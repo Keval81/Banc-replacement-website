@@ -1,26 +1,119 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* BANC Brand Colours - From Brand Kit 2026 */
+  --primary-teal: #4BC5C5;
+  --dark-teal: #2E9E9E;
+  --deep-teal: #1D7A7A;
+  --light-teal: #6EE0E0;
+  --highlight-teal: #8EEAEA;
+  
+  --charcoal: #2C2F33;
+  --dark-grey: #3A3D42;
+  --mid-grey: #6B6E72;
+  --light-grey: #C8C9CB;
+  --off-white: #F0F0ED;
+  --white: #FFFFFF;
+  
+  /* Shadcn/ui compatible variables */
+  --background: var(--off-white);
+  --foreground: var(--charcoal);
+  --card: var(--white);
+  --card-foreground: var(--charcoal);
+  --popover: var(--white);
+  --popover-foreground: var(--charcoal);
+  --primary: var(--primary-teal);
+  --primary-foreground: var(--charcoal);
+  --secondary: var(--dark-grey);
+  --secondary-foreground: var(--white);
+  --muted: var(--off-white);
+  --muted-foreground: var(--mid-grey);
+  --accent: var(--light-teal);
+  --accent-foreground: var(--deep-teal);
+  --destructive: #EF4444;
+  --destructive-foreground: var(--white);
+  --border: var(--light-grey);
+  --input: var(--light-grey);
+  --ring: var(--primary-teal);
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary-teal: var(--primary-teal);
+  --color-dark-teal: var(--dark-teal);
+  --color-deep-teal: var(--deep-teal);
+  --color-light-teal: var(--light-teal);
+  --color-highlight-teal: var(--highlight-teal);
+  --color-charcoal: var(--charcoal);
+  --color-dark-grey: var(--dark-grey);
+  --color-mid-grey: var(--mid-grey);
+  --color-light-grey: var(--light-grey);
+  --color-off-white: var(--off-white);
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--off-white);
+  color: var(--charcoal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: var(--light-teal);
+  color: var(--charcoal);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--off-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mid-grey);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-teal);
+}
+
+/* Focus visible styles */
+*:focus-visible {
+  outline: 2px solid var(--primary-teal);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
