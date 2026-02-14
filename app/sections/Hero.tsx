@@ -191,7 +191,7 @@ export default function Hero() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mt-8 flex flex-wrap items-center gap-6 rounded-2xl border border-white/20 bg-white/10 px-6 py-4 backdrop-blur"
         >
-          {/* Guild Property Network Logo */}
+          {/* Google Reviews (static for now) */}
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90">
               <svg viewBox="0 0 40 40" className="h-8 w-8">
@@ -200,8 +200,8 @@ export default function Hero() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-semibold font-[family-name:var(--font-montserrat)]">Guild Property Network</p>
-              <p className="text-xs text-white/70">Trusted Partner</p>
+              <p className="text-sm font-semibold font-[family-name:var(--font-montserrat)]">Google Reviews</p>
+              <p className="text-xs text-white/70">Banc Property Group</p>
             </div>
           </div>
           <div className="h-8 w-px bg-white/30" />
