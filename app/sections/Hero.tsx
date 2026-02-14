@@ -15,23 +15,67 @@ const videos = [
 export default function Hero() {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [canAutoplay, setCanAutoplay] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Ensure video plays at correct speed when loaded
+  // Start video playback with retry logic for autoplay policies
+  const startPlayback = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      // Ensure muted is set (required for autoplay)
+      video.muted = true;
+      video.playbackRate = 0.60;
+      
+      // Attempt to play
+      await video.play();
+      setCanAutoplay(true);
+    } catch (err) {
+      // Autoplay was blocked, show fallback
+      console.log("Autoplay blocked, will retry on interaction");
+      setCanAutoplay(false);
+    }
+  };
+
+  // Handle video change - start playback when video is ready
   useEffect(() => {
     const video = videoRef.current;
-    if (video) {
-      video.playbackRate = 0.60;
-      video.play().catch(() => {
-        // Autoplay might be blocked, that's okay
-      });
-    }
+    if (!video) return;
+
+    // Reset loaded state for new video
+    setIsLoaded(false);
+    
+    const handleCanPlay = () => {
+      setIsLoaded(true);
+      startPlayback();
+    };
+
+    const handleVideoEnd = () => {
+      setIsLoaded(false);
+      setCurrentVideo((prev) => (prev + 1) % videos.length);
+    };
+
+    video.addEventListener("canplay", handleCanPlay);
+    video.addEventListener("ended", handleVideoEnd);
+    
+    // Force load the video
+    video.load();
+
+    return () => {
+      video.removeEventListener("canplay", handleCanPlay);
+      video.removeEventListener("ended", handleVideoEnd);
+    };
   }, [currentVideo]);
 
-  const handleVideoEnd = () => {
-    setIsLoaded(false);
-    setCurrentVideo((prev) => (prev + 1) % videos.length);
-  };
+  // Attempt autoplay on mount
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      startPlayback();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleDotClick = (index: number) => {
     if (index !== currentVideo) {
@@ -40,12 +84,18 @@ export default function Hero() {
     }
   };
 
-  const handleLoadedData = () => {
-    setIsLoaded(true);
+  // Retry play on user interaction
+  const handleInteraction = () => {
+    if (!canAutoplay) {
+      startPlayback();
+    }
   };
 
   return (
-    <section className="relative min-h-[90vh] w-full overflow-hidden bg-[#2C2F33] text-white">
+    <section 
+      className="relative min-h-[90vh] w-full overflow-hidden bg-[#2C2F33] text-white"
+      onClick={handleInteraction}
+    >
       {/* Video Background with Crossfade */}
       <div className="absolute inset-0 h-full w-full">
         <AnimatePresence mode="sync">
@@ -65,26 +115,54 @@ export default function Hero() {
                 objectPosition: "center center",
               }}
               src={videos[currentVideo]}
-              autoPlay
               muted
               playsInline
-              onEnded={handleVideoEnd}
-              onLoadedData={handleLoadedData}
+              preload="auto"
               aria-hidden="true"
             />
           </motion.div>
         </AnimatePresence>
+
+        {/* Fallback poster while video loads or if autoplay blocked */}
+        {!isLoaded && (
+          <div className="absolute inset-0 h-full w-full bg-[#2C2F33]">
+            <div 
+              className="absolute inset-0 h-full w-full opacity-50"
+              style={{
+                backgroundImage: "url('/map-area.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                filter: "blur(20px) brightness(0.4)",
+              }}
+            />
+          </div>
+        )}
       </div>
       
       {/* Gradient overlay */}
       <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
+
+      {/* Autoplay blocked notice */}
+      {!canAutoplay && (
+        <motion.button
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute bottom-40 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#4BC5C5] px-6 py-3 text-sm font-semibold text-[#2C2F33] shadow-lg hover:bg-[#6EE0E0]"
+          onClick={startPlayback}
+        >
+          Click to play video
+        </motion.button>
+      )}
 
       {/* Video indicator dots */}
       <div className="absolute bottom-32 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {videos.map((_, index) => (
           <button
             key={index}
-            onClick={() => handleDotClick(index)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDotClick(index);
+            }}
             className={`h-2 w-2 rounded-full transition-all duration-300 ${
               index === currentVideo
                 ? "w-8 bg-[#4BC5C5]"
