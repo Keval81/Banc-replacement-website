@@ -11,9 +11,9 @@ export default function Footer() {
             <Image
               src="/banc-logo.png"
               alt="Banc Property Group"
-              width={140}
-              height={40}
-              className="h-10 w-auto object-contain brightness-0 invert"
+              width={210}
+              height={60}
+              className="h-[60px] w-auto object-contain brightness-0 invert"
             />
             <p className="mt-4 text-sm text-white/70">
               Exceptional properties and bespoke service across Cuffley, Mayfair, and beyond.
