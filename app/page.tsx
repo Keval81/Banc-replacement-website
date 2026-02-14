@@ -6,6 +6,7 @@ import PropertySearch from "@/app/sections/PropertySearch";
 import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
+import GoogleReviews from "@/app/sections/GoogleReviews";
 import CTABanner from "@/app/sections/CTABanner";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export default function Home() {
         <PropertySearch />
         <FeaturedListings />
         <Services />
+        <GoogleReviews />
         <Testimonials />
         <CTABanner />
       </main>
