@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -18,64 +18,52 @@ export default function Hero() {
   const [canAutoplay, setCanAutoplay] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Start video playback with retry logic for autoplay policies
-  const startPlayback = async () => {
+  // Start video playback
+  const startPlayback = useCallback(async () => {
     const video = videoRef.current;
     if (!video) return;
 
     try {
-      // Ensure muted is set (required for autoplay)
       video.muted = true;
       video.playbackRate = 0.60;
-      
-      // Attempt to play
       await video.play();
       setCanAutoplay(true);
     } catch (err) {
-      // Autoplay was blocked, show fallback
-      console.log("Autoplay blocked, will retry on interaction");
       setCanAutoplay(false);
     }
-  };
+  }, []);
 
-  // Handle video change - start playback when video is ready
+  // Handle video end - advance to next
+  const handleVideoEnd = useCallback(() => {
+    setIsLoaded(false);
+    setCurrentVideo((prev) => (prev + 1) % videos.length);
+  }, []);
+
+  // Handle video ready
+  const handleCanPlay = useCallback(() => {
+    setIsLoaded(true);
+    startPlayback();
+  }, [startPlayback]);
+
+  // Setup video listeners
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Reset loaded state for new video
-    setIsLoaded(false);
-    
-    const handleCanPlay = () => {
-      setIsLoaded(true);
-      startPlayback();
-    };
-
-    const handleVideoEnd = () => {
-      setIsLoaded(false);
-      setCurrentVideo((prev) => (prev + 1) % videos.length);
-    };
-
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleVideoEnd);
     
-    // Force load the video
+    // Important: load the video
     video.load();
+    
+    // Start playback attempt
+    startPlayback();
 
     return () => {
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleVideoEnd);
     };
-  }, [currentVideo]);
-
-  // Attempt autoplay on mount
-  useEffect(() => {
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(() => {
-      startPlayback();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  }, [currentVideo, handleCanPlay, handleVideoEnd, startPlayback]);
 
   const handleDotClick = (index: number) => {
     if (index !== currentVideo) {
@@ -84,7 +72,6 @@ export default function Hero() {
     }
   };
 
-  // Retry play on user interaction
   const handleInteraction = () => {
     if (!canAutoplay) {
       startPlayback();
@@ -96,34 +83,31 @@ export default function Hero() {
       className="relative min-h-[90vh] w-full overflow-hidden bg-[#2C2F33] text-white"
       onClick={handleInteraction}
     >
-      {/* Video Background with Crossfade */}
+      {/* Video Background - Single video element, no complex transitions */}
       <div className="absolute inset-0 h-full w-full">
-        <AnimatePresence mode="sync">
-          <motion.div
-            key={currentVideo}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isLoaded ? 1 : 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+        <motion.div
+          key={currentVideo}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoaded ? 1 : 0 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          className="absolute inset-0 h-full w-full"
+        >
+          <video
+            ref={videoRef}
             className="absolute inset-0 h-full w-full"
-          >
-            <video
-              ref={videoRef}
-              className="absolute inset-0 h-full w-full"
-              style={{ 
-                objectFit: "cover",
-                objectPosition: "center center",
-              }}
-              src={videos[currentVideo]}
-              muted
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-            />
-          </motion.div>
-        </AnimatePresence>
+            style={{ 
+              objectFit: "cover",
+              objectPosition: "center center",
+            }}
+            src={videos[currentVideo]}
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          />
+        </motion.div>
 
-        {/* Fallback poster while video loads or if autoplay blocked */}
+        {/* Fallback while loading */}
         {!isLoaded && (
           <div className="absolute inset-0 h-full w-full bg-[#2C2F33]">
             <div 
