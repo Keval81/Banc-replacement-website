@@ -51,12 +51,12 @@ export default function Header() {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 border-b border-white/10 bg-[#0A6B82]/95 backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b border-white/10 bg-[#6B7280] backdrop-blur-xl"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
           <Image
-            src="/banc-logo-white.png"
+            src="/banc-logo-white-greybg.png"
             alt="Banc Property Group"
             width={280}
             height={80}
@@ -93,7 +93,7 @@ export default function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-[#1DBFDD]/20 bg-[#0A6B82] p-4 shadow-xl"
+                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#6B7280] p-4 shadow-xl"
                       >
                         <div className="grid gap-4">
                           {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
@@ -121,7 +121,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button className="bg-white text-[#0A6B82] hover:bg-[#4DD4F0]">Request Valuation</Button>
+          <Button className="bg-white text-[#6B7280] hover:bg-[#1DBFDD] hover:text-white">Request Valuation</Button>
         </div>
 
         <button
@@ -153,7 +153,7 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Button className="mt-4 w-full bg-white text-[#0A6B82] hover:bg-[#4DD4F0]">
+              <Button className="mt-4 w-full bg-white text-[#6B7280] hover:bg-[#1DBFDD] hover:text-white">
                 Request Valuation
               </Button>
             </nav>
