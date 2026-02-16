@@ -175,7 +175,7 @@ export default function Hero() {
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-40 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-[#0A6B82] shadow-lg hover:bg-[#4DD4F0]"
+          className="absolute bottom-40 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-[#2C2F33] shadow-lg hover:bg-[#4DD4F0]"
           onClick={startPlayback}
         >
           Click to play video
@@ -201,14 +201,24 @@ export default function Hero() {
         ))}
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 pb-24 pt-24 lg:px-10">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 pb-24 pt-36 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-3xl"
         >
-          {/* OPTION B: No logo here - it's in the dark header */}
+          {/* OPTION A: Blue logo with light background box */}
+          <div className="mb-6 inline-block rounded-xl bg-white/95 backdrop-blur-sm px-6 py-3 shadow-lg">
+            <Image
+              src="/banc-logo-blue.png"
+              alt="Banc Property Group"
+              width={240}
+              height={70}
+              className="h-[55px] w-auto object-contain"
+              priority
+            />
+          </div>
           
           <h1 className="font-heading text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
             Exceptional Properties.<br />
@@ -252,7 +262,7 @@ export default function Hero() {
                   />
                 ) : (
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DBFDD] shrink-0">
-                    <span className="text-sm font-semibold text-[#0A6B82]">
+                    <span className="text-sm font-semibold text-[#2C2F33]">
                       {currentReview.authorName?.[0] || "G"}
                     </span>
                   </div>
@@ -324,7 +334,7 @@ export default function Hero() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90">
                   <svg viewBox="0 0 40 40" className="h-5 w-5">
                     <circle cx="20" cy="20" r="18" fill="#1DBFDD"/>
-                    <text x="20" y="26" textAnchor="middle" fill="#0A6B82" fontFamily="serif" fontWeight="700" fontSize="14">G</text>
+                    <text x="20" y="26" textAnchor="middle" fill="#2C2F33" fontFamily="serif" fontWeight="700" fontSize="14">G</text>
                   </svg>
                 </div>
                 <div>
@@ -349,3 +359,4 @@ export default function Hero() {
     </section>
   );
 }
+// Cache bust Mon 16 Feb 2026 14:57:09 GMT

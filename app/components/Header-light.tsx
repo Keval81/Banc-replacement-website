@@ -49,14 +49,15 @@ export default function Header() {
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 border-b border-white/10 bg-[#0A6B82]/95 backdrop-blur-xl"
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="sticky top-0 z-50 border-b border-[#C8C9CB]/50 bg-white/90 backdrop-blur-xl"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
           <Image
-            src="/banc-logo-white.png"
+            src="/banc-logo-blue.png"
             alt="Banc Property Group"
             width={280}
             height={80}
@@ -65,21 +66,21 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-white font-heading lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-[#2C2F33] font-heading lg:flex">
           {navItems.map((item) => {
-            const hasDropdown = item.name in dropdowns;
+            const hasDropdown = item.name === "Sales" || item.name === "Lettings";
             return (
               <div
                 key={item.name}
                 className="relative"
                 onMouseEnter={() => hasDropdown && setActiveDropdown(item.name)}
-                onMouseLeave={() => setActiveDropdown(null)}
+                onMouseLeave={() => hasDropdown && setActiveDropdown(null)}
               >
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1 transition-colors hover:text-[#4DD4F0]",
-                    activeDropdown === item.name && "text-[#4DD4F0]"
+                    "flex items-center gap-1 transition-colors hover:text-[#1DBFDD]",
+                    activeDropdown === item.name && "text-[#1DBFDD]"
                   )}
                 >
                   {item.name}
@@ -93,19 +94,19 @@ export default function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-[#1DBFDD]/20 bg-[#0A6B82] p-4 shadow-xl"
+                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-[#C8C9CB] bg-white p-4 shadow-xl"
                       >
                         <div className="grid gap-4">
                           {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
                             <Link
                               key={link.title}
                               href={link.href}
-                              className="rounded-lg p-3 transition-colors hover:bg-[#0E8CAB]"
+                              className="rounded-lg p-3 transition-colors hover:bg-[#F0F0ED]"
                             >
-                              <p className="text-sm font-semibold text-white font-heading">
+                              <p className="text-sm font-semibold text-[#2C2F33] font-heading">
                                 {link.title}
                               </p>
-                              <p className="text-xs text-white/70">
+                              <p className="text-xs text-[#6B6E72]">
                                 {link.description}
                               </p>
                             </Link>
@@ -121,42 +122,40 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button className="bg-white text-[#0A6B82] hover:bg-[#4DD4F0]">Request Valuation</Button>
+          <Button size="lg">Request Valuation</Button>
         </div>
 
         <button
-          className="rounded-full border border-white/20 p-2 text-white lg:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
+          onClick={() => setMobileOpen((prev) => !prev)}
+          className="inline-flex items-center justify-center rounded-full border border-[#C8C9CB] p-2 text-[#2C2F33] lg:hidden"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/10 bg-[#0A6B82] lg:hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="border-t border-[#C8C9CB] bg-white lg:hidden"
           >
-            <nav className="flex flex-col gap-4 p-6">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-white hover:text-[#4DD4F0]"
+                  className="text-base font-medium text-[#2C2F33] font-heading"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Button className="mt-4 w-full bg-white text-[#0A6B82] hover:bg-[#4DD4F0]">
-                Request Valuation
-              </Button>
-            </nav>
+              <Button className="w-full">Request Valuation</Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
