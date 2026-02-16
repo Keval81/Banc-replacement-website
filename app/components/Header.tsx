@@ -53,14 +53,14 @@ export default function Header() {
       animate={{ opacity: 1, y: 0 }}
       className="sticky top-0 z-50 border-b border-white/10 bg-[#241f1c] backdrop-blur-xl"
     >
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-3 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
           <Image
             src="/banc-logo-white-greybg.png"
             alt="Banc Property Group"
-            width={280}
-            height={80}
-            className="h-[84px] w-auto object-contain"
+            width={350}
+            height={105}
+            className="h-[100px] w-auto object-contain"
             priority
           />
         </Link>
