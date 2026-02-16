@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  /* BANC Brand Colours - From Brand Kit 2026 */
-  --primary-teal: #4BC5C5;
-  --dark-teal: #2E9E9E;
-  --deep-teal: #1D7A7A;
-  --light-teal: #6EE0E0;
-  --highlight-teal: #8EEAEA;
+  /* BANC Brand Colours - Official from Brand Kit */
+  --primary-cyan: #1DBFDD;
+  --dark-cyan: #0E8CAB;
+  --deep-cyan: #0A6B82;
+  --light-cyan: #4DD4F0;
+  --highlight-cyan: #8EE5F5;
   
   --charcoal: #2C2F33;
   --dark-grey: #3A3D42;
@@ -22,30 +22,30 @@
   --card-foreground: var(--charcoal);
   --popover: var(--white);
   --popover-foreground: var(--charcoal);
-  --primary: var(--primary-teal);
-  --primary-foreground: var(--charcoal);
+  --primary: var(--primary-cyan);
+  --primary-foreground: var(--white);
   --secondary: var(--dark-grey);
   --secondary-foreground: var(--white);
   --muted: var(--off-white);
   --muted-foreground: var(--mid-grey);
-  --accent: var(--light-teal);
-  --accent-foreground: var(--deep-teal);
+  --accent: var(--light-cyan);
+  --accent-foreground: var(--deep-cyan);
   --destructive: #EF4444;
   --destructive-foreground: var(--white);
   --border: var(--light-grey);
   --input: var(--light-grey);
-  --ring: var(--primary-teal);
+  --ring: var(--primary-cyan);
   --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary-teal: var(--primary-teal);
-  --color-dark-teal: var(--dark-teal);
-  --color-deep-teal: var(--deep-teal);
-  --color-light-teal: var(--light-teal);
-  --color-highlight-teal: var(--highlight-teal);
+  --color-primary-cyan: var(--primary-cyan);
+  --color-dark-cyan: var(--dark-cyan);
+  --color-deep-cyan: var(--deep-cyan);
+  --color-light-cyan: var(--light-cyan);
+  --color-highlight-cyan: var(--highlight-cyan);
   --color-charcoal: var(--charcoal);
   --color-dark-grey: var(--dark-grey);
   --color-mid-grey: var(--mid-grey);
@@ -77,7 +77,7 @@ html {
 
 /* Selection color */
 ::selection {
-  background: var(--light-teal);
+  background: var(--light-cyan);
   color: var(--charcoal);
 }
 
@@ -97,12 +97,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-teal);
+  background: var(--primary-cyan);
 }
 
 /* Focus visible styles */
 *:focus-visible {
-  outline: 2px solid var(--primary-teal);
+  outline: 2px solid var(--primary-cyan);
   outline-offset: 2px;
 }
 

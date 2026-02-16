@@ -57,11 +57,11 @@ export default function Header() {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
           <Image
-            src="/banc-logo.png"
+            src="/banc-logo-blue.png"
             alt="Banc Property Group"
-            width={210}
-            height={60}
-            className="h-[60px] w-auto object-contain"
+            width={280}
+            height={80}
+            className="h-[72px] w-auto object-contain"
             priority
           />
         </Link>
@@ -79,8 +79,8 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1 transition-colors hover:text-[#4BC5C5]",
-                    activeDropdown === item.name && "text-[#4BC5C5]"
+                    "flex items-center gap-1 transition-colors hover:text-[#1DBFDD]",
+                    activeDropdown === item.name && "text-[#1DBFDD]"
                   )}
                 >
                   {item.name}

@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Image
-              src="/banc-logo.png"
+              src="/banc-logo-blue.png"
               alt="Banc Property Group"
               width={210}
               height={60}
@@ -19,13 +19,13 @@ export default function Footer() {
               Exceptional properties and bespoke service across Cuffley, Mayfair, and beyond.
             </p>
             <div className="mt-6 flex items-center gap-4 text-white/70">
-              <Link href="#" className="transition-colors hover:text-[#4BC5C5]" aria-label="Instagram">
+              <Link href="#" className="transition-colors hover:text-[#1DBFDD]" aria-label="Instagram">
                 <Instagram className="h-5 w-5" />
               </Link>
-              <Link href="#" className="transition-colors hover:text-[#4BC5C5]" aria-label="LinkedIn">
+              <Link href="#" className="transition-colors hover:text-[#1DBFDD]" aria-label="LinkedIn">
                 <Linkedin className="h-5 w-5" />
               </Link>
-              <Link href="#" className="transition-colors hover:text-[#4BC5C5]" aria-label="Facebook">
+              <Link href="#" className="transition-colors hover:text-[#1DBFDD]" aria-label="Facebook">
                 <Facebook className="h-5 w-5" />
               </Link>
             </div>
@@ -36,7 +36,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               {["Sales", "Lettings", "Premier Homes", "About", "Contact"].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-[#4BC5C5]">
+                  <Link href="#" className="transition-colors hover:text-[#1DBFDD]">
                     {item}
                   </Link>
                 </li>
@@ -49,7 +49,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               {["Valuations", "Property Management", "Vendor Portal", "Market Intelligence"].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-[#4BC5C5]">
+                  <Link href="#" className="transition-colors hover:text-[#1DBFDD]">
                     {item}
                   </Link>
                 </li>

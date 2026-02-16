@@ -91,7 +91,7 @@ export default function GoogleReviews() {
                     className="h-14 w-14 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5F6F6] text-lg font-semibold text-[#1D7A7A]">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5F6F6] text-lg font-semibold text-[#0A6B82]">
                     {activeReview.authorName?.[0] ?? "B"}
                   </div>
                 )}
@@ -103,14 +103,14 @@ export default function GoogleReviews() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex text-[#4BC5C5]">
+                <div className="flex text-[#1DBFDD]">
                   {[...Array(5)].map((_, i) => (
                     <svg key={i} className="h-4 w-4 fill-current" viewBox="0 0 20 20">
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                     </svg>
                   ))}
                 </div>
-                <span className="text-sm font-semibold text-[#1D7A7A]">5.0</span>
+                <span className="text-sm font-semibold text-[#0A6B82]">5.0</span>
               </div>
               <p className="text-lg text-[#374151]">{activeReview.text}</p>
             </div>
@@ -125,7 +125,7 @@ export default function GoogleReviews() {
                   key={index}
                   onClick={() => setActiveIndex(index)}
                   className={`h-2 w-8 rounded-full transition-all ${
-                    index === activeIndex ? "bg-[#4BC5C5]" : "bg-[#E5E7EB]"
+                    index === activeIndex ? "bg-[#1DBFDD]" : "bg-[#E5E7EB]"
                   }`}
                   aria-label={`Show review ${index + 1}`}
                 />

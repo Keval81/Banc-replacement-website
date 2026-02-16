@@ -34,7 +34,7 @@ export default function PropertySearch() {
                 <input
                   type="text"
                   placeholder="Cuffley, Mayfair or postcode"
-                  className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]"
+                  className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]"
                 />
               </div>
 
@@ -42,7 +42,7 @@ export default function PropertySearch() {
                 <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Min Price
                 </label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
+                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
                   <option>No min</option>
                   <option>£250k</option>
                   <option>£500k</option>
@@ -55,7 +55,7 @@ export default function PropertySearch() {
                 <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Max Price
                 </label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
+                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
                   <option>No max</option>
                   <option>£750k</option>
                   <option>£1m</option>
@@ -70,7 +70,7 @@ export default function PropertySearch() {
                 </label>
                 <input
                   type="range"
-                  className="mt-3 w-full accent-[#4BC5C5]"
+                  className="mt-3 w-full accent-[#1DBFDD]"
                   min={0}
                   max={100}
                 />
@@ -86,7 +86,7 @@ export default function PropertySearch() {
                     <button
                       key={option}
                       type="button"
-                      className="rounded-full border border-[#C8C9CB] bg-white px-4 py-2 text-xs font-semibold text-[#2C2F33] transition-colors hover:border-[#4BC5C5] hover:text-[#4BC5C5] font-heading"
+                      className="rounded-full border border-[#C8C9CB] bg-white px-4 py-2 text-xs font-semibold text-[#2C2F33] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD] font-heading"
                     >
                       {option}
                     </button>
@@ -96,7 +96,7 @@ export default function PropertySearch() {
 
               <div>
                 <label className="text-xs font-semibold text-[#6B6E72] font-heading">Property Type</label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
+                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
                   {propertyTypes.map((type) => (
                     <option key={type}>{type}</option>
                   ))}
@@ -107,7 +107,7 @@ export default function PropertySearch() {
                 <button
                   type="button"
                   onClick={() => setAdvancedOpen((prev) => !prev)}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#4BC5C5] font-heading"
+                  className="flex items-center gap-2 text-sm font-semibold text-[#1DBFDD] font-heading"
                 >
                   Advanced Filters
                   <ChevronDown className={`h-4 w-4 transition-transform ${advancedOpen ? "rotate-180" : ""}`} />
@@ -118,7 +118,7 @@ export default function PropertySearch() {
                 <button
                   type="button"
                   onClick={() => setMapOpen(true)}
-                  className="flex items-center gap-2 rounded-xl border border-[#4BC5C5] bg-white px-4 py-3 text-sm font-semibold text-[#4BC5C5] transition-all hover:bg-[#4BC5C5] hover:text-white font-heading"
+                  className="flex items-center gap-2 rounded-xl border border-[#1DBFDD] bg-white px-4 py-3 text-sm font-semibold text-[#1DBFDD] transition-all hover:bg-[#1DBFDD] hover:text-white font-heading"
                 >
                   <MapPin className="h-4 w-4" />
                   View Area Map
@@ -146,7 +146,7 @@ export default function PropertySearch() {
                       "EPC Rating",
                     ].map((label) => (
                       <label key={label} className="flex items-center gap-3 text-sm text-[#2C2F33]">
-                        <input type="checkbox" className="h-4 w-4 rounded border-[#C8C9CB] text-[#4BC5C5] focus:ring-[#4BC5C5]" />
+                        <input type="checkbox" className="h-4 w-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]" />
                         {label}
                       </label>
                     ))}
@@ -155,7 +155,7 @@ export default function PropertySearch() {
                       <input
                         type="text"
                         placeholder="Garden, parking, open-plan"
-                        className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-2 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]"
+                        className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-2 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]"
                       />
                     </div>
                   </div>
@@ -200,14 +200,14 @@ export default function PropertySearch() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setMapExpanded(!mapExpanded)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#4BC5C5] hover:text-[#4BC5C5]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
                     aria-label={mapExpanded ? "Minimize map" : "Expand map"}
                   >
                     {mapExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
                   </button>
                   <button
                     onClick={() => setMapOpen(false)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#4BC5C5] hover:text-[#4BC5C5]"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
                     aria-label="Close map"
                   >
                     <X className="h-4 w-4" />
@@ -232,10 +232,10 @@ export default function PropertySearch() {
                   </p>
                   <div className="space-y-2">
                     {[
-                      { name: "Cuffley", color: "#4BC5C5" },
-                      { name: "Mayfair", color: "#2E9E9E" },
-                      { name: "Hadley Wood", color: "#1D7A7A" },
-                      { name: "Brookmans Park", color: "#6EE0E0" },
+                      { name: "Cuffley", color: "#1DBFDD" },
+                      { name: "Mayfair", color: "#0E8CAB" },
+                      { name: "Hadley Wood", color: "#0A6B82" },
+                      { name: "Brookmans Park", color: "#4DD4F0" },
                     ].map((location) => (
                       <div key={location.name} className="flex items-center gap-2">
                         <div 
