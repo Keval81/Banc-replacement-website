@@ -51,7 +51,7 @@ export default function Header() {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 border-b border-white/10 bg-[#303030] backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b border-white/10 bg-[#241f1c] backdrop-blur-xl"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
@@ -60,7 +60,7 @@ export default function Header() {
             alt="Banc Property Group"
             width={280}
             height={80}
-            className="h-[72px] w-auto object-contain"
+            className="h-[84px] w-auto object-contain"
             priority
           />
         </Link>
@@ -93,7 +93,7 @@ export default function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#303030] p-4 shadow-xl"
+                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#241f1c] p-4 shadow-xl"
                       >
                         <div className="grid gap-4">
                           {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
@@ -121,7 +121,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button className="bg-white text-[#303030] hover:bg-[#1DBFDD] hover:text-white">Request Valuation</Button>
+          <Button className="bg-white text-[#241f1c] hover:bg-[#1DBFDD] hover:text-white">Request Valuation</Button>
         </div>
 
         <button
@@ -140,7 +140,7 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/10 bg-[#303030] lg:hidden"
+            className="border-t border-white/10 bg-[#241f1c] lg:hidden"
           >
             <nav className="flex flex-col gap-4 p-6">
               {navItems.map((item) => (
@@ -153,7 +153,7 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Button className="mt-4 w-full bg-white text-[#303030] hover:bg-[#1DBFDD] hover:text-white">
+              <Button className="mt-4 w-full bg-white text-[#241f1c] hover:bg-[#1DBFDD] hover:text-white">
                 Request Valuation
               </Button>
             </nav>
