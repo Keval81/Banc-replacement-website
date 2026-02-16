@@ -3,8 +3,8 @@
 import Image from "next/image";
 
 const logos = [
-  { name: "Rightmove", logo: "/partners/rightmove.png", size: 210 },
-  { name: "Zoopla", logo: "/zoopla_logo-01.jpg", size: 210 },
+  { name: "Rightmove", logo: "/partners/rightmove.png", size: 315 },
+  { name: "Zoopla", logo: "/zoopla_logo-01.jpg", size: 315 },
   { name: "The Guild", logo: "/TheGuild_Logo_RGB.jpg", size: 140 },
   { name: "Propertymark", logo: "/propertymark.jpg", size: 70 },
   { name: "TDS", logo: "/9_long_member_rgb.png", size: 70 },
