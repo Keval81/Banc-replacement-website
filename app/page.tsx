@@ -7,7 +7,7 @@ import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
 import GoogleReviews from "@/app/sections/GoogleReviews";
-import CTABanner from "@/app/sections/CTABanner";
+import TrustSection from "@/app/sections/TrustSection";
 
 export const metadata: Metadata = {
   title: "Banc Property Services | Premium Estate Agency",
@@ -32,7 +32,7 @@ export default function Home() {
         <Services />
         <GoogleReviews />
         <Testimonials />
-        <CTABanner />
+        <TrustSection />
       </main>
       <Footer />
     </div>
