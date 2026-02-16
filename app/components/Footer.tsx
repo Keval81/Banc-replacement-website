@@ -32,7 +32,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-[family-name:var(--font-montserrat)]">Quick Links</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Quick Links</p>
             <ul className="mt-4 space-y-3 text-sm">
               {["Sales", "Lettings", "Premier Homes", "About", "Contact"].map((item) => (
                 <li key={item}>
@@ -45,7 +45,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-[family-name:var(--font-montserrat)]">Services</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Services</p>
             <ul className="mt-4 space-y-3 text-sm">
               {["Valuations", "Property Management", "Vendor Portal", "Market Intelligence"].map((item) => (
                 <li key={item}>
@@ -58,7 +58,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-[family-name:var(--font-montserrat)]">Contact</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Contact</p>
             <ul className="mt-4 space-y-3 text-sm text-white/70">
               <li>020 1234 5678</li>
               <li>hello@bancproperty.co.uk</li>
@@ -66,7 +66,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 border-t border-white/10 pt-6 text-xs text-white/50 font-[family-name:var(--font-montserrat)]">
+        <div className="mt-12 border-t border-white/10 pt-6 text-xs text-white/50 font-heading">
           © 2026 Banc Property Group. All rights reserved.
         </div>
       </div>

@@ -66,7 +66,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-[#2C2F33] font-[family-name:var(--font-montserrat)] lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-[#2C2F33] font-heading lg:flex">
           {navItems.map((item) => {
             const hasDropdown = item.name === "Sales" || item.name === "Lettings";
             return (
@@ -103,7 +103,7 @@ export default function Header() {
                               href={link.href}
                               className="rounded-lg p-3 transition-colors hover:bg-[#F0F0ED]"
                             >
-                              <p className="text-sm font-semibold text-[#2C2F33] font-[family-name:var(--font-montserrat)]">
+                              <p className="text-sm font-semibold text-[#2C2F33] font-heading">
                                 {link.title}
                               </p>
                               <p className="text-xs text-[#6B6E72]">
@@ -148,7 +148,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-[#2C2F33] font-[family-name:var(--font-montserrat)]"
+                  className="text-base font-medium text-[#2C2F33] font-heading"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.name}

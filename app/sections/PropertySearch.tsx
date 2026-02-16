@@ -20,15 +20,15 @@ export default function PropertySearch() {
         <div className="rounded-3xl border border-[#C8C9CB] bg-[#F0F0ED] p-6 shadow-sm lg:p-10">
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <p className="text-sm uppercase tracking-[0.3em] text-[#6B6E72] font-[family-name:var(--font-montserrat)]">Search</p>
-              <h2 className="text-2xl font-semibold text-[#2C2F33] sm:text-3xl font-[family-name:var(--font-montserrat)]">
+              <p className="text-sm uppercase tracking-[0.3em] text-[#6B6E72] font-heading">Search</p>
+              <h2 className="text-2xl font-semibold text-[#2C2F33] sm:text-3xl font-heading">
                 Find your next property
               </h2>
             </div>
 
             <div className="grid gap-4 lg:grid-cols-5">
               <div className="lg:col-span-2">
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Location
                 </label>
                 <input
@@ -39,7 +39,7 @@ export default function PropertySearch() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Min Price
                 </label>
                 <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
@@ -52,7 +52,7 @@ export default function PropertySearch() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Max Price
                 </label>
                 <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
@@ -65,7 +65,7 @@ export default function PropertySearch() {
               </div>
 
               <div className="flex flex-col justify-between">
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
                   Price Range
                 </label>
                 <input
@@ -80,13 +80,13 @@ export default function PropertySearch() {
 
             <div className="grid gap-4 lg:grid-cols-4">
               <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">Bedrooms</label>
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">Bedrooms</label>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {bedroomOptions.map((option) => (
                     <button
                       key={option}
                       type="button"
-                      className="rounded-full border border-[#C8C9CB] bg-white px-4 py-2 text-xs font-semibold text-[#2C2F33] transition-colors hover:border-[#4BC5C5] hover:text-[#4BC5C5] font-[family-name:var(--font-montserrat)]"
+                      className="rounded-full border border-[#C8C9CB] bg-white px-4 py-2 text-xs font-semibold text-[#2C2F33] transition-colors hover:border-[#4BC5C5] hover:text-[#4BC5C5] font-heading"
                     >
                       {option}
                     </button>
@@ -95,7 +95,7 @@ export default function PropertySearch() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">Property Type</label>
+                <label className="text-xs font-semibold text-[#6B6E72] font-heading">Property Type</label>
                 <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#4BC5C5]">
                   {propertyTypes.map((type) => (
                     <option key={type}>{type}</option>
@@ -107,7 +107,7 @@ export default function PropertySearch() {
                 <button
                   type="button"
                   onClick={() => setAdvancedOpen((prev) => !prev)}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#4BC5C5] font-[family-name:var(--font-montserrat)]"
+                  className="flex items-center gap-2 text-sm font-semibold text-[#4BC5C5] font-heading"
                 >
                   Advanced Filters
                   <ChevronDown className={`h-4 w-4 transition-transform ${advancedOpen ? "rotate-180" : ""}`} />
@@ -118,7 +118,7 @@ export default function PropertySearch() {
                 <button
                   type="button"
                   onClick={() => setMapOpen(true)}
-                  className="flex items-center gap-2 rounded-xl border border-[#4BC5C5] bg-white px-4 py-3 text-sm font-semibold text-[#4BC5C5] transition-all hover:bg-[#4BC5C5] hover:text-white font-[family-name:var(--font-montserrat)]"
+                  className="flex items-center gap-2 rounded-xl border border-[#4BC5C5] bg-white px-4 py-3 text-sm font-semibold text-[#4BC5C5] transition-all hover:bg-[#4BC5C5] hover:text-white font-heading"
                 >
                   <MapPin className="h-4 w-4" />
                   View Area Map
@@ -151,7 +151,7 @@ export default function PropertySearch() {
                       </label>
                     ))}
                     <div>
-                      <label className="text-xs font-semibold text-[#6B6E72] font-[family-name:var(--font-montserrat)]">Keywords</label>
+                      <label className="text-xs font-semibold text-[#6B6E72] font-heading">Keywords</label>
                       <input
                         type="text"
                         placeholder="Garden, parking, open-plan"
@@ -190,7 +190,7 @@ export default function PropertySearch() {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[#C8C9CB] bg-[#F0F0ED] px-6 py-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-[#2C2F33] font-[family-name:var(--font-montserrat)]">
+                  <h3 className="text-lg font-semibold text-[#2C2F33] font-heading">
                     Our Coverage Area
                   </h3>
                   <p className="text-sm text-[#6B6E72]">
@@ -227,7 +227,7 @@ export default function PropertySearch() {
                 
                 {/* Map Overlay - Key Areas */}
                 <div className="absolute bottom-6 left-6 rounded-2xl border border-white/30 bg-white/95 p-4 shadow-lg backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[#6B6E72] mb-2 font-[family-name:var(--font-montserrat)]">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[#6B6E72] mb-2 font-heading">
                     Key Locations
                   </p>
                   <div className="space-y-2">
@@ -250,7 +250,7 @@ export default function PropertySearch() {
 
                 {/* Premium Badge */}
                 <div className="absolute right-6 top-6 rounded-full bg-[#2C2F33] px-4 py-2 shadow-lg">
-                  <span className="text-xs font-semibold text-white font-[family-name:var(--font-montserrat)]">
+                  <span className="text-xs font-semibold text-white font-heading">
                     Premium Coverage
                   </span>
                 </div>

@@ -51,8 +51,8 @@
   --color-mid-grey: var(--mid-grey);
   --color-light-grey: var(--light-grey);
   --color-off-white: var(--off-white);
-  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Open Sans", system-ui, sans-serif;
+  --font-heading: "Montserrat", system-ui, sans-serif;
 }
 
 /* Base styles */
