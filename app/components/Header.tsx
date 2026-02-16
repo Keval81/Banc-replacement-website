@@ -58,9 +58,9 @@ export default function Header() {
           <Image
             src="/banc-logo-blue.png"
             alt="Banc Property Group"
-            width={280}
-            height={80}
-            className="h-[72px] w-auto object-contain brightness-0 invert"
+            width={350}
+            height={105}
+            className="h-[84px] w-auto object-contain"
             priority
           />
         </Link>
