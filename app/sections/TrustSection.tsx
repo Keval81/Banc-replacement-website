@@ -19,8 +19,9 @@ export default function TrustSection() {
   return (
     <section className="bg-white">
       <div className="mx-auto w-full max-w-7xl px-6 py-6 lg:px-10">
-        {/* Partner Portals - spread wide */}
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+        {/* All logos in one tight container */}
+        <div className="flex flex-wrap items-end justify-center gap-x-6 md:gap-x-12">
+          {/* Partner Portals */}
           {partnerLogos.map((logo) => (
             <div
               key={logo.name}
@@ -37,10 +38,8 @@ export default function TrustSection() {
               />
             </div>
           ))}
-        </div>
-
-        {/* Professional Bodies - spread wide, close to partners */}
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-6 md:gap-12">
+          
+          {/* Professional Bodies - inline with partners */}
           {professionalLogos.map((logo) => (
             <div
               key={logo.name}
