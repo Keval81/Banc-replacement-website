@@ -4,7 +4,7 @@ import Image from "next/image";
 
 // Partner portals (larger)
 const partnerLogos = [
-  { name: "Rightmove", logo: "/partners/rightmove.png", size: 472 }, // 50% larger
+  { name: "Rightmove", logo: "/partners/rightmove.png", size: 708 }, // 50% larger again
   { name: "Zoopla", logo: "/zoopla_logo-01.jpg", size: 315 },
 ];
 
