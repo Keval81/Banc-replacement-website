@@ -18,13 +18,13 @@ const professionalLogos = [
 export default function TrustSection() {
   return (
     <section className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-6 py-8 lg:px-10">
-        {/* Partner Portals */}
-        <div className="flex flex-wrap items-center justify-center">
-          {partnerLogos.map((logo, index) => (
+      <div className="mx-auto w-full max-w-7xl px-6 py-6 lg:px-10">
+        {/* Partner Portals - spread wide */}
+        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+          {partnerLogos.map((logo) => (
             <div
               key={logo.name}
-              className="relative flex items-center justify-center transition-opacity duration-300 hover:opacity-70 mx-3 md:mx-6"
+              className="relative flex items-center justify-center transition-opacity duration-300 hover:opacity-70"
               style={{ height: `${logo.size}px` }}
             >
               <Image
@@ -39,12 +39,12 @@ export default function TrustSection() {
           ))}
         </div>
 
-        {/* Professional Bodies - tightly clustered */}
-        <div className="mt-4 flex items-center justify-center">
+        {/* Professional Bodies - spread wide, close to partners */}
+        <div className="mt-2 flex flex-wrap items-center justify-center gap-6 md:gap-12">
           {professionalLogos.map((logo) => (
             <div
               key={logo.name}
-              className="relative flex items-center justify-center mx-1 md:mx-2 transition-opacity duration-300 hover:opacity-70"
+              className="relative flex items-center justify-center transition-opacity duration-300 hover:opacity-70"
               style={{ height: `${logo.size}px` }}
             >
               <Image
