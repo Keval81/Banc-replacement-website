@@ -17,10 +17,10 @@ const professionalLogos = [
 
 export default function TrustSection() {
   return (
-    <section className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-6 py-6 lg:px-10">
-        {/* All logos in one tight container */}
-        <div className="flex flex-wrap items-end justify-center gap-x-6 md:gap-x-12">
+    <section className="bg-white py-4">
+      <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
+        {/* All logos in one tight row */}
+        <div className="flex items-center justify-center gap-4 md:gap-8">
           {/* Partner Portals */}
           {partnerLogos.map((logo) => (
             <div
