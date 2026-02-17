@@ -94,9 +94,9 @@ export default function SalesPropertiesPage() {
           <img
             src="/hertfordshire-home-1.png"
             alt="Premium property for sale"
-            className="w-full h-full object-cover opacity-30"
+            className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C2F33] via-[#2C2F33]/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2C2F33]/70 via-[#2C2F33]/40 to-transparent" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-24">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">

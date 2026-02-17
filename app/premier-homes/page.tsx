@@ -21,9 +21,9 @@ export default function PremierHomesPage() {
           <img
             src="/hertfordshire-home-4.png"
             alt="Luxury Premier Home"
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C2F33] via-[#2C2F33]/60 to-[#2C2F33]/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C2F33]/80 via-[#2C2F33]/30 to-transparent" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
