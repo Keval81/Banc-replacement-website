@@ -9,36 +9,47 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { name: "Sales", href: "#sales" },
-  { name: "Lettings", href: "#lettings" },
-  { name: "Premier Homes", href: "#premier" },
-  { name: "About", href: "#about" },
-  { name: "Contact", href: "#contact" },
+  { name: "Sales", href: "/sales" },
+  { name: "Lettings", href: "/lettings" },
+  { name: "Premier Homes", href: "/premier-homes" },
+  { name: "Land & New Homes", href: "/land-new-homes" },
+  { name: "Reviews", href: "/reviews" },
+  { name: "Contact", href: "/contact" },
 ];
 
 const dropdowns = {
   Sales: [
     {
-      title: "Sell with Confidence",
-      description: "Bespoke marketing, expert pricing, and a full-service sales journey.",
-      href: "#sales",
+      title: "Our Properties",
+      description: "Browse our portfolio of premium properties for sale.",
+      href: "/sales/properties",
     },
     {
-      title: "Book a Valuation",
-      description: "Accurate, local market intelligence to guide your next move.",
-      href: "#valuation",
+      title: "Buyers Guide",
+      description: "Everything you need to know about buying a property.",
+      href: "/sales/buyers-guide",
+    },
+    {
+      title: "Sellers Guide",
+      description: "Expert advice on preparing and selling your home.",
+      href: "/sales/sellers-guide",
     },
   ],
   Lettings: [
     {
-      title: "Find the Right Tenant",
-      description: "Rigorous vetting and premium presentation for standout homes.",
-      href: "#lettings",
+      title: "Rental Properties",
+      description: "Browse our available properties to rent.",
+      href: "/lettings/properties",
     },
     {
-      title: "Managed Lettings",
-      description: "End-to-end property management with transparent reporting.",
-      href: "#management",
+      title: "Tenants Guide",
+      description: "Everything tenants need to know about renting.",
+      href: "/lettings/tenants-guide",
+    },
+    {
+      title: "Landlords Guide",
+      description: "Expert advice for landlords on letting your property.",
+      href: "/lettings/landlords-guide",
     },
   ],
 } as const;

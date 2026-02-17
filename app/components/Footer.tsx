@@ -34,10 +34,19 @@ export default function Footer() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Quick Links</p>
             <ul className="mt-4 space-y-3 text-sm">
-              {["Sales", "Lettings", "Premier Homes", "About", "Contact"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-[#1DBFDD]">
-                    {item}
+              {[
+                { name: "Sales", href: "/sales" },
+                { name: "Lettings", href: "/lettings" },
+                { name: "Premier Homes", href: "/premier-homes" },
+                { name: "Land & New Homes", href: "/land-new-homes" },
+                { name: "The Guild", href: "/the-guild" },
+                { name: "Reviews", href: "/reviews" },
+                { name: "Area Guides", href: "/area-guides" },
+                { name: "Contact", href: "/contact" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="transition-colors hover:text-[#1DBFDD]">
+                    {item.name}
                   </Link>
                 </li>
               ))}
