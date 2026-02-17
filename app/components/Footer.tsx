@@ -5,7 +5,7 @@ import { Instagram, Linkedin, Facebook } from "lucide-react";
 export default function Footer() {
   return (
     <footer className="bg-[#2C2F33] text-white">
-      <div className="mx-auto w-full max-w-7xl px-6 pt-0 pb-16 lg:px-10">
+      <div className="mx-auto w-full max-w-7xl px-6 pt-16 pb-16 lg:px-10">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Image
@@ -32,17 +32,15 @@ export default function Footer() {
           </div>
 
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Quick Links</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">About Us</p>
             <ul className="mt-4 space-y-3 text-sm">
               {[
-                { name: "Sales", href: "/sales" },
-                { name: "Lettings", href: "/lettings" },
-                { name: "Premier Homes", href: "/premier-homes" },
-                { name: "Land & New Homes", href: "/land-new-homes" },
+                { name: "Why Us", href: "/why-us" },
+                { name: "Our Team", href: "/the-team" },
+                { name: "Track Record", href: "/track-record" },
                 { name: "The Guild", href: "/the-guild" },
                 { name: "Reviews", href: "/reviews" },
                 { name: "Area Guides", href: "/area-guides" },
-                { name: "Contact", href: "/contact" },
               ].map((item) => (
                 <li key={item.name}>
                   <Link href={item.href} className="transition-colors hover:text-[#1DBFDD]">
@@ -56,10 +54,16 @@ export default function Footer() {
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/70 font-heading">Services</p>
             <ul className="mt-4 space-y-3 text-sm">
-              {["Valuations", "Property Management", "Vendor Portal", "Market Intelligence"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="transition-colors hover:text-[#1DBFDD]">
-                    {item}
+              {[
+                { name: "Sales", href: "/sales" },
+                { name: "Lettings", href: "/lettings" },
+                { name: "Premier Homes", href: "/premier-homes" },
+                { name: "Land & New Homes", href: "/land-new-homes" },
+                { name: "Become a Partner", href: "/become-partner" },
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="transition-colors hover:text-[#1DBFDD]">
+                    {item.name}
                   </Link>
                 </li>
               ))}

@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { name: "Sales", href: "/sales" },
   { name: "Lettings", href: "/lettings" },
+  { name: "About", href: "/why-us" },
   { name: "Premier Homes", href: "/premier-homes" },
-  { name: "Land & New Homes", href: "/land-new-homes" },
   { name: "Reviews", href: "/reviews" },
   { name: "Contact", href: "/contact" },
 ];
@@ -50,6 +50,28 @@ const dropdowns = {
       title: "Landlords Guide",
       description: "Expert advice for landlords on letting your property.",
       href: "/lettings/landlords-guide",
+    },
+  ],
+  About: [
+    {
+      title: "Why Us",
+      description: "Discover what makes Banc Property Group different.",
+      href: "/why-us",
+    },
+    {
+      title: "Our Team",
+      description: "Meet the dedicated team behind our success.",
+      href: "/the-team",
+    },
+    {
+      title: "Track Record",
+      description: "See our impressive results and statistics.",
+      href: "/track-record",
+    },
+    {
+      title: "The Guild",
+      description: "Learn about our national network membership.",
+      href: "/the-guild",
     },
   ],
 } as const;
