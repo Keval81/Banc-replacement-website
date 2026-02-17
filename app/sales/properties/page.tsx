@@ -88,8 +88,17 @@ export default function SalesPropertiesPage() {
       <Header />
       
       {/* Hero */}
-      <section className="relative bg-[#2C2F33] py-16 lg:py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <section className="relative bg-[#2C2F33]">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/hertfordshire-home-1.png"
+            alt="Premium property for sale"
+            className="w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2C2F33] via-[#2C2F33]/80 to-transparent" />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-24">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD] mb-2">For Sale</p>

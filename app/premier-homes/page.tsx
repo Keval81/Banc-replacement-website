@@ -15,8 +15,17 @@ export default function PremierHomesPage() {
       <Header />
       
       {/* Hero */}
-      <section className="relative bg-[#2C2F33] py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <section className="relative bg-[#2C2F33] py-24 lg:py-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="/hertfordshire-home-4.png"
+            alt="Luxury Premier Home"
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2C2F33] via-[#2C2F33]/60 to-[#2C2F33]/30" />
+        </div>
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#1DBFDD]/20 px-4 py-2 text-[#1DBFDD] mb-6">
               <Crown className="h-5 w-5" />
