@@ -20,7 +20,7 @@ export default function TrustSection() {
     <section className="bg-white">
       <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-10">
         {/* Partner Portals */}
-        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
           {partnerLogos.map((logo) => (
             <div
               key={logo.name}
@@ -39,12 +39,12 @@ export default function TrustSection() {
           ))}
         </div>
 
-        {/* Professional Bodies - clustered closer */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 md:gap-6">
+        {/* Professional Bodies - clustered tighter */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2 md:gap-3">
           {professionalLogos.map((logo) => (
             <div
               key={logo.name}
-              className="relative flex items-center justify-center transition-opacity duration-300 hover:opacity-70"
+              className="relative flex items-center justify-center px-2 transition-opacity duration-300 hover:opacity-70"
               style={{ height: `${logo.size}px` }}
             >
               <Image
