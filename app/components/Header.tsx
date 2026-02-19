@@ -50,12 +50,14 @@ export default function Header() {
 
   // Close mobile menu on route change
   React.useEffect(() => {
-    const handleRouteChange = () => {
-      setMobileOpen(false);
-      setMobileExpanded(null);
-    };
+    setMobileOpen(false);
+    setMobileExpanded(null);
+  }, []);
+
+  // Close on escape key and lock body scroll
+  React.useEffect(() => {
+    if (typeof window === "undefined") return;
     
-    // Close on escape key
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMobileOpen(false);
@@ -63,35 +65,23 @@ export default function Header() {
       }
     };
     
-    if (typeof window !== "undefined") {
-      window.addEventListener("keydown", handleEscape);
-      return () => window.removeEventListener("keydown", handleEscape);
-    }
-  }, []);
-
-  // Lock body scroll when menu is open
-  React.useEffect(() => {
-    if (typeof document === "undefined") return;
-    
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
+    
+    window.addEventListener("keydown", handleEscape);
+    
     return () => {
-      if (typeof document !== "undefined") {
-        document.body.style.overflow = "";
-      }
+      window.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
     };
   }, [mobileOpen]);
 
   return (
     <>
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#2C2F33]/95 backdrop-blur-xl"
-      >
+      <header className="fixed top-0 left-0 right-0 z-[100] border-b border-white/10 bg-[#2C2F33]/95 backdrop-blur-xl">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-10">
           {/* Logo - Smaller on mobile */}
           <Link href="/" aria-label="Banc Property Group" className="flex items-center">
@@ -136,16 +126,16 @@ export default function Header() {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 8 }}
                           transition={{ duration: 0.2 }}
-                          className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#2C2F33] p-4 shadow-xl"
+                          className="absolute left-0 top-full mt-2 w-64 rounded-xl border border-white/10 bg-[#2C2F33] p-3 shadow-2xl"
                         >
-                          <div className="grid gap-2">
+                          <div className="grid gap-1">
                             {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
                               <Link
                                 key={link.title}
                                 href={link.href}
-                                className="rounded-lg p-3 transition-colors hover:bg-white/10"
+                                className="rounded-lg px-3 py-2.5 text-sm text-white/90 transition-colors hover:bg-white/10 hover:text-white"
                               >
-                                <p className="text-sm font-semibold text-white">{link.title}</p>
+                                {link.title}
                               </Link>
                             ))}
                           </div>
@@ -163,14 +153,16 @@ export default function Header() {
             <Link href="tel:01707877781" className="text-sm text-white/80 hover:text-[#1DBFDD]">
               01707 877781
             </Link>
-            <Button className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
-              Request Valuation
-            </Button>
+            <Link href="/contact">
+              <Button className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
+                Request Valuation
+              </Button>
+            </Link>
           </div>
 
-          {/* Mobile Menu Button - Larger touch target */}
+          {/* Mobile Menu Button */}
           <button
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white active:bg-white/10 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white active:bg-white/10 lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -178,25 +170,33 @@ export default function Header() {
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
+      </header>
 
-        {/* Mobile Menu - Full Screen Overlay */}
-        <AnimatePresence>
-          {mobileOpen && (
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
             <motion.div
-              initial={{ opacity: 0, x: "100%" }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-0 top-[57px] z-40 bg-[#2C2F33] lg:hidden"
-              style={{ 
-                height: "calc(100vh - 57px)",
-                paddingBottom: "calc(80px + env(safe-area-inset-bottom))"
-              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[90] bg-black/50 lg:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+            
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed right-0 top-0 bottom-0 z-[95] w-[85%] max-w-[320px] bg-[#2C2F33] shadow-2xl lg:hidden"
+              style={{ paddingTop: "73px" }}
             >
-              <div className="h-full overflow-y-auto px-4 pb-32 pt-4">
+              <div className="h-full overflow-y-auto px-5 pb-32">
                 {/* Mobile Navigation Links */}
-                <nav className="flex flex-col gap-1">
-                  {/* Main Items with Expandable Submenus */}
+                <nav className="flex flex-col">
                   {navItems.map((item) => {
                     const hasDropdown = item.name in dropdowns;
                     const isExpanded = mobileExpanded === item.name;
@@ -206,7 +206,7 @@ export default function Header() {
                         <div className="flex items-center justify-between">
                           <Link
                             href={item.href}
-                            className="flex-1 py-4 text-lg font-medium text-white active:text-[#1DBFDD]"
+                            className="flex-1 py-4 text-base font-medium text-white"
                             onClick={() => !hasDropdown && setMobileOpen(false)}
                           >
                             {item.name}
@@ -214,13 +214,11 @@ export default function Header() {
                           {hasDropdown && (
                             <button
                               onClick={() => setMobileExpanded(isExpanded ? null : item.name)}
-                              className="flex h-11 w-11 items-center justify-center rounded-full text-white active:bg-white/10"
-                              aria-label={isExpanded ? "Collapse menu" : "Expand menu"}
-                              aria-expanded={isExpanded}
+                              className="flex h-10 w-10 items-center justify-center text-white"
                             >
                               <ChevronDown 
                                 className={cn(
-                                  "h-5 w-5 transition-transform duration-200",
+                                  "h-5 w-5 transition-transform",
                                   isExpanded && "rotate-180"
                                 )} 
                               />
@@ -229,31 +227,21 @@ export default function Header() {
                         </div>
                         
                         {/* Expanded Submenu */}
-                        <AnimatePresence>
-                          {hasDropdown && isExpanded && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="space-y-1 pb-4 pl-4">
-                                {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
-                                  <Link
-                                    key={link.title}
-                                    href={link.href}
-                                    className="flex items-center gap-2 py-3 text-base text-white/70 active:text-[#1DBFDD]"
-                                    onClick={() => setMobileOpen(false)}
-                                  >
-                                    <ChevronRight className="h-4 w-4 text-[#1DBFDD]" />
-                                    {link.title}
-                                  </Link>
-                                ))}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                        {hasDropdown && isExpanded && (
+                          <div className="overflow-hidden pb-3 pl-4">
+                            {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
+                              <Link
+                                key={link.title}
+                                href={link.href}
+                                className="flex items-center gap-2 py-2.5 text-sm text-white/70"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                <ChevronRight className="h-4 w-4 text-[#1DBFDD]" />
+                                {link.title}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -263,7 +251,7 @@ export default function Header() {
                     <Link
                       key={link.title}
                       href={link.href}
-                      className="border-b border-white/10 py-4 text-lg font-medium text-white active:text-[#1DBFDD]"
+                      className="border-b border-white/10 py-4 text-base font-medium text-white"
                       onClick={() => setMobileOpen(false)}
                     >
                       {link.title}
@@ -275,51 +263,44 @@ export default function Header() {
                 <div className="mt-8 space-y-3">
                   <a
                     href="tel:01707877781"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 py-4 text-lg font-medium text-white active:bg-white/10"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 py-4 text-base font-medium text-white"
                   >
                     <Phone className="h-5 w-5" />
-                    Call 01707 877781
+                    01707 877781
                   </a>
-                  <Link href="/contact">
-                    <Button 
-                      className="w-full bg-[#1DBFDD] py-6 text-lg font-medium text-white hover:bg-[#0E8CAB]"
-                    >
+                  <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                    <Button className="w-full bg-[#1DBFDD] py-5 text-base font-medium text-white hover:bg-[#0E8CAB]">
                       Request Valuation
                     </Button>
                   </Link>
                 </div>
 
                 {/* Contact Info */}
-                <div className="mt-8 border-t border-white/10 pt-6 text-center text-sm text-white/60">
-                  <p>1 Station Road, Cuffley EN6 4HU</p>
-                  <p className="mt-1">info@bancproperty.com</p>
+                <div className="mt-8 border-t border-white/10 pt-6 text-center text-sm text-white/50">
+                  <p>1 Station Road</p>
+                  <p>Cuffley, EN6 4HU</p>
                 </div>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Header Spacer */}
       <div className="h-[57px] lg:h-[94px]" />
 
-      {/* Sticky Mobile CTA Bar - With safe area */}
-      <div 
-        className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-[#2C2F33] px-4 py-3 lg:hidden"
-        style={{ paddingBottom: "calc(12px + env(safe-area-inset-bottom))" }}
-      >
+      {/* Sticky Mobile CTA Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-[80] border-t border-white/10 bg-[#2C2F33] px-4 py-3 lg:hidden">
         <div className="mx-auto flex max-w-md gap-3">
           <a
             href="tel:01707877781"
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/10 py-3.5 text-sm font-medium text-white active:bg-white/20"
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/10 py-3.5 text-sm font-medium text-white"
           >
             <Phone className="h-4 w-4" />
             Call Now
           </a>
           <Link href="/contact" className="flex-1">
-            <Button 
-              className="w-full bg-[#1DBFDD] py-3.5 text-sm font-medium text-white hover:bg-[#0E8CAB]"
-            >
+            <Button className="w-full bg-[#1DBFDD] py-3.5 text-sm font-medium text-white hover:bg-[#0E8CAB]">
               Valuation
             </Button>
           </Link>
@@ -327,7 +308,7 @@ export default function Header() {
       </div>
 
       {/* Spacer for sticky bottom bar */}
-      <div className="h-16 lg:hidden" style={{ height: "calc(64px + env(safe-area-inset-bottom))" }} />
+      <div className="h-16 lg:hidden" />
     </>
   );
 }
