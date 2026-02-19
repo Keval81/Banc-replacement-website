@@ -63,19 +63,25 @@ export default function Header() {
       }
     };
     
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", handleEscape);
+      return () => window.removeEventListener("keydown", handleEscape);
+    }
   }, []);
 
   // Lock body scroll when menu is open
   React.useEffect(() => {
+    if (typeof document === "undefined") return;
+    
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = "";
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+      }
     };
   }, [mobileOpen]);
 
