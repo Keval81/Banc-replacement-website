@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 // Videos in reverse order: 3, 2, 1
 const videos = [
@@ -12,25 +13,37 @@ const videos = [
   "/videos/hero1.m4v",
 ];
 
-// Multiple reviews for the hero tile carousel
-const heroReviews = [
+interface Review {
+  authorName: string;
+  profilePhotoUrl?: string;
+  rating: number;
+  text: string;
+  relativeTime: string;
+  time: number;
+}
+
+// Fallback reviews if API fails
+const fallbackReviews: Review[] = [
   {
     authorName: "Dawn P.",
-    text: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew.",
     rating: 5,
-    totalReviews: 51,
+    text: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew.",
+    relativeTime: "2 months ago",
+    time: Date.now() - 5184000000,
   },
   {
     authorName: "Iwona K.",
-    text: "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process.",
     rating: 5,
-    totalReviews: 51,
+    text: "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process.",
+    relativeTime: "3 months ago",
+    time: Date.now() - 7776000000,
   },
   {
     authorName: "James M.",
-    text: "The entire team were extremely helpful finding a rental property. The process was made extremely smooth and I would definitely recommend them.",
     rating: 5,
-    totalReviews: 51,
+    text: "The entire team were extremely helpful finding a rental property. The process was made extremely smooth and I would definitely recommend them.",
+    relativeTime: "1 month ago",
+    time: Date.now() - 2592000000,
   },
 ];
 
@@ -38,8 +51,27 @@ export default function Hero() {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canAutoplay, setCanAutoplay] = useState(true);
+  const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
   const [currentReview, setCurrentReview] = useState(0);
+  const [totalReviews, setTotalReviews] = useState(51);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Fetch real reviews from API
+  useEffect(() => {
+    fetch("/api/google-reviews")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.reviews && data.reviews.length > 0) {
+          setReviews(data.reviews);
+        }
+        if (data.place?.totalRatings) {
+          setTotalReviews(data.place.totalRatings);
+        }
+      })
+      .catch(() => {
+        // Keep fallback reviews on error
+      });
+  }, []);
 
   // Start video playback
   const startPlayback = useCallback(async () => {
@@ -86,12 +118,14 @@ export default function Hero() {
 
   // Auto-rotate reviews
   useEffect(() => {
+    if (reviews.length <= 1) return;
+    
     const interval = setInterval(() => {
-      setCurrentReview((prev) => (prev + 1) % heroReviews.length);
+      setCurrentReview((prev) => (prev + 1) % reviews.length);
     }, 6000); // Change review every 6 seconds
     
     return () => clearInterval(interval);
-  }, []);
+  }, [reviews.length]);
 
   const handleDotClick = (index: number) => {
     if (index !== currentVideo) {
@@ -106,7 +140,7 @@ export default function Hero() {
     }
   };
 
-  const activeReview = heroReviews[currentReview];
+  const activeReview = reviews[currentReview];
 
   return (
     <section 
@@ -217,7 +251,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Google Reviews Carousel Tile */}
+        {/* Google Reviews Carousel Tile - Using REAL reviews from API */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -234,14 +268,24 @@ export default function Hero() {
             >
               {/* Reviewer info */}
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
-                  <span className="text-sm font-semibold text-white">
-                    {activeReview.authorName[0]}
-                  </span>
-                </div>
+                {activeReview.profilePhotoUrl ? (
+                  <Image
+                    src={activeReview.profilePhotoUrl}
+                    alt={activeReview.authorName}
+                    width={40}
+                    height={40}
+                    className="h-10 w-10 flex-shrink-0 rounded-full object-cover lg:h-11 lg:w-11"
+                  />
+                ) : (
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
+                    <span className="text-sm font-semibold text-white">
+                      {activeReview.authorName?.[0] || "B"}
+                    </span>
+                  </div>
+                )}
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-semibold text-white">{activeReview.authorName}</p>
-                  <p className="text-xs text-white/70">Google Review</p>
+                  <p className="text-xs text-white/70">{activeReview.relativeTime}</p>
                 </div>
                 {/* Stars */}
                 <div className="flex items-center gap-0.5">
@@ -274,7 +318,7 @@ export default function Hero() {
             
             {/* Review dots */}
             <div className="flex items-center gap-1.5">
-              {heroReviews.map((_, index) => (
+              {reviews.slice(0, 5).map((_, index) => (
                 <div
                   key={index}
                   className={`h-1.5 w-1.5 rounded-full transition-all ${
@@ -285,7 +329,7 @@ export default function Hero() {
             </div>
             
             <p className="text-xs text-white/80">
-              5.0 ★ ({activeReview.totalReviews})
+              5.0 ★ ({totalReviews})
             </p>
           </div>
         </motion.div>
