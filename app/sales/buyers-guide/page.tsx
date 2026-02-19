@@ -2,44 +2,51 @@ import type { Metadata } from "next";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search, Home, FileText, Key, CheckCircle } from "lucide-react";
+import { ArrowRight, Monitor, MessageCircle, Calendar, FileText, CheckCircle, Key, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Buyers Guide | Banc Property Services",
-  description: "Everything you need to know about buying a property. Expert advice from Banc Property Group to help you navigate the buying process.",
+  title: "Buyers Guide | Banc Property Group",
+  description: "We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. Our local knowledge will help you source the right home for your needs.",
 };
 
-const steps = [
+const guideSteps = [
   {
-    icon: Search,
-    title: "Register Your Interest",
-    description: "The first step is to register your details with us. This ensures you receive notifications about new properties that match your criteria before they appear on the open market."
+    icon: Monitor,
+    title: "Our Website",
+    description: "The first port of call is the Banc website, where every property is detailed with exceptional photos and floor plans, location and amenity maps. We make it our business and our pleasure to know the areas and properties intimately so we can extend our knowledge to you.",
+    tip: "Speak with your financial adviser to determine an appropriate budget before starting your search. Having a mortgage 'agreement in principle' at this point is advantageous when you do actually make an offer. Speak with us and we can point you in the right direction."
   },
   {
-    icon: Home,
-    title: "View Properties",
-    description: "Arrange viewings at times that suit you. Our team will accompany you and provide detailed information about each property, the local area, and answer any questions you may have."
+    icon: MessageCircle,
+    title: "Let's Talk",
+    description: "Give us a call or pop into our prominently positioned office on the high street for a coffee and a chat. We will be able to answer all of your questions about property types and styles in the area, buying costs and we can recommend local financial and conveyancing services, and more importantly arrange viewings for you. We can also discuss our 'discrete marketed' properties which are not available online, but exclusively to our registered clients.",
+    tip: "Make sure you are aware of all relevant costs such as mortgage fees, survey fees, conveyancing, stamp duty charges and removals. Let us know if you need a refresher on any of them."
+  },
+  {
+    icon: Calendar,
+    title: "Arranging Views",
+    description: "Once you have identified some potential properties, we will take you to view them. We do offer a pickup service from the station if you are popping out to view after work. Let us guide you round the beautiful houses and local area.",
+    tip: "It's easy to let your heart rule your head so be prepared with a checklist and questions before you visit the properties."
   },
   {
     icon: FileText,
-    title: "Make an Offer",
-    description: "Once you find your perfect property, we'll guide you through making an offer. We'll negotiate on your behalf and keep you informed throughout the process."
+    title: "Make An Offer",
+    description: "Seen a property you like? Make an offer! All offers from qualified buyers will be presented to the seller without delay. We do our very best to get a price that satisfies both you and the vendor.",
+    tip: "It can be hard when deciding how much to offer, but always make sure the offer you are making is viable, and that you are able to support it."
+  },
+  {
+    icon: CheckCircle,
+    title: "Offer Agreed",
+    description: "Congratulations! It's almost time to bring out the champagne, but not quite yet. Communication is the key to a successful purchase. We stay in touch with you, the sellers, solicitors, surveyors and mortgage advisers to ensure your purchase proceeds as quickly as possible. Don't worry – we are there the whole way through to guide you and assist in all aspects of the process.",
+    tip: "When an offer is agreed you will need to instruct your solicitor and mortgage lender in order to progress your case."
   },
   {
     icon: Key,
-    title: "Complete the Purchase",
-    description: "We'll liaise with all parties to ensure a smooth transaction. From solicitors to surveyors, we coordinate everything to get you the keys to your new home."
+    title: "Exchange",
+    description: "This is when signed contracts are exchanged between your solicitor and the seller's solicitor. This is also the point when your deposit, normally 10%, is transferred to the seller's solicitor and a moving day is set. At this point, the transaction becomes legally binding.",
+    tip: "Make sure you take this time to confirm removals, redirect post, call the cable man and organise utilities."
   }
-];
-
-const tips = [
-  "Get a mortgage agreement in principle before you start viewing",
-  "Consider the total cost including stamp duty, legal fees, and moving costs",
-  "Research the local area including schools, transport links, and amenities",
-  "Don't skip the survey – it could save you thousands in the long run",
-  "Be prepared to act quickly in a competitive market",
-  "Keep your paperwork organised and respond promptly to requests"
 ];
 
 export default function BuyersGuidePage() {
@@ -49,71 +56,108 @@ export default function BuyersGuidePage() {
       
       {/* Hero */}
       <section className="relative bg-[#2C2F33] py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#2C2F33] via-[#2C2F33]/95 to-transparent z-10" />
+          <img 
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80" 
+            alt="Luxury home interior"
+            className="w-full h-full object-cover opacity-40"
+          />
+        </div>
+        <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
             <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD] mb-4">Guide</p>
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
               Buyers Guide
             </h1>
-            <p className="mt-6 text-lg text-white/70">
-              Everything you need to know about buying a property. 
-              Our expert team is here to guide you through every step of the process.
+            <p className="mt-6 text-lg text-white/80 leading-relaxed">
+              We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. 
+              We listen to your requirements, to your budget and to your personal story to help identify properties that meet your needs.
+            </p>
+            <p className="mt-4 text-lg text-white/70">
+              All our staff are local to the area so who better to lend a hand when looking for the best schools, 
+              transport links and the best amenities! Our local knowledge will help you source the right home for your needs.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Steps */}
+      {/* Introduction */}
+      <section className="py-16 bg-[#F9FAFB]">
+        <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
+          <p className="text-lg text-[#6B7280] leading-relaxed">
+            Below is a brief guide to the buying process. Whether you're a first-time buyer or seasoned property investor, 
+            we're here to make your journey as smooth as possible.
+          </p>
+        </div>
+      </section>
+
+      {/* Guide Steps */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center mb-12">
-            <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD]">The Process</p>
-            <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Buying in Four Steps</h2>
-          </div>
-          
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {steps.map((step, index) => (
-              <div key={step.title} className="text-center">
-                <div className="w-16 h-16 mx-auto rounded-full bg-[#1DBFDD]/10 flex items-center justify-center">
-                  <step.icon className="h-8 w-8 text-[#1DBFDD]" />
+          <div className="space-y-16">
+            {guideSteps.map((step, index) => (
+              <div key={step.title} className={`grid gap-8 lg:grid-cols-2 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
+                <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-[#1DBFDD] flex items-center justify-center">
+                      <step.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <span className="text-sm font-semibold text-[#1DBFDD] uppercase tracking-wider">Step {index + 1}</span>
+                  </div>
+                  <h2 className="text-2xl font-semibold text-[#111827] mb-4">{step.title}</h2>
+                  <p className="text-[#6B7280] leading-relaxed mb-6">{step.description}</p>
+                  
+                  {/* Top Tip Box */}
+                  <div className="bg-[#1DBFDD]/5 border-l-4 border-[#1DBFDD] p-4 rounded-r-lg">
+                    <div className="flex items-start gap-3">
+                      <Sparkles className="h-5 w-5 text-[#1DBFDD] flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-[#1DBFDD] text-sm uppercase tracking-wider mb-1">Top Tip</p>
+                        <p className="text-sm text-[#6B7280]">{step.tip}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-4 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1DBFDD] text-white font-semibold text-sm">
-                  {index + 1}
+                
+                <div className={`relative h-80 rounded-2xl overflow-hidden ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
+                  <img 
+                    src={[
+                      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+                      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+                      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+                      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80",
+                      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+                      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=800&q=80"
+                    ][index]} 
+                    alt={step.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">{step.title}</h3>
-                <p className="mt-2 text-sm text-[#6B7280]">{step.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Tips */}
-      <section className="bg-[#F9FAFB] py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD]">Expert Advice</p>
-              <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Top Tips for Buyers</h2>
-              <p className="mt-4 text-[#6B7280]">
-                Our experienced team has helped hundreds of buyers find their perfect property. 
-                Here are our top tips to make your buying journey smoother.
-              </p>
-              <ul className="mt-6 space-y-4">
-                {tips.map((tip) => (
-                  <li key={tip} className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-[#6B7280]">{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="relative h-96 rounded-2xl overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80" 
-                alt="Happy homeowners"
-                className="w-full h-full object-cover"
-              />
+      {/* Completion Section */}
+      <section className="py-20 bg-[#F9FAFB]">
+        <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
+          <div className="w-16 h-16 mx-auto rounded-full bg-[#1DBFDD] flex items-center justify-center mb-6">
+            <Sparkles className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="text-3xl font-semibold text-[#111827] mb-4">Completion</h2>
+          <p className="text-lg text-[#6B7280] leading-relaxed mb-6">
+            Now the bubbly can be taken off ice and enjoyed on moving day in your new home. 
+            To make it easier for you, we aim to be there at your new home with the keys instead of you having to detour to our office to collect them.
+          </p>
+          <div className="bg-[#1DBFDD]/5 border-l-4 border-[#1DBFDD] p-4 rounded-r-lg inline-block text-left max-w-xl">
+            <div className="flex items-start gap-3">
+              <Sparkles className="h-5 w-5 text-[#1DBFDD] flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold text-[#1DBFDD] text-sm uppercase tracking-wider mb-1">Top Tip</p>
+                <p className="text-sm text-[#6B7280]">Look out for our moving in surprise soon after completion.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -127,28 +171,28 @@ export default function BuyersGuidePage() {
               <div>
                 <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD]">Finance</p>
                 <h2 className="mt-4 text-3xl font-semibold text-white">Mortgage Advice</h2>
-                <p className="mt-4 text-white/70">
+                <p className="mt-4 text-white/70 leading-relaxed">
                   We work with independent mortgage advisers who can help you find the best deal 
                   for your circumstances. Getting your finances in place early puts you in a 
                   stronger position when making an offer.
                 </p>
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3" />
+                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3 flex-shrink-0" />
                     <span>Independent whole-of-market advice</span>
                   </div>
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3" />
+                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3 flex-shrink-0" />
                     <span>Agreement in principle within 24 hours</span>
                   </div>
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3" />
+                    <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3 flex-shrink-0" />
                     <span>Access to exclusive rates</span>
                   </div>
                 </div>
               </div>
               <div className="text-center lg:text-right">
-                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white px-8 py-6">
+                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white px-8 py-6 text-base">
                   Speak to a Mortgage Adviser
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -169,12 +213,12 @@ export default function BuyersGuidePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/sales/properties">
-              <Button className="bg-white text-[#1DBFDD] hover:bg-white/90 px-8 py-6 text-base">
+              <Button className="bg-white text-[#1DBFDD] hover:bg-white/90 px-8 py-6 text-base font-semibold">
                 View Properties
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 text-base">
+            <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
               Register with Us
             </Button>
           </div>
