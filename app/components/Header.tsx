@@ -66,16 +66,28 @@ export default function Header() {
     };
     
     if (mobileOpen) {
-      document.body.style.overflow = "hidden";
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.dataset.scrollY = String(scrollY);
     } else {
-      document.body.style.overflow = "";
+      const scrollY = document.body.dataset.scrollY || '0';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0'));
     }
     
     window.addEventListener("keydown", handleEscape);
     
     return () => {
       window.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      const scrollY = document.body.dataset.scrollY || '0';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0'));
     };
   }, [mobileOpen]);
 
@@ -173,27 +185,22 @@ export default function Header() {
       </header>
 
       {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[90] bg-black/50 lg:hidden"
-              onClick={() => setMobileOpen(false)}
-            />
-            
-            {/* Menu Panel */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
-              className="fixed right-0 top-0 bottom-0 z-[95] w-[85%] max-w-[320px] bg-[#2C2F33] shadow-2xl lg:hidden"
-              style={{ paddingTop: "73px" }}
-            >
+      {mobileOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-[90] bg-black/50 transition-opacity duration-300 lg:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div
+            className="fixed right-0 top-0 bottom-0 z-[95] w-[85%] max-w-[320px] bg-[#2C2F33] shadow-2xl transition-transform duration-300 ease-out lg:hidden"
+            style={{ 
+              paddingTop: "73px",
+              transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)'
+            }}
+          >
               <div className="h-full overflow-y-auto px-5 pb-32">
                 {/* Mobile Navigation Links */}
                 <nav className="flex flex-col">
@@ -281,10 +288,9 @@ export default function Header() {
                   <p>Cuffley, EN6 4HU</p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </>
         )}
-      </AnimatePresence>
 
       {/* Header Spacer */}
       <div className="h-[57px] lg:h-[94px]" />

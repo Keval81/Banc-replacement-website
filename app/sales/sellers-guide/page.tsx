@@ -555,10 +555,12 @@ export default function SellersGuidePage() {
                       ))}
                     </ul>
 
-                    {/* Top Tips */}
-                    {step.topTips?.map((tip, i) => (
-                      <TopTip key={i}>{tip}</TopTip>
-                    ))}
+                    {/* Top Tips - Always render container for consistent spacing */}
+                    <div className="mt-8 min-h-[100px]">
+                      {step.topTips?.map((tip, i) => (
+                        <TopTip key={i}>{tip}</TopTip>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

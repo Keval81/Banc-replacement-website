@@ -148,7 +148,7 @@ export default function Hero() {
       onClick={handleInteraction}
     >
       {/* Video Background */}
-      <div className="absolute inset-0 h-full w-full">
+      <div className="absolute inset-0 h-full w-full overflow-hidden">
         <motion.div
           key={currentVideo}
           initial={{ opacity: 0 }}

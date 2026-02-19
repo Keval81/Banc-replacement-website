@@ -95,47 +95,57 @@ export default function BuyersGuidePage() {
       {/* Guide Steps */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="space-y-16">
-            {guideSteps.map((step, index) => (
-              <div key={step.title} className={`grid gap-8 lg:grid-cols-2 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-                <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-[#1DBFDD] flex items-center justify-center">
-                      <step.icon className="h-6 w-6 text-white" />
+          <div className="space-y-20">
+            {guideSteps.map((step, index) => {
+              const isReversed = index % 2 === 1;
+              return (
+                <div key={step.title} className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center">
+                  {/* Content Column */}
+                  <div className={isReversed ? 'lg:order-2' : ''}>
+                    {/* Step Badge */}
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-4">
+                      <span className="text-xs font-semibold text-[#1DBFDD] uppercase tracking-wider">Step {index + 1} of 6</span>
                     </div>
-                    <span className="text-sm font-semibold text-[#1DBFDD] uppercase tracking-wider">Step {index + 1}</span>
-                  </div>
-                  <h2 className="text-2xl font-semibold text-[#111827] mb-4">{step.title}</h2>
-                  <p className="text-[#6B7280] leading-relaxed mb-6">{step.description}</p>
-                  
-                  {/* Top Tip Box */}
-                  <div className="bg-[#1DBFDD]/5 border-l-4 border-[#1DBFDD] p-4 rounded-r-lg">
-                    <div className="flex items-start gap-3">
-                      <Sparkles className="h-5 w-5 text-[#1DBFDD] flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-semibold text-[#1DBFDD] text-sm uppercase tracking-wider mb-1">Top Tip</p>
-                        <p className="text-sm text-[#6B7280]">{step.tip}</p>
+                    
+                    <h2 className="text-2xl lg:text-3xl font-semibold text-[#111827] mb-4">{step.title}</h2>
+                    <p className="text-[#6B7280] leading-relaxed mb-6">{step.description}</p>
+                    
+                    {/* Top Tip Box - Consistent styling with Sellers Guide */}
+                    <div className="bg-[#1DBFDD]/5 border-l-4 border-[#1DBFDD] p-5 rounded-r-xl">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#1DBFDD] flex items-center justify-center">
+                          <Sparkles className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-[#1DBFDD] text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
+                          <p className="text-[#374151] leading-relaxed">{step.tip}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Image Column */}
+                  <div className={`relative ${isReversed ? 'lg:order-1' : ''}`}>
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-[#2C2F33]/10">
+                      <img 
+                        src={[
+                          "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+                          "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
+                          "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
+                          "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80",
+                          "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
+                          "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=800&q=80"
+                        ][index]} 
+                        alt={step.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Decorative Frame */}
+                    <div className={`absolute -bottom-3 -right-3 w-full h-full border-2 border-[#1DBFDD]/20 rounded-2xl -z-10 ${isReversed ? 'lg:-left-3 lg:right-auto' : ''}`} />
+                  </div>
                 </div>
-                
-                <div className={`relative h-80 rounded-2xl overflow-hidden ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                  <img 
-                    src={[
-                      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
-                      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
-                      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80",
-                      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80",
-                      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80",
-                      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=800&q=80"
-                    ][index]} 
-                    alt={step.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

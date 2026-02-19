@@ -70,9 +70,17 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling - disable on mobile to prevent bounce */
 html {
   scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: none;
+  min-height: 100vh;
 }
 
 /* Selection color */
