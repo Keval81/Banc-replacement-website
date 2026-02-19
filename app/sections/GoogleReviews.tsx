@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
@@ -20,7 +20,6 @@ interface PlaceData {
   totalRatings?: number;
 }
 
-// Static fallback reviews for immediate display
 const fallbackReviews: Review[] = [
   {
     authorName: "Dawn P.",
@@ -67,8 +66,8 @@ export default function GoogleReviews() {
     totalRatings: 51 
   });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch reviews from API
   useEffect(() => {
@@ -79,31 +78,55 @@ export default function GoogleReviews() {
           setReviews(data.reviews);
           setPlace(data.place || {});
         }
-        setIsLoading(false);
       })
       .catch(() => {
-        setIsLoading(false);
+        // Keep fallback reviews on error
       });
   }, []);
 
   // Auto-play carousel
-  useEffect(() => {
-    if (isPaused || reviews.length <= 1) return;
+  const startAutoPlay = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
     
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % reviews.length);
-    }, 5000); // Change every 5 seconds
+    }, 4000); // Change every 4 seconds
+  }, [reviews.length]);
+
+  const stopAutoPlay = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isPaused && reviews.length > 1) {
+      startAutoPlay();
+    } else {
+      stopAutoPlay();
+    }
     
-    return () => clearInterval(interval);
-  }, [isPaused, reviews.length]);
+    return () => stopAutoPlay();
+  }, [isPaused, reviews.length, startAutoPlay, stopAutoPlay]);
+
+  const goToReview = useCallback((index: number) => {
+    setActiveIndex(index);
+    // Reset timer when manually navigating
+    if (!isPaused) {
+      startAutoPlay();
+    }
+  }, [isPaused, startAutoPlay]);
 
   const nextReview = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % reviews.length);
-  }, [reviews.length]);
+    goToReview((activeIndex + 1) % reviews.length);
+  }, [activeIndex, reviews.length, goToReview]);
 
   const prevReview = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
-  }, [reviews.length]);
+    goToReview((activeIndex - 1 + reviews.length) % reviews.length);
+  }, [activeIndex, reviews.length, goToReview]);
 
   const activeReview = reviews[activeIndex];
 
@@ -149,10 +172,10 @@ export default function GoogleReviews() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, x: -30 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
               className="flex flex-col gap-3 lg:gap-4"
             >
               {/* Reviewer Info */}
@@ -205,15 +228,15 @@ export default function GoogleReviews() {
           {/* Navigation */}
           <div className="mt-5 flex items-center justify-between lg:mt-6">
             {/* Dots */}
-            <div className="flex items-center gap-1.5 lg:gap-2">
+            <div className="flex items-center gap-2">
               {reviews.slice(0, 5).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => setActiveIndex(index)}
-                  className={`h-2 rounded-full transition-all lg:h-2 ${
+                  onClick={() => goToReview(index)}
+                  className={`h-2.5 rounded-full transition-all ${
                     index === activeIndex
-                      ? "w-5 bg-[#1DBFDD] lg:w-6"
-                      : "w-2 bg-[#E5E7EB]"
+                      ? "w-6 bg-[#1DBFDD]"
+                      : "w-2.5 bg-[#E5E7EB] hover:bg-[#CBD5E1]"
                   }`}
                   aria-label={`Show review ${index + 1}`}
                 />
@@ -224,19 +247,30 @@ export default function GoogleReviews() {
             <div className="flex items-center gap-2">
               <button
                 onClick={prevReview}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827] lg:h-10 lg:w-10"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#6B7280] shadow-sm transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
                 aria-label="Previous review"
               >
-                <ChevronLeft className="h-4 w-4 lg:h-5 lg:w-5" />
+                <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={nextReview}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827] lg:h-10 lg:w-10"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#6B7280] shadow-sm transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
                 aria-label="Next review"
               >
-                <ChevronRight className="h-4 w-4 lg:h-5 lg:w-5" />
+                <ChevronRight className="h-5 w-5" />
               </button>
             </div>
+          </div>
+          
+          {/* Auto-play indicator */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-100 rounded-b-2xl overflow-hidden">
+            <motion.div
+              className="h-full bg-[#1DBFDD]"
+              initial={{ width: "0%" }}
+              animate={{ width: isPaused ? "0%" : "100%" }}
+              transition={{ duration: 4, ease: "linear", repeat: isPaused ? 0 : Infinity }}
+              key={activeIndex} // Reset animation when review changes
+            />
           </div>
         </div>
       </div>
