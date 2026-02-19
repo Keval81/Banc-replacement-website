@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -12,18 +12,33 @@ const videos = [
   "/videos/hero1.m4v",
 ];
 
-// Google Review data for hero tile
-const heroReview = {
-  authorName: "Dawn P.",
-  text: "We have just sold our house through Banc Property Group and it was such a positive experience...",
-  rating: 5,
-  totalReviews: 51,
-};
+// Multiple reviews for the hero tile carousel
+const heroReviews = [
+  {
+    authorName: "Dawn P.",
+    text: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew.",
+    rating: 5,
+    totalReviews: 51,
+  },
+  {
+    authorName: "Iwona K.",
+    text: "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process.",
+    rating: 5,
+    totalReviews: 51,
+  },
+  {
+    authorName: "James M.",
+    text: "The entire team were extremely helpful finding a rental property. The process was made extremely smooth and I would definitely recommend them.",
+    rating: 5,
+    totalReviews: 51,
+  },
+];
 
 export default function Hero() {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [canAutoplay, setCanAutoplay] = useState(true);
+  const [currentReview, setCurrentReview] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Start video playback
@@ -69,6 +84,15 @@ export default function Hero() {
     };
   }, [currentVideo, handleCanPlay, handleVideoEnd, startPlayback]);
 
+  // Auto-rotate reviews
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentReview((prev) => (prev + 1) % heroReviews.length);
+    }, 6000); // Change review every 6 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const handleDotClick = (index: number) => {
     if (index !== currentVideo) {
       setIsLoaded(false);
@@ -81,6 +105,8 @@ export default function Hero() {
       startPlayback();
     }
   };
+
+  const activeReview = heroReviews[currentReview];
 
   return (
     <section 
@@ -157,7 +183,7 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* Content - Vertically centered on mobile */}
+      {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-7xl flex-col justify-center px-4 py-16 lg:min-h-[85vh] lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
         <motion.div
@@ -191,40 +217,50 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Google Reviews Tile - Bottom area, responsive positioning */}
+        {/* Google Reviews Carousel Tile */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
         >
-          {/* Reviewer info */}
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
-              <span className="text-sm font-semibold text-white">
-                {heroReview.authorName[0]}
-              </span>
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold text-white">{heroReview.authorName}</p>
-              <p className="text-xs text-white/70">Google Review</p>
-            </div>
-            {/* Stars */}
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <svg key={i} className="h-3 w-3 fill-[#1DBFDD] lg:h-4 lg:w-4" viewBox="0 0 20 20">
-                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                </svg>
-              ))}
-            </div>
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentReview}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4 }}
+            >
+              {/* Reviewer info */}
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
+                  <span className="text-sm font-semibold text-white">
+                    {activeReview.authorName[0]}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-white">{activeReview.authorName}</p>
+                  <p className="text-xs text-white/70">Google Review</p>
+                </div>
+                {/* Stars */}
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="h-3 w-3 fill-[#1DBFDD] lg:h-4 lg:w-4" viewBox="0 0 20 20">
+                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                    </svg>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Review text */}
+              <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-white/90 lg:line-clamp-3">
+                &ldquo;{activeReview.text}&rdquo;
+              </p>
+            </motion.div>
+          </AnimatePresence>
           
-          {/* Review text */}
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-white/90 lg:line-clamp-3">
-            &ldquo;{heroReview.text}&rdquo;
-          </p>
-          
-          {/* Footer with Google logo + rating */}
+          {/* Footer with Google logo + rating + dots */}
           <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
             {/* Google Logo */}
             <svg className="h-4 w-auto lg:h-5" viewBox="0 0 272 92" fill="none">
@@ -235,8 +271,21 @@ export default function Hero() {
               <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
               <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
             </svg>
+            
+            {/* Review dots */}
+            <div className="flex items-center gap-1.5">
+              {heroReviews.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1.5 w-1.5 rounded-full transition-all ${
+                    index === currentReview ? "bg-[#1DBFDD]" : "bg-white/30"
+                  }`}
+                />
+              ))}
+            </div>
+            
             <p className="text-xs text-white/80">
-              5.0 ★ ({heroReview.totalReviews} reviews)
+              5.0 ★ ({activeReview.totalReviews})
             </p>
           </div>
         </motion.div>
