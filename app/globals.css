@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap');
+
 :root {
   /* BANC Brand Colours - Official from Brand Kit */
   --primary-cyan: #1DBFDD;
@@ -108,10 +111,18 @@ body {
   background: var(--primary-cyan);
 }
 
-/* Focus visible styles */
+/* Focus visible styles - Enhanced */
 *:focus-visible {
   outline: 2px solid var(--primary-cyan);
   outline-offset: 2px;
+}
+
+/* Button focus states */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary-cyan);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 /* Reduced motion */
@@ -123,5 +134,15 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  
+  /* Disable video autoplay */
+  video {
+    display: none;
+  }
+  
+  /* Show static fallback */
+  .video-fallback {
+    display: block !important;
   }
 }

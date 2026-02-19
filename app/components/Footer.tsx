@@ -22,7 +22,7 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2C2F33] text-white pb-24 lg:pb-0">
+    <footer className="bg-[#2C2F33] text-white pb-28 lg:pb-0">
       {/* Main Footer */}
       <div className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-10 lg:py-16">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
@@ -40,33 +40,33 @@ export default function Footer() {
             </p>
             
             {/* Social Links */}
-            <div className="mt-5 flex items-center gap-3 lg:mt-6 lg:gap-4">
+            <div className="mt-5 flex items-center gap-4 lg:mt-6">
               <a 
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="Instagram"
               >
-                <Instagram className="h-4 w-4 lg:h-5 lg:w-5" />
+                <Instagram className="h-5 w-5" />
               </a>
               <a 
                 href="https://linkedin.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="h-4 w-4 lg:h-5 lg:w-5" />
+                <Linkedin className="h-5 w-5" />
               </a>
               <a 
                 href="https://facebook.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="Facebook"
               >
-                <Facebook className="h-4 w-4 lg:h-5 lg:w-5" />
+                <Facebook className="h-5 w-5" />
               </a>
             </div>
           </div>
