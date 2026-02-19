@@ -486,13 +486,13 @@ export default function SellersGuidePage() {
             >
               <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <div
-                  className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${
+                  className={`grid lg:grid-cols-2 gap-12 lg:gap-20 ${
                     isReversed ? "" : ""
                   }`}
                 >
                   {/* Image Column */}
                   <div
-                    className={`relative ${isReversed ? "lg:order-2" : ""}`}
+                    className={`relative flex flex-col ${isReversed ? "lg:order-2" : ""}`}
                   >
                     {/* Step Number Overlay */}
                     <div className="absolute -top-4 -left-4 lg:-top-6 lg:-left-6 z-10">
@@ -500,7 +500,7 @@ export default function SellersGuidePage() {
                     </div>
 
                     {/* Image Container */}
-                    <div className="relative aspect-[4/3] lg:aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl shadow-[#2C2F33]/10 group">
+                    <div className="relative h-full rounded-2xl overflow-hidden shadow-2xl shadow-[#2C2F33]/10 group">
                       <img
                         src={step.imageUrl}
                         alt={step.imageAlt}
@@ -522,41 +522,43 @@ export default function SellersGuidePage() {
                   </div>
 
                   {/* Content Column */}
-                  <div className={isReversed ? "lg:order-1" : ""}>
-                    <StepBadge number={step.number} />
+                  <div className={`flex flex-col ${isReversed ? "lg:order-1" : ""}`}>
+                    <div className="flex-1">
+                      <StepBadge number={step.number} />
 
-                    <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33] tracking-tight leading-tight">
-                      {step.title}
-                    </h2>
+                      <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33] tracking-tight leading-tight">
+                        {step.title}
+                      </h2>
 
-                    {step.description && (
-                      <p className="mt-4 text-lg text-[#6B6E72] leading-relaxed">
-                        {step.description}
-                      </p>
-                    )}
-
-                    {step.quote && (
-                      <blockquote className="mt-6 pl-6 border-l-2 border-[#1DBFDD]">
-                        <p className="text-xl font-medium text-[#1DBFDD] italic">
-                          &ldquo;{step.quote}&rdquo;
+                      {step.description && (
+                        <p className="mt-4 text-lg text-[#6B6E72] leading-relaxed">
+                          {step.description}
                         </p>
-                      </blockquote>
-                    )}
+                      )}
 
-                    {/* Items List */}
-                    <ul className="mt-8 space-y-4">
-                      {step.items.map((item, i) => (
-                        <CheckItem
-                          key={i}
-                          icon={item.icon}
-                          text={item.text}
-                          highlight={item.highlight}
-                        />
-                      ))}
-                    </ul>
+                      {step.quote && (
+                        <blockquote className="mt-6 pl-6 border-l-2 border-[#1DBFDD]">
+                          <p className="text-xl font-medium text-[#1DBFDD] italic">
+                            &ldquo;{step.quote}&rdquo;
+                          </p>
+                        </blockquote>
+                      )}
 
-                    {/* Top Tips - Always render container for consistent spacing */}
-                    <div className="mt-8 min-h-[100px]">
+                      {/* Items List */}
+                      <ul className="mt-8 space-y-4">
+                        {step.items.map((item, i) => (
+                          <CheckItem
+                            key={i}
+                            icon={item.icon}
+                            text={item.text}
+                            highlight={item.highlight}
+                          />
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Top Tips - Pushed to bottom with flexbox */}
+                    <div className="mt-8">
                       {step.topTips?.map((tip, i) => (
                         <TopTip key={i}>{tip}</TopTip>
                       ))}
