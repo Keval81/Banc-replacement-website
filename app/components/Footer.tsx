@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Linkedin, Facebook, Phone, Mail, MapPin, ChevronDown } from "lucide-react";
+import { Instagram, Linkedin, Facebook, Phone, Mail, MapPin } from "lucide-react";
 
 const footerLinks = {
   about: [
@@ -22,66 +22,66 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2C2F33] text-white pb-20 lg:pb-0">
+    <footer className="bg-[#2C2F33] text-white pb-24 lg:pb-0">
       {/* Main Footer */}
-      <div className="mx-auto w-full max-w-7xl px-4 py-12 lg:px-10 lg:py-16">
-        <div className="grid gap-10 lg:grid-cols-4 lg:gap-10">
+      <div className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-10 lg:py-16">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           {/* Brand Column */}
-          <div className="lg:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <Image
               src="/banc-logo-blue.png"
               alt="Banc Property Group"
               width={210}
               height={60}
-              className="h-12 w-auto object-contain brightness-0 invert lg:h-[60px]"
+              className="h-10 w-auto object-contain brightness-0 invert lg:h-[60px]"
             />
-            <p className="mt-4 text-sm text-white/70">
+            <p className="mt-3 text-sm text-white/70 lg:mt-4">
               Exceptional properties and bespoke service across Cuffley, Mayfair, and beyond.
             </p>
             
             {/* Social Links */}
-            <div className="mt-6 flex items-center gap-4">
+            <div className="mt-5 flex items-center gap-3 lg:mt-6 lg:gap-4">
               <a 
                 href="https://instagram.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-[#1DBFDD] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5" />
+                <Instagram className="h-4 w-4 lg:h-5 lg:w-5" />
               </a>
               <a 
                 href="https://linkedin.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-[#1DBFDD] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="h-5 w-5" />
+                <Linkedin className="h-4 w-4 lg:h-5 lg:w-5" />
               </a>
               <a 
                 href="https://facebook.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-[#1DBFDD] hover:text-white"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors active:bg-[#1DBFDD] active:text-white lg:hover:bg-[#1DBFDD] lg:hover:text-white"
                 aria-label="Facebook"
               >
-                <Facebook className="h-5 w-5" />
+                <Facebook className="h-4 w-4 lg:h-5 lg:w-5" />
               </a>
             </div>
           </div>
 
-          {/* About Links - Mobile: show inline, Desktop: column */}
+          {/* About Links */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50 lg:text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/50 lg:text-sm lg:tracking-[0.2em]">
               About Us
             </p>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-3 space-y-2 lg:mt-4 lg:space-y-3">
               {footerLinks.about.map((item) => (
                 <li key={item.name}>
                   <Link 
                     href={item.href} 
-                    className="text-sm text-white/70 transition-colors hover:text-[#1DBFDD]"
+                    className="inline-block py-1 text-sm text-white/70 transition-colors active:text-[#1DBFDD] lg:hover:text-[#1DBFDD]"
                   >
                     {item.name}
                   </Link>
@@ -92,15 +92,15 @@ export default function Footer() {
 
           {/* Services Links */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50 lg:text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/50 lg:text-sm lg:tracking-[0.2em]">
               Services
             </p>
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-3 space-y-2 lg:mt-4 lg:space-y-3">
               {footerLinks.services.map((item) => (
                 <li key={item.name}>
                   <Link 
                     href={item.href} 
-                    className="text-sm text-white/70 transition-colors hover:text-[#1DBFDD]"
+                    className="inline-block py-1 text-sm text-white/70 transition-colors active:text-[#1DBFDD] lg:hover:text-[#1DBFDD]"
                   >
                     {item.name}
                   </Link>
@@ -111,14 +111,14 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50 lg:text-sm">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/50 lg:text-sm lg:tracking-[0.2em]">
               Contact
             </p>
-            <ul className="mt-4 space-y-4">
+            <ul className="mt-3 space-y-3 lg:mt-4">
               <li>
                 <a 
                   href="tel:01707877781" 
-                  className="flex items-center gap-3 text-sm text-white/70 transition-colors hover:text-[#1DBFDD]"
+                  className="flex items-center gap-2 py-1 text-sm text-white/70 transition-colors active:text-[#1DBFDD] lg:hover:text-[#1DBFDD]"
                 >
                   <Phone className="h-4 w-4 text-[#1DBFDD]" />
                   01707 877781
@@ -127,14 +127,14 @@ export default function Footer() {
               <li>
                 <a 
                   href="mailto:info@bancproperty.com" 
-                  className="flex items-center gap-3 text-sm text-white/70 transition-colors hover:text-[#1DBFDD]"
+                  className="flex items-center gap-2 py-1 text-sm text-white/70 transition-colors active:text-[#1DBFDD] lg:hover:text-[#1DBFDD]"
                 >
                   <Mail className="h-4 w-4 text-[#1DBFDD]" />
                   info@bancproperty.com
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-sm text-white/70">
-                <MapPin className="h-4 w-4 flex-shrink-0 text-[#1DBFDD]" />
+              <li className="flex items-start gap-2 py-1 text-sm text-white/70">
+                <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#1DBFDD]" />
                 <span>
                   1 Station Road<br />
                   Cuffley, EN6 4HU
@@ -145,15 +145,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-10 border-t border-white/10 pt-6 lg:mt-12">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-8 border-t border-white/10 pt-5 lg:mt-10 lg:pt-6">
+          <div className="flex flex-col gap-3 text-center lg:flex-row lg:items-center lg:justify-between lg:text-left">
             <p className="text-xs text-white/50">
               © 2026 Banc Property Group. All rights reserved.
             </p>
-            <div className="flex flex-wrap gap-4 text-xs text-white/50">
-              <Link href="/privacy" className="hover:text-white/70">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-white/70">Terms of Use</Link>
-              <Link href="/cookies" className="hover:text-white/70">Cookie Policy</Link>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-white/50 lg:justify-end">
+              <Link href="/privacy" className="py-1 transition-colors active:text-white/70 lg:hover:text-white/70">Privacy Policy</Link>
+              <Link href="/terms" className="py-1 transition-colors active:text-white/70 lg:hover:text-white/70">Terms of Use</Link>
+              <Link href="/cookies" className="py-1 transition-colors active:text-white/70 lg:hover:text-white/70">Cookie Policy</Link>
             </div>
           </div>
         </div>

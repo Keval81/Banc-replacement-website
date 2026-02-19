@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
 
 // Videos in reverse order: 3, 2, 1
 const videos = [
@@ -85,7 +84,7 @@ export default function Hero() {
 
   return (
     <section 
-      className="relative min-h-[85vh] lg:min-h-[90vh] w-full overflow-hidden bg-[#2C2F33] text-white"
+      className="relative min-h-[70vh] w-full overflow-hidden bg-[#2C2F33] text-white lg:min-h-[85vh]"
       onClick={handleInteraction}
     >
       {/* Video Background */}
@@ -132,7 +131,7 @@ export default function Hero() {
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-32 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-[#0A6B82] shadow-lg hover:bg-[#4DD4F0]"
+          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#0E8CAB] lg:hover:bg-[#0E8CAB]"
           onClick={startPlayback}
         >
           Click to play video
@@ -140,7 +139,7 @@ export default function Hero() {
       )}
 
       {/* Video indicator dots */}
-      <div className="absolute bottom-28 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:bottom-24">
+      <div className="absolute bottom-24 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:bottom-28">
         {videos.map((_, index) => (
           <button
             key={index}
@@ -148,9 +147,9 @@ export default function Hero() {
               e.stopPropagation();
               handleDotClick(index);
             }}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
+            className={`h-2.5 w-2.5 rounded-full transition-all duration-300 lg:h-2 lg:w-2 ${
               index === currentVideo
-                ? "w-8 bg-[#1DBFDD]"
+                ? "w-8 bg-[#1DBFDD] lg:w-8"
                 : "bg-white/50 hover:bg-white/80"
             }`}
             aria-label={`Play video ${index + 1}`}
@@ -158,9 +157,9 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[85vh] w-full max-w-7xl flex-col justify-between px-4 py-20 lg:min-h-[90vh] lg:px-10 lg:py-24">
-        {/* Top Content */}
+      {/* Content - Vertically centered on mobile */}
+      <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-7xl flex-col justify-center px-4 py-16 lg:min-h-[85vh] lg:justify-between lg:px-10 lg:py-20">
+        {/* Main Content */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -174,54 +173,54 @@ export default function Hero() {
           <p className="mt-4 text-base text-white/90 sm:text-lg lg:text-xl drop-shadow-md">
             Your local Cuffley &amp; Mayfair estate agent
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <Button 
-              size="lg"
-              className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB] text-base lg:text-lg px-6 lg:px-8"
-            >
-              Request a Valuation
-            </Button>
+          <div className="mt-6 flex flex-wrap items-center gap-3 lg:gap-4">
+            <Link href="/contact">
+              <Button 
+                size="lg"
+                className="bg-[#1DBFDD] px-5 py-5 text-sm text-white hover:bg-[#0E8CAB] active:bg-[#0E8CAB] lg:px-8 lg:text-base"
+              >
+                Request a Valuation
+              </Button>
+            </Link>
             <Link
               href="#featured"
-              className="text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-[#4DD4F0] font-heading drop-shadow-md"
+              className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-[#4DD4F0] active:text-[#4DD4F0]"
             >
               View Properties
             </Link>
           </div>
         </motion.div>
 
-        {/* Google Reviews Tile - Bottom Left */}
+        {/* Google Reviews Tile - Bottom area, responsive positioning */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-8 w-full max-w-sm self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:p-5"
+          className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
         >
           {/* Reviewer info */}
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
               <span className="text-sm font-semibold text-white">
                 {heroReview.authorName[0]}
               </span>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white truncate">{heroReview.authorName}</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-white">{heroReview.authorName}</p>
               <p className="text-xs text-white/70">Google Review</p>
             </div>
             {/* Stars */}
-            <div className="flex items-center gap-1">
-              <div className="flex text-[#1DBFDD]">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="h-3 w-3 fill-current lg:h-4 lg:w-4" viewBox="0 0 20 20">
-                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                  </svg>
-                ))}
-              </div>
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <svg key={i} className="h-3 w-3 fill-[#1DBFDD] lg:h-4 lg:w-4" viewBox="0 0 20 20">
+                  <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                </svg>
+              ))}
             </div>
           </div>
           
           {/* Review text */}
-          <p className="mt-3 text-sm text-white/90 line-clamp-2 leading-relaxed lg:line-clamp-3">
+          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-white/90 lg:line-clamp-3">
             &ldquo;{heroReview.text}&rdquo;
           </p>
           

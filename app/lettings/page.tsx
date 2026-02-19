@@ -84,16 +84,16 @@ export default function LettingsPage() {
       <Header />
       
       {/* Hero - Mobile Optimized */}
-      <section className="relative bg-[#2C2F33] py-16 lg:py-24 overflow-hidden">
+      <section className="relative bg-[#2C2F33] py-12 lg:py-24 overflow-hidden">
         {/* Background glow */}
         <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#1DBFDD]/10 blur-3xl" />
         <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#1DBFDD]/5 blur-3xl" />
         
         <div className="relative mx-auto max-w-7xl px-4 lg:px-10">
           {/* Badge */}
-          <div className="mb-4 inline-flex items-center gap-2 lg:mb-6">
-            <Sparkles className="h-4 w-4 text-[#1DBFDD]" />
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-[#1DBFDD] lg:text-sm">
+          <div className="mb-2 inline-flex items-center gap-2 lg:mb-4">
+            <Sparkles className="h-3.5 w-3.5 text-[#1DBFDD] lg:h-4 lg:w-4" />
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#1DBFDD] lg:text-sm">
               Property Lettings
             </span>
           </div>
@@ -102,53 +102,118 @@ export default function LettingsPage() {
             Lettings
           </h1>
           
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
+          <p className="mt-3 text-sm leading-relaxed text-white/70 lg:mt-4 lg:text-lg">
             Whether you are a landlord seeking quality tenants or a tenant 
             searching for your perfect home, we provide exceptional service 
             tailored to your needs.
           </p>
           
           {/* Quick stats */}
-          <div className="mt-6 flex flex-wrap gap-6 lg:mt-10 lg:gap-8">
+          <div className="mt-5 flex flex-wrap gap-5 lg:mt-8 lg:gap-8">
             <div className="flex flex-col">
-              <span className="text-2xl font-semibold text-[#1DBFDD] lg:text-3xl">500+</span>
+              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">500+</span>
               <span className="text-xs text-white/50 lg:text-sm">Properties Managed</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-semibold text-[#1DBFDD] lg:text-3xl">98%</span>
+              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">98%</span>
               <span className="text-xs text-white/50 lg:text-sm">Tenant Satisfaction</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-semibold text-[#1DBFDD] lg:text-3xl">15+</span>
+              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">15+</span>
               <span className="text-xs text-white/50 lg:text-sm">Years Experience</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Property Search Bar - NEW */}
-      <section className="bg-[#1DBFDD] py-6 lg:py-8">
+      {/* Property Search Bar - Mobile Optimized */}
+      <section className="bg-[#1DBFDD] py-4 lg:py-6">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
-          <div className="rounded-xl bg-white p-4 shadow-lg lg:p-6">
-            <div className="grid gap-4 lg:grid-cols-5 lg:gap-3">
+          <div className="rounded-xl bg-white p-3 shadow-lg lg:p-5">
+            {/* Mobile: Stacked layout */}
+            <div className="flex flex-col gap-3 lg:hidden">
               {/* Search Input */}
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+                <Input
+                  placeholder="Search by location..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-12 pl-10 text-sm"
+                />
+              </div>
+              
+              {/* Price Row */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative">
+                  <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+                  <select
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
+                  >
+                    <option value="">Min pcm</option>
+                    <option value="500">£500</option>
+                    <option value="1000">£1,000</option>
+                    <option value="1500">£1,500</option>
+                    <option value="2000">£2,000</option>
+                  </select>
+                </div>
+                <div className="relative">
+                  <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+                  <select
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
+                  >
+                    <option value="">Max pcm</option>
+                    <option value="1000">£1,000</option>
+                    <option value="1500">£1,500</option>
+                    <option value="2000">£2,000</option>
+                    <option value="3000">£3,000+</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Bedrooms & Search */}
+              <div className="grid grid-cols-4 gap-3">
+                <div className="relative col-span-3">
+                  <BedDouble className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
+                  <select
+                    value={bedrooms}
+                    onChange={(e) => setBedrooms(e.target.value)}
+                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
+                  >
+                    <option value="">Bedrooms</option>
+                    <option value="1">1+ beds</option>
+                    <option value="2">2+ beds</option>
+                    <option value="3">3+ beds</option>
+                    <option value="4">4+ beds</option>
+                  </select>
+                </div>
+                <Button className="col-span-1 h-12 bg-[#2C2F33] px-0 hover:bg-[#1DBFDD]">
+                  <Search className="mx-auto h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Desktop: Grid layout */}
+            <div className="hidden gap-3 lg:grid lg:grid-cols-5">
               <div className="relative lg:col-span-2">
                 <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                 <Input
                   placeholder="Search location..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12"
+                  className="h-12 pl-10"
                 />
               </div>
-              
-              {/* Min Price */}
               <div className="relative">
                 <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                 <select
                   value={minPrice}
                   onChange={(e) => setMinPrice(e.target.value)}
-                  className="w-full h-12 rounded-md border border-input bg-background px-10 text-sm"
+                  className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
                 >
                   <option value="">Min Price</option>
                   <option value="500">£500 pcm</option>
@@ -158,14 +223,12 @@ export default function LettingsPage() {
                   <option value="3000">£3,000 pcm</option>
                 </select>
               </div>
-              
-              {/* Max Price */}
               <div className="relative">
                 <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                 <select
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
-                  className="w-full h-12 rounded-md border border-input bg-background px-10 text-sm"
+                  className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
                 >
                   <option value="">Max Price</option>
                   <option value="1000">£1,000 pcm</option>
@@ -175,15 +238,13 @@ export default function LettingsPage() {
                   <option value="5000">£5,000+ pcm</option>
                 </select>
               </div>
-              
-              {/* Bedrooms & Search Button */}
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <BedDouble className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
                   <select
                     value={bedrooms}
                     onChange={(e) => setBedrooms(e.target.value)}
-                    className="w-full h-12 rounded-md border border-input bg-background px-10 text-sm"
+                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
                   >
                     <option value="">Beds</option>
                     <option value="1">1+</option>
@@ -203,46 +264,44 @@ export default function LettingsPage() {
       </section>
 
       {/* Services Grid - Mobile Optimized */}
-      <section className="py-12 lg:py-20">
+      <section className="py-10 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Section Header */}
-          <div className="mb-8 text-center lg:mb-12">
-            <span className="inline-block rounded-full bg-[#1DBFDD]/10 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD]">
+          <div className="mb-6 text-center lg:mb-12">
+            <span className="inline-block rounded-full bg-[#1DBFDD]/10 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD] lg:px-4">
               Our Services
             </span>
-            <h2 className="mt-3 text-2xl font-semibold lg:text-4xl">
+            <h2 className="mt-2 text-xl font-semibold lg:mt-3 lg:text-4xl">
               Lettings Services
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm text-[#6B7280] lg:text-base">
+            <p className="mx-auto mt-2 max-w-2xl text-sm text-[#6B7280] lg:mt-3 lg:text-base">
               Comprehensive letting solutions designed to meet the needs of both landlords and tenants.
             </p>
           </div>
           
           {/* Service Cards Grid */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {serviceCards.map((card) => {
               const IconComponent = card.icon;
               return (
                 <Link 
                   key={card.title} 
                   href={card.href}
-                  className="group block rounded-2xl border border-[#E5E7EB] bg-white p-6 transition-all hover:border-[#1DBFDD] hover:shadow-lg"
+                  className="group block rounded-xl border border-[#E5E7EB] bg-white p-4 transition-all active:bg-[#F9FAFB] lg:rounded-2xl lg:p-6 lg:hover:border-[#1DBFDD] lg:hover:shadow-lg"
                 >
-                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#1DBFDD]/10 text-[#1DBFDD] transition-all group-hover:bg-[#1DBFDD] group-hover:text-white">
-                    <IconComponent className="h-6 w-6" />
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/10 text-[#1DBFDD] transition-all lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl lg:group-hover:bg-[#1DBFDD] lg:group-hover:text-white">
+                    <IconComponent className="h-5 w-5 lg:h-6 lg:w-6" />
                   </div>
                   
-                  <h3 className="text-lg font-semibold transition-colors group-hover:text-[#1DBFDD]">
-                    {card.title}
-                  </h3>
+                  <h3 className="text-sm font-semibold lg:text-base">{card.title}</h3>
                   
-                  <p className="mt-2 text-sm text-[#6B7280]">
+                  <p className="mt-1 text-xs text-[#6B7280] lg:mt-2 lg:text-sm">
                     {card.description}
                   </p>
                   
-                  <span className="mt-4 inline-flex items-center text-sm text-[#1DBFDD]">
+                  <span className="mt-2 inline-flex items-center text-xs text-[#1DBFDD] lg:mt-3 lg:text-sm">
                     Learn more
-                    <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
                   </span>
                 </Link>
               );
@@ -252,40 +311,40 @@ export default function LettingsPage() {
       </section>
 
       {/* Landlord & Tenant Split Section */}
-      <section className="py-12 lg:py-20 bg-[#2C2F33]">
+      <section className="bg-[#2C2F33] py-10 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Section Header */}
-          <div className="mb-8 text-center lg:mb-12">
-            <span className="inline-block rounded-full bg-[#1DBFDD]/20 px-4 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD]">
+          <div className="mb-6 text-center lg:mb-12">
+            <span className="inline-block rounded-full bg-[#1DBFDD]/20 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD] lg:px-4">
               Who We Serve
             </span>
-            <h2 className="mt-3 text-2xl font-semibold text-white lg:text-4xl">
+            <h2 className="mt-2 text-xl font-semibold text-white lg:mt-3 lg:text-4xl">
               Tailored Solutions
             </h2>
           </div>
           
           {/* Split Cards */}
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
             {/* Landlords Card */}
-            <div className="rounded-2xl bg-[#3A3D42] p-6 lg:p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#1DBFDD]/20 text-[#1DBFDD]">
-                <Key className="h-6 w-6" />
+            <div className="rounded-xl bg-[#3A3D42] p-5 lg:rounded-2xl lg:p-8">
+              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/20 text-[#1DBFDD] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
+                <Key className="h-5 w-5 lg:h-6 lg:w-6" />
               </div>
               
-              <h3 className="text-xl font-semibold text-white lg:text-2xl">
+              <h3 className="text-lg font-semibold text-white lg:text-2xl">
                 For Landlords
               </h3>
               
-              <p className="mt-3 text-sm leading-relaxed text-white/70 lg:text-base">
+              <p className="mt-2 text-sm leading-relaxed text-white/70 lg:mt-3 lg:text-base">
                 Maximise your rental income with our comprehensive property management 
                 services. From tenant find to full management, we handle everything.
               </p>
               
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-4 space-y-2 lg:mt-6 lg:space-y-3">
                 {landlordBenefits.map((item) => (
-                  <li key={item} className="flex items-center text-sm text-white/80">
-                    <span className="mr-3 flex h-5 w-5 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD]">
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <li key={item} className="flex items-center text-sm text-white/80 lg:text-base">
+                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD] lg:h-6 lg:w-6">
+                      <svg className="h-3 w-3 lg:h-3.5 lg:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
@@ -296,7 +355,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/landlords-guide"
-                className="mt-6 inline-flex items-center rounded-lg bg-[#1DBFDD] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0E8CAB]"
+                className="mt-5 inline-flex items-center rounded-lg bg-[#1DBFDD] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#0E8CAB] lg:mt-6 lg:px-5 lg:hover:bg-[#0E8CAB]"
               >
                 Landlords Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -304,25 +363,25 @@ export default function LettingsPage() {
             </div>
 
             {/* Tenants Card */}
-            <div className="rounded-2xl bg-[#3A3D42] p-6 lg:p-8">
-              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#1DBFDD]/20 text-[#1DBFDD]">
-                <BookOpen className="h-6 w-6" />
+            <div className="rounded-xl bg-[#3A3D42] p-5 lg:rounded-2xl lg:p-8">
+              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/20 text-[#1DBFDD] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
+                <BookOpen className="h-5 w-5 lg:h-6 lg:w-6" />
               </div>
               
-              <h3 className="text-xl font-semibold text-white lg:text-2xl">
+              <h3 className="text-lg font-semibold text-white lg:text-2xl">
                 For Tenants
               </h3>
               
-              <p className="mt-3 text-sm leading-relaxed text-white/70 lg:text-base">
+              <p className="mt-2 text-sm leading-relaxed text-white/70 lg:mt-3 lg:text-base">
                 Find your perfect rental home with Banc. We offer a wide range of 
                 quality properties and provide support throughout your tenancy.
               </p>
               
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-4 space-y-2 lg:mt-6 lg:space-y-3">
                 {tenantBenefits.map((item) => (
-                  <li key={item} className="flex items-center text-sm text-white/80">
-                    <span className="mr-3 flex h-5 w-5 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD]">
-                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                  <li key={item} className="flex items-center text-sm text-white/80 lg:text-base">
+                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD] lg:h-6 lg:w-6">
+                      <svg className="h-3 w-3 lg:h-3.5 lg:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
@@ -333,7 +392,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/tenants-guide"
-                className="mt-6 inline-flex items-center rounded-lg bg-[#1DBFDD] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0E8CAB]"
+                className="mt-5 inline-flex items-center rounded-lg bg-[#1DBFDD] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#0E8CAB] lg:mt-6 lg:px-5 lg:hover:bg-[#0E8CAB]"
               >
                 Tenants Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -344,20 +403,20 @@ export default function LettingsPage() {
       </section>
 
       {/* Contact CTA Section */}
-      <section className="relative overflow-hidden bg-[#1DBFDD] py-12 lg:py-16">
+      <section className="relative overflow-hidden bg-[#1DBFDD] py-10 lg:py-16">
         <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         
         <div className="relative mx-auto max-w-7xl px-4 text-center lg:px-10">
-          <h2 className="text-2xl font-semibold text-white lg:text-4xl">
+          <h2 className="text-xl font-semibold text-white lg:text-4xl">
             Ready to get started?
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-base text-white/90 lg:text-lg">
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-white/90 lg:mt-3 lg:text-lg">
             Contact our lettings team today for expert advice and assistance.
           </p>
           <Link 
             href="/contact"
-            className="mt-6 inline-flex items-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#1DBFDD] transition-all hover:bg-white/90 lg:px-8 lg:py-4 lg:text-base"
+            className="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#1DBFDD] transition-all active:bg-white/90 lg:mt-6 lg:px-8 lg:py-4 lg:text-base lg:hover:bg-white/90"
           >
             Contact Us
             <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />
