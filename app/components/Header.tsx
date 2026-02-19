@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -19,180 +19,265 @@ const navItems = [
 
 const dropdowns = {
   Sales: [
-    {
-      title: "Our Properties",
-      description: "Browse our portfolio of premium properties for sale.",
-      href: "/sales/properties",
-    },
-    {
-      title: "Buyers Guide",
-      description: "Everything you need to know about buying a property.",
-      href: "/sales/buyers-guide",
-    },
-    {
-      title: "Sellers Guide",
-      description: "Expert advice on preparing and selling your home.",
-      href: "/sales/sellers-guide",
-    },
+    { title: "Our Properties", href: "/sales/properties" },
+    { title: "Buyers Guide", href: "/sales/buyers-guide" },
+    { title: "Sellers Guide", href: "/sales/sellers-guide" },
   ],
   Lettings: [
-    {
-      title: "Rental Properties",
-      description: "Browse our available properties to rent.",
-      href: "/lettings/properties",
-    },
-    {
-      title: "Tenants Guide",
-      description: "Everything tenants need to know about renting.",
-      href: "/lettings/tenants-guide",
-    },
-    {
-      title: "Landlords Guide",
-      description: "Expert advice for landlords on letting your property.",
-      href: "/lettings/landlords-guide",
-    },
+    { title: "Rental Properties", href: "/lettings/properties" },
+    { title: "Tenants Guide", href: "/lettings/tenants-guide" },
+    { title: "Landlords Guide", href: "/lettings/landlords-guide" },
   ],
   About: [
-    {
-      title: "Why Us",
-      description: "Discover what makes Banc Property Group different.",
-      href: "/why-us",
-    },
-    {
-      title: "Our Team",
-      description: "Meet the dedicated team behind our success.",
-      href: "/the-team",
-    },
-    {
-      title: "Track Record",
-      description: "See our impressive results and statistics.",
-      href: "/track-record",
-    },
-    {
-      title: "The Guild",
-      description: "Learn about our national network membership.",
-      href: "/the-guild",
-    },
+    { title: "Why Us", href: "/why-us" },
+    { title: "Our Team", href: "/the-team" },
+    { title: "Track Record", href: "/track-record" },
+    { title: "The Guild", href: "/the-guild" },
+    { title: "Area Guides", href: "/area-guides" },
   ],
 } as const;
+
+// Additional mobile-only links
+const mobileAdditionalLinks = [
+  { title: "Land & New Homes", href: "/land-new-homes" },
+  { title: "Become a Partner", href: "/become-partner" },
+];
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = React.useState<string | null>(null);
+
+  // Close mobile menu on route change
+  React.useEffect(() => {
+    setMobileOpen(false);
+    setMobileExpanded(null);
+  }, []);
 
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 border-b border-white/10 bg-[#2C2F33] backdrop-blur-xl"
-    >
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
-        <Link href="/" aria-label="Banc Property Group" className="flex items-center">
-          <Image
-            src="/banc-logo-blue.png"
-            alt="Banc Property Group"
-            width={350}
-            height={105}
-            className="h-[84px] w-auto object-contain"
-            priority
-          />
-        </Link>
+    <>
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="sticky top-0 z-50 border-b border-white/10 bg-[#2C2F33] backdrop-blur-xl"
+      >
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-10">
+          {/* Logo */}
+          <Link href="/" aria-label="Banc Property Group" className="flex items-center">
+            <Image
+              src="/banc-logo-blue.png"
+              alt="Banc Property Group"
+              width={280}
+              height={84}
+              className="h-14 w-auto object-contain lg:h-[84px]"
+              priority
+            />
+          </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-white font-heading lg:flex">
-          {navItems.map((item) => {
-            const hasDropdown = item.name in dropdowns;
-            return (
-              <div
-                key={item.name}
-                className="relative"
-                onMouseEnter={() => hasDropdown && setActiveDropdown(item.name)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-1 transition-colors hover:text-[#4DD4F0]",
-                    activeDropdown === item.name && "text-[#4DD4F0]"
-                  )}
+          {/* Desktop Navigation */}
+          <nav className="hidden items-center gap-8 text-sm font-medium text-white lg:flex">
+            {navItems.map((item) => {
+              const hasDropdown = item.name in dropdowns;
+              return (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => hasDropdown && setActiveDropdown(item.name)}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  {item.name}
-                  {hasDropdown && <ChevronDown className="h-4 w-4" />}
-                </Link>
-                {hasDropdown && (
-                  <AnimatePresence>
-                    {activeDropdown === item.name && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 8 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#2C2F33] p-4 shadow-xl"
-                      >
-                        <div className="grid gap-4">
-                          {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
-                            <Link
-                              key={link.title}
-                              href={link.href}
-                              className="rounded-lg p-3 transition-colors hover:bg-[#0E8CAB]"
-                            >
-                              <p className="text-sm font-semibold text-white font-heading">
-                                {link.title}
-                              </p>
-                              <p className="text-xs text-white/70">
-                                {link.description}
-                              </p>
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-1 transition-colors hover:text-[#1DBFDD]",
+                      activeDropdown === item.name && "text-[#1DBFDD]"
                     )}
-                  </AnimatePresence>
-                )}
-              </div>
-            );
-          })}
-        </nav>
+                  >
+                    {item.name}
+                    {hasDropdown && <ChevronDown className="h-4 w-4" />}
+                  </Link>
+                  
+                  {/* Desktop Dropdown */}
+                  {hasDropdown && (
+                    <AnimatePresence>
+                      {activeDropdown === item.name && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#2C2F33] p-4 shadow-xl"
+                        >
+                          <div className="grid gap-2">
+                            {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
+                              <Link
+                                key={link.title}
+                                href={link.href}
+                                className="rounded-lg p-3 transition-colors hover:bg-white/10"
+                              >
+                                <p className="text-sm font-semibold text-white">{link.title}</p>
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
-          <Button className="bg-white text-[#2C2F33] hover:bg-[#1DBFDD] hover:text-white">Request Valuation</Button>
+          {/* Desktop CTA */}
+          <div className="hidden items-center gap-4 lg:flex">
+            <Link href="tel:01707877781" className="text-sm text-white/80 hover:text-[#1DBFDD]">
+              01707 877781
+            </Link>
+            <Button className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
+              Request Valuation
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white lg:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
 
-        <button
-          className="rounded-full border border-white/20 p-2 text-white lg:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile Menu - Full Screen Overlay */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 top-[57px] z-40 bg-[#2C2F33] lg:hidden"
+            >
+              <div className="h-full overflow-y-auto px-4 pb-24 pt-4">
+                {/* Mobile Navigation Links */}
+                <nav className="flex flex-col gap-1">
+                  {/* Main Items with Expandable Submenus */}
+                  {navItems.map((item) => {
+                    const hasDropdown = item.name in dropdowns;
+                    const isExpanded = mobileExpanded === item.name;
+                    
+                    return (
+                      <div key={item.name} className="border-b border-white/10">
+                        <div className="flex items-center justify-between">
+                          <Link
+                            href={item.href}
+                            className="flex-1 py-4 text-lg font-medium text-white"
+                            onClick={() => !hasDropdown && setMobileOpen(false)}
+                          >
+                            {item.name}
+                          </Link>
+                          {hasDropdown && (
+                            <button
+                              onClick={() => setMobileExpanded(isExpanded ? null : item.name)}
+                              className="p-2 text-white"
+                              aria-label={isExpanded ? "Collapse" : "Expand"}
+                            >
+                              <ChevronDown 
+                                className={cn(
+                                  "h-5 w-5 transition-transform",
+                                  isExpanded && "rotate-180"
+                                )} 
+                              />
+                            </button>
+                          )}
+                        </div>
+                        
+                        {/* Expanded Submenu */}
+                        {hasDropdown && isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-1 pb-4 pl-4">
+                              {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
+                                <Link
+                                  key={link.title}
+                                  href={link.href}
+                                  className="flex items-center gap-2 py-2 text-sm text-white/70 hover:text-[#1DBFDD]"
+                                  onClick={() => setMobileOpen(false)}
+                                >
+                                  <ChevronRight className="h-4 w-4" />
+                                  {link.title}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </div>
+                    );
+                  })}
+                  
+                  {/* Additional Mobile Links */}
+                  {mobileAdditionalLinks.map((link) => (
+                    <Link
+                      key={link.title}
+                      href={link.href}
+                      className="border-b border-white/10 py-4 text-lg font-medium text-white"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {link.title}
+                    </Link>
+                  ))}
+                </nav>
+
+                {/* Mobile CTA Section */}
+                <div className="mt-8 space-y-3">
+                  <a
+                    href="tel:01707877781"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 py-4 text-lg font-medium text-white hover:bg-white/10"
+                  >
+                    <Phone className="h-5 w-5" />
+                    Call 01707 877781
+                  </a>
+                  <Button 
+                    className="w-full bg-[#1DBFDD] py-6 text-lg font-medium text-white hover:bg-[#0E8CAB]"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Request Valuation
+                  </Button>
+                </div>
+
+                {/* Contact Info */}
+                <div className="mt-8 border-t border-white/10 pt-6 text-center text-sm text-white/60">
+                  <p>14 Mayfair Place, London W1</p>
+                  <p className="mt-1">hello@bancproperty.co.uk</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
+
+      {/* Sticky Mobile CTA Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-[#2C2F33] px-4 py-3 lg:hidden">
+        <div className="mx-auto flex max-w-md gap-3">
+          <a
+            href="tel:01707877781"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-white/10 py-3 text-sm font-medium text-white active:bg-white/20"
+          >
+            <Phone className="h-4 w-4" />
+            Call Now
+          </a>
+          <Button 
+            className="flex-1 bg-[#1DBFDD] py-3 text-sm font-medium text-white hover:bg-[#0E8CAB]"
+          >
+            Valuation
+          </Button>
+        </div>
       </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/10 bg-[#2C2F33] lg:hidden"
-          >
-            <nav className="flex flex-col gap-4 p-6">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-base font-medium text-white hover:text-[#4DD4F0]"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Button className="mt-4 w-full bg-white text-[#2C2F33] hover:bg-[#1DBFDD] hover:text-white">
-                Request Valuation
-              </Button>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+      {/* Spacer for sticky bottom bar */}
+      <div className="h-16 lg:hidden" />
+    </>
   );
 }

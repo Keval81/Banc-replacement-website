@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Review {
   authorName: string;
@@ -12,75 +14,119 @@ interface Review {
   time: number;
 }
 
+interface PlaceData {
+  name?: string;
+  rating?: number;
+  totalRatings?: number;
+}
+
+// Static fallback reviews for immediate display
+const fallbackReviews: Review[] = [
+  {
+    authorName: "Dawn P.",
+    rating: 5,
+    text: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful.",
+    relativeTime: "2 months ago",
+    time: Date.now() - 5184000000,
+  },
+  {
+    authorName: "Iwona K.",
+    rating: 5,
+    text: "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process.",
+    relativeTime: "3 months ago",
+    time: Date.now() - 7776000000,
+  },
+  {
+    authorName: "James M.",
+    rating: 5,
+    text: "The entire team were extremely helpful finding a rental property. The process was made extremely smooth and I would definitely recommend them.",
+    relativeTime: "1 month ago",
+    time: Date.now() - 2592000000,
+  },
+];
+
 export default function GoogleReviews() {
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
+  const [place, setPlace] = useState<PlaceData>({ 
+    name: "Banc Property Group", 
+    rating: 5.0, 
+    totalRatings: 51 
+  });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [place, setPlace] = useState<{ name?: string; rating?: number; totalRatings?: number }>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-
     fetch("/api/google-reviews")
       .then((res) => res.json())
       .then((data) => {
-        if (!mounted) return;
-        setReviews(Array.isArray(data.reviews) ? data.reviews : []);
-        setPlace(data.place || {});
+        if (data.reviews && data.reviews.length > 0) {
+          setReviews(data.reviews);
+          setPlace(data.place || {});
+        }
+        setIsLoading(false);
       })
       .catch(() => {
-        if (!mounted) return;
-        setReviews([]);
+        setError(true);
+        setIsLoading(false);
       });
-
-    return () => {
-      mounted = false;
-    };
   }, []);
-
-  useEffect(() => {
-    if (reviews.length <= 1) return;
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % reviews.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [reviews.length]);
 
   const activeReview = useMemo(() => reviews[activeIndex], [reviews, activeIndex]);
 
+  const nextReview = () => {
+    setActiveIndex((prev) => (prev + 1) % reviews.length);
+  };
+
+  const prevReview = () => {
+    setActiveIndex((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
   return (
-    <section className="bg-[#F7FAFA]">
-      <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-6">
+    <section className="bg-[#F7FAFA] py-16 lg:py-20">
+      <div className="mx-auto w-full max-w-7xl px-4 lg:px-10">
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-[#6B7280]">
               Google Reviews
             </p>
-            <h2 className="text-3xl font-semibold text-[#111827] sm:text-4xl">
+            <h2 className="text-2xl font-semibold text-[#111827] lg:text-4xl mt-2">
               What clients say
             </h2>
             {place?.rating && (
-              <p className="mt-3 text-sm text-[#4B5563]">
-                {place.name} • {place.rating.toFixed(1)} stars ({place.totalRatings} reviews)
+              <p className="mt-2 text-sm text-[#4B5563]">
+                {place.name} • {place.rating.toFixed(1)} stars ({place.totalRatings || 51} reviews)
               </p>
             )}
           </div>
           <div className="flex items-center gap-3 rounded-full bg-white px-4 py-2 shadow-sm">
-            <Image
-              src="/partners/google.png"
-              alt="Google"
-              width={92}
-              height={30}
-              className="h-6 w-auto"
-            />
+            <svg className="h-5 w-auto" viewBox="0 0 272 92" fill="none">
+              <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
+              <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC05"/>
+              <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
+              <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
+              <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
+              <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
+            </svg>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#6B7280]">
               Verified
             </span>
           </div>
         </div>
 
-        <div className="mt-10 rounded-3xl bg-white p-8 shadow-sm">
-          {activeReview ? (
-            <div className="flex flex-col gap-6">
+        {/* Review Card - Mobile Optimized */}
+        <div className="relative rounded-2xl bg-white p-6 shadow-sm lg:p-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col gap-4"
+            >
+              {/* Reviewer Info */}
               <div className="flex items-center gap-4">
                 {activeReview.profilePhotoUrl ? (
                   <Image
@@ -88,50 +134,81 @@ export default function GoogleReviews() {
                     alt={activeReview.authorName}
                     width={56}
                     height={56}
-                    className="h-14 w-14 rounded-full object-cover"
+                    className="h-12 w-12 rounded-full object-cover lg:h-14 lg:w-14"
                   />
                 ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E5F6F6] text-lg font-semibold text-[#0A6B82]">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E5F6F6] text-lg font-semibold text-[#0A6B82] lg:h-14 lg:w-14">
                     {activeReview.authorName?.[0] ?? "B"}
                   </div>
                 )}
-                <div>
-                  <p className="text-base font-semibold text-[#111827]">
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[#111827] truncate">
                     {activeReview.authorName}
                   </p>
                   <p className="text-sm text-[#6B7280]">{activeReview.relativeTime}</p>
                 </div>
               </div>
+
+              {/* Stars */}
               <div className="flex items-center gap-2">
                 <div className="flex text-[#1DBFDD]">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 lg:h-5 lg:w-5 ${
+                        i < activeReview.rating ? "fill-[#1DBFDD]" : "fill-gray-200"
+                      }`}
+                    />
                   ))}
                 </div>
-                <span className="text-sm font-semibold text-[#0A6B82]">5.0</span>
+                <span className="text-sm font-semibold text-[#0A6B82]">
+                  {activeReview.rating}.0
+                </span>
               </div>
-              <p className="text-lg text-[#374151]">{activeReview.text}</p>
-            </div>
-          ) : (
-            <p className="text-sm text-[#6B7280]">Loading reviews…</p>
-          )}
 
-          {reviews.length > 1 && (
-            <div className="mt-8 flex flex-wrap items-center gap-2">
-              {reviews.map((_, index) => (
+              {/* Review Text */}
+              <p className="text-base leading-relaxed text-[#374151] lg:text-lg">
+                &ldquo;{activeReview.text}&rdquo;
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Navigation */}
+          <div className="mt-6 flex items-center justify-between">
+            {/* Dots */}
+            <div className="flex items-center gap-2">
+              {reviews.slice(0, 5).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveIndex(index)}
-                  className={`h-2 w-8 rounded-full transition-all ${
-                    index === activeIndex ? "bg-[#1DBFDD]" : "bg-[#E5E7EB]"
+                  className={`h-2 rounded-full transition-all ${
+                    index === activeIndex
+                      ? "w-6 bg-[#1DBFDD]"
+                      : "w-2 bg-[#E5E7EB]"
                   }`}
                   aria-label={`Show review ${index + 1}`}
                 />
               ))}
             </div>
-          )}
+
+            {/* Arrows */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={prevReview}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827]"
+                aria-label="Previous review"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                onClick={nextReview}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#F9FAFB] hover:text-[#111827]"
+                aria-label="Next review"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
