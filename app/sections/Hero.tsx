@@ -144,7 +144,7 @@ export default function Hero() {
 
   return (
     <section 
-      className="relative min-h-[70vh] w-full overflow-hidden bg-[#2C2F33] text-white lg:min-h-[85vh]"
+      className="relative min-h-[calc(100vh-57px-64px)] w-full overflow-hidden bg-[#2C2F33] text-white sm:min-h-[85vh] lg:min-h-[90vh]"
       onClick={handleInteraction}
     >
       {/* Video Background */}
@@ -218,7 +218,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-7xl flex-col justify-center px-4 py-16 lg:min-h-[85vh] lg:justify-between lg:px-10 lg:py-20">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-57px-64px)] w-full max-w-7xl flex-col justify-center px-4 py-16 sm:min-h-[85vh] lg:min-h-[90vh] lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
