@@ -192,7 +192,7 @@ export default function Hero() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-57px-64px)] w-full max-w-7xl flex-col justify-center px-4 py-16 sm:min-h-[85vh] lg:min-h-[90vh] lg:justify-between lg:px-10 lg:py-20">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-57px-64px)] w-full max-w-7xl flex-col justify-start px-4 pb-24 pt-16 sm:min-h-[85vh] lg:min-h-[90vh] lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -230,7 +230,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5 lg:mb-0 mb-20"
+          className="mt-auto w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
         >
           <AnimatePresence mode="wait">
             <motion.div
