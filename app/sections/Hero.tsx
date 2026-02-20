@@ -127,13 +127,6 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [reviews.length]);
 
-  const handleDotClick = (index: number) => {
-    if (index !== currentVideo) {
-      setIsLoaded(false);
-      setCurrentVideo(index);
-    }
-  };
-
   const handleInteraction = () => {
     if (!canAutoplay) {
       startPlayback();
@@ -198,25 +191,6 @@ export default function Hero() {
         </motion.button>
       )}
 
-      {/* Video indicator dots */}
-      <div className="absolute bottom-24 left-1/2 z-20 flex -translate-x-1/2 gap-2 lg:bottom-28">
-        {videos.map((_, index) => (
-          <button
-            key={index}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDotClick(index);
-            }}
-            className={`h-2.5 w-2.5 rounded-full transition-all duration-300 lg:h-2 lg:w-2 ${
-              index === currentVideo
-                ? "w-8 bg-[#1DBFDD] lg:w-8"
-                : "bg-white/50 hover:bg-white/80"
-            }`}
-            aria-label={`Play video ${index + 1}`}
-          />
-        ))}
-      </div>
-
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-57px-64px)] w-full max-w-7xl flex-col justify-center px-4 py-16 sm:min-h-[85vh] lg:min-h-[90vh] lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
@@ -234,7 +208,7 @@ export default function Hero() {
             Your local Cuffley &amp; Mayfair estate agent
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3 lg:gap-4">
-            <Link href="/contact">
+            <Link href="/valuation">
               <Button 
                 size="lg"
                 className="bg-[#1DBFDD] px-5 py-5 text-sm text-white hover:bg-[#0E8CAB] active:bg-[#0E8CAB] lg:px-8 lg:text-base"
@@ -257,6 +231,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
+          style={{ marginBottom: '80px' }}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -304,7 +279,7 @@ export default function Hero() {
             </motion.div>
           </AnimatePresence>
           
-          {/* Footer with Google logo + rating + dots */}
+          {/* Footer with Google logo + rating */}
           <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
             {/* Google Logo */}
             <svg className="h-4 w-auto lg:h-5" viewBox="0 0 272 92" fill="none">
@@ -315,18 +290,6 @@ export default function Hero() {
               <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
               <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
             </svg>
-            
-            {/* Review dots */}
-            <div className="flex items-center gap-1.5">
-              {reviews.slice(0, 5).map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-1.5 w-1.5 rounded-full transition-all ${
-                    index === currentReview ? "bg-[#1DBFDD]" : "bg-white/30"
-                  }`}
-                />
-              ))}
-            </div>
             
             <p className="text-xs text-white/80">
               5.0 ★ ({totalReviews})

@@ -165,7 +165,7 @@ export default function Header() {
             <Link href="tel:01707877781" className="text-sm text-white/80 hover:text-[#1DBFDD]">
               01707 877781
             </Link>
-            <Link href="/contact">
+            <Link href="/valuation">
               <Button className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
                 Request Valuation
               </Button>
@@ -185,22 +185,33 @@ export default function Header() {
       </header>
 
       {/* Mobile Menu Overlay */}
-      {mobileOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[90] bg-black/50 transition-opacity duration-300 lg:hidden"
-            onClick={() => setMobileOpen(false)}
-          />
-          
-          {/* Menu Panel */}
-          <div
-            className="fixed right-0 top-0 bottom-0 z-[95] w-[85%] max-w-[320px] bg-[#2C2F33] shadow-2xl transition-transform duration-300 ease-out lg:hidden"
-            style={{ 
-              paddingTop: "73px",
-              transform: mobileOpen ? 'translateX(0)' : 'translateX(100%)'
-            }}
-          >
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              className="fixed inset-0 z-[90] bg-black/50 lg:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+            
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ 
+                type: "spring",
+                damping: 30,
+                stiffness: 300,
+                mass: 0.8
+              }}
+              className="fixed right-0 top-0 bottom-0 z-[95] w-[85%] max-w-[320px] bg-[#2C2F33] shadow-2xl lg:hidden"
+              style={{ paddingTop: "73px" }}
+            >
               <div className="h-full overflow-y-auto px-5 pb-32">
                 {/* Mobile Navigation Links */}
                 <nav className="flex flex-col">
@@ -275,7 +286,7 @@ export default function Header() {
                     <Phone className="h-5 w-5" />
                     01707 877781
                   </a>
-                  <Link href="/contact" onClick={() => setMobileOpen(false)}>
+                  <Link href="/valuation" onClick={() => setMobileOpen(false)}>
                     <Button className="w-full bg-[#1DBFDD] py-5 text-base font-medium text-white hover:bg-[#0E8CAB]">
                       Request Valuation
                     </Button>
@@ -288,9 +299,10 @@ export default function Header() {
                   <p>Cuffley, EN6 4HU</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </>
         )}
+      </AnimatePresence>
 
       {/* Header Spacer - only this should push content down */}
       <div className="h-[57px] bg-[#2C2F33] lg:h-[94px]" />
@@ -305,7 +317,7 @@ export default function Header() {
             <Phone className="h-4 w-4" />
             Call Now
           </a>
-          <Link href="/contact" className="flex-1">
+          <Link href="/valuation" className="flex-1">
             <Button className="w-full bg-[#1DBFDD] py-3.5 text-sm font-medium text-white hover:bg-[#0E8CAB]">
               Valuation
             </Button>
