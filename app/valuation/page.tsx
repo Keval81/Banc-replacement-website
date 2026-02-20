@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { CheckCircle, Home, Phone, Mail, User, MapPin, Calendar, MessageSquare } from "lucide-react";
 import Header from "@/app/components/Header";
@@ -48,7 +47,6 @@ export default function ValuationPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Connect to backend/email service
     setSubmitted(true);
   };
 
@@ -130,9 +128,9 @@ export default function ValuationPage() {
                   
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-[#2C2F33]">
+                      <label htmlFor="firstName" className="block text-sm font-medium text-[#2C2F33]">
                         First Name *
-                      </Label>
+                      </label>
                       <Input
                         id="firstName"
                         required
@@ -143,9 +141,9 @@ export default function ValuationPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-[#2C2F33]">
+                      <label htmlFor="lastName" className="block text-sm font-medium text-[#2C2F33]">
                         Last Name *
-                      </Label>
+                      </label>
                       <Input
                         id="lastName"
                         required
@@ -159,10 +157,10 @@ export default function ValuationPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-[#2C2F33]">
+                      <label htmlFor="email" className="block text-sm font-medium text-[#2C2F33]">
                         <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                         Email Address *
-                      </Label>
+                      </label>
                       <Input
                         id="email"
                         type="email"
@@ -174,10 +172,10 @@ export default function ValuationPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-[#2C2F33]">
+                      <label htmlFor="phone" className="block text-sm font-medium text-[#2C2F33]">
                         <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                         Phone Number *
-                      </Label>
+                      </label>
                       <Input
                         id="phone"
                         type="tel"
@@ -201,10 +199,10 @@ export default function ValuationPage() {
                   </h2>
 
                   <div className="space-y-2">
-                    <Label htmlFor="address" className="text-[#2C2F33]">
+                    <label htmlFor="address" className="block text-sm font-medium text-[#2C2F33]">
                       <MapPin className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                       Property Address *
-                    </Label>
+                    </label>
                     <Textarea
                       id="address"
                       required
@@ -217,9 +215,9 @@ export default function ValuationPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="postcode" className="text-[#2C2F33]">
+                      <label htmlFor="postcode" className="block text-sm font-medium text-[#2C2F33]">
                         Postcode *
-                      </Label>
+                      </label>
                       <Input
                         id="postcode"
                         required
@@ -230,7 +228,7 @@ export default function ValuationPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[#2C2F33]">Property Type</Label>
+                      <label className="block text-sm font-medium text-[#2C2F33]">Property Type</label>
                       <select
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
@@ -248,7 +246,7 @@ export default function ValuationPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <Label className="text-[#2C2F33]">Bedrooms</Label>
+                      <label className="block text-sm font-medium text-[#2C2F33]">Bedrooms</label>
                       <select
                         value={formData.bedrooms}
                         onChange={(e) => handleChange("bedrooms", e.target.value)}
@@ -263,10 +261,10 @@ export default function ValuationPage() {
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[#2C2F33]">
+                      <label className="block text-sm font-medium text-[#2C2F33]">
                         <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                         Looking to sell in...
-                      </Label>
+                      </label>
                       <select
                         value={formData.timeframe}
                         onChange={(e) => handleChange("timeframe", e.target.value)}
@@ -287,10 +285,10 @@ export default function ValuationPage() {
 
                 {/* Additional Message */}
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-[#2C2F33]">
+                  <label htmlFor="message" className="block text-sm font-medium text-[#2C2F33]">
                     <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                     Additional Information (Optional)
-                  </Label>
+                  </label>
                   <Textarea
                     id="message"
                     value={formData.message}
