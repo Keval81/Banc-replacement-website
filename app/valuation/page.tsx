@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { CheckCircle, Home, Phone, Mail, User, MapPin, Calendar, MessageSquare } from "lucide-react";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
@@ -238,63 +231,54 @@ export default function ValuationPage() {
                     </div>
                     <div className="space-y-2">
                       <Label className="text-[#2C2F33]">Property Type</Label>
-                      <Select
+                      <select
                         value={formData.propertyType}
-                        onValueChange={(value) => handleChange("propertyType", value)}
+                        onChange={(e) => handleChange("propertyType", e.target.value)}
+                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
-                        <SelectTrigger className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {propertyTypes.map((type) => (
-                            <SelectItem key={type} value={type}>
-                              {type}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <option value="">Select type</option>
+                        {propertyTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label className="text-[#2C2F33]">Bedrooms</Label>
-                      <Select
+                      <select
                         value={formData.bedrooms}
-                        onValueChange={(value) => handleChange("bedrooms", value)}
+                        onChange={(e) => handleChange("bedrooms", e.target.value)}
+                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
-                        <SelectTrigger className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]">
-                          <SelectValue placeholder="Select bedrooms" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {bedrooms.map((num) => (
-                            <SelectItem key={num} value={num}>
-                              {num}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <option value="">Select bedrooms</option>
+                        {bedrooms.map((num) => (
+                          <option key={num} value={num}>
+                            {num}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                     <div className="space-y-2">
                       <Label className="text-[#2C2F33]">
                         <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                         Looking to sell in...
                       </Label>
-                      <Select
+                      <select
                         value={formData.timeframe}
-                        onValueChange={(value) => handleChange("timeframe", value)}
+                        onChange={(e) => handleChange("timeframe", e.target.value)}
+                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
-                        <SelectTrigger className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]">
-                          <SelectValue placeholder="Select timeframe" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {timeframes.map((time) => (
-                            <SelectItem key={time} value={time}>
-                              {time}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                        <option value="">Select timeframe</option>
+                        {timeframes.map((time) => (
+                          <option key={time} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 </div>
