@@ -292,7 +292,7 @@ export default function Header() {
           </>
         )}
 
-      {/* Header Spacer */}
+      {/* Header Spacer - only this should push content down */}
       <div className="h-[57px] bg-[#2C2F33] lg:h-[94px]" />
 
       {/* Sticky Mobile CTA Bar */}
@@ -312,9 +312,6 @@ export default function Header() {
           </Link>
         </div>
       </div>
-
-      {/* Spacer for sticky bottom bar */}
-      <div className="h-16 lg:hidden" />
     </>
   );
 }
