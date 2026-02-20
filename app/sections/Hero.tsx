@@ -230,8 +230,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
-          style={{ marginBottom: '80px' }}
+          className="mt-8 w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5 lg:mb-0 mb-20"
         >
           <AnimatePresence mode="wait">
             <motion.div
