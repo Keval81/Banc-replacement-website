@@ -293,7 +293,7 @@ export default function Header() {
         )}
 
       {/* Header Spacer */}
-      <div className="h-[57px] lg:h-[94px]" />
+      <div className="h-[57px] bg-[#2C2F33] lg:h-[94px]" />
 
       {/* Sticky Mobile CTA Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-[80] border-t border-white/10 bg-[#2C2F33] px-4 py-3 lg:hidden">
