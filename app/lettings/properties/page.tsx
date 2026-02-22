@@ -9,6 +9,7 @@ import { Filter, Grid3X3, List } from "lucide-react";
 
 const rentalProperties = [
   {
+    id: "modern-townhouse-cuffley",
     title: "Modern Townhouse",
     address: "Cuffley, EN6",
     price: "£2,850 pcm",
@@ -21,6 +22,7 @@ const rentalProperties = [
     summary: "Stunning modern townhouse with integrated garage, private garden, and modern kitchen.",
   },
   {
+    id: "mayfair-studio-w1k",
     title: "Mayfair Studio",
     address: "South Audley Street, W1K",
     price: "£2,200 pcm",
@@ -33,6 +35,7 @@ const rentalProperties = [
     summary: "Luxurious studio apartment in the heart of Mayfair with concierge service.",
   },
   {
+    id: "family-detached-brookmans",
     title: "Family Detached",
     address: "Brookmans Park, AL9",
     price: "£3,500 pcm",
@@ -45,6 +48,7 @@ const rentalProperties = [
     summary: "Spacious family home with large garden, close to excellent schools and station.",
   },
   {
+    id: "executive-apartment-hadley",
     title: "Executive Apartment",
     address: "Hadley Wood, EN4",
     price: "£2,100 pcm",
@@ -57,6 +61,7 @@ const rentalProperties = [
     summary: "High specification apartment with balcony, underground parking, and gym access.",
   },
   {
+    id: "period-cottage-potters",
     title: "Period Cottage",
     address: "Potters Bar, EN6",
     price: "£1,800 pcm",
@@ -69,6 +74,7 @@ const rentalProperties = [
     summary: "Charming period cottage with exposed beams, modern kitchen, and courtyard garden.",
   },
   {
+    id: "penthouse-suite-mount",
     title: "Penthouse Suite",
     address: "Mount Street, W1",
     price: "£5,500 pcm",
@@ -150,7 +156,7 @@ export default function LettingsPropertiesPage() {
           >
             {rentalProperties.map((property) => (
               <motion.div
-                key={property.title}
+                key={property.id}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 },
