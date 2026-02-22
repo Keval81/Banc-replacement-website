@@ -9,6 +9,7 @@ import { Filter, Grid3X3, List } from "lucide-react";
 
 const properties = [
   {
+    id: "the-laurels-hadley-wood",
     title: "The Laurels",
     address: "Hadley Wood, EN4",
     price: "£2,450,000",
@@ -21,6 +22,7 @@ const properties = [
     summary: "Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
   },
   {
+    id: "mayfair-penthouse-mount-street",
     title: "Mayfair Penthouse",
     address: "Mount Street, W1",
     price: "£3,900,000",
@@ -33,6 +35,7 @@ const properties = [
     summary: "Light-filled penthouse with panoramic views, concierge service, and private terrace.",
   },
   {
+    id: "cuffley-house-hertfordshire",
     title: "Cuffley House",
     address: "Cuffley, Hertfordshire",
     price: "£1,350,000",
@@ -45,6 +48,7 @@ const properties = [
     summary: "Characterful family home with open-plan living, media room, and expansive gardens.",
   },
   {
+    id: "woodland-manor-brookmans-park",
     title: "Woodland Manor",
     address: "Brookmans Park, AL9",
     price: "£1,850,000",
@@ -57,6 +61,7 @@ const properties = [
     summary: "Stunning detached residence set within mature grounds with woodland views and triple garage.",
   },
   {
+    id: "the-old-rectory-potters-bar",
     title: "The Old Rectory",
     address: "Potters Bar, EN6",
     price: "£2,100,000",
@@ -69,6 +74,7 @@ const properties = [
     summary: "Impressive Grade II listed former rectory with period features, modernised throughout.",
   },
   {
+    id: "parkside-apartment-mayfair",
     title: "Parkside Apartment",
     address: "Mayfair, W1K",
     price: "£1,650,000",
@@ -159,7 +165,7 @@ export default function SalesPropertiesPage() {
           >
             {properties.map((property) => (
               <motion.div
-                key={property.title}
+                key={property.id}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 },

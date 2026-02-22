@@ -2,11 +2,13 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Bed, Bath, Square, Sparkles, Share2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface PropertyCardProps {
+  id: string;
   title: string;
   address: string;
   price: string;
@@ -17,6 +19,7 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({
+  id,
   title,
   address,
   price,
@@ -49,58 +52,62 @@ export default function PropertyCard({
       transition={{ duration: 0.2 }}
       className="group overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white shadow-sm transition-shadow hover:shadow-xl"
     >
-      <div
-        className="relative aspect-[4/3] w-full overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <Image
-          src={images[index]}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#111827]"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-        <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={prev}
-              className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold"
-              aria-label="Previous image"
-            >
-              Prev
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold"
-              aria-label="Next image"
-            >
-              Next
-            </button>
+      <Link href={`/sales/properties/${id}`} className="block">
+        <div
+          className="relative aspect-[4/3] w-full overflow-hidden"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <Image
+            src={images[index]}
+            alt={title}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#111827]"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
-          <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white">
-            {index + 1} / {images.length}
-          </span>
+          <div className="absolute inset-x-4 bottom-4 flex items-center justify-between">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); prev(); }}
+                className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold"
+                aria-label="Previous image"
+              >
+                Prev
+              </button>
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); next(); }}
+                className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold"
+                aria-label="Next image"
+              >
+                Next
+              </button>
+            </div>
+            <span className="rounded-full bg-black/60 px-3 py-1 text-xs text-white">
+              {index + 1} / {images.length}
+            </span>
+          </div>
         </div>
-      </div>
+      </Link>
 
       <div className="flex flex-col gap-4 p-6">
-        <div>
-          <p className="text-sm text-[#6B7280]">{address}</p>
-          <h3 className="text-lg font-semibold text-[#111827]">{title}</h3>
-          <p className="mt-3 text-2xl font-semibold text-[#0D9488]">{price}</p>
-        </div>
+        <Link href={`/sales/properties/${id}`} className="block">
+          <div>
+            <p className="text-sm text-[#6B7280]">{address}</p>
+            <h3 className="text-lg font-semibold text-[#111827] group-hover:text-[#1DBFDD] transition-colors">{title}</h3>
+            <p className="mt-3 text-2xl font-semibold text-[#0D9488]">{price}</p>
+          </div>
+        </Link>
 
         <div className="flex flex-wrap gap-4 text-xs text-[#6B7280]">
           <span className="flex items-center gap-1">
@@ -130,9 +137,11 @@ export default function PropertyCard({
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
-          <Button size="sm" className="flex-1">
-            Arrange Viewing
-          </Button>
+          <Link href={`/sales/properties/${id}`} className="flex-1">
+            <Button size="sm" className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB]">
+              View Details
+            </Button>
+          </Link>
           <button
             type="button"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] text-[#111827] transition-colors hover:border-[#0D9488] hover:text-[#0D9488]"
