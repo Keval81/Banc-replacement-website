@@ -5,6 +5,7 @@ import PropertyCard from "@/app/components/PropertyCard";
 
 const listings = [
   {
+    id: "the-laurels-hadley-wood",
     title: "The Laurels",
     address: "Hadley Wood, EN4",
     price: "£2,450,000",
@@ -19,6 +20,7 @@ const listings = [
       "AI-generated summary placeholder. Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
   },
   {
+    id: "mayfair-penthouse-mount-street",
     title: "Mayfair Penthouse",
     address: "Mount Street, W1",
     price: "£3,900,000",
@@ -33,6 +35,7 @@ const listings = [
       "AI-generated summary placeholder. Light-filled penthouse with panoramic views, concierge service, and private terrace.",
   },
   {
+    id: "cuffley-house-hertfordshire",
     title: "Cuffley House",
     address: "Cuffley, Hertfordshire",
     price: "£1,350,000",
@@ -73,7 +76,7 @@ export default function FeaturedListings() {
         >
           {listings.map((listing) => (
             <motion.div
-              key={listing.title}
+              key={listing.id}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 show: { opacity: 1, y: 0 },
