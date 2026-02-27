@@ -59,7 +59,7 @@ const listings = [
 export default function FeaturedListings() {
   return (
     <section id="featured" className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-6 pb-20 pt-8 lg:px-10">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-16 sm:pb-20 pt-6 sm:pt-8 lg:px-10">
         <div className="flex flex-col gap-4">
           <p className="text-sm uppercase tracking-[0.3em] text-[#6B7280]">Featured</p>
           <h2 className="text-3xl font-semibold text-[#111827] sm:text-4xl">
@@ -77,7 +77,7 @@ export default function FeaturedListings() {
               transition: { staggerChildren: 0.15 },
             },
           }}
-          className="mt-12 grid gap-8 lg:grid-cols-3"
+          className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {listings.map((listing) => (
             <motion.div

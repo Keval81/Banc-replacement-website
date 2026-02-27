@@ -133,11 +133,11 @@ export default function PropertyCard({
 
           {/* Tags Overlay */}
           {tags.length > 0 && (
-            <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+            <div className="absolute left-2 sm:left-3 top-2 sm:top-3 flex flex-wrap gap-1 sm:gap-1.5 max-w-[calc(100%-4rem)]">
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-[#111827] shadow-sm"
+                  className="rounded-full bg-white/95 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-[#111827] shadow-sm whitespace-nowrap"
                 >
                   {tag}
                 </span>
@@ -147,12 +147,12 @@ export default function PropertyCard({
 
           {/* Compare Checkbox Overlay */}
           {showCompare && (
-            <div className="absolute right-3 top-3 z-10">
+            <div className="absolute right-2 sm:right-3 top-2 sm:top-3 z-10">
               <button
                 onClick={handleCompareClick}
                 disabled={!canCompare && !isCompared}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-md",
+                  "flex items-center gap-1 px-2 sm:gap-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all shadow-md",
                   isCompared
                     ? "bg-[#1DBFDD] text-white"
                     : canCompare
@@ -162,13 +162,13 @@ export default function PropertyCard({
               >
                 {isCompared ? (
                   <>
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Comparing</span>
+                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="hidden sm:inline">Comparing</span>
                   </>
                 ) : (
                   <>
-                    <Scale className="w-3.5 h-3.5" />
-                    <span>Compare</span>
+                    <Scale className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span className="hidden sm:inline">Compare</span>
                   </>
                 )}
               </button>
@@ -181,18 +181,20 @@ export default function PropertyCard({
               <button
                 type="button"
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white shadow-md"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
                 aria-label="Previous image"
+                style={{ touchAction: 'manipulation' }}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-5 w-5 sm:h-4 sm:w-4" />
               </button>
               <button
                 type="button"
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white shadow-md"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
                 aria-label="Next image"
+                style={{ touchAction: 'manipulation' }}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-5 w-5 sm:h-4 sm:w-4" />
               </button>
               <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2 py-1 text-xs text-white font-medium">
                 {imageIndex + 1} / {safeImages.length}
@@ -215,21 +217,24 @@ export default function PropertyCard({
         </Link>
 
         {/* Stats Row */}
-        <div className="flex flex-wrap gap-3 text-xs text-[#6B7280]">
-          <span className="flex items-center gap-1">
-            <Bed className="h-3.5 w-3.5 text-[#0D9488]" />
-            <span className="font-medium">{stats.beds}</span> Beds
+        <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-[#6B7280]">
+          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+            <Bed className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <span className="font-medium">{stats.beds}</span>
+            <span className="hidden sm:inline"> Beds</span>
+          </span>
+          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+            <Bath className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <span className="font-medium">{stats.baths}</span>
+            <span className="hidden sm:inline"> Baths</span>
+          </span>
+          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+            <Square className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <span className="font-medium">{stats.sqft.toLocaleString()}</span>
+            <span className="hidden sm:inline"> Sq Ft</span>
           </span>
           <span className="flex items-center gap-1">
-            <Bath className="h-3.5 w-3.5 text-[#0D9488]" />
-            <span className="font-medium">{stats.baths}</span> Baths
-          </span>
-          <span className="flex items-center gap-1">
-            <Square className="h-3.5 w-3.5 text-[#0D9488]" />
-            <span className="font-medium">{stats.sqft}</span> Sq Ft
-          </span>
-          <span className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-[#0D9488]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
             <span className="font-medium">EPC {stats.epc}</span>
           </span>
         </div>
@@ -242,7 +247,7 @@ export default function PropertyCard({
         {/* Action Buttons */}
         <div className="flex items-center gap-2 pt-1">
           <Link href={`/sales/properties/${id}`} className="flex-1">
-            <Button size="sm" className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB] transition-colors text-xs">
+            <Button size="sm" className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB] transition-colors text-xs min-h-[44px] sm:min-h-0">
               View Details
             </Button>
           </Link>
@@ -251,21 +256,23 @@ export default function PropertyCard({
             onClick={handleFavoriteClick}
             disabled={isLoading || isToggling}
             className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full border transition-all",
+              "flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border transition-all touch-manipulation",
               favorited
                 ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
                 : "border-[#E5E7EB] text-[#6B7280] hover:border-red-400 hover:text-red-500"
             )}
             aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+            style={{ touchAction: 'manipulation' }}
           >
-            <Heart className={cn("h-3.5 w-3.5", favorited && "fill-current")} />
+            <Heart className={cn("h-5 w-5 sm:h-3.5 sm:w-3.5", favorited && "fill-current")} />
           </button>
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-all hover:border-[#0D9488] hover:text-[#0D9488]"
+            className="flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-all hover:border-[#0D9488] hover:text-[#0D9488] touch-manipulation"
             aria-label="Share property"
+            style={{ touchAction: 'manipulation' }}
           >
-            <Share2 className="h-3.5 w-3.5" />
+            <Share2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
           </button>
         </div>
       </div>

@@ -372,9 +372,9 @@ export default function SearchPage() {
               ) : (
                 <motion.div
                   layout
-                  className={`grid gap-6 ${
-                    filters.view === "list" 
-                      ? "grid-cols-1" 
+                  className={`grid gap-4 sm:gap-6 ${
+                    filters.view === "list"
+                      ? "grid-cols-1"
                       : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                   }`}
                 >
