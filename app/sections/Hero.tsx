@@ -151,12 +151,11 @@ export default function Hero() {
         >
           <video
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-contain md:object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             style={{ 
               minHeight: '100vh', 
               minWidth: '100vw',
-              objectPosition: 'center center',
-              backgroundColor: '#2C2F33'
+              objectPosition: 'center center'
             }}
             src={videos[currentVideo]}
             muted
