@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle, Home, Phone, Mail, User, MapPin, Calendar, MessageSquare } from "lucide-react";
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
+import { NativeSelect } from "@/components/ui/select";
+import { CheckCircle, Home, Phone, Mail, User, MapPin, Calendar, MessageSquare, Loader2, AlertCircle } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const propertyTypes = [
   "Detached House",
@@ -30,8 +31,33 @@ const timeframes = [
   "Just curious",
 ];
 
+// Toast notification component
+function Toast({ message, type, onClose }: { message: string; type: "success" | "error"; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -50, x: "-50%" }}
+      animate={{ opacity: 1, y: 0, x: "-50%" }}
+      exit={{ opacity: 0, y: -50, x: "-50%" }}
+      className={`fixed left-1/2 top-24 z-50 flex items-center gap-3 rounded-xl px-6 py-4 shadow-2xl ${
+        type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+      }`}
+    >
+      {type === "success" ? <CheckCircle className="h-5 w-5" /> : <AlertCircle className="h-5 w-5" />}
+      <span className="font-medium">{message}</span>
+      <button onClick={onClose} className="ml-2 opacity-70 hover:opacity-100">
+        <span className="sr-only">Close</span>
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </motion.div>
+  );
+}
+
 export default function ValuationPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -45,13 +71,37 @@ export default function ValuationPage() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
-
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/valuation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSubmitted(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        setToast({ 
+          message: data.error || data.details?.[0]?.message || "Something went wrong. Please try again.", 
+          type: "error" 
+        });
+      }
+    } catch (error) {
+      setToast({ message: "Failed to submit request. Please try again later.", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -93,7 +143,18 @@ export default function ValuationPage() {
       <Header />
       <div className="h-[57px] lg:h-[94px]" />
       
-      <main className="px-4 py-8 lg:px-8 lg:py-12">
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
+      </AnimatePresence>
+      
+      <main className="px-4 py-8 pb-24 lg:px-8 lg:py-12 lg:pb-12">
         <div className="mx-auto max-w-6xl">
           {/* Header Section */}
           <motion.div
@@ -126,7 +187,7 @@ export default function ValuationPage() {
                     Your Details
                   </h2>
                   
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="firstName" className="block text-sm font-medium text-[#2C2F33]">
                         First Name *
@@ -155,7 +216,7 @@ export default function ValuationPage() {
                     </div>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="email" className="block text-sm font-medium text-[#2C2F33]">
                         <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
@@ -213,7 +274,7 @@ export default function ValuationPage() {
                     />
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="postcode" className="block text-sm font-medium text-[#2C2F33]">
                         Postcode *
@@ -229,10 +290,9 @@ export default function ValuationPage() {
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-[#2C2F33]">Property Type</label>
-                      <select
+                      <NativeSelect
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
-                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
                         <option value="">Select type</option>
                         {propertyTypes.map((type) => (
@@ -240,17 +300,16 @@ export default function ValuationPage() {
                             {type}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </div>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-[#2C2F33]">Bedrooms</label>
-                      <select
+                      <NativeSelect
                         value={formData.bedrooms}
                         onChange={(e) => handleChange("bedrooms", e.target.value)}
-                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
                         <option value="">Select bedrooms</option>
                         {bedrooms.map((num) => (
@@ -258,17 +317,16 @@ export default function ValuationPage() {
                             {num}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-[#2C2F33]">
                         <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
                         Looking to sell in...
                       </label>
-                      <select
+                      <NativeSelect
                         value={formData.timeframe}
                         onChange={(e) => handleChange("timeframe", e.target.value)}
-                        className="w-full rounded-md border border-[#C8C9CB] bg-white px-3 py-2 text-sm focus:border-[#1DBFDD] focus:outline-none focus:ring-1 focus:ring-[#1DBFDD]"
                       >
                         <option value="">Select timeframe</option>
                         {timeframes.map((time) => (
@@ -276,7 +334,7 @@ export default function ValuationPage() {
                             {time}
                           </option>
                         ))}
-                      </select>
+                      </NativeSelect>
                     </div>
                   </div>
                 </div>
@@ -300,9 +358,17 @@ export default function ValuationPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#1DBFDD] py-6 text-lg font-semibold text-white hover:bg-[#0E8CAB]"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#1DBFDD] py-6 text-lg font-semibold text-white hover:bg-[#0E8CAB] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Request Free Valuation
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Submitting...
+                    </span>
+                  ) : (
+                    "Request Free Valuation"
+                  )}
                 </Button>
 
                 <p className="text-center text-sm text-[#6B6E72]">

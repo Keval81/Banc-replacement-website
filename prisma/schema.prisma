@@ -1,0 +1,200 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum UserRole {
+  applicant
+  vendor
+  landlord
+  admin
+}
+
+enum PropertyType {
+  HOUSE
+  APARTMENT
+  BUNGALOW
+  MAISONETTE
+  COTTAGE
+  TOWNHOUSE
+  PENTHOUSE
+  STUDIO
+  OTHER
+}
+
+enum TransactionType {
+  buy
+  rent
+}
+
+// NextAuth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?   // For credentials provider
+  phone         String?
+  role          UserRole  @default(applicant)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  accounts          Account[]
+  sessions          Session[]
+  favorites         Favorite[]
+  alerts            Alert[]
+  requirements      PropertyRequirements?
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Application Models
+model Favorite {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  propertyId      String   @map("property_id")
+  propertyTitle   String?  @map("property_title")
+  propertyPrice   String?  @map("property_price")
+  propertyImage   String?  @map("property_image")
+  propertyAddress String?  @map("property_address")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@index([userId])
+  @@index([propertyId])
+  @@map("favorites")
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  name        String
+  criteria    Json     // Search criteria
+  frequency   String   @default("daily") // daily, weekly, instant
+  isActive    Boolean  @default(true) @map("is_active")
+  lastSentAt  DateTime? @map("last_sent_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("alerts")
+}
+
+model PropertyRequirements {
+  id                   String          @id @default(cuid())
+  userId               String          @unique @map("user_id")
+  transactionType      TransactionType @default(buy) @map("transaction_type")
+  propertyTypes        PropertyType[]  @map("property_types")
+  minBeds              Int?            @map("min_beds")
+  maxBeds              Int?            @map("max_beds")
+  minPrice             Int?            @map("min_price")
+  maxPrice             Int?            @map("max_price")
+  preferredLocations   String[]        @map("preferred_locations")
+  mustHaveFeatures     String[]        @map("must_have_features")
+  niceToHaveFeatures   String[]        @map("nice_to_have_features")
+  timeline             String?
+  notes                String?
+  isActive             Boolean         @default(true) @map("is_active")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  updatedAt            DateTime        @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("property_requirements")
+}
+
+// Form Submission Models
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  source    String   @default("contact-page") // which page submitted
+  status    String   @default("new") // new, responded, closed
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_submissions")
+}
+
+model ValuationRequest {
+  id            String   @id @default(uuid())
+  firstName     String   @map("first_name")
+  lastName      String   @map("last_name")
+  email         String
+  phone         String
+  address       String
+  postcode      String
+  propertyType  String?  @map("property_type")
+  bedrooms      String?
+  timeframe     String?
+  message       String?
+  status        String   @default("new") // new, contacted, valued, instructed
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([postcode])
+  @@index([status])
+  @@index([createdAt])
+  @@map("valuation_requests")
+}

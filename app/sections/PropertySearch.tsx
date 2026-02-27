@@ -1,274 +1,165 @@
 "use client";
 
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, MapPin, X, Maximize2, Minimize2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
-const bedroomOptions = ["1+", "2+", "3+", "4+", "5+"];
-const propertyTypes = ["Detached", "Semi-Detached", "Terraced", "Flat", "Bungalow", "Land"];
+// New professional search components
+import {
+  PropertySearchBar,
+  type SearchFilters,
+} from "@/components/property";
+
+// ============================================
+// Homepage Search Component
+// ============================================
 
 export default function PropertySearch() {
-  const [advancedOpen, setAdvancedOpen] = React.useState(false);
-  const [mapOpen, setMapOpen] = React.useState(false);
-  const [mapExpanded, setMapExpanded] = React.useState(false);
+  const router = useRouter();
+
+  // Local state for filters (not URL-synced on homepage)
+  const [filters, setFilters] = React.useState<SearchFilters>({});
+
+  // Check if any filters are active
+  const hasActiveFilters = React.useMemo(() => {
+    return (
+      filters.location !== undefined ||
+      filters.radius !== undefined ||
+      filters.minPrice !== undefined ||
+      filters.maxPrice !== undefined ||
+      filters.minBeds !== undefined ||
+      filters.maxBeds !== undefined ||
+      filters.minBaths !== undefined ||
+      filters.maxBaths !== undefined ||
+      (filters.propertyType?.length ?? 0) > 0 ||
+      (filters.tenure?.length ?? 0) > 0 ||
+      Object.values(filters.features || {}).some(Boolean)
+    );
+  }, [filters]);
+
+  // Handle filter changes
+  const handleFilterChange = React.useCallback((newFilters: Partial<SearchFilters>) => {
+    setFilters((prev) => {
+      const updated = { ...prev };
+
+      // Handle special case for features (merge instead of replace)
+      if (newFilters.features) {
+        updated.features = { ...prev.features, ...newFilters.features };
+      }
+
+      // Apply all other filters
+      Object.entries(newFilters).forEach(([key, value]) => {
+        if (key !== "features") {
+          if (value === undefined) {
+            delete (updated as Record<string, unknown>)[key];
+          } else {
+            (updated as Record<string, unknown>)[key] = value;
+          }
+        }
+      });
+
+      return updated;
+    });
+  }, []);
+
+  // Clear all filters
+  const handleClearFilters = React.useCallback(() => {
+    setFilters({});
+  }, []);
+
+  // Build query params and navigate to properties page
+  const buildQueryString = (currentFilters: SearchFilters): string => {
+    const params = new URLSearchParams();
+
+    // Location
+    if (currentFilters.location) params.set("location", currentFilters.location);
+
+    // Radius
+    if (currentFilters.radius !== undefined) params.set("radius", currentFilters.radius.toString());
+
+    // Price
+    if (currentFilters.minPrice !== undefined) params.set("minPrice", currentFilters.minPrice.toString());
+    if (currentFilters.maxPrice !== undefined) params.set("maxPrice", currentFilters.maxPrice.toString());
+
+    // Bedrooms
+    if (currentFilters.minBeds !== undefined) params.set("minBeds", currentFilters.minBeds.toString());
+    if (currentFilters.maxBeds !== undefined) params.set("maxBeds", currentFilters.maxBeds.toString());
+
+    // Bathrooms
+    if (currentFilters.minBaths !== undefined) params.set("minBaths", currentFilters.minBaths.toString());
+    if (currentFilters.maxBaths !== undefined) params.set("maxBaths", currentFilters.maxBaths.toString());
+
+    // Property Type
+    if (currentFilters.propertyType?.length) {
+      params.set("propertyType", currentFilters.propertyType.join(","));
+    }
+
+    // Tenure
+    if (currentFilters.tenure?.length) {
+      params.set("tenure", currentFilters.tenure.join(","));
+    }
+
+    // Features
+    if (currentFilters.features) {
+      Object.entries(currentFilters.features).forEach(([key, value]) => {
+        if (value) params.set(key, "true");
+      });
+    }
+
+    return params.toString();
+  };
+
+  // Handle search - navigate to properties page with filters
+  const handleSearch = React.useCallback(() => {
+    const queryString = buildQueryString(filters);
+    router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
+  }, [filters, router]);
+
+  // Custom onFilterChange that also triggers search on location submit
+  const handleFilterChangeWithSearch = React.useCallback((newFilters: Partial<SearchFilters>) => {
+    handleFilterChange(newFilters);
+    
+    // If location is being set (search submitted), navigate to properties page
+    if (newFilters.location !== undefined) {
+      const updatedFilters = { ...filters, ...newFilters };
+      const queryString = buildQueryString(updatedFilters);
+      router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
+    }
+  }, [filters, handleFilterChange, router]);
 
   return (
     <section className="relative bg-white">
       <div className="mx-auto w-full max-w-7xl px-6 pb-6 pt-16 lg:px-10">
-        <div className="rounded-3xl border border-[#C8C9CB] bg-[#F0F0ED] p-6 shadow-sm lg:p-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="rounded-3xl border border-[#C8C9CB] bg-[#F0F0ED] p-6 shadow-sm lg:p-10"
+        >
           <div className="flex flex-col gap-6">
+            {/* Header */}
             <div className="flex flex-col gap-2">
-              <p className="text-sm uppercase tracking-[0.3em] text-[#6B6E72] font-heading">Search</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-[#6B6E72] font-heading">
+                Search
+              </p>
               <h2 className="text-2xl font-semibold text-[#2C2F33] sm:text-3xl font-heading">
                 Find your next property
               </h2>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-5">
-              <div className="lg:col-span-2">
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  placeholder="Cuffley, Mayfair or postcode"
-                  className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
-                  Min Price
-                </label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
-                  <option>No min</option>
-                  <option>£250k</option>
-                  <option>£500k</option>
-                  <option>£750k</option>
-                  <option>£1m</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
-                  Max Price
-                </label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
-                  <option>No max</option>
-                  <option>£750k</option>
-                  <option>£1m</option>
-                  <option>£1.5m</option>
-                  <option>£2m+</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col justify-between">
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">
-                  Price Range
-                </label>
-                <input
-                  type="range"
-                  className="mt-3 w-full accent-[#1DBFDD]"
-                  min={0}
-                  max={100}
-                />
-                <span className="text-xs text-[#6B6E72]">Adjust range</span>
-              </div>
-            </div>
-
-            <div className="grid gap-4 lg:grid-cols-4">
-              <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">Bedrooms</label>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {bedroomOptions.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      className="rounded-full border border-[#C8C9CB] bg-white px-4 py-2 text-xs font-semibold text-[#2C2F33] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD] font-heading"
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-[#6B6E72] font-heading">Property Type</label>
-                <select className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]">
-                  {propertyTypes.map((type) => (
-                    <option key={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setAdvancedOpen((prev) => !prev)}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#1DBFDD] font-heading"
-                >
-                  Advanced Filters
-                  <ChevronDown className={`h-4 w-4 transition-transform ${advancedOpen ? "rotate-180" : ""}`} />
-                </button>
-              </div>
-
-              <div className="flex items-end justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setMapOpen(true)}
-                  className="flex items-center gap-2 rounded-xl border border-[#1DBFDD] bg-white px-4 py-3 text-sm font-semibold text-[#1DBFDD] transition-all hover:bg-[#1DBFDD] hover:text-white font-heading"
-                >
-                  <MapPin className="h-4 w-4" />
-                  View Area Map
-                </button>
-                <Button size="lg" className="w-full lg:w-auto">
-                  Search
-                </Button>
-              </div>
-            </div>
-
-            <AnimatePresence>
-              {advancedOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="grid gap-4 border-t border-[#C8C9CB] pt-6 lg:grid-cols-5">
-                    {[
-                      "Tenure (Freehold/Leasehold)",
-                      "Garden",
-                      "Parking",
-                      "EPC Rating",
-                    ].map((label) => (
-                      <label key={label} className="flex items-center gap-3 text-sm text-[#2C2F33]">
-                        <input type="checkbox" className="h-4 w-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]" />
-                        {label}
-                      </label>
-                    ))}
-                    <div>
-                      <label className="text-xs font-semibold text-[#6B6E72] font-heading">Keywords</label>
-                      <input
-                        type="text"
-                        placeholder="Garden, parking, open-plan"
-                        className="mt-2 w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-2 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* New Professional Search Bar */}
+            <PropertySearchBar
+              filters={filters}
+              onFilterChange={handleFilterChangeWithSearch}
+              onClearFilters={handleClearFilters}
+              hasActiveFilters={hasActiveFilters}
+              isLoading={false}
+              showMapButton={false}
+            />
           </div>
-        </div>
+        </motion.div>
       </div>
-
-      {/* Premium Map Modal */}
-      <AnimatePresence>
-        {mapOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#2C2F33]/80 backdrop-blur-sm p-4"
-            onClick={() => setMapOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative overflow-hidden rounded-3xl bg-white shadow-2xl transition-all duration-500 ${
-                mapExpanded ? "h-[90vh] w-[95vw]" : "max-h-[85vh] w-full max-w-4xl"
-              }`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between border-b border-[#C8C9CB] bg-[#F0F0ED] px-6 py-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-[#2C2F33] font-heading">
-                    Our Coverage Area
-                  </h3>
-                  <p className="text-sm text-[#6B6E72]">
-                    Premium properties in Hertfordshire & North London
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setMapExpanded(!mapExpanded)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
-                    aria-label={mapExpanded ? "Minimize map" : "Expand map"}
-                  >
-                    {mapExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
-                  </button>
-                  <button
-                    onClick={() => setMapOpen(false)}
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[#C8C9CB] bg-white text-[#6B6E72] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
-                    aria-label="Close map"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Map Content */}
-              <div className={`relative overflow-hidden bg-[#E8E8E8] ${mapExpanded ? "h-[calc(90vh-80px)]" : "h-[60vh] max-h-[500px]"}`}>
-                <Image
-                  src="/map-area.png"
-                  alt="Banc Property Group coverage area map showing Hertfordshire and North London"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-                
-                {/* Map Overlay - Key Areas */}
-                <div className="absolute bottom-6 left-6 rounded-2xl border border-white/30 bg-white/95 p-4 shadow-lg backdrop-blur-sm">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[#6B6E72] mb-2 font-heading">
-                    Key Locations
-                  </p>
-                  <div className="space-y-2">
-                    {[
-                      { name: "Cuffley", color: "#1DBFDD" },
-                      { name: "Mayfair", color: "#0E8CAB" },
-                      { name: "Hadley Wood", color: "#0A6B82" },
-                      { name: "Brookmans Park", color: "#4DD4F0" },
-                    ].map((location) => (
-                      <div key={location.name} className="flex items-center gap-2">
-                        <div 
-                          className="h-2 w-2 rounded-full" 
-                          style={{ backgroundColor: location.color }}
-                        />
-                        <span className="text-sm text-[#2C2F33]">{location.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Premium Badge */}
-                <div className="absolute right-6 top-6 rounded-full bg-[#2C2F33] px-4 py-2 shadow-lg">
-                  <span className="text-xs font-semibold text-white font-heading">
-                    Premium Coverage
-                  </span>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="flex items-center justify-between border-t border-[#C8C9CB] bg-white px-6 py-4">
-                <p className="text-sm text-[#6B6E72]">
-                  Contact us for properties outside these areas
-                </p>
-                <Button size="sm" onClick={() => setMapOpen(false)}>
-                  Start Searching
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }

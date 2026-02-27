@@ -15,7 +15,15 @@
   --off-white: #F0F0ED;
   --white: #FFFFFF;
   
-  /* Shadcn/ui compatible variables */
+  /* Dark mode colors */
+  --dark-bg: #0F0F0F;
+  --dark-surface: #1A1A1A;
+  --dark-surface-hover: #252525;
+  --dark-text: #F5F5F5;
+  --dark-text-muted: #A0A0A0;
+  --dark-border: #333333;
+  
+  /* Shadcn/ui compatible variables - Light mode (default) */
   --background: var(--off-white);
   --foreground: var(--charcoal);
   --card: var(--white);
@@ -36,6 +44,54 @@
   --input: var(--light-grey);
   --ring: var(--primary-cyan);
   --radius: 0.5rem;
+}
+
+/* Dark mode overrides */
+.dark {
+  --background: var(--dark-bg);
+  --foreground: var(--dark-text);
+  --card: var(--dark-surface);
+  --card-foreground: var(--dark-text);
+  --popover: var(--dark-surface);
+  --popover-foreground: var(--dark-text);
+  --primary: var(--primary-cyan);
+  --primary-foreground: var(--white);
+  --secondary: var(--dark-surface-hover);
+  --secondary-foreground: var(--dark-text);
+  --muted: var(--dark-surface);
+  --muted-foreground: var(--dark-text-muted);
+  --accent: var(--dark-cyan);
+  --accent-foreground: var(--dark-text);
+  --destructive: #EF4444;
+  --destructive-foreground: var(--white);
+  --border: var(--dark-border);
+  --input: var(--dark-border);
+  --ring: var(--primary-cyan);
+}
+
+/* System dark mode preference (when no explicit theme set) */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    --background: var(--dark-bg);
+    --foreground: var(--dark-text);
+    --card: var(--dark-surface);
+    --card-foreground: var(--dark-text);
+    --popover: var(--dark-surface);
+    --popover-foreground: var(--dark-text);
+    --primary: var(--primary-cyan);
+    --primary-foreground: var(--white);
+    --secondary: var(--dark-surface-hover);
+    --secondary-foreground: var(--dark-text);
+    --muted: var(--dark-surface);
+    --muted-foreground: var(--dark-text-muted);
+    --accent: var(--dark-cyan);
+    --accent-foreground: var(--dark-text);
+    --destructive: #EF4444;
+    --destructive-foreground: var(--white);
+    --border: var(--dark-border);
+    --input: var(--dark-border);
+    --ring: var(--primary-cyan);
+  }
 }
 
 @theme inline {
@@ -122,6 +178,69 @@ a:focus-visible {
   border-radius: 4px;
 }
 
+/* Dark mode specific adjustments */
+.dark body {
+  background: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.dark ::selection {
+  background: var(--dark-cyan);
+  color: var(--dark-text);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--dark-surface);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-cyan);
+}
+
+/* Safe area support for mobile */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Keyboard user focus styles */
+.keyboard-user *:focus-visible {
+  outline: 3px solid var(--primary-cyan);
+  outline-offset: 4px;
+}
+
+/* Touch target minimum size enforcement */
+button, a, input, select, textarea, [role="button"], [role="link"] {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Allow small touch targets for specific cases */
+.touch-target-sm {
+  min-height: 32px;
+  min-width: 32px;
+}
+
+/* Gesture support for swipeable elements */
+.swipeable {
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+}
+
+/* Bottom sheet pull indicator */
+.pull-indicator {
+  touch-action: none;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -143,4 +262,70 @@ a:focus-visible {
     display: block !important;
   }
 }
-/* Cache bust: Fri Feb 20 15:40:27 GMT 2026 */
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  :root {
+    --border: var(--charcoal);
+  }
+  
+  .dark {
+    --border: var(--dark-text);
+  }
+  
+  *:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 4px;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: black !important;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    word-break: break-all;
+  }
+}
+/* Marquee Animation for Sold Banner */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee2 {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.animate-marquee2 {
+  animation: marquee2 20s linear infinite;
+}
+
+/* Cache bust: Fri Feb 27 16:40:00 GMT 2026 */

@@ -1,8 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, CheckCircle, AlertCircle, Loader2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/select";
+import { useToast } from "@/components/ui/Toast";
+import { trackCallClick } from "@/lib/callTracking";
 
 const testimonials = [
   {
@@ -69,6 +73,59 @@ const scaleIn = {
 };
 
 export default function ContactPageClient() {
+  const { success, error } = useToast();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "General Enquiry",
+    message: "I would like to request a call back",
+    consent: false,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { id, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [id]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        success("Thank you! Your message has been sent successfully.");
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "General Enquiry",
+          message: "I would like to request a call back",
+          consent: false,
+        });
+      } else {
+        error(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      error("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -118,7 +175,7 @@ export default function ContactPageClient() {
               transition={{ duration: 0.6, delay: 0.5 }}
             >
               Your local property experts in Cuffley. Visit our office, give us a call, 
-              or request a callback — we're here to help with all your property needs.
+              or request a callback — we&apos;re here to help with all your property needs.
             </motion.p>
           </motion.div>
         </div>
@@ -168,6 +225,7 @@ export default function ContactPageClient() {
                         <a
                           href={detail.href}
                           className="mt-1 inline-block text-[#2C2F33] transition-colors hover:text-[#1DBFDD]"
+                          onClick={() => detail.label === "Phone" && trackCallClick("contact_page_details")}
                         >
                           {detail.lines.map((line, i) => (
                             <span key={i} className="block">
@@ -199,6 +257,7 @@ export default function ContactPageClient() {
               >
                 <a
                   href="tel:01707877781"
+                  onClick={() => trackCallClick("contact_page_cta")}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#2C2F33] px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#1DBFDD] hover:shadow-lg hover:shadow-[#1DBFDD]/25"
                 >
                   <Phone className="h-4 w-4" />
@@ -331,7 +390,7 @@ export default function ContactPageClient() {
       </section>
 
       {/* Call Me Back Form Section - Premium Dark Design */}
-      <section className="relative overflow-hidden bg-[#1a1d21] py-24 lg:py-32">
+      <section className="relative overflow-hidden bg-[#1a1d21] py-24 pb-32 lg:py-32">
         {/* Background elements */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1DBFDD]/5 to-transparent" />
         <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#1DBFDD]/10 blur-3xl" />
@@ -353,11 +412,12 @@ export default function ContactPageClient() {
               Call Me Back
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
-              Fill out the form below and we'll get back to you as soon as possible.
+              Fill out the form below and we&apos;ll get back to you as soon as possible.
             </p>
           </motion.div>
 
           <motion.form 
+            onSubmit={handleSubmit}
             className="relative overflow-hidden rounded-3xl bg-[#2C2F33] p-10 shadow-2xl lg:p-14"
             variants={scaleIn}
             initial="initial"
@@ -378,6 +438,8 @@ export default function ContactPageClient() {
                     id="name"
                     type="text"
                     required
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full rounded-xl border-2 border-[#3A3D42] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10"
                     placeholder="Your full name"
                   />
@@ -397,6 +459,8 @@ export default function ContactPageClient() {
                     id="phone"
                     type="tel"
                     required
+                    value={formData.phone}
+                    onChange={handleChange}
                     className="w-full rounded-xl border-2 border-[#3A3D42] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10"
                     placeholder="Your phone number"
                   />
@@ -416,12 +480,37 @@ export default function ContactPageClient() {
                     id="email"
                     type="email"
                     required
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full rounded-xl border-2 border-[#3A3D42] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10"
                     placeholder="Your email address"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
                     <div className="h-2 w-2 rounded-full bg-[#1DBFDD]" />
                   </div>
+                </div>
+              </div>
+
+              {/* Subject Field */}
+              <div className="group md:col-span-2">
+                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-white/70">
+                  Subject <span className="text-[#1DBFDD]">*</span>
+                </label>
+                <div className="relative">
+                  <select
+                    id="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className="w-full min-h-[56px] rounded-xl border-2 border-[#3A3D42] bg-[#1a1d21] px-4 py-4 text-white text-base transition-all duration-300 focus:border-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10 appearance-none cursor-pointer hover:border-[#1DBFDD]/50"
+                  >
+                    <option value="General Enquiry">General Enquiry</option>
+                    <option value="Property Valuation">Property Valuation</option>
+                    <option value="Property for Sale">Property for Sale</option>
+                    <option value="Property to Let">Property to Let</option>
+                    <option value="Land & New Homes">Land & New Homes</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 pointer-events-none" />
                 </div>
               </div>
 
@@ -434,8 +523,10 @@ export default function ContactPageClient() {
                   <textarea
                     id="message"
                     rows={5}
+                    value={formData.message}
+                    onChange={handleChange}
                     className="w-full resize-none rounded-xl border-2 border-[#3A3D42] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10"
-                    defaultValue="I would like to request a call back"
+                    placeholder="How can we help you?"
                   />
                   <div className="absolute bottom-4 right-4 opacity-0 transition-opacity group-focus-within:opacity-100">
                     <div className="h-2 w-2 rounded-full bg-[#1DBFDD]" />
@@ -447,9 +538,11 @@ export default function ContactPageClient() {
               <div className="flex items-start gap-4 md:col-span-2">
                 <div className="relative flex items-center">
                   <input
-                    id="privacy"
+                    id="consent"
                     type="checkbox"
                     required
+                    checked={formData.consent}
+                    onChange={handleChange}
                     className="peer h-6 w-6 cursor-pointer rounded-lg border-2 border-[#3A3D42] bg-[#1a1d21] checked:border-[#1DBFDD] checked:bg-[#1DBFDD] focus:outline-none focus:ring-4 focus:ring-[#1DBFDD]/10"
                   />
                   <svg
@@ -468,9 +561,9 @@ export default function ContactPageClient() {
                     />
                   </svg>
                 </div>
-                <label htmlFor="privacy" className="cursor-pointer text-sm leading-relaxed text-white/60">
+                <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-white/60">
                   Please tick this box if you are happy for us to contact you via phone and email. 
-                  You can view our full privacy policy on our website.
+                  You can view our full <a href="/privacy" className="text-[#1DBFDD] hover:underline">privacy policy</a> on our website.
                 </label>
               </div>
 
@@ -478,14 +571,26 @@ export default function ContactPageClient() {
               <div className="md:col-span-2">
                 <Button
                   type="submit"
-                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-[#1DBFDD] to-[#0E8CAB] py-7 text-base font-semibold text-white transition-all duration-500 hover:shadow-lg hover:shadow-[#1DBFDD]/30 hover:scale-[1.02] active:scale-[0.98]"
+                  disabled={isSubmitting}
+                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-[#1DBFDD] to-[#0E8CAB] py-7 text-base font-semibold text-white transition-all duration-500 hover:shadow-lg hover:shadow-[#1DBFDD]/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Submit Request
-                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Submit Request
+                        <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      </>
+                    )}
                   </span>
                   {/* Hover shimmer effect */}
-                  <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                  {!isSubmitting && (
+                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+                  )}
                 </Button>
               </div>
             </div>

@@ -1,6 +1,6 @@
 // Example: Updated Property Usage with Map and Floorplan
 
-import PropertyCard from "@/app/components/PropertyCard";
+import PropertyCard from "@/components/PropertyCard";
 
 // Example property data with map and floorplan images
 const propertyWithExtras = {

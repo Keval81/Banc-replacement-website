@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Crown, Award, TrendingUp } from "lucide-react";
 

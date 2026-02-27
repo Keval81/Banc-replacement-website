@@ -1,9 +1,8 @@
 "use client";
 
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { 
   ArrowRight, 
   Home, 
@@ -12,13 +11,10 @@ import {
   Key, 
   PoundSterling, 
   TrendingUp,
-  Sparkles,
-  MapPin,
-  BedDouble,
-  Search
+  Sparkles
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import LettingsPropertySearch from "@/app/sections/LettingsPropertySearch";
 
 const serviceCards = [
   {
@@ -74,11 +70,6 @@ const tenantBenefits = [
 ];
 
 export default function LettingsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [bedrooms, setBedrooms] = useState("");
-
   return (
     <div className="bg-white text-[#111827]">
       <Header />
@@ -126,140 +117,10 @@ export default function LettingsPage() {
         </div>
       </section>
 
-      {/* Property Search Bar - Mobile Optimized */}
-      <section className="bg-[#1DBFDD] py-4 lg:py-6">
-        <div className="mx-auto max-w-7xl px-4 lg:px-10">
-          <div className="rounded-xl bg-white p-3 shadow-lg lg:p-5">
-            {/* Mobile: Stacked layout */}
-            <div className="flex flex-col gap-3 lg:hidden">
-              {/* Search Input */}
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                <Input
-                  placeholder="Search by location..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 pl-10 text-sm"
-                />
-              </div>
-              
-              {/* Price Row */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="relative">
-                  <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                  <select
-                    value={minPrice}
-                    onChange={(e) => setMinPrice(e.target.value)}
-                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
-                  >
-                    <option value="">Min pcm</option>
-                    <option value="500">£500</option>
-                    <option value="1000">£1,000</option>
-                    <option value="1500">£1,500</option>
-                    <option value="2000">£2,000</option>
-                  </select>
-                </div>
-                <div className="relative">
-                  <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                  <select
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
-                  >
-                    <option value="">Max pcm</option>
-                    <option value="1000">£1,000</option>
-                    <option value="1500">£1,500</option>
-                    <option value="2000">£2,000</option>
-                    <option value="3000">£3,000+</option>
-                  </select>
-                </div>
-              </div>
-              
-              {/* Bedrooms & Search */}
-              <div className="grid grid-cols-4 gap-3">
-                <div className="relative col-span-3">
-                  <BedDouble className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                  <select
-                    value={bedrooms}
-                    onChange={(e) => setBedrooms(e.target.value)}
-                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-8 text-sm"
-                  >
-                    <option value="">Bedrooms</option>
-                    <option value="1">1+ beds</option>
-                    <option value="2">2+ beds</option>
-                    <option value="3">3+ beds</option>
-                    <option value="4">4+ beds</option>
-                  </select>
-                </div>
-                <Button className="col-span-1 h-12 bg-[#2C2F33] px-0 hover:bg-[#1DBFDD]">
-                  <Search className="mx-auto h-5 w-5" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Desktop: Grid layout */}
-            <div className="hidden gap-3 lg:grid lg:grid-cols-5">
-              <div className="relative lg:col-span-2">
-                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                <Input
-                  placeholder="Search location..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 pl-10"
-                />
-              </div>
-              <div className="relative">
-                <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                <select
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                  className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
-                >
-                  <option value="">Min Price</option>
-                  <option value="500">£500 pcm</option>
-                  <option value="1000">£1,000 pcm</option>
-                  <option value="1500">£1,500 pcm</option>
-                  <option value="2000">£2,000 pcm</option>
-                  <option value="3000">£3,000 pcm</option>
-                </select>
-              </div>
-              <div className="relative">
-                <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                <select
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                  className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
-                >
-                  <option value="">Max Price</option>
-                  <option value="1000">£1,000 pcm</option>
-                  <option value="1500">£1,500 pcm</option>
-                  <option value="2000">£2,000 pcm</option>
-                  <option value="3000">£3,000 pcm</option>
-                  <option value="5000">£5,000+ pcm</option>
-                </select>
-              </div>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <BedDouble className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6B7280]" />
-                  <select
-                    value={bedrooms}
-                    onChange={(e) => setBedrooms(e.target.value)}
-                    className="h-12 w-full appearance-none rounded-md border border-input bg-background pl-9 pr-4 text-sm"
-                  >
-                    <option value="">Beds</option>
-                    <option value="1">1+</option>
-                    <option value="2">2+</option>
-                    <option value="3">3+</option>
-                    <option value="4">4+</option>
-                    <option value="5">5+</option>
-                  </select>
-                </div>
-                <Button className="h-12 w-12 bg-[#2C2F33] p-0 hover:bg-[#1DBFDD]">
-                  <Search className="h-5 w-5" />
-                </Button>
-              </div>
-            </div>
-          </div>
+      {/* Property Search Section - Using New Professional Component */}
+      <section className="relative z-10 -mt-8 px-6 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <LettingsPropertySearch variant="hero" />
         </div>
       </section>
 

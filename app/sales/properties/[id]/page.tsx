@@ -1,113 +1,79 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { PropertyGallery } from "@/components/PropertyGallery";
+import { FloorplanViewer } from "@/components/FloorplanViewer";
+import { EPCVisualizer } from "@/components/EPCVisualizer";
+import { TransportLinks } from "@/components/TransportLinks";
+import { LocalAmenities } from "@/components/LocalAmenities";
+import { StreetViewComponent } from "@/components/StreetView";
+import { AgentContactCard } from "@/components/AgentContactCard";
+import { SimilarProperties } from "@/components/SimilarProperties";
+import { ShareButtons } from "@/components/ShareButtons";
+import MatchScore from "@/components/ai/MatchScore";
+import ViewingCounter from "@/components/social/ViewingCounter";
+import SmartDescription from "@/components/ai/SmartDescription";
 import {
   Bed,
   Bath,
   Square,
   MapPin,
-  Phone,
-  Mail,
-  Heart,
-  Share2,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Train,
-  Calendar,
-  Info,
   Home,
-  ChevronDown,
+  ChevronRight,
+  Clock,
   FileText,
-  Calculator,
+  Info,
+  Check,
+  TrendingUp,
+  History,
+  ImageIcon,
+  Play,
+  X,
+  Phone,
 } from "lucide-react";
+import { sampleProperty, similarProperties } from "@/lib/property-data";
 
-// Property data
-const propertyData = {
-  id: "chpk1487075",
-  title: "6 Bedroom House",
-  subtitle: "terraced for Sale",
-  address: "Bourne Street, Belgravia, London SW1W",
-  price: "£15,500,000",
-  status: "For Sale",
-  featured: true,
-  newListing: true,
-  stats: {
-    beds: 6,
-    baths: 4,
-    receptions: 3,
-    sqft: 5759,
-    sqm: 535.01,
-    epc: "C",
-  },
-  images: [
-    "/hertfordshire-home-1.png",
-    "/hertfordshire-home-4.png",
-    "/hertfordshire-home-1.png",
-    "/hertfordshire-home-4.png",
-    "/hertfordshire-home-1.png",
-    "/hertfordshire-home-4.png",
-  ],
-  description: `This impressive 6 bedroom townhouse within a development which completed circa 2001, benefits from an impressive private swimming pool, steam room, lift access, private sunny garden and large underground garage.
-
-The property is arranged over five floors and includes an elegant entrance hall, grand double reception room, open-plan kitchen and family room with bi-fold doors opening onto a west-facing garden. The master suite occupies the entire second floor with dressing room and en-suite bathroom.
-
-Additional features include air conditioning, underfloor heating, integrated Sonos sound system, and a separate utility room.`,
-  tenure: {
-    type: "Leasehold plus share of freehold",
-    leaseExpires: "25 Dec, 2999",
-    groundRent: "-",
-    serviceCharge: "£10,000 per quarter (2025)",
-    councilTax: "£2,034.36 per year (H)",
-    localAuthority: "The City of Westminster",
-    reference: "11487075",
-  },
-  stations: [
-    { name: "Victoria", distance: "0.3 miles", zone: 1, lines: ["District", "Circle", "Victoria"] },
-    { name: "Sloane Square", distance: "0.4 miles", zone: 1, lines: ["District", "Circle"] },
-    { name: "Hyde Park Corner", distance: "0.6 miles", zone: 1, lines: ["Piccadilly"] },
-  ],
-  agent: {
-    name: "James Harrington",
-    title: "Senior Property Consultant",
-    phone: "020 7123 4567",
-    email: "james.harrington@banc.co.uk",
-    image: "/banc-logo.png",
-  },
-};
+type GalleryTab = "photos" | "tour" | "map" | "floorplan";
 
 // Accordion Component
 function AccordionItem({ 
   title, 
   children, 
   defaultOpen = false,
-  icon: Icon
+  icon: Icon,
+  badge,
 }: { 
   title: string; 
   children: React.ReactNode; 
   defaultOpen?: boolean;
   icon?: React.ComponentType<{ className?: string }>;
+  badge?: string;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-[#E5E7EB]">
+    <div className="border-b border-gray-200 last:border-b-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-5 text-left hover:bg-[#F9FAFB] transition-colors"
+        className="flex w-full items-center justify-between py-3 sm:py-4 text-left hover:bg-gray-50/50 transition-colors group min-h-[56px]"
       >
-        <div className="flex items-center gap-3">
-          {Icon && <Icon className="h-5 w-5 text-[#1DBFDD]" />}
-          <h3 className="text-lg font-semibold text-[#111827]">{title}</h3>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD] flex-shrink-0" />}
+          <h3 className="text-sm sm:text-base font-semibold text-gray-900">{title}</h3>
+          {badge && (
+            <span className="text-[10px] sm:text-xs bg-[#1DBFDD]/10 text-[#1DBFDD] px-1.5 sm:px-2 py-0.5 rounded-full font-medium flex-shrink-0">
+              {badge}
+            </span>
+          )}
         </div>
-        <ChevronDown 
-          className={`h-5 w-5 text-[#1DBFDD] transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
+        <ChevronRight 
+          className={`h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-200 group-hover:text-[#1DBFDD] flex-shrink-0 ml-2 ${
+            isOpen ? "rotate-90" : ""
           }`} 
         />
       </button>
@@ -120,7 +86,7 @@ function AccordionItem({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="pb-6">{children}</div>
+            <div className="pb-5">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -128,18 +94,60 @@ function AccordionItem({
   );
 }
 
-export default function PropertyDetailPage() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
+// Virtual Tour Modal
+function VirtualTourModal({ 
+  url, 
+  isOpen, 
+  onClose 
+}: { 
+  url: string; 
+  isOpen: boolean; 
+  onClose: () => void;
+}) {
+  if (!isOpen) return null;
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % propertyData.images.length);
-  };
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] bg-black"
+    >
+      <div className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
+        <div className="flex items-center gap-3">
+          <Play className="h-5 w-5 text-[#1DBFDD]" />
+          <span className="font-medium">Virtual Tour</span>
+        </div>
+        <button 
+          onClick={onClose}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
+      <div className="h-[calc(100vh-72px)]">
+        <iframe
+          src={url}
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          allowFullScreen
+          allow="xr-spatial-tracking"
+          className="w-full h-full"
+        />
+      </div>
+    </motion.div>
+  );
+}
 
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + propertyData.images.length) % propertyData.images.length);
+export default function PropertyDetailPage({ params }: { params: { id: string } }) {
+  const [activeTab, setActiveTab] = useState<GalleryTab>("photos");
+  const [showTourModal, setShowTourModal] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const property = sampleProperty;
+
+  const handleSave = () => {
+    setIsSaved(!isSaved);
   };
 
   return (
@@ -147,491 +155,447 @@ export default function PropertyDetailPage() {
       <Header />
 
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-[#E5E7EB]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2">
-          <nav className="flex items-center gap-2 text-sm text-[#6B7280]">
+      <div className="bg-gray-50 border-b border-gray-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+          <nav className="flex items-center gap-2 text-sm text-gray-500">
             <a href="/" className="hover:text-[#1DBFDD] transition-colors">Home</a>
             <ChevronRight className="h-4 w-4" />
-            <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors">Properties for Sale</a>
+            <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors">For Sale</a>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-[#111827] truncate max-w-[200px] sm:max-w-[400px]">{propertyData.address}</span>
+            <span className="text-gray-900 truncate max-w-[200px] sm:max-w-[400px]">{property.address}</span>
           </nav>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid gap-8 lg:grid-cols-[58%_42%]">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-6">
+        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[65%_35%]">
           {/* Left Column */}
           <div>
-            {/* Image Gallery */}
-            <div className="relative mb-6">
-              {/* Main Image - 3:2 Aspect Ratio */}
-              <div 
-                className="relative bg-black cursor-pointer group"
-                onClick={() => setIsFullscreen(true)}
-              >
-                <div className="aspect-[3/2] relative">
-                  <Image
-                    src={propertyData.images[currentImageIndex]}
-                    alt={`Property image ${currentImageIndex + 1}`}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-
-                {/* Navigation Arrows */}
+            {/* Gallery with Tabs */}
+            <div className="mb-6">
+              {/* Tab Navigation */}
+              <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
                 <button
-                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-black/60 text-white hover:bg-black/80 transition-colors"
+                  onClick={() => setActiveTab("photos")}
+                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                    activeTab === "photos" 
+                      ? "bg-[#1DBFDD] text-white" 
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Photos ({property.images.length})</span>
+                  <span className="sm:hidden">Photos</span>
                 </button>
-                <button
-                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-black/60 text-white hover:bg-black/80 transition-colors"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-
-                {/* Image Counter */}
-                <div className="absolute bottom-4 right-4 bg-black/70 px-3 py-1.5 text-sm text-white font-medium">
-                  {currentImageIndex + 1} / {propertyData.images.length}
-                </div>
-
-                {/* Featured Tag */}
-                {propertyData.featured && (
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-[#1DBFDD] text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide">
-                      Featured
-                    </span>
-                  </div>
-                )}
-
-                {/* New Listing Tag */}
-                {propertyData.newListing && (
-                  <div className="absolute top-4" style={{ left: propertyData.featured ? '110px' : '16px' }}>
-                    <span className="bg-[#0D9488] text-white px-4 py-2 text-sm font-semibold uppercase tracking-wide">
-                      New Listing
-                    </span>
-                  </div>
-                )}
-
-                {/* Save/Share Buttons */}
-                <div className="absolute top-4 right-4 flex gap-2">
+                {property.virtualTour && (
                   <button
-                    onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
-                    className="w-11 h-11 bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors"
-                  >
-                    <Heart className={`h-5 w-5 ${saved ? "fill-red-500 text-red-500" : "text-white"}`} />
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setShowShareModal(true); }}
-                    className="w-11 h-11 bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors"
-                  >
-                    <Share2 className="h-5 w-5 text-white" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Thumbnail Strip */}
-              <div className="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
-                {propertyData.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`relative flex-shrink-0 w-24 h-16 overflow-hidden border-2 transition-all ${
-                      index === currentImageIndex
-                        ? "border-[#1DBFDD]"
-                        : "border-transparent opacity-60 hover:opacity-100"
+                    onClick={() => setActiveTab("tour")}
+                    className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                      activeTab === "tour" 
+                        ? "bg-[#1DBFDD] text-white" 
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
-                    <Image
-                      src={image}
-                      alt={`Thumbnail ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
+                    <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Virtual Tour</span>
+                    <span className="sm:hidden">Tour</span>
                   </button>
-                ))}
+                )}
+                <button
+                  onClick={() => setActiveTab("map")}
+                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                    activeTab === "map" 
+                      ? "bg-[#1DBFDD] text-white" 
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Map & Street View</span>
+                  <span className="sm:hidden">Map</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab("floorplan")}
+                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                    activeTab === "floorplan" 
+                      ? "bg-[#1DBFDD] text-white" 
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  }`}
+                >
+                  <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Floorplans</span>
+                  <span className="sm:hidden">Plans</span>
+                </button>
               </div>
+
+              {/* Gallery Content */}
+              <AnimatePresence mode="wait">
+                {activeTab === "photos" && (
+                  <motion.div
+                    key="photos"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    <PropertyGallery images={property.images} />
+                  </motion.div>
+                )}
+
+                {activeTab === "tour" && property.virtualTour && (
+                  <motion.div
+                    key="tour"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="relative bg-gray-900 rounded-lg overflow-hidden"
+                  >
+                    <div className="aspect-video relative">
+                      <Image
+                        src={property.virtualTour.thumbnail || property.images[0]?.url || ""}
+                        alt="Virtual Tour Thumbnail"
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <button
+                          onClick={() => setShowTourModal(true)}
+                          className="flex items-center gap-2 px-6 py-3 bg-[#1DBFDD] text-white rounded-full font-semibold hover:bg-[#1DBFDD]/90 transition-colors"
+                        >
+                          <Play className="h-5 w-5" />
+                          Launch Virtual Tour
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {activeTab === "map" && (
+                  <motion.div
+                    key="map"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    <StreetViewComponent
+                      lat={property.mapCoordinates.lat}
+                      lng={property.mapCoordinates.lng}
+                      address={property.address}
+                    />
+                  </motion.div>
+                )}
+
+                {activeTab === "floorplan" && (
+                  <motion.div
+                    key="floorplan"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    <FloorplanViewer floorplans={property.floorplans} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Desktop Property Info */}
-            <div className="hidden lg:block mb-8">
-              <div className="flex justify-between items-start gap-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-[#111827] mb-1">
-                    {propertyData.title}
-                  </h1>
-                  <p className="text-lg text-[#6B7280]">{propertyData.subtitle}</p>
-                  <p className="text-[#6B7280] mt-2 flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    {propertyData.address}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-3xl font-bold text-[#0D9488]">{propertyData.price}</p>
-                </div>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="flex flex-wrap gap-6 mt-6 pt-6 border-t border-[#E5E7EB]">
-                <div className="flex items-center gap-2">
-                  <Bed className="h-5 w-5 text-[#1DBFDD]" />
-                  <span className="font-semibold text-[#111827]">{propertyData.stats.beds}</span>
-                  <span className="text-[#6B7280]">Beds</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Bath className="h-5 w-5 text-[#1DBFDD]" />
-                  <span className="font-semibold text-[#111827]">{propertyData.stats.baths}</span>
-                  <span className="text-[#6B7280]">Baths</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Home className="h-5 w-5 text-[#1DBFDD]" />
-                  <span className="font-semibold text-[#111827]">{propertyData.stats.receptions}</span>
-                  <span className="text-[#6B7280]">Receptions</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Square className="h-5 w-5 text-[#1DBFDD]" />
-                  <span className="font-semibold text-[#111827]">{propertyData.stats.sqft.toLocaleString()}</span>
-                  <span className="text-[#6B7280]">sq ft</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1.5 bg-[#0D9488] text-white text-sm font-bold">
-                    EPC {propertyData.stats.epc}
+            {/* Property Header */}
+            <div className="mb-4 sm:mb-6">
+              <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
+                {property.newListing && (
+                  <span className="bg-[#0D9488] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
+                    NEW LISTING
                   </span>
+                )}
+                {property.featured && (
+                  <span className="bg-[#1DBFDD] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
+                    FEATURED
+                  </span>
+                )}
+                <span className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                  <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                  Added {property.addedDate}
+                </span>
+                {/* AI Match Score */}
+                <div className="hidden sm:block">
+                  <MatchScore 
+                    score={92} 
+                    size="sm" 
+                    showLabel={false}
+                    reasons={['Within your price range', '4 bedrooms as requested', 'Has Garden, Garage, Parking']}
+                  />
                 </div>
+              </div>
+
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 leading-tight">
+                {property.title}
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg text-gray-500 mb-2 sm:mb-3">{property.address}</p>
+              
+              {/* Price - Moved up for mobile visibility */}
+              <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
+                <p className="text-2xl sm:text-3xl font-bold text-[#0D9488]">{property.price}</p>
+                {property.priceQualifier && (
+                  <span className="text-xs sm:text-sm text-gray-500">{property.priceQualifier}</span>
+                )}
+              </div>
+              
+              {/* Smart Description Tags */}
+              <div className="mb-2 sm:mb-3">
+                <SmartDescription 
+                  property={{
+                    features: property.features || [],
+                    bedrooms: property.beds || 0,
+                    location: property.address || '',
+                    propertyType: 'Detached House',
+                    nearbySchools: true,
+                    transportLinks: true,
+                  }}
+                />
+              </div>
+              
+              {/* Viewing Counter */}
+              <div className="mb-2 sm:mb-3">
+                <ViewingCounter propertyId={property.id} baseCount={18} />
               </div>
             </div>
 
-            {/* Mobile Property Info */}
-            <div className="lg:hidden mb-6">
-              <p className="text-[#1DBFDD] font-semibold text-sm uppercase tracking-wider mb-2">
-                {propertyData.status}
-              </p>
-              <h1 className="text-2xl font-bold text-[#111827] mb-1">
-                {propertyData.title}
-              </h1>
-              <p className="text-[#6B7280]">{propertyData.subtitle}</p>
-              <p className="text-2xl font-bold text-[#0D9488] mt-3">{propertyData.price}</p>
-              <p className="text-[#6B7280] mt-2 flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                {propertyData.address}
-              </p>
-              
-              {/* Mobile Stats */}
-              <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-[#E5E7EB]">
-                <span className="flex items-center gap-1 text-sm">
-                  <Bed className="h-4 w-4 text-[#1DBFDD]" />
-                  <strong>{propertyData.stats.beds}</strong> Beds
-                </span>
-                <span className="flex items-center gap-1 text-sm">
-                  <Bath className="h-4 w-4 text-[#1DBFDD]" />
-                  <strong>{propertyData.stats.baths}</strong> Baths
-                </span>
-                <span className="flex items-center gap-1 text-sm">
-                  <Square className="h-4 w-4 text-[#1DBFDD]" />
-                  <strong>{propertyData.stats.sqft.toLocaleString()}</strong> sq ft
-                </span>
+            {/* Key Stats */}
+            <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
+                  <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.beds}</span>
+                  <span className="text-[10px] sm:text-sm text-gray-500">Beds</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
+                  <Bath className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.baths}</span>
+                  <span className="text-[10px] sm:text-sm text-gray-500">Baths</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
+                  <Home className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.receptions}</span>
+                  <span className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">Receptions</span>
+                  <span className="text-[10px] sm:text-sm text-gray-500 sm:hidden">Recep</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
+                  <Square className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                </div>
+                <div className="min-w-0">
+                  <span className="block font-bold text-gray-900 text-xs sm:text-base truncate">{property.sqft.toLocaleString()}</span>
+                  <span className="text-[10px] sm:text-sm text-gray-500">sq ft</span>
+                </div>
               </div>
             </div>
 
             {/* Accordion Sections */}
-            <div className="border-t border-[#E5E7EB]">
+            <div className="mb-8">
               {/* Description */}
               <AccordionItem title="Description" defaultOpen={true} icon={FileText}>
                 <div className="prose max-w-none">
-                  <p className="text-[#374151] whitespace-pre-line leading-relaxed">
-                    {propertyData.description}
+                  <p className="text-sm sm:text-base text-gray-600 whitespace-pre-line leading-relaxed">
+                    {property.description}
                   </p>
                 </div>
               </AccordionItem>
 
-              {/* Further Details */}
-              <AccordionItem title="Further details" icon={Info}>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Tenure</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.type}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Lease Expires</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.leaseExpires}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Ground Rent</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.groundRent}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Service Charge</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.serviceCharge}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Council Tax</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.councilTax}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Local Authority</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.localAuthority}</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4 sm:col-span-2">
-                    <p className="text-sm text-[#6B7280] mb-1">Total Sq Ft</p>
-                    <p className="font-medium text-[#111827]">{propertyData.stats.sqft.toLocaleString()} ({propertyData.stats.sqm} Sq M) approx.</p>
-                  </div>
-                  <div className="bg-[#F9FAFB] p-4">
-                    <p className="text-sm text-[#6B7280] mb-1">Reference</p>
-                    <p className="font-medium text-[#111827]">{propertyData.tenure.reference}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-xs text-[#6B7280] bg-[#F9FAFB] p-4">
-                  <Info className="h-3 w-3 inline mr-1" />
-                  Tenure details, service charges, ground rent (where applicable) and council tax are
-                  given as a guide only and should be checked and confirmed by your Solicitor prior to
-                  exchange of contracts.
-                </p>
-              </AccordionItem>
-
-              {/* Nearest Stations */}
-              <AccordionItem title="Nearest stations" icon={Train}>
-                <div className="space-y-3">
-                  {propertyData.stations.map((station, index) => (
-                    <div
+              {/* Features */}
+              <AccordionItem title="Key Features" badge={`${property.features.length}`} icon={Check}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {property.features.map((feature, index) => (
+                    <div 
                       key={index}
-                      className="flex items-center justify-between p-4 border border-[#E5E7EB] hover:border-[#1DBFDD] transition-colors"
+                      className="flex items-start gap-2 p-2 sm:p-2.5 bg-gray-50 rounded"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center justify-center w-12 h-12 bg-[#1DBFDD]/10">
-                          <Train className="h-6 w-6 text-[#1DBFDD]" />
-                        </div>
-                        <div>
-                          <a href="#" className="font-semibold text-[#1DBFDD] hover:underline text-lg">
-                            {station.name}
-                          </a>
-                          <p className="text-sm text-[#6B7280]">
-                            {station.distance} • Zone {station.zone}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap gap-1 justify-end max-w-[150px]">
-                        {station.lines.map((line) => (
-                          <span
-                            key={line}
-                            className="px-2 py-1 text-xs font-medium bg-[#F3F4F6] text-[#374151]"
-                          >
-                            {line}
-                          </span>
-                        ))}
-                      </div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#1DBFDD] mt-2 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-gray-700 leading-relaxed">{feature}</span>
                     </div>
                   ))}
                 </div>
               </AccordionItem>
 
-              {/* EPC */}
-              <AccordionItem title="Energy Performance Certificates" icon={FileText}>
-                <div className="flex items-center gap-6 mb-4">
-                  <div className="w-24 h-24 bg-[#0D9488] flex items-center justify-center">
-                    <span className="text-5xl font-bold text-white">{propertyData.stats.epc}</span>
+              {/* Further Information */}
+              <AccordionItem title="Further Information" icon={Info}>
+                <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                    <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Tenure</p>
+                    <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.type}</p>
                   </div>
-                  <div>
-                    <p className="font-semibold text-[#111827] text-lg">Current Rating: {propertyData.stats.epc}</p>
-                    <p className="text-[#6B7280]">Potential Rating: B</p>
-                  </div>
+                  {property.tenure.leaseExpires && (
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Lease Expires</p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.leaseExpires}</p>
+                    </div>
+                  )}
+                  {property.tenure.serviceCharge && (
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Service Charge</p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.serviceCharge}</p>
+                    </div>
+                  )}
+                  {property.tenure.councilTax && (
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Council Tax</p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.councilTax}</p>
+                    </div>
+                  )}
+                  {property.tenure.localAuthority && (
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg sm:col-span-2">
+                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Local Authority</p>
+                      <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.localAuthority}</p>
+                    </div>
+                  )}
                 </div>
-                <p className="text-[#6B7280] leading-relaxed">
-                  The Energy Performance Certificate (EPC) gives the building a standard energy
-                  and carbon emission efficiency grade from &apos;A&apos; to &apos;G&apos;, where
-                  &apos;A&apos; is the most efficient and &apos;D&apos; being the average to date.
-                </p>
               </AccordionItem>
 
-              {/* Mortgage */}
-              <AccordionItem title="Mortgage" icon={Calculator}>
-                <div className="bg-[#F9FAFB] p-6">
-                  <p className="text-[#374151] mb-4 leading-relaxed">
-                    Find out how much you could borrow and what it might cost with our mortgage calculator.
-                  </p>
-                  <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white px-8">
-                    Calculate Mortgage
-                  </Button>
-                </div>
+              {/* EPC */}
+              <AccordionItem title="Energy Performance" badge={property.epc.currentRating} icon={TrendingUp}>
+                <EPCVisualizer epc={property.epc} />
               </AccordionItem>
+
+              {/* Transport */}
+              <AccordionItem title="Transport Links" badge={`${property.transport.length}`} icon={MapPin}>
+                <TransportLinks 
+                  stations={property.transport} 
+                  propertyAddress={property.address}
+                />
+              </AccordionItem>
+
+              {/* Local Amenities */}
+              <AccordionItem title="Local Amenities" badge={`${property.amenities.length}`} icon={Home}>
+                <LocalAmenities 
+                  amenities={property.amenities}
+                  propertyAddress={property.address}
+                />
+              </AccordionItem>
+
+              {/* Property History */}
+              {property.history && property.history.length > 0 && (
+                <AccordionItem title="Property History" icon={History}>
+                  <div className="space-y-2 sm:space-y-3">
+                    {property.history.map((record, index) => (
+                      <div 
+                        key={index}
+                        className="flex items-center justify-between p-2.5 sm:p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div className="min-w-0 flex-1 pr-2">
+                          <p className="text-sm sm:text-base font-medium text-gray-900">
+                            {record.event === 'sold' ? 'Sold' : 'Listed for sale'}
+                          </p>
+                          <p className="text-xs sm:text-sm text-gray-500">
+                            {new Date(record.date).toLocaleDateString('en-GB', { 
+                              day: 'numeric', 
+                              month: 'short', 
+                              year: 'numeric' 
+                            })}
+                          </p>
+                          {record.agent && (
+                            <p className="text-[10px] sm:text-xs text-gray-400 truncate">{record.agent}</p>
+                          )}
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-sm sm:text-base font-semibold text-gray-900">{record.price}</p>
+                          {record.priceChange && (
+                            <p className="text-xs sm:text-sm text-green-600">{record.priceChange}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionItem>
+              )}
+            </div>
+
+            {/* Map Section (if not in tabs) */}
+            <div className="mb-8 lg:hidden">
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Location</h2>
+              <StreetViewComponent
+                lat={property.mapCoordinates.lat}
+                lng={property.mapCoordinates.lng}
+                address={property.address}
+              />
             </div>
           </div>
 
-          {/* Right Column - Agent Card */}
-          <div>
-            <div className="lg:sticky lg:top-24">
-              {/* Desktop Agent Card */}
-              <div className="hidden lg:block bg-white border border-[#E5E7EB] p-6 shadow-sm">
-                {/* Action Buttons */}
-                <div className="space-y-3 mb-6">
-                  <Button className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white py-6 text-lg font-semibold">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Book a Viewing
-                  </Button>
-                  <div className="flex gap-3">
-                    <Button
-                      variant="outline"
-                      className={`flex-1 py-5 border-2 ${saved ? 'border-red-500 text-red-500' : 'border-[#1DBFDD] text-[#1DBFDD]'} hover:bg-[#1DBFDD] hover:text-white`}
-                      onClick={() => setSaved(!saved)}
-                    >
-                      <Heart className={`h-4 w-4 mr-2 ${saved ? "fill-current" : ""}`} />
-                      {saved ? "Saved" : "Save"}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="flex-1 py-5 border-2 border-[#1DBFDD] text-[#1DBFDD] hover:bg-[#1DBFDD] hover:text-white"
-                      onClick={() => setShowShareModal(true)}
-                    >
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Agent Info */}
-                <div className="border-t border-[#E5E7EB] pt-6">
-                  <p className="text-sm text-[#6B7280] mb-4">Contact Agent</p>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden bg-[#F3F4F6] border-2 border-[#E5E7EB]">
-                      <Image
-                        src={propertyData.agent.image}
-                        alt={propertyData.agent.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-[#111827] text-lg">{propertyData.agent.name}</p>
-                      <p className="text-sm text-[#6B7280]">{propertyData.agent.title}</p>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start border-[#E5E7EB] hover:border-[#1DBFDD] hover:text-[#1DBFDD] py-5">
-                      <Phone className="h-4 w-4 mr-3" />
-                      {propertyData.agent.phone}
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start border-[#E5E7EB] hover:border-[#1DBFDD] hover:text-[#1DBFDD] py-5">
-                      <Mail className="h-4 w-4 mr-3" />
-                      Email Agent
-                    </Button>
-                  </div>
-                </div>
+          {/* Right Column - Sticky Sidebar */}
+          <div className="lg:pl-6 order-first lg:order-last">
+            <div className="lg:sticky lg:top-24 space-y-3 sm:space-y-4">
+              {/* Share Buttons - Hidden on mobile (moved to sticky CTA) */}
+              <div className="hidden lg:block">
+                <ShareButtons
+                  propertyUrl={`/sales/properties/${property.id}`}
+                  propertyTitle={property.title}
+                  propertyPrice={property.price}
+                  onSave={handleSave}
+                  isSaved={isSaved}
+                />
               </div>
 
-              {/* Mobile Bottom Bar */}
-              <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB] p-4 z-50">
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    className={`w-14 ${saved ? 'border-red-500 text-red-500' : 'border-[#E5E7EB]'}`}
-                    onClick={() => setSaved(!saved)}
-                  >
-                    <Heart className={`h-5 w-5 ${saved ? "fill-red-500 text-red-500" : ""}`} />
-                  </Button>
-                  <Button className="flex-1 bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white py-6 text-lg">
-                    <Calendar className="h-5 w-5 mr-2" />
-                    Book a Viewing
-                  </Button>
-                </div>
-              </div>
+              {/* Agent Contact Card */}
+              <AgentContactCard
+                agent={property.agent}
+                propertyId={property.id}
+              />
 
-              {/* Mobile Spacer */}
-              <div className="lg:hidden h-24" />
+              {/* Reference Number */}
+              <div className="text-center text-[10px] sm:text-xs text-gray-400 pb-4 lg:pb-0">
+                Property Reference: {property.reference}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Similar Properties */}
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <SimilarProperties properties={similarProperties} />
+        </div>
       </main>
 
-      {/* Fullscreen Gallery Modal */}
+      {/* Virtual Tour Modal */}
       <AnimatePresence>
-        {isFullscreen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black"
-          >
-            <button
-              onClick={() => setIsFullscreen(false)}
-              className="absolute right-4 top-4 z-10 w-12 h-12 flex items-center justify-center bg-black/60 text-white hover:bg-black/80 transition-colors"
-            >
-              <X className="h-6 w-6" />
-            </button>
-
-            <div className="relative h-full flex items-center justify-center">
-              <Image
-                src={propertyData.images[currentImageIndex]}
-                alt={`Property image ${currentImageIndex + 1}`}
-                fill
-                className="object-contain"
-              />
-
-              <button
-                onClick={prevImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-16 h-16 flex items-center justify-center bg-black/60 text-white hover:bg-black/80 transition-colors"
-              >
-                <ChevronLeft className="h-8 w-8" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-16 h-16 flex items-center justify-center bg-black/60 text-white hover:bg-black/80 transition-colors"
-              >
-                <ChevronRight className="h-8 w-8" />
-              </button>
-
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 bg-black/70 px-6 py-2 text-white font-medium">
-                {currentImageIndex + 1} / {propertyData.images.length}
-              </div>
-            </div>
-          </motion.div>
+        {showTourModal && property.virtualTour && (
+          <VirtualTourModal
+            url={property.virtualTour.url}
+            isOpen={showTourModal}
+            onClose={() => setShowTourModal(false)}
+          />
         )}
       </AnimatePresence>
 
-      {/* Share Modal */}
-      <AnimatePresence>
-        {showShareModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4"
-            onClick={() => setShowShareModal(false)}
+      {/* Mobile Sticky CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-pb">
+        <div className="flex gap-2 sm:gap-3 max-w-lg mx-auto">
+          <Button
+            variant="outline"
+            className="flex-1 h-12 sm:h-14 text-sm sm:text-base font-semibold"
+            onClick={handleSave}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white p-6 max-w-md w-full"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Share this property</h3>
-                <button onClick={() => setShowShareModal(false)}>
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="space-y-3">
-                <Button variant="outline" className="w-full justify-start" onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  setShowShareModal(false);
-                }}>
-                  Copy Link
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Share via Email
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  Share on WhatsApp
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {isSaved ? (
+              <span className="flex items-center gap-1.5">
+                <Check className="h-4 w-4 sm:h-5 sm:w-5" />
+                Saved
+              </span>
+            ) : (
+              "Save"
+            )}
+          </Button>
+          <Button className="flex-[2] h-12 sm:h-14 bg-[#0D9488] hover:bg-[#0F766E] text-white text-sm sm:text-base font-semibold shadow-lg">
+            <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5" />
+            Contact Agent
+          </Button>
+        </div>
+      </div>
 
       <Footer />
     </div>

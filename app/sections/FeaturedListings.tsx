@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import PropertyCard from "@/app/components/PropertyCard";
+import PropertyCard from "@/components/PropertyCard";
 
 const listings = [
   {
@@ -16,6 +16,8 @@ const listings = [
       "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
     ],
+    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
+    floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
     summary:
       "AI-generated summary placeholder. Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
   },
@@ -31,6 +33,8 @@ const listings = [
       "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80",
     ],
+    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
+    floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
     summary:
       "AI-generated summary placeholder. Light-filled penthouse with panoramic views, concierge service, and private terrace.",
   },
@@ -46,6 +50,7 @@ const listings = [
       "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
     ],
+    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
     summary:
       "AI-generated summary placeholder. Characterful family home with open-plan living, media room, and expansive gardens.",
   },

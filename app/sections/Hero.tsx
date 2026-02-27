@@ -137,11 +137,11 @@ export default function Hero() {
 
   return (
     <section 
-      className="relative min-h-[calc(100vh-57px-64px)] w-full overflow-hidden bg-[#2C2F33] text-white sm:min-h-[85vh] lg:min-h-[90vh]"
+      className="relative min-h-screen h-screen w-full overflow-hidden bg-[#2C2F33] text-white"
       onClick={handleInteraction}
     >
       {/* Video Background */}
-      <div className="absolute inset-0 h-full w-full overflow-hidden">
+      <div className="absolute inset-0 h-screen w-full overflow-hidden">
         <motion.div
           key={currentVideo}
           initial={{ opacity: 0 }}
@@ -152,6 +152,11 @@ export default function Hero() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
+            style={{ 
+              minHeight: '100vh', 
+              minWidth: '100vw',
+              objectPosition: 'center center'
+            }}
             src={videos[currentVideo]}
             muted
             playsInline
@@ -162,13 +167,13 @@ export default function Hero() {
 
         {/* Fallback while loading */}
         {!isLoaded && (
-          <div className="absolute inset-0 h-full w-full bg-[#2C2F33]">
+          <div className="absolute inset-0 h-screen w-full bg-[#2C2F33]">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
               style={{
                 backgroundImage: "url('/map-area.png')",
                 backgroundSize: "cover",
-                backgroundPosition: "center",
+                backgroundPosition: "center center",
                 filter: "blur(20px) brightness(0.4)",
               }}
             />
@@ -192,7 +197,7 @@ export default function Hero() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-57px-64px)] w-full max-w-7xl flex-col justify-start px-4 pb-24 pt-16 sm:min-h-[85vh] lg:min-h-[90vh] lg:justify-between lg:px-10 lg:py-20">
+      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-7xl flex-col justify-start px-4 pb-24 pt-20 lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -207,7 +212,7 @@ export default function Hero() {
           <p className="mt-4 text-base text-white/90 sm:text-lg lg:text-xl drop-shadow-md">
             Your local Cuffley &amp; Mayfair estate agent
           </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3 lg:gap-4">
+          <div className="mt-6 mb-8 flex flex-wrap items-center gap-3 lg:gap-4">
             <Link href="/valuation">
               <Button 
                 size="lg"
@@ -217,7 +222,7 @@ export default function Hero() {
               </Button>
             </Link>
             <Link
-              href="#featured"
+              href="/sales/properties"
               className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-[#4DD4F0] active:text-[#4DD4F0]"
             >
               View Properties
@@ -230,7 +235,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-auto w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm lg:mt-0 lg:max-w-sm lg:self-end lg:p-5"
+          className="w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm mb-32 sm:mb-28 lg:mb-0 lg:mt-auto lg:max-w-sm lg:self-end lg:p-5"
         >
           <AnimatePresence mode="wait">
             <motion.div
