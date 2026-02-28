@@ -13,58 +13,6 @@ const videos = [
   "/videos/hero1.m4v",
 ];
 
-// Mobile-optimized video sources (lower bitrate)
-const mobileVideos = [
-  "/videos/hero3-mobile.m4v",
-  "/videos/hero2-mobile.m4v",
-  "/videos/hero1-mobile.m4v",
-];
-
-// Hook to detect mobile devices
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-  
-  return isMobile;
-}
-
-// Hook to detect low-power/battery mode
-function useBatterySaver() {
-  const [isLowPower, setIsLowPower] = useState(false);
-  
-  useEffect(() => {
-    // Check for battery API support
-    if ('getBattery' in navigator) {
-      // @ts-expect-error - Battery API not fully typed
-      navigator.getBattery().then((battery) => {
-        setIsLowPower(!battery.charging && battery.level < 0.2);
-        
-        const handleChange = () => {
-          setIsLowPower(!battery.charging && battery.level < 0.2);
-        };
-        
-        battery.addEventListener('levelchange', handleChange);
-        battery.addEventListener('chargingchange', handleChange);
-        
-        return () => {
-          battery.removeEventListener('levelchange', handleChange);
-          battery.removeEventListener('chargingchange', handleChange);
-        };
-      });
-    }
-  }, []);
-  
-  return isLowPower;
-}
-
 interface Review {
   authorName: string;
   profilePhotoUrl?: string;
@@ -108,13 +56,8 @@ export default function Hero() {
   const [totalReviews, setTotalReviews] = useState(51);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Mobile and performance optimizations
-  const isMobile = useIsMobile();
-  const isLowPower = useBatterySaver();
+  // Accessibility - respect reduced motion preference
   const shouldReduceMotion = useReducedMotion();
-  
-  // Use static fallback for mobile/low-power/reduced-motion
-  const useVideoFallback = isMobile || isLowPower || shouldReduceMotion;
 
   // Fetch real reviews from API
   useEffect(() => {
@@ -202,7 +145,7 @@ export default function Hero() {
     >
       {/* Video Background - Optimized for mobile */}
       <div className="absolute inset-0 h-screen w-full overflow-hidden">
-        {!useVideoFallback ? (
+        {!shouldReduceMotion ? (
           <motion.div
             key={currentVideo}
             initial={{ opacity: 0 }}
@@ -226,7 +169,7 @@ export default function Hero() {
             />
           </motion.div>
         ) : (
-          /* Mobile/Low-power: Use optimized image carousel instead of video */
+          /* Reduced motion: Use static image instead of video */
           <motion.div
             key={currentVideo}
             initial={{ opacity: 0 }}
@@ -241,13 +184,13 @@ export default function Hero() {
               priority
               className="object-cover"
               sizes="100vw"
-              quality={isMobile ? 75 : 90}
+              quality={90}
             />
           </motion.div>
         )}
 
         {/* Fallback while loading */}
-        {!isLoaded && !useVideoFallback && (
+        {!isLoaded && !shouldReduceMotion && (
           <div className="absolute inset-0 h-screen w-full bg-[#2C2F33]">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
@@ -265,8 +208,8 @@ export default function Hero() {
       {/* Gradient overlay */}
       <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
 
-      {/* Autoplay blocked notice - hide on mobile fallback */}
-      {!canAutoplay && !useVideoFallback && (
+      {/* Autoplay blocked notice - hide when reduced motion */}
+      {!canAutoplay && !shouldReduceMotion && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
