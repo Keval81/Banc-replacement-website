@@ -166,8 +166,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
       {/* Image Container */}
       <div 
         ref={containerRef}
-        className="relative bg-gray-100 overflow-hidden"
-        style={{ height: isFullscreen ? 'calc(100vh - 200px)' : '500px' }}
+        className="relative bg-gray-100 overflow-hidden h-[300px] sm:h-[400px] lg:h-[500px]"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

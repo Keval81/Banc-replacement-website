@@ -157,7 +157,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       {/* Breadcrumb */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 min-w-0">
+          <nav className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
             <a href="/" className="hover:text-[#1DBFDD] transition-colors flex-shrink-0">Home</a>
             <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
             <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors flex-shrink-0">For Sale</a>
@@ -168,7 +168,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       </div>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-28 lg:pb-6 overflow-x-hidden">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-6">
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-[65%_35%]">
           {/* Left Column */}
           <div>
@@ -329,8 +329,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               <p className="text-sm sm:text-base lg:text-lg text-gray-500 mb-2 sm:mb-3">{property.address}</p>
               
               {/* Price - Moved up for mobile visibility */}
-              <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
-                <p className="text-2xl sm:text-3xl font-bold text-[#0D9488]">{property.price}</p>
+              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-2 sm:mb-3">
+                <p className="text-2xl sm:text-3xl font-bold text-[#0D9488] break-all">{property.price}</p>
                 {property.priceQualifier && (
                   <span className="text-xs sm:text-sm text-gray-500">{property.priceQualifier}</span>
                 )}
@@ -357,7 +357,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             </div>
 
             {/* Key Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 gap-y-3 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
+            <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
                   <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
@@ -391,7 +391,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   <Square className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
                 </div>
                 <div className="min-w-0">
-                  <span className="block font-bold text-gray-900 text-xs sm:text-base truncate">{property.sqft.toLocaleString()}</span>
+                  <span className="block font-bold text-gray-900 text-xs sm:text-base">{property.sqft.toLocaleString()}</span>
                   <span className="text-xs sm:text-sm text-gray-500">sq ft</span>
                 </div>
               </div>
@@ -527,7 +527,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
           </div>
 
           {/* Right Column - Sticky Sidebar */}
-          <div className="lg:pl-6 order-first lg:order-last">
+          <div className="lg:pl-6 order-last">
             <div className="lg:sticky lg:top-24 space-y-3 sm:space-y-4">
               {/* Share Buttons - Hidden on mobile (moved to sticky CTA) */}
               <div className="hidden lg:block">
@@ -572,7 +572,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       </AnimatePresence>
 
       {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-pb shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-pb shadow-[0_-4px_20px_rgba(0,0,0,0.1)] landscape:relative landscape:shadow-none landscape:bg-transparent landscape:border-t-0">
         <div className="flex gap-2 sm:gap-3 max-w-lg mx-auto">
           <Button
             variant="outline"

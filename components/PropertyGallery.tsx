@@ -191,12 +191,12 @@ export function PropertyGallery({
 
         {/* Thumbnails - Smaller on mobile */}
         {showThumbnails && images.length > 1 && (
-          <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3 overflow-x-auto pb-1 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
             {images.map((image, index) => (
               <button
                 key={image.id}
                 onClick={() => goToIndex(index)}
-                className={`relative flex-shrink-0 w-14 h-10 sm:w-20 sm:h-14 overflow-hidden rounded-md sm:rounded-lg border-2 transition-all ${
+                className={`relative flex-shrink-0 w-14 h-10 sm:w-20 sm:h-14 overflow-hidden rounded-md sm:rounded-lg border-2 transition-all snap-start ${
                   index === currentIndex
                     ? "border-[#1DBFDD] ring-2 ring-[#1DBFDD]/20"
                     : "border-transparent opacity-60 hover:opacity-100"
