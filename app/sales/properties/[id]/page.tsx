@@ -156,13 +156,13 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
       {/* Breadcrumb */}
       <div className="bg-gray-50 border-b border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="flex items-center gap-2 text-sm text-gray-500">
-            <a href="/" className="hover:text-[#1DBFDD] transition-colors">Home</a>
-            <ChevronRight className="h-4 w-4" />
-            <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors">For Sale</a>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-gray-900 truncate max-w-[200px] sm:max-w-[400px]">{property.address}</span>
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-3">
+          <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 min-w-0">
+            <a href="/" className="hover:text-[#1DBFDD] transition-colors flex-shrink-0">Home</a>
+            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+            <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors flex-shrink-0">For Sale</a>
+            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
+            <span className="text-gray-900 truncate min-w-0">{property.address}</span>
           </nav>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             {/* Gallery with Tabs */}
             <div className="mb-6">
               {/* Tab Navigation */}
-              <div className="flex items-center gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 scrollbar-hide min-w-0">
                 <button
                   onClick={() => setActiveTab("photos")}
                   className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
@@ -314,15 +314,13 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                   Added {property.addedDate}
                 </span>
-                {/* AI Match Score */}
-                <div className="hidden sm:block">
-                  <MatchScore 
-                    score={92} 
-                    size="sm" 
-                    showLabel={false}
-                    reasons={['Within your price range', '4 bedrooms as requested', 'Has Garden, Garage, Parking']}
-                  />
-                </div>
+                {/* AI Match Score - visible on all screen sizes */}
+                <MatchScore 
+                  score={92} 
+                  size="sm" 
+                  showLabel={false}
+                  reasons={['Within your price range', '4 bedrooms as requested', 'Has Garden, Garage, Parking']}
+                />
               </div>
 
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 leading-tight">
@@ -359,7 +357,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             </div>
 
             {/* Key Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 gap-y-3 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
                   <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
