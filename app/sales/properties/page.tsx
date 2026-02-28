@@ -440,7 +440,7 @@ function SalesPropertiesPageContent() {
                   }}
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-6 lg:gap-8"
                       : viewMode === "list"
                       ? "flex flex-col gap-6"
                       : "h-[600px] bg-[#F9FAFB] rounded-2xl flex items-center justify-center"

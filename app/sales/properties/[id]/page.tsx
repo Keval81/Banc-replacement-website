@@ -168,17 +168,17 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       </div>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-6">
+      <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-28 lg:pb-6 overflow-x-hidden">
         <div className="grid gap-6 lg:gap-8 lg:grid-cols-[65%_35%]">
           {/* Left Column */}
           <div>
             {/* Gallery with Tabs */}
             <div className="mb-6">
               {/* Tab Navigation */}
-              <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
                 <button
                   onClick={() => setActiveTab("photos")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "photos" 
                       ? "bg-[#1DBFDD] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -191,7 +191,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 {property.virtualTour && (
                   <button
                     onClick={() => setActiveTab("tour")}
-                    className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                    className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                       activeTab === "tour" 
                         ? "bg-[#1DBFDD] text-white" 
                         : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -204,7 +204,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 )}
                 <button
                   onClick={() => setActiveTab("map")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "map" 
                       ? "bg-[#1DBFDD] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -216,7 +216,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </button>
                 <button
                   onClick={() => setActiveTab("floorplan")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "floorplan" 
                       ? "bg-[#1DBFDD] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -359,14 +359,14 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             </div>
 
             {/* Key Stats */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
                   <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.beds}</span>
-                  <span className="text-[10px] sm:text-sm text-gray-500">Beds</span>
+                  <span className="text-xs sm:text-sm text-gray-500">Beds</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
@@ -375,7 +375,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.baths}</span>
-                  <span className="text-[10px] sm:text-sm text-gray-500">Baths</span>
+                  <span className="text-xs sm:text-sm text-gray-500">Baths</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
@@ -384,8 +384,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.receptions}</span>
-                  <span className="text-[10px] sm:text-sm text-gray-500 hidden sm:block">Receptions</span>
-                  <span className="text-[10px] sm:text-sm text-gray-500 sm:hidden">Recep</span>
+                  <span className="text-xs sm:text-sm text-gray-500 hidden sm:block">Receptions</span>
+                  <span className="text-xs sm:text-sm text-gray-500 sm:hidden">Recep</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
@@ -394,7 +394,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-xs sm:text-base truncate">{property.sqft.toLocaleString()}</span>
-                  <span className="text-[10px] sm:text-sm text-gray-500">sq ft</span>
+                  <span className="text-xs sm:text-sm text-gray-500">sq ft</span>
                 </div>
               </div>
             </div>
@@ -427,32 +427,32 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
 
               {/* Further Information */}
               <AccordionItem title="Further Information" icon={Info}>
-                <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
+                <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                    <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Tenure</p>
+                    <p className="text-xs text-gray-500 mb-1">Tenure</p>
                     <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.type}</p>
                   </div>
                   {property.tenure.leaseExpires && (
                     <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Lease Expires</p>
+                      <p className="text-xs text-gray-500 mb-1">Lease Expires</p>
                       <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.leaseExpires}</p>
                     </div>
                   )}
                   {property.tenure.serviceCharge && (
                     <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Service Charge</p>
+                      <p className="text-xs text-gray-500 mb-1">Service Charge</p>
                       <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.serviceCharge}</p>
                     </div>
                   )}
                   {property.tenure.councilTax && (
                     <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Council Tax</p>
+                      <p className="text-xs text-gray-500 mb-1">Council Tax</p>
                       <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.councilTax}</p>
                     </div>
                   )}
                   {property.tenure.localAuthority && (
                     <div className="bg-gray-50 p-3 sm:p-4 rounded-lg sm:col-span-2">
-                      <p className="text-[10px] sm:text-xs text-gray-500 mb-0.5 sm:mb-1">Local Authority</p>
+                      <p className="text-xs text-gray-500 mb-1">Local Authority</p>
                       <p className="text-sm sm:text-base font-medium text-gray-900">{property.tenure.localAuthority}</p>
                     </div>
                   )}
@@ -487,9 +487,9 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                     {property.history.map((record, index) => (
                       <div 
                         key={index}
-                        className="flex items-center justify-between p-2.5 sm:p-3 bg-gray-50 rounded-lg"
+                        className="flex items-center justify-between p-3 sm:p-3 bg-gray-50 rounded-lg"
                       >
-                        <div className="min-w-0 flex-1 pr-2">
+                        <div className="min-w-0 flex-1 pr-3">
                           <p className="text-sm sm:text-base font-medium text-gray-900">
                             {record.event === 'sold' ? 'Sold' : 'Listed for sale'}
                           </p>
@@ -501,7 +501,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                             })}
                           </p>
                           {record.agent && (
-                            <p className="text-[10px] sm:text-xs text-gray-400 truncate">{record.agent}</p>
+                            <p className="text-xs text-gray-400 truncate">{record.agent}</p>
                           )}
                         </div>
                         <div className="text-right flex-shrink-0">
@@ -574,11 +574,11 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       </AnimatePresence>
 
       {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-pb">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-pb shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
         <div className="flex gap-2 sm:gap-3 max-w-lg mx-auto">
           <Button
             variant="outline"
-            className="flex-1 h-12 sm:h-14 text-sm sm:text-base font-semibold"
+            className="flex-1 h-12 sm:h-14 text-sm sm:text-base font-semibold border-gray-300"
             onClick={handleSave}
           >
             {isSaved ? (

@@ -133,7 +133,7 @@ export default function PropertyCard({
 
           {/* Tags Overlay */}
           {tags.length > 0 && (
-            <div className="absolute left-2 sm:left-3 top-2 sm:top-3 flex flex-wrap gap-1 sm:gap-1.5 max-w-[calc(100%-4rem)]">
+            <div className="absolute left-2 sm:left-3 top-2 sm:top-3 flex flex-wrap gap-1 sm:gap-1.5 max-w-[calc(100%-4rem)] overflow-hidden">
               {tags.map((tag) => (
                 <span
                   key={tag}
@@ -218,17 +218,17 @@ export default function PropertyCard({
 
         {/* Stats Row */}
         <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-[#6B7280]">
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+          <span className="flex items-center gap-1">
             <Bed className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
             <span className="font-medium">{stats.beds}</span>
             <span className="hidden sm:inline"> Beds</span>
           </span>
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+          <span className="flex items-center gap-1">
             <Bath className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
             <span className="font-medium">{stats.baths}</span>
             <span className="hidden sm:inline"> Baths</span>
           </span>
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+          <span className="flex items-center gap-1">
             <Square className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
             <span className="font-medium">{stats.sqft.toLocaleString()}</span>
             <span className="hidden sm:inline"> Sq Ft</span>

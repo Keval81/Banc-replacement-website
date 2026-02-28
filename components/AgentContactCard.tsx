@@ -98,18 +98,18 @@ export function AgentContactCard({
       </div>
 
       {/* Contact Methods */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-3 sm:p-4 border-b border-gray-200">
         <div className="grid grid-cols-2 gap-2">
           <a 
             href={`tel:${agent.phone}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group min-h-[48px]"
           >
             <Phone className="h-4 w-4" />
             <span className="text-sm font-medium">Call</span>
           </a>
           <a 
             href={`mailto:${agent.email}?subject=Property Enquiry - Ref: ${propertyId}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group min-h-[48px]"
           >
             <Mail className="h-4 w-4" />
             <span className="text-sm font-medium">Email</span>
@@ -152,15 +152,15 @@ export function AgentContactCard({
       </div>
 
       {/* Forms */}
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         {isSubmitted ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-8"
+            className="text-center py-6 sm:py-8"
           >
-            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-7 w-7 sm:h-8 sm:w-8 text-green-600" />
             </div>
             <h4 className="font-semibold text-gray-900 mb-1">Message Sent!</h4>
             <p className="text-sm text-gray-500">
@@ -168,7 +168,7 @@ export function AgentContactCard({
             </p>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 Your Name
@@ -181,7 +181,7 @@ export function AgentContactCard({
                   onChange={handleChange}
                   placeholder="John Smith"
                   required
-                  className="pl-10"
+                  className="pl-10 h-11 sm:h-12 text-base"
                 />
               </div>
             </div>
@@ -199,7 +199,7 @@ export function AgentContactCard({
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="pl-10"
+                  className="pl-10 h-11 sm:h-12 text-base"
                 />
               </div>
             </div>
@@ -216,7 +216,7 @@ export function AgentContactCard({
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="020 7123 4567"
-                  className="pl-10"
+                  className="pl-10 h-11 sm:h-12 text-base"
                 />
               </div>
             </div>
@@ -232,7 +232,7 @@ export function AgentContactCard({
                     name="preferredTime"
                     value={formData.preferredTime}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]/20 focus:border-[#1DBFDD]"
+                    className="w-full pl-10 pr-3 py-2.5 sm:py-3 border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]/20 focus:border-[#1DBFDD] h-11 sm:h-12"
                   >
                     <option value="">Select a time...</option>
                     <option value="weekday-morning">Weekday Morning</option>
@@ -256,15 +256,15 @@ export function AgentContactCard({
                 placeholder={activeTab === "viewing" 
                   ? "Any specific requirements or questions..." 
                   : "I'm interested in this property..."}
-                rows={4}
-                className="resize-none"
+                rows={3}
+                className="resize-none text-base"
               />
             </div>
 
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white py-5 text-base font-semibold"
+              className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-12 sm:h-14 text-base font-semibold"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">

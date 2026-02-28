@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +12,58 @@ const videos = [
   "/videos/hero2.m4v",
   "/videos/hero1.m4v",
 ];
+
+// Mobile-optimized video sources (lower bitrate)
+const mobileVideos = [
+  "/videos/hero3-mobile.m4v",
+  "/videos/hero2-mobile.m4v",
+  "/videos/hero1-mobile.m4v",
+];
+
+// Hook to detect mobile devices
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  return isMobile;
+}
+
+// Hook to detect low-power/battery mode
+function useBatterySaver() {
+  const [isLowPower, setIsLowPower] = useState(false);
+  
+  useEffect(() => {
+    // Check for battery API support
+    if ('getBattery' in navigator) {
+      // @ts-expect-error - Battery API not fully typed
+      navigator.getBattery().then((battery) => {
+        setIsLowPower(!battery.charging && battery.level < 0.2);
+        
+        const handleChange = () => {
+          setIsLowPower(!battery.charging && battery.level < 0.2);
+        };
+        
+        battery.addEventListener('levelchange', handleChange);
+        battery.addEventListener('chargingchange', handleChange);
+        
+        return () => {
+          battery.removeEventListener('levelchange', handleChange);
+          battery.removeEventListener('chargingchange', handleChange);
+        };
+      });
+    }
+  }, []);
+  
+  return isLowPower;
+}
 
 interface Review {
   authorName: string;
@@ -55,6 +107,14 @@ export default function Hero() {
   const [currentReview, setCurrentReview] = useState(0);
   const [totalReviews, setTotalReviews] = useState(51);
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Mobile and performance optimizations
+  const isMobile = useIsMobile();
+  const isLowPower = useBatterySaver();
+  const shouldReduceMotion = useReducedMotion();
+  
+  // Use static fallback for mobile/low-power/reduced-motion
+  const useVideoFallback = isMobile || isLowPower || shouldReduceMotion;
 
   // Fetch real reviews from API
   useEffect(() => {
@@ -140,33 +200,54 @@ export default function Hero() {
       className="relative min-h-screen h-screen w-full overflow-hidden bg-[#2C2F33] text-white"
       onClick={handleInteraction}
     >
-      {/* Video Background */}
+      {/* Video Background - Optimized for mobile */}
       <div className="absolute inset-0 h-screen w-full overflow-hidden">
-        <motion.div
-          key={currentVideo}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoaded ? 1 : 0 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0 h-full w-full"
-        >
-          <video
-            ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover"
-            style={{ 
-              minHeight: '100vh', 
-              minWidth: '100vw',
-              objectPosition: 'center center'
-            }}
-            src={videos[currentVideo]}
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-          />
-        </motion.div>
+        {!useVideoFallback ? (
+          <motion.div
+            key={currentVideo}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isLoaded ? 1 : 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute inset-0 h-full w-full"
+          >
+            <video
+              ref={videoRef}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ 
+                minHeight: '100vh', 
+                minWidth: '100vw',
+                objectPosition: 'center center'
+              }}
+              src={videos[currentVideo]}
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            />
+          </motion.div>
+        ) : (
+          /* Mobile/Low-power: Use optimized image carousel instead of video */
+          <motion.div
+            key={currentVideo}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 h-full w-full"
+          >
+            <Image
+              src={`/images/hero-fallback-${currentVideo + 1}.jpg`}
+              alt="Luxury property showcase"
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+              quality={isMobile ? 75 : 90}
+            />
+          </motion.div>
+        )}
 
         {/* Fallback while loading */}
-        {!isLoaded && (
+        {!isLoaded && !useVideoFallback && (
           <div className="absolute inset-0 h-screen w-full bg-[#2C2F33]">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
@@ -184,12 +265,12 @@ export default function Hero() {
       {/* Gradient overlay */}
       <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
 
-      {/* Autoplay blocked notice */}
-      {!canAutoplay && (
+      {/* Autoplay blocked notice - hide on mobile fallback */}
+      {!canAutoplay && !useVideoFallback && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#0E8CAB] lg:hover:bg-[#0E8CAB]"
+          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#0E8CAB] hover:bg-[#0E8CAB] transition-colors"
           onClick={startPlayback}
         >
           Click to play video
@@ -197,7 +278,7 @@ export default function Hero() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-7xl flex-col justify-start px-4 pb-24 pt-20 lg:justify-between lg:px-10 lg:py-20">
+      <div className="relative z-10 mx-auto flex min-h-[600px] lg:min-h-screen h-screen w-full max-w-7xl flex-col justify-start px-4 pb-32 pt-20 sm:pb-28 lg:justify-between lg:px-10 lg:py-20">
         {/* Main Content */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -235,7 +316,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm mb-32 sm:mb-28 lg:mb-0 lg:mt-auto lg:max-w-sm lg:self-end lg:p-5"
+          className="w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm mb-0 mt-auto sm:max-w-sm lg:self-end lg:p-5"
         >
           <AnimatePresence mode="wait">
             <motion.div

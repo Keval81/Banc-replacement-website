@@ -258,7 +258,7 @@ export default function SearchPage() {
       
       {/* Hero Search Bar */}
       <section className="bg-[#2C2F33] py-6">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -280,7 +280,7 @@ export default function SearchPage() {
 
       {/* Results Bar */}
       <section className="border-b border-[#E5E7EB] bg-white sticky top-0 z-30">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-3">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Mobile Filter Button */}
             <button
@@ -347,7 +347,7 @@ export default function SearchPage() {
 
       {/* Main Content */}
       <section className="py-6">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           <div className="flex gap-8">
             {/* Sidebar Filters - Desktop */}
             <aside className="hidden md:block w-72 flex-shrink-0">
@@ -372,7 +372,7 @@ export default function SearchPage() {
               ) : (
                 <motion.div
                   layout
-                  className={`grid gap-4 sm:gap-6 ${
+                  className={`grid gap-4 sm:gap-4 lg:gap-6 ${
                     filters.view === "list"
                       ? "grid-cols-1"
                       : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"

@@ -131,6 +131,19 @@ html {
   scroll-behavior: smooth;
   overscroll-behavior-y: none;
   -webkit-overflow-scrolling: touch;
+  /* Account for fixed bottom navigation on mobile */
+  scroll-padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Dynamic viewport height support for mobile browsers */
+@supports (height: 100dvh) {
+  .min-h-screen {
+    min-height: 100dvh;
+  }
+  
+  .h-screen {
+    height: 100dvh;
+  }
 }
 
 /* Prevent pull-to-refresh on mobile */
@@ -241,7 +254,7 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   touch-action: none;
 }
 
-/* Reduced motion */
+/* Reduced motion - comprehensive support */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -252,6 +265,12 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
     scroll-behavior: auto !important;
   }
   
+  /* Disable marquee animations */
+  .animate-marquee,
+  .animate-marquee2 {
+    animation: none !important;
+  }
+  
   /* Disable video autoplay */
   video {
     display: none;
@@ -260,6 +279,117 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   /* Show static fallback */
   .video-fallback {
     display: block !important;
+  }
+  
+  /* Disable Framer Motion transforms */
+  [data-framer-motion] {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Touch device optimizations - disable hover effects */
+@media (hover: none) {
+  /* Property card hover lift - disable on touch */
+  [data-property-card]:hover,
+  .property-card-hover:hover {
+    transform: none !important;
+  }
+  
+  /* Image scale on hover - disable on touch */
+  .group:hover .group-hover\:scale-105,
+  .group:active .group-hover\:scale-105 {
+    transform: none !important;
+  }
+  
+  /* Use active state instead of hover for touch feedback */
+  .touch-active:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  /* Remove cursor pointer on non-clickable elements */
+  .cursor-pointer:not(a):not(button):not([role="button"]) {
+    cursor: default;
+  }
+}
+
+/* GPU acceleration for animated elements */
+.will-change-transform {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Micro typography for premium mobile feel */
+.text-micro {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+/* Ultra-compact devices */
+@media (max-width: 360px) {
+  .text-micro {
+    font-size: 10px;
+    letter-spacing: 0.01em;
+  }
+  
+  /* Reduce padding on very small screens */
+  .compact-padding {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Content visibility for below-fold sections - performance optimization */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
+
+/* Premium mobile button sizing */
+@media (max-width: 640px) {
+  .btn-premium-mobile {
+    min-height: 48px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Reduce vertical padding in landscape */
+  .landscape-compact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Adjust mobile bottom nav in landscape */
+  nav[aria-label="Mobile navigation"] {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  
+  /* Smaller text in landscape nav */
+  nav[aria-label="Mobile navigation"] span {
+    font-size: 10px;
+  }
+}
+
+/* Landscape mobile specific (phones in landscape) */
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 896px) {
+  /* Gallery wider aspect ratio */
+  .gallery-landscape {
+    aspect-ratio: 16/9 !important;
+  }
+  
+  /* Compact hero for landscape mobile */
+  .hero-landscape {
+    min-height: 400px !important;
   }
 }
 

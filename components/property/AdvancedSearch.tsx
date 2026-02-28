@@ -351,10 +351,10 @@ export default function AdvancedSearch({
   };
 
   return (
-    <div className={cn("bg-white h-full flex flex-col", isMobile ? "" : "rounded-2xl border border-[#E5E7EB] shadow-sm")}>
+    <div className={cn("bg-white h-full flex flex-col", isMobile ? "max-h-[100dvh] landscape:max-h-[100dvh]" : "rounded-2xl border border-[#E5E7EB] shadow-sm")}>
       {/* Header */}
       <div className={cn(
-        "flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB]",
+        "flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB] flex-shrink-0",
         isMobile && "sticky top-0 bg-white z-10"
       )}>
         <div className="flex items-center gap-3">
@@ -399,7 +399,7 @@ export default function AdvancedSearch({
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-6">
+      <div className="flex-1 overflow-y-auto px-6 landscape:max-h-[calc(100dvh-180px)]">
         {/* Sort Options - Always visible at top */}
         <div className="py-4 border-b border-[#E5E7EB]">
           <SectionTitle>Sort by</SectionTitle>

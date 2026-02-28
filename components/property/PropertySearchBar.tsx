@@ -146,9 +146,9 @@ export default function PropertySearchBar({
         <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden">
           {/* Primary Search Row */}
           <div className="p-4 lg:p-6">
-            <div className="flex flex-col lg:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               {/* Location Search */}
-              <form onSubmit={handleLocationSubmit} className="flex-1">
+              <form onSubmit={handleLocationSubmit} className="flex-1 min-w-0">
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
                   <Input
@@ -178,7 +178,7 @@ export default function PropertySearchBar({
               </form>
 
               {/* Quick Actions */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 sm:flex-shrink-0">
                 {/* Mobile Filter Button */}
                 <MobileFilterButton
                   onClick={() => setMobileFiltersOpen(true)}

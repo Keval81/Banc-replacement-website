@@ -135,7 +135,7 @@ export default function SoldBanner() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-[70px] left-0 right-0 z-40 md:hidden"
+            className="fixed bottom-[70px] left-0 right-0 z-40 md:hidden landscape:hidden"
           >
             <div 
               className="relative h-11 overflow-hidden"

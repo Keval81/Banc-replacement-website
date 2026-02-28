@@ -58,12 +58,12 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
     <nav 
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-lg lg:hidden",
-        "safe-area-pb", // Handle iOS safe area
+        "safe-area-pb landscape:static landscape:border-t-0", // Handle iOS safe area and landscape mode
         className
       )}
       aria-label="Mobile navigation"
     >
-      <div className="mx-auto flex max-w-md items-center justify-around px-2">
+      <div className="mx-auto flex max-w-md items-center justify-around px-2 landscape:max-w-none landscape:justify-center landscape:gap-8">
         {navItems.map((item) => {
           const isActive = item.exact 
             ? pathname === item.href 
@@ -77,7 +77,7 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "group flex flex-col items-center gap-1 py-3 px-4 min-w-[64px]",
+                  "group flex flex-col items-center gap-1 py-3 px-4 min-w-[64px] landscape:flex-row landscape:gap-2",
                   "active:scale-95 transition-transform"
                 )}
                 aria-label={`Call us at ${item.href.replace("tel:", "")}`}
@@ -85,13 +85,13 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
                 <div className="relative">
                   <Icon 
                     className={cn(
-                      "h-6 w-6 transition-colors",
+                      "h-6 w-6 transition-colors landscape:h-5 landscape:w-5",
                       "text-muted-foreground group-active:text-primary"
                     )} 
                   />
                 </div>
                 <span className={cn(
-                  "text-[10px] font-medium transition-colors",
+                  "text-[10px] font-medium transition-colors landscape:text-xs",
                   "text-muted-foreground"
                 )}>
                   {item.name}
@@ -105,7 +105,7 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
               key={item.name}
               href={item.href}
               className={cn(
-                "group flex flex-col items-center gap-1 py-3 px-4 min-w-[64px]",
+                "group flex flex-col items-center gap-1 py-3 px-4 min-w-[64px] landscape:flex-row landscape:gap-2",
                 "active:scale-95 transition-transform"
               )}
               aria-current={isActive ? "page" : undefined}
@@ -113,7 +113,7 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
               <div className="relative">
                 <Icon 
                   className={cn(
-                    "h-6 w-6 transition-colors",
+                    "h-6 w-6 transition-colors landscape:h-5 landscape:w-5",
                     isActive 
                       ? "text-primary" 
                       : "text-muted-foreground group-hover:text-foreground"
@@ -122,13 +122,13 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
                 {isActive && (
                   <motion.div
                     layoutId="bottomNavIndicator"
-                    className="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary"
+                    className="absolute -bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary landscape:hidden"
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
               </div>
               <span className={cn(
-                "text-[10px] font-medium transition-colors",
+                "text-[10px] font-medium transition-colors landscape:text-xs",
                 isActive 
                   ? "text-primary" 
                   : "text-muted-foreground group-hover:text-foreground"
@@ -137,7 +137,7 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
               </span>
             </Link>
           );
-        })}
+        })}   
       </div>
     </nav>
   );
