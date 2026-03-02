@@ -122,7 +122,7 @@ export function ShareButtons({
         Share
       </Button>
 
-      {/* Share Modal */}
+      {/* Share Modal - Bottom sheet on mobile, centered on desktop */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -135,15 +135,21 @@ export function ShareButtons({
               className="fixed inset-0 bg-black/50 z-[100]"
             />
 
-            {/* Modal */}
+            {/* Modal - Bottom sheet style on mobile, centered on desktop */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl shadow-2xl z-[101] p-6"
+              initial={{ opacity: 0, y: "100%" }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 sm:left-1/2 sm:top-1/2 sm:bottom-auto sm:right-auto sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-xl shadow-2xl z-[101] sm:p-6 max-h-[85vh] sm:max-h-none overflow-auto"
             >
+              {/* Drag handle for mobile */}
+              <div className="sm:hidden w-full pt-3 pb-1 flex justify-center">
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+              </div>
+
               {/* Header */}
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6 px-4 sm:px-0 pt-2 sm:pt-0">
                 <h3 className="text-lg font-semibold text-gray-900">Share this property</h3>
                 <button 
                   onClick={() => setIsOpen(false)}
@@ -154,7 +160,7 @@ export function ShareButtons({
               </div>
 
               {/* Copy Link */}
-              <div className="mb-6">
+              <div className="mb-6 px-4 sm:px-0">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Page Link
                 </label>
@@ -180,50 +186,50 @@ export function ShareButtons({
               </div>
 
               {/* Share Options */}
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-4 gap-3 px-4 sm:px-0 pb-4 sm:pb-0">
                 <button
                   onClick={handleWhatsAppShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                    <MessageCircle className="h-6 w-6 text-green-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                    <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
                   </div>
                   <span className="text-xs text-gray-600">WhatsApp</span>
                 </button>
 
                 <button
                   onClick={handleEmailShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                    <Mail className="h-6 w-6 text-blue-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                    <Mail className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                   </div>
                   <span className="text-xs text-gray-600">Email</span>
                 </button>
 
                 <button
                   onClick={handleFacebookShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                    <Facebook className="h-6 w-6 text-blue-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                    <Facebook className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                   </div>
                   <span className="text-xs text-gray-600">Facebook</span>
                 </button>
 
                 <button
                   onClick={handleTwitterShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center group-hover:bg-sky-200 transition-colors">
-                    <Twitter className="h-6 w-6 text-sky-500" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-sky-100 flex items-center justify-center group-hover:bg-sky-200 transition-colors">
+                    <Twitter className="h-5 w-5 sm:h-6 sm:w-6 text-sky-500" />
                   </div>
                   <span className="text-xs text-gray-600">Twitter</span>
                 </button>
               </div>
 
               {/* Additional Options */}
-              <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="mt-4 sm:mt-6 pt-4 border-t border-gray-200 px-4 sm:px-0">
                 <button
                   onClick={handleLinkedInShare}
                   className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors"

@@ -40,7 +40,7 @@ import { sampleProperty, similarProperties } from "@/lib/property-data";
 
 type GalleryTab = "photos" | "tour" | "map" | "floorplan";
 
-// Accordion Component
+// Accordion Component with CSS Grid animation (prevents layout thrashing)
 function AccordionItem({ 
   title, 
   children, 
@@ -77,19 +77,15 @@ function AccordionItem({
           }`} 
         />
       </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="pb-5">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Use CSS Grid for smooth animation without layout thrashing */}
+      <div 
+        className="grid transition-[grid-template-rows] duration-200 ease-out"
+        style={{ gridTemplateRows: isOpen ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <div className="pb-5">{children}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -167,135 +163,145 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Mobile-First Layout */}
       <main className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-6">
-        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[65%_35%]">
-          {/* Left Column */}
-          <div>
-            {/* Gallery with Tabs */}
-            <div className="mb-6">
-              {/* Tab Navigation */}
-              <div className="flex items-center gap-1.5 sm:gap-2 mb-4 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 scrollbar-hide min-w-0">
+        {/* Mobile-First Single Column Layout / Desktop: Two Column */}
+        <div className="lg:grid lg:gap-8 lg:grid-cols-[1fr_380px]">
+          
+          {/* LEFT COLUMN: Gallery + Property Details */}
+          <div className="order-1">
+            {/* 1. GALLERY - Full width, 16:9 on mobile */}
+            <div className="w-full -mx-3 px-3 sm:mx-0 sm:px-0">
+            {/* Tab Navigation */}
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 overflow-x-auto pb-2 scrollbar-hide min-w-0">
+              <button
+                onClick={() => setActiveTab("photos")}
+                className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  activeTab === "photos" 
+                    ? "bg-[#1DBFDD] text-white" 
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Photos ({property.images.length})</span>
+                <span className="sm:hidden">Photos</span>
+              </button>
+              {property.virtualTour && (
                 <button
-                  onClick={() => setActiveTab("photos")}
+                  onClick={() => setActiveTab("tour")}
                   className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "photos" 
+                    activeTab === "tour" 
                       ? "bg-[#1DBFDD] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Photos ({property.images.length})</span>
-                  <span className="sm:hidden">Photos</span>
+                  <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">Virtual Tour</span>
+                  <span className="sm:hidden">Tour</span>
                 </button>
-                {property.virtualTour && (
-                  <button
-                    onClick={() => setActiveTab("tour")}
-                    className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                      activeTab === "tour" 
-                        ? "bg-[#1DBFDD] text-white" 
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Virtual Tour</span>
-                    <span className="sm:hidden">Tour</span>
-                  </button>
-                )}
-                <button
-                  onClick={() => setActiveTab("map")}
-                  className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "map" 
-                      ? "bg-[#1DBFDD] text-white" 
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Map & Street View</span>
-                  <span className="sm:hidden">Map</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("floorplan")}
-                  className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "floorplan" 
-                      ? "bg-[#1DBFDD] text-white" 
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
-                >
-                  <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Floorplans</span>
-                  <span className="sm:hidden">Plans</span>
-                </button>
-              </div>
-
-              {/* Gallery Content */}
-              <AnimatePresence mode="wait">
-                {activeTab === "photos" && (
-                  <motion.div
-                    key="photos"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <PropertyGallery images={property.images} />
-                  </motion.div>
-                )}
-
-                {activeTab === "tour" && property.virtualTour && (
-                  <motion.div
-                    key="tour"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="relative bg-gray-900 rounded-lg overflow-hidden"
-                  >
-                    <div className="aspect-video relative">
-                      <Image
-                        src={property.virtualTour.thumbnail || property.images[0]?.url || ""}
-                        alt="Virtual Tour Thumbnail"
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <button
-                          onClick={() => setShowTourModal(true)}
-                          className="flex items-center gap-2 px-6 py-3 bg-[#1DBFDD] text-white rounded-full font-semibold hover:bg-[#1DBFDD]/90 transition-colors"
-                        >
-                          <Play className="h-5 w-5" />
-                          Launch Virtual Tour
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeTab === "map" && (
-                  <motion.div
-                    key="map"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <StreetViewComponent
-                      lat={property.mapCoordinates.lat}
-                      lng={property.mapCoordinates.lng}
-                      address={property.address}
-                    />
-                  </motion.div>
-                )}
-
-                {activeTab === "floorplan" && (
-                  <motion.div
-                    key="floorplan"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <FloorplanViewer floorplans={property.floorplans} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              )}
+              <button
+                onClick={() => setActiveTab("map")}
+                className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  activeTab === "map" 
+                    ? "bg-[#1DBFDD] text-white" 
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Map & Street View</span>
+                <span className="sm:hidden">Map</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("floorplan")}
+                className={`flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
+                  activeTab === "floorplan" 
+                    ? "bg-[#1DBFDD] text-white" 
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Floorplans</span>
+                <span className="sm:hidden">Plans</span>
+              </button>
             </div>
+
+            {/* Gallery Content - 16:9 aspect ratio on mobile */}
+            <AnimatePresence mode="wait">
+              {activeTab === "photos" && (
+                <motion.div
+                  key="photos"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full"
+                >
+                  <PropertyGallery 
+                    images={property.images} 
+                    className="[&_[class*='aspect-']]:aspect-video [&_[class*='aspect-']]:sm:aspect-[4/3]"
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === "tour" && property.virtualTour && (
+                <motion.div
+                  key="tour"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="relative bg-gray-900 rounded-lg overflow-hidden w-full aspect-video sm:aspect-[4/3]"
+                >
+                  <div className="absolute inset-0">
+                    <Image
+                      src={property.virtualTour.thumbnail || property.images[0]?.url || ""}
+                      alt="Virtual Tour Thumbnail"
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <button
+                        onClick={() => setShowTourModal(true)}
+                        className="flex items-center gap-2 px-6 py-3 bg-[#1DBFDD] text-white rounded-full font-semibold hover:bg-[#1DBFDD]/90 transition-colors"
+                      >
+                        <Play className="h-5 w-5" />
+                        Launch Virtual Tour
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "map" && (
+                <motion.div
+                  key="map"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full aspect-video sm:aspect-[4/3]"
+                >
+                  <StreetViewComponent
+                    lat={property.mapCoordinates.lat}
+                    lng={property.mapCoordinates.lng}
+                    address={property.address}
+                  />
+                </motion.div>
+              )}
+
+              {activeTab === "floorplan" && (
+                <motion.div
+                  key="floorplan"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full"
+                >
+                  <FloorplanViewer floorplans={property.floorplans} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+            {/* Property Details Content */}
 
             {/* Property Header */}
             <div className="mb-4 sm:mb-6">
@@ -356,8 +362,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               </div>
             </div>
 
-            {/* Key Stats */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
+            {/* Key Stats - 2x2 grid on mobile, 4 columns on sm+ */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
                   <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
@@ -524,21 +530,20 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 address={property.address}
               />
             </div>
+            {/* Close Left Column */}
           </div>
-
-          {/* Right Column - Sticky Sidebar */}
-          <div className="lg:pl-6 order-last">
-            <div className="lg:sticky lg:top-24 space-y-3 sm:space-y-4">
-              {/* Share Buttons - Hidden on mobile (moved to sticky CTA) */}
-              <div className="hidden lg:block">
-                <ShareButtons
-                  propertyUrl={`/sales/properties/${property.id}`}
-                  propertyTitle={property.title}
-                  propertyPrice={property.price}
-                  onSave={handleSave}
-                  isSaved={isSaved}
-                />
-              </div>
+          
+          {/* RIGHT COLUMN: Agent Contact - Desktop only (sticky), Mobile flows after Similar Properties */}
+          <div className="hidden lg:block lg:pl-6">
+            <div className="sticky top-24 space-y-4">
+              {/* Share Buttons - Desktop only */}
+              <ShareButtons
+                propertyUrl={`/sales/properties/${property.id}`}
+                propertyTitle={property.title}
+                propertyPrice={property.price}
+                onSave={handleSave}
+                isSaved={isSaved}
+              />
 
               {/* Agent Contact Card */}
               <AgentContactCard
@@ -547,7 +552,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               />
 
               {/* Reference Number */}
-              <div className="text-center text-[10px] sm:text-xs text-gray-400 pb-4 lg:pb-0">
+              <div className="text-center text-xs text-gray-400 pb-0">
                 Property Reference: {property.reference}
               </div>
             </div>
@@ -557,6 +562,17 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
         {/* Similar Properties */}
         <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
           <SimilarProperties properties={similarProperties} />
+        </div>
+
+        {/* Mobile Agent Contact - Appears at bottom on mobile */}
+        <div className="lg:hidden mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
+          <AgentContactCard
+            agent={property.agent}
+            propertyId={property.id}
+          />
+          <div className="text-center text-[10px] sm:text-xs text-gray-400 mt-4 pb-4">
+            Property Reference: {property.reference}
+          </div>
         </div>
       </main>
 

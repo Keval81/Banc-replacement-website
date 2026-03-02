@@ -110,7 +110,7 @@ export function EPCVisualizer({ epc, className = "" }: EPCVisualizerProps) {
               {activeTab === "current" ? "Current Rating" : "Potential Rating"}
             </p>
             <div className="flex items-baseline gap-2">
-              <span className={`text-5xl font-bold ${activeColors.text}`}>
+              <span className={`text-4xl sm:text-5xl font-bold ${activeColors.text}`}>
                 {activeRating}
               </span>
               <span className="text-2xl text-gray-400">/</span>
@@ -120,8 +120,8 @@ export function EPCVisualizer({ epc, className = "" }: EPCVisualizerProps) {
               Score: <span className="font-semibold">{activeScore}</span>
             </p>
           </div>
-          <div className={`w-24 h-24 rounded-full ${activeColors.bg} bg-opacity-20 flex items-center justify-center`}>
-            <Zap className={`h-12 w-12 ${activeColors.text}`} />
+          <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full ${activeColors.bg} bg-opacity-20 flex items-center justify-center flex-shrink-0`}>
+            <Zap className={`h-10 w-10 sm:h-12 sm:w-12 ${activeColors.text}`} />
           </div>
         </div>
 

@@ -189,14 +189,14 @@ export function PropertyGallery({
           )}
         </div>
 
-        {/* Thumbnails - Smaller on mobile */}
+        {/* Thumbnails - Smaller on mobile with scroll-snap */}
         {showThumbnails && images.length > 1 && (
-          <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
+          <div className="flex gap-2 sm:gap-2.5 mt-2 sm:mt-3 overflow-x-auto pb-2 scrollbar-hide -mx-3 px-3 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-pl-3 sm:scroll-pl-0">
             {images.map((image, index) => (
               <button
                 key={image.id}
                 onClick={() => goToIndex(index)}
-                className={`relative flex-shrink-0 w-14 h-10 sm:w-20 sm:h-14 overflow-hidden rounded-md sm:rounded-lg border-2 transition-all snap-start ${
+                className={`relative flex-shrink-0 w-16 h-12 sm:w-20 sm:h-14 overflow-hidden rounded-md sm:rounded-lg border-2 transition-all snap-start scroll-ml-3 sm:scroll-ml-0 ${
                   index === currentIndex
                     ? "border-[#1DBFDD] ring-2 ring-[#1DBFDD]/20"
                     : "border-transparent opacity-60 hover:opacity-100"
@@ -208,7 +208,7 @@ export function PropertyGallery({
                   alt={`Thumbnail ${index + 1}`}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 56px, 80px"
+                  sizes="(max-width: 640px) 64px, 80px"
                 />
               </button>
             ))}

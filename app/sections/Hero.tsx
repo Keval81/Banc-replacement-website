@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -54,10 +54,19 @@ export default function Hero() {
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
   const [currentReview, setCurrentReview] = useState(0);
   const [totalReviews, setTotalReviews] = useState(51);
+  const [isVideoError, setIsVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   
-  // Accessibility - respect reduced motion preference
-  const shouldReduceMotion = useReducedMotion();
+  // Check for reduced motion preference client-side only
+  const [shouldReduceMotion, setShouldReduceMotion] = useState(false);
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setShouldReduceMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setShouldReduceMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
   // Fetch real reviews from API
   useEffect(() => {
@@ -103,6 +112,12 @@ export default function Hero() {
     startPlayback();
   }, [startPlayback]);
 
+  // Handle video error
+  const handleVideoError = useCallback(() => {
+    setIsVideoError(true);
+    setIsLoaded(true); // Show fallback content
+  }, []);
+
   // Setup video listeners
   useEffect(() => {
     const video = videoRef.current;
@@ -110,14 +125,23 @@ export default function Hero() {
 
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleVideoEnd);
+    video.addEventListener("error", handleVideoError);
+    
+    // Force load and play
     video.load();
-    startPlayback();
+    
+    // Small timeout to ensure video element is ready
+    const playTimeout = setTimeout(() => {
+      startPlayback();
+    }, 100);
 
     return () => {
+      clearTimeout(playTimeout);
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleVideoEnd);
+      video.removeEventListener("error", handleVideoError);
     };
-  }, [currentVideo, handleCanPlay, handleVideoEnd, startPlayback]);
+  }, [currentVideo, handleCanPlay, handleVideoEnd, handleVideoError, startPlayback]);
 
   // Auto-rotate reviews
   useEffect(() => {
@@ -144,10 +168,10 @@ export default function Hero() {
       onClick={handleInteraction}
     >
       {/* Video Background - Optimized for mobile */}
-      <div className="absolute inset-0 h-screen w-full overflow-hidden">
-        {!shouldReduceMotion ? (
+      <div className="absolute inset-0 h-full w-full overflow-hidden z-0">
+        {!shouldReduceMotion && !isVideoError ? (
           <motion.div
-            key={currentVideo}
+            key={`video-${currentVideo}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: isLoaded ? 1 : 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
@@ -157,28 +181,30 @@ export default function Hero() {
               ref={videoRef}
               className="absolute inset-0 h-full w-full object-cover"
               style={{ 
-                minHeight: '100vh', 
-                minWidth: '100vw',
-                objectPosition: 'center center'
+                minHeight: '100%', 
+                minWidth: '100%',
+                objectPosition: 'center center',
+                zIndex: 1
               }}
               src={videos[currentVideo]}
               muted
               playsInline
               preload="auto"
+              loop={false}
               aria-hidden="true"
             />
           </motion.div>
         ) : (
-          /* Reduced motion: Use static image instead of video */
+          /* Reduced motion or video error: Use static image instead */
           <motion.div
-            key={currentVideo}
+            key={`image-${currentVideo}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             className="absolute inset-0 h-full w-full"
           >
             <Image
-              src={`/images/hero-fallback-${currentVideo + 1}.jpg`}
+              src={`/images/hero-fallback-${(currentVideo % 3) + 1}.jpg`}
               alt="Luxury property showcase"
               fill
               priority
@@ -190,8 +216,8 @@ export default function Hero() {
         )}
 
         {/* Fallback while loading */}
-        {!isLoaded && !shouldReduceMotion && (
-          <div className="absolute inset-0 h-screen w-full bg-[#2C2F33]">
+        {(!isLoaded || isVideoError) && (
+          <div className="absolute inset-0 h-full w-full bg-[#2C2F33] z-0">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
               style={{
@@ -206,10 +232,10 @@ export default function Hero() {
       </div>
       
       {/* Gradient overlay */}
-      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
+      <div className="absolute inset-0 z-[5] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
 
-      {/* Autoplay blocked notice - hide when reduced motion */}
-      {!canAutoplay && !shouldReduceMotion && (
+      {/* Autoplay blocked notice - hide when reduced motion or video error */}
+      {!canAutoplay && !shouldReduceMotion && !isVideoError && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
