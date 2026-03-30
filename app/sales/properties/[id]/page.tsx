@@ -36,7 +36,7 @@ import {
   X,
   Phone,
 } from "lucide-react";
-import { sampleProperty, similarProperties } from "@/lib/property-data";
+import { sampleProperty, similarProperties, getPropertyById } from "@/lib/property-data";
 
 type GalleryTab = "photos" | "tour" | "map" | "floorplan";
 
@@ -144,7 +144,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
   const [activeTab, setActiveTab] = useState<GalleryTab>("photos");
   const [showTourModal, setShowTourModal] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const property = sampleProperty;
+  const property = getPropertyById(params.id) ?? sampleProperty;
 
   const handleSave = () => {
     setIsSaved(!isSaved);

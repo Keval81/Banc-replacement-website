@@ -19,7 +19,7 @@ const listings = [
     mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
     floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
     summary:
-      "AI-generated summary placeholder. Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
+      "Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
   },
   {
     id: "mayfair-penthouse-mount-street",
@@ -36,7 +36,7 @@ const listings = [
     mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
     floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
     summary:
-      "AI-generated summary placeholder. Light-filled penthouse with panoramic views, concierge service, and private terrace.",
+      "Light-filled penthouse with panoramic views, concierge service, and private terrace.",
   },
   {
     id: "cuffley-house-hertfordshire",
@@ -52,7 +52,7 @@ const listings = [
     ],
     mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
     summary:
-      "AI-generated summary placeholder. Characterful family home with open-plan living, media room, and expansive gardens.",
+      "Characterful family home with open-plan living, media room, and expansive gardens.",
   },
 ];
 
