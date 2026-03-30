@@ -6,7 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { NativeSelect } from "@/components/ui/select";
-import { CheckCircle, Home, Phone, Mail, User, MapPin, Calendar, MessageSquare, Loader2, AlertCircle } from "lucide-react";
+import {
+  CheckCircle,
+  Home,
+  Phone,
+  Mail,
+  User,
+  MapPin,
+  Calendar,
+  MessageSquare,
+  Loader2,
+  AlertCircle,
+  ArrowRight,
+  ArrowLeft,
+  Check,
+} from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -31,33 +45,17 @@ const timeframes = [
   "Just curious",
 ];
 
-// Toast notification component
-function Toast({ message, type, onClose }: { message: string; type: "success" | "error"; onClose: () => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -50, x: "-50%" }}
-      animate={{ opacity: 1, y: 0, x: "-50%" }}
-      exit={{ opacity: 0, y: -50, x: "-50%" }}
-      className={`fixed left-1/2 top-24 z-50 flex items-center gap-3 rounded-xl px-6 py-4 shadow-2xl ${
-        type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
-      }`}
-    >
-      {type === "success" ? <CheckCircle className="h-5 w-5" /> : <AlertCircle className="h-5 w-5" />}
-      <span className="font-medium">{message}</span>
-      <button onClick={onClose} className="ml-2 opacity-70 hover:opacity-100">
-        <span className="sr-only">Close</span>
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </motion.div>
-  );
-}
+const steps = [
+  { id: 1, title: "Address", icon: MapPin },
+  { id: 2, title: "Property", icon: Home },
+  { id: 3, title: "Contact", icon: User },
+  { id: 4, title: "Results", icon: CheckCircle },
+];
 
 export default function ValuationPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -73,11 +71,48 @@ export default function ValuationPage() {
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    setError(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        if (!formData.address.trim() || !formData.postcode.trim()) {
+          setError("Please enter your property address and postcode.");
+          return false;
+        }
+        return true;
+      case 2:
+        return true; // Property details are optional
+      case 3:
+        if (!formData.firstName.trim() || !formData.email.trim() || !formData.phone.trim()) {
+          setError("Please fill in your name, email, and phone number.");
+          return false;
+        }
+        return true;
+      default:
+        return true;
+    }
+  };
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      if (currentStep === 3) {
+        handleSubmit();
+      } else {
+        setCurrentStep((prev) => Math.min(prev + 1, 4));
+      }
+    }
+  };
+
+  const prevStep = () => {
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setError(null);
+  };
+
+  const handleSubmit = async () => {
     setIsSubmitting(true);
+    setError(null);
 
     try {
       const response = await fetch("/api/valuation", {
@@ -89,239 +124,210 @@ export default function ValuationPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSubmitted(true);
+        setCurrentStep(4);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        setToast({ 
-          message: data.error || data.details?.[0]?.message || "Something went wrong. Please try again.", 
-          type: "error" 
-        });
+        setError(data.error || "Something went wrong. Please try again.");
       }
-    } catch (error) {
-      setToast({ message: "Failed to submit request. Please try again later.", type: "error" });
+    } catch {
+      setError("Failed to submit request. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen bg-[#F4F3F1]">
-        <Header />
-        <div className="h-[57px] lg:h-[94px]" />
-        <main className="flex min-h-[calc(100vh-57px-300px)] items-center justify-center px-4 py-16 lg:min-h-[calc(100vh-94px-300px)]">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-lg rounded-2xl bg-white p-8 text-center shadow-xl lg:p-12"
-          >
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#4AC8E8]/10">
-              <CheckCircle className="h-10 w-10 text-[#4AC8E8]" />
-            </div>
-            <h1 className="mb-4 text-2xl font-semibold text-[#1A1917] lg:text-3xl">
-              Thank You!
-            </h1>
-            <p className="mb-6 text-[#8A8880]">
-              Your valuation request has been received. One of our property experts will contact you within 24 hours to arrange your free, no-obligation valuation.
-            </p>
-            <Button
-              onClick={() => window.location.href = "/"}
-              className="bg-[#4AC8E8] px-8 py-5 text-white hover:bg-[#1A9BBF]"
-            >
-              Return to Homepage
-            </Button>
-          </motion.div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      <div className="h-[57px] lg:h-[94px]" />
-      
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toast && (
-          <Toast
-            message={toast.message}
-            type={toast.type}
-            onClose={() => setToast(null)}
-          />
-        )}
-      </AnimatePresence>
-      
+
       <main className="px-4 py-8 pb-24 lg:px-8 lg:py-12 lg:pb-12">
-        <div className="mx-auto max-w-6xl">
-          {/* Header Section */}
+        <div className="mx-auto max-w-3xl">
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8 text-center lg:mb-12"
+            className="mb-8 text-center"
           >
-            <h1 className="mb-4 text-3xl font-semibold text-[#1A1917] lg:text-4xl">
+            <h1 className="mb-3 text-3xl font-semibold text-banc-dark font-serif lg:text-4xl">
               Request a Free Valuation
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-[#8A8880]">
-              Discover the true value of your property with our expert, no-obligation valuation service
+            <p className="text-banc-grey">
+              Discover the true value of your property in 3 simple steps
             </p>
           </motion.div>
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
-            {/* Form Section */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="rounded-2xl bg-white p-6 shadow-lg lg:p-10"
-            >
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Personal Details */}
-                <div className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1A1917]">
-                    <User className="h-5 w-5 text-[#4AC8E8]" />
-                    Your Details
-                  </h2>
-                  
-                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <label htmlFor="firstName" className="block text-sm font-medium text-[#1A1917]">
-                        First Name *
-                      </label>
-                      <Input
-                        id="firstName"
-                        required
-                        value={formData.firstName}
-                        onChange={(e) => handleChange("firstName", e.target.value)}
-                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                        placeholder="John"
-                      />
+          {/* Stepper */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => {
+                const StepIcon = step.icon;
+                const isActive = currentStep === step.id;
+                const isCompleted = currentStep > step.id;
+
+                return (
+                  <div key={step.id} className="flex items-center flex-1 last:flex-none">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
+                          isCompleted
+                            ? "bg-banc-sky text-white"
+                            : isActive
+                            ? "bg-banc-sky text-white ring-4 ring-banc-sky/20"
+                            : "bg-white text-banc-grey border border-banc-grey/30"
+                        }`}
+                      >
+                        {isCompleted ? (
+                          <Check className="h-5 w-5" />
+                        ) : (
+                          <StepIcon className="h-5 w-5" />
+                        )}
+                      </div>
+                      <span
+                        className={`mt-2 text-xs font-medium hidden sm:block ${
+                          isActive || isCompleted ? "text-banc-dark" : "text-banc-grey"
+                        }`}
+                      >
+                        {step.title}
+                      </span>
                     </div>
-                    <div className="space-y-2">
-                      <label htmlFor="lastName" className="block text-sm font-medium text-[#1A1917]">
-                        Last Name *
-                      </label>
-                      <Input
-                        id="lastName"
-                        required
-                        value={formData.lastName}
-                        onChange={(e) => handleChange("lastName", e.target.value)}
-                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                        placeholder="Smith"
+                    {index < steps.length - 1 && (
+                      <div
+                        className={`mx-2 h-0.5 flex-1 transition-colors duration-300 ${
+                          currentStep > step.id ? "bg-banc-sky" : "bg-banc-grey/20"
+                        }`}
                       />
-                    </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Error */}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="mb-6 flex items-center gap-3 rounded-xl bg-red-50 px-4 py-3 text-red-700"
+              >
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                <span className="text-sm">{error}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Step Content */}
+          <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-10">
+            <AnimatePresence mode="wait">
+              {/* Step 1: Address */}
+              {currentStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
+                      <MapPin className="h-5 w-5 text-banc-sky" />
+                      Where is your property?
+                    </h2>
+                    <p className="mt-1 text-sm text-banc-grey">
+                      Enter the address of the property you&apos;d like valued
+                    </p>
                   </div>
 
-                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+                  <div className="space-y-4">
                     <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-[#1A1917]">
-                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
-                        Email Address *
+                      <label htmlFor="address" className="block text-sm font-medium text-banc-dark">
+                        Property Address *
                       </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
-                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                        placeholder="john@example.com"
+                      <Textarea
+                        id="address"
+                        value={formData.address}
+                        onChange={(e) => handleChange("address", e.target.value)}
+                        className="min-h-[100px]"
+                        placeholder="123 Station Road, Cuffley, Hertfordshire..."
                       />
                     </div>
+
                     <div className="space-y-2">
-                      <label htmlFor="phone" className="block text-sm font-medium text-[#1A1917]">
-                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
-                        Phone Number *
-                      </label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => handleChange("phone", e.target.value)}
-                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                        placeholder="01707 877781"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-px bg-[#E0DFDC]" />
-
-                {/* Property Details */}
-                <div className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1A1917]">
-                    <Home className="h-5 w-5 text-[#4AC8E8]" />
-                    Property Details
-                  </h2>
-
-                  <div className="space-y-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-[#1A1917]">
-                      <MapPin className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
-                      Property Address *
-                    </label>
-                    <Textarea
-                      id="address"
-                      required
-                      value={formData.address}
-                      onChange={(e) => handleChange("address", e.target.value)}
-                      className="min-h-[80px] border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                      placeholder="123 Station Road, Cuffley..."
-                    />
-                  </div>
-
-                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <label htmlFor="postcode" className="block text-sm font-medium text-[#1A1917]">
+                      <label htmlFor="postcode" className="block text-sm font-medium text-banc-dark">
                         Postcode *
                       </label>
                       <Input
                         id="postcode"
-                        required
                         value={formData.postcode}
                         onChange={(e) => handleChange("postcode", e.target.value)}
-                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="EN6 4HU"
+                        className="max-w-xs"
                       />
                     </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 2: Property Details */}
+              {currentStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
+                      <Home className="h-5 w-5 text-banc-sky" />
+                      Tell us about your property
+                    </h2>
+                    <p className="mt-1 text-sm text-banc-grey">
+                      These details help us provide a more accurate valuation
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#1A1917]">Property Type</label>
+                      <label className="block text-sm font-medium text-banc-dark">Property Type</label>
                       <NativeSelect
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
                       >
                         <option value="">Select type</option>
                         {propertyTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
+                          <option key={type} value={type}>{type}</option>
                         ))}
                       </NativeSelect>
                     </div>
-                  </div>
 
-                  <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#1A1917]">Bedrooms</label>
-                      <NativeSelect
-                        value={formData.bedrooms}
-                        onChange={(e) => handleChange("bedrooms", e.target.value)}
-                      >
-                        <option value="">Select bedrooms</option>
+                      <label className="block text-sm font-medium text-banc-dark">Bedrooms</label>
+                      <div className="flex flex-wrap gap-2">
                         {bedrooms.map((num) => (
-                          <option key={num} value={num}>
+                          <button
+                            key={num}
+                            type="button"
+                            onClick={() => handleChange("bedrooms", num)}
+                            className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${
+                              formData.bedrooms === num
+                                ? "border-banc-sky bg-banc-sky text-white"
+                                : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"
+                            }`}
+                          >
                             {num}
-                          </option>
+                          </button>
                         ))}
-                      </NativeSelect>
+                      </div>
                     </div>
+
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#1A1917]">
-                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
+                      <label className="block text-sm font-medium text-banc-dark">
+                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
                         Looking to sell in...
                       </label>
                       <NativeSelect
@@ -330,126 +336,197 @@ export default function ValuationPage() {
                       >
                         <option value="">Select timeframe</option>
                         {timeframes.map((time) => (
-                          <option key={time} value={time}>
-                            {time}
-                          </option>
+                          <option key={time} value={time}>{time}</option>
                         ))}
                       </NativeSelect>
                     </div>
                   </div>
-                </div>
+                </motion.div>
+              )}
 
-                <div className="h-px bg-[#E0DFDC]" />
+              {/* Step 3: Contact */}
+              {currentStep === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
+                      <User className="h-5 w-5 text-banc-sky" />
+                      Your contact details
+                    </h2>
+                    <p className="mt-1 text-sm text-banc-grey">
+                      We&apos;ll use these to send your valuation report
+                    </p>
+                  </div>
 
-                {/* Additional Message */}
-                <div className="space-y-2">
-                  <label htmlFor="message" className="block text-sm font-medium text-[#1A1917]">
-                    <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
-                    Additional Information (Optional)
-                  </label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => handleChange("message", e.target.value)}
-                    className="min-h-[100px] border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
-                    placeholder="Tell us anything else about your property or requirements..."
-                  />
-                </div>
+                  <div className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <label htmlFor="firstName" className="block text-sm font-medium text-banc-dark">
+                          First Name *
+                        </label>
+                        <Input
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={(e) => handleChange("firstName", e.target.value)}
+                          placeholder="John"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="lastName" className="block text-sm font-medium text-banc-dark">
+                          Last Name
+                        </label>
+                        <Input
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={(e) => handleChange("lastName", e.target.value)}
+                          placeholder="Smith"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="block text-sm font-medium text-banc-dark">
+                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        Email Address *
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        placeholder="john@example.com"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="phone" className="block text-sm font-medium text-banc-dark">
+                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        Phone Number *
+                      </label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => handleChange("phone", e.target.value)}
+                        placeholder="01707 877781"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="message" className="block text-sm font-medium text-banc-dark">
+                        <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        Additional Information (Optional)
+                      </label>
+                      <Textarea
+                        id="message"
+                        value={formData.message}
+                        onChange={(e) => handleChange("message", e.target.value)}
+                        className="min-h-[80px]"
+                        placeholder="Anything else we should know..."
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Results */}
+              {currentStep === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="py-8 text-center"
+                >
+                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/10">
+                    <CheckCircle className="h-10 w-10 text-banc-sky" />
+                  </div>
+                  <h2 className="mb-4 text-2xl font-semibold text-banc-dark font-serif lg:text-3xl">
+                    Thank You!
+                  </h2>
+                  <p className="mb-2 text-banc-grey max-w-md mx-auto">
+                    Your valuation request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.
+                  </p>
+                  <p className="mb-8 text-banc-grey max-w-md mx-auto">
+                    One of our property experts will contact you within 24 hours to arrange your free, no-obligation valuation.
+                  </p>
+
+                  <div className="rounded-xl bg-banc-grey-pale p-6 mb-8 max-w-sm mx-auto text-left">
+                    <h3 className="text-sm font-semibold text-banc-dark mb-3">What happens next?</h3>
+                    <ul className="space-y-2">
+                      {[
+                        "We review your property details",
+                        "A local expert calls to book a visit",
+                        "We provide a detailed market appraisal",
+                        "You decide — no obligation",
+                      ].map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-banc-grey">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-sky" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <Button
+                    onClick={() => (window.location.href = "/")}
+                    className="bg-banc-sky px-8 py-5 text-white hover:bg-banc-sky-dark"
+                  >
+                    Return to Homepage
+                  </Button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Navigation Buttons */}
+            {currentStep < 4 && (
+              <div className="mt-8 flex items-center justify-between border-t border-banc-grey/10 pt-6">
+                {currentStep > 1 ? (
+                  <Button variant="ghost" onClick={prevStep} className="text-banc-grey">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Button>
+                ) : (
+                  <div />
+                )}
 
                 <Button
-                  type="submit"
+                  onClick={nextStep}
                   disabled={isSubmitting}
-                  className="w-full bg-[#4AC8E8] py-6 text-lg font-semibold text-white hover:bg-[#1A9BBF] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="bg-banc-sky px-8 py-5 text-white hover:bg-banc-sky-dark disabled:opacity-70"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Submitting...
                     </span>
+                  ) : currentStep === 3 ? (
+                    "Submit Request"
                   ) : (
-                    "Request Free Valuation"
+                    <span className="flex items-center gap-2">
+                      Continue
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
                   )}
                 </Button>
-
-                <p className="text-center text-sm text-[#8A8880]">
-                  By submitting this form, you agree to our{" "}
-                  <a href="/privacy" className="text-[#4AC8E8] hover:underline">
-                    Privacy Policy
-                  </a>
-                  . We will never share your details with third parties.
-                </p>
-              </form>
-            </motion.div>
-
-            {/* Sidebar */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-6"
-            >
-              {/* Why Choose Us */}
-              <div className="rounded-2xl bg-[#1A1917] p-6 text-white lg:p-8">
-                <h3 className="mb-4 text-xl font-semibold">Why Choose Banc?</h3>
-                <ul className="space-y-4">
-                  {[
-                    "Free, no-obligation valuation",
-                    "Local market expertise",
-                    "Premium marketing package",
-                    "Dedicated account manager",
-                    "94% of asking price achieved",
-                    "Average 21 days to sell",
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
-                      <span className="text-white/90">{item}</span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-
-              {/* Contact Card */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-8">
-                <h3 className="mb-4 text-lg font-semibold text-[#1A1917]">
-                  Prefer to Call?
-                </h3>
-                <p className="mb-4 text-[#8A8880]">
-                  Speak directly with our valuations team
-                </p>
-                <a
-                  href="tel:01707877781"
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#4AC8E8]/10 py-4 text-lg font-semibold text-[#4AC8E8] transition-colors hover:bg-[#4AC8E8]/20"
-                >
-                  <Phone className="h-5 w-5" />
-                  01707 877781
-                </a>
-                <p className="mt-4 text-center text-sm text-[#8A8880]">
-                  Mon-Fri: 9am - 6pm<br />Sat: 9am - 4pm
-                </p>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-8">
-                <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-[#8A8880]">
-                  Accredited & Trusted
-                </h3>
-                <div className="flex flex-wrap items-center justify-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
-                    <span className="text-xs font-bold text-[#1A1917]">NAEA</span>
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
-                    <span className="text-xs font-bold text-[#1A1917]">ARLA</span>
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
-                    <span className="text-xs font-bold text-[#1A1917]">TPO</span>
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
-                    <span className="text-xs font-bold text-[#1A1917]">The Guild</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            )}
           </div>
+
+          {/* Privacy note */}
+          {currentStep < 4 && (
+            <p className="mt-4 text-center text-sm text-banc-grey">
+              By submitting, you agree to our{" "}
+              <a href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</a>.
+              We never share your details with third parties.
+            </p>
+          )}
         </div>
       </main>
 
