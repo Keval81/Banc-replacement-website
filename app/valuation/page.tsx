@@ -313,7 +313,7 @@ export default function ValuationPage() {
                             key={num}
                             type="button"
                             onClick={() => handleChange("bedrooms", num)}
-                            className={`rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${
+                            className={`rounded-[6px] border px-5 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer min-h-[44px] ${
                               formData.bedrooms === num
                                 ? "border-banc-sky bg-banc-sky text-white"
                                 : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"

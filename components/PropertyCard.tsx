@@ -115,7 +115,7 @@ export default function PropertyCard({
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        "group overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:shadow-lg",
+        "group overflow-hidden rounded-[10px] border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer",
         isCompared ? "border-banc-sky ring-1 ring-banc-sky" : "border-banc-grey/20"
       )}
     >
@@ -256,7 +256,7 @@ export default function PropertyCard({
             onClick={handleFavoriteClick}
             disabled={isLoading || isToggling}
             className={cn(
-              "flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border transition-all touch-manipulation",
+              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-200 cursor-pointer touch-manipulation",
               favorited
                 ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
                 : "border-banc-grey/20 text-banc-grey hover:border-red-400 hover:text-red-500"
@@ -268,7 +268,7 @@ export default function PropertyCard({
           </button>
           <button
             type="button"
-            className="flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-banc-grey/20 text-banc-grey transition-all hover:border-banc-sky hover:text-banc-sky touch-manipulation"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-banc-grey/20 text-banc-grey transition-colors duration-200 hover:border-banc-sky hover:text-banc-sky cursor-pointer touch-manipulation"
             aria-label="Share property"
             style={{ touchAction: 'manipulation' }}
           >

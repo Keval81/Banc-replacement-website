@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -57,13 +58,15 @@ export default function Services() {
             >
               <Link
                 href={service.href}
-                className="group relative block h-64 sm:h-72 overflow-hidden rounded-xl"
+                className="group relative block h-64 sm:h-72 overflow-hidden rounded-[10px] cursor-pointer"
               >
                 {/* Background Image */}
-                <img
+                <Image
                   src={service.image}
                   alt={service.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
 
                 {/* Gradient Overlay */}
