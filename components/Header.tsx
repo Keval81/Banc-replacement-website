@@ -89,7 +89,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" aria-label="Banc Property Group" className="flex items-center">
             <Image
-              src="/banc-logo-white.png"
+              src="/banc-logo-blue.png"
               alt="Banc Property Group"
               width={200}
               height={60}

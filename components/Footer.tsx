@@ -75,11 +75,11 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/banc-logo-white.png"
+                src="/banc-logo-blue.png"
                 alt="Banc Property Group"
                 width={180}
                 height={50}
-                className="h-12 w-auto"
+                className="h-12 w-auto brightness-0 invert"
               />
             </Link>
             <p className="text-gray-400 mb-6 max-w-sm">
