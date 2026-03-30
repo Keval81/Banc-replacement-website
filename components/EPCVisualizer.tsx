@@ -75,28 +75,28 @@ export function EPCVisualizer({ epc, className = "" }: EPCVisualizerProps) {
         <button
           onClick={() => setActiveTab("current")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === "current" ? "text-[#1DBFDD]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "current" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
           }`}
         >
           Current Rating
           {activeTab === "current" && (
             <motion.div 
               layoutId="epc-tab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1DBFDD]"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4AC8E8]"
             />
           )}
         </button>
         <button
           onClick={() => setActiveTab("potential")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === "potential" ? "text-[#1DBFDD]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "potential" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
           }`}
         >
           Potential Rating
           {activeTab === "potential" && (
             <motion.div 
               layoutId="epc-tab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1DBFDD]"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4AC8E8]"
             />
           )}
         </button>

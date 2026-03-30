@@ -67,7 +67,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#2C2F33] text-white">
+    <footer className="bg-banc-dark-deep text-white">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
@@ -75,11 +75,11 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/banc-logo-blue.png"
+                src="/banc-logo-white.png"
                 alt="Banc Property Group"
                 width={180}
                 height={50}
-                className="h-12 w-auto brightness-0 invert"
+                className="h-12 w-auto"
               />
             </Link>
             <p className="text-gray-400 mb-6 max-w-sm">
@@ -89,11 +89,11 @@ export default function Footer() {
             
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="tel:01707877781" className="flex items-center gap-3 text-gray-400 hover:text-[#1DBFDD] transition-colors">
+              <a href="tel:01707877781" className="flex items-center gap-3 text-gray-400 hover:text-banc-sky transition-colors">
                 <Phone className="h-4 w-4" />
                 <span>01707 877781</span>
               </a>
-              <a href="mailto:info@bancproperty.com" className="flex items-center gap-3 text-gray-400 hover:text-[#1DBFDD] transition-colors">
+              <a href="mailto:info@bancproperty.com" className="flex items-center gap-3 text-gray-400 hover:text-banc-sky transition-colors">
                 <Mail className="h-4 w-4" />
                 <span>info@bancproperty.com</span>
               </a>
@@ -109,7 +109,7 @@ export default function Footer() {
                 href="https://facebook.com/bancproperty"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#1DBFDD] transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -118,7 +118,7 @@ export default function Footer() {
                 href="https://instagram.com/bancproperty"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#1DBFDD] transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -127,7 +127,7 @@ export default function Footer() {
                 href="https://linkedin.com/company/bancproperty"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#1DBFDD] transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="h-5 w-5" />
@@ -143,7 +143,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-[#1DBFDD] transition-colors text-sm"
+                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -160,7 +160,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-[#1DBFDD] transition-colors text-sm"
+                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -177,7 +177,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-[#1DBFDD] transition-colors text-sm"
+                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -205,7 +205,7 @@ export default function Footer() {
                 <Button 
                   type="submit" 
                   disabled={status === 'loading' || status === 'success'}
-                  className="bg-[#1DBFDD] hover:bg-[#1DBFDD]/90 whitespace-nowrap"
+                  className="bg-banc-sky hover:bg-banc-sky/90 whitespace-nowrap"
                 >
                   {status === 'loading' ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -236,7 +236,7 @@ export default function Footer() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-400 hover:text-[#1DBFDD] transition-colors text-sm"
+                  className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
                 >
                   {link.name}
                 </Link>

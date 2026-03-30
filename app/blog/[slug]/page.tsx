@@ -98,18 +98,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <Header />
 
         {/* Breadcrumb */}
-        <div className="bg-[#F9FAFB] border-b border-[#E5E7EB]">
+        <div className="bg-[#F4F3F1] border-b border-[#E0DFDC]">
           <div className="mx-auto max-w-7xl px-4 lg:px-10 py-3">
-            <nav className="flex items-center gap-2 text-sm text-[#6B7280]">
-              <Link href="/" className="hover:text-[#1DBFDD] transition-colors">
+            <nav className="flex items-center gap-2 text-sm text-[#8A8880]">
+              <Link href="/" className="hover:text-[#4AC8E8] transition-colors">
                 Home
               </Link>
               <span>/</span>
-              <Link href="/blog" className="hover:text-[#1DBFDD] transition-colors">
+              <Link href="/blog" className="hover:text-[#4AC8E8] transition-colors">
                 Blog
               </Link>
               <span>/</span>
-              <span className="text-[#111827] truncate max-w-[200px] sm:max-w-[400px]">
+              <span className="text-[#2C2A27] truncate max-w-[200px] sm:max-w-[400px]">
                 {post.title}
               </span>
             </nav>
@@ -121,16 +121,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mb-4">
             <Link
               href={`/blog/category/${post.category}`}
-              className="inline-block rounded-full bg-[#1DBFDD]/10 px-3 py-1 text-sm font-medium text-[#1DBFDD] capitalize"
+              className="inline-block rounded-full bg-[#4AC8E8]/10 px-3 py-1 text-sm font-medium text-[#4AC8E8] capitalize"
             >
               {post.category.replace("-", " ")}
             </Link>
           </div>
-          <h1 className="text-2xl font-bold text-[#111827] sm:text-3xl lg:text-4xl">
+          <h1 className="text-2xl font-bold text-[#2C2A27] sm:text-3xl lg:text-4xl">
             {post.title}
           </h1>
-          <p className="mt-4 text-lg text-[#6B7280]">{post.description}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[#6B7280]">
+          <p className="mt-4 text-lg text-[#8A8880]">{post.description}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[#8A8880]">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {formatDate(post.date)}
@@ -166,14 +166,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {/* Main Content */}
             <article className="prose prose-lg max-w-none">
               {/* Content would be rendered from MDX */}
-              <div className="text-[#374151] leading-relaxed">
+              <div className="text-[#3D3B37] leading-relaxed">
                 <p className="text-lg mb-6">{post.excerpt}</p>
                 <p className="mb-6">
                   This is a sample blog post content. In a production environment, 
                   this would be rendered from an MDX file with full support for 
                   markdown formatting, images, and custom components.
                 </p>
-                <h2 className="text-xl font-semibold text-[#111827] mt-8 mb-4">
+                <h2 className="text-xl font-semibold text-[#2C2A27] mt-8 mb-4">
                   Key Insights
                 </h2>
                 <p className="mb-6">
@@ -181,7 +181,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim 
                   ad minim veniam, quis nostrud exercitation ullamco laboris.
                 </p>
-                <h2 className="text-xl font-semibold text-[#111827] mt-8 mb-4">
+                <h2 className="text-xl font-semibold text-[#2C2A27] mt-8 mb-4">
                   Expert Advice
                 </h2>
                 <p className="mb-6">
@@ -197,7 +197,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-[#6B7280]"
+                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-[#8A8880]"
                   >
                     <Tag className="h-3 w-3" />
                     {tag}
@@ -206,8 +206,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
 
               {/* Share */}
-              <div className="mt-8 border-t border-[#E5E7EB] pt-8">
-                <p className="mb-4 text-sm font-medium text-[#6B7280]">Share this article</p>
+              <div className="mt-8 border-t border-[#E0DFDC] pt-8">
+                <p className="mb-4 text-sm font-medium text-[#8A8880]">Share this article</p>
                 <div className="flex gap-3">
                   <Button variant="outline" size="sm" className="gap-2">
                     <Facebook className="h-4 w-4" />
@@ -229,8 +229,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <aside className="space-y-8">
               {/* Author Card */}
               {author && (
-                <div className="rounded-xl border border-[#E5E7EB] p-6">
-                  <p className="mb-4 text-sm font-medium text-[#6B7280]">Written by</p>
+                <div className="rounded-xl border border-[#E0DFDC] p-6">
+                  <p className="mb-4 text-sm font-medium text-[#8A8880]">Written by</p>
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-full">
                       <Image
@@ -241,22 +241,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#111827]">{author.name}</p>
-                      <p className="text-sm text-[#6B7280]">{author.role}</p>
+                      <p className="font-semibold text-[#2C2A27]">{author.name}</p>
+                      <p className="text-sm text-[#8A8880]">{author.role}</p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm text-[#6B7280]">{author.bio}</p>
+                  <p className="mt-4 text-sm text-[#8A8880]">{author.bio}</p>
                 </div>
               )}
 
               {/* CTA */}
-              <div className="rounded-xl bg-[#1DBFDD] p-6 text-white">
+              <div className="rounded-xl bg-[#4AC8E8] p-6 text-white">
                 <h3 className="font-semibold">Looking to buy or sell?</h3>
                 <p className="mt-2 text-sm text-white/90">
                   Get expert advice from our team of property professionals.
                 </p>
                 <Link href="/contact">
-                  <Button className="mt-4 w-full bg-white text-[#1DBFDD] hover:bg-white/90">
+                  <Button className="mt-4 w-full bg-white text-[#4AC8E8] hover:bg-white/90">
                     Contact Us
                   </Button>
                 </Link>
@@ -267,9 +267,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="bg-[#F9FAFB] py-12 lg:py-16">
+          <section className="bg-[#F4F3F1] py-12 lg:py-16">
             <div className="mx-auto max-w-7xl px-4 lg:px-10">
-              <h2 className="mb-8 text-xl font-semibold text-[#111827]">Related Articles</h2>
+              <h2 className="mb-8 text-xl font-semibold text-[#2C2A27]">Related Articles</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedPosts.map((relatedPost) => (
                   <article
@@ -286,10 +286,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         />
                       </div>
                       <div className="p-5">
-                        <h3 className="font-semibold text-[#111827] transition-colors group-hover:text-[#1DBFDD]">
+                        <h3 className="font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8]">
                           {relatedPost.title}
                         </h3>
-                        <p className="mt-2 text-sm text-[#6B7280] line-clamp-2">
+                        <p className="mt-2 text-sm text-[#8A8880] line-clamp-2">
                           {relatedPost.description}
                         </p>
                       </div>
@@ -305,7 +305,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-10">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-[#1DBFDD] hover:underline"
+            className="inline-flex items-center gap-2 text-[#4AC8E8] hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog

@@ -184,15 +184,15 @@ const testimonials = [
 
 export default function WhyUsPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-[#2C2F33] py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-[#1A1917] py-24 lg:py-32 overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1DBFDD] rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1DBFDD] rounded-full blur-[128px]" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
         </div>
         
         {/* Grid pattern */}
@@ -207,14 +207,14 @@ export default function WhyUsPage() {
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           {/* Trust badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-            <Star className="h-4 w-4 text-[#1DBFDD]" />
+            <Star className="h-4 w-4 text-[#4AC8E8]" />
             <span className="text-sm font-medium text-white/80">5-Star Rated Estate Agent</span>
           </div>
           
           <div className="max-w-4xl">
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
               Why Choose{" "}
-              <span className="text-[#1DBFDD]">Banc Property Group</span>
+              <span className="text-[#4AC8E8]">Banc Property Group</span>
             </h1>
             <p className="mt-6 text-xl text-white/70 leading-relaxed max-w-3xl">
               Born from a desire to provide a truly tailored and bespoke service. 
@@ -225,8 +225,8 @@ export default function WhyUsPage() {
             {/* Quick stats row */}
             <div className="mt-10 flex flex-wrap gap-8">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#1DBFDD]/20 flex items-center justify-center">
-                  <Award className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
+                  <Award className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">97%</p>
@@ -234,8 +234,8 @@ export default function WhyUsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#1DBFDD]/20 flex items-center justify-center">
-                  <Users className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">500+</p>
@@ -243,8 +243,8 @@ export default function WhyUsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#1DBFDD]/20 flex items-center justify-center">
-                  <Star className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
+                  <Star className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">4.9/5</p>
@@ -258,7 +258,7 @@ export default function WhyUsPage() {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-xs text-white/40 uppercase tracking-widest">Discover More</span>
-          <div className="w-px h-8 bg-gradient-to-b from-[#1DBFDD] to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-[#4AC8E8] to-transparent" />
         </div>
       </section>
 
@@ -267,14 +267,14 @@ export default function WhyUsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-              <Award className="h-4 w-4 text-[#1DBFDD]" />
-              <span className="text-sm font-medium text-[#0A6B82]">What Sets Us Apart</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+              <Award className="h-4 w-4 text-[#4AC8E8]" />
+              <span className="text-sm font-medium text-[#1A9BBF]">What Sets Us Apart</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33]">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
               8 Reasons to Choose Banc
             </h2>
-            <p className="mt-4 text-lg text-[#6B6E72]">
+            <p className="mt-4 text-lg text-[#8A8880]">
               We don't just sell properties – we build relationships and deliver results that matter.
             </p>
           </div>
@@ -284,29 +284,29 @@ export default function WhyUsPage() {
             {differentiators.map((item, index) => (
               <div 
                 key={item.title}
-                className="group relative bg-white rounded-2xl p-6 border border-[#C8C9CB]/30 hover:border-[#1DBFDD]/50 hover:shadow-xl hover:shadow-[#1DBFDD]/5 transition-all duration-300"
+                className="group relative bg-white rounded-2xl p-6 border border-[#E0DFDC]/30 hover:border-[#4AC8E8]/50 hover:shadow-xl hover:shadow-[#4AC8E8]/5 transition-all duration-300"
               >
                 {/* Stat badge */}
-                <div className="absolute -top-3 -right-3 w-16 h-16 rounded-xl bg-[#1DBFDD] flex flex-col items-center justify-center shadow-lg">
+                <div className="absolute -top-3 -right-3 w-16 h-16 rounded-xl bg-[#4AC8E8] flex flex-col items-center justify-center shadow-lg">
                   <span className="text-lg font-bold text-white">{item.stat}</span>
                   <span className="text-[10px] text-white/80 uppercase tracking-wide">{item.statLabel}</span>
                 </div>
                 
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center mb-4 group-hover:bg-[#1DBFDD]/20 transition-colors">
-                  <item.icon className="h-7 w-7 text-[#1DBFDD]" />
+                <div className="w-14 h-14 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center mb-4 group-hover:bg-[#4AC8E8]/20 transition-colors">
+                  <item.icon className="h-7 w-7 text-[#4AC8E8]" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-lg font-semibold text-[#2C2F33] mb-2">
+                <h3 className="text-lg font-semibold text-[#1A1917] mb-2">
                   {item.title}
                 </h3>
-                <p className="text-sm text-[#6B6E72] leading-relaxed">
+                <p className="text-sm text-[#8A8880] leading-relaxed">
                   {item.description}
                 </p>
                 
                 {/* Number indicator */}
-                <div className="absolute bottom-4 right-4 text-6xl font-bold text-[#F0F0ED] group-hover:text-[#1DBFDD]/10 transition-colors">
+                <div className="absolute bottom-4 right-4 text-6xl font-bold text-[#F4F3F1] group-hover:text-[#4AC8E8]/10 transition-colors">
                   {String(index + 1).padStart(2, '0')}
                 </div>
               </div>
@@ -316,17 +316,17 @@ export default function WhyUsPage() {
       </section>
 
       {/* Process Timeline Section */}
-      <section className="py-20 lg:py-28 bg-[#2C2F33] relative overflow-hidden">
+      <section className="py-20 lg:py-28 bg-[#1A1917] relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#1DBFDD] to-transparent" />
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#4AC8E8] to-transparent" />
         </div>
         
         <div className="mx-auto max-w-7xl px-6 lg:px-10 relative">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Clock className="h-4 w-4 text-[#1DBFDD]" />
+              <Clock className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm font-medium text-white/80">Our Process</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-semibold text-white">
@@ -340,7 +340,7 @@ export default function WhyUsPage() {
           {/* Timeline */}
           <div className="relative">
             {/* Connecting line */}
-            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#1DBFDD]/50 to-transparent" />
+            <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#4AC8E8]/50 to-transparent" />
             
             <div className="space-y-8 lg:space-y-0">
               {processSteps.map((step, index) => (
@@ -350,18 +350,18 @@ export default function WhyUsPage() {
                 >
                   {/* Content side */}
                   <div className={`${index % 2 === 0 ? 'lg:pr-16 lg:text-right' : 'lg:col-start-2 lg:pl-16'}`}>
-                    <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-[#1DBFDD]/50 transition-colors ${index % 2 === 0 ? '' : 'lg:ml-0'}`}>
+                    <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-[#4AC8E8]/50 transition-colors ${index % 2 === 0 ? '' : 'lg:ml-0'}`}>
                       {/* Step number and duration */}
                       <div className={`flex items-center gap-3 mb-4 ${index % 2 === 0 ? 'lg:justify-end' : ''}`}>
-                        <span className="text-3xl font-bold text-[#1DBFDD]">{step.step}</span>
-                        <span className="px-3 py-1 rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD] text-xs font-medium">
+                        <span className="text-3xl font-bold text-[#4AC8E8]">{step.step}</span>
+                        <span className="px-3 py-1 rounded-full bg-[#4AC8E8]/20 text-[#4AC8E8] text-xs font-medium">
                           {step.duration}
                         </span>
                       </div>
                       
                       {/* Icon and title */}
                       <div className={`flex items-center gap-3 mb-3 ${index % 2 === 0 ? 'lg:justify-end' : ''}`}>
-                        <step.icon className="h-5 w-5 text-[#1DBFDD]" />
+                        <step.icon className="h-5 w-5 text-[#4AC8E8]" />
                         <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                       </div>
                       
@@ -373,7 +373,7 @@ export default function WhyUsPage() {
                   
                   {/* Center node */}
                   <div className="hidden lg:flex absolute left-1/2 top-6 -translate-x-1/2">
-                    <div className="w-4 h-4 rounded-full bg-[#1DBFDD] ring-4 ring-[#2C2F33] shadow-lg shadow-[#1DBFDD]/50" />
+                    <div className="w-4 h-4 rounded-full bg-[#4AC8E8] ring-4 ring-[#1A1917] shadow-lg shadow-[#4AC8E8]/50" />
                   </div>
                 </div>
               ))}
@@ -388,15 +388,15 @@ export default function WhyUsPage() {
           {/* Stats grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16">
             {keyStats.map((stat) => (
-              <div key={stat.label} className="text-center p-6 bg-white rounded-2xl border border-[#C8C9CB]/30 shadow-sm">
-                <p className="text-3xl lg:text-4xl font-bold text-[#1DBFDD]">{stat.value}</p>
-                <p className="mt-2 text-sm text-[#6B6E72]">{stat.label}</p>
+              <div key={stat.label} className="text-center p-6 bg-white rounded-2xl border border-[#E0DFDC]/30 shadow-sm">
+                <p className="text-3xl lg:text-4xl font-bold text-[#4AC8E8]">{stat.value}</p>
+                <p className="mt-2 text-sm text-[#8A8880]">{stat.label}</p>
               </div>
             ))}
           </div>
           
           {/* Awards section */}
-          <div className="bg-gradient-to-br from-[#2C2F33] to-[#3A3D42] rounded-3xl p-8 lg:p-12">
+          <div className="bg-gradient-to-br from-[#1A1917] to-[#3D3B37] rounded-3xl p-8 lg:p-12">
             <div className="text-center mb-10">
               <h3 className="text-2xl font-semibold text-white">Accreditations & Memberships</h3>
               <p className="mt-2 text-white/60">Trusted by industry leaders and regulated by professional bodies</p>
@@ -405,7 +405,7 @@ export default function WhyUsPage() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
               {awards.map((award) => (
                 <div key={award.name} className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
-                  <Award className="h-8 w-8 text-[#1DBFDD] mx-auto mb-3" />
+                  <Award className="h-8 w-8 text-[#4AC8E8] mx-auto mb-3" />
                   <p className="font-semibold text-white text-sm">{award.name}</p>
                   <p className="text-xs text-white/50 mt-1">{award.description}</p>
                 </div>
@@ -416,18 +416,18 @@ export default function WhyUsPage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 lg:py-28 bg-[#F0F0ED]">
+      <section className="py-20 lg:py-28 bg-[#F4F3F1]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-              <Star className="h-4 w-4 text-[#1DBFDD]" />
-              <span className="text-sm font-medium text-[#0A6B82]">Client Testimonials</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+              <Star className="h-4 w-4 text-[#4AC8E8]" />
+              <span className="text-sm font-medium text-[#1A9BBF]">Client Testimonials</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33]">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
               What Our Clients Say
             </h2>
-            <p className="mt-4 text-lg text-[#6B6E72]">
+            <p className="mt-4 text-lg text-[#8A8880]">
               Don't just take our word for it – hear from the people we've helped.
             </p>
           </div>
@@ -437,29 +437,29 @@ export default function WhyUsPage() {
             {testimonials.map((testimonial, index) => (
               <div 
                 key={index}
-                className="bg-white rounded-2xl p-8 border border-[#C8C9CB]/30 shadow-sm hover:shadow-lg transition-shadow relative"
+                className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30 shadow-sm hover:shadow-lg transition-shadow relative"
               >
                 {/* Quote marks */}
-                <div className="absolute -top-4 left-6 w-8 h-8 bg-[#1DBFDD] rounded-full flex items-center justify-center">
+                <div className="absolute -top-4 left-6 w-8 h-8 bg-[#4AC8E8] rounded-full flex items-center justify-center">
                   <span className="text-white text-xl font-serif">"</span>
                 </div>
                 
                 {/* Stars */}
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-[#1DBFDD] text-[#1DBFDD]" />
+                    <Star key={i} className="h-4 w-4 fill-[#4AC8E8] text-[#4AC8E8]" />
                   ))}
                 </div>
                 
                 {/* Quote */}
-                <p className="text-[#3A3D42] leading-relaxed mb-6">
+                <p className="text-[#3D3B37] leading-relaxed mb-6">
                   "{testimonial.quote}"
                 </p>
                 
                 {/* Author */}
-                <div className="pt-4 border-t border-[#C8C9CB]/30">
-                  <p className="font-semibold text-[#2C2F33]">{testimonial.author}</p>
-                  <p className="text-sm text-[#6B6E72]">{testimonial.location}</p>
+                <div className="pt-4 border-t border-[#E0DFDC]/30">
+                  <p className="font-semibold text-[#1A1917]">{testimonial.author}</p>
+                  <p className="text-sm text-[#8A8880]">{testimonial.location}</p>
                 </div>
               </div>
             ))}
@@ -468,7 +468,7 @@ export default function WhyUsPage() {
           {/* Link to all reviews */}
           <div className="text-center">
             <Link href="/reviews">
-              <Button variant="outline" className="border-[#1DBFDD] text-[#1DBFDD] hover:bg-[#1DBFDD] hover:text-white px-8">
+              <Button variant="outline" className="border-[#4AC8E8] text-[#4AC8E8] hover:bg-[#4AC8E8] hover:text-white px-8">
                 Read All Reviews
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -478,7 +478,7 @@ export default function WhyUsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-24 bg-[#1DBFDD]">
+      <section className="py-20 lg:py-24 bg-[#4AC8E8]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-semibold text-white">
@@ -490,7 +490,7 @@ export default function WhyUsPage() {
             
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/valuation">
-                <Button className="bg-white text-[#1DBFDD] hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-black/10">
+                <Button className="bg-white text-[#4AC8E8] hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-black/10">
                   <Home className="mr-2 h-5 w-5" />
                   Get Free Valuation
                 </Button>

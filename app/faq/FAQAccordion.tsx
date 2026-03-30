@@ -26,8 +26,8 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
         <div
           key={index}
           className={cn(
-            "bg-white rounded-xl border border-[#C8C9CB]/30 overflow-hidden transition-all duration-200",
-            openIndex === index && "border-[#1DBFDD]/50 shadow-md shadow-[#1DBFDD]/5"
+            "bg-white rounded-xl border border-[#E0DFDC]/30 overflow-hidden transition-all duration-200",
+            openIndex === index && "border-[#4AC8E8]/50 shadow-md shadow-[#4AC8E8]/5"
           )}
         >
           <button
@@ -36,17 +36,17 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
             aria-expanded={openIndex === index}
           >
             <span className={cn(
-              "font-semibold text-[#2C2F33] pr-4",
-              openIndex === index && "text-[#1DBFDD]"
+              "font-semibold text-[#1A1917] pr-4",
+              openIndex === index && "text-[#4AC8E8]"
             )}>
               {item.question}
             </span>
             <div className={cn(
-              "w-8 h-8 rounded-lg bg-[#F0F0ED] flex items-center justify-center flex-shrink-0 transition-all duration-200",
-              openIndex === index && "bg-[#1DBFDD] rotate-180"
+              "w-8 h-8 rounded-lg bg-[#F4F3F1] flex items-center justify-center flex-shrink-0 transition-all duration-200",
+              openIndex === index && "bg-[#4AC8E8] rotate-180"
             )}>
               <ChevronDown className={cn(
-                "h-5 w-5 text-[#6B6E72] transition-colors",
+                "h-5 w-5 text-[#8A8880] transition-colors",
                 openIndex === index && "text-white"
               )} />
             </div>
@@ -60,8 +60,8 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
           >
             <div className="overflow-hidden">
               <div className="px-5 pb-5">
-                <div className="pt-2 border-t border-[#C8C9CB]/20">
-                  <p className="text-[#6B6E72] leading-relaxed pt-4">
+                <div className="pt-2 border-t border-[#E0DFDC]/20">
+                  <p className="text-[#8A8880] leading-relaxed pt-4">
                     {item.answer}
                   </p>
                 </div>

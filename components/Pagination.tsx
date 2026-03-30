@@ -55,14 +55,14 @@ export default function Pagination({
         {currentPage > 1 ? (
           <Link
             href={buildUrl(currentPage - 1)}
-            className="flex items-center gap-1 rounded-lg border border-[#E5E7EB] px-3 py-2 text-sm text-[#374151] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+            className="flex items-center gap-1 rounded-lg border border-[#E0DFDC] px-3 py-2 text-sm text-[#3D3B37] transition-colors hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
             rel="prev"
           >
             <ChevronLeft className="h-4 w-4" />
             <span className="hidden sm:inline">Previous</span>
           </Link>
         ) : (
-          <span className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-[#E5E7EB] px-3 py-2 text-sm text-[#9CA3AF]">
+          <span className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-[#E0DFDC] px-3 py-2 text-sm text-[#9CA3AF]">
             <ChevronLeft className="h-4 w-4" />
             <span className="hidden sm:inline">Previous</span>
           </span>
@@ -90,8 +90,8 @@ export default function Pagination({
                 href={buildUrl(page as number)}
                 className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
                   isCurrent
-                    ? "bg-[#1DBFDD] text-white"
-                    : "border border-[#E5E7EB] text-[#374151] hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+                    ? "bg-[#4AC8E8] text-white"
+                    : "border border-[#E0DFDC] text-[#3D3B37] hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
                 }`}
                 aria-current={isCurrent ? "page" : undefined}
                 rel={isCurrent ? undefined : page === currentPage - 1 ? "prev" : page === currentPage + 1 ? "next" : undefined}
@@ -106,14 +106,14 @@ export default function Pagination({
         {currentPage < totalPages ? (
           <Link
             href={buildUrl(currentPage + 1)}
-            className="flex items-center gap-1 rounded-lg border border-[#E5E7EB] px-3 py-2 text-sm text-[#374151] transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+            className="flex items-center gap-1 rounded-lg border border-[#E0DFDC] px-3 py-2 text-sm text-[#3D3B37] transition-colors hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
             rel="next"
           >
             <span className="hidden sm:inline">Next</span>
             <ChevronRight className="h-4 w-4" />
           </Link>
         ) : (
-          <span className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-[#E5E7EB] px-3 py-2 text-sm text-[#9CA3AF]">
+          <span className="flex cursor-not-allowed items-center gap-1 rounded-lg border border-[#E0DFDC] px-3 py-2 text-sm text-[#9CA3AF]">
             <span className="hidden sm:inline">Next</span>
             <ChevronRight className="h-4 w-4" />
           </span>

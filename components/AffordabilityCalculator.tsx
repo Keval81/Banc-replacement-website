@@ -61,7 +61,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-[#2C2F33] p-4", className)}>
+      <div className={cn("rounded-xl border border-white/10 bg-[#1A1917] p-4", className)}>
         <div className="space-y-3">
           <div>
             <label className="mb-1.5 block text-xs text-white/60">Your Income</label>
@@ -73,7 +73,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setIncome1)}
                 onBlur={() => formatCurrencyDisplay(income1, setIncome1)}
                 placeholder="e.g. £50,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-8 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-8 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -88,15 +88,15 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setDeposit)}
                 onBlur={() => formatCurrencyDisplay(deposit, setDeposit)}
                 placeholder="e.g. £50,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-8 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-8 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
 
           {totalIncome > 0 && (
-            <div className="rounded-lg bg-[#1DBFDD]/10 p-3 text-center">
+            <div className="rounded-lg bg-[#4AC8E8]/10 p-3 text-center">
               <p className="text-xs text-white/60">Max Property Budget</p>
-              <p className="text-lg font-semibold text-[#1DBFDD]">
+              <p className="text-lg font-semibold text-[#4AC8E8]">
                 {formatCurrency(result.estimatedBudget)}
               </p>
             </div>
@@ -109,9 +109,9 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+      <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Wallet className="h-5 w-5 text-[#1DBFDD]" />
+          <Wallet className="h-5 w-5 text-[#4AC8E8]" />
           Your Finances
         </h3>
 
@@ -130,7 +130,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setIncome1)}
                 onBlur={() => formatCurrencyDisplay(income1, setIncome1)}
                 placeholder="e.g. £50,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -149,7 +149,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setIncome2)}
                 onBlur={() => formatCurrencyDisplay(income2, setIncome2)}
                 placeholder="e.g. £40,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -168,7 +168,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setOutgoings)}
                 onBlur={() => formatCurrencyDisplay(outgoings, setOutgoings)}
                 placeholder="e.g. £500"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
             <p className="mt-1 text-xs text-white/40">Loans, credit cards, car finance, etc.</p>
@@ -188,7 +188,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 onChange={formatInput(setDeposit)}
                 onBlur={() => formatCurrencyDisplay(deposit, setDeposit)}
                 placeholder="e.g. £50,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-10 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -198,7 +198,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
         <div className="mt-6">
           <label className="mb-2 block text-sm text-white/70">
             Income Multiplier:
-            <span className="ml-2 text-[#1DBFDD]">{multiplier}x</span>
+            <span className="ml-2 text-[#4AC8E8]">{multiplier}x</span>
           </label>
           <input
             type="range"
@@ -207,7 +207,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
             step="0.1"
             value={multiplier}
             onChange={(e) => setMultiplier(Number(e.target.value))}
-            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-[#1DBFDD]"
+            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-[#4AC8E8]"
           />
           <div className="mt-1 flex justify-between text-xs text-white/40">
             <span>3x (Conservative)</span>
@@ -224,9 +224,9 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
       {totalIncome > 0 && (
         <>
           {/* Main Results */}
-          <div className="rounded-2xl bg-gradient-to-br from-[#1DBFDD]/20 to-[#1DBFDD]/5 p-6 text-center">
+          <div className="rounded-2xl bg-gradient-to-br from-[#4AC8E8]/20 to-[#4AC8E8]/5 p-6 text-center">
             <p className="text-white/70">Maximum Property Budget</p>
-            <p className="my-2 text-4xl font-bold text-[#1DBFDD]">
+            <p className="my-2 text-4xl font-bold text-[#4AC8E8]">
               {formatCurrency(result.estimatedBudget)}
             </p>
             <p className="text-sm text-white/60">
@@ -236,14 +236,14 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
 
           {/* Key Figures */}
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
               <p className="text-sm text-white/60">Maximum Borrowing</p>
               <p className="my-1 text-2xl font-bold text-white">
                 {formatCurrency(result.maxBorrowing)}
               </p>
               <p className="text-xs text-white/40">{multiplier}x income</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
               <p className="text-sm text-white/60">Your Deposit</p>
               <p className="my-1 text-2xl font-bold text-white">
                 {formatCurrency(result.depositAmount)}
@@ -254,7 +254,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                   : 0}% of budget
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
               <p className="text-sm text-white/60">Total Income</p>
               <p className="my-1 text-2xl font-bold text-white">{formatCurrency(totalIncome)}</p>
               <p className="text-xs text-white/40">{income2Num > 0 ? "Combined" : "Single"} income</p>
@@ -276,9 +276,9 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
           )}
 
           {/* LTV Options */}
-          <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <Home className="h-5 w-5 text-[#1DBFDD]" />
+              <Home className="h-5 w-5 text-[#4AC8E8]" />
               Loan-to-Value Options
             </h3>
             <p className="mb-4 text-sm text-white/60">
@@ -302,7 +302,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                         key={option.ltv}
                         className={cn(
                           "border-b border-white/5",
-                          canAfford && "bg-[#1DBFDD]/5"
+                          canAfford && "bg-[#4AC8E8]/5"
                         )}
                       >
                         <td className="py-3 text-sm font-medium text-white">{option.ltv}% LTV</td>
@@ -332,9 +332,9 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
           </div>
 
           {/* Payment Estimates */}
-          <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <TrendingUp className="h-5 w-5 text-[#1DBFDD]" />
+              <TrendingUp className="h-5 w-5 text-[#4AC8E8]" />
               Estimated Monthly Payments
             </h3>
             <p className="mb-4 text-sm text-white/60">
@@ -347,7 +347,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                   className="rounded-xl border border-white/10 bg-white/5 p-4 text-center"
                 >
                   <p className="text-sm text-white/60">{estimate.rate}% rate</p>
-                  <p className="my-1 text-xl font-bold text-[#1DBFDD]">
+                  <p className="my-1 text-xl font-bold text-[#4AC8E8]">
                     {formatCurrency(estimate.monthlyPayment)}
                   </p>
                   <p className="text-xs text-white/40">per month</p>
@@ -357,7 +357,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
           </div>
 
           {/* Affordability Guidelines */}
-          <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
             <h3 className="mb-4 text-lg font-semibold text-white">Affordability Guidelines</h3>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl bg-white/5 p-4">
@@ -365,7 +365,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 <p className="text-sm text-white/60">
                   Your monthly mortgage payment should not exceed 28% of your gross monthly income.
                 </p>
-                <p className="mt-2 text-sm text-[#1DBFDD]">
+                <p className="mt-2 text-sm text-[#4AC8E8]">
                   Your max: {formatCurrency(totalIncome / 12 * 0.28)}/month
                 </p>
               </div>
@@ -374,7 +374,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
                 <p className="text-sm text-white/60">
                   Total debt payments (including mortgage) should not exceed 36% of income.
                 </p>
-                <p className="mt-2 text-sm text-[#1DBFDD]">
+                <p className="mt-2 text-sm text-[#4AC8E8]">
                   Your max: {formatCurrency(totalIncome / 12 * 0.36 - outgoingsNum)}/month mortgage
                 </p>
               </div>
@@ -384,7 +384,7 @@ export function AffordabilityCalculator({ className, compact = false }: Affordab
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/contact">
-              <Button className="w-full bg-[#1DBFDD] text-white hover:bg-[#0E8CAB] sm:w-auto">
+              <Button className="w-full bg-[#4AC8E8] text-white hover:bg-[#1A9BBF] sm:w-auto">
                 Speak to an Advisor
               </Button>
             </Link>

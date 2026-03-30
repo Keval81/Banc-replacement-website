@@ -51,9 +51,9 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
       case "submitted":
         return {
           icon: Clock,
-          bgColor: "bg-[#1DBFDD]/10",
-          iconColor: "text-[#1DBFDD]",
-          textColor: "text-[#0E8CAB]",
+          bgColor: "bg-[#4AC8E8]/10",
+          iconColor: "text-[#4AC8E8]",
+          textColor: "text-[#1A9BBF]",
           label: "Submitted",
           description: "Your offer has been submitted and will be reviewed shortly.",
         };
@@ -82,7 +82,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
   const StatusIcon = config.icon;
 
   return (
-    <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden">
+    <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
       {/* Status Banner */}
       <div className={`px-5 py-4 ${config.bgColor}`}>
         <div className="flex items-center gap-3">
@@ -99,19 +99,19 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
       <div className="p-5">
         {/* Property Info */}
         {showPropertyDetails && (
-          <div className="flex gap-4 mb-5 pb-5 border-b border-[#C8C9CB]">
+          <div className="flex gap-4 mb-5 pb-5 border-b border-[#E0DFDC]">
             <img
               src={offer.propertyImage}
               alt={offer.propertyAddress}
               className="w-24 h-24 object-cover rounded-lg"
             />
             <div>
-              <h4 className="font-medium text-[#2C2F33]">
+              <h4 className="font-medium text-[#1A1917]">
                 {offer.propertyAddress}
               </h4>
               <a
                 href={`/sales/properties/${offer.propertyId}`}
-                className="text-sm text-[#1DBFDD] hover:underline mt-1 inline-block"
+                className="text-sm text-[#4AC8E8] hover:underline mt-1 inline-block"
               >
                 View Property →
               </a>
@@ -122,37 +122,37 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         {/* Offer Details */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-[#6B6E72]">Offer Amount</span>
-            <span className="text-2xl font-bold text-[#2C2F33]">
+            <span className="text-[#8A8880]">Offer Amount</span>
+            <span className="text-2xl font-bold text-[#1A1917]">
               {formatCurrency(offer.amount)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-[#6B6E72]">Your Position</span>
-            <span className="font-medium text-[#2C2F33]">
+            <span className="text-[#8A8880]">Your Position</span>
+            <span className="font-medium text-[#1A1917]">
               {getBuyerPositionLabel(offer.position)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-[#6B6E72]">Preferred Timescale</span>
-            <span className="font-medium text-[#2C2F33] capitalize">
+            <span className="text-[#8A8880]">Preferred Timescale</span>
+            <span className="font-medium text-[#1A1917] capitalize">
               {offer.timescale.replace("_", " ")}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-[#6B6E72]">Submitted</span>
-            <span className="text-[#2C2F33]">
+            <span className="text-[#8A8880]">Submitted</span>
+            <span className="text-[#1A1917]">
               {formatDate(offer.submittedAt)}
             </span>
           </div>
 
           {offer.updatedAt !== offer.submittedAt && (
             <div className="flex justify-between items-center">
-              <span className="text-[#6B6E72]">Last Updated</span>
-              <span className="text-[#2C2F33]">
+              <span className="text-[#8A8880]">Last Updated</span>
+              <span className="text-[#1A1917]">
                 {formatDate(offer.updatedAt)}
               </span>
             </div>
@@ -161,19 +161,19 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
 
         {/* Notes */}
         {offer.notes && (
-          <div className="mt-5 pt-5 border-t border-[#C8C9CB]">
-            <p className="text-sm text-[#6B6E72] mb-1">Notes:</p>
-            <p className="text-[#2C2F33]">{offer.notes}</p>
+          <div className="mt-5 pt-5 border-t border-[#E0DFDC]">
+            <p className="text-sm text-[#8A8880] mb-1">Notes:</p>
+            <p className="text-[#1A1917]">{offer.notes}</p>
           </div>
         )}
 
         {/* Proof of Funds */}
         {offer.proofOfFunds && (
-          <div className="mt-5 pt-5 border-t border-[#C8C9CB]">
-            <p className="text-sm text-[#6B6E72] mb-2">Proof of Funds:</p>
+          <div className="mt-5 pt-5 border-t border-[#E0DFDC]">
+            <p className="text-sm text-[#8A8880] mb-2">Proof of Funds:</p>
             <a
               href={offer.proofOfFunds.url}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#F0F0ED] rounded-lg text-[#2C2F33] hover:bg-[#1DBFDD]/10 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#F4F3F1] rounded-lg text-[#1A1917] hover:bg-[#4AC8E8]/10 transition-colors"
             >
               <CheckCircle className="w-4 h-4 text-green-500" />
               Document Uploaded
@@ -183,10 +183,10 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
 
         {/* Actions */}
         {(offer.status === "submitted" || offer.status === "under_review") && (
-          <div className="mt-5 pt-5 border-t border-[#C8C9CB] flex gap-3">
+          <div className="mt-5 pt-5 border-t border-[#E0DFDC] flex gap-3">
             <button
               disabled
-              className="flex-1 py-2 px-4 bg-[#C8C9CB] text-white rounded-lg cursor-not-allowed"
+              className="flex-1 py-2 px-4 bg-[#E0DFDC] text-white rounded-lg cursor-not-allowed"
             >
               Revise Offer
             </button>
@@ -200,7 +200,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         )}
 
         {offer.status === "countered" && (
-          <div className="mt-5 pt-5 border-t border-[#C8C9CB] flex gap-3">
+          <div className="mt-5 pt-5 border-t border-[#E0DFDC] flex gap-3">
             <button
               disabled
               className="flex-1 py-2 px-4 bg-green-500 text-white rounded-lg cursor-not-allowed"
@@ -209,7 +209,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
             </button>
             <button
               disabled
-              className="flex-1 py-2 px-4 bg-[#1DBFDD] text-white rounded-lg cursor-not-allowed"
+              className="flex-1 py-2 px-4 bg-[#4AC8E8] text-white rounded-lg cursor-not-allowed"
             >
               Make New Offer
             </button>

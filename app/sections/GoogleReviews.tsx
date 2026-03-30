@@ -132,7 +132,7 @@ export default function GoogleReviews() {
 
   return (
     <section 
-      className="bg-[#F7FAFA] py-12 lg:py-20"
+      className="bg-banc-grey-pale py-12 lg:py-20"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -140,14 +140,14 @@ export default function GoogleReviews() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 lg:mb-8">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-[#6B7280] lg:text-sm lg:tracking-[0.3em]">
+            <p className="text-xs uppercase tracking-[0.2em] text-banc-grey lg:text-sm lg:tracking-[0.3em]">
               Google Reviews
             </p>
-            <h2 className="mt-2 text-xl font-semibold text-[#111827] lg:text-4xl">
+            <h2 className="mt-2 text-xl font-semibold text-banc-dark lg:text-4xl">
               What clients say
             </h2>
             {place?.rating && (
-              <p className="mt-1 text-sm text-[#4B5563] lg:mt-2">
+              <p className="mt-1 text-sm text-banc-grey lg:mt-2">
                 {place.name} • {place.rating.toFixed(1)} stars ({place.totalRatings || 51} reviews)
               </p>
             )}
@@ -161,7 +161,7 @@ export default function GoogleReviews() {
               <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
               <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
             </svg>
-            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-[#6B7280] lg:tracking-[0.2em]">
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-grey lg:tracking-[0.2em]">
               Verified
             </span>
           </div>
@@ -189,37 +189,37 @@ export default function GoogleReviews() {
                     className="h-11 w-11 rounded-full object-cover lg:h-12 lg:w-12"
                   />
                 ) : (
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E5F6F6] text-base font-semibold text-[#0A6B82] lg:h-12 lg:w-12 lg:text-lg">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-banc-sky-light text-base font-semibold text-banc-sky-dark lg:h-12 lg:w-12 lg:text-lg">
                     {activeReview.authorName?.[0] ?? "B"}
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-[#111827] lg:text-base">
+                  <p className="truncate text-sm font-semibold text-banc-dark lg:text-base">
                     {activeReview.authorName}
                   </p>
-                  <p className="text-xs text-[#6B7280] lg:text-sm">{activeReview.relativeTime}</p>
+                  <p className="text-xs text-banc-grey lg:text-sm">{activeReview.relativeTime}</p>
                 </div>
               </div>
 
               {/* Stars */}
               <div className="flex items-center gap-2">
-                <div className="flex text-[#1DBFDD]">
+                <div className="flex text-banc-sky">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`h-4 w-4 lg:h-5 lg:w-5 ${
-                        i < activeReview.rating ? "fill-[#1DBFDD]" : "fill-gray-200"
+                        i < activeReview.rating ? "fill-banc-sky" : "fill-gray-200"
                       }`}
                     />
                   ))}
                 </div>
-                <span className="text-sm font-semibold text-[#0A6B82]">
+                <span className="text-sm font-semibold text-banc-sky-dark">
                   {activeReview.rating}.0
                 </span>
               </div>
 
               {/* Review Text */}
-              <p className="text-sm leading-relaxed text-[#374151] lg:text-base">
+              <p className="text-sm leading-relaxed text-banc-dark-mid lg:text-base">
                 &ldquo;{activeReview.text}&rdquo;
               </p>
             </motion.div>
@@ -235,8 +235,8 @@ export default function GoogleReviews() {
                   onClick={() => goToReview(index)}
                   className={`h-2.5 rounded-full transition-all ${
                     index === activeIndex
-                      ? "w-6 bg-[#1DBFDD]"
-                      : "w-2.5 bg-[#E5E7EB] hover:bg-[#CBD5E1]"
+                      ? "w-6 bg-banc-sky"
+                      : "w-2.5 bg-[#E0DFDC] hover:bg-[#CBD5E1]"
                   }`}
                   aria-label={`Show review ${index + 1}`}
                 />
@@ -247,14 +247,14 @@ export default function GoogleReviews() {
             <div className="flex items-center gap-2">
               <button
                 onClick={prevReview}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#6B7280] shadow-sm transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-banc-grey/20 bg-white text-banc-grey shadow-sm transition-colors hover:border-banc-sky hover:text-banc-sky"
                 aria-label="Previous review"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={nextReview}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E5E7EB] bg-white text-[#6B7280] shadow-sm transition-colors hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-banc-grey/20 bg-white text-banc-grey shadow-sm transition-colors hover:border-banc-sky hover:text-banc-sky"
                 aria-label="Next review"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -265,7 +265,7 @@ export default function GoogleReviews() {
           {/* Auto-play indicator */}
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-100 rounded-b-2xl overflow-hidden">
             <motion.div
-              className="h-full bg-[#1DBFDD]"
+              className="h-full bg-banc-sky"
               initial={{ width: "0%" }}
               animate={{ width: isPaused ? "0%" : "100%" }}
               transition={{ duration: 4, ease: "linear", repeat: isPaused ? 0 : Infinity }}

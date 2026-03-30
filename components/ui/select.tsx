@@ -19,10 +19,10 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-11 min-h-[44px] w-full items-center justify-between rounded-xl border border-[#C8C9CB] bg-white px-4 py-2.5 text-sm text-[#2C2F33] ring-offset-white transition-colors",
-      "placeholder:text-[#6B6E72]",
-      "focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:ring-offset-2 focus:border-[#1DBFDD]",
-      "hover:border-[#1DBFDD]/50",
+      "flex h-11 min-h-[44px] w-full items-center justify-between rounded-xl border border-[#E0DFDC] bg-white px-4 py-2.5 text-sm text-[#2C2A27] ring-offset-white transition-colors",
+      "placeholder:text-[#8A8880]",
+      "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-2 focus:border-[#4AC8E8]",
+      "hover:border-[#4AC8E8]/50",
       "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-100",
       "[&>span]:line-clamp-1",
       className
@@ -79,7 +79,7 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-[100] max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-[#C8C9CB] bg-white shadow-xl",
+        "relative z-[100] max-h-96 min-w-[8rem] overflow-hidden rounded-xl border border-[#E0DFDC] bg-white shadow-xl",
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
         "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
@@ -113,7 +113,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn("py-2 pl-8 pr-2 text-xs font-semibold uppercase tracking-wide text-[#6B6E72]", className)}
+    className={cn("py-2 pl-8 pr-2 text-xs font-semibold uppercase tracking-wide text-[#8A8880]", className)}
     {...props}
   />
 ))
@@ -126,10 +126,10 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-pointer select-none items-center rounded-lg py-2.5 pl-8 pr-3 text-sm text-[#2C2F33] outline-none",
+      "relative flex w-full cursor-pointer select-none items-center rounded-lg py-2.5 pl-8 pr-3 text-sm text-[#2C2A27] outline-none",
       "transition-colors duration-150",
-      "focus:bg-[#1DBFDD]/10 focus:text-[#0E8CAB]",
-      "hover:bg-[#F0F0ED] hover:text-[#2C2F33]",
+      "focus:bg-[#4AC8E8]/10 focus:text-[#1A9BBF]",
+      "hover:bg-[#F4F3F1] hover:text-[#2C2A27]",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "min-h-[40px]",
       className
@@ -138,7 +138,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute left-2.5 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 text-[#1DBFDD]" />
+        <Check className="h-4 w-4 text-[#4AC8E8]" />
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -153,7 +153,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1.5 h-px bg-[#C8C9CB]/50", className)}
+    className={cn("-mx-1 my-1.5 h-px bg-[#E0DFDC]/50", className)}
     {...props}
   />
 ))
@@ -170,7 +170,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-xs font-semibold text-[#6B6E72] font-heading mb-2">
+          <label className="block text-xs font-semibold text-[#8A8880] font-sans mb-2">
             {label}
           </label>
         )}
@@ -178,10 +178,10 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
           <select
             ref={ref}
             className={cn(
-              "w-full rounded-xl border border-[#C8C9CB] bg-white px-4 py-3 text-sm text-[#2C2F33]",
+              "w-full rounded-xl border border-[#E0DFDC] bg-white px-4 py-3 text-sm text-[#2C2A27]",
               "appearance-none min-h-[48px]",
-              "focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]",
-              "hover:border-[#1DBFDD]/50 transition-colors",
+              "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]",
+              "hover:border-[#4AC8E8]/50 transition-colors",
               "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100",
               error && "border-red-500 focus:ring-red-500 focus:border-red-500",
               className
@@ -190,7 +190,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
           >
             {children}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#6B6E72] pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8A8880] pointer-events-none" />
         </div>
         {error && (
           <p className="mt-1.5 text-xs text-red-500">{error}</p>

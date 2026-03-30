@@ -9,8 +9,7 @@ export {
 } from "./mobile/FloatingWhatsApp";
 
 // UI Components
-export { ThemeProvider, useTheme } from "./ui/ThemeProvider";
-export { ThemeToggle, ThemeSelector } from "./ui/ThemeToggle";
+export { ThemeProvider } from "./ui/ThemeProvider";
 export { ToastProvider, useToast } from "./ui/Toast";
 export { 
   Skeleton, 

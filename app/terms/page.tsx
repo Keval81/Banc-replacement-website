@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       <div className="h-[57px] lg:h-[94px]" />
 
@@ -17,22 +17,22 @@ export default function TermsPage() {
         <div className="mx-auto max-w-4xl">
           {/* Header */}
           <div className="mb-12 text-center">
-            <h1 className="text-4xl font-semibold text-[#2C2F33] lg:text-5xl">
+            <h1 className="text-4xl font-semibold text-[#1A1917] lg:text-5xl">
               Terms of Use
             </h1>
-            <p className="mt-4 text-lg text-[#6B6E72]">
+            <p className="mt-4 text-lg text-[#8A8880]">
               Last updated: February 2026
             </p>
           </div>
 
           {/* Content */}
           <div className="rounded-2xl bg-white p-8 shadow-lg lg:p-12">
-            <div className="prose prose-lg max-w-none text-[#6B6E72]">
+            <div className="prose prose-lg max-w-none text-[#8A8880]">
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">1. Introduction</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">1. Introduction</h2>
                 <p className="mt-4">
                   Welcome to Banc Property Group&apos;s website. These Terms of Use govern your use of our website 
-                  located at <strong className="text-[#2C2F33]">bancproperty.com</strong> and any related services 
+                  located at <strong className="text-[#1A1917]">bancproperty.com</strong> and any related services 
                   provided by Banc Property Group (referred to as &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;).
                 </p>
                 <p className="mt-4">
@@ -42,17 +42,17 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">2. Definitions</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">2. Definitions</h2>
                 <ul className="mt-4 list-disc space-y-2 pl-6">
-                  <li><strong className="text-[#2C2F33]">&ldquo;Website&rdquo;</strong> refers to bancproperty.com</li>
-                  <li><strong className="text-[#2C2F33]">&ldquo;Service&rdquo;</strong> refers to the services provided through our website</li>
-                  <li><strong className="text-[#2C2F33]">&ldquo;User&rdquo;</strong> refers to any individual accessing or using our website</li>
-                  <li><strong className="text-[#2C2F33]">&ldquo;Content&rdquo;</strong> refers to all text, images, data, and other materials on our website</li>
+                  <li><strong className="text-[#1A1917]">&ldquo;Website&rdquo;</strong> refers to bancproperty.com</li>
+                  <li><strong className="text-[#1A1917]">&ldquo;Service&rdquo;</strong> refers to the services provided through our website</li>
+                  <li><strong className="text-[#1A1917]">&ldquo;User&rdquo;</strong> refers to any individual accessing or using our website</li>
+                  <li><strong className="text-[#1A1917]">&ldquo;Content&rdquo;</strong> refers to all text, images, data, and other materials on our website</li>
                 </ul>
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">3. Use of Website</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">3. Use of Website</h2>
                 <p className="mt-4">
                   You agree to use our website only for lawful purposes and in a way that does not infringe the 
                   rights of, restrict or inhibit anyone else&apos;s use and enjoyment of the website.
@@ -68,7 +68,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">4. Intellectual Property</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">4. Intellectual Property</h2>
                 <p className="mt-4">
                   The content on this website, including but not limited to text, graphics, logos, images, 
                   photographs, audio clips, digital downloads, data compilations, and software, is the property 
@@ -86,7 +86,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">5. Property Listings and Information</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">5. Property Listings and Information</h2>
                 <p className="mt-4">
                   While we make every effort to ensure that property information on our website is accurate, 
                   we cannot guarantee the completeness or accuracy of all information. Property details, 
@@ -104,7 +104,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">6. User Submissions</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">6. User Submissions</h2>
                 <p className="mt-4">
                   Any material you submit to our website, including contact form submissions, valuation 
                   requests, and feedback, must not be illegal, obscene, abusive, threatening, defamatory, 
@@ -118,7 +118,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">7. Links to Third-Party Websites</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">7. Links to Third-Party Websites</h2>
                 <p className="mt-4">
                   Our website may contain links to third-party websites that are not owned or controlled 
                   by Banc Property Group. We have no control over, and assume no responsibility for, the 
@@ -132,7 +132,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">8. Disclaimer of Warranties</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">8. Disclaimer of Warranties</h2>
                 <p className="mt-4">
                   Our website is provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis. 
                   Banc Property Group makes no representations or warranties of any kind, express or implied, 
@@ -151,7 +151,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">9. Limitation of Liability</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">9. Limitation of Liability</h2>
                 <p className="mt-4">
                   Banc Property Group shall not be liable for any direct, indirect, incidental, special, 
                   consequential, or punitive damages arising out of or relating to your use of, or inability 
@@ -169,7 +169,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">10. Indemnification</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">10. Indemnification</h2>
                 <p className="mt-4">
                   You agree to indemnify, defend, and hold harmless Banc Property Group, its directors, 
                   officers, employees, consultants, agents, and affiliates from any and all third-party 
@@ -180,7 +180,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">11. Termination</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">11. Termination</h2>
                 <p className="mt-4">
                   We may terminate or suspend your access to our website immediately, without prior notice 
                   or liability, for any reason whatsoever, including without limitation if you breach these 
@@ -194,7 +194,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">12. Governing Law</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">12. Governing Law</h2>
                 <p className="mt-4">
                   These Terms of Use shall be governed by and construed in accordance with the laws of 
                   England and Wales, without regard to its conflict of law provisions.
@@ -206,7 +206,7 @@ export default function TermsPage() {
               </section>
 
               <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">13. Changes to Terms</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">13. Changes to Terms</h2>
                 <p className="mt-4">
                   We reserve the right to modify these Terms of Use at any time. Changes will be effective 
                   immediately upon posting to the website. Your continued use of the website following the 
@@ -218,20 +218,20 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="text-2xl font-semibold text-[#2C2F33]">14. Contact Information</h2>
+                <h2 className="text-2xl font-semibold text-[#1A1917]">14. Contact Information</h2>
                 <p className="mt-4">
                   If you have any questions about these Terms of Use, please contact us:
                 </p>
-                <div className="mt-4 rounded-xl bg-[#F0F0ED] p-6">
-                  <p className="font-semibold text-[#2C2F33]">Banc Property Group</p>
+                <div className="mt-4 rounded-xl bg-[#F4F3F1] p-6">
+                  <p className="font-semibold text-[#1A1917]">Banc Property Group</p>
                   <p className="mt-2">1 Station Road</p>
                   <p>Cuffley, Hertfordshire</p>
                   <p>EN6 4HU</p>
                   <p className="mt-3">
-                    Email: <a href="mailto:info@bancproperty.com" className="text-[#1DBFDD] hover:underline">info@bancproperty.com</a>
+                    Email: <a href="mailto:info@bancproperty.com" className="text-[#4AC8E8] hover:underline">info@bancproperty.com</a>
                   </p>
                   <p>
-                    Phone: <a href="tel:01707877781" className="text-[#1DBFDD] hover:underline">01707 877781</a>
+                    Phone: <a href="tel:01707877781" className="text-[#4AC8E8] hover:underline">01707 877781</a>
                   </p>
                 </div>
               </section>

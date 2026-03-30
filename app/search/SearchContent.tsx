@@ -253,11 +253,11 @@ export default function SearchPage() {
   }, [filters]);
 
   return (
-    <div className="bg-white text-[#111827]">
+    <div className="bg-white text-[#2C2A27]">
       <Header />
       
       {/* Hero Search Bar */}
-      <section className="bg-[#2C2F33] py-6">
+      <section className="bg-[#1A1917] py-6">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex-1 relative">
@@ -265,11 +265,11 @@ export default function SearchPage() {
               <input
                 type="text"
                 placeholder="Search by location, property name..."
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-[#1DBFDD]"
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-[#4AC8E8]"
               />
             </div>
             <Link href="/alerts">
-              <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB]">
+              <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
                 <Bell className="w-4 h-4 mr-2" />
                 Create Alert
               </Button>
@@ -279,7 +279,7 @@ export default function SearchPage() {
       </section>
 
       {/* Results Bar */}
-      <section className="border-b border-[#E5E7EB] bg-white sticky top-0 z-30">
+      <section className="border-b border-[#E0DFDC] bg-white sticky top-0 z-30">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Mobile Filter Button */}
@@ -290,7 +290,7 @@ export default function SearchPage() {
               <SlidersHorizontal className="w-4 h-4" />
               Filters
               {activeFilterCount > 0 && (
-                <span className="bg-[#1DBFDD] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="bg-[#4AC8E8] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                   {activeFilterCount}
                 </span>
               )}
@@ -308,7 +308,7 @@ export default function SearchPage() {
                 <select
                   value={filters.sortBy}
                   onChange={(e) => updateFilters({ sortBy: e.target.value })}
-                  className="min-h-[40px] appearance-none bg-white border border-gray-200 rounded-lg px-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]/20 focus:border-[#1DBFDD] cursor-pointer transition-colors hover:border-[#1DBFDD]/50"
+                  className="min-h-[40px] appearance-none bg-white border border-gray-200 rounded-lg px-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8] cursor-pointer transition-colors hover:border-[#4AC8E8]/50"
                 >
                   {sortOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -351,7 +351,7 @@ export default function SearchPage() {
           <div className="flex gap-8">
             {/* Sidebar Filters - Desktop */}
             <aside className="hidden md:block w-72 flex-shrink-0">
-              <div className="sticky top-24 bg-white rounded-xl border border-[#E5E7EB] overflow-hidden">
+              <div className="sticky top-24 bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
                 <SearchFilters
                   filters={filters}
                   onFilterChange={updateFilters}

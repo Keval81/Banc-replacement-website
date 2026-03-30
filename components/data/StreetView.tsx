@@ -195,7 +195,7 @@ export function StreetView({
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
             <div className="text-center">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-[#1DBFDD] rounded-full animate-spin mx-auto mb-2"></div>
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-[#4AC8E8] rounded-full animate-spin mx-auto mb-2"></div>
               <p className="text-sm text-gray-500">Loading Street View...</p>
             </div>
           </div>

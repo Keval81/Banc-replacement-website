@@ -71,20 +71,20 @@ const tenantBenefits = [
 
 export default function LettingsPage() {
   return (
-    <div className="bg-white text-[#111827]">
+    <div className="bg-white text-[#2C2A27]">
       <Header />
       
       {/* Hero - Mobile Optimized */}
-      <section className="relative bg-[#2C2F33] py-12 lg:py-24 overflow-hidden">
+      <section className="relative bg-[#1A1917] py-12 lg:py-24 overflow-hidden">
         {/* Background glow */}
-        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#1DBFDD]/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#1DBFDD]/5 blur-3xl" />
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#4AC8E8]/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#4AC8E8]/5 blur-3xl" />
         
         <div className="relative mx-auto max-w-7xl px-4 lg:px-10">
           {/* Badge */}
           <div className="mb-2 inline-flex items-center gap-2 lg:mb-4">
-            <Sparkles className="h-3.5 w-3.5 text-[#1DBFDD] lg:h-4 lg:w-4" />
-            <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#1DBFDD] lg:text-sm">
+            <Sparkles className="h-3.5 w-3.5 text-[#4AC8E8] lg:h-4 lg:w-4" />
+            <span className="text-xs font-medium uppercase tracking-[0.15em] text-[#4AC8E8] lg:text-sm">
               Property Lettings
             </span>
           </div>
@@ -102,15 +102,15 @@ export default function LettingsPage() {
           {/* Quick stats */}
           <div className="mt-5 flex flex-wrap gap-5 lg:mt-8 lg:gap-8">
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">500+</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">500+</span>
               <span className="text-xs text-white/50 lg:text-sm">Properties Managed</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">98%</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">98%</span>
               <span className="text-xs text-white/50 lg:text-sm">Tenant Satisfaction</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#1DBFDD] lg:text-3xl">15+</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">15+</span>
               <span className="text-xs text-white/50 lg:text-sm">Years Experience</span>
             </div>
           </div>
@@ -129,13 +129,13 @@ export default function LettingsPage() {
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Section Header */}
           <div className="mb-6 text-center lg:mb-12">
-            <span className="inline-block rounded-full bg-[#1DBFDD]/10 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD] lg:px-4">
+            <span className="inline-block rounded-full bg-[#4AC8E8]/10 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#4AC8E8] lg:px-4">
               Our Services
             </span>
             <h2 className="mt-2 text-xl font-semibold lg:mt-3 lg:text-4xl">
               Lettings Services
             </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-[#6B7280] lg:mt-3 lg:text-base">
+            <p className="mx-auto mt-2 max-w-2xl text-sm text-[#8A8880] lg:mt-3 lg:text-base">
               Comprehensive letting solutions designed to meet the needs of both landlords and tenants.
             </p>
           </div>
@@ -148,19 +148,19 @@ export default function LettingsPage() {
                 <Link 
                   key={card.title} 
                   href={card.href}
-                  className="group block rounded-xl border border-[#E5E7EB] bg-white p-4 transition-all active:bg-[#F9FAFB] lg:rounded-2xl lg:p-6 lg:hover:border-[#1DBFDD] lg:hover:shadow-lg"
+                  className="group block rounded-xl border border-[#E0DFDC] bg-white p-4 transition-all active:bg-[#F4F3F1] lg:rounded-2xl lg:p-6 lg:hover:border-[#4AC8E8] lg:hover:shadow-lg"
                 >
-                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/10 text-[#1DBFDD] transition-all lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl lg:group-hover:bg-[#1DBFDD] lg:group-hover:text-white">
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#4AC8E8]/10 text-[#4AC8E8] transition-all lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl lg:group-hover:bg-[#4AC8E8] lg:group-hover:text-white">
                     <IconComponent className="h-5 w-5 lg:h-6 lg:w-6" />
                   </div>
                   
                   <h3 className="text-sm font-semibold lg:text-base">{card.title}</h3>
                   
-                  <p className="mt-1 text-xs text-[#6B7280] lg:mt-2 lg:text-sm">
+                  <p className="mt-1 text-xs text-[#8A8880] lg:mt-2 lg:text-sm">
                     {card.description}
                   </p>
                   
-                  <span className="mt-2 inline-flex items-center text-xs text-[#1DBFDD] lg:mt-3 lg:text-sm">
+                  <span className="mt-2 inline-flex items-center text-xs text-[#4AC8E8] lg:mt-3 lg:text-sm">
                     Learn more
                     <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
                   </span>
@@ -172,11 +172,11 @@ export default function LettingsPage() {
       </section>
 
       {/* Landlord & Tenant Split Section */}
-      <section className="bg-[#2C2F33] py-10 lg:py-20">
+      <section className="bg-[#1A1917] py-10 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Section Header */}
           <div className="mb-6 text-center lg:mb-12">
-            <span className="inline-block rounded-full bg-[#1DBFDD]/20 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#1DBFDD] lg:px-4">
+            <span className="inline-block rounded-full bg-[#4AC8E8]/20 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-[#4AC8E8] lg:px-4">
               Who We Serve
             </span>
             <h2 className="mt-2 text-xl font-semibold text-white lg:mt-3 lg:text-4xl">
@@ -187,8 +187,8 @@ export default function LettingsPage() {
           {/* Split Cards */}
           <div className="grid gap-4 lg:grid-cols-2 lg:gap-6">
             {/* Landlords Card */}
-            <div className="rounded-xl bg-[#3A3D42] p-5 lg:rounded-2xl lg:p-8">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/20 text-[#1DBFDD] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
+            <div className="rounded-xl bg-[#3D3B37] p-5 lg:rounded-2xl lg:p-8">
+              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#4AC8E8]/20 text-[#4AC8E8] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
                 <Key className="h-5 w-5 lg:h-6 lg:w-6" />
               </div>
               
@@ -204,7 +204,7 @@ export default function LettingsPage() {
               <ul className="mt-4 space-y-2 lg:mt-6 lg:space-y-3">
                 {landlordBenefits.map((item) => (
                   <li key={item} className="flex items-center text-sm text-white/80 lg:text-base">
-                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD] lg:h-6 lg:w-6">
+                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#4AC8E8]/20 text-[#4AC8E8] lg:h-6 lg:w-6">
                       <svg className="h-3 w-3 lg:h-3.5 lg:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
@@ -216,7 +216,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/landlords-guide"
-                className="mt-5 inline-flex items-center rounded-lg bg-[#1DBFDD] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#0E8CAB] lg:mt-6 lg:px-5 lg:hover:bg-[#0E8CAB]"
+                className="mt-5 inline-flex items-center rounded-lg bg-[#4AC8E8] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#1A9BBF] lg:mt-6 lg:px-5 lg:hover:bg-[#1A9BBF]"
               >
                 Landlords Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -224,8 +224,8 @@ export default function LettingsPage() {
             </div>
 
             {/* Tenants Card */}
-            <div className="rounded-xl bg-[#3A3D42] p-5 lg:rounded-2xl lg:p-8">
-              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#1DBFDD]/20 text-[#1DBFDD] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
+            <div className="rounded-xl bg-[#3D3B37] p-5 lg:rounded-2xl lg:p-8">
+              <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#4AC8E8]/20 text-[#4AC8E8] lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl">
                 <BookOpen className="h-5 w-5 lg:h-6 lg:w-6" />
               </div>
               
@@ -241,7 +241,7 @@ export default function LettingsPage() {
               <ul className="mt-4 space-y-2 lg:mt-6 lg:space-y-3">
                 {tenantBenefits.map((item) => (
                   <li key={item} className="flex items-center text-sm text-white/80 lg:text-base">
-                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD]/20 text-[#1DBFDD] lg:h-6 lg:w-6">
+                    <span className="mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#4AC8E8]/20 text-[#4AC8E8] lg:h-6 lg:w-6">
                       <svg className="h-3 w-3 lg:h-3.5 lg:w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
@@ -253,7 +253,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/tenants-guide"
-                className="mt-5 inline-flex items-center rounded-lg bg-[#1DBFDD] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#0E8CAB] lg:mt-6 lg:px-5 lg:hover:bg-[#0E8CAB]"
+                className="mt-5 inline-flex items-center rounded-lg bg-[#4AC8E8] px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-[#1A9BBF] lg:mt-6 lg:px-5 lg:hover:bg-[#1A9BBF]"
               >
                 Tenants Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -264,7 +264,7 @@ export default function LettingsPage() {
       </section>
 
       {/* Contact CTA Section */}
-      <section className="relative overflow-hidden bg-[#1DBFDD] py-10 lg:py-16">
+      <section className="relative overflow-hidden bg-[#4AC8E8] py-10 lg:py-16">
         <div className="absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         
@@ -277,7 +277,7 @@ export default function LettingsPage() {
           </p>
           <Link 
             href="/contact"
-            className="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#1DBFDD] transition-all active:bg-white/90 lg:mt-6 lg:px-8 lg:py-4 lg:text-base lg:hover:bg-white/90"
+            className="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#4AC8E8] transition-all active:bg-white/90 lg:mt-6 lg:px-8 lg:py-4 lg:text-base lg:hover:bg-white/90"
           >
             Contact Us
             <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />

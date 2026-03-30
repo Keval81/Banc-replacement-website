@@ -138,12 +138,12 @@ export default function OfferForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Offer Amount */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-        <label className="block text-sm font-medium text-[#2C2F33] mb-3">
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+        <label className="block text-sm font-medium text-[#1A1917] mb-3">
           Your Offer Amount
         </label>
         <div className="relative">
-          <PoundSterling className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
+          <PoundSterling className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8880]" />
           <input
             type="text"
             value={formData.amount ? formData.amount.toLocaleString() : ""}
@@ -152,9 +152,9 @@ export default function OfferForm({
             placeholder="Enter offer amount"
             className={`
               w-full pl-12 pr-4 py-3 text-2xl font-semibold rounded-lg border bg-white
-              focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-              disabled:bg-[#F0F0ED] disabled:cursor-not-allowed
-              ${errors.amount ? "border-red-500" : "border-[#C8C9CB]"}
+              focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+              disabled:bg-[#F4F3F1] disabled:cursor-not-allowed
+              ${errors.amount ? "border-red-500" : "border-[#E0DFDC]"}
             `}
           />
         </div>
@@ -165,7 +165,7 @@ export default function OfferForm({
         {/* Comparison to asking price */}
         {formData.amount && formData.amount > 0 && (
           <div className="mt-3 flex items-center gap-4 text-sm">
-            <span className="text-[#6B6E72]">
+            <span className="text-[#8A8880]">
               {percentageOfAsking}% of asking price
             </span>
             {difference !== 0 && (
@@ -194,7 +194,7 @@ export default function OfferForm({
                 }))
               }
               disabled={isSubmitting}
-              className="px-3 py-1.5 text-sm bg-[#F0F0ED] hover:bg-[#1DBFDD]/10 text-[#6B6E72] hover:text-[#1DBFDD] rounded-lg transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 text-sm bg-[#F4F3F1] hover:bg-[#4AC8E8]/10 text-[#8A8880] hover:text-[#4AC8E8] rounded-lg transition-colors disabled:opacity-50"
             >
               {pct}%
             </button>
@@ -203,8 +203,8 @@ export default function OfferForm({
       </div>
 
       {/* Buying Position */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-        <label className="block text-sm font-medium text-[#2C2F33] mb-3">
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+        <label className="block text-sm font-medium text-[#1A1917] mb-3">
           Your Buying Position <span className="text-red-500">*</span>
         </label>
         {errors.position && (
@@ -218,8 +218,8 @@ export default function OfferForm({
                 flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all
                 ${
                   formData.position === pos.value
-                    ? "border-[#1DBFDD] bg-[#1DBFDD]/5"
-                    : "border-[#C8C9CB] hover:border-[#1DBFDD]/50"
+                    ? "border-[#4AC8E8] bg-[#4AC8E8]/5"
+                    : "border-[#E0DFDC] hover:border-[#4AC8E8]/50"
                 }
                 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
               `}
@@ -233,11 +233,11 @@ export default function OfferForm({
                   setFormData((prev) => ({ ...prev, position: pos.value }))
                 }
                 disabled={isSubmitting}
-                className="mt-0.5 w-4 h-4 text-[#1DBFDD] focus:ring-[#1DBFDD]"
+                className="mt-0.5 w-4 h-4 text-[#4AC8E8] focus:ring-[#4AC8E8]"
               />
               <div>
-                <span className="font-medium text-[#2C2F33]">{pos.label}</span>
-                <p className="text-sm text-[#6B6E72]">{pos.description}</p>
+                <span className="font-medium text-[#1A1917]">{pos.label}</span>
+                <p className="text-sm text-[#8A8880]">{pos.description}</p>
               </div>
             </label>
           ))}
@@ -245,8 +245,8 @@ export default function OfferForm({
       </div>
 
       {/* Timescale */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-        <label className="block text-sm font-medium text-[#2C2F33] mb-3">
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+        <label className="block text-sm font-medium text-[#1A1917] mb-3">
           Preferred Timescale <span className="text-red-500">*</span>
         </label>
         {errors.timescale && (
@@ -260,8 +260,8 @@ export default function OfferForm({
                 flex flex-col p-3 rounded-lg border-2 cursor-pointer transition-all
                 ${
                   formData.timescale === time.value
-                    ? "border-[#1DBFDD] bg-[#1DBFDD]/5"
-                    : "border-[#C8C9CB] hover:border-[#1DBFDD]/50"
+                    ? "border-[#4AC8E8] bg-[#4AC8E8]/5"
+                    : "border-[#E0DFDC] hover:border-[#4AC8E8]/50"
                 }
                 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
               `}
@@ -277,19 +277,19 @@ export default function OfferForm({
                 disabled={isSubmitting}
                 className="sr-only"
               />
-              <Clock className="w-5 h-5 text-[#1DBFDD] mb-2" />
-              <span className="font-medium text-[#2C2F33] text-sm">
+              <Clock className="w-5 h-5 text-[#4AC8E8] mb-2" />
+              <span className="font-medium text-[#1A1917] text-sm">
                 {time.label}
               </span>
-              <span className="text-xs text-[#6B6E72]">{time.description}</span>
+              <span className="text-xs text-[#8A8880]">{time.description}</span>
             </label>
           ))}
         </div>
       </div>
 
       {/* Additional Options */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5 space-y-4">
-        <h4 className="font-medium text-[#2C2F33]">Additional Information</h4>
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5 space-y-4">
+        <h4 className="font-medium text-[#1A1917]">Additional Information</h4>
 
         <label className="flex items-center gap-3 cursor-pointer">
           <input
@@ -302,9 +302,9 @@ export default function OfferForm({
               }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]"
+            className="w-4 h-4 rounded border-[#E0DFDC] text-[#4AC8E8] focus:ring-[#4AC8E8]"
           />
-          <span className="text-[#2C2F33]">
+          <span className="text-[#1A1917]">
             I have a Mortgage Agreement in Principle
           </span>
         </label>
@@ -317,31 +317,31 @@ export default function OfferForm({
               setFormData((prev) => ({ ...prev, chainFree: e.target.checked }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]"
+            className="w-4 h-4 rounded border-[#E0DFDC] text-[#4AC8E8] focus:ring-[#4AC8E8]"
           />
-          <span className="text-[#2C2F33]">I am chain-free</span>
+          <span className="text-[#1A1917]">I am chain-free</span>
         </label>
       </div>
 
       {/* Proof of Funds Upload */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-        <label className="block text-sm font-medium text-[#2C2F33] mb-3">
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+        <label className="block text-sm font-medium text-[#1A1917] mb-3">
           Proof of Funds (Optional)
         </label>
-        <p className="text-sm text-[#6B6E72] mb-3">
+        <p className="text-sm text-[#8A8880] mb-3">
           Upload bank statement or mortgage agreement in principle to strengthen
           your offer
         </p>
 
-        <div className="border-2 border-dashed border-[#C8C9CB] rounded-lg p-6 text-center">
+        <div className="border-2 border-dashed border-[#E0DFDC] rounded-lg p-6 text-center">
           {proofOfFundsFile ? (
             <div className="flex items-center justify-center gap-3">
               <FileText className="w-8 h-8 text-green-500" />
               <div className="text-left">
-                <p className="font-medium text-[#2C2F33]">
+                <p className="font-medium text-[#1A1917]">
                   {proofOfFundsFile.name}
                 </p>
-                <p className="text-sm text-[#6B6E72]">
+                <p className="text-sm text-[#8A8880]">
                   {(proofOfFundsFile.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>
@@ -356,11 +356,11 @@ export default function OfferForm({
             </div>
           ) : (
             <label className="cursor-pointer">
-              <Upload className="w-8 h-8 text-[#6B6E72] mx-auto mb-2" />
-              <p className="text-sm text-[#2C2F33]">
+              <Upload className="w-8 h-8 text-[#8A8880] mx-auto mb-2" />
+              <p className="text-sm text-[#1A1917]">
                 Click to upload or drag and drop
               </p>
-              <p className="text-xs text-[#6B6E72] mt-1">
+              <p className="text-xs text-[#8A8880] mt-1">
                 PDF, JPG, PNG up to 10MB
               </p>
               <input
@@ -376,8 +376,8 @@ export default function OfferForm({
       </div>
 
       {/* Additional Comments */}
-      <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-        <label className="block text-sm font-medium text-[#2C2F33] mb-3">
+      <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+        <label className="block text-sm font-medium text-[#1A1917] mb-3">
           Additional Comments (Optional)
         </label>
         <textarea
@@ -392,15 +392,15 @@ export default function OfferForm({
           placeholder="Any additional information that might support your offer..."
           rows={4}
           className="
-            w-full px-4 py-3 rounded-lg border border-[#C8C9CB] bg-white
-            focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-            disabled:bg-[#F0F0ED] disabled:cursor-not-allowed resize-none
+            w-full px-4 py-3 rounded-lg border border-[#E0DFDC] bg-white
+            focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+            disabled:bg-[#F4F3F1] disabled:cursor-not-allowed resize-none
           "
         />
       </div>
 
       {/* Terms */}
-      <div className="bg-[#F0F0ED] rounded-xl p-5">
+      <div className="bg-[#F4F3F1] rounded-xl p-5">
         <label className="flex items-start gap-3 cursor-pointer">
           <input
             type="checkbox"
@@ -413,20 +413,20 @@ export default function OfferForm({
               if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }));
             }}
             disabled={isSubmitting}
-            className="mt-1 w-4 h-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]"
+            className="mt-1 w-4 h-4 rounded border-[#E0DFDC] text-[#4AC8E8] focus:ring-[#4AC8E8]"
           />
           <div>
-            <span className="text-[#2C2F33]">
+            <span className="text-[#1A1917]">
               I confirm this is a genuine offer and I understand that providing
               false information may result in legal action.
             </span>
-            <p className="text-sm text-[#6B6E72] mt-1">
+            <p className="text-sm text-[#8A8880] mt-1">
               I agree to the{" "}
-              <a href="/terms" className="text-[#1DBFDD] hover:underline">
+              <a href="/terms" className="text-[#4AC8E8] hover:underline">
                 Terms of Business
               </a>{" "}
               and{" "}
-              <a href="/privacy" className="text-[#1DBFDD] hover:underline">
+              <a href="/privacy" className="text-[#4AC8E8] hover:underline">
                 Privacy Policy
               </a>
               .
@@ -447,8 +447,8 @@ export default function OfferForm({
           flex items-center justify-center gap-2
           ${
             isSubmitting
-              ? "bg-[#C8C9CB] cursor-not-allowed"
-              : "bg-[#1DBFDD] hover:bg-[#0E8CAB]"
+              ? "bg-[#E0DFDC] cursor-not-allowed"
+              : "bg-[#4AC8E8] hover:bg-[#1A9BBF]"
           }
           text-white
         `}
@@ -466,7 +466,7 @@ export default function OfferForm({
         )}
       </button>
 
-      <p className="text-center text-sm text-[#6B6E72]">
+      <p className="text-center text-sm text-[#8A8880]">
         Your offer will be reviewed and the vendor will be notified within 24
         hours.
       </p>

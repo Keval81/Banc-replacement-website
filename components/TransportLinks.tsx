@@ -73,8 +73,8 @@ export function TransportLinks({
       {/* Header */}
       <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center">
-            <Navigation className="h-5 w-5 text-[#1DBFDD]" />
+          <div className="w-10 h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center">
+            <Navigation className="h-5 w-5 text-[#4AC8E8]" />
           </div>
           <div>
             <h3 className="font-semibold text-gray-900">Transport Links</h3>
@@ -154,7 +154,7 @@ export function TransportLinks({
                   animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
                   className="flex-shrink-0"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#1DBFDD]/10 flex items-center justify-center text-[#1DBFDD]">
+                  <div className="w-10 h-10 rounded-full bg-[#4AC8E8]/10 flex items-center justify-center text-[#4AC8E8]">
                     <ExternalLink className="h-4 w-4" />
                   </div>
                 </motion.div>

@@ -57,24 +57,24 @@ export default function MakeOfferPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-[#F0F0ED] py-8 px-4">
+      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-[#C8C9CB] p-8 text-center">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
-            <h1 className="text-2xl font-heading font-bold text-[#2C2F33] mb-3">
+            <h1 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
               Offer Submitted Successfully!
             </h1>
-            <p className="text-[#6B6E72] mb-6">
+            <p className="text-[#8A8880] mb-6">
               Your offer of{" "}
               <strong>
                 £{submittedAmount.toLocaleString()}
               </strong>{" "}
               for <strong>{mockProperty.address}</strong> has been submitted.
             </p>
-            <div className="bg-[#F0F0ED] rounded-lg p-4 mb-6">
-              <p className="text-sm text-[#6B6E72]">
+            <div className="bg-[#F4F3F1] rounded-lg p-4 mb-6">
+              <p className="text-sm text-[#8A8880]">
                 The vendor will be notified and will review your offer within 24
                 hours. You&apos;ll receive an email notification once they respond.
               </p>
@@ -89,13 +89,13 @@ export default function MakeOfferPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="/portal/applicant"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1DBFDD] text-white rounded-lg font-medium hover:bg-[#0E8CAB] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
               >
                 Track Your Offer
               </a>
               <a
                 href="/sales/properties"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#C8C9CB] text-[#2C2F33] rounded-lg font-medium hover:bg-[#F0F0ED] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E0DFDC] text-[#1A1917] rounded-lg font-medium hover:bg-[#F4F3F1] transition-colors"
               >
                 Browse More Properties
               </a>
@@ -107,12 +107,12 @@ export default function MakeOfferPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0F0ED] py-8 px-4">
+    <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Back Link */}
         <a
           href={`/sales/properties/${propertyId}`}
-          className="inline-flex items-center gap-2 text-[#6B6E72] hover:text-[#1DBFDD] transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-[#8A8880] hover:text-[#4AC8E8] transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to property
@@ -120,10 +120,10 @@ export default function MakeOfferPage() {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-[#2C2F33]">
+          <h1 className="text-3xl font-heading font-bold text-[#1A1917]">
             Make an Offer
           </h1>
-          <p className="text-[#6B6E72] mt-2">
+          <p className="text-[#8A8880] mt-2">
             Submit your offer for this property. The vendor will review and
             respond within 24 hours.
           </p>
@@ -132,23 +132,23 @@ export default function MakeOfferPage() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden sticky top-4">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden sticky top-4">
               <img
                 src={mockProperty.image}
                 alt={mockProperty.address}
                 className="w-full h-48 object-cover"
               />
               <div className="p-5">
-                <h2 className="font-heading font-semibold text-[#2C2F33]">
+                <h2 className="font-heading font-semibold text-[#1A1917]">
                   {mockProperty.address}
                 </h2>
-                <p className="text-[#6B6E72] text-sm">{mockProperty.postcode}</p>
-                <p className="text-xl font-bold text-[#1DBFDD] mt-2">
+                <p className="text-[#8A8880] text-sm">{mockProperty.postcode}</p>
+                <p className="text-xl font-bold text-[#4AC8E8] mt-2">
                   {mockProperty.displayPrice}
                 </p>
-                <p className="text-sm text-[#6B6E72] mt-1">Asking Price</p>
+                <p className="text-sm text-[#8A8880] mt-1">Asking Price</p>
 
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#C8C9CB] text-sm text-[#6B6E72]">
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#E0DFDC] text-sm text-[#8A8880]">
                   <span className="flex items-center gap-1">
                     <Bed className="w-4 h-4" />
                     {mockProperty.bedrooms}
@@ -163,30 +163,30 @@ export default function MakeOfferPage() {
                   </span>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-[#C8C9CB]">
-                  <p className="text-sm text-[#6B6E72] line-clamp-3">
+                <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
+                  <p className="text-sm text-[#8A8880] line-clamp-3">
                     {mockProperty.description}
                   </p>
                   <a
                     href={`/sales/properties/${propertyId}`}
-                    className="text-sm text-[#1DBFDD] hover:underline mt-2 inline-block"
+                    className="text-sm text-[#4AC8E8] hover:underline mt-2 inline-block"
                   >
                     View full details →
                   </a>
                 </div>
 
                 {/* Agent Info */}
-                <div className="mt-4 pt-4 border-t border-[#C8C9CB]">
-                  <p className="text-sm text-[#6B6E72] mb-2">Listing Agent</p>
+                <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
+                  <p className="text-sm text-[#8A8880] mb-2">Listing Agent</p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#1DBFDD]/10 rounded-full flex items-center justify-center">
-                      <Home className="w-5 h-5 text-[#1DBFDD]" />
+                    <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
+                      <Home className="w-5 h-5 text-[#4AC8E8]" />
                     </div>
                     <div>
-                      <p className="font-medium text-[#2C2F33]">
+                      <p className="font-medium text-[#1A1917]">
                         {mockProperty.agent.name}
                       </p>
-                      <p className="text-sm text-[#6B6E72]">
+                      <p className="text-sm text-[#8A8880]">
                         {mockProperty.agent.phone}
                       </p>
                     </div>
@@ -198,8 +198,8 @@ export default function MakeOfferPage() {
 
           {/* Right Column - Offer Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl border border-[#C8C9CB] p-6">
-              <h2 className="text-xl font-heading font-semibold text-[#2C2F33] mb-6">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] p-6">
+              <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-6">
                 Your Offer Details
               </h2>
               <OfferForm

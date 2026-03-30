@@ -94,7 +94,7 @@ export function ShareButtons({
           className={`flex-1 py-5 border-2 rounded-lg transition-colors ${
             isSaved 
               ? 'border-red-500 text-red-500 bg-red-50' 
-              : 'border-gray-200 text-gray-600 hover:border-[#1DBFDD] hover:text-[#1DBFDD]'
+              : 'border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8]'
           }`}
         >
           <Heart className={`h-4 w-4 mr-2 ${isSaved ? "fill-red-500" : ""}`} />
@@ -106,7 +106,7 @@ export function ShareButtons({
       <Button
         variant="outline"
         onClick={handlePrint}
-        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#1DBFDD] hover:text-[#1DBFDD] rounded-lg transition-colors"
+        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
       >
         <Printer className="h-4 w-4 mr-2" />
         Print
@@ -116,7 +116,7 @@ export function ShareButtons({
       <Button
         variant="outline"
         onClick={() => setIsOpen(true)}
-        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#1DBFDD] hover:text-[#1DBFDD] rounded-lg transition-colors"
+        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
       >
         <Share2 className="h-4 w-4 mr-2" />
         Share

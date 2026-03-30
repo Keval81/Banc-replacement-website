@@ -161,7 +161,7 @@ export default function SoldPricesPage() {
           <Button 
             onClick={search} 
             disabled={loading || !postcode}
-            className="w-full md:w-auto bg-[#1DBFDD] hover:bg-[#1DBFDD]/90"
+            className="w-full md:w-auto bg-[#4AC8E8] hover:bg-[#4AC8E8]/90"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
             Search Sold Prices

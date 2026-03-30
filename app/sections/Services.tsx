@@ -8,13 +8,13 @@ const services = [
     title: "Sales",
     description: "Premium marketing, accurate valuations, and a seamless sales journey.",
     icon: Home,
-    accent: "#0D9488",
+    accent: "#4AC8E8",
   },
   {
     title: "Lettings",
     description: "Find quality tenants fast with concierge-level landlord support.",
     icon: Key,
-    accent: "#0D9488",
+    accent: "#4AC8E8",
   },
   {
     title: "Premier Homes",
@@ -26,17 +26,17 @@ const services = [
     title: "Property Management",
     description: "Full-service management with trusted suppliers and clear reporting.",
     icon: Wrench,
-    accent: "#0D9488",
+    accent: "#4AC8E8",
   },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className="bg-[#F9FAFB]">
+    <section id="services" className="bg-banc-grey-pale">
       <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-10">
         <div className="flex flex-col gap-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#6B7280]">Our Services</p>
-          <h2 className="text-3xl font-semibold text-[#111827] sm:text-4xl">
+          <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">Our Services</p>
+          <h2 className="text-3xl font-semibold text-banc-dark sm:text-4xl">
             Bespoke property expertise
           </h2>
         </div>
@@ -52,7 +52,7 @@ export default function Services() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -6 }}
-                className="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-banc-grey/20 bg-white p-6 shadow-sm"
               >
                 <div
                   className="mb-4 flex h-12 w-12 items-center justify-center rounded-full"
@@ -61,13 +61,13 @@ export default function Services() {
                   <Icon className="h-6 w-6" style={{ color: service.accent }} />
                 </div>
                 <h3
-                  className={`text-lg font-semibold text-[#111827] ${
+                  className={`text-lg font-semibold text-banc-dark ${
                     service.title === "Premier Homes" ? "font-serif" : ""
                   }`}
                 >
                   {service.title}
                 </h3>
-                <p className="mt-2 text-sm text-[#6B7280]">{service.description}</p>
+                <p className="mt-2 text-sm text-banc-grey">{service.description}</p>
               </motion.div>
             );
           })}

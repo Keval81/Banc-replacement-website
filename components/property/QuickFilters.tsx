@@ -176,10 +176,10 @@ function QuickFilterButton({
         "group relative flex items-center gap-2 px-4 py-2.5 rounded-xl",
         "text-sm font-medium whitespace-nowrap",
         "border transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:ring-offset-2",
+        "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-2",
         isActive
-          ? "bg-[#1DBFDD] text-white border-[#1DBFDD] shadow-md shadow-[#1DBFDD]/20"
-          : "bg-white text-[#6B6E72] border-[#E5E7EB] hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+          ? "bg-[#4AC8E8] text-white border-[#4AC8E8] shadow-md shadow-[#4AC8E8]/20"
+          : "bg-white text-[#8A8880] border-[#E0DFDC] hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
       )}
     >
       <Icon className={cn(
@@ -191,7 +191,7 @@ function QuickFilterButton({
       {/* Active indicator dot */}
       {isActive && (
         <span
-          className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-[#1DBFDD]"
+          className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-[#4AC8E8]"
         />
       )}
     </button>

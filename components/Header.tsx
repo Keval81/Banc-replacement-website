@@ -84,12 +84,12 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#2C2F33]/95 backdrop-blur-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
           {/* Logo */}
           <Link href="/" aria-label="Banc Property Group" className="flex items-center">
             <Image
-              src="/banc-logo-blue.png"
+              src="/banc-logo-white.png"
               alt="Banc Property Group"
               width={200}
               height={60}
@@ -112,8 +112,8 @@ export default function Header() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-1 py-2 transition-colors hover:text-[#1DBFDD]",
-                      activeDropdown === item.name && "text-[#1DBFDD]"
+                      "flex items-center gap-1 py-2 transition-colors hover:text-banc-sky",
+                      activeDropdown === item.name && "text-banc-sky"
                     )}
                   >
                     {item.name}
@@ -129,17 +129,17 @@ export default function Header() {
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: 8, scale: 0.95 }}
                           transition={{ duration: 0.15, ease: "easeOut" }}
-                          className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-white/10 bg-[#2C2F33] p-2 shadow-2xl z-50 overflow-hidden"
+                          className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-white/10 bg-banc-dark-deep p-2 shadow-2xl z-50 overflow-hidden"
                           style={{ transformOrigin: "top left" }}
                         >
                           {dropdowns[item.name as keyof typeof dropdowns].map((link, index) => (
                             <Link
                               key={link.title}
                               href={link.href}
-                              className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-white/80 transition-all duration-200 hover:bg-[#1DBFDD]/10 hover:text-white min-h-[44px]"
+                              className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-white/80 transition-all duration-200 hover:bg-banc-sky/10 hover:text-white min-h-[44px]"
                               style={{ animationDelay: `${index * 25}ms` }}
                             >
-                              <span className="w-1.5 h-1.5 rounded-full bg-[#1DBFDD] opacity-0 group-hover:opacity-100 transition-opacity" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-banc-sky opacity-0 group-hover:opacity-100 transition-opacity" />
                               {link.title}
                             </Link>
                           ))}
@@ -157,7 +157,7 @@ export default function Header() {
             {/* Phone */}
             <a 
               href="tel:01707877781" 
-              className="text-sm text-white/70 hover:text-[#1DBFDD] transition-colors"
+              className="text-sm text-white/70 hover:text-banc-sky transition-colors"
               onClick={() => trackCallClick("header_desktop")}
             >
               01707 877781
@@ -166,7 +166,7 @@ export default function Header() {
             {/* Favorites */}
             <Link 
               href="/favorites" 
-              className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:text-[#1DBFDD] transition-colors"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:text-banc-sky transition-colors"
               aria-label="Favorites"
             >
               <Heart className="h-5 w-5" />
@@ -201,7 +201,7 @@ export default function Header() {
 
             {/* CTA */}
             <Link href="/valuation">
-              <Button size="sm" className="bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
+              <Button size="sm" className="bg-banc-sky text-white hover:bg-banc-sky-dark">
                 Valuation
               </Button>
             </Link>
@@ -235,7 +235,7 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 z-50 w-[85%] max-w-[340px] bg-[#2C2F33] shadow-2xl lg:hidden"
+              className="fixed right-0 top-0 bottom-0 z-50 w-[85%] max-w-[340px] bg-banc-dark-deep shadow-2xl lg:hidden"
             >
               {/* Mobile Header */}
               <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
@@ -259,8 +259,8 @@ export default function Header() {
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DBFDD]/20">
-                        <User className="h-5 w-5 text-[#1DBFDD]" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-banc-sky/20">
+                        <User className="h-5 w-5 text-banc-sky" />
                       </div>
                     )}
                     <div className="flex-1">
@@ -281,7 +281,7 @@ export default function Header() {
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setMobileOpen(false)} className="flex-1">
-                      <Button className="w-full bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]">
+                      <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
                         Register
                       </Button>
                     </Link>
@@ -335,7 +335,7 @@ export default function Header() {
                                 onClick={() => setMobileOpen(false)}
                                 style={{ animationDelay: `${index * 50}ms` }}
                               >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#1DBFDD]" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-banc-sky" />
                                 {link.title}
                               </Link>
                             ))}
@@ -369,7 +369,7 @@ export default function Header() {
                     01707 877781
                   </a>
                   <Link href="/valuation" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-[#1DBFDD] py-3 text-base text-white hover:bg-[#0E8CAB]">
+                    <Button className="w-full bg-banc-sky py-3 text-base text-white hover:bg-banc-sky-dark">
                       Request Valuation
                     </Button>
                   </Link>
@@ -386,7 +386,7 @@ export default function Header() {
       </AnimatePresence>
 
       {/* Header Spacer */}
-      <div className="h-[56px] bg-[#2C2F33] lg:h-[72px]" />
+      <div className="h-[56px] bg-banc-dark-deep lg:h-[72px]" />
     </>
   );
 }

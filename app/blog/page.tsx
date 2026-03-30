@@ -54,10 +54,10 @@ export default function BlogPage() {
         <Header />
 
         {/* Hero Section */}
-        <section className="bg-[#2C2F33] py-16 lg:py-24">
+        <section className="bg-[#1A1917] py-16 lg:py-24">
           <div className="mx-auto max-w-7xl px-4 lg:px-10">
             <div className="max-w-3xl">
-              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#1DBFDD]">
+              <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#4AC8E8]">
                 Insights & Advice
               </p>
               <h1 className="text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -72,15 +72,15 @@ export default function BlogPage() {
         </section>
 
         {/* Categories */}
-        <section className="border-b border-[#E5E7EB] bg-[#F9FAFB]">
+        <section className="border-b border-[#E0DFDC] bg-[#F4F3F1]">
           <div className="mx-auto max-w-7xl px-4 lg:px-10">
             <div className="flex flex-wrap items-center gap-2 py-4">
-              <span className="mr-2 text-sm font-medium text-[#6B7280]">Categories:</span>
+              <span className="mr-2 text-sm font-medium text-[#8A8880]">Categories:</span>
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={`/blog/category/${category.slug}`}
-                  className="rounded-full bg-white px-4 py-2 text-sm text-[#374151] shadow-sm transition-colors hover:bg-[#1DBFDD] hover:text-white"
+                  className="rounded-full bg-white px-4 py-2 text-sm text-[#3D3B37] shadow-sm transition-colors hover:bg-[#4AC8E8] hover:text-white"
                 >
                   {category.name}
                 </Link>
@@ -93,7 +93,7 @@ export default function BlogPage() {
           {/* Featured Posts */}
           {featuredPosts.length > 0 && (
             <section className="mb-16">
-              <h2 className="mb-8 text-xl font-semibold text-[#111827]">Featured Articles</h2>
+              <h2 className="mb-8 text-xl font-semibold text-[#2C2A27]">Featured Articles</h2>
               <div className="grid gap-8 lg:grid-cols-2">
                 {featuredPosts.map((post) => (
                   <article
@@ -109,12 +109,12 @@ export default function BlogPage() {
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        <div className="absolute left-4 top-4 rounded-full bg-[#1DBFDD] px-3 py-1 text-xs font-semibold text-white">
+                        <div className="absolute left-4 top-4 rounded-full bg-[#4AC8E8] px-3 py-1 text-xs font-semibold text-white">
                           Featured
                         </div>
                       </div>
                       <div className="p-6">
-                        <div className="mb-3 flex items-center gap-4 text-sm text-[#6B7280]">
+                        <div className="mb-3 flex items-center gap-4 text-sm text-[#8A8880]">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
                             {formatDate(post.date)}
@@ -124,13 +124,13 @@ export default function BlogPage() {
                             {post.readingTime}
                           </span>
                         </div>
-                        <h3 className="mb-2 text-xl font-semibold text-[#111827] transition-colors group-hover:text-[#1DBFDD]">
+                        <h3 className="mb-2 text-xl font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8]">
                           {post.title}
                         </h3>
-                        <p className="mb-4 text-sm text-[#6B7280] line-clamp-2">
+                        <p className="mb-4 text-sm text-[#8A8880] line-clamp-2">
                           {post.description}
                         </p>
-                        <span className="inline-flex items-center text-sm font-medium text-[#1DBFDD]">
+                        <span className="inline-flex items-center text-sm font-medium text-[#4AC8E8]">
                           Read Article
                           <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </span>
@@ -144,12 +144,12 @@ export default function BlogPage() {
 
           {/* All Posts */}
           <section>
-            <h2 className="mb-8 text-xl font-semibold text-[#111827]">Latest Articles</h2>
+            <h2 className="mb-8 text-xl font-semibold text-[#2C2A27]">Latest Articles</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {posts.map((post) => (
                 <article
                   key={post.slug}
-                  className="group flex flex-col overflow-hidden rounded-xl border border-[#E5E7EB] bg-white transition-shadow hover:shadow-lg"
+                  className="group flex flex-col overflow-hidden rounded-xl border border-[#E0DFDC] bg-white transition-shadow hover:shadow-lg"
                 >
                   <Link href={`/blog/${post.slug}`} className="flex flex-1 flex-col">
                     <div className="relative aspect-[16/9] overflow-hidden">
@@ -162,7 +162,7 @@ export default function BlogPage() {
                       />
                     </div>
                     <div className="flex flex-1 flex-col p-5">
-                      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#6B7280]">
+                      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#8A8880]">
                         <span className="rounded-full bg-[#F3F4F6] px-2 py-1 capitalize">
                           {post.category.replace("-", " ")}
                         </span>
@@ -171,13 +171,13 @@ export default function BlogPage() {
                           {post.readingTime}
                         </span>
                       </div>
-                      <h3 className="mb-2 text-base font-semibold text-[#111827] transition-colors group-hover:text-[#1DBFDD] line-clamp-2">
+                      <h3 className="mb-2 text-base font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8] line-clamp-2">
                         {post.title}
                       </h3>
-                      <p className="mb-4 flex-1 text-sm text-[#6B7280] line-clamp-3">
+                      <p className="mb-4 flex-1 text-sm text-[#8A8880] line-clamp-3">
                         {post.description}
                       </p>
-                      <div className="flex items-center gap-2 text-sm text-[#6B7280]">
+                      <div className="flex items-center gap-2 text-sm text-[#8A8880]">
                         <User className="h-4 w-4" />
                         <span>{post.author}</span>
                       </div>
@@ -189,7 +189,7 @@ export default function BlogPage() {
           </section>
 
           {/* Newsletter CTA */}
-          <section className="mt-16 rounded-2xl bg-[#2C2F33] p-8 lg:p-12">
+          <section className="mt-16 rounded-2xl bg-[#1A1917] p-8 lg:p-12">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-xl font-semibold text-white lg:text-2xl">
                 Stay Updated with Property Insights
@@ -201,9 +201,9 @@ export default function BlogPage() {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="flex-1 rounded-lg bg-white/10 px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]"
+                  className="flex-1 rounded-lg bg-white/10 px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]"
                 />
-                <Button className="bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-white hover:bg-[#0E8CAB]">
+                <Button className="bg-[#4AC8E8] px-6 py-3 text-sm font-semibold text-white hover:bg-[#1A9BBF]">
                   Subscribe
                 </Button>
               </form>

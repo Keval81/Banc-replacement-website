@@ -29,32 +29,32 @@ export default function PortalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#C8C9CB] shadow-sm">
+      <header className="sticky top-0 z-50 bg-white border-b border-[#E0DFDC] shadow-sm">
         <div className="flex items-center justify-between px-4 lg:px-6 h-16">
           {/* Left: Menu button + Logo */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-[#F4F3F1] transition-colors"
               aria-label="Toggle menu"
             >
               {isSidebarOpen ? (
-                <X className="w-6 h-6 text-[#2C2F33]" />
+                <X className="w-6 h-6 text-[#1A1917]" />
               ) : (
-                <Menu className="w-6 h-6 text-[#2C2F33]" />
+                <Menu className="w-6 h-6 text-[#1A1917]" />
               )}
             </button>
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-[#1DBFDD] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-[#4AC8E8] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">B</span>
               </div>
               <div>
-                <h1 className="font-heading font-semibold text-[#2C2F33] text-lg leading-tight">
+                <h1 className="font-heading font-semibold text-[#1A1917] text-lg leading-tight">
                   Banc Property
                 </h1>
-                <p className="text-xs text-[#6B6E72]">{getPortalTitle()}</p>
+                <p className="text-xs text-[#8A8880]">{getPortalTitle()}</p>
               </div>
             </div>
           </div>
@@ -63,12 +63,12 @@ export default function PortalLayout({
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Notifications */}
             <button
-              className="relative p-2 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+              className="relative p-2 rounded-lg hover:bg-[#F4F3F1] transition-colors"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5 text-[#6B6E72]" />
+              <Bell className="w-5 h-5 text-[#8A8880]" />
               {notifications > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#1DBFDD] text-white text-xs font-medium rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#4AC8E8] text-white text-xs font-medium rounded-full flex items-center justify-center">
                   {notifications > 9 ? "9+" : notifications}
                 </span>
               )}
@@ -78,9 +78,9 @@ export default function PortalLayout({
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-2 sm:gap-3 p-2 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+                className="flex items-center gap-2 sm:gap-3 p-2 rounded-lg hover:bg-[#F4F3F1] transition-colors"
               >
-                <div className="w-8 h-8 bg-[#0E8CAB] rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#1A9BBF] rounded-full flex items-center justify-center">
                   {user.avatar ? (
                     <img
                       src={user.avatar}
@@ -92,12 +92,12 @@ export default function PortalLayout({
                   )}
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-sm font-medium text-[#2C2F33] leading-tight">
+                  <p className="text-sm font-medium text-[#1A1917] leading-tight">
                     {user.name}
                   </p>
-                  <p className="text-xs text-[#6B6E72] capitalize">{user.role}</p>
+                  <p className="text-xs text-[#8A8880] capitalize">{user.role}</p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-[#6B6E72] hidden sm:block" />
+                <ChevronDown className="w-4 h-4 text-[#8A8880] hidden sm:block" />
               </button>
 
               {/* Profile Dropdown */}
@@ -107,25 +107,25 @@ export default function PortalLayout({
                     className="fixed inset-0 z-40"
                     onClick={() => setIsProfileOpen(false)}
                   />
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg border border-[#C8C9CB] z-50 overflow-hidden">
-                    <div className="p-4 border-b border-[#C8C9CB]">
-                      <p className="font-medium text-[#2C2F33]">{user.name}</p>
-                      <p className="text-sm text-[#6B6E72]">{user.email}</p>
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg border border-[#E0DFDC] z-50 overflow-hidden">
+                    <div className="p-4 border-b border-[#E0DFDC]">
+                      <p className="font-medium text-[#1A1917]">{user.name}</p>
+                      <p className="text-sm text-[#8A8880]">{user.email}</p>
                     </div>
                     <nav className="p-2">
                       <a
                         href="/portal/settings"
-                        className="block px-4 py-2 text-sm text-[#2C2F33] hover:bg-[#F0F0ED] rounded-lg transition-colors"
+                        className="block px-4 py-2 text-sm text-[#1A1917] hover:bg-[#F4F3F1] rounded-lg transition-colors"
                       >
                         Settings
                       </a>
                       <a
                         href="/portal/help"
-                        className="block px-4 py-2 text-sm text-[#2C2F33] hover:bg-[#F0F0ED] rounded-lg transition-colors"
+                        className="block px-4 py-2 text-sm text-[#1A1917] hover:bg-[#F4F3F1] rounded-lg transition-colors"
                       >
                         Help & Support
                       </a>
-                      <hr className="my-2 border-[#C8C9CB]" />
+                      <hr className="my-2 border-[#E0DFDC]" />
                       <a
                         href="/api/auth/signout"
                         className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -144,7 +144,7 @@ export default function PortalLayout({
       <div className="flex">
         {/* Sidebar Navigation */}
         <aside
-          className={`fixed lg:sticky top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] bg-white border-r border-[#C8C9CB] transform transition-transform duration-300 ease-in-out lg:transform-none ${
+          className={`fixed lg:sticky top-16 left-0 z-40 w-64 h-[calc(100vh-4rem)] bg-white border-r border-[#E0DFDC] transform transition-transform duration-300 ease-in-out lg:transform-none ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >

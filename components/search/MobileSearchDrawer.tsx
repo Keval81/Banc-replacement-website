@@ -64,7 +64,7 @@ export default function MobileSearchDrawer({
                   onClick={() => onFilterChange({ view: "grid" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "grid" ? "bg-white shadow-sm text-[#1DBFDD]" : "text-gray-500"
+                    filters.view === "grid" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
                   )}
                 >
                   <Grid3X3 className="w-4 h-4" />
@@ -73,7 +73,7 @@ export default function MobileSearchDrawer({
                   onClick={() => onFilterChange({ view: "list" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "list" ? "bg-white shadow-sm text-[#1DBFDD]" : "text-gray-500"
+                    filters.view === "list" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
                   )}
                 >
                   <List className="w-4 h-4" />
@@ -82,7 +82,7 @@ export default function MobileSearchDrawer({
                   onClick={() => onFilterChange({ view: "map" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "map" ? "bg-white shadow-sm text-[#1DBFDD]" : "text-gray-500"
+                    filters.view === "map" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
                   )}
                 >
                   <Map className="w-4 h-4" />

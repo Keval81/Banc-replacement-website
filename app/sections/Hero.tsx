@@ -137,7 +137,7 @@ export default function Hero() {
 
   return (
     <section 
-      className="relative min-h-screen h-screen w-full overflow-hidden bg-[#2C2F33] text-white"
+      className="relative min-h-screen h-screen w-full overflow-hidden bg-banc-dark-deep text-white"
       onClick={handleInteraction}
     >
       {/* Video Background */}
@@ -167,7 +167,7 @@ export default function Hero() {
 
         {/* Fallback while loading */}
         {!isLoaded && (
-          <div className="absolute inset-0 h-screen w-full bg-[#2C2F33]">
+          <div className="absolute inset-0 h-screen w-full bg-banc-dark-deep">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
               style={{
@@ -182,14 +182,14 @@ export default function Hero() {
       </div>
       
       {/* Gradient overlay */}
-      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
+      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-banc-dark-deep/70 via-banc-dark-deep/40 to-banc-dark-deep/80" />
 
       {/* Autoplay blocked notice */}
       {!canAutoplay && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#0E8CAB] lg:hover:bg-[#0E8CAB]"
+          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-banc-sky px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#1A9BBF] lg:hover:bg-[#1A9BBF]"
           onClick={startPlayback}
         >
           Click to play video
@@ -207,7 +207,7 @@ export default function Hero() {
         >
           <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-lg sm:text-4xl lg:text-5xl xl:text-6xl">
             Exceptional Properties.<br />
-            <span className="text-[#4DD4F0]">Exceptional Service.</span>
+            <span className="text-banc-sky-mid">Exceptional Service.</span>
           </h1>
           <p className="mt-4 text-base text-white/90 sm:text-lg lg:text-xl drop-shadow-md">
             Your local Cuffley &amp; Mayfair estate agent
@@ -216,14 +216,14 @@ export default function Hero() {
             <Link href="/valuation">
               <Button 
                 size="lg"
-                className="bg-[#1DBFDD] px-5 py-5 text-sm text-white hover:bg-[#0E8CAB] active:bg-[#0E8CAB] lg:px-8 lg:text-base"
+                className="bg-banc-sky px-5 py-5 text-sm text-white hover:bg-[#1A9BBF] active:bg-[#1A9BBF] lg:px-8 lg:text-base"
               >
                 Request a Valuation
               </Button>
             </Link>
             <Link
               href="/sales/properties"
-              className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-[#4DD4F0] active:text-[#4DD4F0]"
+              className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-banc-sky-mid active:text-banc-sky-mid"
             >
               View Properties
             </Link>
@@ -256,7 +256,7 @@ export default function Hero() {
                     className="h-10 w-10 flex-shrink-0 rounded-full object-cover lg:h-11 lg:w-11"
                   />
                 ) : (
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#1DBFDD] lg:h-11 lg:w-11">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-banc-sky lg:h-11 lg:w-11">
                     <span className="text-sm font-semibold text-white">
                       {activeReview.authorName?.[0] || "B"}
                     </span>
@@ -269,7 +269,7 @@ export default function Hero() {
                 {/* Stars */}
                 <div className="flex items-center gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="h-3 w-3 fill-[#1DBFDD] lg:h-4 lg:w-4" viewBox="0 0 20 20">
+                    <svg key={i} className="h-3 w-3 fill-banc-sky lg:h-4 lg:w-4" viewBox="0 0 20 20">
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
                     </svg>
                   ))}

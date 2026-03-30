@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function CTABanner() {
   return (
-    <section className="bg-gradient-to-r from-[#0D9488] via-[#0F766E] to-[#0D9488]">
+    <section className="bg-gradient-to-r from-banc-dark-deep via-banc-dark to-banc-dark-deep">
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-6 px-6 py-16 text-center text-white lg:flex-row lg:text-left lg:px-10">
         <div>
           <h2 className="text-3xl font-semibold sm:text-4xl">
@@ -15,7 +15,7 @@ export default function CTABanner() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <Button variant="secondary" className="bg-white text-[#0D9488] hover:bg-white/90">
+          <Button variant="secondary" className="bg-banc-sky text-white hover:bg-banc-sky-dark">
             Get a Valuation
           </Button>
           <Button variant="outline" className="border-white/50 bg-transparent text-white hover:bg-white/10">

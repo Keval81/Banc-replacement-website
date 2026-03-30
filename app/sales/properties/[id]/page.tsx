@@ -63,16 +63,16 @@ function AccordionItem({
         className="flex w-full items-center justify-between py-3 sm:py-4 text-left hover:bg-gray-50/50 transition-colors group min-h-[56px]"
       >
         <div className="flex items-center gap-2 sm:gap-3">
-          {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD] flex-shrink-0" />}
+          {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8] flex-shrink-0" />}
           <h3 className="text-sm sm:text-base font-semibold text-gray-900">{title}</h3>
           {badge && (
-            <span className="text-[10px] sm:text-xs bg-[#1DBFDD]/10 text-[#1DBFDD] px-1.5 sm:px-2 py-0.5 rounded-full font-medium flex-shrink-0">
+            <span className="text-[10px] sm:text-xs bg-[#4AC8E8]/10 text-[#4AC8E8] px-1.5 sm:px-2 py-0.5 rounded-full font-medium flex-shrink-0">
               {badge}
             </span>
           )}
         </div>
         <ChevronRight 
-          className={`h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-200 group-hover:text-[#1DBFDD] flex-shrink-0 ml-2 ${
+          className={`h-4 w-4 sm:h-5 sm:w-5 text-gray-400 transition-transform duration-200 group-hover:text-[#4AC8E8] flex-shrink-0 ml-2 ${
             isOpen ? "rotate-90" : ""
           }`} 
         />
@@ -115,7 +115,7 @@ function VirtualTourModal({
     >
       <div className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
         <div className="flex items-center gap-3">
-          <Play className="h-5 w-5 text-[#1DBFDD]" />
+          <Play className="h-5 w-5 text-[#4AC8E8]" />
           <span className="font-medium">Virtual Tour</span>
         </div>
         <button 
@@ -158,9 +158,9 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-2 text-sm text-gray-500">
-            <a href="/" className="hover:text-[#1DBFDD] transition-colors">Home</a>
+            <a href="/" className="hover:text-[#4AC8E8] transition-colors">Home</a>
             <ChevronRight className="h-4 w-4" />
-            <a href="/sales/properties" className="hover:text-[#1DBFDD] transition-colors">For Sale</a>
+            <a href="/sales/properties" className="hover:text-[#4AC8E8] transition-colors">For Sale</a>
             <ChevronRight className="h-4 w-4" />
             <span className="text-gray-900 truncate max-w-[200px] sm:max-w-[400px]">{property.address}</span>
           </nav>
@@ -180,7 +180,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   onClick={() => setActiveTab("photos")}
                   className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "photos" 
-                      ? "bg-[#1DBFDD] text-white" 
+                      ? "bg-[#4AC8E8] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
@@ -193,7 +193,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                     onClick={() => setActiveTab("tour")}
                     className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                       activeTab === "tour" 
-                        ? "bg-[#1DBFDD] text-white" 
+                        ? "bg-[#4AC8E8] text-white" 
                         : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                   >
@@ -206,7 +206,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   onClick={() => setActiveTab("map")}
                   className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "map" 
-                      ? "bg-[#1DBFDD] text-white" 
+                      ? "bg-[#4AC8E8] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
@@ -218,7 +218,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                   onClick={() => setActiveTab("floorplan")}
                   className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                     activeTab === "floorplan" 
-                      ? "bg-[#1DBFDD] text-white" 
+                      ? "bg-[#4AC8E8] text-white" 
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
@@ -259,7 +259,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <button
                           onClick={() => setShowTourModal(true)}
-                          className="flex items-center gap-2 px-6 py-3 bg-[#1DBFDD] text-white rounded-full font-semibold hover:bg-[#1DBFDD]/90 transition-colors"
+                          className="flex items-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-full font-semibold hover:bg-[#4AC8E8]/90 transition-colors"
                         >
                           <Play className="h-5 w-5" />
                           Launch Virtual Tour
@@ -301,12 +301,12 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             <div className="mb-4 sm:mb-6">
               <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
                 {property.newListing && (
-                  <span className="bg-[#0D9488] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
+                  <span className="bg-[#4AC8E8] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
                     NEW LISTING
                   </span>
                 )}
                 {property.featured && (
-                  <span className="bg-[#1DBFDD] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
+                  <span className="bg-[#4AC8E8] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
                     FEATURED
                   </span>
                 )}
@@ -332,7 +332,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               
               {/* Price - Moved up for mobile visibility */}
               <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
-                <p className="text-2xl sm:text-3xl font-bold text-[#0D9488]">{property.price}</p>
+                <p className="text-2xl sm:text-3xl font-bold text-[#4AC8E8]">{property.price}</p>
                 {property.priceQualifier && (
                   <span className="text-xs sm:text-sm text-gray-500">{property.priceQualifier}</span>
                 )}
@@ -361,8 +361,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
             {/* Key Stats */}
             <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-gray-200 mb-4 sm:mb-6">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                  <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                  <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.beds}</span>
@@ -370,8 +370,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                  <Bath className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                  <Bath className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.baths}</span>
@@ -379,8 +379,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                  <Home className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                  <Home className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-sm sm:text-base">{property.receptions}</span>
@@ -389,8 +389,8 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                  <Square className="h-4 w-4 sm:h-5 sm:w-5 text-[#1DBFDD]" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                  <Square className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
                 </div>
                 <div className="min-w-0">
                   <span className="block font-bold text-gray-900 text-xs sm:text-base truncate">{property.sqft.toLocaleString()}</span>
@@ -418,7 +418,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
                       key={index}
                       className="flex items-start gap-2 p-2 sm:p-2.5 bg-gray-50 rounded"
                     >
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#1DBFDD] mt-2 flex-shrink-0" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#4AC8E8] mt-2 flex-shrink-0" />
                       <span className="text-xs sm:text-sm text-gray-700 leading-relaxed">{feature}</span>
                     </div>
                   ))}
@@ -590,7 +590,7 @@ export default function PropertyDetailPage({ params }: { params: { id: string } 
               "Save"
             )}
           </Button>
-          <Button className="flex-[2] h-12 sm:h-14 bg-[#0D9488] hover:bg-[#0F766E] text-white text-sm sm:text-base font-semibold shadow-lg">
+          <Button className="flex-[2] h-12 sm:h-14 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white text-sm sm:text-base font-semibold shadow-lg">
             <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5" />
             Contact Agent
           </Button>

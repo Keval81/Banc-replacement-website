@@ -130,7 +130,7 @@ export default function PropertyMap({
               className={cn(
                 "flex items-center gap-1 px-3 py-1.5 rounded-full shadow-lg transition-colors",
                 isSelected
-                  ? "bg-[#0D9488] text-white"
+                  ? "bg-[#4AC8E8] text-white"
                   : "bg-white text-gray-800 hover:bg-gray-50"
               )}
             >
@@ -148,7 +148,7 @@ export default function PropertyMap({
         <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30">
           <Button
             onClick={onAreaSearch}
-            className="bg-[#1DBFDD] hover:bg-[#0E8CAB] shadow-lg"
+            className="bg-[#4AC8E8] hover:bg-[#1A9BBF] shadow-lg"
           >
             <Search className="w-4 h-4 mr-2" />
             Search this area
@@ -169,7 +169,7 @@ export default function PropertyMap({
           onClick={() => setShowAreaSearch(!showAreaSearch)}
           className={cn(
             "p-2 rounded-lg shadow-md transition-colors",
-            showAreaSearch ? "bg-[#1DBFDD] text-white" : "bg-white hover:bg-gray-50"
+            showAreaSearch ? "bg-[#4AC8E8] text-white" : "bg-white hover:bg-gray-50"
           )}
           title="Draw search area"
         >
@@ -219,7 +219,7 @@ export default function PropertyMap({
               <h3 className="font-semibold text-gray-900 line-clamp-1">
                 {selectedProperty.title}
               </h3>
-              <p className="text-lg font-bold text-[#0D9488] mt-1">
+              <p className="text-lg font-bold text-[#4AC8E8] mt-1">
                 {selectedProperty.price}
               </p>
               <div className="flex gap-3 mt-2 text-xs text-gray-600">
@@ -228,7 +228,7 @@ export default function PropertyMap({
                 <span>{selectedProperty.stats.sqft} sqft</span>
               </div>
               <Link href={`/sales/properties/${selectedProperty.id}`}>
-                <Button className="w-full mt-3 bg-[#1DBFDD] hover:bg-[#0E8CAB] text-sm">
+                <Button className="w-full mt-3 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-sm">
                   View Details
                 </Button>
               </Link>
@@ -240,7 +240,7 @@ export default function PropertyMap({
       {/* Legend */}
       <div className="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-600 hidden md:block">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-[#0D9488]" />
+          <div className="w-3 h-3 rounded-full bg-[#4AC8E8]" />
           <span>Selected</span>
         </div>
         <div className="flex items-center gap-2 mt-1">

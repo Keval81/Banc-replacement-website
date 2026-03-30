@@ -139,62 +139,62 @@ export default function ApplicantPortalPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-heading font-bold text-[#2C2F33]">
+          <h1 className="text-2xl font-heading font-bold text-[#1A1917]">
             Welcome back, {mockUser.name.split(" ")[0]}
           </h1>
-          <p className="text-[#6B6E72] mt-1">
+          <p className="text-[#8A8880] mt-1">
             Track your property search and viewings
           </p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-[#C8C9CB] p-4">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-red-500" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#2C2F33]">
+            <p className="text-2xl font-bold text-[#1A1917]">
               {mockSavedProperties.length}
             </p>
-            <p className="text-sm text-[#6B6E72]">Saved Properties</p>
+            <p className="text-sm text-[#8A8880]">Saved Properties</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#C8C9CB] p-4">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#1DBFDD]/10 rounded-lg flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-[#1DBFDD]" />
+              <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-lg flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-[#4AC8E8]" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#2C2F33]">
+            <p className="text-2xl font-bold text-[#1A1917]">
               {upcomingViewings.length}
             </p>
-            <p className="text-sm text-[#6B6E72]">Upcoming Viewings</p>
+            <p className="text-sm text-[#8A8880]">Upcoming Viewings</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#C8C9CB] p-4">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                 <PoundSterling className="w-5 h-5 text-amber-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#2C2F33]">
+            <p className="text-2xl font-bold text-[#1A1917]">
               {mockOffers.length}
             </p>
-            <p className="text-sm text-[#6B6E72]">Active Offers</p>
+            <p className="text-sm text-[#8A8880]">Active Offers</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#C8C9CB] p-4">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <Bell className="w-5 h-5 text-purple-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#2C2F33]">
+            <p className="text-2xl font-bold text-[#1A1917]">
               {mockAlerts.length}
             </p>
-            <p className="text-sm text-[#6B6E72]">Property Alerts</p>
+            <p className="text-sm text-[#8A8880]">Property Alerts</p>
           </div>
         </div>
 
@@ -203,23 +203,23 @@ export default function ApplicantPortalPage() {
           {/* Left Column - Saved Properties & Viewings */}
           <div className="lg:col-span-2 space-y-6">
             {/* Saved Properties */}
-            <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden">
-              <div className="px-5 py-4 border-b border-[#C8C9CB] flex items-center justify-between">
-                <h3 className="font-heading font-semibold text-[#2C2F33]">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+              <div className="px-5 py-4 border-b border-[#E0DFDC] flex items-center justify-between">
+                <h3 className="font-heading font-semibold text-[#1A1917]">
                   Saved Properties
                 </h3>
                 <a
                   href="/portal/applicant/saved"
-                  className="text-sm text-[#1DBFDD] hover:text-[#0E8CAB] transition-colors"
+                  className="text-sm text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
                 >
                   View All →
                 </a>
               </div>
-              <div className="divide-y divide-[#C8C9CB]">
+              <div className="divide-y divide-[#E0DFDC]">
                 {mockSavedProperties.slice(0, 3).map((property) => (
                   <div
                     key={property.id}
-                    className="p-4 hover:bg-[#F0F0ED]/50 transition-colors"
+                    className="p-4 hover:bg-[#F4F3F1]/50 transition-colors"
                   >
                     <div className="flex gap-4">
                       <img
@@ -230,10 +230,10 @@ export default function ApplicantPortalPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div>
-                            <h4 className="font-medium text-[#2C2F33] truncate">
+                            <h4 className="font-medium text-[#1A1917] truncate">
                               {property.address}
                             </h4>
-                            <p className="text-lg font-semibold text-[#1DBFDD]">
+                            <p className="text-lg font-semibold text-[#4AC8E8]">
                               {property.price}
                             </p>
                           </div>
@@ -241,7 +241,7 @@ export default function ApplicantPortalPage() {
                             <Heart className="w-5 h-5 fill-current" />
                           </button>
                         </div>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-[#6B6E72]">
+                        <div className="flex items-center gap-4 mt-2 text-sm text-[#8A8880]">
                           <span className="flex items-center gap-1">
                             <Bed className="w-4 h-4" />
                             {property.bedrooms}
@@ -252,7 +252,7 @@ export default function ApplicantPortalPage() {
                           </span>
                         </div>
                         {property.notes && (
-                          <p className="mt-2 text-sm text-[#6B6E72] italic">
+                          <p className="mt-2 text-sm text-[#8A8880] italic">
                             &ldquo;{property.notes}&rdquo;
                           </p>
                         )}
@@ -264,26 +264,26 @@ export default function ApplicantPortalPage() {
             </div>
 
             {/* Upcoming Viewings */}
-            <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden">
-              <div className="px-5 py-4 border-b border-[#C8C9CB] flex items-center justify-between">
-                <h3 className="font-heading font-semibold text-[#2C2F33]">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+              <div className="px-5 py-4 border-b border-[#E0DFDC] flex items-center justify-between">
+                <h3 className="font-heading font-semibold text-[#1A1917]">
                   Upcoming Viewings
                 </h3>
                 <a
                   href="/portal/applicant/viewings"
-                  className="text-sm text-[#1DBFDD] hover:text-[#0E8CAB] transition-colors"
+                  className="text-sm text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
                 >
                   View All →
                 </a>
               </div>
-              <div className="divide-y divide-[#C8C9CB]">
+              <div className="divide-y divide-[#E0DFDC]">
                 {upcomingViewings.length === 0 ? (
                   <div className="p-8 text-center">
-                    <Calendar className="w-12 h-12 text-[#C8C9CB] mx-auto mb-3" />
-                    <p className="text-[#6B6E72]">No upcoming viewings</p>
+                    <Calendar className="w-12 h-12 text-[#E0DFDC] mx-auto mb-3" />
+                    <p className="text-[#8A8880]">No upcoming viewings</p>
                     <a
                       href="/sales/properties"
-                      className="inline-block mt-3 text-[#1DBFDD] hover:underline"
+                      className="inline-block mt-3 text-[#4AC8E8] hover:underline"
                     >
                       Browse Properties →
                     </a>
@@ -292,7 +292,7 @@ export default function ApplicantPortalPage() {
                   upcomingViewings.map((viewing) => (
                     <div
                       key={viewing.id}
-                      className="p-4 hover:bg-[#F0F0ED]/50 transition-colors"
+                      className="p-4 hover:bg-[#F4F3F1]/50 transition-colors"
                     >
                       <div className="flex gap-4">
                         <img
@@ -306,11 +306,11 @@ export default function ApplicantPortalPage() {
                               Confirmed
                             </span>
                           </div>
-                          <h4 className="font-medium text-[#2C2F33]">
+                          <h4 className="font-medium text-[#1A1917]">
                             {viewing.propertyAddress}
                           </h4>
                           <div className="flex items-center gap-4 mt-2 text-sm">
-                            <span className="flex items-center gap-1 text-[#6B6E72]">
+                            <span className="flex items-center gap-1 text-[#8A8880]">
                               <Calendar className="w-4 h-4" />
                               {new Date(viewing.date).toLocaleDateString("en-GB", {
                                 weekday: "short",
@@ -318,13 +318,13 @@ export default function ApplicantPortalPage() {
                                 month: "short",
                               })}
                             </span>
-                            <span className="flex items-center gap-1 text-[#1DBFDD]">
+                            <span className="flex items-center gap-1 text-[#4AC8E8]">
                               <Eye className="w-4 h-4" />
                               {viewing.time}
                             </span>
                           </div>
                           {viewing.agentName && (
-                            <p className="mt-2 text-sm text-[#6B6E72]">
+                            <p className="mt-2 text-sm text-[#8A8880]">
                               Agent: {viewing.agentName}
                             </p>
                           )}
@@ -342,7 +342,7 @@ export default function ApplicantPortalPage() {
             {/* Active Offers */}
             {mockOffers.length > 0 && (
               <div>
-                <h3 className="font-heading font-semibold text-[#2C2F33] mb-3">
+                <h3 className="font-heading font-semibold text-[#1A1917] mb-3">
                   Your Offers
                 </h3>
                 {mockOffers.map((offer) => (
@@ -352,14 +352,14 @@ export default function ApplicantPortalPage() {
             )}
 
             {/* Property Alerts */}
-            <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-heading font-semibold text-[#2C2F33]">
+                <h3 className="font-heading font-semibold text-[#1A1917]">
                   Property Alerts
                 </h3>
                 <a
                   href="/portal/applicant/alerts"
-                  className="text-sm text-[#1DBFDD] hover:text-[#0E8CAB]"
+                  className="text-sm text-[#4AC8E8] hover:text-[#1A9BBF]"
                 >
                   Manage →
                 </a>
@@ -368,68 +368,68 @@ export default function ApplicantPortalPage() {
                 {mockAlerts.map((alert) => (
                   <div
                     key={alert.id}
-                    className="p-3 bg-[#F0F0ED] rounded-lg"
+                    className="p-3 bg-[#F4F3F1] rounded-lg"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-[#2C2F33]">
+                      <span className="font-medium text-[#1A1917]">
                         {alert.name}
                       </span>
                       <span
                         className={`w-2 h-2 rounded-full ${
-                          alert.active ? "bg-green-500" : "bg-[#C8C9CB]"
+                          alert.active ? "bg-green-500" : "bg-[#E0DFDC]"
                         }`}
                       />
                     </div>
-                    <p className="text-sm text-[#6B6E72]">
+                    <p className="text-sm text-[#8A8880]">
                       {alert.locations.join(", ")}
                     </p>
-                    <p className="text-sm text-[#6B6E72]">
+                    <p className="text-sm text-[#8A8880]">
                       £{(alert.minPrice || 0).toLocaleString()} - £
                       {(alert.maxPrice || 0).toLocaleString()}
                     </p>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-4 py-2 px-4 border border-[#1DBFDD] text-[#1DBFDD] rounded-lg hover:bg-[#1DBFDD]/5 transition-colors text-sm font-medium">
+              <button className="w-full mt-4 py-2 px-4 border border-[#4AC8E8] text-[#4AC8E8] rounded-lg hover:bg-[#4AC8E8]/5 transition-colors text-sm font-medium">
                 + Create New Alert
               </button>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white rounded-xl border border-[#C8C9CB] p-5">
-              <h3 className="font-heading font-semibold text-[#2C2F33] mb-4">
+            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
+              <h3 className="font-heading font-semibold text-[#1A1917] mb-4">
                 Quick Links
               </h3>
               <div className="space-y-2">
                 <a
                   href="/sales/properties"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Home className="w-5 h-5 text-[#1DBFDD]" />
-                    <span className="text-[#2C2F33]">Browse Properties</span>
+                    <Home className="w-5 h-5 text-[#4AC8E8]" />
+                    <span className="text-[#1A1917]">Browse Properties</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#6B6E72]" />
+                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
                 </a>
                 <a
                   href="/sales/buyers-guide"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-[#1DBFDD]" />
-                    <span className="text-[#2C2F33]">Buyer&apos;s Guide</span>
+                    <MapPin className="w-5 h-5 text-[#4AC8E8]" />
+                    <span className="text-[#1A1917]">Buyer&apos;s Guide</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#6B6E72]" />
+                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
                 </a>
                 <a
                   href="/contact"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <MessageSquare className="w-5 h-5 text-[#1DBFDD]" />
-                    <span className="text-[#2C2F33]">Contact Agent</span>
+                    <MessageSquare className="w-5 h-5 text-[#4AC8E8]" />
+                    <span className="text-[#1A1917]">Contact Agent</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#6B6E72]" />
+                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
                 </a>
               </div>
             </div>

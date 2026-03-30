@@ -61,11 +61,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <Header />
 
       {/* Hero */}
-      <section className="bg-[#2C2F33] py-12 lg:py-20">
+      <section className="bg-[#1A1917] py-12 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <Link
             href="/blog"
-            className="mb-4 inline-flex items-center gap-2 text-[#1DBFDD] hover:underline"
+            className="mb-4 inline-flex items-center gap-2 text-[#4AC8E8] hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
@@ -86,7 +86,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {posts.map((post) => (
               <article
                 key={post.slug}
-                className="group flex flex-col overflow-hidden rounded-xl border border-[#E5E7EB] bg-white transition-shadow hover:shadow-lg"
+                className="group flex flex-col overflow-hidden rounded-xl border border-[#E0DFDC] bg-white transition-shadow hover:shadow-lg"
               >
                 <Link href={`/blog/${post.slug}`} className="flex flex-1 flex-col">
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -99,7 +99,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#6B7280]">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#8A8880]">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(post.date)}
@@ -109,13 +109,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                         {post.readingTime}
                       </span>
                     </div>
-                    <h3 className="mb-2 text-base font-semibold text-[#111827] transition-colors group-hover:text-[#1DBFDD] line-clamp-2">
+                    <h3 className="mb-2 text-base font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8] line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="mb-4 flex-1 text-sm text-[#6B7280] line-clamp-3">
+                    <p className="mb-4 flex-1 text-sm text-[#8A8880] line-clamp-3">
                       {post.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-[#6B7280]">
+                    <div className="flex items-center gap-2 text-sm text-[#8A8880]">
                       <User className="h-4 w-4" />
                       <span>{post.author}</span>
                     </div>
@@ -126,12 +126,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg text-[#6B7280]">
+            <p className="text-lg text-[#8A8880]">
               No posts found in this category yet.
             </p>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-[#1DBFDD] hover:underline"
+              className="mt-4 inline-block text-[#4AC8E8] hover:underline"
             >
               Browse all articles
             </Link>

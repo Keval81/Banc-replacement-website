@@ -61,8 +61,8 @@ export default function FeaturedListings() {
     <section id="featured" className="bg-white">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-16 sm:pb-20 pt-6 sm:pt-8 lg:px-10">
         <div className="flex flex-col gap-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#6B7280]">Featured</p>
-          <h2 className="text-3xl font-semibold text-[#111827] sm:text-4xl">
+          <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">Featured</p>
+          <h2 className="text-3xl font-semibold text-banc-dark sm:text-4xl">
             Featured Properties
           </h2>
         </div>

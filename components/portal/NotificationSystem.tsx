@@ -69,17 +69,17 @@ export default function NotificationSystem({
   const getNotificationColor = (type: Notification["type"]) => {
     switch (type) {
       case "viewing":
-        return "bg-[#1DBFDD]";
+        return "bg-[#4AC8E8]";
       case "offer":
         return "bg-green-500";
       case "message":
-        return "bg-[#0E8CAB]";
+        return "bg-[#1A9BBF]";
       case "document":
         return "bg-purple-500";
       case "milestone":
         return "bg-amber-500";
       default:
-        return "bg-[#6B6E72]";
+        return "bg-[#8A8880]";
     }
   };
 
@@ -101,12 +101,12 @@ export default function NotificationSystem({
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg hover:bg-[#F0F0ED] transition-colors"
+        className="relative p-2 rounded-lg hover:bg-[#F4F3F1] transition-colors"
         aria-label="Notifications"
       >
-        <Bell className="w-5 h-5 text-[#6B6E72]" />
+        <Bell className="w-5 h-5 text-[#8A8880]" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#1DBFDD] text-white text-xs font-medium rounded-full flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#4AC8E8] text-white text-xs font-medium rounded-full flex items-center justify-center">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
@@ -119,10 +119,10 @@ export default function NotificationSystem({
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#C8C9CB] z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-96 bg-white rounded-xl shadow-lg border border-[#E0DFDC] z-50 overflow-hidden">
             {/* Header */}
-            <div className="px-4 py-3 border-b border-[#C8C9CB] flex items-center justify-between">
-              <h3 className="font-heading font-semibold text-[#2C2F33]">
+            <div className="px-4 py-3 border-b border-[#E0DFDC] flex items-center justify-between">
+              <h3 className="font-heading font-semibold text-[#1A1917]">
                 Notifications
               </h3>
               {unreadCount > 0 && onMarkAllAsRead && (
@@ -130,7 +130,7 @@ export default function NotificationSystem({
                   onClick={() => {
                     onMarkAllAsRead();
                   }}
-                  className="text-xs text-[#1DBFDD] hover:text-[#0E8CAB] transition-colors"
+                  className="text-xs text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
                 >
                   Mark all read
                 </button>
@@ -141,9 +141,9 @@ export default function NotificationSystem({
             <div className="max-h-96 overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center">
-                  <Bell className="w-10 h-10 text-[#C8C9CB] mx-auto mb-3" />
-                  <p className="text-[#6B6E72]">No notifications</p>
-                  <p className="text-sm text-[#6B6E72]">
+                  <Bell className="w-10 h-10 text-[#E0DFDC] mx-auto mb-3" />
+                  <p className="text-[#8A8880]">No notifications</p>
+                  <p className="text-sm text-[#8A8880]">
                     You&apos;re all caught up!
                   </p>
                 </div>
@@ -151,10 +151,10 @@ export default function NotificationSystem({
                 notifications.map((notification) => (
                   <div
                     key={notification.id}
-                    className={`px-4 py-3 border-b border-[#C8C9CB] last:border-b-0 cursor-pointer transition-colors ${
+                    className={`px-4 py-3 border-b border-[#E0DFDC] last:border-b-0 cursor-pointer transition-colors ${
                       notification.read
                         ? "bg-white"
-                        : "bg-[#1DBFDD]/5 hover:bg-[#1DBFDD]/10"
+                        : "bg-[#4AC8E8]/5 hover:bg-[#4AC8E8]/10"
                     }`}
                   >
                     <div className="flex gap-3">
@@ -171,13 +171,13 @@ export default function NotificationSystem({
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1" onClick={() => handleNotificationClick(notification)}>
-                            <p className="font-medium text-[#2C2F33] text-sm">
+                            <p className="font-medium text-[#1A1917] text-sm">
                               {notification.title}
                             </p>
-                            <p className="text-sm text-[#6B6E72] mt-0.5 line-clamp-2">
+                            <p className="text-sm text-[#8A8880] mt-0.5 line-clamp-2">
                               {notification.message}
                             </p>
-                            <p className="text-xs text-[#6B6E72] mt-1">
+                            <p className="text-xs text-[#8A8880] mt-1">
                               {getRelativeTime(notification.timestamp)}
                             </p>
                           </div>
@@ -190,7 +190,7 @@ export default function NotificationSystem({
                                   e.stopPropagation();
                                   onMarkAsRead(notification.id);
                                 }}
-                                className="p-1.5 rounded-lg hover:bg-[#F0F0ED] text-[#6B6E72] hover:text-[#1DBFDD] transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-[#F4F3F1] text-[#8A8880] hover:text-[#4AC8E8] transition-colors"
                                 title="Mark as read"
                               >
                                 <CheckCircle className="w-4 h-4" />
@@ -202,7 +202,7 @@ export default function NotificationSystem({
                                   e.stopPropagation();
                                   onDelete(notification.id);
                                 }}
-                                className="p-1.5 rounded-lg hover:bg-red-50 text-[#6B6E72] hover:text-red-500 transition-colors"
+                                className="p-1.5 rounded-lg hover:bg-red-50 text-[#8A8880] hover:text-red-500 transition-colors"
                                 title="Delete"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -216,7 +216,7 @@ export default function NotificationSystem({
                     {/* Unread indicator */}
                     {!notification.read && (
                       <div className="flex justify-end mt-2">
-                        <span className="w-2 h-2 bg-[#1DBFDD] rounded-full" />
+                        <span className="w-2 h-2 bg-[#4AC8E8] rounded-full" />
                       </div>
                     )}
                   </div>
@@ -225,10 +225,10 @@ export default function NotificationSystem({
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-3 border-t border-[#C8C9CB] bg-[#F0F0ED]/50">
+            <div className="px-4 py-3 border-t border-[#E0DFDC] bg-[#F4F3F1]/50">
               <a
                 href="/portal/notifications"
-                className="block text-center text-sm text-[#1DBFDD] hover:text-[#0E8CAB] transition-colors"
+                className="block text-center text-sm text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
               >
                 View all notifications →
               </a>

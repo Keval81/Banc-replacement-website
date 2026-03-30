@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default function ValuationPage() {
   return (
-    <div className="min-h-screen bg-[#2C2F33]">
+    <div className="min-h-screen bg-[#1A1917]">
       <Header />
 
       <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
@@ -22,7 +22,7 @@ export default function ValuationPage() {
           {/* Back Link */}
           <Link
             href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-[#1DBFDD]"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-[#4AC8E8]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
@@ -42,9 +42,9 @@ export default function ValuationPage() {
           </div>
 
           {/* AVM Instant Valuation */}
-          <div className="mb-8 rounded-2xl border border-[#1DBFDD]/20 bg-white/[0.03] p-6">
+          <div className="mb-8 rounded-2xl border border-[#4AC8E8]/20 bg-white/[0.03] p-6">
             <h2 className="mb-4 text-xl font-semibold text-white flex items-center gap-2">
-              <span className="w-8 h-8 rounded-full bg-gradient-to-r from-[#1DBFDD] to-[#1a4d5c] flex items-center justify-center text-sm">AI</span>
+              <span className="w-8 h-8 rounded-full bg-gradient-to-r from-[#4AC8E8] to-[#1a4d5c] flex items-center justify-center text-sm">AI</span>
               AI-Powered Instant Valuation
             </h2>
             <p className="text-white/70 mb-6">
@@ -60,7 +60,7 @@ export default function ValuationPage() {
           {/* Info Section */}
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <Info className="h-5 w-5 text-[#1DBFDD]" />
+              <Info className="h-5 w-5 text-[#4AC8E8]" />
               About Online Valuations
             </h2>
             <div className="space-y-4 text-sm leading-relaxed text-white/70">

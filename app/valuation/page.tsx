@@ -106,7 +106,7 @@ export default function ValuationPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F0F0ED]">
+      <div className="min-h-screen bg-[#F4F3F1]">
         <Header />
         <div className="h-[57px] lg:h-[94px]" />
         <main className="flex min-h-[calc(100vh-57px-300px)] items-center justify-center px-4 py-16 lg:min-h-[calc(100vh-94px-300px)]">
@@ -116,18 +116,18 @@ export default function ValuationPage() {
             transition={{ duration: 0.5 }}
             className="w-full max-w-lg rounded-2xl bg-white p-8 text-center shadow-xl lg:p-12"
           >
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#1DBFDD]/10">
-              <CheckCircle className="h-10 w-10 text-[#1DBFDD]" />
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#4AC8E8]/10">
+              <CheckCircle className="h-10 w-10 text-[#4AC8E8]" />
             </div>
-            <h1 className="mb-4 text-2xl font-semibold text-[#2C2F33] lg:text-3xl">
+            <h1 className="mb-4 text-2xl font-semibold text-[#1A1917] lg:text-3xl">
               Thank You!
             </h1>
-            <p className="mb-6 text-[#6B6E72]">
+            <p className="mb-6 text-[#8A8880]">
               Your valuation request has been received. One of our property experts will contact you within 24 hours to arrange your free, no-obligation valuation.
             </p>
             <Button
               onClick={() => window.location.href = "/"}
-              className="bg-[#1DBFDD] px-8 py-5 text-white hover:bg-[#0E8CAB]"
+              className="bg-[#4AC8E8] px-8 py-5 text-white hover:bg-[#1A9BBF]"
             >
               Return to Homepage
             </Button>
@@ -139,7 +139,7 @@ export default function ValuationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       <div className="h-[57px] lg:h-[94px]" />
       
@@ -163,10 +163,10 @@ export default function ValuationPage() {
             transition={{ duration: 0.6 }}
             className="mb-8 text-center lg:mb-12"
           >
-            <h1 className="mb-4 text-3xl font-semibold text-[#2C2F33] lg:text-4xl">
+            <h1 className="mb-4 text-3xl font-semibold text-[#1A1917] lg:text-4xl">
               Request a Free Valuation
             </h1>
-            <p className="mx-auto max-w-2xl text-lg text-[#6B6E72]">
+            <p className="mx-auto max-w-2xl text-lg text-[#8A8880]">
               Discover the true value of your property with our expert, no-obligation valuation service
             </p>
           </motion.div>
@@ -182,14 +182,14 @@ export default function ValuationPage() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal Details */}
                 <div className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#2C2F33]">
-                    <User className="h-5 w-5 text-[#1DBFDD]" />
+                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1A1917]">
+                    <User className="h-5 w-5 text-[#4AC8E8]" />
                     Your Details
                   </h2>
                   
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label htmlFor="firstName" className="block text-sm font-medium text-[#2C2F33]">
+                      <label htmlFor="firstName" className="block text-sm font-medium text-[#1A1917]">
                         First Name *
                       </label>
                       <Input
@@ -197,12 +197,12 @@ export default function ValuationPage() {
                         required
                         value={formData.firstName}
                         onChange={(e) => handleChange("firstName", e.target.value)}
-                        className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="John"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="lastName" className="block text-sm font-medium text-[#2C2F33]">
+                      <label htmlFor="lastName" className="block text-sm font-medium text-[#1A1917]">
                         Last Name *
                       </label>
                       <Input
@@ -210,7 +210,7 @@ export default function ValuationPage() {
                         required
                         value={formData.lastName}
                         onChange={(e) => handleChange("lastName", e.target.value)}
-                        className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="Smith"
                       />
                     </div>
@@ -218,8 +218,8 @@ export default function ValuationPage() {
 
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-[#2C2F33]">
-                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
+                      <label htmlFor="email" className="block text-sm font-medium text-[#1A1917]">
+                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
                         Email Address *
                       </label>
                       <Input
@@ -228,13 +228,13 @@ export default function ValuationPage() {
                         required
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
-                        className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="john@example.com"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="phone" className="block text-sm font-medium text-[#2C2F33]">
-                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
+                      <label htmlFor="phone" className="block text-sm font-medium text-[#1A1917]">
+                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
                         Phone Number *
                       </label>
                       <Input
@@ -243,25 +243,25 @@ export default function ValuationPage() {
                         required
                         value={formData.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
-                        className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="01707 877781"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="h-px bg-[#C8C9CB]" />
+                <div className="h-px bg-[#E0DFDC]" />
 
                 {/* Property Details */}
                 <div className="space-y-4">
-                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#2C2F33]">
-                    <Home className="h-5 w-5 text-[#1DBFDD]" />
+                  <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1A1917]">
+                    <Home className="h-5 w-5 text-[#4AC8E8]" />
                     Property Details
                   </h2>
 
                   <div className="space-y-2">
-                    <label htmlFor="address" className="block text-sm font-medium text-[#2C2F33]">
-                      <MapPin className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
+                    <label htmlFor="address" className="block text-sm font-medium text-[#1A1917]">
+                      <MapPin className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
                       Property Address *
                     </label>
                     <Textarea
@@ -269,14 +269,14 @@ export default function ValuationPage() {
                       required
                       value={formData.address}
                       onChange={(e) => handleChange("address", e.target.value)}
-                      className="min-h-[80px] border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                      className="min-h-[80px] border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                       placeholder="123 Station Road, Cuffley..."
                     />
                   </div>
 
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label htmlFor="postcode" className="block text-sm font-medium text-[#2C2F33]">
+                      <label htmlFor="postcode" className="block text-sm font-medium text-[#1A1917]">
                         Postcode *
                       </label>
                       <Input
@@ -284,12 +284,12 @@ export default function ValuationPage() {
                         required
                         value={formData.postcode}
                         onChange={(e) => handleChange("postcode", e.target.value)}
-                        className="border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                        className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                         placeholder="EN6 4HU"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#2C2F33]">Property Type</label>
+                      <label className="block text-sm font-medium text-[#1A1917]">Property Type</label>
                       <NativeSelect
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
@@ -306,7 +306,7 @@ export default function ValuationPage() {
 
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#2C2F33]">Bedrooms</label>
+                      <label className="block text-sm font-medium text-[#1A1917]">Bedrooms</label>
                       <NativeSelect
                         value={formData.bedrooms}
                         onChange={(e) => handleChange("bedrooms", e.target.value)}
@@ -320,8 +320,8 @@ export default function ValuationPage() {
                       </NativeSelect>
                     </div>
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-[#2C2F33]">
-                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
+                      <label className="block text-sm font-medium text-[#1A1917]">
+                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
                         Looking to sell in...
                       </label>
                       <NativeSelect
@@ -339,19 +339,19 @@ export default function ValuationPage() {
                   </div>
                 </div>
 
-                <div className="h-px bg-[#C8C9CB]" />
+                <div className="h-px bg-[#E0DFDC]" />
 
                 {/* Additional Message */}
                 <div className="space-y-2">
-                  <label htmlFor="message" className="block text-sm font-medium text-[#2C2F33]">
-                    <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-[#1DBFDD]" />
+                  <label htmlFor="message" className="block text-sm font-medium text-[#1A1917]">
+                    <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-[#4AC8E8]" />
                     Additional Information (Optional)
                   </label>
                   <Textarea
                     id="message"
                     value={formData.message}
                     onChange={(e) => handleChange("message", e.target.value)}
-                    className="min-h-[100px] border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-[#1DBFDD]"
+                    className="min-h-[100px] border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]"
                     placeholder="Tell us anything else about your property or requirements..."
                   />
                 </div>
@@ -359,7 +359,7 @@ export default function ValuationPage() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#1DBFDD] py-6 text-lg font-semibold text-white hover:bg-[#0E8CAB] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full bg-[#4AC8E8] py-6 text-lg font-semibold text-white hover:bg-[#1A9BBF] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -371,9 +371,9 @@ export default function ValuationPage() {
                   )}
                 </Button>
 
-                <p className="text-center text-sm text-[#6B6E72]">
+                <p className="text-center text-sm text-[#8A8880]">
                   By submitting this form, you agree to our{" "}
-                  <a href="/privacy" className="text-[#1DBFDD] hover:underline">
+                  <a href="/privacy" className="text-[#4AC8E8] hover:underline">
                     Privacy Policy
                   </a>
                   . We will never share your details with third parties.
@@ -389,7 +389,7 @@ export default function ValuationPage() {
               className="space-y-6"
             >
               {/* Why Choose Us */}
-              <div className="rounded-2xl bg-[#2C2F33] p-6 text-white lg:p-8">
+              <div className="rounded-2xl bg-[#1A1917] p-6 text-white lg:p-8">
                 <h3 className="mb-4 text-xl font-semibold">Why Choose Banc?</h3>
                 <ul className="space-y-4">
                   {[
@@ -401,7 +401,7 @@ export default function ValuationPage() {
                     "Average 21 days to sell",
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#1DBFDD]" />
+                      <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
                       <span className="text-white/90">{item}</span>
                     </li>
                   ))}
@@ -410,41 +410,41 @@ export default function ValuationPage() {
 
               {/* Contact Card */}
               <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-8">
-                <h3 className="mb-4 text-lg font-semibold text-[#2C2F33]">
+                <h3 className="mb-4 text-lg font-semibold text-[#1A1917]">
                   Prefer to Call?
                 </h3>
-                <p className="mb-4 text-[#6B6E72]">
+                <p className="mb-4 text-[#8A8880]">
                   Speak directly with our valuations team
                 </p>
                 <a
                   href="tel:01707877781"
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#1DBFDD]/10 py-4 text-lg font-semibold text-[#1DBFDD] transition-colors hover:bg-[#1DBFDD]/20"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#4AC8E8]/10 py-4 text-lg font-semibold text-[#4AC8E8] transition-colors hover:bg-[#4AC8E8]/20"
                 >
                   <Phone className="h-5 w-5" />
                   01707 877781
                 </a>
-                <p className="mt-4 text-center text-sm text-[#6B6E72]">
+                <p className="mt-4 text-center text-sm text-[#8A8880]">
                   Mon-Fri: 9am - 6pm<br />Sat: 9am - 4pm
                 </p>
               </div>
 
               {/* Trust Badges */}
               <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-8">
-                <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-[#6B6E72]">
+                <h3 className="mb-4 text-center text-sm font-semibold uppercase tracking-wider text-[#8A8880]">
                   Accredited & Trusted
                 </h3>
                 <div className="flex flex-wrap items-center justify-center gap-4">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F0F0ED]">
-                    <span className="text-xs font-bold text-[#2C2F33]">NAEA</span>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
+                    <span className="text-xs font-bold text-[#1A1917]">NAEA</span>
                   </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F0F0ED]">
-                    <span className="text-xs font-bold text-[#2C2F33]">ARLA</span>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
+                    <span className="text-xs font-bold text-[#1A1917]">ARLA</span>
                   </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F0F0ED]">
-                    <span className="text-xs font-bold text-[#2C2F33]">TPO</span>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
+                    <span className="text-xs font-bold text-[#1A1917]">TPO</span>
                   </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F0F0ED]">
-                    <span className="text-xs font-bold text-[#2C2F33]">The Guild</span>
+                  <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-[#F4F3F1]">
+                    <span className="text-xs font-bold text-[#1A1917]">The Guild</span>
                   </div>
                 </div>
               </div>

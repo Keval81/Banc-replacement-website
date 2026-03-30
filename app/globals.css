@@ -1,129 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  /* BANC Brand Colours - Official from Brand Kit */
-  --primary-cyan: #1DBFDD;
-  --dark-cyan: #0E8CAB;
-  --deep-cyan: #0A6B82;
-  --light-cyan: #4DD4F0;
-  --highlight-cyan: #8EE5F5;
-  
-  --charcoal: #2C2F33;
-  --dark-grey: #3A3D42;
-  --mid-grey: #6B6E72;
-  --light-grey: #C8C9CB;
-  --off-white: #F0F0ED;
-  --white: #FFFFFF;
-  
-  /* Dark mode colors */
-  --dark-bg: #0F0F0F;
-  --dark-surface: #1A1A1A;
-  --dark-surface-hover: #252525;
-  --dark-text: #F5F5F5;
-  --dark-text-muted: #A0A0A0;
-  --dark-border: #333333;
-  
-  /* Shadcn/ui compatible variables - Light mode (default) */
-  --background: var(--off-white);
-  --foreground: var(--charcoal);
-  --card: var(--white);
-  --card-foreground: var(--charcoal);
-  --popover: var(--white);
-  --popover-foreground: var(--charcoal);
-  --primary: var(--primary-cyan);
-  --primary-foreground: var(--white);
-  --secondary: var(--dark-grey);
-  --secondary-foreground: var(--white);
-  --muted: var(--off-white);
-  --muted-foreground: var(--mid-grey);
-  --accent: var(--light-cyan);
-  --accent-foreground: var(--deep-cyan);
+  /* Banc Brand Colours — Design System Tokens */
+  --banc-sky:          #4AC8E8;
+  --banc-sky-light:    #E8F8FC;
+  --banc-sky-mid:      #9ADFF2;
+  --banc-sky-dark:     #1A9BBF;
+  --banc-dark:         #2C2A27;
+  --banc-dark-deep:    #1A1917;
+  --banc-dark-mid:     #3D3B37;
+  --banc-grey:         #8A8880;
+  --banc-grey-pale:    #F4F3F1;
+  --banc-gold:         #D4AF37;
+  --banc-gold-light:   #FBF5DC;
+  --banc-gold-dark:    #7A5C00;
+  --banc-white:        #FFFFFF;
+
+  /* Font families */
+  --font-serif:        'Source Serif 4', Georgia, serif;
+  --font-sans:         'DM Sans', -apple-system, sans-serif;
+
+  /* Border radii */
+  --radius-sm:         6px;
+  --radius-md:         10px;
+  --radius-lg:         16px;
+
+  /* Shadcn/ui compatible variables */
+  --background: var(--banc-grey-pale);
+  --foreground: var(--banc-dark);
+  --card: var(--banc-white);
+  --card-foreground: var(--banc-dark);
+  --popover: var(--banc-white);
+  --popover-foreground: var(--banc-dark);
+  --primary: var(--banc-sky);
+  --primary-foreground: var(--banc-white);
+  --secondary: var(--banc-dark-mid);
+  --secondary-foreground: var(--banc-white);
+  --muted: var(--banc-grey-pale);
+  --muted-foreground: var(--banc-grey);
+  --accent: var(--banc-sky-light);
+  --accent-foreground: var(--banc-sky-dark);
   --destructive: #EF4444;
-  --destructive-foreground: var(--white);
-  --border: var(--light-grey);
-  --input: var(--light-grey);
-  --ring: var(--primary-cyan);
+  --destructive-foreground: var(--banc-white);
+  --border: #E0DFDC;
+  --input: #E0DFDC;
+  --ring: var(--banc-sky);
   --radius: 0.5rem;
-}
-
-/* Dark mode overrides */
-.dark {
-  --background: var(--dark-bg);
-  --foreground: var(--dark-text);
-  --card: var(--dark-surface);
-  --card-foreground: var(--dark-text);
-  --popover: var(--dark-surface);
-  --popover-foreground: var(--dark-text);
-  --primary: var(--primary-cyan);
-  --primary-foreground: var(--white);
-  --secondary: var(--dark-surface-hover);
-  --secondary-foreground: var(--dark-text);
-  --muted: var(--dark-surface);
-  --muted-foreground: var(--dark-text-muted);
-  --accent: var(--dark-cyan);
-  --accent-foreground: var(--dark-text);
-  --destructive: #EF4444;
-  --destructive-foreground: var(--white);
-  --border: var(--dark-border);
-  --input: var(--dark-border);
-  --ring: var(--primary-cyan);
-}
-
-/* System dark mode preference (when no explicit theme set) */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light):not([data-theme="light"]) {
-    --background: var(--dark-bg);
-    --foreground: var(--dark-text);
-    --card: var(--dark-surface);
-    --card-foreground: var(--dark-text);
-    --popover: var(--dark-surface);
-    --popover-foreground: var(--dark-text);
-    --primary: var(--primary-cyan);
-    --primary-foreground: var(--white);
-    --secondary: var(--dark-surface-hover);
-    --secondary-foreground: var(--dark-text);
-    --muted: var(--dark-surface);
-    --muted-foreground: var(--dark-text-muted);
-    --accent: var(--dark-cyan);
-    --accent-foreground: var(--dark-text);
-    --destructive: #EF4444;
-    --destructive-foreground: var(--white);
-    --border: var(--dark-border);
-    --input: var(--dark-border);
-    --ring: var(--primary-cyan);
-  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary-cyan: var(--primary-cyan);
-  --color-dark-cyan: var(--dark-cyan);
-  --color-deep-cyan: var(--deep-cyan);
-  --color-light-cyan: var(--light-cyan);
-  --color-highlight-cyan: var(--highlight-cyan);
-  --color-charcoal: var(--charcoal);
-  --color-dark-grey: var(--dark-grey);
-  --color-mid-grey: var(--mid-grey);
-  --color-light-grey: var(--light-grey);
-  --color-off-white: var(--off-white);
-  --font-sans: "Open Sans", system-ui, sans-serif;
-  --font-heading: "Montserrat", system-ui, sans-serif;
+  --color-banc-sky: var(--banc-sky);
+  --color-banc-sky-light: var(--banc-sky-light);
+  --color-banc-sky-mid: var(--banc-sky-mid);
+  --color-banc-sky-dark: var(--banc-sky-dark);
+  --color-banc-dark: var(--banc-dark);
+  --color-banc-dark-deep: var(--banc-dark-deep);
+  --color-banc-dark-mid: var(--banc-dark-mid);
+  --color-banc-grey: var(--banc-grey);
+  --color-banc-grey-pale: var(--banc-grey-pale);
+  --color-banc-gold: var(--banc-gold);
+  --color-banc-gold-light: var(--banc-gold-light);
+  --color-banc-gold-dark: var(--banc-gold-dark);
+  --color-banc-white: var(--banc-white);
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-heading: 'DM Sans', -apple-system, sans-serif;
 }
 
 /* Base styles */
 body {
-  background: var(--off-white);
-  color: var(--charcoal);
+  background: var(--banc-grey-pale);
+  color: var(--banc-dark);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Heading styles */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
+/* Heading styles — Source Serif 4 for display/H1, DM Sans for H2+ */
+h1 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+}
+
+h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 500;
 }
 
 /* Smooth scrolling - disable on mobile to prevent bounce */
@@ -141,8 +104,8 @@ body {
 
 /* Selection color */
 ::selection {
-  background: var(--light-cyan);
-  color: var(--charcoal);
+  background: var(--banc-sky-light);
+  color: var(--banc-dark);
 }
 
 /* Custom scrollbar */
@@ -152,53 +115,30 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--off-white);
+  background: var(--banc-grey-pale);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--mid-grey);
+  background: var(--banc-grey);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-cyan);
+  background: var(--banc-sky);
 }
 
-/* Focus visible styles - Enhanced */
+/* Focus visible styles */
 *:focus-visible {
-  outline: 2px solid var(--primary-cyan);
+  outline: 2px solid var(--banc-sky);
   outline-offset: 2px;
 }
 
 /* Button focus states */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--primary-cyan);
+  outline: 2px solid var(--banc-sky);
   outline-offset: 4px;
   border-radius: 4px;
-}
-
-/* Dark mode specific adjustments */
-.dark body {
-  background: var(--dark-bg);
-  color: var(--dark-text);
-}
-
-.dark ::selection {
-  background: var(--dark-cyan);
-  color: var(--dark-text);
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: var(--dark-surface);
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: var(--dark-border);
-}
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-cyan);
 }
 
 /* Safe area support for mobile */
@@ -214,7 +154,7 @@ a:focus-visible {
 
 /* Keyboard user focus styles */
 .keyboard-user *:focus-visible {
-  outline: 3px solid var(--primary-cyan);
+  outline: 3px solid var(--banc-sky);
   outline-offset: 4px;
 }
 
@@ -266,13 +206,9 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
 /* High contrast mode adjustments */
 @media (prefers-contrast: high) {
   :root {
-    --border: var(--charcoal);
+    --border: var(--banc-dark);
   }
-  
-  .dark {
-    --border: var(--dark-text);
-  }
-  
+
   *:focus-visible {
     outline: 3px solid currentColor;
     outline-offset: 4px;

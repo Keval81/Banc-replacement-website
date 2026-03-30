@@ -62,7 +62,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-[#2C2F33] p-4", className)}>
+      <div className={cn("rounded-xl border border-white/10 bg-[#1A1917] p-4", className)}>
         <div className="space-y-3">
           <div>
             <label className="mb-1.5 block text-xs text-white/60">Property Price</label>
@@ -74,7 +74,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                 onChange={handlePriceChange}
                 onBlur={formatPriceDisplay}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
               className={cn(
                 "rounded-lg border px-2 py-2 text-xs transition-all",
                 buyerType === "first-time"
-                  ? "border-[#1DBFDD] bg-[#1DBFDD]/10 text-[#1DBFDD]"
+                  ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
                   : "border-white/10 text-white/70 hover:border-white/20"
               )}
             >
@@ -96,7 +96,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
               className={cn(
                 "rounded-lg border px-2 py-2 text-xs transition-all",
                 buyerType === "home-mover"
-                  ? "border-[#1DBFDD] bg-[#1DBFDD]/10 text-[#1DBFDD]"
+                  ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
                   : "border-white/10 text-white/70 hover:border-white/20"
               )}
             >
@@ -105,9 +105,9 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
           </div>
 
           {priceNum > 0 && (
-            <div className="rounded-lg bg-[#1DBFDD]/10 p-3 text-center">
+            <div className="rounded-lg bg-[#4AC8E8]/10 p-3 text-center">
               <p className="text-xs text-white/60">Stamp Duty</p>
-              <p className="text-lg font-semibold text-[#1DBFDD]">
+              <p className="text-lg font-semibold text-[#4AC8E8]">
                 {formatCurrency(result.totalTax)}
               </p>
             </div>
@@ -120,9 +120,9 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+      <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Calculator className="h-5 w-5 text-[#1DBFDD]" />
+          <Calculator className="h-5 w-5 text-[#4AC8E8]" />
           Calculator Settings
         </h3>
 
@@ -138,7 +138,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                 onChange={handlePriceChange}
                 onBlur={formatPriceDisplay}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#1DBFDD] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
               />
             </div>
           </div>
@@ -158,7 +158,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                   className={cn(
                     "rounded-xl border px-3 py-3 text-sm transition-all",
                     location === loc.value
-                      ? "border-[#1DBFDD] bg-[#1DBFDD]/10 text-[#1DBFDD]"
+                      ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
                       : "border-white/10 text-white/70 hover:border-white/20"
                   )}
                 >
@@ -200,21 +200,21 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                 className={cn(
                   "flex items-start gap-3 rounded-xl border p-4 text-left transition-all",
                   buyerType === type.value
-                    ? "border-[#1DBFDD] bg-[#1DBFDD]/10"
+                    ? "border-[#4AC8E8] bg-[#4AC8E8]/10"
                     : "border-white/10 hover:border-white/20"
                 )}
               >
                 <type.icon
                   className={cn(
                     "h-5 w-5 flex-shrink-0",
-                    buyerType === type.value ? "text-[#1DBFDD]" : "text-white/40"
+                    buyerType === type.value ? "text-[#4AC8E8]" : "text-white/40"
                   )}
                 />
                 <div>
                   <p
                     className={cn(
                       "font-medium",
-                      buyerType === type.value ? "text-[#1DBFDD]" : "text-white"
+                      buyerType === type.value ? "text-[#4AC8E8]" : "text-white"
                     )}
                   >
                     {type.label}
@@ -231,9 +231,9 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
       {priceNum > 0 && (
         <>
           {/* Main Result */}
-          <div className="rounded-2xl bg-gradient-to-br from-[#1DBFDD]/20 to-[#1DBFDD]/5 p-6 text-center">
+          <div className="rounded-2xl bg-gradient-to-br from-[#4AC8E8]/20 to-[#4AC8E8]/5 p-6 text-center">
             <p className="text-white/70">Stamp Duty Land Tax Due</p>
-            <p className="my-2 text-4xl font-bold text-[#1DBFDD]">
+            <p className="my-2 text-4xl font-bold text-[#4AC8E8]">
               {formatCurrency(result.totalTax)}
             </p>
             <p className="text-sm text-white/60">
@@ -242,7 +242,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
           </div>
 
           {/* Comparison Table */}
-          <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
             <h3 className="mb-4 text-lg font-semibold text-white">Buyer Type Comparison</h3>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -264,7 +264,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                       key={row.type}
                       className={cn(
                         "border-b border-white/5",
-                        buyerType === row.type && "bg-[#1DBFDD]/5"
+                        buyerType === row.type && "bg-[#4AC8E8]/5"
                       )}
                     >
                       <td className="py-3 text-sm text-white">{row.label}</td>
@@ -276,7 +276,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                       </td>
                       <td className="py-3 text-right text-sm">
                         {row.type === buyerType ? (
-                          <span className="text-[#1DBFDD]">Current</span>
+                          <span className="text-[#4AC8E8]">Current</span>
                         ) : (
                           <span
                             className={
@@ -299,7 +299,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
 
           {/* Breakdown Table */}
           {result.breakdown.length > 0 && (
-            <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
               <h3 className="mb-4 text-lg font-semibold text-white">Tax Breakdown by Band</h3>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -323,16 +323,16 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                         <td className="py-3 text-right text-sm text-white/70">
                           {formatCurrency(band.amountInBand)}
                         </td>
-                        <td className="py-3 text-right text-sm font-medium text-[#1DBFDD]">
+                        <td className="py-3 text-right text-sm font-medium text-[#4AC8E8]">
                           {formatCurrency(band.tax)}
                         </td>
                       </tr>
                     ))}
-                    <tr className="bg-[#1DBFDD]/10 font-semibold">
+                    <tr className="bg-[#4AC8E8]/10 font-semibold">
                       <td className="py-3 text-sm text-white">Total</td>
                       <td className="py-3"></td>
                       <td className="py-3"></td>
-                      <td className="py-3 text-right text-sm text-[#1DBFDD]">
+                      <td className="py-3 text-right text-sm text-[#4AC8E8]">
                         {formatCurrency(result.totalTax)}
                       </td>
                     </tr>
@@ -343,9 +343,9 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
           )}
 
           {/* Visual Band Chart */}
-          <div className="rounded-2xl border border-white/10 bg-[#2C2F33] p-6">
+          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <Info className="h-5 w-5 text-[#1DBFDD]" />
+              <Info className="h-5 w-5 text-[#4AC8E8]" />
               Tax Rate Bands ({location === "england" ? "England & NI" : location === "scotland" ? "Scotland" : "Wales"})
             </h3>
             <div className="space-y-3">
@@ -358,7 +358,7 @@ export function StampDutyCalculator({ className, compact = false }: StampDutyCal
                     <div className="flex-1">
                       <div className="h-6 rounded-full bg-white/5">
                         <div
-                          className="flex h-full items-center justify-end rounded-full bg-gradient-to-r from-[#1DBFDD] to-[#0E8CAB] px-2 text-xs text-white transition-all"
+                          className="flex h-full items-center justify-end rounded-full bg-gradient-to-r from-[#4AC8E8] to-[#1A9BBF] px-2 text-xs text-white transition-all"
                           style={{ width: `${Math.max(width, 5)}%` }}
                         >
                           {formatPercent(band.rate * 100, 0)}

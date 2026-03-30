@@ -156,7 +156,7 @@ export function LocalAmenities({
               onClick={() => setSelectedCategory(null)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === null
-                  ? "bg-[#1DBFDD] text-white"
+                  ? "bg-[#4AC8E8] text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -250,7 +250,7 @@ export function LocalAmenities({
                             e.stopPropagation();
                             handleGetDirections(amenity);
                           }}
-                          className="flex items-center gap-1.5 text-sm text-[#1DBFDD] hover:underline"
+                          className="flex items-center gap-1.5 text-sm text-[#4AC8E8] hover:underline"
                         >
                           <Navigation className="h-3.5 w-3.5" />
                           Get directions
@@ -267,7 +267,7 @@ export function LocalAmenities({
 
         {/* Show More Button */}
         {!selectedCategory && amenities.length > 6 && (
-          <button className="w-full mt-4 py-2 text-sm text-[#1DBFDD] font-medium hover:underline">
+          <button className="w-full mt-4 py-2 text-sm text-[#4AC8E8] font-medium hover:underline">
             Show all {amenities.length} amenities
           </button>
         )}

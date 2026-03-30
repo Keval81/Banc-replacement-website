@@ -170,15 +170,15 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-3xl border border-[#C8C9CB] bg-[#F0F0ED] p-6 shadow-sm lg:p-10"
+          className="rounded-3xl border border-[#E0DFDC] bg-[#F4F3F1] p-6 shadow-sm lg:p-10"
         >
           <div className="flex flex-col gap-6">
             {/* Header */}
             <div className="flex flex-col gap-2">
-              <p className="text-sm uppercase tracking-[0.3em] text-[#6B6E72] font-heading">
+              <p className="text-sm uppercase tracking-[0.3em] text-[#8A8880] font-heading">
                 Search Rentals
               </p>
-              <h2 className="text-2xl font-semibold text-[#2C2F33] sm:text-3xl font-heading">
+              <h2 className="text-2xl font-semibold text-[#1A1917] sm:text-3xl font-heading">
                 Find your perfect rental
               </h2>
             </div>

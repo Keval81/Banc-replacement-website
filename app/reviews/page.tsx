@@ -119,11 +119,11 @@ function ReviewTypeBadge({ type }: { type?: string }) {
 
 export default function ReviewsPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       
       {/* Premium Hero Section */}
-      <section className="relative overflow-hidden bg-[#2C2F33]">
+      <section className="relative overflow-hidden bg-[#1A1917]">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
@@ -133,7 +133,7 @@ export default function ReviewsPage() {
         </div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#2C2F33]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1A1917]/50" />
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
           <div className="text-center">
@@ -142,7 +142,7 @@ export default function ReviewsPage() {
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star 
                   key={star} 
-                  className="h-7 w-7 fill-[#1DBFDD] text-[#1DBFDD] drop-shadow-[0_0_8px_rgba(29,191,221,0.4)]" 
+                  className="h-7 w-7 fill-[#4AC8E8] text-[#4AC8E8] drop-shadow-[0_0_8px_rgba(29,191,221,0.4)]" 
                 />
               ))}
               <span className="ml-3 text-white/90 text-lg font-medium">5.0 Rating</span>
@@ -161,15 +161,15 @@ export default function ReviewsPage() {
             {/* Stats Row */}
             <div className="mt-12 flex flex-wrap justify-center gap-6 sm:gap-12">
               <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#1DBFDD]">5.0</p>
+                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">5.0</p>
                 <p className="text-sm text-white/60 mt-1">Average Rating</p>
               </div>
               <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#1DBFDD]">50+</p>
+                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">50+</p>
                 <p className="text-sm text-white/60 mt-1">Google Reviews</p>
               </div>
               <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#1DBFDD]">100%</p>
+                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">100%</p>
                 <p className="text-sm text-white/60 mt-1">Would Recommend</p>
               </div>
             </div>
@@ -179,7 +179,7 @@ export default function ReviewsPage() {
         {/* Bottom Curve */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
-            <path d="M0 60L1440 60L1440 0C1440 0 1140 60 720 60C300 60 0 0 0 0L0 60Z" fill="#F0F0ED"/>
+            <path d="M0 60L1440 60L1440 0C1440 0 1140 60 720 60C300 60 0 0 0 0L0 60Z" fill="#F4F3F1"/>
           </svg>
         </div>
       </section>
@@ -189,10 +189,10 @@ export default function ReviewsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#1DBFDD]/10 text-[#1DBFDD] text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-[#4AC8E8]/10 text-[#4AC8E8] text-sm font-medium mb-4">
               Client Testimonials
             </span>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33]">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
               Trusted by Homeowners Across Hertfordshire
             </h2>
           </div>
@@ -208,7 +208,7 @@ export default function ReviewsPage() {
               >
                 {/* Quote Icon - Large and prominent */}
                 <div className="absolute -top-3 -left-2">
-                  <div className="w-14 h-14 rounded-xl bg-[#1DBFDD] flex items-center justify-center shadow-lg shadow-[#1DBFDD]/20 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-14 h-14 rounded-xl bg-[#4AC8E8] flex items-center justify-center shadow-lg shadow-[#4AC8E8]/20 group-hover:scale-110 transition-transform duration-300">
                     <Quote className="h-7 w-7 text-white fill-white" />
                   </div>
                 </div>
@@ -221,21 +221,21 @@ export default function ReviewsPage() {
                 {/* Content */}
                 <div className="mt-2">
                   {/* Headline */}
-                  <h3 className="text-xl font-semibold text-[#2C2F33] leading-snug mb-4">
+                  <h3 className="text-xl font-semibold text-[#1A1917] leading-snug mb-4">
                     {review.title}
                   </h3>
                   
                   {/* Testimonial Text */}
-                  <blockquote className="text-[#6B6E72] leading-relaxed text-base">
+                  <blockquote className="text-[#8A8880] leading-relaxed text-base">
                     "{review.text}"
                   </blockquote>
                   
                   {/* Author */}
-                  <div className="mt-6 pt-6 border-t border-[#E5E7EB]">
-                    <p className="font-semibold text-[#2C2F33]">{review.name}</p>
+                  <div className="mt-6 pt-6 border-t border-[#E0DFDC]">
+                    <p className="font-semibold text-[#1A1917]">{review.name}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <MapPin className="h-3.5 w-3.5 text-[#1DBFDD]" />
-                      <p className="text-sm text-[#6B6E72]">{review.location}</p>
+                      <MapPin className="h-3.5 w-3.5 text-[#4AC8E8]" />
+                      <p className="text-sm text-[#8A8880]">{review.location}</p>
                     </div>
                   </div>
                 </div>
@@ -248,10 +248,10 @@ export default function ReviewsPage() {
       {/* Google Reviews CTA Section */}
       <section className="py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="relative overflow-hidden rounded-3xl bg-[#2C2F33] p-12 lg:p-16">
+          <div className="relative overflow-hidden rounded-3xl bg-[#1A1917] p-12 lg:p-16">
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#1DBFDD]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#1DBFDD]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
             
             <div className="relative text-center">
               {/* Google Logo Placeholder */}
@@ -275,7 +275,7 @@ export default function ReviewsPage() {
                 href="https://g.co/kgs/example" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#1DBFDD] px-8 py-4 text-white font-semibold hover:bg-[#0E8CAB] transition-colors duration-200 shadow-lg shadow-[#1DBFDD]/25 hover:shadow-[#1DBFDD]/40"
+                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#4AC8E8] px-8 py-4 text-white font-semibold hover:bg-[#1A9BBF] transition-colors duration-200 shadow-lg shadow-[#4AC8E8]/25 hover:shadow-[#4AC8E8]/40"
               >
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                   <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
@@ -288,24 +288,24 @@ export default function ReviewsPage() {
       </section>
 
       {/* Trust Indicators */}
-      <section className="py-16 border-t border-[#C8C9CB]/50">
+      <section className="py-16 border-t border-[#E0DFDC]/50">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl font-bold text-[#1DBFDD]">7+</p>
-              <p className="text-sm text-[#6B6E72] mt-1">Years Experience</p>
+              <p className="text-3xl font-bold text-[#4AC8E8]">7+</p>
+              <p className="text-sm text-[#8A8880] mt-1">Years Experience</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-[#1DBFDD]">500+</p>
-              <p className="text-sm text-[#6B6E72] mt-1">Properties Sold</p>
+              <p className="text-3xl font-bold text-[#4AC8E8]">500+</p>
+              <p className="text-sm text-[#8A8880] mt-1">Properties Sold</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-[#1DBFDD]">300+</p>
-              <p className="text-sm text-[#6B6E72] mt-1">Happy Tenants</p>
+              <p className="text-3xl font-bold text-[#4AC8E8]">300+</p>
+              <p className="text-sm text-[#8A8880] mt-1">Happy Tenants</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-[#1DBFDD]">4</p>
-              <p className="text-sm text-[#6B6E72] mt-1">Local Areas Covered</p>
+              <p className="text-3xl font-bold text-[#4AC8E8]">4</p>
+              <p className="text-sm text-[#8A8880] mt-1">Local Areas Covered</p>
             </div>
           </div>
         </div>

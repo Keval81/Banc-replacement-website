@@ -41,7 +41,7 @@ export default function CompareBar({ className }: CompareBarProps) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b">
         <div className="flex items-center gap-2">
-          <Scale className="w-5 h-5 text-[#1DBFDD]" />
+          <Scale className="w-5 h-5 text-[#4AC8E8]" />
           <span className="font-medium">
             Compare ({comparedProperties.length}/3)
           </span>
@@ -66,7 +66,7 @@ export default function CompareBar({ className }: CompareBarProps) {
           <Link href="/compare">
             <Button
               size="sm"
-              className="bg-[#1DBFDD] hover:bg-[#0E8CAB]"
+              className="bg-[#4AC8E8] hover:bg-[#1A9BBF]"
               disabled={comparedProperties.length < 2}
             >
               Compare Now
@@ -109,7 +109,7 @@ export default function CompareBar({ className }: CompareBarProps) {
                   </div>
                   <div className="p-2">
                     <p className="text-xs font-medium truncate">{property.title}</p>
-                    <p className="text-xs text-[#0D9488] font-semibold">
+                    <p className="text-xs text-[#4AC8E8] font-semibold">
                       {property.price}
                     </p>
                   </div>

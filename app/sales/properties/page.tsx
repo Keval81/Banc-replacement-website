@@ -332,11 +332,11 @@ function SalesPropertiesPageContent() {
   }, [filters]);
 
   return (
-    <div className="bg-white text-[#111827] min-h-screen">
+    <div className="bg-white text-[#2C2A27] min-h-screen">
       <Header />
       
       {/* Hero */}
-      <section className="relative bg-[#2C2F33]">
+      <section className="relative bg-[#1A1917]">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
@@ -344,7 +344,7 @@ function SalesPropertiesPageContent() {
             alt="Premium property for sale"
             className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#2C2F33]/70 via-[#2C2F33]/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/70 via-[#1A1917]/40 to-transparent" />
         </div>
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-24">
           <motion.div
@@ -352,7 +352,7 @@ function SalesPropertiesPageContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-sm uppercase tracking-[0.3em] text-[#1DBFDD] mb-2">For Sale</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8] mb-2">For Sale</p>
             <h1 className="text-4xl font-semibold text-white sm:text-5xl font-heading">
               Properties for Sale
             </h1>
@@ -391,8 +391,8 @@ function SalesPropertiesPageContent() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-center justify-center py-20"
               >
-                <Loader2 className="w-10 h-10 text-[#1DBFDD] animate-spin mb-4" />
-                <p className="text-[#6B6E72]">Loading properties...</p>
+                <Loader2 className="w-10 h-10 text-[#4AC8E8] animate-spin mb-4" />
+                <p className="text-[#8A8880]">Loading properties...</p>
               </motion.div>
             ) : filteredProperties.length === 0 ? (
               <motion.div
@@ -402,20 +402,20 @@ function SalesPropertiesPageContent() {
                 exit={{ opacity: 0, y: -20 }}
                 className="text-center py-20"
               >
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#F9FAFB] flex items-center justify-center">
-                  <Grid3X3 className="w-8 h-8 text-[#C8C9CB]" />
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#F4F3F1] flex items-center justify-center">
+                  <Grid3X3 className="w-8 h-8 text-[#E0DFDC]" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#2C2F33] mb-2">
+                <h3 className="text-xl font-semibold text-[#1A1917] mb-2">
                   No properties found
                 </h3>
-                <p className="text-[#6B6E72] max-w-md mx-auto mb-6">
+                <p className="text-[#8A8880] max-w-md mx-auto mb-6">
                   We couldn&apos;t find any properties matching your current filters. 
                   Try adjusting your search criteria or clearing some filters.
                 </p>
                 <Button
                   onClick={clearFilters}
                   variant="outline"
-                  className="border-[#1DBFDD] text-[#1DBFDD] hover:bg-[#1DBFDD] hover:text-white"
+                  className="border-[#4AC8E8] text-[#4AC8E8] hover:bg-[#4AC8E8] hover:text-white"
                 >
                   Clear all filters
                 </Button>
@@ -443,13 +443,13 @@ function SalesPropertiesPageContent() {
                       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
                       : viewMode === "list"
                       ? "flex flex-col gap-6"
-                      : "h-[600px] bg-[#F9FAFB] rounded-2xl flex items-center justify-center"
+                      : "h-[600px] bg-[#F4F3F1] rounded-2xl flex items-center justify-center"
                   }
                 >
                   {viewMode === "map" ? (
                     <div className="text-center">
-                      <Map className="w-12 h-12 text-[#C8C9CB] mx-auto mb-4" />
-                      <p className="text-[#6B6E72]">Map view coming soon</p>
+                      <Map className="w-12 h-12 text-[#E0DFDC] mx-auto mb-4" />
+                      <p className="text-[#8A8880]">Map view coming soon</p>
                     </div>
                   ) : (
                     filteredProperties.map((property) => (
@@ -474,16 +474,16 @@ function SalesPropertiesPageContent() {
 
       {/* Pagination */}
       {filteredProperties.length > 0 && (
-        <section className="border-t border-[#E5E7EB] py-8 px-6 lg:px-10">
+        <section className="border-t border-[#E0DFDC] py-8 px-6 lg:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="flex items-center justify-center gap-2">
-              <Button variant="outline" className="border-[#E5E7EB]" disabled>
+              <Button variant="outline" className="border-[#E0DFDC]" disabled>
                 Previous
               </Button>
-              <Button className="bg-[#1DBFDD] text-white">1</Button>
-              <Button variant="outline" className="border-[#E5E7EB]">2</Button>
-              <Button variant="outline" className="border-[#E5E7EB]">3</Button>
-              <Button variant="outline" className="border-[#E5E7EB]">
+              <Button className="bg-[#4AC8E8] text-white">1</Button>
+              <Button variant="outline" className="border-[#E0DFDC]">2</Button>
+              <Button variant="outline" className="border-[#E0DFDC]">3</Button>
+              <Button variant="outline" className="border-[#E0DFDC]">
                 Next
               </Button>
             </div>
@@ -500,10 +500,10 @@ function SalesPropertiesPageContent() {
 export default function SalesPropertiesPage() {
   return (
     <Suspense fallback={
-      <div className="bg-white text-[#111827] min-h-screen">
+      <div className="bg-white text-[#2C2A27] min-h-screen">
         <Header />
         <div className="flex items-center justify-center h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-[#1DBFDD]" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#4AC8E8]" />
         </div>
         <Footer />
       </div>

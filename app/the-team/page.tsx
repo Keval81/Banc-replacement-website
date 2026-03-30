@@ -76,15 +76,15 @@ const team = [
 
 export default function TeamPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-[#2C2F33] py-24 lg:py-36 overflow-hidden">
+      <section className="relative bg-[#1A1917] py-24 lg:py-36 overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#1DBFDD] rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#1DBFDD] rounded-full blur-[128px]" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
         </div>
         
         {/* Grid pattern overlay */}
@@ -100,7 +100,7 @@ export default function TeamPage() {
           <div className="max-w-3xl mx-auto text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-              <Users className="h-4 w-4 text-[#1DBFDD]" />
+              <Users className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm font-medium text-white/80">Our People</span>
             </div>
             
@@ -108,11 +108,11 @@ export default function TeamPage() {
               Meet The Team
             </h1>
             <div className="mt-6 flex items-center justify-center gap-3">
-              <div className="h-px w-12 bg-[#1DBFDD]" />
+              <div className="h-px w-12 bg-[#4AC8E8]" />
               <p className="text-lg text-white/70 font-medium">
                 Meet the awesome team at Banc
               </p>
-              <div className="h-px w-12 bg-[#1DBFDD]" />
+              <div className="h-px w-12 bg-[#4AC8E8]" />
             </div>
             <p className="mt-6 text-white/60 max-w-2xl mx-auto leading-relaxed">
               Our experienced professionals bring decades of combined expertise in property, 
@@ -124,7 +124,7 @@ export default function TeamPage() {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-xs text-white/40 uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-[#1DBFDD] to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-[#4AC8E8] to-transparent" />
         </div>
       </section>
 
@@ -138,23 +138,23 @@ export default function TeamPage() {
                 className={`relative flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-start group`}
               >
                 {/* Visual connector line for desktop */}
-                <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-gradient-to-b from-transparent via-[#C8C9CB] to-transparent" 
+                <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-gradient-to-b from-transparent via-[#E0DFDC] to-transparent" 
                   style={{ height: index === team.length - 1 ? '50%' : 'calc(100% + 8rem)' }}
                 />
                 
                 {/* Number indicator */}
-                <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-[#1DBFDD] items-center justify-center z-10 shadow-lg">
-                  <span className="text-lg font-bold text-[#1DBFDD]">0{index + 1}</span>
+                <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-[#4AC8E8] items-center justify-center z-10 shadow-lg">
+                  <span className="text-lg font-bold text-[#4AC8E8]">0{index + 1}</span>
                 </div>
                 
                 {/* Photo Column */}
                 <div className="w-full lg:w-2/5">
                   <div className="relative">
                     {/* Decorative frame */}
-                    <div className={`absolute -inset-4 border-2 border-[#1DBFDD]/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
+                    <div className={`absolute -inset-4 border-2 border-[#4AC8E8]/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
                     
                     {/* Image container */}
-                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-[#2C2F33]">
+                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-[#1A1917]">
                       <Image 
                         src={member.image} 
                         alt={member.name}
@@ -163,11 +163,11 @@ export default function TeamPage() {
                         sizes="(max-width: 1024px) 100vw, 40vw"
                       />
                       {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#2C2F33]/60 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1A1917]/60 via-transparent to-transparent" />
                       
                       {/* Role badge */}
                       <div className="absolute bottom-4 left-4 right-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1DBFDD] text-white text-xs font-semibold uppercase tracking-wider">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4AC8E8] text-white text-xs font-semibold uppercase tracking-wider">
                           {member.role}
                         </div>
                       </div>
@@ -179,20 +179,20 @@ export default function TeamPage() {
                 <div className="w-full lg:w-3/5 flex flex-col justify-center">
                   {/* Name and Location */}
                   <div className="mb-6">
-                    <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33] mb-2">
+                    <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917] mb-2">
                       {member.name}
                     </h2>
-                    <div className="flex items-center gap-2 text-[#6B6E72]">
-                      <MapPin className="h-4 w-4 text-[#1DBFDD]" />
+                    <div className="flex items-center gap-2 text-[#8A8880]">
+                      <MapPin className="h-4 w-4 text-[#4AC8E8]" />
                       <span className="text-sm">{member.location}</span>
                     </div>
                   </div>
                   
                   {/* Decorative line */}
-                  <div className="w-16 h-1 bg-[#1DBFDD] rounded-full mb-6" />
+                  <div className="w-16 h-1 bg-[#4AC8E8] rounded-full mb-6" />
                   
                   {/* Bio paragraphs */}
-                  <div className="space-y-4 text-[#3A3D42] leading-relaxed">
+                  <div className="space-y-4 text-[#3D3B37] leading-relaxed">
                     {member.bio.map((paragraph, pIndex) => (
                       <p key={pIndex} className="text-base lg:text-[17px]">
                         {paragraph}
@@ -201,15 +201,15 @@ export default function TeamPage() {
                   </div>
                   
                   {/* Contact Details */}
-                  <div className="mt-8 pt-6 border-t border-[#C8C9CB]/50">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-[#6B6E72] mb-4">
+                  <div className="mt-8 pt-6 border-t border-[#E0DFDC]/50">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-4">
                       Get in Touch
                     </p>
                     <div className="flex flex-wrap gap-4">
                       {member.phone && (
                         <a 
                           href={`tel:${member.phone.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#C8C9CB] text-[#2C2F33] hover:border-[#1DBFDD] hover:text-[#1DBFDD] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Phone className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.phone}</span>
@@ -218,7 +218,7 @@ export default function TeamPage() {
                       {member.mobile && (
                         <a 
                           href={`tel:${member.mobile.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#C8C9CB] text-[#2C2F33] hover:border-[#1DBFDD] hover:text-[#1DBFDD] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Smartphone className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.mobile}</span>
@@ -227,7 +227,7 @@ export default function TeamPage() {
                       {member.email && (
                         <a 
                           href={`mailto:${member.email}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#C8C9CB] text-[#2C2F33] hover:border-[#1DBFDD] hover:text-[#1DBFDD] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Mail className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.email}</span>
@@ -246,54 +246,54 @@ export default function TeamPage() {
       <section className="relative py-20 lg:py-28 bg-white overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#F0F0ED] to-transparent" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1DBFDD]/5 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#F4F3F1] to-transparent" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4AC8E8]/5 rounded-full blur-[100px]" />
         </div>
         
         <div className="relative mx-auto max-w-6xl px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             {/* Left Column - Content */}
             <div className="lg:sticky lg:top-32">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-                <Users className="h-4 w-4 text-[#1DBFDD]" />
-                <span className="text-sm font-medium text-[#0A6B82]">Careers</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+                <Users className="h-4 w-4 text-[#4AC8E8]" />
+                <span className="text-sm font-medium text-[#1A9BBF]">Careers</span>
               </div>
               
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#2C2F33] leading-tight">
-                Looking To Join A <span className="text-[#1DBFDD]">Young Dynamic</span> Property Company?
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1A1917] leading-tight">
+                Looking To Join A <span className="text-[#4AC8E8]">Young Dynamic</span> Property Company?
               </h2>
               
-              <p className="mt-6 text-lg text-[#6B6E72] leading-relaxed">
+              <p className="mt-6 text-lg text-[#8A8880] leading-relaxed">
                 Would you like to join the Banc Property Team? We&apos;re always looking for talented 
                 individuals who share our passion for exceptional property service.
               </p>
               
               <div className="mt-8 space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#1DBFDD]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2F33]">Growth Opportunities</h3>
-                    <p className="text-sm text-[#6B6E72]">Develop your career in a supportive environment</p>
+                    <h3 className="font-semibold text-[#1A1917]">Growth Opportunities</h3>
+                    <p className="text-sm text-[#8A8880]">Develop your career in a supportive environment</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#1DBFDD]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2F33]">Local Expertise</h3>
-                    <p className="text-sm text-[#6B6E72]">Work in the heart of the Cuffley community</p>
+                    <h3 className="font-semibold text-[#1A1917]">Local Expertise</h3>
+                    <p className="text-sm text-[#8A8880]">Work in the heart of the Cuffley community</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#1DBFDD]" />
+                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2F33]">Great Team</h3>
-                    <p className="text-sm text-[#6B6E72]">Join a passionate and experienced team</p>
+                    <h3 className="font-semibold text-[#1A1917]">Great Team</h3>
+                    <p className="text-sm text-[#8A8880]">Join a passionate and experienced team</p>
                   </div>
                 </div>
               </div>
@@ -302,24 +302,24 @@ export default function TeamPage() {
             {/* Right Column - Form */}
             <div className="relative">
               {/* Form card */}
-              <div className="bg-[#F0F0ED] rounded-3xl p-8 lg:p-10 shadow-xl border border-[#C8C9CB]/30">
+              <div className="bg-[#F4F3F1] rounded-3xl p-8 lg:p-10 shadow-xl border border-[#E0DFDC]/30">
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-[#2C2F33] mb-2">Apply Today</h3>
-                  <p className="text-[#6B6E72] text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
+                  <h3 className="text-xl font-semibold text-[#1A1917] mb-2">Apply Today</h3>
+                  <p className="text-[#8A8880] text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
                 </div>
                 
                 <form className="space-y-6">
                   {/* Name */}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-[#3A3D42] mb-2">
-                      Full Name <span className="text-[#1DBFDD]">*</span>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#3D3B37] mb-2">
+                      Full Name <span className="text-[#4AC8E8]">*</span>
                     </label>
                     <Input
                       id="name"
                       name="name"
                       type="text"
                       placeholder="John Smith"
-                      className="w-full h-12 bg-white border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-2 focus:ring-[#1DBFDD]/20 rounded-xl transition-all"
+                      className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
                       required
                     />
                   </div>
@@ -327,7 +327,7 @@ export default function TeamPage() {
                   {/* Phone & Email Row */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-[#3A3D42] mb-2">
+                      <label htmlFor="phone" className="block text-sm font-medium text-[#3D3B37] mb-2">
                         Phone Number
                       </label>
                       <Input
@@ -335,19 +335,19 @@ export default function TeamPage() {
                         name="phone"
                         type="tel"
                         placeholder="01707 877781"
-                        className="w-full h-12 bg-white border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-2 focus:ring-[#1DBFDD]/20 rounded-xl transition-all"
+                        className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-[#3A3D42] mb-2">
-                        Email Address <span className="text-[#1DBFDD]">*</span>
+                      <label htmlFor="email" className="block text-sm font-medium text-[#3D3B37] mb-2">
+                        Email Address <span className="text-[#4AC8E8]">*</span>
                       </label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full h-12 bg-white border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-2 focus:ring-[#1DBFDD]/20 rounded-xl transition-all"
+                        className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
                         required
                       />
                     </div>
@@ -355,37 +355,37 @@ export default function TeamPage() {
                   
                   {/* Message */}
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-[#3A3D42] mb-2">
-                      Your Message <span className="text-[#1DBFDD]">*</span>
+                    <label htmlFor="message" className="block text-sm font-medium text-[#3D3B37] mb-2">
+                      Your Message <span className="text-[#4AC8E8]">*</span>
                     </label>
                     <Textarea
                       id="message"
                       name="message"
                       placeholder="Tell us about yourself, your experience, and why you'd like to join the Banc team..."
                       rows={5}
-                      className="w-full bg-white border-[#C8C9CB] focus:border-[#1DBFDD] focus:ring-2 focus:ring-[#1DBFDD]/20 rounded-xl transition-all resize-none"
+                      className="w-full bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all resize-none"
                       required
                     />
                   </div>
                   
                   {/* Privacy Checkbox */}
-                  <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-[#C8C9CB]/50">
+                  <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-[#E0DFDC]/50">
                     <Checkbox 
                       id="privacy" 
                       name="privacy"
                       required
-                      className="mt-0.5 border-[#C8C9CB] data-[state=checked]:bg-[#1DBFDD] data-[state=checked]:border-[#1DBFDD] rounded"
+                      className="mt-0.5 border-[#E0DFDC] data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8] rounded"
                     />
-                    <label htmlFor="privacy" className="text-sm text-[#6B6E72] leading-relaxed cursor-pointer">
+                    <label htmlFor="privacy" className="text-sm text-[#8A8880] leading-relaxed cursor-pointer">
                       Please tick this box if you are happy for us to contact you via phone and email. 
-                      You can view our full <a href="/privacy" className="text-[#1DBFDD] hover:underline">privacy policy</a> on our website.
+                      You can view our full <a href="/privacy" className="text-[#4AC8E8] hover:underline">privacy policy</a> on our website.
                     </label>
                   </div>
                   
                   {/* Submit Button */}
                   <Button 
                     type="submit"
-                    className="w-full h-14 bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-[#1DBFDD]/25 hover:shadow-xl hover:shadow-[#1DBFDD]/30"
+                    className="w-full h-14 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-[#4AC8E8]/25 hover:shadow-xl hover:shadow-[#4AC8E8]/30"
                   >
                     Submit Application
                     <ArrowRight className="h-5 w-5 ml-2" />
@@ -394,14 +394,14 @@ export default function TeamPage() {
               </div>
               
               {/* Decorative element */}
-              <div className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl bg-[#1DBFDD]/10" />
+              <div className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl bg-[#4AC8E8]/10" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Call to Action Banner */}
-      <section className="bg-[#2C2F33] py-12">
+      <section className="bg-[#1A1917] py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left">
             <div>
@@ -415,14 +415,14 @@ export default function TeamPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
                 href="tel:01707877781" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white font-semibold rounded-xl transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white font-semibold rounded-xl transition-all duration-300"
               >
                 <Phone className="h-5 w-5" />
                 01707 877781
               </a>
               <a 
                 href="/contact" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-[#F0F0ED] text-[#2C2F33] font-semibold rounded-xl transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-[#F4F3F1] text-[#1A1917] font-semibold rounded-xl transition-all duration-300"
               >
                 Contact Us
                 <ArrowRight className="h-5 w-5" />

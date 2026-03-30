@@ -49,7 +49,7 @@ export function StreetViewComponent({
             onClick={() => setViewMode("map")}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
               viewMode === "map" 
-                ? "bg-[#1DBFDD] text-white" 
+                ? "bg-[#4AC8E8] text-white" 
                 : "text-gray-600 hover:bg-gray-100"
             }`}
           >
@@ -60,7 +60,7 @@ export function StreetViewComponent({
             onClick={() => setViewMode("street")}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
               viewMode === "street" 
-                ? "bg-[#1DBFDD] text-white" 
+                ? "bg-[#4AC8E8] text-white" 
                 : "text-gray-600 hover:bg-gray-100"
             }`}
           >
@@ -108,7 +108,7 @@ export function StreetViewComponent({
       <div className="absolute bottom-3 left-3 right-3 z-10">
         <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg">
           <div className="flex items-center gap-2 text-gray-900">
-            <MapPin className="h-4 w-4 text-[#1DBFDD]" />
+            <MapPin className="h-4 w-4 text-[#4AC8E8]" />
             <span className="font-medium text-sm truncate">{address}</span>
           </div>
         </div>
@@ -121,7 +121,7 @@ export function StreetViewComponent({
       <div className="fixed inset-0 z-[100] bg-black">
         <div className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
           <div className="flex items-center gap-3">
-            <MapPin className="h-5 w-5 text-[#1DBFDD]" />
+            <MapPin className="h-5 w-5 text-[#4AC8E8]" />
             <span className="font-medium">{viewMode === "map" ? "Map View" : "Street View"}</span>
             <span className="text-gray-400">•</span>
             <span className="text-sm text-gray-400">{address}</span>
@@ -132,7 +132,7 @@ export function StreetViewComponent({
                 onClick={() => setViewMode("map")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                   viewMode === "map" 
-                    ? "bg-[#1DBFDD] text-white" 
+                    ? "bg-[#4AC8E8] text-white" 
                     : "text-white hover:bg-white/10"
                 }`}
               >
@@ -143,7 +143,7 @@ export function StreetViewComponent({
                 onClick={() => setViewMode("street")}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
                   viewMode === "street" 
-                    ? "bg-[#1DBFDD] text-white" 
+                    ? "bg-[#4AC8E8] text-white" 
                     : "text-white hover:bg-white/10"
                 }`}
               >

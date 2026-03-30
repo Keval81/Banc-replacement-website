@@ -74,10 +74,10 @@ export default function FavoritesPage() {
     return (
       <>
         <Header />
-        <main className="min-h-screen bg-gradient-to-br from-[#2C2F33] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
+        <main className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
           <div className="mx-auto max-w-7xl px-4 lg:px-10">
             <div className="flex items-center justify-center h-64">
-              <div className="animate-spin h-8 w-8 border-2 border-[#1DBFDD] border-t-transparent rounded-full" />
+              <div className="animate-spin h-8 w-8 border-2 border-[#4AC8E8] border-t-transparent rounded-full" />
             </div>
           </div>
         </main>
@@ -93,7 +93,7 @@ export default function FavoritesPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-[#2C2F33] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Header */}
           <motion.div
@@ -130,7 +130,7 @@ export default function FavoritesPage() {
                 Start browsing and save properties you&apos;re interested in.
               </p>
               <Link href="/sales/properties">
-                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white">
+                <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white">
                   <Home className="mr-2 h-4 w-4" />
                   Browse Properties
                 </Button>
@@ -162,14 +162,14 @@ export default function FavoritesPage() {
                   {/* Property Details */}
                   <div className="p-4">
                     <Link href={`/sales/properties/${favorite.propertyId}`}>
-                      <h3 className="font-semibold text-white group-hover:text-[#1DBFDD] transition-colors line-clamp-1">
+                      <h3 className="font-semibold text-white group-hover:text-[#4AC8E8] transition-colors line-clamp-1">
                         {favorite.propertyTitle || "Property"}
                       </h3>
                     </Link>
                     <p className="mt-1 text-sm text-white/60 line-clamp-1">
                       {favorite.propertyAddress}
                     </p>
-                    <p className="mt-2 text-lg font-bold text-[#1DBFDD]">
+                    <p className="mt-2 text-lg font-bold text-[#4AC8E8]">
                       {favorite.propertyPrice}
                     </p>
 

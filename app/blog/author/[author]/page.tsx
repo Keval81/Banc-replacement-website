@@ -65,18 +65,18 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       <Header />
 
       {/* Hero */}
-      <section className="bg-[#2C2F33] py-12 lg:py-20">
+      <section className="bg-[#1A1917] py-12 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <Link
             href="/blog"
-            className="mb-4 inline-flex items-center gap-2 text-[#1DBFDD] hover:underline"
+            className="mb-4 inline-flex items-center gap-2 text-[#4AC8E8] hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
           </Link>
 
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center">
-            <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-[#1DBFDD]">
+            <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-[#4AC8E8]">
               <Image
                 src={author.image}
                 alt={author.name}
@@ -85,7 +85,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
               />
             </div>
             <div>
-              <p className="text-sm uppercase tracking-wider text-[#1DBFDD]">
+              <p className="text-sm uppercase tracking-wider text-[#4AC8E8]">
                 {author.role}
               </p>
               <h1 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
@@ -99,7 +99,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                   {author.social.email && (
                     <a
                       href={`mailto:${author.social.email}`}
-                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#1DBFDD]"
+                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#4AC8E8]"
                     >
                       <Mail className="h-5 w-5" />
                       <span className="text-sm">Email</span>
@@ -110,7 +110,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                       href={author.social.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#1DBFDD]"
+                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#4AC8E8]"
                     >
                       <Linkedin className="h-5 w-5" />
                       <span className="text-sm">LinkedIn</span>
@@ -121,7 +121,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                       href={author.social.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#1DBFDD]"
+                      className="flex items-center gap-2 text-white/70 transition-colors hover:text-[#4AC8E8]"
                     >
                       <Twitter className="h-5 w-5" />
                       <span className="text-sm">Twitter</span>
@@ -136,7 +136,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
 
       {/* Posts Grid */}
       <main className="mx-auto max-w-7xl px-4 py-12 lg:px-10 lg:py-16">
-        <h2 className="mb-8 text-xl font-semibold text-[#111827]">
+        <h2 className="mb-8 text-xl font-semibold text-[#2C2A27]">
           Articles by {author.name}
         </h2>
 
@@ -145,7 +145,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
             {posts.map((post) => (
               <article
                 key={post.slug}
-                className="group flex flex-col overflow-hidden rounded-xl border border-[#E5E7EB] bg-white transition-shadow hover:shadow-lg"
+                className="group flex flex-col overflow-hidden rounded-xl border border-[#E0DFDC] bg-white transition-shadow hover:shadow-lg"
               >
                 <Link href={`/blog/${post.slug}`} className="flex flex-1 flex-col">
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -158,7 +158,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#6B7280]">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#8A8880]">
                       <span className="rounded-full bg-[#F3F4F6] px-2 py-1 capitalize">
                         {post.category.replace("-", " ")}
                       </span>
@@ -171,10 +171,10 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                         {post.readingTime}
                       </span>
                     </div>
-                    <h3 className="mb-2 text-base font-semibold text-[#111827] transition-colors group-hover:text-[#1DBFDD] line-clamp-2">
+                    <h3 className="mb-2 text-base font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8] line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="flex-1 text-sm text-[#6B7280] line-clamp-3">
+                    <p className="flex-1 text-sm text-[#8A8880] line-clamp-3">
                       {post.description}
                     </p>
                   </div>
@@ -184,12 +184,12 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg text-[#6B7280]">
+            <p className="text-lg text-[#8A8880]">
               No posts found from this author yet.
             </p>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-[#1DBFDD] hover:underline"
+              className="mt-4 inline-block text-[#4AC8E8] hover:underline"
             >
               Browse all articles
             </Link>

@@ -226,11 +226,11 @@ export default function TenantsGuideClient() {
       <Header />
       
       {/* Premium Hero Section */}
-      <section className="relative bg-[#2C2F33] overflow-hidden">
+      <section className="relative bg-[#1A1917] overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#1DBFDD]/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#1DBFDD]/3 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#4AC8E8]/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#4AC8E8]/3 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
@@ -241,9 +241,9 @@ export default function TenantsGuideClient() {
             className="max-w-3xl"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-              <Sparkles className="h-4 w-4 text-[#1DBFDD]" />
-              <span className="text-sm font-medium text-[#1DBFDD] tracking-wide uppercase">Tenant Resources</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+              <Sparkles className="h-4 w-4 text-[#4AC8E8]" />
+              <span className="text-sm font-medium text-[#4AC8E8] tracking-wide uppercase">Tenant Resources</span>
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
@@ -267,14 +267,14 @@ export default function TenantsGuideClient() {
                 <Link 
                   key={section.id}
                   href={`#${section.id}`}
-                  className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80 hover:bg-[#1DBFDD]/20 hover:border-[#1DBFDD]/30 hover:text-white transition-all duration-300"
+                  className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80 hover:bg-[#4AC8E8]/20 hover:border-[#4AC8E8]/30 hover:text-white transition-all duration-300"
                 >
                   {section.number} {section.title}
                 </Link>
               ))}
               <Link 
                 href="#fees"
-                className="px-4 py-2 rounded-lg bg-[#1DBFDD]/20 border border-[#1DBFDD]/30 text-sm text-[#1DBFDD] hover:bg-[#1DBFDD]/30 transition-all duration-300"
+                className="px-4 py-2 rounded-lg bg-[#4AC8E8]/20 border border-[#4AC8E8]/30 text-sm text-[#4AC8E8] hover:bg-[#4AC8E8]/30 transition-all duration-300"
               >
                 07 Tenant Fees
               </Link>
@@ -304,17 +304,17 @@ export default function TenantsGuideClient() {
                 <div className="flex flex-col md:flex-row md:items-start gap-6 mb-8">
                   {/* Number & Icon */}
                   <div className="flex items-center gap-4 md:w-48 flex-shrink-0">
-                    <span className="text-5xl font-bold text-[#1DBFDD]/20 font-heading">
+                    <span className="text-5xl font-bold text-[#4AC8E8]/20 font-heading">
                       {section.number}
                     </span>
-                    <div className="w-14 h-14 rounded-2xl bg-[#1DBFDD] flex items-center justify-center shadow-lg shadow-[#1DBFDD]/20">
+                    <div className="w-14 h-14 rounded-2xl bg-[#4AC8E8] flex items-center justify-center shadow-lg shadow-[#4AC8E8]/20">
                       <section.icon className="h-7 w-7 text-white" />
                     </div>
                   </div>
                   
                   {/* Title */}
                   <div className="flex-1">
-                    <h2 className="text-2xl md:text-3xl font-semibold text-[#2C2F33] tracking-tight">
+                    <h2 className="text-2xl md:text-3xl font-semibold text-[#1A1917] tracking-tight">
                       {section.title}
                     </h2>
                   </div>
@@ -323,7 +323,7 @@ export default function TenantsGuideClient() {
                 {/* Content Grid */}
                 <div className="md:ml-52">
                   {section.intro && (
-                    <p className="text-[#2C2F33] font-medium mb-4 text-lg">{section.intro}</p>
+                    <p className="text-[#1A1917] font-medium mb-4 text-lg">{section.intro}</p>
                   )}
                   
                   <div className="grid lg:grid-cols-3 gap-8">
@@ -339,8 +339,8 @@ export default function TenantsGuideClient() {
                             transition={{ delay: i * 0.05 }}
                             className="flex items-start gap-4"
                           >
-                            <span className="w-2 h-2 rounded-full bg-[#1DBFDD] mt-2.5 flex-shrink-0" />
-                            <span className="text-[#6B6E72] leading-relaxed">{item}</span>
+                            <span className="w-2 h-2 rounded-full bg-[#4AC8E8] mt-2.5 flex-shrink-0" />
+                            <span className="text-[#8A8880] leading-relaxed">{item}</span>
                           </motion.li>
                         ))}
                       </ul>
@@ -351,21 +351,21 @@ export default function TenantsGuideClient() {
                           initial={{ opacity: 0, y: 20 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
-                          className="mt-8 p-6 bg-white rounded-2xl border border-[#E5E7EB] shadow-sm"
+                          className="mt-8 p-6 bg-white rounded-2xl border border-[#E0DFDC] shadow-sm"
                         >
                           <div className="flex items-center gap-3 mb-5">
-                            <div className="w-10 h-10 rounded-xl bg-[#2C2F33] flex items-center justify-center">
-                              <CheckCircle className="h-5 w-5 text-[#1DBFDD]" />
+                            <div className="w-10 h-10 rounded-xl bg-[#1A1917] flex items-center justify-center">
+                              <CheckCircle className="h-5 w-5 text-[#4AC8E8]" />
                             </div>
-                            <h3 className="font-semibold text-[#2C2F33]">Moving Day Checklist</h3>
+                            <h3 className="font-semibold text-[#1A1917]">Moving Day Checklist</h3>
                           </div>
                           <div className="grid gap-3 sm:grid-cols-2">
                             {section.checklist.map((item, i) => (
-                              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#F9FAFB]">
-                                <div className="w-5 h-5 rounded-full border-2 border-[#1DBFDD]/30 flex items-center justify-center flex-shrink-0">
-                                  <div className="w-2 h-2 rounded-full bg-[#1DBFDD]" />
+                              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[#F4F3F1]">
+                                <div className="w-5 h-5 rounded-full border-2 border-[#4AC8E8]/30 flex items-center justify-center flex-shrink-0">
+                                  <div className="w-2 h-2 rounded-full bg-[#4AC8E8]" />
                                 </div>
-                                <span className="text-sm text-[#6B6E72]">{item}</span>
+                                <span className="text-sm text-[#8A8880]">{item}</span>
                               </div>
                             ))}
                           </div>
@@ -376,15 +376,15 @@ export default function TenantsGuideClient() {
                     {/* Highlights sidebar */}
                     {section.highlights && (
                       <div className="lg:col-span-1">
-                        <div className="p-6 bg-[#2C2F33] rounded-2xl">
+                        <div className="p-6 bg-[#1A1917] rounded-2xl">
                           <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">
                             Pro Tips
                           </h3>
                           <div className="space-y-4">
                             {section.highlights.map((highlight, i) => (
                               <div key={i} className="flex items-start gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-[#1DBFDD]/20 flex items-center justify-center flex-shrink-0">
-                                  <highlight.icon className="h-4 w-4 text-[#1DBFDD]" />
+                                <div className="w-8 h-8 rounded-lg bg-[#4AC8E8]/20 flex items-center justify-center flex-shrink-0">
+                                  <highlight.icon className="h-4 w-4 text-[#4AC8E8]" />
                                 </div>
                                 <span className="text-sm text-white/80">{highlight.text}</span>
                               </div>
@@ -398,9 +398,9 @@ export default function TenantsGuideClient() {
                 
                 {/* Divider */}
                 {index < sections.length - 1 && (
-                  <div className="mt-16 pt-16 border-t border-[#E5E7EB]">
+                  <div className="mt-16 pt-16 border-t border-[#E0DFDC]">
                     <div className="flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-[#1DBFDD]/30" />
+                      <div className="w-2 h-2 rounded-full bg-[#4AC8E8]/30" />
                     </div>
                   </div>
                 )}
@@ -411,11 +411,11 @@ export default function TenantsGuideClient() {
       </section>
 
       {/* Tenant Fees Section - Premium Table Design */}
-      <section id="fees" className="py-20 lg:py-28 bg-[#2C2F33] relative overflow-hidden">
+      <section id="fees" className="py-20 lg:py-28 bg-[#1A1917] relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#1DBFDD]/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-[#1DBFDD]/3 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-[#4AC8E8]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-[#4AC8E8]/3 rounded-full blur-3xl" />
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
@@ -427,8 +427,8 @@ export default function TenantsGuideClient() {
             className="text-center mb-16"
           >
             <div className="inline-flex items-center gap-3 mb-6">
-              <span className="text-6xl font-bold text-[#1DBFDD]/20 font-heading">07</span>
-              <div className="w-16 h-16 rounded-2xl bg-[#1DBFDD] flex items-center justify-center shadow-lg shadow-[#1DBFDD]/20">
+              <span className="text-6xl font-bold text-[#4AC8E8]/20 font-heading">07</span>
+              <div className="w-16 h-16 rounded-2xl bg-[#4AC8E8] flex items-center justify-center shadow-lg shadow-[#4AC8E8]/20">
                 <PoundSterling className="h-8 w-8 text-white" />
               </div>
             </div>
@@ -438,7 +438,7 @@ export default function TenantsGuideClient() {
             </h2>
             
             <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-              <BadgeCheck className="h-4 w-4 text-[#1DBFDD]" />
+              <BadgeCheck className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm text-white/70">
                 Tenant Fees Act 2019 — New Assured Shorthold Tenancies
               </span>
@@ -456,11 +456,11 @@ export default function TenantsGuideClient() {
                 transition={{ delay: index * 0.08 }}
                 className="group"
               >
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 lg:p-8 hover:bg-white/10 hover:border-[#1DBFDD]/30 transition-all duration-300">
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 lg:p-8 hover:bg-white/10 hover:border-[#4AC8E8]/30 transition-all duration-300">
                   <div className="flex flex-col lg:flex-row lg:items-center gap-6">
                     {/* Icon */}
-                    <div className="w-14 h-14 rounded-xl bg-[#1DBFDD]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1DBFDD]/30 transition-colors">
-                      <fee.icon className="h-7 w-7 text-[#1DBFDD]" />
+                    <div className="w-14 h-14 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#4AC8E8]/30 transition-colors">
+                      <fee.icon className="h-7 w-7 text-[#4AC8E8]" />
                     </div>
                     
                     {/* Content */}
@@ -471,8 +471,8 @@ export default function TenantsGuideClient() {
                     
                     {/* Amount */}
                     <div className="lg:text-right flex-shrink-0">
-                      <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#1DBFDD]/20 border border-[#1DBFDD]/30">
-                        <span className="text-[#1DBFDD] font-semibold whitespace-nowrap">{fee.amount}</span>
+                      <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#4AC8E8]/20 border border-[#4AC8E8]/30">
+                        <span className="text-[#4AC8E8] font-semibold whitespace-nowrap">{fee.amount}</span>
                       </div>
                     </div>
                   </div>
@@ -501,25 +501,25 @@ export default function TenantsGuideClient() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2C2F33] to-[#3A3D42] p-10 lg:p-16"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1A1917] to-[#3D3B37] p-10 lg:p-16"
           >
             {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#1DBFDD]/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#1DBFDD]/5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#4AC8E8]/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#4AC8E8]/5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
             
             <div className="relative flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
               {/* Badge/Icon side */}
               <div className="flex-shrink-0">
-                <div className="w-28 h-28 rounded-full bg-[#1DBFDD] flex items-center justify-center shadow-2xl shadow-[#1DBFDD]/30">
+                <div className="w-28 h-28 rounded-full bg-[#4AC8E8] flex items-center justify-center shadow-2xl shadow-[#4AC8E8]/30">
                   <ShieldCheck className="h-14 w-14 text-white" />
                 </div>
               </div>
               
               {/* Content side */}
               <div className="flex-1 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1DBFDD]/20 border border-[#1DBFDD]/30 mb-4">
-                  <BadgeCheck className="h-4 w-4 text-[#1DBFDD]" />
-                  <span className="text-sm font-medium text-[#1DBFDD]">Accredited Agent</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#4AC8E8]/20 border border-[#4AC8E8]/30 mb-4">
+                  <BadgeCheck className="h-4 w-4 text-[#4AC8E8]" />
+                  <span className="text-sm font-medium text-[#4AC8E8]">Accredited Agent</span>
                 </div>
                 
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
@@ -535,15 +535,15 @@ export default function TenantsGuideClient() {
                 
                 <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD]" />
+                    <CheckCircle className="h-5 w-5 text-[#4AC8E8]" />
                     <span>Professional Standards</span>
                   </div>
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD]" />
+                    <CheckCircle className="h-5 w-5 text-[#4AC8E8]" />
                     <span>Transparent Fees</span>
                   </div>
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-[#1DBFDD]" />
+                    <CheckCircle className="h-5 w-5 text-[#4AC8E8]" />
                     <span>Client Money Protection</span>
                   </div>
                 </div>
@@ -554,7 +554,7 @@ export default function TenantsGuideClient() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-28 bg-[#1DBFDD] relative overflow-hidden">
+      <section className="py-20 lg:py-28 bg-[#4AC8E8] relative overflow-hidden">
         {/* Decorative pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{
@@ -582,7 +582,7 @@ export default function TenantsGuideClient() {
               <Link href="/lettings/properties">
                 <Button 
                   size="lg"
-                  className="bg-white text-[#1DBFDD] hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 transition-all duration-300"
+                  className="bg-white text-[#4AC8E8] hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 transition-all duration-300"
                 >
                   Browse Properties
                   <ArrowRight className="ml-2 h-5 w-5" />

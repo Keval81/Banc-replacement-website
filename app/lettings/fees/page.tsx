@@ -154,20 +154,20 @@ const additionalFees = [
 
 export default function LettingsFeesPage() {
   return (
-    <div className="min-h-screen bg-[#F0F0ED]">
+    <div className="min-h-screen bg-[#F4F3F1]">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-[#2C2F33] py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-[#1A1917] py-24 lg:py-32 overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1DBFDD] rounded-full blur-[128px]" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <PoundSterling className="h-4 w-4 text-[#1DBFDD]" />
+              <PoundSterling className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm font-medium text-white/80">Transparent Pricing</span>
             </div>
             
@@ -188,12 +188,12 @@ export default function LettingsFeesPage() {
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Main content */}
             <div className="lg:col-span-2">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-                <Users className="h-4 w-4 text-[#1DBFDD]" />
-                <span className="text-sm font-medium text-[#0A6B82]">For Tenants</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+                <Users className="h-4 w-4 text-[#4AC8E8]" />
+                <span className="text-sm font-medium text-[#1A9BBF]">For Tenants</span>
               </div>
               
-              <h2 className="text-3xl lg:text-4xl font-semibold text-[#2C2F33] mb-4">
+              <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917] mb-4">
                 Tenant Fees Explained
               </h2>
               
@@ -214,31 +214,31 @@ export default function LettingsFeesPage() {
                 </div>
               </div>
               
-              <p className="text-lg text-[#6B6E72] mb-8">
+              <p className="text-lg text-[#8A8880] mb-8">
                 Under current legislation, we are only permitted to charge the following payments to tenants:
               </p>
               
               {/* Permitted fees */}
               <div className="space-y-6">
                 {tenantFees.permitted.map((fee) => (
-                  <div key={fee.name} className="bg-white rounded-2xl p-6 border border-[#C8C9CB]/30">
+                  <div key={fee.name} className="bg-white rounded-2xl p-6 border border-[#E0DFDC]/30">
                     <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                       <div>
-                        <h3 className="text-lg font-semibold text-[#2C2F33]">{fee.name}</h3>
-                        <p className="text-[#6B6E72] mt-1">{fee.description}</p>
+                        <h3 className="text-lg font-semibold text-[#1A1917]">{fee.name}</h3>
+                        <p className="text-[#8A8880] mt-1">{fee.description}</p>
                       </div>
-                      <span className="px-4 py-2 rounded-full bg-[#1DBFDD]/10 text-[#1DBFDD] font-semibold text-sm">
+                      <span className="px-4 py-2 rounded-full bg-[#4AC8E8]/10 text-[#4AC8E8] font-semibold text-sm">
                         {fee.amount}
                       </span>
                     </div>
                     
                     {fee.conditions && (
-                      <div className="mt-4 pt-4 border-t border-[#C8C9CB]/30">
-                        <p className="text-sm font-medium text-[#3A3D42] mb-2">Refund conditions:</p>
+                      <div className="mt-4 pt-4 border-t border-[#E0DFDC]/30">
+                        <p className="text-sm font-medium text-[#3D3B37] mb-2">Refund conditions:</p>
                         <ul className="space-y-1">
                           {fee.conditions.map((condition, index) => (
-                            <li key={index} className="text-sm text-[#6B6E72] flex items-start gap-2">
-                              <span className="text-[#1DBFDD] mt-1">•</span>
+                            <li key={index} className="text-sm text-[#8A8880] flex items-start gap-2">
+                              <span className="text-[#4AC8E8] mt-1">•</span>
                               {condition}
                             </li>
                           ))}
@@ -247,8 +247,8 @@ export default function LettingsFeesPage() {
                     )}
                     
                     {fee.note && (
-                      <div className="mt-4 pt-4 border-t border-[#C8C9CB]/30">
-                        <p className="text-sm text-[#6B6E72]">{fee.note}</p>
+                      <div className="mt-4 pt-4 border-t border-[#E0DFDC]/30">
+                        <p className="text-sm text-[#8A8880]">{fee.note}</p>
                       </div>
                     )}
                   </div>
@@ -278,34 +278,34 @@ export default function LettingsFeesPage() {
               </div>
               
               {/* Deposit protection info */}
-              <div className="bg-white rounded-2xl p-6 border border-[#C8C9CB]/30">
+              <div className="bg-white rounded-2xl p-6 border border-[#E0DFDC]/30">
                 <div className="flex items-center gap-2 mb-4">
-                  <Shield className="h-5 w-5 text-[#1DBFDD]" />
-                  <h3 className="font-semibold text-[#2C2F33]">Deposit Protection</h3>
+                  <Shield className="h-5 w-5 text-[#4AC8E8]" />
+                  <h3 className="font-semibold text-[#1A1917]">Deposit Protection</h3>
                 </div>
-                <p className="text-sm text-[#6B6E72] mb-4">
+                <p className="text-sm text-[#8A8880] mb-4">
                   Your security deposit is protected in a government-approved scheme:
                 </p>
-                <ul className="space-y-2 text-sm text-[#6B6E72]">
+                <ul className="space-y-2 text-sm text-[#8A8880]">
                   <li className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-green-500" />
                     MyDeposits
                   </li>
                 </ul>
-                <p className="text-sm text-[#6B6E72] mt-4">
+                <p className="text-sm text-[#8A8880] mt-4">
                   You'll receive prescribed information within 30 days of payment.
                 </p>
               </div>
               
               {/* CTA */}
-              <div className="bg-[#1DBFDD] rounded-2xl p-6 text-center">
+              <div className="bg-[#4AC8E8] rounded-2xl p-6 text-center">
                 <Home className="h-8 w-8 text-white mx-auto mb-3" />
                 <h3 className="font-semibold text-white mb-2">Looking to Rent?</h3>
                 <p className="text-sm text-white/80 mb-4">
                   Browse our available rental properties
                 </p>
                 <Link href="/lettings/properties">
-                  <Button className="w-full bg-white text-[#1DBFDD] hover:bg-white/90">
+                  <Button className="w-full bg-white text-[#4AC8E8] hover:bg-white/90">
                     View Properties
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -317,11 +317,11 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* Landlord Fees Section */}
-      <section className="py-20 lg:py-28 bg-[#2C2F33]">
+      <section className="py-20 lg:py-28 bg-[#1A1917]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Key className="h-4 w-4 text-[#1DBFDD]" />
+              <Key className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm font-medium text-white/80">For Landlords</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-semibold text-white">
@@ -340,13 +340,13 @@ export default function LettingsFeesPage() {
                 key={service.name}
                 className={`relative rounded-2xl p-8 ${
                   service.popular 
-                    ? 'bg-[#1DBFDD] text-white' 
+                    ? 'bg-[#4AC8E8] text-white' 
                     : 'bg-white/5 border border-white/10 text-white'
                 }`}
               >
                 {service.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-white text-[#1DBFDD] text-xs font-semibold">
+                    <span className="px-4 py-1.5 rounded-full bg-white text-[#4AC8E8] text-xs font-semibold">
                       Most Popular
                     </span>
                   </div>
@@ -364,7 +364,7 @@ export default function LettingsFeesPage() {
                 <ul className="space-y-3">
                   {service.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3 text-sm">
-                      <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${service.popular ? 'text-white' : 'text-[#1DBFDD]'}`} />
+                      <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${service.popular ? 'text-white' : 'text-[#4AC8E8]'}`} />
                       <span className={service.popular ? 'text-white/90' : 'text-white/70'}>
                         {feature}
                       </span>
@@ -390,7 +390,7 @@ export default function LettingsFeesPage() {
                   {additionalFees.map((item) => (
                     <tr key={item.service} className="border-b border-white/5 last:border-0">
                       <td className="py-3 px-4 text-white">{item.service}</td>
-                      <td className="py-3 px-4 text-right text-[#1DBFDD] font-medium">{item.fee}</td>
+                      <td className="py-3 px-4 text-right text-[#4AC8E8] font-medium">{item.fee}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -409,12 +409,12 @@ export default function LettingsFeesPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Fee transparency */}
-            <div className="bg-white rounded-2xl p-8 border border-[#C8C9CB]/30">
+            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center">
+                  <FileText className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#2C2F33]">Fee Transparency</h3>
+                <h3 className="text-xl font-semibold text-[#1A1917]">Fee Transparency</h3>
               </div>
               
               <ul className="space-y-4">
@@ -425,8 +425,8 @@ export default function LettingsFeesPage() {
                   "Landlord fees are deducted from rent collected",
                   "Setup fees are payable upon instruction"
                 ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3 text-[#6B6E72]">
-                    <Check className="h-5 w-5 text-[#1DBFDD] flex-shrink-0 mt-0.5" />
+                  <li key={index} className="flex items-start gap-3 text-[#8A8880]">
+                    <Check className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
                     {item}
                   </li>
                 ))}
@@ -434,27 +434,27 @@ export default function LettingsFeesPage() {
             </div>
             
             {/* Cancellation policy */}
-            <div className="bg-white rounded-2xl p-8 border border-[#C8C9CB]/30">
+            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center">
-                  <Info className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center">
+                  <Info className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#2C2F33]">Cancellation Policy</h3>
+                <h3 className="text-xl font-semibold text-[#1A1917]">Cancellation Policy</h3>
               </div>
               
-              <div className="space-y-4 text-[#6B6E72]">
+              <div className="space-y-4 text-[#8A8880]">
                 <p>
-                  <strong className="text-[#2C2F33]">Landlords:</strong> Management agreements 
+                  <strong className="text-[#1A1917]">Landlords:</strong> Management agreements 
                   run for a minimum period of 6 months. Notice to terminate must be given 
                   in writing, with a notice period of 2 months.
                 </p>
                 <p>
-                  <strong className="text-[#2C2F33]">Tenants:</strong> Once a holding deposit 
+                  <strong className="text-[#1A1917]">Tenants:</strong> Once a holding deposit 
                   is paid, it becomes non-refundable if you withdraw from the tenancy 
                   (subject to the conditions outlined above).
                 </p>
                 <p>
-                  <strong className="text-[#2C2F33]">Tenancy Renewals:</strong> No fees are 
+                  <strong className="text-[#1A1917]">Tenancy Renewals:</strong> No fees are 
                   charged to tenants for tenancy renewals. Landlords may be charged a 
                   renewal fee depending on their service level.
                 </p>
@@ -465,75 +465,75 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* Client Money Protection */}
-      <section className="py-20 lg:py-28 bg-[#F0F0ED]">
+      <section className="py-20 lg:py-28 bg-[#F4F3F1]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-[#C8C9CB]/30">
+          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-[#E0DFDC]/30">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-                  <Shield className="h-4 w-4 text-[#1DBFDD]" />
-                  <span className="text-sm font-medium text-[#0A6B82]">Protection</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+                  <Shield className="h-4 w-4 text-[#4AC8E8]" />
+                  <span className="text-sm font-medium text-[#1A9BBF]">Protection</span>
                 </div>
                 
-                <h2 className="text-3xl font-semibold text-[#2C2F33]">
+                <h2 className="text-3xl font-semibold text-[#1A1917]">
                   Client Money Protection
                 </h2>
-                <p className="mt-4 text-lg text-[#6B6E72]">
+                <p className="mt-4 text-lg text-[#8A8880]">
                   Banc Property Group is a member of a Client Money Protection scheme, 
                   providing peace of mind that your money is protected.
                 </p>
                 
                 <div className="mt-8 space-y-4">
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-[#1DBFDD]" />
+                    <div className="w-10 h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-5 w-5 text-[#4AC8E8]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2F33]">Client Money Protected</h3>
-                      <p className="text-sm text-[#6B6E72]">All client funds held in segregated accounts</p>
+                      <h3 className="font-semibold text-[#1A1917]">Client Money Protected</h3>
+                      <p className="text-sm text-[#8A8880]">All client funds held in segregated accounts</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-[#1DBFDD]" />
+                    <div className="w-10 h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-5 w-5 text-[#4AC8E8]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2F33]">Propertymark Member</h3>
-                      <p className="text-sm text-[#6B6E72]">Regulated by a professional body</p>
+                      <h3 className="font-semibold text-[#1A1917]">Propertymark Member</h3>
+                      <p className="text-sm text-[#8A8880]">Regulated by a professional body</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-[#1DBFDD]" />
+                    <div className="w-10 h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-5 w-5 text-[#4AC8E8]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2C2F33]">Redress Scheme</h3>
-                      <p className="text-sm text-[#6B6E72]">Member of The Property Ombudsman</p>
+                      <h3 className="font-semibold text-[#1A1917]">Redress Scheme</h3>
+                      <p className="text-sm text-[#8A8880]">Member of The Property Ombudsman</p>
                     </div>
                   </div>
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#F0F0ED] rounded-2xl p-6 text-center">
-                  <Shield className="h-10 w-10 text-[#1DBFDD] mx-auto mb-3" />
-                  <p className="font-semibold text-[#2C2F33]">Client Money Protection</p>
-                  <p className="text-sm text-[#6B6E72]">Fully Protected</p>
+                <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
+                  <Shield className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
+                  <p className="font-semibold text-[#1A1917]">Client Money Protection</p>
+                  <p className="text-sm text-[#8A8880]">Fully Protected</p>
                 </div>
-                <div className="bg-[#F0F0ED] rounded-2xl p-6 text-center">
-                  <Building2 className="h-10 w-10 text-[#1DBFDD] mx-auto mb-3" />
-                  <p className="font-semibold text-[#2C2F33]">Professional Membership</p>
-                  <p className="text-sm text-[#6B6E72]">Propertymark</p>
+                <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
+                  <Building2 className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
+                  <p className="font-semibold text-[#1A1917]">Professional Membership</p>
+                  <p className="text-sm text-[#8A8880]">Propertymark</p>
                 </div>
-                <div className="bg-[#F0F0ED] rounded-2xl p-6 text-center">
-                  <FileText className="h-10 w-10 text-[#1DBFDD] mx-auto mb-3" />
-                  <p className="font-semibold text-[#2C2F33]">Redress Scheme</p>
-                  <p className="text-sm text-[#6B6E72]">The Property Ombudsman</p>
+                <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
+                  <FileText className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
+                  <p className="font-semibold text-[#1A1917]">Redress Scheme</p>
+                  <p className="text-sm text-[#8A8880]">The Property Ombudsman</p>
                 </div>
-                <div className="bg-[#F0F0ED] rounded-2xl p-6 text-center">
-                  <Key className="h-10 w-10 text-[#1DBFDD] mx-auto mb-3" />
-                  <p className="font-semibold text-[#2C2F33]">Deposit Protection</p>
-                  <p className="text-sm text-[#6B6E72]">MyDeposits</p>
+                <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
+                  <Key className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
+                  <p className="font-semibold text-[#1A1917]">Deposit Protection</p>
+                  <p className="text-sm text-[#8A8880]">MyDeposits</p>
                 </div>
               </div>
             </div>
@@ -542,7 +542,7 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-24 bg-[#1DBFDD]">
+      <section className="py-20 lg:py-24 bg-[#4AC8E8]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 text-center">
           <h2 className="text-3xl font-semibold text-white mb-4">
             Have Questions About Fees?
@@ -553,7 +553,7 @@ export default function LettingsFeesPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="tel:01707877781">
-              <Button className="bg-white text-[#1DBFDD] hover:bg-white/90 px-8 py-6 text-base font-semibold">
+              <Button className="bg-white text-[#4AC8E8] hover:bg-white/90 px-8 py-6 text-base font-semibold">
                 <Phone className="mr-2 h-5 w-5" />
                 Call 01707 877781
               </Button>

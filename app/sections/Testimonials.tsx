@@ -29,8 +29,8 @@ export default function Testimonials() {
     <section className="bg-white">
       <div className="mx-auto w-full max-w-7xl px-6 pt-20 pb-0 lg:px-10">
         <div className="flex flex-col gap-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#6B7280]">Testimonials</p>
-          <h2 className="text-3xl font-semibold text-[#111827] sm:text-4xl">
+          <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">Testimonials</p>
+          <h2 className="text-3xl font-semibold text-banc-dark sm:text-4xl">
             What Our Clients Say
           </h2>
         </div>
@@ -43,17 +43,17 @@ export default function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ delay: index * 0.1 }}
-              className="rounded-2xl border border-[#E5E7EB] bg-[#F9FAFB] p-6 shadow-sm"
+              className="rounded-2xl border border-banc-grey/20 bg-banc-grey-pale p-6 shadow-sm"
             >
-              <div className="flex gap-1 text-[#0D9488]">
+              <div className="flex gap-1 text-banc-sky">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-[#0D9488]" />
+                  <Star key={i} className="h-4 w-4 fill-banc-sky" />
                 ))}
               </div>
-              <p className="mt-4 text-sm text-[#111827]">“{item.quote}”</p>
-              <p className="mt-6 text-xs font-semibold text-[#111827]">
+              <p className="mt-4 text-sm text-banc-dark">“{item.quote}”</p>
+              <p className="mt-6 text-xs font-semibold text-banc-dark">
                 {item.name}
-                <span className="block text-[#6B7280]">{item.location}</span>
+                <span className="block text-banc-grey">{item.location}</span>
               </p>
             </motion.div>
           ))}

@@ -78,7 +78,7 @@ export function AgentContactCard({
         <p className="text-sm text-gray-500 mb-4">Listed by</p>
         
         <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-white border-2 border-[#1DBFDD]/20 shadow-sm">
+          <div className="relative w-16 h-16 rounded-full overflow-hidden bg-white border-2 border-[#4AC8E8]/20 shadow-sm">
             <Image
               src={agent.image}
               alt={agent.name}
@@ -102,14 +102,14 @@ export function AgentContactCard({
         <div className="grid grid-cols-2 gap-2">
           <a 
             href={`tel:${agent.phone}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
           >
             <Phone className="h-4 w-4" />
             <span className="text-sm font-medium">Call</span>
           </a>
           <a 
             href={`mailto:${agent.email}?subject=Property Enquiry - Ref: ${propertyId}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#1DBFDD]/10 hover:text-[#1DBFDD] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
           >
             <Mail className="h-4 w-4" />
             <span className="text-sm font-medium">Email</span>
@@ -122,7 +122,7 @@ export function AgentContactCard({
         <button
           onClick={() => setActiveTab("contact")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative flex items-center justify-center gap-2 ${
-            activeTab === "contact" ? "text-[#1DBFDD]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "contact" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
           }`}
         >
           <MessageSquare className="h-4 w-4" />
@@ -130,14 +130,14 @@ export function AgentContactCard({
           {activeTab === "contact" && (
             <motion.div 
               layoutId="agent-tab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1DBFDD]"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4AC8E8]"
             />
           )}
         </button>
         <button
           onClick={() => setActiveTab("viewing")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative flex items-center justify-center gap-2 ${
-            activeTab === "viewing" ? "text-[#1DBFDD]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "viewing" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
           }`}
         >
           <Calendar className="h-4 w-4" />
@@ -145,7 +145,7 @@ export function AgentContactCard({
           {activeTab === "viewing" && (
             <motion.div 
               layoutId="agent-tab"
-              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1DBFDD]"
+              className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4AC8E8]"
             />
           )}
         </button>
@@ -232,7 +232,7 @@ export function AgentContactCard({
                     name="preferredTime"
                     value={formData.preferredTime}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#1DBFDD]/20 focus:border-[#1DBFDD]"
+                    className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8]"
                   >
                     <option value="">Select a time...</option>
                     <option value="weekday-morning">Weekday Morning</option>
@@ -264,7 +264,7 @@ export function AgentContactCard({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white py-5 text-base font-semibold"
+              className="w-full bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white py-5 text-base font-semibold"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">

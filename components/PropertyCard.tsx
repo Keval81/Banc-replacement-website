@@ -116,12 +116,12 @@ export default function PropertyCard({
       transition={{ duration: 0.2 }}
       className={cn(
         "group overflow-hidden rounded-2xl border bg-white shadow-sm transition-all hover:shadow-lg",
-        isCompared ? "border-[#1DBFDD] ring-1 ring-[#1DBFDD]" : "border-[#E5E7EB]"
+        isCompared ? "border-banc-sky ring-1 ring-banc-sky" : "border-banc-grey/20"
       )}
     >
       {/* Simple Image Carousel - Click goes to property page */}
       <Link href={`/sales/properties/${id}`} className="block">
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F3F4F6]">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-banc-grey-pale">
           <Image
             src={currentImageUrl}
             alt={`${title} - Property Image`}
@@ -137,7 +137,7 @@ export default function PropertyCard({
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-white/95 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-[#111827] shadow-sm whitespace-nowrap"
+                  className="rounded-full bg-white/95 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-banc-dark shadow-sm whitespace-nowrap"
                 >
                   {tag}
                 </span>
@@ -154,7 +154,7 @@ export default function PropertyCard({
                 className={cn(
                   "flex items-center gap-1 px-2 sm:gap-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all shadow-md",
                   isCompared
-                    ? "bg-[#1DBFDD] text-white"
+                    ? "bg-banc-sky text-white"
                     : canCompare
                     ? "bg-white/95 text-gray-700 hover:bg-white"
                     : "bg-gray-200/80 text-gray-400 cursor-not-allowed"
@@ -181,7 +181,7 @@ export default function PropertyCard({
               <button
                 type="button"
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-banc-dark opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
                 aria-label="Previous image"
                 style={{ touchAction: 'manipulation' }}
               >
@@ -190,7 +190,7 @@ export default function PropertyCard({
               <button
                 type="button"
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-[#111827] opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-banc-dark opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
                 aria-label="Next image"
                 style={{ touchAction: 'manipulation' }}
               >
@@ -208,46 +208,46 @@ export default function PropertyCard({
       <div className="flex flex-col gap-3 p-4">
         <Link href={`/sales/properties/${id}`} className="block group/link">
           <div>
-            <p className="text-xs text-[#6B7280] line-clamp-1 mb-0.5">{address}</p>
-            <h3 className="text-base font-semibold text-[#111827] group-hover/link:text-[#1DBFDD] transition-colors line-clamp-1">
+            <p className="text-xs text-banc-grey line-clamp-1 mb-0.5">{address}</p>
+            <h3 className="text-base font-semibold text-banc-dark group-hover/link:text-banc-sky transition-colors line-clamp-1">
               {title}
             </h3>
-            <p className="mt-2 text-xl font-bold text-[#0D9488]">{price}</p>
+            <p className="mt-2 text-xl font-bold text-banc-sky">{price}</p>
           </div>
         </Link>
 
         {/* Stats Row */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-[#6B7280]">
+        <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-banc-grey">
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bed className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <Bed className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
             <span className="font-medium">{stats.beds}</span>
             <span className="hidden sm:inline"> Beds</span>
           </span>
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bath className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <Bath className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
             <span className="font-medium">{stats.baths}</span>
             <span className="hidden sm:inline"> Baths</span>
           </span>
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Square className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <Square className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
             <span className="font-medium">{stats.sqft.toLocaleString()}</span>
             <span className="hidden sm:inline"> Sq Ft</span>
           </span>
           <span className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-[#0D9488] flex-shrink-0" />
+            <Sparkles className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
             <span className="font-medium">EPC {stats.epc}</span>
           </span>
         </div>
 
         {/* Summary */}
-        <p className="text-xs text-[#6B7280] line-clamp-2">
+        <p className="text-xs text-banc-grey line-clamp-2">
           {summary}
         </p>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 pt-1">
           <Link href={`/sales/properties/${id}`} className="flex-1">
-            <Button size="sm" className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB] transition-colors text-xs min-h-[44px] sm:min-h-0">
+            <Button size="sm" className="w-full bg-banc-sky hover:bg-banc-sky-dark transition-colors text-xs min-h-[44px] sm:min-h-0">
               View Details
             </Button>
           </Link>
@@ -259,7 +259,7 @@ export default function PropertyCard({
               "flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border transition-all touch-manipulation",
               favorited
                 ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
-                : "border-[#E5E7EB] text-[#6B7280] hover:border-red-400 hover:text-red-500"
+                : "border-banc-grey/20 text-banc-grey hover:border-red-400 hover:text-red-500"
             )}
             aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             style={{ touchAction: 'manipulation' }}
@@ -268,7 +268,7 @@ export default function PropertyCard({
           </button>
           <button
             type="button"
-            className="flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-all hover:border-[#0D9488] hover:text-[#0D9488] touch-manipulation"
+            className="flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-banc-grey/20 text-banc-grey transition-all hover:border-banc-sky hover:text-banc-sky touch-manipulation"
             aria-label="Share property"
             style={{ touchAction: 'manipulation' }}
           >

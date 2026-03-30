@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
                   position: "absolute",
                   top: 20,
                   left: 20,
-                  backgroundColor: "#1DBFDD",
+                  backgroundColor: "#4AC8E8",
                   color: "white",
                   padding: "8px 16px",
                   borderRadius: "4px",
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
                   style={{
                     fontSize: 36,
                     fontWeight: 700,
-                    color: "#111827",
+                    color: "#2C2A27",
                     margin: 0,
                     lineHeight: 1.2,
                     marginBottom: 8,
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
                 <p
                   style={{
                     fontSize: 20,
-                    color: "#6B7280",
+                    color: "#8A8880",
                     margin: 0,
                   }}
                 >
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
                     style={{
                       fontSize: 32,
                       fontWeight: 700,
-                      color: "#0D9488",
+                      color: "#4AC8E8",
                     }}
                   >
                     {price}
@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
                   <span
                     style={{
                       fontSize: 18,
-                      color: "#1DBFDD",
+                      color: "#4AC8E8",
                       fontWeight: 600,
                     }}
                   >
@@ -177,7 +177,7 @@ export async function GET(request: NextRequest) {
               width: "100%",
               display: "flex",
               flexDirection: "column",
-              background: "linear-gradient(135deg, #2C2F33 0%, #1a1c1f 100%)",
+              background: "linear-gradient(135deg, #1A1917 0%, #1a1c1f 100%)",
               fontFamily: "Montserrat",
               padding: 60,
             }}
@@ -194,14 +194,14 @@ export async function GET(request: NextRequest) {
                 style={{
                   width: 50,
                   height: 50,
-                  backgroundColor: "#1DBFDD",
+                  backgroundColor: "#4AC8E8",
                   borderRadius: "50%",
                 }}
               />
               <span
                 style={{
                   fontSize: 20,
-                  color: "#1DBFDD",
+                  color: "#4AC8E8",
                   fontWeight: 600,
                 }}
               >
@@ -244,7 +244,7 @@ export async function GET(request: NextRequest) {
               <span
                 style={{
                   fontSize: 20,
-                  color: "#1DBFDD",
+                  color: "#4AC8E8",
                   fontWeight: 600,
                 }}
               >
@@ -282,7 +282,7 @@ export async function GET(request: NextRequest) {
             height: "100%",
             width: "100%",
             display: "flex",
-            background: "linear-gradient(135deg, #2C2F33 0%, #1a1c1f 100%)",
+            background: "linear-gradient(135deg, #1A1917 0%, #1a1c1f 100%)",
             fontFamily: "Montserrat",
           }}
         >
@@ -308,14 +308,14 @@ export async function GET(request: NextRequest) {
                 style={{
                   width: 60,
                   height: 60,
-                  backgroundColor: "#1DBFDD",
+                  backgroundColor: "#4AC8E8",
                   borderRadius: "50%",
                 }}
               />
               <span
                 style={{
                   fontSize: 24,
-                  color: "#1DBFDD",
+                  color: "#4AC8E8",
                   fontWeight: 600,
                 }}
               >
@@ -356,7 +356,7 @@ export async function GET(request: NextRequest) {
             >
               <span
                 style={{
-                  backgroundColor: "#1DBFDD",
+                  backgroundColor: "#4AC8E8",
                   color: "white",
                   padding: "12px 24px",
                   borderRadius: "6px",
@@ -385,7 +385,7 @@ export async function GET(request: NextRequest) {
           <div
             style={{
               width: "40%",
-              background: "linear-gradient(180deg, #1DBFDD 0%, #0D9488 100%)",
+              background: "linear-gradient(180deg, #4AC8E8 0%, #4AC8E8 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

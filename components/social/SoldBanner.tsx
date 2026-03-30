@@ -139,7 +139,7 @@ export default function SoldBanner() {
           >
             <div 
               className="relative h-11 overflow-hidden"
-              style={{ backgroundColor: '#1DBFDD' }}
+              style={{ backgroundColor: '#4AC8E8' }}
             >
               {/* Scrolling Text Container */}
               <div
@@ -168,8 +168,8 @@ export default function SoldBanner() {
                 onClick={() => setShowBanner(false)}
                 className="absolute right-0 top-0 bottom-0 w-12 flex items-center justify-center z-10 touch-target-sm"
                 style={{ 
-                  backgroundColor: '#1DBFDD',
-                  background: 'linear-gradient(to left, #1DBFDD 70%, transparent)'
+                  backgroundColor: '#4AC8E8',
+                  background: 'linear-gradient(to left, #4AC8E8 70%, transparent)'
                 }}
                 aria-label="Close banner"
               >
@@ -180,7 +180,7 @@ export default function SoldBanner() {
               <div 
                 className="absolute right-12 top-0 bottom-0 w-8 pointer-events-none"
                 style={{
-                  background: 'linear-gradient(to left, #1DBFDD, transparent)'
+                  background: 'linear-gradient(to left, #4AC8E8, transparent)'
                 }}
               />
             </div>
@@ -198,7 +198,7 @@ export default function SoldBanner() {
               {/* Header */}
               <div 
                 className="px-4 py-2 flex items-center justify-between"
-                style={{ backgroundColor: '#1DBFDD' }}
+                style={{ backgroundColor: '#4AC8E8' }}
               >
                 <div className="flex items-center gap-2">
                   <span className="text-white text-sm font-semibold">JUST SOLD</span>
@@ -237,7 +237,7 @@ export default function SoldBanner() {
                     />
                     <div 
                       className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold text-white"
-                      style={{ backgroundColor: '#1DBFDD' }}
+                      style={{ backgroundColor: '#4AC8E8' }}
                     >
                       SOLD
                     </div>
@@ -292,7 +292,7 @@ export default function SoldBanner() {
                         : 'hover:opacity-70'
                     }`}
                     style={{
-                      backgroundColor: index === currentPropertyIndex ? '#1DBFDD' : '#D1D5DB',
+                      backgroundColor: index === currentPropertyIndex ? '#4AC8E8' : '#D1D5DB',
                     }}
                     aria-label={`View property ${index + 1}`}
                   />

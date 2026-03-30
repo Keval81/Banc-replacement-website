@@ -130,7 +130,7 @@ export function PropertyGallery({
           <div className="aspect-[4/3] relative">
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-                <Loader2 className="h-8 w-8 text-[#1DBFDD] animate-spin" />
+                <Loader2 className="h-8 w-8 text-[#4AC8E8] animate-spin" />
               </div>
             )}
             <Image
@@ -149,14 +149,14 @@ export function PropertyGallery({
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); goToPrev(); }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 text-[#111827] hover:bg-white transition-all opacity-0 group-hover:opacity-100 shadow-lg"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 text-[#2C2A27] hover:bg-white transition-all opacity-0 group-hover:opacity-100 shadow-lg"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); goToNext(); }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 text-[#111827] hover:bg-white transition-all opacity-0 group-hover:opacity-100 shadow-lg"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/90 text-[#2C2A27] hover:bg-white transition-all opacity-0 group-hover:opacity-100 shadow-lg"
                 aria-label="Next image"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -183,7 +183,7 @@ export function PropertyGallery({
 
           {/* Primary Image Badge */}
           {currentImage.isPrimary && (
-            <div className="absolute top-3 left-3 bg-[#0D9488] text-white px-2.5 py-1 text-xs font-semibold rounded">
+            <div className="absolute top-3 left-3 bg-[#4AC8E8] text-white px-2.5 py-1 text-xs font-semibold rounded">
               Featured
             </div>
           )}
@@ -198,7 +198,7 @@ export function PropertyGallery({
                 onClick={() => goToIndex(index)}
                 className={`relative flex-shrink-0 w-20 h-14 overflow-hidden rounded-lg border-2 transition-all ${
                   index === currentIndex
-                    ? "border-[#1DBFDD] ring-2 ring-[#1DBFDD]/20"
+                    ? "border-[#4AC8E8] ring-2 ring-[#4AC8E8]/20"
                     : "border-transparent opacity-60 hover:opacity-100"
                 }`}
                 aria-label={`Go to image ${index + 1}`}
@@ -319,7 +319,7 @@ export function PropertyGallery({
                         onClick={() => goToIndex(index)}
                         className={`relative flex-shrink-0 w-16 h-12 overflow-hidden rounded border-2 transition-all ${
                           index === currentIndex
-                            ? "border-[#1DBFDD]"
+                            ? "border-[#4AC8E8]"
                             : "border-transparent opacity-50 hover:opacity-100"
                         }`}
                       >

@@ -124,7 +124,7 @@ export default function Hero() {
 
   return (
     <section 
-      className="relative min-h-[90vh] w-full overflow-hidden bg-[#2C2F33] text-white"
+      className="relative min-h-[90vh] w-full overflow-hidden bg-[#1A1917] text-white"
       onClick={handleInteraction}
     >
       {/* Video Background - Single video element, no complex transitions */}
@@ -153,7 +153,7 @@ export default function Hero() {
 
         {/* Fallback while loading */}
         {!isLoaded && (
-          <div className="absolute inset-0 h-full w-full bg-[#2C2F33]">
+          <div className="absolute inset-0 h-full w-full bg-[#1A1917]">
             <div 
               className="absolute inset-0 h-full w-full opacity-50"
               style={{
@@ -168,14 +168,14 @@ export default function Hero() {
       </div>
       
       {/* Gradient overlay */}
-      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#2C2F33]/70 via-[#2C2F33]/40 to-[#2C2F33]/80" />
+      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-[#1A1917]/70 via-[#1A1917]/40 to-[#1A1917]/80" />
 
       {/* Autoplay blocked notice */}
       {!canAutoplay && (
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-40 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#1DBFDD] px-6 py-3 text-sm font-semibold text-[#2C2F33] shadow-lg hover:bg-[#4DD4F0]"
+          className="absolute bottom-40 left-1/2 z-30 -translate-x-1/2 rounded-full bg-[#4AC8E8] px-6 py-3 text-sm font-semibold text-[#1A1917] shadow-lg hover:bg-[#9ADFF2]"
           onClick={startPlayback}
         >
           Click to play video
@@ -193,7 +193,7 @@ export default function Hero() {
             }}
             className={`h-2 w-2 rounded-full transition-all duration-300 ${
               index === currentVideo
-                ? "w-8 bg-[#1DBFDD]"
+                ? "w-8 bg-[#4AC8E8]"
                 : "bg-white/50 hover:bg-white/80"
             }`}
             aria-label={`Play video ${index + 1}`}
@@ -222,7 +222,7 @@ export default function Hero() {
           
           <h1 className="font-heading text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl text-white drop-shadow-lg">
             Exceptional Properties.<br />
-            <span className="text-[#4DD4F0]">Exceptional Service.</span>
+            <span className="text-[#9ADFF2]">Exceptional Service.</span>
           </h1>
           <p className="mt-5 text-lg text-white/90 sm:text-xl drop-shadow-md">
             Your local Cuffley &amp; Mayfair estate agent
@@ -231,7 +231,7 @@ export default function Hero() {
             <Button size="lg">Request a Valuation</Button>
             <Link
               href="#featured"
-              className="text-sm font-semibold uppercase tracking-[0.2em] text-white/90 transition-colors hover:text-[#4DD4F0] font-heading drop-shadow-md"
+              className="text-sm font-semibold uppercase tracking-[0.2em] text-white/90 transition-colors hover:text-[#9ADFF2] font-heading drop-shadow-md"
             >
               View Properties
             </Link>
@@ -261,8 +261,8 @@ export default function Hero() {
                     className="h-10 w-10 rounded-full object-cover shrink-0"
                   />
                 ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DBFDD] shrink-0">
-                    <span className="text-sm font-semibold text-[#2C2F33]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4AC8E8] shrink-0">
+                    <span className="text-sm font-semibold text-[#1A1917]">
                       {currentReview.authorName?.[0] || "G"}
                     </span>
                   </div>
@@ -272,7 +272,7 @@ export default function Hero() {
                   <p className="text-xs text-white/70">{currentReview.relativeTime}</p>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                  <div className="flex text-[#1DBFDD]">
+                  <div className="flex text-[#4AC8E8]">
                     {[...Array(5)].map((_, i) => (
                       <svg key={i} className="h-3 w-3 fill-current" viewBox="0 0 20 20">
                         <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
@@ -313,7 +313,7 @@ export default function Hero() {
                           }}
                           className={`h-1.5 rounded-full transition-all ${
                             index === currentReviewIndex 
-                              ? "w-3 bg-[#1DBFDD]" 
+                              ? "w-3 bg-[#4AC8E8]" 
                               : "w-1.5 bg-white/40 hover:bg-white/60"
                           }`}
                           aria-label={`Show review ${index + 1}`}
@@ -333,8 +333,8 @@ export default function Hero() {
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90">
                   <svg viewBox="0 0 40 40" className="h-5 w-5">
-                    <circle cx="20" cy="20" r="18" fill="#1DBFDD"/>
-                    <text x="20" y="26" textAnchor="middle" fill="#2C2F33" fontFamily="serif" fontWeight="700" fontSize="14">G</text>
+                    <circle cx="20" cy="20" r="18" fill="#4AC8E8"/>
+                    <text x="20" y="26" textAnchor="middle" fill="#1A1917" fontFamily="serif" fontWeight="700" fontSize="14">G</text>
                   </svg>
                 </div>
                 <div>
@@ -343,7 +343,7 @@ export default function Hero() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex text-[#1DBFDD]">
+                <div className="flex text-[#4AC8E8]">
                   {[...Array(5)].map((_, i) => (
                     <svg key={i} className="h-3 w-3 fill-current" viewBox="0 0 20 20">
                       <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>

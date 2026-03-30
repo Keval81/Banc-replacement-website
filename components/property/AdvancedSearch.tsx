@@ -187,8 +187,8 @@ function formatPrice(value: number): string {
 
 function SectionTitle({ children, icon: Icon }: { children: React.ReactNode; icon?: React.ComponentType<{ className?: string }> }) {
   return (
-    <h3 className="text-sm font-semibold text-[#2C2F33] mb-3 flex items-center gap-2 font-heading">
-      {Icon && <Icon className="w-4 h-4 text-[#1DBFDD]" />}
+    <h3 className="text-sm font-semibold text-[#1A1917] mb-3 flex items-center gap-2 font-heading">
+      {Icon && <Icon className="w-4 h-4 text-[#4AC8E8]" />}
       {children}
     </h3>
   );
@@ -210,8 +210,8 @@ function FilterChip({
       className={cn(
         "px-3 py-1.5 text-sm rounded-lg border transition-all duration-200 font-medium",
         isActive
-          ? "bg-[#1DBFDD] text-white border-[#1DBFDD] shadow-sm"
-          : "bg-white text-[#6B6E72] border-[#C8C9CB] hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+          ? "bg-[#4AC8E8] text-white border-[#4AC8E8] shadow-sm"
+          : "bg-white text-[#8A8880] border-[#E0DFDC] hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
       )}
     >
       {label}
@@ -316,7 +316,7 @@ export default function AdvancedSearch({
     const isExpanded = expandedSections.includes(id);
     
     return (
-      <div className="border-b border-[#E5E7EB] last:border-b-0">
+      <div className="border-b border-[#E0DFDC] last:border-b-0">
         <button
           type="button"
           onClick={() => toggleSection(id)}
@@ -326,7 +326,7 @@ export default function AdvancedSearch({
           <SectionTitle icon={Icon}>{title}</SectionTitle>
           <ChevronDown 
             className={cn(
-              "w-5 h-5 text-[#6B6E72] transition-transform duration-200",
+              "w-5 h-5 text-[#8A8880] transition-transform duration-200",
               isExpanded && "rotate-180"
             )} 
           />
@@ -351,20 +351,20 @@ export default function AdvancedSearch({
   };
 
   return (
-    <div className={cn("bg-white h-full flex flex-col", isMobile ? "" : "rounded-2xl border border-[#E5E7EB] shadow-sm")}>
+    <div className={cn("bg-white h-full flex flex-col", isMobile ? "" : "rounded-2xl border border-[#E0DFDC] shadow-sm")}>
       {/* Header */}
       <div className={cn(
-        "flex items-center justify-between px-6 py-4 border-b border-[#E5E7EB]",
+        "flex items-center justify-between px-6 py-4 border-b border-[#E0DFDC]",
         isMobile && "sticky top-0 bg-white z-10"
       )}>
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#1DBFDD]/10">
-            <SlidersHorizontal className="w-5 h-5 text-[#1DBFDD]" />
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#4AC8E8]/10">
+            <SlidersHorizontal className="w-5 h-5 text-[#4AC8E8]" />
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#2C2F33] font-heading">Filters</h2>
+            <h2 className="text-lg font-semibold text-[#1A1917] font-heading">Filters</h2>
             {resultCount !== undefined && (
-              <p className="text-sm text-[#6B6E72]">
+              <p className="text-sm text-[#8A8880]">
                 {isLoading ? (
                   <span className="flex items-center gap-1">
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -381,7 +381,7 @@ export default function AdvancedSearch({
           {hasActiveFilters && (
             <button
               onClick={onClearFilters}
-              className="text-sm font-medium text-[#1DBFDD] hover:text-[#0E8CAB] transition-colors"
+              className="text-sm font-medium text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
             >
               Clear all
             </button>
@@ -389,10 +389,10 @@ export default function AdvancedSearch({
           {isMobile && onClose && (
             <button
               onClick={onClose}
-              className="p-2 hover:bg-[#F0F0ED] rounded-full transition-colors"
+              className="p-2 hover:bg-[#F4F3F1] rounded-full transition-colors"
               aria-label="Close filters"
             >
-              <X className="w-5 h-5 text-[#6B6E72]" />
+              <X className="w-5 h-5 text-[#8A8880]" />
             </button>
           )}
         </div>
@@ -401,13 +401,13 @@ export default function AdvancedSearch({
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto px-6">
         {/* Sort Options - Always visible at top */}
-        <div className="py-4 border-b border-[#E5E7EB]">
+        <div className="py-4 border-b border-[#E0DFDC]">
           <SectionTitle>Sort by</SectionTitle>
           <div className="relative">
             <select
               value={filters.sortBy || "newest"}
               onChange={(e) => onFilterChange({ sortBy: e.target.value as SearchFilters["sortBy"] })}
-              className="w-full appearance-none bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-transparent cursor-pointer"
+              className="w-full appearance-none bg-[#F4F3F1] border border-[#E0DFDC] rounded-xl px-4 py-3 text-sm text-[#1A1917] focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-transparent cursor-pointer"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -415,7 +415,7 @@ export default function AdvancedSearch({
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6E72] pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A8880] pointer-events-none" />
           </div>
         </div>
 
@@ -425,20 +425,20 @@ export default function AdvancedSearch({
             {/* Location Input with Autocomplete */}
             <div className="relative">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6E72]" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A8880]" />
                 <Input
                   type="text"
                   placeholder="Enter area or postcode"
                   value={filters.location || ""}
                   onChange={(e) => handleLocationChange(e.target.value)}
-                  className="pl-10 pr-10 bg-[#F9FAFB] border-[#E5E7EB] focus:bg-white"
+                  className="pl-10 pr-10 bg-[#F4F3F1] border-[#E0DFDC] focus:bg-white"
                 />
                 {filters.location && (
                   <button
                     onClick={() => onFilterChange({ location: undefined })}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-[#E5E7EB] rounded-full"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-[#E0DFDC] rounded-full"
                   >
-                    <X className="w-3 h-3 text-[#6B6E72]" />
+                    <X className="w-3 h-3 text-[#8A8880]" />
                   </button>
                 )}
               </div>
@@ -450,15 +450,15 @@ export default function AdvancedSearch({
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="absolute z-20 w-full mt-1 bg-white border border-[#E5E7EB] rounded-xl shadow-lg overflow-hidden"
+                    className="absolute z-20 w-full mt-1 bg-white border border-[#E0DFDC] rounded-xl shadow-lg overflow-hidden"
                   >
                     {locationSuggestions.map((suggestion) => (
                       <button
                         key={suggestion}
                         onClick={() => handleLocationSelect(suggestion)}
-                        className="w-full px-4 py-2.5 text-left text-sm text-[#2C2F33] hover:bg-[#F9FAFB] flex items-center gap-2"
+                        className="w-full px-4 py-2.5 text-left text-sm text-[#1A1917] hover:bg-[#F4F3F1] flex items-center gap-2"
                       >
-                        <MapPin className="w-4 h-4 text-[#1DBFDD]" />
+                        <MapPin className="w-4 h-4 text-[#4AC8E8]" />
                         {suggestion}
                       </button>
                     ))}
@@ -469,7 +469,7 @@ export default function AdvancedSearch({
 
             {/* Radius Selector */}
             <div>
-              <Label className="text-xs text-[#6B6E72] mb-2 block">Search radius</Label>
+              <Label className="text-xs text-[#8A8880] mb-2 block">Search radius</Label>
               <div className="flex flex-wrap gap-2">
                 {RADIUS_OPTIONS.map((option) => (
                   <FilterChip
@@ -492,14 +492,14 @@ export default function AdvancedSearch({
             {/* Price Selectors */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="text-xs text-[#6B6E72] mb-1.5 block">Min Price</Label>
+                <Label className="text-xs text-[#8A8880] mb-1.5 block">Min Price</Label>
                 <div className="relative">
                   <select
                     value={filters.minPrice || ""}
                     onChange={(e) => onFilterChange({ 
                       minPrice: e.target.value ? Number(e.target.value) : undefined 
                     })}
-                    className="w-full appearance-none bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] cursor-pointer"
+                    className="w-full appearance-none bg-[#F4F3F1] border border-[#E0DFDC] rounded-xl px-4 py-3 text-sm text-[#1A1917] focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] cursor-pointer"
                   >
                     <option value="">No min</option>
                     {PRICE_OPTIONS.filter(o => o.value > 0).map((option) => (
@@ -508,18 +508,18 @@ export default function AdvancedSearch({
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6E72] pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A8880] pointer-events-none" />
                 </div>
               </div>
               <div>
-                <Label className="text-xs text-[#6B6E72] mb-1.5 block">Max Price</Label>
+                <Label className="text-xs text-[#8A8880] mb-1.5 block">Max Price</Label>
                 <div className="relative">
                   <select
                     value={filters.maxPrice || ""}
                     onChange={(e) => onFilterChange({ 
                       maxPrice: e.target.value ? Number(e.target.value) : undefined 
                     })}
-                    className="w-full appearance-none bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl px-4 py-3 text-sm text-[#2C2F33] focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] cursor-pointer"
+                    className="w-full appearance-none bg-[#F4F3F1] border border-[#E0DFDC] rounded-xl px-4 py-3 text-sm text-[#1A1917] focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] cursor-pointer"
                   >
                     <option value="">No max</option>
                     {PRICE_OPTIONS.filter(o => o.value > 0).map((option) => (
@@ -528,7 +528,7 @@ export default function AdvancedSearch({
                       </option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B6E72] pointer-events-none" />
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8A8880] pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -536,11 +536,11 @@ export default function AdvancedSearch({
             {/* Price Range Display */}
             {(filters.minPrice !== undefined || filters.maxPrice !== undefined) && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-[#6B6E72]">
+                <span className="text-[#8A8880]">
                   {filters.minPrice !== undefined ? formatPrice(filters.minPrice) : "Any price"}
                 </span>
-                <span className="text-[#C8C9CB]">—</span>
-                <span className="text-[#6B6E72]">
+                <span className="text-[#E0DFDC]">—</span>
+                <span className="text-[#8A8880]">
                   {filters.maxPrice !== undefined ? formatPrice(filters.maxPrice) : "No max"}
                 </span>
               </div>
@@ -552,7 +552,7 @@ export default function AdvancedSearch({
         <Section id="bedrooms" title="Bedrooms" icon={Home}>
           <div className="space-y-4">
             <div>
-              <Label className="text-xs text-[#6B6E72] mb-2 block">Minimum bedrooms</Label>
+              <Label className="text-xs text-[#8A8880] mb-2 block">Minimum bedrooms</Label>
               <div className="flex flex-wrap gap-2">
                 {BEDROOM_OPTIONS.map((option) => (
                   <FilterChip
@@ -567,7 +567,7 @@ export default function AdvancedSearch({
               </div>
             </div>
             <div>
-              <Label className="text-xs text-[#6B6E72] mb-2 block">Maximum bedrooms</Label>
+              <Label className="text-xs text-[#8A8880] mb-2 block">Maximum bedrooms</Label>
               <div className="flex flex-wrap gap-2">
                 {BEDROOM_OPTIONS.filter(o => o.value >= (filters.minBeds || 0)).map((option) => (
                   <FilterChip
@@ -588,7 +588,7 @@ export default function AdvancedSearch({
         <Section id="bathrooms" title="Bathrooms" icon={Building2}>
           <div className="space-y-4">
             <div>
-              <Label className="text-xs text-[#6B6E72] mb-2 block">Minimum bathrooms</Label>
+              <Label className="text-xs text-[#8A8880] mb-2 block">Minimum bathrooms</Label>
               <div className="flex flex-wrap gap-2">
                 {BATHROOM_OPTIONS.map((option) => (
                   <FilterChip
@@ -617,17 +617,17 @@ export default function AdvancedSearch({
                   className={cn(
                     "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border",
                     isSelected 
-                      ? "bg-[#1DBFDD]/5 border-[#1DBFDD]/30" 
-                      : "bg-white border-transparent hover:bg-[#F9FAFB]"
+                      ? "bg-[#4AC8E8]/5 border-[#4AC8E8]/30" 
+                      : "bg-white border-transparent hover:bg-[#F4F3F1]"
                   )}
                 >
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handlePropertyTypeToggle(type.id)}
-                    className="data-[state=checked]:bg-[#1DBFDD] data-[state=checked]:border-[#1DBFDD]"
+                    className="data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8]"
                   />
-                  <Icon className={cn("w-4 h-4", isSelected ? "text-[#1DBFDD]" : "text-[#6B6E72]")} />
-                  <span className={cn("text-sm", isSelected ? "text-[#2C2F33] font-medium" : "text-[#6B6E72]")}>
+                  <Icon className={cn("w-4 h-4", isSelected ? "text-[#4AC8E8]" : "text-[#8A8880]")} />
+                  <span className={cn("text-sm", isSelected ? "text-[#1A1917] font-medium" : "text-[#8A8880]")}>
                     {type.label}
                   </span>
                 </label>
@@ -647,16 +647,16 @@ export default function AdvancedSearch({
                   className={cn(
                     "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border",
                     isSelected 
-                      ? "bg-[#1DBFDD]/5 border-[#1DBFDD]/30" 
-                      : "bg-white border-transparent hover:bg-[#F9FAFB]"
+                      ? "bg-[#4AC8E8]/5 border-[#4AC8E8]/30" 
+                      : "bg-white border-transparent hover:bg-[#F4F3F1]"
                   )}
                 >
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handleTenureToggle(option.id)}
-                    className="data-[state=checked]:bg-[#1DBFDD] data-[state=checked]:border-[#1DBFDD]"
+                    className="data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8]"
                   />
-                  <span className={cn("text-sm", isSelected ? "text-[#2C2F33] font-medium" : "text-[#6B6E72]")}>
+                  <span className={cn("text-sm", isSelected ? "text-[#1A1917] font-medium" : "text-[#8A8880]")}>
                     {option.label}
                   </span>
                 </label>
@@ -676,16 +676,16 @@ export default function AdvancedSearch({
                   className={cn(
                     "flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border",
                     isSelected 
-                      ? "bg-[#1DBFDD]/5 border-[#1DBFDD]/30" 
-                      : "bg-white border-transparent hover:bg-[#F9FAFB]"
+                      ? "bg-[#4AC8E8]/5 border-[#4AC8E8]/30" 
+                      : "bg-white border-transparent hover:bg-[#F4F3F1]"
                   )}
                 >
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handleFeatureToggle(option.key as keyof SearchFilters["features"])}
-                    className="data-[state=checked]:bg-[#1DBFDD] data-[state=checked]:border-[#1DBFDD]"
+                    className="data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8]"
                   />
-                  <span className={cn("text-sm", isSelected ? "text-[#2C2F33] font-medium" : "text-[#6B6E72]")}>
+                  <span className={cn("text-sm", isSelected ? "text-[#1A1917] font-medium" : "text-[#8A8880]")}>
                     {option.label}
                   </span>
                 </label>
@@ -697,10 +697,10 @@ export default function AdvancedSearch({
 
       {/* Mobile Footer Actions */}
       {isMobile && (
-        <div className="sticky bottom-0 bg-white border-t border-[#E5E7EB] p-4 space-y-3">
+        <div className="sticky bottom-0 bg-white border-t border-[#E0DFDC] p-4 space-y-3">
           <Button
             onClick={onClose}
-            className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white h-12 text-base font-semibold"
+            className="w-full bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white h-12 text-base font-semibold"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -716,7 +716,7 @@ export default function AdvancedSearch({
             <Button
               variant="outline"
               onClick={onClearFilters}
-              className="w-full h-12 text-base border-[#E5E7EB]"
+              className="w-full h-12 text-base border-[#E0DFDC]"
             >
               Clear All Filters
             </Button>

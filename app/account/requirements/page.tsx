@@ -14,7 +14,7 @@ export default async function RequirementsPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-[#2C2F33] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-4">
             <AccountSidebar user={session.user} />
@@ -27,7 +27,7 @@ export default async function RequirementsPage() {
                   Update your property search preferences
                 </p>
                 
-                <div className="rounded-xl border border-[#1DBFDD]/30 bg-[#1DBFDD]/5 p-6">
+                <div className="rounded-xl border border-[#4AC8E8]/30 bg-[#4AC8E8]/5 p-6">
                   <p className="text-white/80">
                     Your requirements were saved during registration. 
                     Advanced requirement editing will be available soon.

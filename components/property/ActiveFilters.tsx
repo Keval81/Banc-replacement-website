@@ -116,15 +116,15 @@ function FilterChip({
       onClick={onRemove}
       className={cn(
         "group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full",
-        "bg-[#1DBFDD]/10 text-[#1DBFDD] text-sm font-medium",
-        "border border-[#1DBFDD]/20",
-        "hover:bg-[#1DBFDD]/20 hover:border-[#1DBFDD]/30",
+        "bg-[#4AC8E8]/10 text-[#4AC8E8] text-sm font-medium",
+        "border border-[#4AC8E8]/20",
+        "hover:bg-[#4AC8E8]/20 hover:border-[#4AC8E8]/30",
         "transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:ring-offset-1"
+        "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-1"
       )}
     >
       <span>{label}</span>
-      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-[#1DBFDD]/20 group-hover:bg-[#1DBFDD]/30 transition-colors">
+      <span className="flex items-center justify-center w-4 h-4 rounded-full bg-[#4AC8E8]/20 group-hover:bg-[#4AC8E8]/30 transition-colors">
         <X className="w-3 h-3" />
       </span>
     </motion.button>
@@ -275,18 +275,18 @@ export default function ActiveFilters({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {/* Results Count */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#1DBFDD]/10">
-            <SlidersHorizontal className="w-4 h-4 text-[#1DBFDD]" />
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#4AC8E8]/10">
+            <SlidersHorizontal className="w-4 h-4 text-[#4AC8E8]" />
           </div>
           <div>
             {isLoading ? (
-              <span className="text-[#6B6E72]">Loading properties...</span>
+              <span className="text-[#8A8880]">Loading properties...</span>
             ) : (
               <>
-                <span className="font-semibold text-[#2C2F33]">
+                <span className="font-semibold text-[#1A1917]">
                   {resultCount?.toLocaleString() || 0}
                 </span>
-                <span className="text-[#6B6E72]">
+                <span className="text-[#8A8880]">
                   {" "}
                   propert{resultCount === 1 ? "y" : "ies"} found
                 </span>
@@ -298,7 +298,7 @@ export default function ActiveFilters({
         {/* Active Filters */}
         {hasActiveFilters && (
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-sm text-[#6B6E72] hidden lg:block">Active filters:</span>
+            <span className="text-sm text-[#8A8880] hidden lg:block">Active filters:</span>
             
             <div className="flex items-center gap-2 flex-wrap">
               <AnimatePresence mode="popLayout">
@@ -313,7 +313,7 @@ export default function ActiveFilters({
               </AnimatePresence>
               
               {activeChips.length > 5 && (
-                <span className="text-sm text-[#6B6E72] px-2">
+                <span className="text-sm text-[#8A8880] px-2">
                   +{activeChips.length - 5} more
                 </span>
               )}
@@ -324,7 +324,7 @@ export default function ActiveFilters({
               onClick={onClearAll}
               className={cn(
                 "inline-flex items-center gap-1.5 text-sm font-medium",
-                "text-[#6B6E72] hover:text-[#1DBFDD]",
+                "text-[#8A8880] hover:text-[#4AC8E8]",
                 "transition-colors duration-200",
                 "focus:outline-none focus:underline"
               )}

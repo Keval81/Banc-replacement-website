@@ -67,7 +67,7 @@ export default function Home() {
           __html: JSON.stringify(homepageStructuredData),
         }}
       />
-      <div className="bg-white text-[#111827]">
+      <div className="bg-white text-[#2C2A27]">
         <Header />
         <main>
           <Hero />

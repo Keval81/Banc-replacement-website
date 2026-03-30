@@ -63,7 +63,7 @@ function ViewModeToggle({
   ];
 
   return (
-    <div className="flex items-center gap-1 bg-[#F9FAFB] rounded-xl p-1 border border-[#E5E7EB]">
+    <div className="flex items-center gap-1 bg-[#F4F3F1] rounded-xl p-1 border border-[#E0DFDC]">
       {options.map((option) => {
         const Icon = option.icon;
         const isActive = mode === option.value;
@@ -75,8 +75,8 @@ function ViewModeToggle({
             className={cn(
               "flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
               isActive
-                ? "bg-white text-[#1DBFDD] shadow-sm"
-                : "text-[#6B6E72] hover:text-[#2C2F33]"
+                ? "bg-white text-[#4AC8E8] shadow-sm"
+                : "text-[#8A8880] hover:text-[#1A1917]"
             )}
             aria-pressed={isActive}
             title={option.label}
@@ -143,22 +143,22 @@ export default function PropertySearchBar({
     <>
       <div className={cn("w-full", className)}>
         {/* Main Search Bar */}
-        <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm overflow-hidden">
+        <div className="bg-white rounded-2xl border border-[#E0DFDC] shadow-sm overflow-hidden">
           {/* Primary Search Row */}
           <div className="p-4 lg:p-6">
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Location Search */}
               <form onSubmit={handleLocationSubmit} className="flex-1">
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8880]" />
                   <Input
                     type="text"
                     placeholder="Search by area, town or postcode..."
                     value={locationInput}
                     onChange={(e) => setLocationInput(e.target.value)}
                     className={cn(
-                      "pl-12 pr-12 h-12 text-base bg-[#F9FAFB] border-[#E5E7EB]",
-                      "focus:bg-white focus:border-[#1DBFDD] focus:ring-[#1DBFDD]",
+                      "pl-12 pr-12 h-12 text-base bg-[#F4F3F1] border-[#E0DFDC]",
+                      "focus:bg-white focus:border-[#4AC8E8] focus:ring-[#4AC8E8]",
                       "placeholder:text-[#9CA3AF]"
                     )}
                   />
@@ -169,9 +169,9 @@ export default function PropertySearchBar({
                         setLocationInput("");
                         onFilterChange({ location: undefined });
                       }}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-[#E5E7EB] rounded-full transition-colors"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-[#E0DFDC] rounded-full transition-colors"
                     >
-                      <X className="w-4 h-4 text-[#6B6E72]" />
+                      <X className="w-4 h-4 text-[#8A8880]" />
                     </button>
                   )}
                 </div>
@@ -193,16 +193,16 @@ export default function PropertySearchBar({
                   className={cn(
                     "hidden lg:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl",
                     "text-sm font-medium transition-all duration-200",
-                    "border focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:ring-offset-2",
+                    "border focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-2",
                     showAdvancedDesktop || hasActiveFilters
-                      ? "bg-[#1DBFDD]/10 text-[#1DBFDD] border-[#1DBFDD]/30"
-                      : "bg-white text-[#6B6E72] border-[#E5E7EB] hover:border-[#1DBFDD] hover:text-[#1DBFDD]"
+                      ? "bg-[#4AC8E8]/10 text-[#4AC8E8] border-[#4AC8E8]/30"
+                      : "bg-white text-[#8A8880] border-[#E0DFDC] hover:border-[#4AC8E8] hover:text-[#4AC8E8]"
                   )}
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   Filters
                   {activeFilterCount > 0 && (
-                    <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#1DBFDD] text-white text-xs font-semibold">
+                    <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#4AC8E8] text-white text-xs font-semibold">
                       {activeFilterCount}
                     </span>
                   )}
@@ -213,7 +213,7 @@ export default function PropertySearchBar({
                   onClick={handleLocationSubmit}
                   disabled={isLoading}
                   className={cn(
-                    "h-12 px-6 bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white font-semibold",
+                    "h-12 px-6 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white font-semibold",
                     "transition-all duration-200",
                     "disabled:opacity-70"
                   )}
@@ -232,7 +232,7 @@ export default function PropertySearchBar({
           </div>
 
           {/* Quick Filters Row */}
-          <div className="px-4 lg:px-6 pb-4 lg:pb-6 border-t border-[#E5E7EB] pt-4">
+          <div className="px-4 lg:px-6 pb-4 lg:pb-6 border-t border-[#E0DFDC] pt-4">
             <div className="flex flex-col lg:flex-row lg:items-center gap-4">
               <QuickFilters
                 filters={filters}
@@ -279,7 +279,7 @@ export default function PropertySearchBar({
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="overflow-hidden mt-4"
             >
-              <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm max-h-[600px] overflow-y-auto">
+              <div className="bg-white rounded-2xl border border-[#E0DFDC] shadow-sm max-h-[600px] overflow-y-auto">
                 <AdvancedSearch
                   filters={filters}
                   onFilterChange={onFilterChange}

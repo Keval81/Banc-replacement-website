@@ -52,7 +52,7 @@ export default function Header() {
       initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="sticky top-0 z-50 border-b border-[#C8C9CB]/50 bg-white/90 backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b border-[#E0DFDC]/50 bg-white/90 backdrop-blur-xl"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
@@ -66,7 +66,7 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium text-[#2C2F33] font-heading lg:flex">
+        <nav className="hidden items-center gap-8 text-sm font-medium text-[#1A1917] font-heading lg:flex">
           {navItems.map((item) => {
             const hasDropdown = item.name === "Sales" || item.name === "Lettings";
             return (
@@ -79,8 +79,8 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1 transition-colors hover:text-[#1DBFDD]",
-                    activeDropdown === item.name && "text-[#1DBFDD]"
+                    "flex items-center gap-1 transition-colors hover:text-[#4AC8E8]",
+                    activeDropdown === item.name && "text-[#4AC8E8]"
                   )}
                 >
                   {item.name}
@@ -94,19 +94,19 @@ export default function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-[#C8C9CB] bg-white p-4 shadow-xl"
+                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-[#E0DFDC] bg-white p-4 shadow-xl"
                       >
                         <div className="grid gap-4">
                           {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
                             <Link
                               key={link.title}
                               href={link.href}
-                              className="rounded-lg p-3 transition-colors hover:bg-[#F0F0ED]"
+                              className="rounded-lg p-3 transition-colors hover:bg-[#F4F3F1]"
                             >
-                              <p className="text-sm font-semibold text-[#2C2F33] font-heading">
+                              <p className="text-sm font-semibold text-[#1A1917] font-heading">
                                 {link.title}
                               </p>
-                              <p className="text-xs text-[#6B6E72]">
+                              <p className="text-xs text-[#8A8880]">
                                 {link.description}
                               </p>
                             </Link>
@@ -127,7 +127,7 @@ export default function Header() {
 
         <button
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="inline-flex items-center justify-center rounded-full border border-[#C8C9CB] p-2 text-[#2C2F33] lg:hidden"
+          className="inline-flex items-center justify-center rounded-full border border-[#E0DFDC] p-2 text-[#1A1917] lg:hidden"
           aria-label="Toggle menu"
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -141,14 +141,14 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="border-t border-[#C8C9CB] bg-white lg:hidden"
+            className="border-t border-[#E0DFDC] bg-white lg:hidden"
           >
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-6 py-6">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-[#2C2F33] font-heading"
+                  className="text-base font-medium text-[#1A1917] font-heading"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.name}

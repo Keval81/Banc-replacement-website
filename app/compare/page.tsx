@@ -14,11 +14,11 @@ export default function ComparePage() {
   const { comparedProperties, clearComparison } = useComparison();
 
   return (
-    <div className="bg-white text-[#111827] min-h-screen">
+    <div className="bg-white text-[#2C2A27] min-h-screen">
       <Header />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#2C2F33] to-[#1a1c1f] py-12">
+      <section className="bg-gradient-to-br from-[#1A1917] to-[#1a1c1f] py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -73,7 +73,7 @@ export default function ComparePage() {
                 You can compare up to 3 properties at once.
               </p>
               <Link href="/search">
-                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB]">
+                <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
                   Browse Properties
                 </Button>
               </Link>
@@ -90,7 +90,7 @@ export default function ComparePage() {
                 You have 1 property selected. Add at least one more property to see a comparison.
               </p>
               <Link href="/search">
-                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB]">
+                <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Another Property
                 </Button>
@@ -128,7 +128,7 @@ export default function ComparePage() {
                     </Button>
                   </Link>
                   <Link href="/contact">
-                    <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB]">
+                    <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
                       Contact Us
                     </Button>
                   </Link>

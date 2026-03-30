@@ -120,7 +120,7 @@ export default function SearchFilters({
           {hasActiveFilters && (
             <button
               onClick={onClearFilters}
-              className="text-sm text-[#1DBFDD] hover:underline"
+              className="text-sm text-[#4AC8E8] hover:underline"
             >
               Clear all
             </button>
@@ -168,8 +168,8 @@ export default function SearchFilters({
                 className={cn(
                   "px-3 py-1.5 text-sm rounded-lg border transition-colors",
                   filters.beds === option.value
-                    ? "bg-[#1DBFDD] text-white border-[#1DBFDD]"
-                    : "border-gray-200 hover:border-[#1DBFDD]"
+                    ? "bg-[#4AC8E8] text-white border-[#4AC8E8]"
+                    : "border-gray-200 hover:border-[#4AC8E8]"
                 )}
               >
                 {option.label}
@@ -190,7 +190,7 @@ export default function SearchFilters({
                   key={type.id}
                   className={cn(
                     "flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors",
-                    isSelected ? "bg-[#1DBFDD]/10" : "hover:bg-gray-50"
+                    isSelected ? "bg-[#4AC8E8]/10" : "hover:bg-gray-50"
                   )}
                 >
                   <Checkbox
@@ -217,7 +217,7 @@ export default function SearchFilters({
                   value={option.id}
                   checked={filters.tenure === option.id}
                   onChange={(e) => onFilterChange({ tenure: e.target.value })}
-                  className="text-[#1DBFDD] focus:ring-[#1DBFDD]"
+                  className="text-[#4AC8E8] focus:ring-[#4AC8E8]"
                 />
                 <span className="text-sm">{option.label}</span>
               </label>
@@ -248,7 +248,7 @@ export default function SearchFilters({
           <select
             value={filters.addedSince || ""}
             onChange={(e) => onFilterChange({ addedSince: e.target.value || undefined })}
-            className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#1DBFDD] focus:border-transparent"
+            className="w-full p-2 text-sm border rounded-lg focus:ring-2 focus:ring-[#4AC8E8] focus:border-transparent"
           >
             <option value="">Any time</option>
             {addedSinceOptions.map((option) => (
@@ -276,7 +276,7 @@ export default function SearchFilters({
         <div className="mt-6 pt-4 border-t space-y-2">
           <Button
             onClick={onClose}
-            className="w-full bg-[#1DBFDD] hover:bg-[#0E8CAB]"
+            className="w-full bg-[#4AC8E8] hover:bg-[#1A9BBF]"
           >
             Show Results
           </Button>

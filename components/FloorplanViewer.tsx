@@ -138,7 +138,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
             variant="ghost"
             size="sm"
             onClick={() => setShowMeasureMode(!showMeasureMode)}
-            className={`h-9 px-3 ${showMeasureMode ? 'bg-[#1DBFDD]/10 text-[#1DBFDD]' : ''}`}
+            className={`h-9 px-3 ${showMeasureMode ? 'bg-[#4AC8E8]/10 text-[#4AC8E8]' : ''}`}
           >
             <Ruler className="h-4 w-4 mr-1.5" />
             Measure
@@ -260,7 +260,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
               }}
               className={`relative flex-shrink-0 w-24 h-16 overflow-hidden rounded border-2 transition-all ${
                 index === currentIndex
-                  ? "border-[#1DBFDD]"
+                  ? "border-[#4AC8E8]"
                   : "border-transparent opacity-60 hover:opacity-100"
               }`}
             >

@@ -23,7 +23,7 @@ export default function MilestoneTracker({
         );
       case "in_progress":
         return (
-          <div className="w-8 h-8 bg-[#1DBFDD] rounded-full flex items-center justify-center ring-4 ring-[#1DBFDD]/20">
+          <div className="w-8 h-8 bg-[#4AC8E8] rounded-full flex items-center justify-center ring-4 ring-[#4AC8E8]/20">
             <Clock className="w-4 h-4 text-white" />
           </div>
         );
@@ -36,7 +36,7 @@ export default function MilestoneTracker({
       case "pending":
       default:
         return (
-          <div className="w-8 h-8 bg-[#C8C9CB] rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-[#E0DFDC] rounded-full flex items-center justify-center">
             <Hourglass className="w-4 h-4 text-white" />
           </div>
         );
@@ -63,12 +63,12 @@ export default function MilestoneTracker({
       case "completed":
         return "text-green-600";
       case "in_progress":
-        return "text-[#1DBFDD]";
+        return "text-[#4AC8E8]";
       case "blocked":
         return "text-red-600";
       case "pending":
       default:
-        return "text-[#6B6E72]";
+        return "text-[#8A8880]";
     }
   };
 
@@ -76,19 +76,19 @@ export default function MilestoneTracker({
   const progress = Math.round((completedCount / milestones.length) * 100);
 
   return (
-    <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden">
-      <div className="px-5 py-4 border-b border-[#C8C9CB]">
+    <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+      <div className="px-5 py-4 border-b border-[#E0DFDC]">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-heading font-semibold text-[#2C2F33]">
+          <h3 className="font-heading font-semibold text-[#1A1917]">
             Sale Progress
           </h3>
-          <span className="text-sm font-medium text-[#1DBFDD]">
+          <span className="text-sm font-medium text-[#4AC8E8]">
             {completedCount} of {milestones.length} completed
           </span>
         </div>
-        <div className="w-full h-2 bg-[#F0F0ED] rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-[#F4F3F1] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#1DBFDD] to-[#4DD4F0] rounded-full transition-all duration-500"
+            className="h-full bg-gradient-to-r from-[#4AC8E8] to-[#9ADFF2] rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -104,7 +104,7 @@ export default function MilestoneTracker({
                   className={`absolute left-4 top-8 w-0.5 h-[calc(100%+1rem)] ${
                     milestone.status === "completed"
                       ? "bg-green-500"
-                      : "bg-[#C8C9CB]"
+                      : "bg-[#E0DFDC]"
                   }`}
                 />
               )}
@@ -118,16 +118,16 @@ export default function MilestoneTracker({
                       <p
                         className={`font-medium ${
                           milestone.status === "completed"
-                            ? "text-[#2C2F33]"
+                            ? "text-[#1A1917]"
                             : milestone.status === "in_progress"
-                            ? "text-[#2C2F33]"
-                            : "text-[#6B6E72]"
+                            ? "text-[#1A1917]"
+                            : "text-[#8A8880]"
                         }`}
                       >
                         {milestone.title}
                       </p>
                       {showDetails && milestone.description && (
-                        <p className="text-sm text-[#6B6E72] mt-0.5">
+                        <p className="text-sm text-[#8A8880] mt-0.5">
                           {milestone.description}
                         </p>
                       )}
@@ -137,10 +137,10 @@ export default function MilestoneTracker({
                         milestone.status === "completed"
                           ? "bg-green-100 text-green-700"
                           : milestone.status === "in_progress"
-                          ? "bg-[#1DBFDD]/10 text-[#0E8CAB]"
+                          ? "bg-[#4AC8E8]/10 text-[#1A9BBF]"
                           : milestone.status === "blocked"
                           ? "bg-red-100 text-red-700"
-                          : "bg-[#F0F0ED] text-[#6B6E72]"
+                          : "bg-[#F4F3F1] text-[#8A8880]"
                       }`}
                     >
                       {getStatusLabel(milestone.status)}
@@ -149,7 +149,7 @@ export default function MilestoneTracker({
 
                   {/* Dates */}
                   {(milestone.completedDate || milestone.estimatedDate) && (
-                    <div className="mt-2 text-xs text-[#6B6E72]">
+                    <div className="mt-2 text-xs text-[#8A8880]">
                       {milestone.completedDate ? (
                         <span className="text-green-600">
                           Completed: {new Date(milestone.completedDate).toLocaleDateString("en-GB")}

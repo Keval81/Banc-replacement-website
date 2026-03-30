@@ -92,13 +92,13 @@ export default function BookingForm({
   const isComplete = selectedDate && selectedTime;
 
   return (
-    <div className="bg-white rounded-xl border border-[#C8C9CB] overflow-hidden">
-      <div className="px-5 py-4 border-b border-[#C8C9CB]">
-        <h3 className="font-heading font-semibold text-[#2C2F33]">
+    <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+      <div className="px-5 py-4 border-b border-[#E0DFDC]">
+        <h3 className="font-heading font-semibold text-[#1A1917]">
           Your Details
         </h3>
         {!isComplete && (
-          <p className="text-sm text-[#6B6E72] mt-1">
+          <p className="text-sm text-[#8A8880] mt-1">
             Please select a date and time above
           </p>
         )}
@@ -107,11 +107,11 @@ export default function BookingForm({
       <form onSubmit={handleSubmit} className="p-5 space-y-4">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-[#2C2F33] mb-1.5">
+          <label className="block text-sm font-medium text-[#1A1917] mb-1.5">
             Full Name <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8880]" />
             <input
               type="text"
               name="name"
@@ -121,9 +121,9 @@ export default function BookingForm({
               placeholder="Enter your full name"
               className={`
                 w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-                disabled:bg-[#F0F0ED] disabled:cursor-not-allowed
-                ${errors.name ? "border-red-500" : "border-[#C8C9CB]"}
+                focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+                disabled:bg-[#F4F3F1] disabled:cursor-not-allowed
+                ${errors.name ? "border-red-500" : "border-[#E0DFDC]"}
               `}
             />
           </div>
@@ -134,11 +134,11 @@ export default function BookingForm({
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-[#2C2F33] mb-1.5">
+          <label className="block text-sm font-medium text-[#1A1917] mb-1.5">
             Email Address <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8880]" />
             <input
               type="email"
               name="email"
@@ -148,9 +148,9 @@ export default function BookingForm({
               placeholder="your@email.com"
               className={`
                 w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-                disabled:bg-[#F0F0ED] disabled:cursor-not-allowed
-                ${errors.email ? "border-red-500" : "border-[#C8C9CB]"}
+                focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+                disabled:bg-[#F4F3F1] disabled:cursor-not-allowed
+                ${errors.email ? "border-red-500" : "border-[#E0DFDC]"}
               `}
             />
           </div>
@@ -161,11 +161,11 @@ export default function BookingForm({
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-[#2C2F33] mb-1.5">
+          <label className="block text-sm font-medium text-[#1A1917] mb-1.5">
             Phone Number <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B6E72]" />
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8A8880]" />
             <input
               type="tel"
               name="phone"
@@ -175,9 +175,9 @@ export default function BookingForm({
               placeholder="+44 123 456 7890"
               className={`
                 w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-                disabled:bg-[#F0F0ED] disabled:cursor-not-allowed
-                ${errors.phone ? "border-red-500" : "border-[#C8C9CB]"}
+                focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+                disabled:bg-[#F4F3F1] disabled:cursor-not-allowed
+                ${errors.phone ? "border-red-500" : "border-[#E0DFDC]"}
               `}
             />
           </div>
@@ -188,11 +188,11 @@ export default function BookingForm({
 
         {/* Special Requests */}
         <div>
-          <label className="block text-sm font-medium text-[#2C2F33] mb-1.5">
+          <label className="block text-sm font-medium text-[#1A1917] mb-1.5">
             Special Requests (Optional)
           </label>
           <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-[#6B6E72]" />
+            <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-[#8A8880]" />
             <textarea
               name="specialRequests"
               value={formData.specialRequests}
@@ -201,9 +201,9 @@ export default function BookingForm({
               placeholder="Any special requirements or questions..."
               rows={3}
               className="
-                w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#C8C9CB] bg-white
-                focus:outline-none focus:ring-2 focus:ring-[#1DBFDD] focus:border-[#1DBFDD]
-                disabled:bg-[#F0F0ED] disabled:cursor-not-allowed resize-none
+                w-full pl-10 pr-4 py-2.5 rounded-lg border border-[#E0DFDC] bg-white
+                focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]
+                disabled:bg-[#F4F3F1] disabled:cursor-not-allowed resize-none
               "
             />
           </div>
@@ -222,11 +222,11 @@ export default function BookingForm({
                 }
               }}
               disabled={!isComplete || isSubmitting}
-              className="mt-1 w-4 h-4 rounded border-[#C8C9CB] text-[#1DBFDD] focus:ring-[#1DBFDD]"
+              className="mt-1 w-4 h-4 rounded border-[#E0DFDC] text-[#4AC8E8] focus:ring-[#4AC8E8]"
             />
-            <span className="text-sm text-[#6B6E72]">
+            <span className="text-sm text-[#8A8880]">
               I agree to Banc Property Group&apos;s{" "}
-              <a href="/privacy" className="text-[#1DBFDD] hover:underline">
+              <a href="/privacy" className="text-[#4AC8E8] hover:underline">
                 Privacy Policy
               </a>{" "}
               and consent to being contacted regarding this viewing request.
@@ -239,9 +239,9 @@ export default function BookingForm({
 
         {/* Selected Date/Time Summary */}
         {isComplete && (
-          <div className="p-4 bg-[#F0F0ED] rounded-lg">
-            <p className="text-sm text-[#6B6E72]">Selected Viewing:</p>
-            <p className="font-medium text-[#2C2F33]">
+          <div className="p-4 bg-[#F4F3F1] rounded-lg">
+            <p className="text-sm text-[#8A8880]">Selected Viewing:</p>
+            <p className="font-medium text-[#1A1917]">
               {selectedDate.toLocaleDateString("en-GB", {
                 weekday: "long",
                 day: "numeric",
@@ -261,8 +261,8 @@ export default function BookingForm({
             flex items-center justify-center gap-2
             ${
               isComplete && !isSubmitting
-                ? "bg-[#1DBFDD] text-white hover:bg-[#0E8CAB]"
-                : "bg-[#C8C9CB] text-white cursor-not-allowed"
+                ? "bg-[#4AC8E8] text-white hover:bg-[#1A9BBF]"
+                : "bg-[#E0DFDC] text-white cursor-not-allowed"
             }
           `}
         >
@@ -280,7 +280,7 @@ export default function BookingForm({
         </button>
 
         {!isComplete && (
-          <p className="text-center text-sm text-[#6B6E72]">
+          <p className="text-center text-sm text-[#8A8880]">
             Please select a date and time to continue
           </p>
         )}

@@ -124,30 +124,30 @@ const insuranceProducts = [
 
 export default function LandlordsGuidePage() {
   return (
-    <div className="bg-white text-[#2C2F33] min-h-screen">
+    <div className="bg-white text-[#1A1917] min-h-screen">
       <Header />
 
       {/* Hero Section - Premium Dark with Gradient */}
-      <section className="relative bg-[#2C2F33] py-28 lg:py-36 overflow-hidden">
+      <section className="relative bg-[#1A1917] py-28 lg:py-36 overflow-hidden">
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, #1DBFDD 1px, transparent 0)`,
+              backgroundImage: `radial-gradient(circle at 1px 1px, #4AC8E8 1px, transparent 0)`,
               backgroundSize: "40px 40px",
             }}
           />
         </div>
 
         {/* Cyan accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#1DBFDD] to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#4AC8E8] to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#1DBFDD]/10 border border-[#1DBFDD]/20 mb-6">
-              <Award className="h-4 w-4 text-[#1DBFDD]" />
-              <span className="text-sm font-medium text-[#1DBFDD]">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
+              <Award className="h-4 w-4 text-[#4AC8E8]" />
+              <span className="text-sm font-medium text-[#4AC8E8]">
                 Property Guild Approved
               </span>
             </div>
@@ -163,7 +163,7 @@ export default function LandlordsGuidePage() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#1DBFDD]/25">
+              <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#4AC8E8]/25">
                 Book Free Valuation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -178,7 +178,7 @@ export default function LandlordsGuidePage() {
         </div>
 
         {/* Decorative element */}
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#1DBFDD]/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#4AC8E8]/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
       </section>
 
       {/* Introduction & Coverage Areas */}
@@ -187,14 +187,14 @@ export default function LandlordsGuidePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             {/* Left Column - Main Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
                 Introduction
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Expert Letting Services
               </h2>
 
-              <div className="mt-8 space-y-6 text-[#6B6E72] text-lg leading-relaxed">
+              <div className="mt-8 space-y-6 text-[#8A8880] text-lg leading-relaxed">
                 <p>
                   We understand that becoming a landlord can be a daunting
                   experience. It is easy to see why, when you consider there are
@@ -211,22 +211,22 @@ export default function LandlordsGuidePage() {
 
               {/* Accreditation Badges */}
               <div className="mt-10 flex flex-wrap gap-4">
-                <div className="flex items-center gap-3 px-5 py-3 bg-[#F0F0ED] rounded-xl">
-                  <BadgeCheck className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="flex items-center gap-3 px-5 py-3 bg-[#F4F3F1] rounded-xl">
+                  <BadgeCheck className="h-6 w-6 text-[#4AC8E8]" />
                   <div>
-                    <p className="text-sm font-semibold text-[#2C2F33]">
+                    <p className="text-sm font-semibold text-[#1A1917]">
                       Property Guild
                     </p>
-                    <p className="text-xs text-[#6B6E72]">Approved Agent</p>
+                    <p className="text-xs text-[#8A8880]">Approved Agent</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 px-5 py-3 bg-[#F0F0ED] rounded-xl">
-                  <Lock className="h-6 w-6 text-[#1DBFDD]" />
+                <div className="flex items-center gap-3 px-5 py-3 bg-[#F4F3F1] rounded-xl">
+                  <Lock className="h-6 w-6 text-[#4AC8E8]" />
                   <div>
-                    <p className="text-sm font-semibold text-[#2C2F33]">
+                    <p className="text-sm font-semibold text-[#1A1917]">
                       CMP Protected
                     </p>
-                    <p className="text-xs text-[#6B6E72]">Client Money</p>
+                    <p className="text-xs text-[#8A8880]">Client Money</p>
                   </div>
                 </div>
               </div>
@@ -234,9 +234,9 @@ export default function LandlordsGuidePage() {
 
             {/* Right Column - Coverage Card */}
             <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-br from-[#1DBFDD]/10 to-transparent rounded-3xl" />
-              <div className="relative bg-[#F0F0ED] rounded-2xl p-8 lg:p-10">
-                <div className="h-14 w-14 rounded-xl bg-[#1DBFDD] flex items-center justify-center mb-6">
+              <div className="absolute -inset-4 bg-gradient-to-br from-[#4AC8E8]/10 to-transparent rounded-3xl" />
+              <div className="relative bg-[#F4F3F1] rounded-2xl p-8 lg:p-10">
+                <div className="h-14 w-14 rounded-xl bg-[#4AC8E8] flex items-center justify-center mb-6">
                   <Home className="h-7 w-7 text-white" />
                 </div>
 
@@ -244,7 +244,7 @@ export default function LandlordsGuidePage() {
                   Covering Your Area
                 </h3>
 
-                <p className="text-[#6B6E72] leading-relaxed">
+                <p className="text-[#8A8880] leading-relaxed">
                   From Apartments, Victorian cottages to Country estates, let our
                   lettings department look after your properties of every type,
                   size and style there is.
@@ -255,7 +255,7 @@ export default function LandlordsGuidePage() {
                     (area) => (
                       <span
                         key={area}
-                        className="inline-flex items-center px-4 py-2 rounded-full bg-white text-[#2C2F33] text-sm font-medium shadow-sm"
+                        className="inline-flex items-center px-4 py-2 rounded-full bg-white text-[#1A1917] text-sm font-medium shadow-sm"
                       >
                         {area}
                       </span>
@@ -263,7 +263,7 @@ export default function LandlordsGuidePage() {
                   )}
                 </div>
 
-                <p className="mt-6 text-[#6B6E72] leading-relaxed">
+                <p className="mt-6 text-[#8A8880] leading-relaxed">
                   We handle an impressive portfolio of rented properties
                   throughout these areas and surrounding locations. Whether you
                   are thinking of letting your property for the first time, or
@@ -279,25 +279,25 @@ export default function LandlordsGuidePage() {
 
       {/* Premium Statistics Banner - 30% Highlight */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[#2C2F33]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1DBFDD]/10 via-transparent to-[#1DBFDD]/10" />
+        <div className="absolute inset-0 bg-[#1A1917]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#4AC8E8]/10 via-transparent to-[#4AC8E8]/10" />
 
         {/* Decorative circles */}
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#1DBFDD]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#1DBFDD]/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             {/* Stat Display */}
             <div className="flex items-center gap-8">
               <div className="relative">
-                <div className="absolute -inset-4 bg-[#1DBFDD]/20 rounded-2xl blur-xl" />
-                <div className="relative flex items-center justify-center h-32 w-32 rounded-2xl bg-gradient-to-br from-[#1DBFDD] to-[#0E8CAB] shadow-2xl shadow-[#1DBFDD]/30">
+                <div className="absolute -inset-4 bg-[#4AC8E8]/20 rounded-2xl blur-xl" />
+                <div className="relative flex items-center justify-center h-32 w-32 rounded-2xl bg-gradient-to-br from-[#4AC8E8] to-[#1A9BBF] shadow-2xl shadow-[#4AC8E8]/30">
                   <span className="text-5xl font-bold text-white">30%</span>
                 </div>
               </div>
               <div>
-                <p className="text-sm uppercase tracking-widest text-[#1DBFDD] font-medium">
+                <p className="text-sm uppercase tracking-widest text-[#4AC8E8] font-medium">
                   Strict Referencing
                 </p>
                 <p className="text-3xl font-semibold text-white mt-1">
@@ -335,18 +335,18 @@ export default function LandlordsGuidePage() {
                   className="w-full h-full object-cover"
                 />
                 {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#2C2F33]/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1A1917]/60 via-transparent to-transparent" />
               </div>
 
               {/* Floating Stats Card */}
               <div className="absolute -bottom-6 -right-6 lg:right-8 bg-white rounded-xl shadow-2xl p-6 max-w-xs">
                 <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-full bg-[#1DBFDD]/10 flex items-center justify-center">
-                    <CheckCircle className="h-7 w-7 text-[#1DBFDD]" />
+                  <div className="h-14 w-14 rounded-full bg-[#4AC8E8]/10 flex items-center justify-center">
+                    <CheckCircle className="h-7 w-7 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-[#2C2F33]">30%</p>
-                    <p className="text-sm text-[#6B6E72]">
+                    <p className="text-2xl font-bold text-[#1A1917]">30%</p>
+                    <p className="text-sm text-[#8A8880]">
                       Pass strict referencing
                     </p>
                   </div>
@@ -356,14 +356,14 @@ export default function LandlordsGuidePage() {
 
             {/* Content Side */}
             <div className="order-1 lg:order-2">
-              <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
                 Our Priority
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Quality Tenants
               </h2>
 
-              <div className="mt-8 space-y-6 text-[#6B6E72] text-lg leading-relaxed">
+              <div className="mt-8 space-y-6 text-[#8A8880] text-lg leading-relaxed">
                 <p>
                   Our number 1 priority is quality tenants. We&apos;re
                   particularly fussy when it comes to finding quality tenants
@@ -371,7 +371,7 @@ export default function LandlordsGuidePage() {
                 </p>
                 <p>
                   In fact only about{" "}
-                  <span className="text-[#1DBFDD] font-bold">
+                  <span className="text-[#4AC8E8] font-bold">
                     30% of our applicants
                   </span>{" "}
                   actually make it through our strict referencing procedure
@@ -393,23 +393,23 @@ export default function LandlordsGuidePage() {
       </section>
 
       {/* Marketing Section */}
-      <section className="py-24 bg-[#F0F0ED]">
+      <section className="py-24 bg-[#F4F3F1]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
                 Marketing
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 It&apos;s All About The Internet!
               </h2>
 
-              <p className="mt-8 text-[#6B6E72] text-lg leading-relaxed">
+              <p className="mt-8 text-[#8A8880] text-lg leading-relaxed">
                 These days people looking for rental property rely on the
                 internet, not local papers. Which is why we&apos;ll heavily
                 promote your property on our own website,{" "}
-                <strong className="text-[#2C2F33]">bancproperty.com</strong>,
+                <strong className="text-[#1A1917]">bancproperty.com</strong>,
                 and all of the most important property websites along with
                 popular Social Media platforms.
               </p>
@@ -422,9 +422,9 @@ export default function LandlordsGuidePage() {
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="inline-flex items-center px-5 py-3 rounded-full bg-white text-[#2C2F33] text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
+                    className="inline-flex items-center px-5 py-3 rounded-full bg-white text-[#1A1917] text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <item.icon className="h-4 w-4 mr-2 text-[#1DBFDD]" />
+                    <item.icon className="h-4 w-4 mr-2 text-[#4AC8E8]" />
                     {item.label}
                   </div>
                 ))}
@@ -433,8 +433,8 @@ export default function LandlordsGuidePage() {
 
             {/* Right Card - Dark Theme */}
             <div className="relative">
-              <div className="bg-[#2C2F33] rounded-2xl p-10 shadow-xl">
-                <div className="h-14 w-14 rounded-xl bg-[#1DBFDD] flex items-center justify-center mb-6">
+              <div className="bg-[#1A1917] rounded-2xl p-10 shadow-xl">
+                <div className="h-14 w-14 rounded-xl bg-[#4AC8E8] flex items-center justify-center mb-6">
                   <Globe className="h-7 w-7 text-white" />
                 </div>
 
@@ -451,7 +451,7 @@ export default function LandlordsGuidePage() {
                     "Professional photography and descriptions",
                   ].map((item, index) => (
                     <li key={index} className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-[#1DBFDD] mr-3 mt-0.5 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-[#4AC8E8] mr-3 mt-0.5 flex-shrink-0" />
                       <span className="text-white/70">{item}</span>
                     </li>
                   ))}
@@ -463,17 +463,17 @@ export default function LandlordsGuidePage() {
       </section>
 
       {/* Property Management - Premium Dark Section */}
-      <section className="relative py-24 bg-[#2C2F33] overflow-hidden">
+      <section className="relative py-24 bg-[#1A1917] overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#1DBFDD]/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#1DBFDD]/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4AC8E8]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           {/* Header */}
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+            <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
               Full Management
             </p>
             <h2 className="mt-4 text-4xl font-semibold text-white sm:text-5xl tracking-tight">
@@ -507,10 +507,10 @@ export default function LandlordsGuidePage() {
             ].map((item, index) => (
               <div
                 key={index}
-                className="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-[#1DBFDD]/50 transition-all duration-300 hover:bg-white/10"
+                className="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-[#4AC8E8]/50 transition-all duration-300 hover:bg-white/10"
               >
-                <div className="h-14 w-14 rounded-xl bg-[#1DBFDD]/20 flex items-center justify-center mb-6 group-hover:bg-[#1DBFDD]/30 transition-colors">
-                  <item.icon className="h-7 w-7 text-[#1DBFDD]" />
+                <div className="h-14 w-14 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center mb-6 group-hover:bg-[#4AC8E8]/30 transition-colors">
+                  <item.icon className="h-7 w-7 text-[#4AC8E8]" />
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
                   {item.title}
@@ -521,9 +521,9 @@ export default function LandlordsGuidePage() {
           </div>
 
           {/* Dedicated Manager Highlight */}
-          <div className="mt-12 bg-gradient-to-r from-[#1DBFDD]/20 to-[#1DBFDD]/5 rounded-2xl p-10 border border-[#1DBFDD]/20">
+          <div className="mt-12 bg-gradient-to-r from-[#4AC8E8]/20 to-[#4AC8E8]/5 rounded-2xl p-10 border border-[#4AC8E8]/20">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
-              <div className="h-20 w-20 rounded-2xl bg-[#1DBFDD] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#1DBFDD]/25">
+              <div className="h-20 w-20 rounded-2xl bg-[#4AC8E8] flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#4AC8E8]/25">
                 <Users className="h-10 w-10 text-white" />
               </div>
               <div>
@@ -539,7 +539,7 @@ export default function LandlordsGuidePage() {
                   point of contact, rather than having to battle with the
                   faceless call centres used by many agencies today.
                 </p>
-                <div className="mt-4 flex items-center gap-2 text-[#1DBFDD]">
+                <div className="mt-4 flex items-center gap-2 text-[#4AC8E8]">
                   <Phone className="h-5 w-5" />
                   <span className="font-medium">Direct line to your manager</span>
                 </div>
@@ -554,13 +554,13 @@ export default function LandlordsGuidePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Header */}
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+            <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
               Why Us
             </p>
             <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
               Why Choose Banc
             </h2>
-            <p className="mt-6 text-[#6B6E72] max-w-2xl mx-auto text-lg">
+            <p className="mt-6 text-[#8A8880] max-w-2xl mx-auto text-lg">
               We pride ourselves on delivering exceptional service to landlords
               across our coverage areas
             </p>
@@ -571,20 +571,20 @@ export default function LandlordsGuidePage() {
             {whyChooseBanc.map((item, index) => (
               <div
                 key={index}
-                className="group relative bg-white rounded-2xl p-6 border border-[#C8C9CB]/50 hover:border-[#1DBFDD] transition-all duration-300 hover:shadow-xl hover:shadow-[#1DBFDD]/5 hover:-translate-y-1"
+                className="group relative bg-white rounded-2xl p-6 border border-[#E0DFDC]/50 hover:border-[#4AC8E8] transition-all duration-300 hover:shadow-xl hover:shadow-[#4AC8E8]/5 hover:-translate-y-1"
               >
                 {/* Cyan accent on hover */}
-                <div className="absolute inset-x-0 top-0 h-1 bg-[#1DBFDD] rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-x-0 top-0 h-1 bg-[#4AC8E8] rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
                 <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1DBFDD]/20 transition-colors">
-                    <item.icon className="h-6 w-6 text-[#1DBFDD]" />
+                  <div className="h-12 w-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#4AC8E8]/20 transition-colors">
+                    <item.icon className="h-6 w-6 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2F33] text-lg">
+                    <h3 className="font-semibold text-[#1A1917] text-lg">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-[#6B6E72]">{item.desc}</p>
+                    <p className="mt-1 text-[#8A8880]">{item.desc}</p>
                   </div>
                 </div>
               </div>
@@ -594,26 +594,26 @@ export default function LandlordsGuidePage() {
       </section>
 
       {/* Insurance Products - Clean Premium Section */}
-      <section className="py-24 bg-[#F0F0ED]">
+      <section className="py-24 bg-[#F4F3F1]">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-16 lg:grid-cols-2 items-center">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-[#1DBFDD] font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-[#4AC8E8] font-semibold">
                 Protection
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Insurance Products Available
               </h2>
 
-              <p className="mt-8 text-[#6B6E72] text-lg leading-relaxed">
+              <p className="mt-8 text-[#8A8880] text-lg leading-relaxed">
                 Protect your investment with our range of landlord insurance
                 products. We offer comprehensive coverage options to give you
                 complete peace of mind.
               </p>
 
               <div className="mt-10">
-                <Button className="bg-[#1DBFDD] hover:bg-[#0E8CAB] text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#1DBFDD]/25">
+                <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#4AC8E8]/25">
                   Enquire About Insurance
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -621,16 +621,16 @@ export default function LandlordsGuidePage() {
 
               {/* Trust indicators */}
               <div className="mt-10 flex items-center gap-6">
-                <div className="flex items-center gap-2 text-[#6B6E72]">
-                  <Shield className="h-5 w-5 text-[#1DBFDD]" />
+                <div className="flex items-center gap-2 text-[#8A8880]">
+                  <Shield className="h-5 w-5 text-[#4AC8E8]" />
                   <span className="text-sm">Fully Protected</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#6B6E72]">
-                  <CheckCircle className="h-5 w-5 text-[#1DBFDD]" />
+                <div className="flex items-center gap-2 text-[#8A8880]">
+                  <CheckCircle className="h-5 w-5 text-[#4AC8E8]" />
                   <span className="text-sm">Quick Claims</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#6B6E72]">
-                  <Award className="h-5 w-5 text-[#1DBFDD]" />
+                <div className="flex items-center gap-2 text-[#8A8880]">
+                  <Award className="h-5 w-5 text-[#4AC8E8]" />
                   <span className="text-sm">A-Rated Providers</span>
                 </div>
               </div>
@@ -641,16 +641,16 @@ export default function LandlordsGuidePage() {
               {insuranceProducts.map((product, index) => (
                 <div
                   key={index}
-                  className="group flex items-center gap-5 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#1DBFDD]/20"
+                  className="group flex items-center gap-5 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent hover:border-[#4AC8E8]/20"
                 >
-                  <div className="h-14 w-14 rounded-xl bg-[#1DBFDD]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#1DBFDD]/20 transition-colors">
-                    <product.icon className="h-7 w-7 text-[#1DBFDD]" />
+                  <div className="h-14 w-14 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0 group-hover:bg-[#4AC8E8]/20 transition-colors">
+                    <product.icon className="h-7 w-7 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2C2F33] text-lg">
+                    <h3 className="font-semibold text-[#1A1917] text-lg">
                       {product.title}
                     </h3>
-                    <p className="text-[#6B6E72] text-sm mt-0.5">
+                    <p className="text-[#8A8880] text-sm mt-0.5">
                       {product.desc}
                     </p>
                   </div>
@@ -663,7 +663,7 @@ export default function LandlordsGuidePage() {
 
       {/* CTA Section - Premium Gradient */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1DBFDD] to-[#0E8CAB]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#4AC8E8] to-[#1A9BBF]" />
 
         {/* Decorative elements */}
         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -679,7 +679,7 @@ export default function LandlordsGuidePage() {
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button className="bg-white text-[#1DBFDD] hover:bg-white/90 px-10 py-7 text-base font-semibold transition-all duration-300 hover:shadow-xl">
+            <Button className="bg-white text-[#4AC8E8] hover:bg-white/90 px-10 py-7 text-base font-semibold transition-all duration-300 hover:shadow-xl">
               Book Free Valuation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

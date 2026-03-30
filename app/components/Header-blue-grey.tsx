@@ -51,7 +51,7 @@ export default function Header() {
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 border-b border-white/10 bg-[#6B7280] backdrop-blur-xl"
+      className="sticky top-0 z-50 border-b border-white/10 bg-[#8A8880] backdrop-blur-xl"
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <Link href="/" aria-label="Banc Property Group" className="flex items-center">
@@ -78,8 +78,8 @@ export default function Header() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-1 transition-colors hover:text-[#1DBFDD]",
-                    activeDropdown === item.name && "text-[#1DBFDD]"
+                    "flex items-center gap-1 transition-colors hover:text-[#4AC8E8]",
+                    activeDropdown === item.name && "text-[#4AC8E8]"
                   )}
                 >
                   {item.name}
@@ -93,14 +93,14 @@ export default function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#6B7280] p-4 shadow-xl"
+                        className="absolute left-0 mt-4 w-72 rounded-2xl border border-white/20 bg-[#8A8880] p-4 shadow-xl"
                       >
                         <div className="grid gap-4">
                           {dropdowns[item.name as keyof typeof dropdowns].map((link) => (
                             <Link
                               key={link.title}
                               href={link.href}
-                              className="rounded-lg p-3 transition-colors hover:bg-[#4B5563]"
+                              className="rounded-lg p-3 transition-colors hover:bg-[#8A8880]"
                             >
                               <p className="text-sm font-semibold text-white font-heading">
                                 {link.title}
@@ -121,7 +121,7 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Button className="bg-white text-[#6B7280] hover:bg-[#1DBFDD] hover:text-white">Request Valuation</Button>
+          <Button className="bg-white text-[#8A8880] hover:bg-[#4AC8E8] hover:text-white">Request Valuation</Button>
         </div>
 
         <button
@@ -140,20 +140,20 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-t border-white/10 bg-[#6B7280] lg:hidden"
+            className="border-t border-white/10 bg-[#8A8880] lg:hidden"
           >
             <nav className="flex flex-col gap-4 p-6">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-base font-medium text-white hover:text-[#1DBFDD]"
+                  className="text-base font-medium text-white hover:text-[#4AC8E8]"
                   onClick={() => setMobileOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <Button className="mt-4 w-full bg-white text-[#6B7280] hover:bg-[#1DBFDD] hover:text-white">
+              <Button className="mt-4 w-full bg-white text-[#8A8880] hover:bg-[#4AC8E8] hover:text-white">
                 Request Valuation
               </Button>
             </nav>

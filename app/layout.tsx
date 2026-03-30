@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Source_Serif_4, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { CookieProvider } from "@/hooks/useCookies";
 import { ComparisonProvider } from "@/app/hooks/usePropertyComparison";
@@ -14,6 +15,20 @@ import PropertyChatbot from "@/components/ai/PropertyChatbot";
 import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 import SoldBanner from "@/components/social/SoldBanner";
+
+const sourceSerif4 = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Banc Property Services | Premium Estate Agency",
@@ -45,11 +60,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#F0F0ED" },
-    { media: "(prefers-color-scheme: dark)", color: "#0F0F0F" },
-  ],
-  colorScheme: "light dark",
+  themeColor: "#F4F3F1",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -58,15 +70,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
-        />
-      </head>
+    <html lang="en-GB" className={`${sourceSerif4.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
         <ThemeProvider
           defaultTheme="system"

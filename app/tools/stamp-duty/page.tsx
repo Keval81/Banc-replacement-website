@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function StampDutyPage() {
   return (
-    <div className="min-h-screen bg-[#2C2F33]">
+    <div className="min-h-screen bg-[#1A1917]">
       <Header />
 
       <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
@@ -21,7 +21,7 @@ export default function StampDutyPage() {
           {/* Back Link */}
           <Link
             href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-[#1DBFDD]"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-[#4AC8E8]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
@@ -48,7 +48,7 @@ export default function StampDutyPage() {
           {/* Info Section */}
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <Info className="h-5 w-5 text-[#1DBFDD]" />
+              <Info className="h-5 w-5 text-[#4AC8E8]" />
               About Stamp Duty
             </h2>
             <div className="space-y-4 text-sm leading-relaxed text-white/70">
