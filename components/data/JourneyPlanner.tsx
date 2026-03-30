@@ -100,16 +100,16 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white">
             <Navigation className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Journey Planner</h3>
-            <p className="text-sm text-gray-600">Plan your commute</p>
+            <h3 className="font-semibold text-banc-dark">Journey Planner</h3>
+            <p className="text-sm text-banc-grey">Plan your commute</p>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
         <div className="space-y-3 mb-4">
           {!fromPostcode && (
             <div className="flex items-center gap-3">
-              <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0" />
+              <MapPin className="h-5 w-5 text-banc-grey flex-shrink-0" />
               <Input
                 placeholder="From postcode..."
                 value={from}
@@ -129,7 +129,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
             </div>
           )}
           <div className="flex items-center gap-3">
-            <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0" />
+            <MapPin className="h-5 w-5 text-banc-grey flex-shrink-0" />
             <Input
               placeholder="To postcode..."
               value={to}
@@ -150,14 +150,14 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
 
         {/* Quick Destinations */}
         <div className="mb-4">
-          <p className="text-sm text-gray-500 mb-2">Quick destinations:</p>
+          <p className="text-sm text-banc-grey mb-2">Quick destinations:</p>
           <div className="flex flex-wrap gap-2">
             {COMMON_DESTINATIONS.map((dest) => (
               <button
                 key={dest.postcode}
                 onClick={() => planToDestination(dest.postcode)}
                 disabled={loading || !from}
-                className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 transition-colors"
+                className="text-xs px-3 py-1.5 bg-banc-grey-pale hover:bg-banc-grey/20 rounded-full text-banc-dark-mid transition-colors"
               >
                 {dest.name}
               </button>
@@ -178,20 +178,20 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-t border-gray-200 pt-4"
+            className="border-t border-banc-grey/20 pt-4"
           >
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-3xl font-bold text-gray-900">{journey.duration} min</p>
-                <p className="text-sm text-gray-500">
+                <p className="text-3xl font-bold text-banc-dark">{journey.duration} min</p>
+                <p className="text-sm text-banc-grey">
                   {journey.modes.filter((m, i, a) => a.indexOf(m) === i).join(' → ')}
                 </p>
               </div>
               {journey.fare && (
                 <div className="text-right">
-                  <p className="text-xl font-bold text-gray-900">{journey.fare.total}</p>
+                  <p className="text-xl font-bold text-banc-dark">{journey.fare.total}</p>
                   {journey.fare.zones && (
-                    <p className="text-sm text-gray-500">{journey.fare.zones}</p>
+                    <p className="text-sm text-banc-grey">{journey.fare.zones}</p>
                   )}
                 </div>
               )}
@@ -201,12 +201,12 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
             <div className="space-y-3">
               {journey.steps.map((step, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-banc-grey-pale rounded-full flex items-center justify-center flex-shrink-0">
                     {getModeIcon(step.mode)}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-gray-900">{step.instruction}</p>
-                    <p className="text-xs text-gray-500">{step.duration} min</p>
+                    <p className="text-sm text-banc-dark">{step.instruction}</p>
+                    <p className="text-xs text-banc-grey">{step.duration} min</p>
                   </div>
                 </div>
               ))}

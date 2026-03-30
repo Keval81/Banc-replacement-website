@@ -44,7 +44,7 @@ const LINE_COLORS: Record<string, string> = {
   'Circle': 'bg-yellow-500',
   'District': 'bg-green-600',
   'Hammersmith \& City': 'bg-pink-400',
-  'Jubilee': 'bg-gray-500',
+  'Jubilee': 'bg-banc-grey-pale0',
   'Metropolitan': 'bg-purple-600',
   'Northern': 'bg-black',
   'Piccadilly': 'bg-blue-800',
@@ -125,23 +125,23 @@ export function NearestStations({
   }, [destination, postcode]);
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-cyan-500 flex items-center justify-center text-white">
             <Train className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Transport Links</h3>
-            <p className="text-sm text-gray-600">Nearby stations & travel times</p>
+            <h3 className="font-semibold text-banc-dark">Transport Links</h3>
+            <p className="text-sm text-banc-grey">Nearby stations & travel times</p>
           </div>
         </div>
       </div>
 
       {/* Search */}
       {!initialPostcode && (
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-banc-grey/20">
           <div className="flex gap-2">
             <input
               type="text"
@@ -186,7 +186,7 @@ export function NearestStations({
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-banc-grey" />
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-red-500">
@@ -194,8 +194,8 @@ export function NearestStations({
             {error}
           </div>
         ) : stations.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <Train className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+          <div className="text-center py-12 text-banc-grey">
+            <Train className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
             <p>No stations found</p>
             {!initialPostcode && <p className="text-sm mt-1">Enter a postcode to search</p>}
           </div>
@@ -207,18 +207,18 @@ export function NearestStations({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="px-5 py-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="px-5 py-4 hover:bg-banc-grey-pale transition-colors cursor-pointer"
                 onClick={() => setExpandedStation(expandedStation === station.id ? null : station.id)}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="text-gray-600">
+                      <div className="text-banc-grey">
                         {TYPE_ICONS[station.type] || <Train className="h-4 w-4" />}
                       </div>
-                      <h4 className="font-medium text-gray-900">{station.name}</h4>
+                      <h4 className="font-medium text-banc-dark">{station.name}</h4>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-gray-600">
+                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-banc-grey">
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" />
                         {station.distance} miles
@@ -240,14 +240,14 @@ export function NearestStations({
                           <span
                             key={line}
                             className={`text-xs px-2 py-0.5 rounded text-white ${
-                              LINE_COLORS[line] || 'bg-gray-500'
+                              LINE_COLORS[line] || 'bg-banc-grey-pale0'
                             }`}
                           >
                             {line}
                           </span>
                         ))}
                         {station.lines.length > 4 && (
-                          <span className="text-xs text-gray-500 px-1">
+                          <span className="text-xs text-banc-grey px-1">
                             +{station.lines.length - 4} more
                           </span>
                         )}
@@ -262,18 +262,18 @@ export function NearestStations({
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="mt-3 pt-3 border-t border-gray-200"
+                    className="mt-3 pt-3 border-t border-banc-grey/20"
                   >
                     <div className="space-y-2">
                       {station.lines.length > 0 && (
                         <div>
-                          <p className="text-xs text-gray-500 mb-1">All Lines</p>
+                          <p className="text-xs text-banc-grey mb-1">All Lines</p>
                           <div className="flex flex-wrap gap-1">
                             {station.lines.map((line) => (
                               <span
                                 key={line}
                                 className={`text-xs px-2 py-0.5 rounded text-white ${
-                                  LINE_COLORS[line] || 'bg-gray-500'
+                                  LINE_COLORS[line] || 'bg-banc-grey-pale0'
                                 }`}
                               >
                                 {line}
@@ -308,7 +308,7 @@ export function NearestStations({
 
       {/* Footer */}
       {stations.length > 0 && (
-        <div className="px-5 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 text-center">
+        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey text-center">
           Data from TfL and National Rail Enquiries
         </div>
       )}

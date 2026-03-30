@@ -75,7 +75,7 @@ export default function PropertyMap({
   return (
     <div
       className={cn(
-        "relative bg-gray-100 overflow-hidden",
+        "relative bg-banc-grey-pale overflow-hidden",
         isFullscreen ? "fixed inset-0 z-50" : "rounded-xl h-full min-h-[500px]",
         className
       )}
@@ -131,7 +131,7 @@ export default function PropertyMap({
                 "flex items-center gap-1 px-3 py-1.5 rounded-full shadow-lg transition-colors",
                 isSelected
                   ? "bg-[#4AC8E8] text-white"
-                  : "bg-white text-gray-800 hover:bg-gray-50"
+                  : "bg-white text-banc-dark hover:bg-banc-grey-pale"
               )}
             >
               <MapPin className="w-3 h-3" />
@@ -160,16 +160,16 @@ export default function PropertyMap({
       <div className="absolute top-4 right-4 z-30 flex flex-col gap-2">
         <button
           onClick={() => setMapView(mapView === "satellite" ? "roadmap" : "satellite")}
-          className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50"
+          className="p-2 bg-white rounded-lg shadow-md hover:bg-banc-grey-pale"
           title="Toggle view"
         >
-          <Layers className="w-5 h-5 text-gray-700" />
+          <Layers className="w-5 h-5 text-banc-dark-mid" />
         </button>
         <button
           onClick={() => setShowAreaSearch(!showAreaSearch)}
           className={cn(
             "p-2 rounded-lg shadow-md transition-colors",
-            showAreaSearch ? "bg-[#4AC8E8] text-white" : "bg-white hover:bg-gray-50"
+            showAreaSearch ? "bg-[#4AC8E8] text-white" : "bg-white hover:bg-banc-grey-pale"
           )}
           title="Draw search area"
         >
@@ -177,13 +177,13 @@ export default function PropertyMap({
         </button>
         <button
           onClick={() => setIsFullscreen(!isFullscreen)}
-          className="p-2 bg-white rounded-lg shadow-md hover:bg-gray-50"
+          className="p-2 bg-white rounded-lg shadow-md hover:bg-banc-grey-pale"
           title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
         >
           {isFullscreen ? (
-            <Minimize2 className="w-5 h-5 text-gray-700" />
+            <Minimize2 className="w-5 h-5 text-banc-dark-mid" />
           ) : (
-            <Maximize2 className="w-5 h-5 text-gray-700" />
+            <Maximize2 className="w-5 h-5 text-banc-dark-mid" />
           )}
         </button>
       </div>
@@ -215,14 +215,14 @@ export default function PropertyMap({
             </div>
             
             <div className="p-4">
-              <p className="text-xs text-gray-500">{selectedProperty.address}</p>
-              <h3 className="font-semibold text-gray-900 line-clamp-1">
+              <p className="text-xs text-banc-grey">{selectedProperty.address}</p>
+              <h3 className="font-semibold text-banc-dark line-clamp-1">
                 {selectedProperty.title}
               </h3>
               <p className="text-lg font-bold text-[#4AC8E8] mt-1">
                 {selectedProperty.price}
               </p>
-              <div className="flex gap-3 mt-2 text-xs text-gray-600">
+              <div className="flex gap-3 mt-2 text-xs text-banc-grey">
                 <span>{selectedProperty.stats.beds} beds</span>
                 <span>{selectedProperty.stats.baths} baths</span>
                 <span>{selectedProperty.stats.sqft} sqft</span>
@@ -238,13 +238,13 @@ export default function PropertyMap({
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-gray-600 hidden md:block">
+      <div className="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-banc-grey hidden md:block">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-[#4AC8E8]" />
           <span>Selected</span>
         </div>
         <div className="flex items-center gap-2 mt-1">
-          <div className="w-3 h-3 rounded-full bg-white border border-gray-300" />
+          <div className="w-3 h-3 rounded-full bg-white border border-banc-grey/30" />
           <span>Available</span>
         </div>
       </div>

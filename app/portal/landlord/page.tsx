@@ -143,7 +143,7 @@ const getComplianceStatusColor = (status: ComplianceItem["status"]) => {
     case "expired":
       return "bg-red-100 text-red-700";
     default:
-      return "bg-gray-100 text-gray-700";
+      return "bg-banc-grey-pale text-banc-dark-mid";
   }
 };
 
@@ -156,7 +156,7 @@ const getMaintenanceStatusColor = (status: MaintenanceRequest["status"]) => {
     case "reported":
       return "bg-amber-100 text-amber-700";
     default:
-      return "bg-gray-100 text-gray-700";
+      return "bg-banc-grey-pale text-banc-dark-mid";
   }
 };
 
@@ -169,7 +169,7 @@ const getPriorityColor = (priority: MaintenanceRequest["priority"]) => {
     case "medium":
       return "text-blue-600";
     default:
-      return "text-gray-600";
+      return "text-banc-grey";
   }
 };
 

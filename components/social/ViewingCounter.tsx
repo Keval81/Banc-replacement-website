@@ -79,10 +79,10 @@ export default function ViewingCounter({ propertyId, baseCount = 12 }: ViewingCo
 // Counter for shortlist/favorites
 export function ShortlistCounter({ count }: { count: number }) {
   return (
-    <div className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+    <div className="inline-flex items-center gap-1.5 text-sm text-banc-grey">
       <Users className="w-4 h-4" />
       <span>
-        <strong className="text-gray-900">{count}</strong> people have shortlisted this
+        <strong className="text-banc-dark">{count}</strong> people have shortlisted this
       </span>
     </div>
   );

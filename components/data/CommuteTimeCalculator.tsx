@@ -105,16 +105,16 @@ export function CommuteTimeCalculator({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center text-white">
             <Briefcase className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Commute Calculator</h3>
-            <p className="text-sm text-gray-600">Travel times to key destinations</p>
+            <h3 className="font-semibold text-banc-dark">Commute Calculator</h3>
+            <p className="text-sm text-banc-grey">Travel times to key destinations</p>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@ export function CommuteTimeCalculator({
         {/* Property Postcode Input */}
         {!propertyPostcode && (
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-banc-dark-mid mb-1">
               Property Postcode
             </label>
             <div className="flex gap-2">
@@ -150,23 +150,23 @@ export function CommuteTimeCalculator({
               key={index}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              className="flex items-center justify-between p-3 bg-banc-grey-pale rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <Building2 className="h-4 w-4 text-gray-400" />
+                <Building2 className="h-4 w-4 text-banc-grey" />
                 <div>
-                  <p className="font-medium text-gray-900">{dest.name}</p>
-                  <p className="text-xs text-gray-500">{dest.postcode}</p>
+                  <p className="font-medium text-banc-dark">{dest.name}</p>
+                  <p className="text-xs text-banc-grey">{dest.postcode}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 {dest.duration !== undefined && (
                   <div className="text-right">
-                    <p className="font-bold text-gray-900">{dest.duration} min</p>
+                    <p className="font-bold text-banc-dark">{dest.duration} min</p>
                     {dest.modes && dest.modes.length > 0 && (
                       <div className="flex items-center gap-1 justify-end">
                         {dest.modes.filter((m, i, a) => a.indexOf(m) === i).slice(0, 3).map((mode, i) => (
-                          <span key={i} className="text-gray-400">
+                          <span key={i} className="text-banc-grey">
                             {getModeIcon(mode)}
                           </span>
                         ))}
@@ -176,7 +176,7 @@ export function CommuteTimeCalculator({
                 )}
                 <button
                   onClick={() => removeDestination(index)}
-                  className="text-gray-400 hover:text-red-500"
+                  className="text-banc-grey hover:text-red-500"
                 >
                   <X className="h-4 w-4" />
                 </button>

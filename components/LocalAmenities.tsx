@@ -90,8 +90,8 @@ const AMENITY_CONFIG: Record<string, {
   other: { 
     icon: MapPin, 
     label: "Other", 
-    color: "text-gray-600",
-    bgColor: "bg-gray-50"
+    color: "text-banc-grey",
+    bgColor: "bg-banc-grey-pale"
   },
 };
 
@@ -127,37 +127,37 @@ export function LocalAmenities({
 
   if (amenities.length === 0) {
     return (
-      <div className={`bg-gray-50 rounded-lg p-6 text-center ${className}`}>
-        <p className="text-gray-500">No local amenity information available</p>
+      <div className={`bg-banc-grey-pale rounded-lg p-6 text-center ${className}`}>
+        <p className="text-banc-grey">No local amenity information available</p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-green-50 to-teal-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-green-50 to-teal-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
             <MapPin className="h-5 w-5 text-green-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Local Amenities</h3>
-            <p className="text-sm text-gray-600">{amenities.length} places nearby</p>
+            <h3 className="font-semibold text-banc-dark">Local Amenities</h3>
+            <p className="text-sm text-banc-grey">{amenities.length} places nearby</p>
           </div>
         </div>
       </div>
 
       {/* Category Filter */}
       {categories.length > 0 && (
-        <div className="px-5 py-3 border-b border-gray-200">
+        <div className="px-5 py-3 border-b border-banc-grey/20">
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === null
                   ? "bg-[#4AC8E8] text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
               }`}
             >
               All
@@ -174,7 +174,7 @@ export function LocalAmenities({
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                     isSelected
                       ? `${config.bgColor} ${config.color}`
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
                   }`}
                 >
                   <Icon className="h-3.5 w-3.5" />
@@ -201,7 +201,7 @@ export function LocalAmenities({
               <motion.div
                 key={amenity.id}
                 layout
-                className="bg-gray-50 rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition-colors"
+                className="bg-banc-grey-pale rounded-lg p-3 cursor-pointer hover:bg-banc-grey-pale transition-colors"
                 onClick={() => setExpandedAmenity(isExpanded ? null : amenity.id)}
               >
                 <div className="flex items-start gap-3">
@@ -209,13 +209,13 @@ export function LocalAmenities({
                     <Icon className={`h-5 w-5 ${config.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 truncate">
+                    <h4 className="font-medium text-banc-dark truncate">
                       {amenity.name}
                     </h4>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-gray-500">{amenity.distance}</span>
-                      <span className="text-xs text-gray-400">•</span>
-                      <span className="text-xs text-gray-500 flex items-center gap-0.5">
+                      <span className="text-xs text-banc-grey">{amenity.distance}</span>
+                      <span className="text-xs text-banc-grey">•</span>
+                      <span className="text-xs text-banc-grey flex items-center gap-0.5">
                         <Clock className="h-3 w-3" />
                         {amenity.walkingTime} min
                       </span>
@@ -228,7 +228,7 @@ export function LocalAmenities({
                     )}
                   </div>
                   <ChevronDown 
-                    className={`h-4 w-4 text-gray-400 transition-transform ${
+                    className={`h-4 w-4 text-banc-grey transition-transform ${
                       isExpanded ? 'rotate-180' : ''
                     }`}
                   />
@@ -243,8 +243,8 @@ export function LocalAmenities({
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="pt-3 mt-3 border-t border-gray-200">
-                        <p className="text-sm text-gray-600 mb-2">{amenity.address}</p>
+                      <div className="pt-3 mt-3 border-t border-banc-grey/20">
+                        <p className="text-sm text-banc-grey mb-2">{amenity.address}</p>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();

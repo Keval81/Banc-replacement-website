@@ -222,7 +222,7 @@ export default function TheGuildPage() {
                     <MapPin className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider">Our Promise</p>
+                    <p className="text-xs text-banc-grey uppercase tracking-wider">Our Promise</p>
                     <p className="text-sm font-semibold text-[#1a1a1a]">Local expertise, national reach</p>
                   </div>
                 </div>
@@ -245,13 +245,13 @@ export default function TheGuildPage() {
               </h2>
               
               <div className="mt-8 space-y-5">
-                <p className="text-lg text-gray-600 leading-relaxed">
+                <p className="text-lg text-banc-grey leading-relaxed">
                   Banc is proud to be a member of The Guild of Property Professionals, 
                   a prestigious network of independent estate agents across the UK. This 
                   membership reflects our commitment to maintaining the highest standards 
                   of service while benefiting from national exposure and shared expertise.
                 </p>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-banc-grey leading-relaxed">
                   Unlike corporate chains, The Guild brings together carefully selected 
                   independent agents who share a passion for exceptional customer service 
                   and deep local knowledge. As a member, we combine our Cuffley and 
@@ -266,7 +266,7 @@ export default function TheGuildPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Quality Assured</p>
-                    <p className="text-sm text-gray-500 mt-1">Rigorous selection process</p>
+                    <p className="text-sm text-banc-grey mt-1">Rigorous selection process</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -275,7 +275,7 @@ export default function TheGuildPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Trusted Network</p>
-                    <p className="text-sm text-gray-500 mt-1">Professional excellence</p>
+                    <p className="text-sm text-banc-grey mt-1">Professional excellence</p>
                   </div>
                 </div>
               </div>
@@ -297,7 +297,7 @@ export default function TheGuildPage() {
             <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a]">
               What Guild Membership Means
             </h2>
-            <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+            <p className="mt-6 text-lg text-banc-grey leading-relaxed">
               Our partnership with The Guild delivers tangible advantages that help us 
               achieve better results and provide a superior experience for buyers and 
               sellers alike.
@@ -313,7 +313,7 @@ export default function TheGuildPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#4AC8E8]/30 hover:shadow-xl hover:shadow-[#4AC8E8]/5 transition-all duration-500"
+                className="group bg-white rounded-2xl p-8 border border-banc-grey/10 hover:border-[#4AC8E8]/30 hover:shadow-xl hover:shadow-[#4AC8E8]/5 transition-all duration-500"
               >
                 <div className="w-14 h-14 bg-[#4AC8E8]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#4AC8E8] transition-colors duration-500">
                   <benefit.icon className="h-7 w-7 text-[#4AC8E8] group-hover:text-white transition-colors duration-500" />
@@ -321,7 +321,7 @@ export default function TheGuildPage() {
                 <h3 className="text-xl font-semibold text-[#1a1a1a] mb-3 group-hover:text-[#4AC8E8] transition-colors">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-sm">
+                <p className="text-banc-grey leading-relaxed text-sm">
                   {benefit.description}
                 </p>
               </motion.div>
@@ -380,28 +380,28 @@ export default function TheGuildPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-[#1a1a1a]">Since 1994</p>
-                  <p className="text-gray-500">30+ years of excellence</p>
+                  <p className="text-banc-grey">30+ years of excellence</p>
                 </div>
               </div>
             </div>
             
             {/* Right Column */}
             <div className="lg:col-span-7 space-y-6">
-              <p className="text-lg text-gray-600 leading-relaxed">
+              <p className="text-lg text-banc-grey leading-relaxed">
                 Founded in 1994, The Guild of Property Professionals has established itself as 
                 one of the UK's most respected networks of independent estate agents. Unlike 
                 corporate chains, The Guild champions the independent agency model, recognising 
                 that local expertise, community connections, and personalised service are 
                 irreplaceable assets in the property market.
               </p>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-banc-grey leading-relaxed">
                 Membership is by invitation only, with each member agency undergoing a rigorous 
                 selection process to ensure they meet The Guild's exacting standards for customer 
                 service, professional conduct, and market knowledge. This selective approach means 
                 that when you work with a Guild member like Banc, you can be confident you're 
                 working with one of the best agents in your area.
               </p>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-banc-grey leading-relaxed">
                 The Guild's collaborative culture means members share best practices, market insights, 
                 and resources, while retaining the independence that allows them to provide the 
                 personalised service that only a local agent can offer. It's this unique combination 
@@ -421,7 +421,7 @@ export default function TheGuildPage() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a] text-sm">Banc Property Group</p>
-                    <p className="text-gray-500 text-xs">Proud Guild Member</p>
+                    <p className="text-banc-grey text-xs">Proud Guild Member</p>
                   </div>
                 </div>
               </div>

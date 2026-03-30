@@ -47,7 +47,7 @@ export default function CompareBar({ className }: CompareBarProps) {
           </span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1 hover:bg-gray-100 rounded md:hidden"
+            className="p-1 hover:bg-banc-grey-pale rounded md:hidden"
           >
             {isExpanded ? (
               <ChevronDown className="w-4 h-4" />
@@ -59,7 +59,7 @@ export default function CompareBar({ className }: CompareBarProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={clearComparison}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-banc-grey hover:text-banc-dark-mid"
           >
             Clear
           </button>
@@ -92,7 +92,7 @@ export default function CompareBar({ className }: CompareBarProps) {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className="flex-shrink-0 w-40 bg-gray-50 rounded-lg overflow-hidden"
+                  className="flex-shrink-0 w-40 bg-banc-grey-pale rounded-lg overflow-hidden"
                 >
                   <div className="relative aspect-[4/3]">
                     <img
@@ -120,7 +120,7 @@ export default function CompareBar({ className }: CompareBarProps) {
               {Array.from({ length: 3 - comparedProperties.length }).map((_, i) => (
                 <div
                   key={`empty-${i}`}
-                  className="flex-shrink-0 w-40 h-24 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center text-gray-400 text-xs"
+                  className="flex-shrink-0 w-40 h-24 border-2 border-dashed border-banc-grey/20 rounded-lg flex items-center justify-center text-banc-grey text-xs"
                 >
                   Add property
                 </div>

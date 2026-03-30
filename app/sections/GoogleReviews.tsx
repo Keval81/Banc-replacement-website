@@ -208,7 +208,7 @@ export default function GoogleReviews() {
                     <Star
                       key={i}
                       className={`h-4 w-4 lg:h-5 lg:w-5 ${
-                        i < activeReview.rating ? "fill-banc-sky" : "fill-gray-200"
+                        i < activeReview.rating ? "fill-banc-sky" : "fill-banc-grey/20"
                       }`}
                     />
                   ))}
@@ -263,7 +263,7 @@ export default function GoogleReviews() {
           </div>
           
           {/* Auto-play indicator */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-100 rounded-b-2xl overflow-hidden">
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-banc-grey-pale rounded-b-2xl overflow-hidden">
             <motion.div
               className="h-full bg-banc-sky"
               initial={{ width: "0%" }}

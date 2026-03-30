@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 // PropertyCard component may have different props - using a generic card for now
 const SimplePropertyCard = ({ property }: { property: any }) => (
   <div className="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
-    <div className="aspect-[4/3] bg-gray-200 relative">
+    <div className="aspect-[4/3] bg-banc-grey/20 relative">
       {property.media?.images?.[0]?.url ? (
         <img 
           src={property.media.images[0].url} 
@@ -13,18 +13,18 @@ const SimplePropertyCard = ({ property }: { property: any }) => (
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-gray-400">
+        <div className="w-full h-full flex items-center justify-center text-banc-grey">
           No Image
         </div>
       )}
     </div>
     <div className="p-4">
-      <p className="text-lg font-bold text-gray-900">
+      <p className="text-lg font-bold text-banc-dark">
         £{(property.price?.amount || 0).toLocaleString()}
       </p>
-      <h3 className="font-semibold text-gray-800 mt-1">{property.title}</h3>
-      <p className="text-sm text-gray-500">{property.address?.town}, {property.address?.postcode}</p>
-      <div className="flex gap-4 mt-3 text-sm text-gray-600">
+      <h3 className="font-semibold text-banc-dark mt-1">{property.title}</h3>
+      <p className="text-sm text-banc-grey">{property.address?.town}, {property.address?.postcode}</p>
+      <div className="flex gap-4 mt-3 text-sm text-banc-grey">
         <span>{property.details?.bedrooms} beds</span>
         <span>{property.details?.bathrooms} baths</span>
       </div>
@@ -108,7 +108,7 @@ export default function RecommendedProperties({
 
   if (isLoading) {
     return (
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-banc-grey-pale">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center h-64">
             <Loader2 className="w-8 h-8 animate-spin text-[#1a4d5c]" />
@@ -132,8 +132,8 @@ export default function RecommendedProperties({
               <Sparkles className="w-5 h-5 text-[#1a4d5c]" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-              <p className="text-gray-600 text-sm">
+              <h2 className="text-2xl font-bold text-banc-dark">{title}</h2>
+              <p className="text-banc-grey text-sm">
                 Properties matched to your preferences using AI
               </p>
             </div>

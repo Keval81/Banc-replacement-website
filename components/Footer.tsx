@@ -82,22 +82,22 @@ export default function Footer() {
                 className="h-12 w-auto brightness-0 invert"
               />
             </Link>
-            <p className="text-gray-400 mb-6 max-w-sm">
+            <p className="text-banc-grey mb-6 max-w-sm">
               Award-winning estate agents serving Hertfordshire and North London. 
               Exceptional service, exceptional results.
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="tel:01707877781" className="flex items-center gap-3 text-gray-400 hover:text-banc-sky transition-colors">
+              <a href="tel:01707877781" className="flex items-center gap-3 text-banc-grey hover:text-banc-sky transition-colors">
                 <Phone className="h-4 w-4" />
                 <span>01707 877781</span>
               </a>
-              <a href="mailto:info@bancproperty.com" className="flex items-center gap-3 text-gray-400 hover:text-banc-sky transition-colors">
+              <a href="mailto:info@bancproperty.com" className="flex items-center gap-3 text-banc-grey hover:text-banc-sky transition-colors">
                 <Mail className="h-4 w-4" />
                 <span>info@bancproperty.com</span>
               </a>
-              <div className="flex items-start gap-3 text-gray-400">
+              <div className="flex items-start gap-3 text-banc-grey">
                 <MapPin className="h-4 w-4 mt-0.5" />
                 <span>1 Station Road, Cuffley,<br />Hertfordshire, EN6 4HU</span>
               </div>
@@ -143,7 +143,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
+                    className="text-banc-grey hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -160,7 +160,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
+                    className="text-banc-grey hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -177,7 +177,7 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
+                    className="text-banc-grey hover:text-banc-sky transition-colors text-sm"
                   >
                     {link.name}
                   </Link>
@@ -189,7 +189,7 @@ export default function Footer() {
           {/* Newsletter */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-banc-grey text-sm mb-4">
               Get the latest properties and market news delivered to your inbox.
             </p>
             <form onSubmit={handleSubscribe} className="space-y-3">
@@ -200,7 +200,7 @@ export default function Footer() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-gray-500"
+                  className="bg-white/10 border-white/20 text-white placeholder:text-banc-grey"
                 />
                 <Button 
                   type="submit" 
@@ -228,7 +228,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-400 text-sm text-center md:text-left">
+            <p className="text-banc-grey text-sm text-center md:text-left">
               &copy; {new Date().getFullYear()} Banc Property Group. All rights reserved.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6">
@@ -236,7 +236,7 @@ export default function Footer() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-gray-400 hover:text-banc-sky transition-colors text-sm"
+                  className="text-banc-grey hover:text-banc-sky transition-colors text-sm"
                 >
                   {link.name}
                 </Link>

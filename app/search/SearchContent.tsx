@@ -261,7 +261,7 @@ export default function SearchPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />
               <input
                 type="text"
                 placeholder="Search by location, property name..."
@@ -297,7 +297,7 @@ export default function SearchPage() {
             </button>
 
             {/* Result Count */}
-            <p className="hidden md:block text-sm text-gray-600">
+            <p className="hidden md:block text-sm text-banc-grey">
               <span className="font-semibold">{filteredProperties.length}</span> properties found
             </p>
 
@@ -308,7 +308,7 @@ export default function SearchPage() {
                 <select
                   value={filters.sortBy}
                   onChange={(e) => updateFilters({ sortBy: e.target.value })}
-                  className="min-h-[40px] appearance-none bg-white border border-gray-200 rounded-lg px-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8] cursor-pointer transition-colors hover:border-[#4AC8E8]/50"
+                  className="min-h-[40px] appearance-none bg-white border border-banc-grey/20 rounded-lg px-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8] cursor-pointer transition-colors hover:border-[#4AC8E8]/50"
                 >
                   {sortOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -316,11 +316,11 @@ export default function SearchPage() {
                     </option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey pointer-events-none" />
               </div>
 
               {/* View Toggle */}
-              <div className="hidden md:flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <div className="hidden md:flex items-center gap-1 bg-banc-grey-pale rounded-lg p-1">
                 <button
                   onClick={() => updateFilters({ view: "grid" })}
                   className={`p-2 rounded ${filters.view === "grid" ? "bg-white shadow-sm" : ""}`}
@@ -401,7 +401,7 @@ export default function SearchPage() {
               {/* Empty State */}
               {filteredProperties.length === 0 && (
                 <div className="text-center py-16">
-                  <p className="text-gray-500 mb-4">No properties match your filters</p>
+                  <p className="text-banc-grey mb-4">No properties match your filters</p>
                   <Button onClick={clearFilters} variant="outline">
                     Clear Filters
                   </Button>

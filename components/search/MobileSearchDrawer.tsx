@@ -48,7 +48,7 @@ export default function MobileSearchDrawer({
           >
             {/* Drag Handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-12 h-1 bg-gray-300 rounded-full" />
+              <div className="w-12 h-1 bg-banc-grey/30 rounded-full" />
             </div>
             
             {/* Header with View Toggle */}
@@ -59,12 +59,12 @@ export default function MobileSearchDrawer({
               </h2>
               
               {/* Mobile View Toggle */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-banc-grey-pale rounded-lg p-1">
                 <button
                   onClick={() => onFilterChange({ view: "grid" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "grid" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
+                    filters.view === "grid" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-banc-grey"
                   )}
                 >
                   <Grid3X3 className="w-4 h-4" />
@@ -73,7 +73,7 @@ export default function MobileSearchDrawer({
                   onClick={() => onFilterChange({ view: "list" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "list" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
+                    filters.view === "list" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-banc-grey"
                   )}
                 >
                   <List className="w-4 h-4" />
@@ -82,7 +82,7 @@ export default function MobileSearchDrawer({
                   onClick={() => onFilterChange({ view: "map" })}
                   className={cn(
                     "p-2 rounded transition-colors",
-                    filters.view === "map" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-gray-500"
+                    filters.view === "map" ? "bg-white shadow-sm text-[#4AC8E8]" : "text-banc-grey"
                   )}
                 >
                   <Map className="w-4 h-4" />

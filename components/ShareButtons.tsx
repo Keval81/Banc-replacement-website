@@ -94,7 +94,7 @@ export function ShareButtons({
           className={`flex-1 py-5 border-2 rounded-lg transition-colors ${
             isSaved 
               ? 'border-red-500 text-red-500 bg-red-50' 
-              : 'border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8]'
+              : 'border-banc-grey/20 text-banc-grey hover:border-[#4AC8E8] hover:text-[#4AC8E8]'
           }`}
         >
           <Heart className={`h-4 w-4 mr-2 ${isSaved ? "fill-red-500" : ""}`} />
@@ -106,7 +106,7 @@ export function ShareButtons({
       <Button
         variant="outline"
         onClick={handlePrint}
-        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
+        className="flex-1 py-5 border-2 border-banc-grey/20 text-banc-grey hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
       >
         <Printer className="h-4 w-4 mr-2" />
         Print
@@ -116,7 +116,7 @@ export function ShareButtons({
       <Button
         variant="outline"
         onClick={() => setIsOpen(true)}
-        className="flex-1 py-5 border-2 border-gray-200 text-gray-600 hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
+        className="flex-1 py-5 border-2 border-banc-grey/20 text-banc-grey hover:border-[#4AC8E8] hover:text-[#4AC8E8] rounded-lg transition-colors"
       >
         <Share2 className="h-4 w-4 mr-2" />
         Share
@@ -144,22 +144,22 @@ export function ShareButtons({
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Share this property</h3>
+                <h3 className="text-lg font-semibold text-banc-dark">Share this property</h3>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full hover:bg-banc-grey-pale flex items-center justify-center transition-colors"
                 >
-                  <X className="h-4 w-4 text-gray-500" />
+                  <X className="h-4 w-4 text-banc-grey" />
                 </button>
               </div>
 
               {/* Copy Link */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-banc-dark-mid mb-2">
                   Page Link
                 </label>
                 <div className="flex gap-2">
-                  <div className="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 truncate">
+                  <div className="flex-1 px-3 py-2 bg-banc-grey-pale border border-banc-grey/20 rounded-lg text-sm text-banc-grey truncate">
                     {fullUrl}
                   </div>
                   <Button
@@ -183,53 +183,53 @@ export function ShareButtons({
               <div className="grid grid-cols-4 gap-3">
                 <button
                   onClick={handleWhatsAppShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-banc-grey-pale transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center group-hover:bg-green-200 transition-colors">
                     <MessageCircle className="h-6 w-6 text-green-600" />
                   </div>
-                  <span className="text-xs text-gray-600">WhatsApp</span>
+                  <span className="text-xs text-banc-grey">WhatsApp</span>
                 </button>
 
                 <button
                   onClick={handleEmailShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-banc-grey-pale transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                     <Mail className="h-6 w-6 text-blue-600" />
                   </div>
-                  <span className="text-xs text-gray-600">Email</span>
+                  <span className="text-xs text-banc-grey">Email</span>
                 </button>
 
                 <button
                   onClick={handleFacebookShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-banc-grey-pale transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                     <Facebook className="h-6 w-6 text-blue-600" />
                   </div>
-                  <span className="text-xs text-gray-600">Facebook</span>
+                  <span className="text-xs text-banc-grey">Facebook</span>
                 </button>
 
                 <button
                   onClick={handleTwitterShare}
-                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-banc-grey-pale transition-colors group"
                 >
                   <div className="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                     <Twitter className="h-6 w-6 text-sky-500" />
                   </div>
-                  <span className="text-xs text-gray-600">Twitter</span>
+                  <span className="text-xs text-banc-grey">Twitter</span>
                 </button>
               </div>
 
               {/* Additional Options */}
-              <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="mt-6 pt-4 border-t border-banc-grey/20">
                 <button
                   onClick={handleLinkedInShare}
-                  className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <Linkedin className="h-5 w-5 text-blue-700" />
-                  <span className="text-sm text-gray-700">Share on LinkedIn</span>
+                  <span className="text-sm text-banc-dark-mid">Share on LinkedIn</span>
                 </button>
               </div>
             </motion.div>

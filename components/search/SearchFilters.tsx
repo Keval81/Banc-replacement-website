@@ -107,7 +107,7 @@ export default function SearchFilters({
             <SlidersHorizontal className="w-5 h-5" />
             Filters
           </h2>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+          <button onClick={onClose} className="p-2 hover:bg-banc-grey-pale rounded-full">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -134,7 +134,7 @@ export default function SearchFilters({
           <h3 className="text-sm font-medium mb-3">Price Range</h3>
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">£</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
               <Input
                 type="number"
                 placeholder="Min"
@@ -143,9 +143,9 @@ export default function SearchFilters({
                 className="pl-6"
               />
             </div>
-            <span className="text-gray-400">-</span>
+            <span className="text-banc-grey">-</span>
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">£</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
               <Input
                 type="number"
                 placeholder="Max"
@@ -169,7 +169,7 @@ export default function SearchFilters({
                   "px-3 py-1.5 text-sm rounded-lg border transition-colors",
                   filters.beds === option.value
                     ? "bg-[#4AC8E8] text-white border-[#4AC8E8]"
-                    : "border-gray-200 hover:border-[#4AC8E8]"
+                    : "border-banc-grey/20 hover:border-[#4AC8E8]"
                 )}
               >
                 {option.label}
@@ -190,14 +190,14 @@ export default function SearchFilters({
                   key={type.id}
                   className={cn(
                     "flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors",
-                    isSelected ? "bg-[#4AC8E8]/10" : "hover:bg-gray-50"
+                    isSelected ? "bg-[#4AC8E8]/10" : "hover:bg-banc-grey-pale"
                   )}
                 >
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handlePropertyTypeToggle(type.id)}
                   />
-                  <Icon className="w-4 h-4 text-gray-500" />
+                  <Icon className="w-4 h-4 text-banc-grey" />
                   <span className="text-sm">{type.label}</span>
                 </label>
               );
@@ -229,7 +229,7 @@ export default function SearchFilters({
         <div>
           <h3 className="text-sm font-medium mb-3">Keywords</h3>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey" />
             <Input
               placeholder="e.g. garden, parking..."
               value={filters.keywords || ""}

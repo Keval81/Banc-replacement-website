@@ -193,7 +193,7 @@ export default function PropertyChatbot() {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-gray-50 overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-banc-grey-pale overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -215,11 +215,11 @@ export default function PropertyChatbot() {
                             <a
                               key={property.id}
                               href={`/sales/properties/${property.id}`}
-                              className="block bg-gray-100 rounded-lg p-3 hover:bg-gray-200 transition-colors touch-manipulation"
+                              className="block bg-banc-grey-pale rounded-lg p-3 hover:bg-banc-grey/20 transition-colors touch-manipulation"
                               style={{ touchAction: 'manipulation' }}
                             >
                               <div className="flex items-start gap-3">
-                                <div className="w-16 h-12 bg-gray-300 rounded overflow-hidden shrink-0">
+                                <div className="w-16 h-12 bg-banc-grey/30 rounded overflow-hidden shrink-0">
                                   {property.images?.[0] && (
                                     <img
                                       src={property.images[0]}
@@ -229,13 +229,13 @@ export default function PropertyChatbot() {
                                   )}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-medium text-sm truncate text-gray-900">
+                                  <p className="font-medium text-sm truncate text-banc-dark">
                                     {property.title}
                                   </p>
-                                  <p className="text-xs text-gray-600">
+                                  <p className="text-xs text-banc-grey">
                                     {property.bedrooms} bed • £{property.price.toLocaleString()}
                                   </p>
-                                  <p className="text-xs text-gray-500 truncate">
+                                  <p className="text-xs text-banc-grey truncate">
                                     {property.location}
                                   </p>
                                 </div>
@@ -249,7 +249,7 @@ export default function PropertyChatbot() {
                       {message.action === 'valuation' && (
                         <div className="mt-3">
                           <a href="/tools/valuation">
-                            <Button size="sm" className="w-full bg-white text-[#1a4d5c] hover:bg-gray-100 h-11 min-h-[44px] text-sm">
+                            <Button size="sm" className="w-full bg-white text-[#1a4d5c] hover:bg-banc-grey-pale h-11 min-h-[44px] text-sm">
                               <Tag className="w-4 h-4 mr-2" />
                               Get Free Valuation
                             </Button>
@@ -260,7 +260,7 @@ export default function PropertyChatbot() {
                       {message.action === 'viewing' && (
                         <div className="mt-3">
                           <a href="/contact">
-                            <Button size="sm" className="w-full bg-white text-[#1a4d5c] hover:bg-gray-100 h-11 min-h-[44px] text-sm">
+                            <Button size="sm" className="w-full bg-white text-[#1a4d5c] hover:bg-banc-grey-pale h-11 min-h-[44px] text-sm">
                               <Calendar className="w-4 h-4 mr-2" />
                               Contact Us
                             </Button>
@@ -283,7 +283,7 @@ export default function PropertyChatbot() {
 
               {/* Quick Replies */}
               {messages.length < 3 && (
-                <div className="px-3 sm:px-4 py-2 bg-gray-50 border-t shrink-0">
+                <div className="px-3 sm:px-4 py-2 bg-banc-grey-pale border-t shrink-0">
                   <div className="flex flex-wrap gap-2">
                     {quickReplies.map((reply) => (
                       <button
@@ -292,7 +292,7 @@ export default function PropertyChatbot() {
                           setInput(reply);
                           inputRef.current?.focus();
                         }}
-                        className="text-xs bg-white border rounded-full px-3 py-2.5 min-h-[44px] text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors touch-manipulation"
+                        className="text-xs bg-white border rounded-full px-3 py-2.5 min-h-[44px] text-banc-grey hover:bg-banc-grey-pale hover:text-banc-dark transition-colors touch-manipulation"
                         style={{ touchAction: 'manipulation' }}
                       >
                         {reply}
@@ -324,7 +324,7 @@ export default function PropertyChatbot() {
                     <Send className="w-5 h-5" />
                   </Button>
                 </div>
-                <p className="text-xs text-gray-400 mt-2 text-center">
+                <p className="text-xs text-banc-grey mt-2 text-center">
                   Powered by AI • May occasionally produce inaccurate information
                 </p>
               </div>

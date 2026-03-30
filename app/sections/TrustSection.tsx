@@ -17,7 +17,7 @@ const professionalLogos = [
 
 export default function TrustSection() {
   return (
-    <section className="bg-white border-t border-b border-gray-200">
+    <section className="bg-white border-t border-b border-banc-grey/20">
       <div className="mx-auto w-full max-w-7xl px-4 lg:px-8 py-4">
         {/* All logos in one tight row */}
         <div className="flex items-center justify-center gap-4 md:gap-8">

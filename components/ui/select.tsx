@@ -23,7 +23,7 @@ const SelectTrigger = React.forwardRef<
       "placeholder:text-[#8A8880]",
       "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-2 focus:border-[#4AC8E8]",
       "hover:border-[#4AC8E8]/50",
-      "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-100",
+      "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-banc-grey-pale",
       "[&>span]:line-clamp-1",
       className
     )}
@@ -182,7 +182,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
               "appearance-none min-h-[48px]",
               "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8]",
               "hover:border-[#4AC8E8]/50 transition-colors",
-              "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-100",
+              "disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-banc-grey-pale",
               error && "border-red-500 focus:ring-red-500 focus:border-red-500",
               className
             )}

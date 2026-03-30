@@ -38,18 +38,18 @@ export default function NewsletterUnsubscribePage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-banc-grey-pale flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="w-8 h-8 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          <h1 className="text-2xl font-bold text-banc-dark mb-3">
             You&apos;ve Been Unsubscribed
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-banc-grey mb-6">
             You have been successfully removed from our mailing list. You will no longer receive emails from us.
           </p>
-          <p className="text-sm text-gray-500 mb-6">
+          <p className="text-sm text-banc-grey mb-6">
             Changed your mind?{' '}
             <a href="/newsletter/signup" className="text-[#1a4d5c] hover:underline">
               Subscribe again
@@ -64,16 +64,16 @@ export default function NewsletterUnsubscribePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-banc-grey-pale flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Frown className="w-8 h-8 text-gray-400" />
+          <div className="w-16 h-16 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-4">
+            <Frown className="w-8 h-8 text-banc-grey" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-banc-dark mb-2">
             Unsubscribe
           </h1>
-          <p className="text-gray-600">
+          <p className="text-banc-grey">
             We&apos;re sorry to see you go. Enter your email to unsubscribe from our newsletter.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function NewsletterUnsubscribePage() {
         </form>
 
         <div className="mt-6 pt-6 border-t text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-banc-grey">
             Having trouble?{' '}
             <a href="mailto:info@banc.co.uk" className="text-[#1a4d5c] hover:underline">
               Contact us

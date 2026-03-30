@@ -108,9 +108,9 @@ export function PropertyGallery({
 
   if (images.length === 0) {
     return (
-      <div className={`relative bg-gray-100 rounded-lg flex items-center justify-center ${className}`}>
-        <ImageIcon className="h-16 w-16 text-gray-300" />
-        <span className="ml-2 text-gray-400">No images available</span>
+      <div className={`relative bg-banc-grey-pale rounded-lg flex items-center justify-center ${className}`}>
+        <ImageIcon className="h-16 w-16 text-banc-grey" />
+        <span className="ml-2 text-banc-grey">No images available</span>
       </div>
     );
   }
@@ -129,7 +129,7 @@ export function PropertyGallery({
         >
           <div className="aspect-[4/3] relative">
             {isLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+              <div className="absolute inset-0 flex items-center justify-center bg-banc-dark-deep">
                 <Loader2 className="h-8 w-8 text-[#4AC8E8] animate-spin" />
               </div>
             )}
@@ -168,7 +168,7 @@ export function PropertyGallery({
           <div className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm text-white font-medium">
             {currentIndex + 1} / {images.length}
             {currentImage.caption && (
-              <span className="ml-2 text-gray-300">{currentImage.caption}</span>
+              <span className="ml-2 text-banc-grey">{currentImage.caption}</span>
             )}
           </div>
 
@@ -306,7 +306,7 @@ export function PropertyGallery({
                     {currentIndex + 1} / {images.length}
                   </span>
                   {currentImage.caption && (
-                    <p className="text-gray-300 mt-1">{currentImage.caption}</p>
+                    <p className="text-banc-grey mt-1">{currentImage.caption}</p>
                   )}
                 </div>
 

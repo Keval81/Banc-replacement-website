@@ -133,12 +133,12 @@ export function StreetView({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+      <div className="px-4 py-3 bg-banc-grey-pale border-b border-banc-grey/20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">
+          <MapPin className="h-4 w-4 text-banc-grey" />
+          <span className="text-sm font-medium text-banc-dark-mid">
             {address || 'Street View'}
           </span>
         </div>
@@ -193,25 +193,25 @@ export function StreetView({
         className="relative"
       >
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-banc-grey-pale">
             <div className="text-center">
-              <div className="w-8 h-8 border-2 border-gray-300 border-t-[#4AC8E8] rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-sm text-gray-500">Loading Street View...</p>
+              <div className="w-8 h-8 border-2 border-banc-grey/30 border-t-[#4AC8E8] rounded-full animate-spin mx-auto mb-2"></div>
+              <p className="text-sm text-banc-grey">Loading Street View...</p>
             </div>
           </div>
         )}
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-banc-grey-pale">
             <div className="text-center p-4">
-              <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-2" />
-              <p className="text-gray-500">{error}</p>
+              <MapPin className="h-12 w-12 text-banc-grey mx-auto mb-2" />
+              <p className="text-banc-grey">{error}</p>
             </div>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
+      <div className="px-4 py-2 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey flex items-center justify-between">
         <span>Drag to look around</span>
         <span>Google Street View</span>
       </div>

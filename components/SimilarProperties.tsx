@@ -27,7 +27,7 @@ export function SimilarProperties({
   return (
     <div className={`${className}`}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Similar Properties</h2>
+        <h2 className="text-xl font-bold text-banc-dark">Similar Properties</h2>
         <a 
           href="/sales/properties" 
           className="text-sm text-[#4AC8E8] hover:underline flex items-center gap-1"
@@ -45,7 +45,7 @@ export function SimilarProperties({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+            className="group bg-white rounded-lg border border-banc-grey/20 overflow-hidden hover:shadow-lg transition-shadow"
           >
             {/* Image */}
             <div className="relative aspect-[4/3] overflow-hidden">
@@ -63,21 +63,21 @@ export function SimilarProperties({
                   // Toggle favorite logic here
                 }}
               >
-                <Heart className="h-4 w-4 text-gray-600" />
+                <Heart className="h-4 w-4 text-banc-grey" />
               </button>
             </div>
 
             {/* Content */}
             <div className="p-4">
-              <h3 className="font-semibold text-gray-900 truncate group-hover:text-[#4AC8E8] transition-colors">
+              <h3 className="font-semibold text-banc-dark truncate group-hover:text-[#4AC8E8] transition-colors">
                 {property.title}
               </h3>
-              <p className="text-sm text-gray-500 truncate mb-2">{property.address}</p>
+              <p className="text-sm text-banc-grey truncate mb-2">{property.address}</p>
               
               <p className="text-lg font-bold text-[#4AC8E8] mb-3">{property.price}</p>
 
               {/* Stats */}
-              <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-4 text-sm text-banc-grey">
                 <div className="flex items-center gap-1">
                   <Bed className="h-4 w-4 text-[#4AC8E8]" />
                   <span>{property.beds}</span>

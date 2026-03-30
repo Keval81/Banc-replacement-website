@@ -62,23 +62,23 @@ export function TransportLinks({
 
   if (stations.length === 0) {
     return (
-      <div className={`bg-gray-50 rounded-lg p-6 text-center ${className}`}>
-        <p className="text-gray-500">No nearby transport information available</p>
+      <div className={`bg-banc-grey-pale rounded-lg p-6 text-center ${className}`}>
+        <p className="text-banc-grey">No nearby transport information available</p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center">
             <Navigation className="h-5 w-5 text-[#4AC8E8]" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Transport Links</h3>
-            <p className="text-sm text-gray-600">{stations.length} stations nearby</p>
+            <h3 className="font-semibold text-banc-dark">Transport Links</h3>
+            <p className="text-sm text-banc-grey">{stations.length} stations nearby</p>
           </div>
         </div>
       </div>
@@ -92,30 +92,30 @@ export function TransportLinks({
           return (
             <motion.div
               key={station.id}
-              className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+              className="p-4 hover:bg-banc-grey-pale transition-colors cursor-pointer"
               onMouseEnter={() => setHoveredStation(station.id)}
               onMouseLeave={() => setHoveredStation(null)}
               onClick={() => handleGetDirections(station)}
             >
               <div className="flex items-start gap-4">
                 {/* Icon */}
-                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                  <Icon className="h-6 w-6 text-gray-600" />
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-banc-grey-pale flex items-center justify-center">
+                  <Icon className="h-6 w-6 text-banc-grey" />
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-gray-900 truncate">
+                    <h4 className="font-semibold text-banc-dark truncate">
                       {station.name}
                     </h4>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                    <span className="text-xs text-banc-grey bg-banc-grey-pale px-2 py-0.5 rounded-full">
                       {station.distance}
                     </span>
                   </div>
 
                   {/* Walking Time */}
-                  <div className="flex items-center gap-1 text-sm text-gray-600 mb-2">
+                  <div className="flex items-center gap-1 text-sm text-banc-grey mb-2">
                     <Footprints className="h-3.5 w-3.5" />
                     <span>{station.walkingTime} min walk</span>
                     {station.drivingTime && (
@@ -133,7 +133,7 @@ export function TransportLinks({
                       <span
                         key={line}
                         className={`text-xs px-2 py-0.5 rounded text-white font-medium ${
-                          LINE_COLORS[line] || "bg-gray-500"
+                          LINE_COLORS[line] || "bg-banc-grey-pale0"
                         }`}
                         title={line}
                       >
@@ -141,7 +141,7 @@ export function TransportLinks({
                       </span>
                     ))}
                     {station.zone && (
-                      <span className="text-xs px-2 py-0.5 rounded bg-gray-200 text-gray-700">
+                      <span className="text-xs px-2 py-0.5 rounded bg-banc-grey/20 text-banc-dark-mid">
                         Zone {station.zone}
                       </span>
                     )}
@@ -165,8 +165,8 @@ export function TransportLinks({
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-3 bg-gray-50 border-t border-gray-200">
-        <p className="text-xs text-gray-500 text-center">
+      <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20">
+        <p className="text-xs text-banc-grey text-center">
           Walking times are estimates and may vary depending on route
         </p>
       </div>

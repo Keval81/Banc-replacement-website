@@ -113,7 +113,7 @@ export default function AVMValuation() {
       case 'down':
         return <TrendingDown className="w-5 h-5 text-red-600" />;
       default:
-        return <Minus className="w-5 h-5 text-gray-600" />;
+        return <Minus className="w-5 h-5 text-banc-grey" />;
     }
   };
 
@@ -124,7 +124,7 @@ export default function AVMValuation() {
       case 'medium':
         return 'bg-yellow-100 text-yellow-700 border-yellow-200';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
+        return 'bg-banc-grey-pale text-banc-dark-mid border-banc-grey/20';
     }
   };
 
@@ -136,7 +136,7 @@ export default function AVMValuation() {
           <div className="md:col-span-2">
             <Label htmlFor="address">Property Address *</Label>
             <div className="relative mt-1">
-              <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-grey w-4 h-4" />
               <Input
                 id="address"
                 value={formData.address}
@@ -151,7 +151,7 @@ export default function AVMValuation() {
           <div>
             <Label htmlFor="postcode">Postcode *</Label>
             <div className="relative mt-1">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-grey w-4 h-4" />
               <Input
                 id="postcode"
                 value={formData.postcode}
@@ -271,16 +271,16 @@ export default function AVMValuation() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-gray-50 rounded-2xl p-6 space-y-6"
+            className="bg-banc-grey-pale rounded-2xl p-6 space-y-6"
           >
             {/* Main Estimate */}
             <div className="text-center">
-              <p className="text-gray-600 mb-2">Estimated Value</p>
+              <p className="text-banc-grey mb-2">Estimated Value</p>
               <p className="text-5xl font-bold text-[#1a4d5c]">
                 {formatPrice(result.estimate)}
               </p>
               <div className="flex items-center justify-center gap-4 mt-3">
-                <span className="text-gray-500">
+                <span className="text-banc-grey">
                   Range: {formatPrice(result.lowEstimate)} - {formatPrice(result.highEstimate)}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${getConfidenceColor(result.confidenceLevel)}`}>
@@ -293,14 +293,14 @@ export default function AVMValuation() {
             {/* Market Trend */}
             <div className="bg-white rounded-xl p-4 flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">Market Trend</p>
+                <p className="text-sm text-banc-grey">Market Trend</p>
                 <p className="font-medium">{result.marketTrend.period}</p>
               </div>
               <div className="flex items-center gap-2">
                 {getTrendIcon()}
                 <span className={`font-bold ${
                   result.marketTrend.direction === 'up' ? 'text-green-600' :
-                  result.marketTrend.direction === 'down' ? 'text-red-600' : 'text-gray-600'
+                  result.marketTrend.direction === 'down' ? 'text-red-600' : 'text-banc-grey'
                 }`}>
                   {result.marketTrend.direction === 'up' ? '+' : ''}
                   {result.marketTrend.percentage}%
@@ -325,11 +325,11 @@ export default function AVMValuation() {
                   </div>
                 )}
                 {result.factors.negative.length > 0 && (
-                  <div className="bg-gray-100 rounded-xl p-4">
-                    <p className="font-medium text-gray-800 mb-2">Considerations</p>
+                  <div className="bg-banc-grey-pale rounded-xl p-4">
+                    <p className="font-medium text-banc-dark mb-2">Considerations</p>
                     <ul className="space-y-1">
                       {result.factors.negative.map((factor, i) => (
-                        <li key={i} className="text-sm text-gray-600 flex items-center gap-2">
+                        <li key={i} className="text-sm text-banc-grey flex items-center gap-2">
                           <AlertCircle className="w-4 h-4" />
                           {factor}
                         </li>
@@ -342,19 +342,19 @@ export default function AVMValuation() {
 
             {/* Comparables */}
             <div>
-              <p className="font-medium text-gray-900 mb-3">Recent Comparable Sales</p>
+              <p className="font-medium text-banc-dark mb-3">Recent Comparable Sales</p>
               <div className="space-y-2">
                 {result.comparables.map((comp, i) => (
                   <div key={i} className="bg-white rounded-lg p-3 flex items-center justify-between text-sm">
                     <div>
                       <p className="font-medium">{comp.address}</p>
-                      <p className="text-gray-500">
+                      <p className="text-banc-grey">
                         {comp.bedrooms} bed {comp.propertyType} • Sold {comp.date}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold">{formatPrice(comp.price)}</p>
-                      <p className="text-gray-500">{comp.distance} miles away</p>
+                      <p className="text-banc-grey">{comp.distance} miles away</p>
                     </div>
                   </div>
                 ))}
@@ -367,7 +367,7 @@ export default function AVMValuation() {
               <p className="text-sm text-white/80 mb-3">
                 Our local experts can provide a detailed in-person valuation
               </p>
-              <Button variant="secondary" className="bg-white text-[#1a4d5c] hover:bg-gray-100">
+              <Button variant="secondary" className="bg-white text-[#1a4d5c] hover:bg-banc-grey-pale">
                 Book Free Valuation
               </Button>
             </div>

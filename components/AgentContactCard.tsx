@@ -72,10 +72,10 @@ export function AgentContactCard({
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Agent Info Header */}
-      <div className="p-5 bg-gradient-to-br from-gray-50 to-white border-b border-gray-200">
-        <p className="text-sm text-gray-500 mb-4">Listed by</p>
+      <div className="p-5 bg-gradient-to-br from-gray-50 to-white border-b border-banc-grey/20">
+        <p className="text-sm text-banc-grey mb-4">Listed by</p>
         
         <div className="flex items-center gap-4">
           <div className="relative w-16 h-16 rounded-full overflow-hidden bg-white border-2 border-[#4AC8E8]/20 shadow-sm">
@@ -88,28 +88,28 @@ export function AgentContactCard({
             />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">{agent.name}</h3>
-            <p className="text-sm text-gray-500">{agent.title}</p>
+            <h3 className="font-semibold text-banc-dark">{agent.name}</h3>
+            <p className="text-sm text-banc-grey">{agent.title}</p>
             {agent.branch && (
-              <p className="text-xs text-gray-400 mt-0.5">{agent.branch.name}</p>
+              <p className="text-xs text-banc-grey mt-0.5">{agent.branch.name}</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Contact Methods */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-banc-grey/20">
         <div className="grid grid-cols-2 gap-2">
           <a 
             href={`tel:${agent.phone}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-banc-grey-pale rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
           >
             <Phone className="h-4 w-4" />
             <span className="text-sm font-medium">Call</span>
           </a>
           <a 
             href={`mailto:${agent.email}?subject=Property Enquiry - Ref: ${propertyId}`}
-            className="flex items-center justify-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
+            className="flex items-center justify-center gap-2 p-3 bg-banc-grey-pale rounded-lg hover:bg-[#4AC8E8]/10 hover:text-[#4AC8E8] transition-colors group"
           >
             <Mail className="h-4 w-4" />
             <span className="text-sm font-medium">Email</span>
@@ -118,11 +118,11 @@ export function AgentContactCard({
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex border-b border-gray-200">
+      <div className="flex border-b border-banc-grey/20">
         <button
           onClick={() => setActiveTab("contact")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative flex items-center justify-center gap-2 ${
-            activeTab === "contact" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "contact" ? "text-[#4AC8E8]" : "text-banc-grey hover:text-banc-dark-mid"
           }`}
         >
           <MessageSquare className="h-4 w-4" />
@@ -137,7 +137,7 @@ export function AgentContactCard({
         <button
           onClick={() => setActiveTab("viewing")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative flex items-center justify-center gap-2 ${
-            activeTab === "viewing" ? "text-[#4AC8E8]" : "text-gray-500 hover:text-gray-700"
+            activeTab === "viewing" ? "text-[#4AC8E8]" : "text-banc-grey hover:text-banc-dark-mid"
           }`}
         >
           <Calendar className="h-4 w-4" />
@@ -162,19 +162,19 @@ export function AgentContactCard({
             <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-            <h4 className="font-semibold text-gray-900 mb-1">Message Sent!</h4>
-            <p className="text-sm text-gray-500">
+            <h4 className="font-semibold text-banc-dark mb-1">Message Sent!</h4>
+            <p className="text-sm text-banc-grey">
               {agent.name} will be in touch shortly.
             </p>
           </motion.div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-banc-dark-mid mb-1.5">
                 Your Name
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey" />
                 <Input
                   name="name"
                   value={formData.name}
@@ -187,11 +187,11 @@ export function AgentContactCard({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-banc-dark-mid mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey" />
                 <Input
                   type="email"
                   name="email"
@@ -205,11 +205,11 @@ export function AgentContactCard({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-banc-dark-mid mb-1.5">
                 Phone Number
               </label>
               <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey" />
                 <Input
                   type="tel"
                   name="phone"
@@ -223,16 +223,16 @@ export function AgentContactCard({
 
             {activeTab === "viewing" && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                <label className="block text-sm font-medium text-banc-dark-mid mb-1.5">
                   Preferred Time
                 </label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey" />
                   <select
                     name="preferredTime"
                     value={formData.preferredTime}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8]"
+                    className="w-full pl-10 pr-3 py-2 border border-banc-grey/20 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4AC8E8]/20 focus:border-[#4AC8E8]"
                   >
                     <option value="">Select a time...</option>
                     <option value="weekday-morning">Weekday Morning</option>
@@ -246,7 +246,7 @@ export function AgentContactCard({
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              <label className="block text-sm font-medium text-banc-dark-mid mb-1.5">
                 {activeTab === "viewing" ? "Additional Notes" : "Message"}
               </label>
               <Textarea
@@ -287,13 +287,13 @@ export function AgentContactCard({
 
       {/* Branch Info */}
       {agent.branch && (
-        <div className="px-5 py-4 bg-gray-50 border-t border-gray-200">
-          <div className="flex items-start gap-2 text-sm text-gray-600">
-            <MapPin className="h-4 w-4 mt-0.5 text-gray-400 flex-shrink-0" />
+        <div className="px-5 py-4 bg-banc-grey-pale border-t border-banc-grey/20">
+          <div className="flex items-start gap-2 text-sm text-banc-grey">
+            <MapPin className="h-4 w-4 mt-0.5 text-banc-grey flex-shrink-0" />
             <div>
-              <p className="font-medium text-gray-900">{agent.branch.name}</p>
+              <p className="font-medium text-banc-dark">{agent.branch.name}</p>
               <p className="mt-0.5">{agent.branch.address}</p>
-              <p className="mt-1 text-xs text-gray-500">{agent.branch.openingHours}</p>
+              <p className="mt-1 text-xs text-banc-grey">{agent.branch.openingHours}</p>
             </div>
           </div>
         </div>

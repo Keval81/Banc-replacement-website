@@ -41,7 +41,7 @@ export function StreetViewComponent({
   };
 
   const mapContent = (
-    <div className={`relative bg-gray-100 rounded-lg overflow-hidden ${className}`}>
+    <div className={`relative bg-banc-grey-pale rounded-lg overflow-hidden ${className}`}>
       {/* View Toggle */}
       <div className="absolute top-3 left-3 z-10">
         <div className="flex rounded-lg bg-white shadow-lg p-1">
@@ -50,7 +50,7 @@ export function StreetViewComponent({
             className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
               viewMode === "map" 
                 ? "bg-[#4AC8E8] text-white" 
-                : "text-gray-600 hover:bg-gray-100"
+                : "text-banc-grey hover:bg-banc-grey-pale"
             }`}
           >
             <MapPin className="h-4 w-4" />
@@ -61,7 +61,7 @@ export function StreetViewComponent({
             className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
               viewMode === "street" 
                 ? "bg-[#4AC8E8] text-white" 
-                : "text-gray-600 hover:bg-gray-100"
+                : "text-banc-grey hover:bg-banc-grey-pale"
             }`}
           >
             <Video className="h-4 w-4" />
@@ -76,14 +76,14 @@ export function StreetViewComponent({
           variant="secondary"
           size="sm"
           onClick={handleGetDirections}
-          className="bg-white shadow-lg hover:bg-gray-50"
+          className="bg-white shadow-lg hover:bg-banc-grey-pale"
         >
           <Navigation className="h-4 w-4 mr-1.5" />
           Directions
         </Button>
         <button
           onClick={() => setIsFullscreen(true)}
-          className="w-9 h-9 flex items-center justify-center rounded-lg bg-white shadow-lg hover:bg-gray-50 text-gray-700"
+          className="w-9 h-9 flex items-center justify-center rounded-lg bg-white shadow-lg hover:bg-banc-grey-pale text-banc-dark-mid"
         >
           <Maximize2 className="h-4 w-4" />
         </button>
@@ -107,7 +107,7 @@ export function StreetViewComponent({
       {/* Location Info */}
       <div className="absolute bottom-3 left-3 right-3 z-10">
         <div className="bg-white/95 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg">
-          <div className="flex items-center gap-2 text-gray-900">
+          <div className="flex items-center gap-2 text-banc-dark">
             <MapPin className="h-4 w-4 text-[#4AC8E8]" />
             <span className="font-medium text-sm truncate">{address}</span>
           </div>
@@ -119,12 +119,12 @@ export function StreetViewComponent({
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-[100] bg-black">
-        <div className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
+        <div className="flex items-center justify-between px-6 py-4 bg-banc-dark-deep text-white">
           <div className="flex items-center gap-3">
             <MapPin className="h-5 w-5 text-[#4AC8E8]" />
             <span className="font-medium">{viewMode === "map" ? "Map View" : "Street View"}</span>
-            <span className="text-gray-400">•</span>
-            <span className="text-sm text-gray-400">{address}</span>
+            <span className="text-banc-grey">•</span>
+            <span className="text-sm text-banc-grey">{address}</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex rounded-lg bg-white/10 p-1">

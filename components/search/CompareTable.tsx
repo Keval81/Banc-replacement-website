@@ -29,7 +29,7 @@ export default function CompareTable({ className }: CompareTableProps) {
   if (comparedProperties.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-gray-500 mb-4">No properties selected for comparison</p>
+        <p className="text-banc-grey mb-4">No properties selected for comparison</p>
         <Link href="/search">
           <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
             Browse Properties
@@ -56,13 +56,13 @@ export default function CompareTable({ className }: CompareTableProps) {
       <table className="w-full min-w-[600px]">
         <thead>
           <tr>
-            <th className="text-left p-4 font-medium text-gray-500 w-32">Feature</th>
+            <th className="text-left p-4 font-medium text-banc-grey w-32">Feature</th>
             {comparedProperties.map((property) => (
               <th key={property.id} className="p-4 min-w-[200px]">
                 <div className="relative">
                   <button
                     onClick={() => removeFromComparison(property.id)}
-                    className="absolute -top-2 -right-2 p-1.5 bg-gray-100 hover:bg-gray-200 rounded-full z-10"
+                    className="absolute -top-2 -right-2 p-1.5 bg-banc-grey-pale hover:bg-banc-grey/20 rounded-full z-10"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -76,7 +76,7 @@ export default function CompareTable({ className }: CompareTableProps) {
                   <h3 className="font-semibold text-left line-clamp-1">
                     {property.title}
                   </h3>
-                  <p className="text-sm text-gray-500 text-left line-clamp-1">
+                  <p className="text-sm text-banc-grey text-left line-clamp-1">
                     {property.address}
                   </p>
                 </div>
@@ -87,7 +87,7 @@ export default function CompareTable({ className }: CompareTableProps) {
         <tbody>
           {/* Price Row */}
           <tr className="border-t">
-            <td className="p-4 text-sm font-medium text-gray-500">Price</td>
+            <td className="p-4 text-sm font-medium text-banc-grey">Price</td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
                 <span className="text-xl font-bold text-[#4AC8E8]">
@@ -98,14 +98,14 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Price per sqft (calculated) */}
-          <tr className="border-t bg-gray-50/50">
-            <td className="p-4 text-sm font-medium text-gray-500">Price/sqft</td>
+          <tr className="border-t bg-banc-grey-pale/50">
+            <td className="p-4 text-sm font-medium text-banc-grey">Price/sqft</td>
             {comparedProperties.map((property) => {
               const priceNum = parseInt(property.price.replace(/[^\d]/g, ""));
               const pricePerSqft = Math.round(priceNum / property.stats.sqft);
               return (
                 <td key={property.id} className="p-4">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-banc-grey">
                     £{pricePerSqft.toLocaleString()}
                   </span>
                 </td>
@@ -115,7 +115,7 @@ export default function CompareTable({ className }: CompareTableProps) {
 
           {/* Property Type */}
           <tr className="border-t">
-            <td className="p-4 text-sm font-medium text-gray-500">
+            <td className="p-4 text-sm font-medium text-banc-grey">
               <span className="flex items-center gap-2">
                 <Home className="w-4 h-4" />
                 Type
@@ -131,7 +131,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           {/* Stats */}
           {features.map(({ icon: Icon, label, key }) => (
             <tr key={key} className="border-t">
-              <td className="p-4 text-sm font-medium text-gray-500">
+              <td className="p-4 text-sm font-medium text-banc-grey">
                 <span className="flex items-center gap-2">
                   <Icon className="w-4 h-4" />
                   {label}
@@ -156,7 +156,7 @@ export default function CompareTable({ className }: CompareTableProps) {
 
           {/* Tenure */}
           <tr className="border-t">
-            <td className="p-4 text-sm font-medium text-gray-500">
+            <td className="p-4 text-sm font-medium text-banc-grey">
               <span className="flex items-center gap-2">
                 <Tag className="w-4 h-4" />
                 Tenure
@@ -171,7 +171,7 @@ export default function CompareTable({ className }: CompareTableProps) {
 
           {/* Date Added */}
           <tr className="border-t">
-            <td className="p-4 text-sm font-medium text-gray-500">
+            <td className="p-4 text-sm font-medium text-banc-grey">
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
                 Listed
@@ -190,14 +190,14 @@ export default function CompareTable({ className }: CompareTableProps) {
 
           {/* Tags */}
           <tr className="border-t">
-            <td className="p-4 text-sm font-medium text-gray-500 align-top">Features</td>
+            <td className="p-4 text-sm font-medium text-banc-grey align-top">Features</td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
                 <div className="flex flex-wrap gap-1">
                   {property.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 text-xs bg-gray-100 rounded-full"
+                      className="px-2 py-0.5 text-xs bg-banc-grey-pale rounded-full"
                     >
                       {tag}
                     </span>
@@ -225,7 +225,7 @@ export default function CompareTable({ className }: CompareTableProps) {
 
       {/* Contact About All */}
       <div className="mt-8 text-center">
-        <p className="text-gray-500 mb-4">
+        <p className="text-banc-grey mb-4">
           Interested in these properties? Contact us about all {comparedProperties.length} properties
         </p>
         <Link href="/contact">

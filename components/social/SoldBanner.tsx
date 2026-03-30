@@ -194,7 +194,7 @@ export default function SoldBanner() {
             transition={{ duration: 0.4, ease: 'easeOut' }}
             className="fixed bottom-6 left-6 z-40 hidden md:block"
           >
-            <div className="bg-white rounded-xl shadow-2xl overflow-hidden w-[380px] border border-gray-100">
+            <div className="bg-white rounded-xl shadow-2xl overflow-hidden w-[380px] border border-banc-grey/10">
               {/* Header */}
               <div 
                 className="px-4 py-2 flex items-center justify-between"
@@ -227,7 +227,7 @@ export default function SoldBanner() {
                   className="flex"
                 >
                   {/* Image */}
-                  <div className="relative w-28 h-28 flex-shrink-0 bg-gray-100">
+                  <div className="relative w-28 h-28 flex-shrink-0 bg-banc-grey-pale">
                     <Image
                       src={currentProperty.image}
                       alt={`${currentProperty.address}`}
@@ -246,10 +246,10 @@ export default function SoldBanner() {
                   {/* Details */}
                   <div className="flex-1 p-3 flex flex-col justify-between">
                     <div>
-                      <h4 className="font-semibold text-gray-900 text-sm leading-tight">
+                      <h4 className="font-semibold text-banc-dark text-sm leading-tight">
                         {currentProperty.address}
                       </h4>
-                      <div className="flex items-center gap-1 text-gray-500 text-xs mt-0.5">
+                      <div className="flex items-center gap-1 text-banc-grey text-xs mt-0.5">
                         <MapPin className="w-3 h-3" />
                         <span>{currentProperty.location}</span>
                       </div>
@@ -257,15 +257,15 @@ export default function SoldBanner() {
 
                     <div className="space-y-1">
                       <div className="flex items-baseline gap-1.5">
-                        <span className="text-xs text-gray-400 line-through">
+                        <span className="text-xs text-banc-grey line-through">
                           £{currentProperty.price.toLocaleString()}
                         </span>
-                        <span className="font-bold text-gray-900">
+                        <span className="font-bold text-banc-dark">
                           £{currentProperty.soldPrice.toLocaleString()}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-3 text-[10px] text-gray-500">
+                      <div className="flex items-center gap-3 text-[10px] text-banc-grey">
                         <div className="flex items-center gap-1">
                           <TrendingUp className="w-3 h-3 text-green-500" />
                           <span className="text-green-600 font-medium">{percentageAchieved}%</span>
@@ -281,7 +281,7 @@ export default function SoldBanner() {
               </AnimatePresence>
 
               {/* Progress Dots */}
-              <div className="px-3 py-2 flex items-center justify-center gap-1.5 border-t border-gray-100">
+              <div className="px-3 py-2 flex items-center justify-center gap-1.5 border-t border-banc-grey/10">
                 {mockSoldProperties.map((_, index) => (
                   <button
                     key={index}

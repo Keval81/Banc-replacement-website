@@ -60,18 +60,18 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
       case "withdrawn":
         return {
           icon: XCircle,
-          bgColor: "bg-gray-100",
-          iconColor: "text-gray-600",
-          textColor: "text-gray-800",
+          bgColor: "bg-banc-grey-pale",
+          iconColor: "text-banc-grey",
+          textColor: "text-banc-dark",
           label: "Withdrawn",
           description: "You have withdrawn this offer.",
         };
       default:
         return {
           icon: Clock,
-          bgColor: "bg-gray-100",
-          iconColor: "text-gray-600",
-          textColor: "text-gray-800",
+          bgColor: "bg-banc-grey-pale",
+          iconColor: "text-banc-grey",
+          textColor: "text-banc-dark",
           label: status,
           description: "Your offer is being processed.",
         };

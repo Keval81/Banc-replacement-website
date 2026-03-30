@@ -91,8 +91,8 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
 
   if (floorplans.length === 0) {
     return (
-      <div className={`bg-gray-50 rounded-lg p-8 text-center ${className}`}>
-        <p className="text-gray-500">No floorplans available</p>
+      <div className={`bg-banc-grey-pale rounded-lg p-8 text-center ${className}`}>
+        <p className="text-banc-grey">No floorplans available</p>
       </div>
     );
   }
@@ -100,13 +100,13 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
   const viewerContent = (
     <div className={`bg-white rounded-lg overflow-hidden ${className}`}>
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
+      <div className="flex items-center justify-between px-4 py-3 bg-banc-grey-pale border-b border-banc-grey/20">
         <div className="flex items-center gap-2">
-          <h3 className="font-semibold text-gray-900">
+          <h3 className="font-semibold text-banc-dark">
             {currentFloorplan.title}
           </h3>
           {floorplans.length > 1 && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-banc-grey">
               ({currentIndex + 1} of {floorplans.length})
             </span>
           )}
@@ -121,7 +121,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
           >
             <ZoomOut className="h-4 w-4" />
           </Button>
-          <span className="text-sm text-gray-600 w-12 text-center">
+          <span className="text-sm text-banc-grey w-12 text-center">
             {Math.round(zoom * 100)}%
           </span>
           <Button
@@ -133,7 +133,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
           >
             <ZoomIn className="h-4 w-4" />
           </Button>
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <div className="w-px h-6 bg-banc-grey/30 mx-1" />
           <Button
             variant="ghost"
             size="sm"
@@ -166,7 +166,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
       {/* Image Container */}
       <div 
         ref={containerRef}
-        className="relative bg-gray-100 overflow-hidden"
+        className="relative bg-banc-grey-pale overflow-hidden"
         style={{ height: isFullscreen ? 'calc(100vh - 200px)' : '500px' }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -210,7 +210,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
               <h4 className="font-semibold text-sm">Room Measurements</h4>
               <button 
                 onClick={() => setShowMeasureMode(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-banc-grey hover:text-banc-grey"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -219,9 +219,9 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
               {currentFloorplan.rooms?.map((room, index) => (
                 <div 
                   key={index}
-                  className="flex justify-between items-center py-1.5 border-b border-gray-100 last:border-0"
+                  className="flex justify-between items-center py-1.5 border-b border-banc-grey/10 last:border-0"
                 >
-                  <span className="text-sm text-gray-700">{room.name}</span>
+                  <span className="text-sm text-banc-dark-mid">{room.name}</span>
                   <span className="text-sm font-medium">{room.dimensions}</span>
                 </div>
               ))}
@@ -250,7 +250,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
 
       {/* Thumbnail Strip */}
       {floorplans.length > 1 && (
-        <div className="flex gap-2 p-4 border-t border-gray-200 overflow-x-auto">
+        <div className="flex gap-2 p-4 border-t border-banc-grey/20 overflow-x-auto">
           {floorplans.map((fp, index) => (
             <button
               key={fp.id}
@@ -278,7 +278,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
 
       {/* Floorplan Info */}
       {currentFloorplan.dimensions && (
-        <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 text-sm text-gray-600">
+        <div className="px-4 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-sm text-banc-grey">
           Dimensions: {currentFloorplan.dimensions.width} × {currentFloorplan.dimensions.height} {currentFloorplan.dimensions.unit}
         </div>
       )}
@@ -288,7 +288,7 @@ export function FloorplanViewer({ floorplans, className = "" }: FloorplanViewerP
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-[100] bg-black flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 bg-gray-900 text-white">
+        <div className="flex items-center justify-between px-6 py-4 bg-banc-dark-deep text-white">
           <h2 className="text-lg font-semibold">Floorplan Viewer</h2>
           <button 
             onClick={() => setIsFullscreen(false)}

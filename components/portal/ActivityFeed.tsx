@@ -72,7 +72,7 @@ export default function ActivityFeed({
     return (
       <span
         className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-          styles[status] || "bg-gray-100 text-gray-800"
+          styles[status] || "bg-banc-grey-pale text-banc-dark"
         }`}
       >
         {status.charAt(0).toUpperCase() + status.slice(1)}

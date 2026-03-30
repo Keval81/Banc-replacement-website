@@ -156,8 +156,8 @@ export default function PropertyCard({
                   isCompared
                     ? "bg-banc-sky text-white"
                     : canCompare
-                    ? "bg-white/95 text-gray-700 hover:bg-white"
-                    : "bg-gray-200/80 text-gray-400 cursor-not-allowed"
+                    ? "bg-white/95 text-banc-dark-mid hover:bg-white"
+                    : "bg-banc-grey/20/80 text-banc-grey cursor-not-allowed"
                 )}
               >
                 {isCompared ? (

@@ -242,19 +242,19 @@ export default function AlertsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
-              <p className="text-sm text-gray-500">Total Alerts</p>
+              <p className="text-sm text-banc-grey">Total Alerts</p>
               <p className="text-2xl font-semibold">{alerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
-              <p className="text-sm text-gray-500">Active</p>
+              <p className="text-sm text-banc-grey">Active</p>
               <p className="text-2xl font-semibold text-[#4AC8E8]">{activeAlerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
-              <p className="text-sm text-gray-500">Paused</p>
-              <p className="text-2xl font-semibold text-gray-500">{pausedAlerts.length}</p>
+              <p className="text-sm text-banc-grey">Paused</p>
+              <p className="text-2xl font-semibold text-banc-grey">{pausedAlerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
-              <p className="text-sm text-gray-500">Total Matches</p>
+              <p className="text-sm text-banc-grey">Total Matches</p>
               <p className="text-2xl font-semibold text-[#4AC8E8]">
                 {alerts.reduce((sum, a) => sum + a.matchCount, 0)}
               </p>
@@ -274,11 +274,11 @@ export default function AlertsPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16 bg-gray-50 rounded-2xl"
+              className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <Bell className="w-16 h-16 text-banc-grey mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">No alerts yet</h2>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              <p className="text-banc-grey mb-6 max-w-md mx-auto">
                 Create a property alert to get notified when new properties matching your criteria are listed.
               </p>
               <div className="flex justify-center gap-3">
@@ -327,7 +327,7 @@ export default function AlertsPage() {
               {pausedAlerts.length > 0 && (
                 <div>
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Pause className="w-5 h-5 text-gray-400" />
+                    <Pause className="w-5 h-5 text-banc-grey" />
                     Paused Alerts ({pausedAlerts.length})
                   </h2>
                   <div className="space-y-4 opacity-70">
@@ -382,28 +382,28 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
       layout
       className={cn(
         "bg-white rounded-xl border overflow-hidden transition-shadow",
-        alert.isActive ? "border-[#E0DFDC]" : "border-gray-200",
+        alert.isActive ? "border-[#E0DFDC]" : "border-banc-grey/20",
         isExpanded && "shadow-lg"
       )}
     >
       {/* Header */}
       <div 
-        className="p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-50/50"
+        className="p-4 flex items-center gap-4 cursor-pointer hover:bg-banc-grey-pale/50"
         onClick={onToggleExpand}
       >
         <div className={cn(
           "w-10 h-10 rounded-full flex items-center justify-center",
-          alert.isActive ? "bg-[#4AC8E8]/10" : "bg-gray-100"
+          alert.isActive ? "bg-[#4AC8E8]/10" : "bg-banc-grey-pale"
         )}>
           <Bell className={cn(
             "w-5 h-5",
-            alert.isActive ? "text-[#4AC8E8]" : "text-gray-400"
+            alert.isActive ? "text-[#4AC8E8]" : "text-banc-grey"
           )} />
         </div>
         
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate">{alert.name}</h3>
-          <div className="flex items-center gap-3 text-sm text-gray-500">
+          <div className="flex items-center gap-3 text-sm text-banc-grey">
             <span className="flex items-center gap-1">
               <FrequencyIcon className="w-3.5 h-3.5" />
               {frequencyLabels[alert.frequency]}
@@ -426,7 +426,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
               "p-2 rounded-full transition-colors",
               alert.isActive 
                 ? "text-[#4AC8E8] hover:bg-[#4AC8E8]/10" 
-                : "text-gray-400 hover:bg-gray-100"
+                : "text-banc-grey hover:bg-banc-grey-pale"
             )}
             title={alert.isActive ? "Pause alert" : "Resume alert"}
           >
@@ -434,7 +434,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(); }}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full"
+            className="p-2 text-banc-grey hover:text-banc-grey hover:bg-banc-grey-pale rounded-full"
             title="Edit alert"
           >
             <Edit2 className="w-4 h-4" />
@@ -447,9 +447,9 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             <Trash2 className="w-4 h-4" />
           </button>
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-gray-400" />
+            <ChevronUp className="w-5 h-5 text-banc-grey" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <ChevronDown className="w-5 h-5 text-banc-grey" />
           )}
         </div>
       </div>
@@ -461,23 +461,23 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t bg-gray-50/50"
+            className="border-t bg-banc-grey-pale/50"
           >
             <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
               {alert.criteria.location && (
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Location</p>
+                    <p className="text-xs text-banc-grey">Location</p>
                     <p className="text-sm font-medium">{alert.criteria.location}</p>
                   </div>
                 </div>
               )}
               {(alert.criteria.minPrice || alert.criteria.maxPrice) && (
                 <div className="flex items-start gap-2">
-                  <PoundSterling className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <PoundSterling className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Price Range</p>
+                    <p className="text-xs text-banc-grey">Price Range</p>
                     <p className="text-sm font-medium">
                       {alert.criteria.minPrice ? `£${alert.criteria.minPrice.toLocaleString()}` : "No min"}
                       {" - "}
@@ -488,18 +488,18 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
               )}
               {alert.criteria.beds && (
                 <div className="flex items-start gap-2">
-                  <Bed className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <Bed className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Bedrooms</p>
+                    <p className="text-xs text-banc-grey">Bedrooms</p>
                     <p className="text-sm font-medium">{alert.criteria.beds}+</p>
                   </div>
                 </div>
               )}
               {alert.criteria.propertyType && alert.criteria.propertyType.length > 0 && (
                 <div className="flex items-start gap-2">
-                  <Home className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <Home className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Property Type</p>
+                    <p className="text-xs text-banc-grey">Property Type</p>
                     <p className="text-sm font-medium capitalize">
                       {alert.criteria.propertyType.join(", ")}
                     </p>
@@ -508,18 +508,18 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
               )}
               {alert.criteria.tenure && (
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <AlertCircle className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Tenure</p>
+                    <p className="text-xs text-banc-grey">Tenure</p>
                     <p className="text-sm font-medium capitalize">{alert.criteria.tenure}</p>
                   </div>
                 </div>
               )}
               {alert.criteria.keywords && (
                 <div className="flex items-start gap-2">
-                  <Search className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <Search className="w-4 h-4 text-banc-grey mt-0.5" />
                   <div>
-                    <p className="text-xs text-gray-500">Keywords</p>
+                    <p className="text-xs text-banc-grey">Keywords</p>
                     <p className="text-sm font-medium">{alert.criteria.keywords}</p>
                   </div>
                 </div>
@@ -602,11 +602,11 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
         <div className="p-6 border-b sticky top-0 bg-white">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Create Property Alert</h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+            <button onClick={onClose} className="p-2 hover:bg-banc-grey-pale rounded-full">
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-banc-grey text-sm mt-1">
             Get notified when properties matching your criteria are listed
           </p>
         </div>
@@ -635,7 +635,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                     "p-3 rounded-lg border text-sm font-medium transition-colors",
                     formData.frequency === freq
                       ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
-                      : "border-gray-200 hover:border-gray-300"
+                      : "border-banc-grey/20 hover:border-banc-grey/30"
                   )}
                 >
                   {frequencyLabels[freq]}
@@ -649,7 +649,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
             <label className="block text-sm font-medium mb-2">Price Range</label>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
                 <Input
                   type="number"
                   placeholder="Min"
@@ -658,9 +658,9 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                   className="pl-7"
                 />
               </div>
-              <span className="text-gray-400">-</span>
+              <span className="text-banc-grey">-</span>
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
                 <Input
                   type="number"
                   placeholder="Max"
@@ -679,7 +679,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
               <select
                 value={formData.beds}
                 onChange={(e) => setFormData({ ...formData, beds: e.target.value })}
-                className="w-full min-h-[48px] px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8] appearance-none cursor-pointer transition-colors hover:border-[#4AC8E8]/50 bg-white"
+                className="w-full min-h-[48px] px-4 py-3 border border-banc-grey/20 rounded-xl focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8] appearance-none cursor-pointer transition-colors hover:border-[#4AC8E8]/50 bg-white"
               >
                 <option value="">Any</option>
                 <option value="1">1+</option>
@@ -688,7 +688,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                 <option value="4">4+</option>
                 <option value="5">5+</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey pointer-events-none" />
             </div>
           </div>
 
@@ -696,7 +696,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
           <div>
             <label className="block text-sm font-medium mb-2">Location</label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey" />
               <Input
                 placeholder="e.g., Cuffley, Mayfair..."
                 value={formData.location}
@@ -710,7 +710,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
           <div>
             <label className="block text-sm font-medium mb-2">Keywords</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey" />
               <Input
                 placeholder="e.g., garden, garage, parking..."
                 value={formData.keywords}

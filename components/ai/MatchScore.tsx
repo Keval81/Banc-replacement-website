@@ -20,7 +20,7 @@ export default function MatchScore({
   const getColor = () => {
     if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
     if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-gray-600 bg-gray-50 border-gray-200';
+    return 'text-banc-grey bg-banc-grey-pale border-banc-grey/20';
   };
 
   const getSizeClasses = () => {
@@ -50,7 +50,7 @@ export default function MatchScore({
             fill="none"
             stroke="currentColor"
             strokeWidth="8"
-            className="text-gray-200"
+            className="text-banc-grey/20"
           />
           {/* Progress circle */}
           <motion.circle
@@ -65,7 +65,7 @@ export default function MatchScore({
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
             transition={{ duration: 1, ease: 'easeOut' }}
-            className={score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-gray-400'}
+            className={score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-banc-grey'}
           />
         </svg>
         
@@ -75,7 +75,7 @@ export default function MatchScore({
             {score}%
           </span>
           {showLabel && size !== 'sm' && (
-            <span className="text-[10px] text-gray-500">Match</span>
+            <span className="text-[10px] text-banc-grey">Match</span>
           )}
         </div>
 
@@ -94,7 +94,7 @@ export default function MatchScore({
       {/* Tooltip with reasons */}
       {reasons && reasons.length > 0 && (
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-          <div className="bg-gray-900 text-white text-xs rounded-lg p-3 shadow-lg">
+          <div className="bg-banc-dark-deep text-white text-xs rounded-lg p-3 shadow-lg">
             <p className="font-semibold mb-2 flex items-center gap-1">
               <ThumbsUp className="w-3 h-3" />
               Why this matches
@@ -107,7 +107,7 @@ export default function MatchScore({
                 </li>
               ))}
             </ul>
-            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />
+            <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-banc-dark-deep rotate-45" />
           </div>
         </div>
       )}

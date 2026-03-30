@@ -64,11 +64,11 @@ export default function ComparePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16 bg-gray-50 rounded-2xl"
+              className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Scale className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <Scale className="w-16 h-16 text-banc-grey mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">No properties to compare</h2>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              <p className="text-banc-grey mb-6 max-w-md mx-auto">
                 Select properties from the search page to compare them side-by-side. 
                 You can compare up to 3 properties at once.
               </p>
@@ -82,11 +82,11 @@ export default function ComparePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16 bg-gray-50 rounded-2xl"
+              className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Scale className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <Scale className="w-16 h-16 text-banc-grey mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Add more properties</h2>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              <p className="text-banc-grey mb-6 max-w-md mx-auto">
                 You have 1 property selected. Add at least one more property to see a comparison.
               </p>
               <Link href="/search">
@@ -112,13 +112,13 @@ export default function ComparePage() {
               </div>
 
               {/* Compare Table */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+              <div className="bg-white rounded-2xl border border-banc-grey/20 overflow-hidden">
                 <CompareTable />
               </div>
 
               {/* Bottom CTA */}
               <div className="mt-8 text-center">
-                <p className="text-gray-500 mb-4">
+                <p className="text-banc-grey mb-4">
                   Want to see more options? Continue browsing or adjust your search criteria.
                 </p>
                 <div className="flex justify-center gap-3">

@@ -161,22 +161,22 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
   }, {} as Record<string, LocalAmenity[]>);
 
   return (
-    <div className={`bg-white rounded-lg border border-gray-200 overflow-hidden ${className}`}>
+    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-gray-200">
+      <div className="px-5 py-4 bg-gradient-to-r from-rose-50 to-orange-50 border-b border-banc-grey/20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-rose-500 flex items-center justify-center text-white">
             <MapPin className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">Local Amenities</h3>
-            <p className="text-sm text-gray-600">Shops, restaurants, and services nearby</p>
+            <h3 className="font-semibold text-banc-dark">Local Amenities</h3>
+            <p className="text-sm text-banc-grey">Shops, restaurants, and services nearby</p>
           </div>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="p-4 border-b border-gray-200">
+      <div className="p-4 border-b border-banc-grey/20">
         <div className="flex gap-2 overflow-x-auto pb-2">
           {AMENITY_TYPES.map((type) => {
             const Icon = type.icon;
@@ -187,7 +187,7 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-colors ${
                   filter === type.value 
                     ? 'bg-rose-100 text-rose-700' 
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    : 'bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20'
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -202,7 +202,7 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
       <div className="max-h-96 overflow-y-auto p-4">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-banc-grey" />
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-red-500">
@@ -210,15 +210,15 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
             {error}
           </div>
         ) : filteredAmenities.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            <MapPin className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+          <div className="text-center py-12 text-banc-grey">
+            <MapPin className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
             <p>No amenities found</p>
           </div>
         ) : (
           <div className="space-y-6">
             {Object.entries(grouped).map(([type, items]) => (
               <div key={type}>
-                <h4 className="text-sm font-medium text-gray-900 capitalize mb-3 flex items-center gap-2">
+                <h4 className="text-sm font-medium text-banc-dark capitalize mb-3 flex items-center gap-2">
                   {TYPE_ICONS[type] || <MapPin className="h-4 w-4" />}
                   {type}s
                 </h4>
@@ -229,14 +229,14 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
+                      className="flex items-start gap-3 p-3 bg-banc-grey-pale rounded-lg"
                     >
                       <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0">
-                        {TYPE_ICONS[amenity.type] || <MapPin className="h-4 w-4 text-gray-400" />}
+                        {TYPE_ICONS[amenity.type] || <MapPin className="h-4 w-4 text-banc-grey" />}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h5 className="font-medium text-gray-900 truncate">{amenity.name}</h5>
+                          <h5 className="font-medium text-banc-dark truncate">{amenity.name}</h5>
                           {amenity.rating && (
                             <span className="flex items-center gap-0.5 text-xs text-yellow-600">
                               <Star className="h-3 w-3 fill-current" />
@@ -244,8 +244,8 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-500 truncate">{amenity.address}</p>
-                        <div className="flex items-center gap-3 mt-1 text-xs text-gray-600">
+                        <p className="text-sm text-banc-grey truncate">{amenity.address}</p>
+                        <div className="flex items-center gap-3 mt-1 text-xs text-banc-grey">
                           <span className="flex items-center gap-1">
                             <MapPin className="h-3 w-3" />
                             {amenity.distance} miles
@@ -267,7 +267,7 @@ export function LocalAmenities({ postcode: initialPostcode, lat, lng, className 
 
       {/* Footer */}
       {amenities.length > 0 && (
-        <div className="px-5 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 text-center">
+        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey text-center">
           Data from Google Places • Walking times are estimates
         </div>
       )}

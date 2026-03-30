@@ -54,15 +54,15 @@ export default function NewsletterSignupPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-banc-grey-pale flex items-center justify-center px-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="w-8 h-8 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+          <h1 className="text-2xl font-bold text-banc-dark mb-3">
             You&apos;re Subscribed!
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-banc-grey mb-6">
             Thank you for subscribing to our newsletter. You&apos;ll receive property updates and market insights at {formData.email}.
           </p>
           <Button onClick={() => window.location.href = '/'} className="w-full">
@@ -74,7 +74,7 @@ export default function NewsletterSignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-banc-grey-pale">
       {/* Hero */}
       <div className="bg-[#1a4d5c] text-white py-16">
         <div className="container mx-auto px-4 text-center">
@@ -94,15 +94,15 @@ export default function NewsletterSignupPage() {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* Benefits */}
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">What You&apos;ll Receive</h2>
+              <h2 className="text-xl font-semibold text-banc-dark">What You&apos;ll Receive</h2>
               
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center shrink-0">
                   <Home className="w-5 h-5 text-[#1a4d5c]" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-900">New Property Alerts</h3>
-                  <p className="text-sm text-gray-600">Be the first to know when properties matching your criteria come on the market.</p>
+                  <h3 className="font-medium text-banc-dark">New Property Alerts</h3>
+                  <p className="text-sm text-banc-grey">Be the first to know when properties matching your criteria come on the market.</p>
                 </div>
               </div>
 
@@ -111,8 +111,8 @@ export default function NewsletterSignupPage() {
                   <TrendingUp className="w-5 h-5 text-[#1a4d5c]" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-900">Market Updates</h3>
-                  <p className="text-sm text-gray-600">Weekly market reports and price trend analysis for your area.</p>
+                  <h3 className="font-medium text-banc-dark">Market Updates</h3>
+                  <p className="text-sm text-banc-grey">Weekly market reports and price trend analysis for your area.</p>
                 </div>
               </div>
 
@@ -121,8 +121,8 @@ export default function NewsletterSignupPage() {
                   <Tag className="w-5 h-5 text-[#1a4d5c]" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-900">Price Drop Alerts</h3>
-                  <p className="text-sm text-gray-600">Get notified when properties you&apos;re interested in reduce in price.</p>
+                  <h3 className="font-medium text-banc-dark">Price Drop Alerts</h3>
+                  <p className="text-sm text-banc-grey">Get notified when properties you&apos;re interested in reduce in price.</p>
                 </div>
               </div>
 
@@ -131,15 +131,15 @@ export default function NewsletterSignupPage() {
                   <FileText className="w-5 h-5 text-[#1a4d5c]" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-gray-900">Expert Insights</h3>
-                  <p className="text-sm text-gray-600">Tips and advice from our property experts on buying, selling, and investing.</p>
+                  <h3 className="font-medium text-banc-dark">Expert Insights</h3>
+                  <p className="text-sm text-banc-grey">Tips and advice from our property experts on buying, selling, and investing.</p>
                 </div>
               </div>
             </div>
 
             {/* Form */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Subscribe Now</h2>
+              <h2 className="text-xl font-semibold text-banc-dark mb-6">Subscribe Now</h2>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -253,7 +253,7 @@ export default function NewsletterSignupPage() {
                   )}
                 </Button>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-banc-grey text-center">
                   By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
                 </p>
               </form>
