@@ -226,27 +226,31 @@ export default function Footer() {
 
       {/* Partner & Accreditation Logos */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-white/30 mb-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-white/40 mb-8">
             Accredited &amp; Trusted Partners
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 items-center">
             {[
-              { src: "/partners/rightmove.png", alt: "Rightmove", h: "h-6 md:h-8" },
-              { src: "/zoopla_logo-01.jpg", alt: "Zoopla", h: "h-6 md:h-8" },
-              { src: "/TheGuild_Logo_RGB.jpg", alt: "The Guild of Property Professionals", h: "h-8 md:h-10" },
-              { src: "/propertymark.jpg", alt: "The Property Ombudsman", h: "h-6 md:h-8" },
-              { src: "/9_long_member_rgb.png", alt: "OnTheMarket", h: "h-5 md:h-7" },
-              { src: "/tpo-tsi.jpg", alt: "TPO & TSI Approved", h: "h-6 md:h-8" },
+              { src: "/partners/rightmove.png", alt: "Rightmove" },
+              { src: "/zoopla_logo-01.jpg", alt: "Zoopla" },
+              { src: "/TheGuild_Logo_RGB.jpg", alt: "The Guild of Property Professionals" },
+              { src: "/propertymark.jpg", alt: "The Property Ombudsman" },
+              { src: "/9_long_member_rgb.png", alt: "OnTheMarket" },
+              { src: "/tpo-tsi.jpg", alt: "TPO & TSI Approved" },
             ].map((logo) => (
-              <Image
+              <div
                 key={logo.alt}
-                src={logo.src}
-                alt={logo.alt}
-                width={160}
-                height={60}
-                className={`${logo.h} w-auto object-contain brightness-0 invert opacity-50 hover:opacity-80 transition-opacity duration-200`}
-              />
+                className="flex items-center justify-center rounded-[10px] bg-white/[0.07] p-4 hover:bg-white/[0.12] transition-colors duration-200"
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={140}
+                  height={50}
+                  className="h-8 w-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                />
+              </div>
             ))}
           </div>
         </div>
