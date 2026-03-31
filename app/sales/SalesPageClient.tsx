@@ -130,6 +130,15 @@ export default function SalesPageClient() {
       
       {/* Hero - Mobile Optimized */}
       <section className="relative bg-[#1A1917] py-12 lg:py-24">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <div className="max-w-3xl">
             <p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#4AC8E8] lg:mb-3 lg:text-sm">Property Sales</p>

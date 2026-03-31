@@ -65,7 +65,16 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
       <Header />
 
       {/* Hero */}
-      <section className="bg-[#1A1917] py-12 lg:py-20">
+      <section className="relative overflow-hidden bg-[#1A1917] py-12 lg:py-20">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <Link
             href="/blog"

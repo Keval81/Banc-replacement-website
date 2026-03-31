@@ -73,7 +73,16 @@ const tools = [
 
 export default function ToolsPage() {
   return (
-    <div className="min-h-screen bg-[#1A1917]">
+    <div className="relative overflow-hidden min-h-screen bg-[#1A1917]">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
       <Header />
 
       <main>
