@@ -224,13 +224,13 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Partner & Accreditation Logos */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <p className="text-center text-xs font-medium uppercase tracking-[0.2em] text-white/40 mb-8">
+      {/* Partner & Accreditation Logos — white strip */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <p className="text-center text-[10px] font-medium uppercase tracking-[0.25em] text-banc-grey/60 mb-6">
             Accredited &amp; Trusted Partners
           </p>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6 items-center">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
             {[
               { src: "/partners/rightmove.png", alt: "Rightmove" },
               { src: "/zoopla_logo-01.jpg", alt: "Zoopla" },
@@ -239,18 +239,14 @@ export default function Footer() {
               { src: "/9_long_member_rgb.png", alt: "OnTheMarket" },
               { src: "/tpo-tsi.jpg", alt: "TPO & TSI Approved" },
             ].map((logo) => (
-              <div
+              <Image
                 key={logo.alt}
-                className="flex items-center justify-center rounded-[10px] bg-white/[0.07] p-4 hover:bg-white/[0.12] transition-colors duration-200"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={140}
-                  height={50}
-                  className="h-8 w-auto object-contain opacity-70 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-                />
-              </div>
+                src={logo.src}
+                alt={logo.alt}
+                width={120}
+                height={40}
+                className="h-7 md:h-8 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              />
             ))}
           </div>
         </div>
