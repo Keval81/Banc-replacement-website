@@ -8,6 +8,7 @@ import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
 import GoogleReviews from "@/app/sections/GoogleReviews";
 // Partner logos moved to Footer
+import SoldBanner from "@/components/social/SoldBanner";
 import RecommendedProperties from "@/components/ai/RecommendedProperties";
 
 export const metadata: Metadata = {
@@ -81,6 +82,7 @@ export default function Home() {
           <Services />
           <GoogleReviews />
           <Testimonials />
+          <SoldBanner />
         </main>
         <Footer />
       </div>

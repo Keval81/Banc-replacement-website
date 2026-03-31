@@ -14,7 +14,7 @@ import Script from "next/script";
 import PropertyChatbot from "@/components/ai/PropertyChatbot";
 import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import LiveReviewFeed from "@/components/social/LiveReviewFeed";
-import SoldBanner from "@/components/social/SoldBanner";
+// SoldBanner moved to homepage as a section
 
 const sourceSerif4 = Source_Serif_4({
   subsets: ["latin"],
@@ -109,7 +109,6 @@ export default function RootLayout({
                 
                 {/* Social Proof Elements */}
                 <LiveReviewFeed />
-                <SoldBanner />
                 
                 <CookieConsent />
                 <GoogleAnalytics />
