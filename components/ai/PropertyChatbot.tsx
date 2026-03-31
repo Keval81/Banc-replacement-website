@@ -48,6 +48,8 @@ export default function PropertyChatbot() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [promptDismissed, setPromptDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,8 +60,24 @@ export default function PropertyChatbot() {
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 150);
+      setShowPrompt(false);
+      setPromptDismissed(true);
     }
   }, [isOpen]);
+
+  // Show prompt bubble after 8 seconds if chat hasn't been opened
+  useEffect(() => {
+    if (promptDismissed) return;
+    const timer = setTimeout(() => setShowPrompt(true), 8000);
+    return () => clearTimeout(timer);
+  }, [promptDismissed]);
+
+  // Auto-hide prompt after 15 seconds
+  useEffect(() => {
+    if (!showPrompt) return;
+    const timer = setTimeout(() => setShowPrompt(false), 15000);
+    return () => clearTimeout(timer);
+  }, [showPrompt]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -115,21 +133,67 @@ export default function PropertyChatbot() {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button + Prompt Bubble */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={transition}
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-36 right-4 sm:bottom-6 sm:right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-banc-dark-deep text-white shadow-lg hover:bg-banc-dark transition-colors duration-200 cursor-pointer"
-            aria-label="Open chat"
-          >
-            <MessageCircle className="h-6 w-6" />
-            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-white" />
-          </motion.button>
+          <div className="fixed bottom-36 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3">
+            {/* Speech Bubble Prompt */}
+            <AnimatePresence>
+              {showPrompt && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10, scale: 0.9 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: 10, scale: 0.9 }}
+                  transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+                  className="relative mb-1"
+                >
+                  <button
+                    onClick={() => {
+                      setShowPrompt(false);
+                      setPromptDismissed(true);
+                      setIsOpen(true);
+                    }}
+                    className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
+                  >
+                    <p className="text-sm font-medium text-banc-dark leading-snug">
+                      Need help finding a property?
+                    </p>
+                    <p className="text-xs text-banc-grey mt-1">
+                      Try our chat assistant →
+                    </p>
+                  </button>
+                  {/* Close button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowPrompt(false);
+                      setPromptDismissed(true);
+                    }}
+                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-banc-grey/20 text-banc-grey hover:bg-banc-grey/40 transition-colors duration-200 cursor-pointer"
+                    aria-label="Dismiss"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                  {/* Tail pointing right toward the chat button */}
+                  <div className="absolute right-[-6px] bottom-5 h-3 w-3 rotate-45 bg-white border-r border-b border-banc-grey/15" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Chat Button */}
+            <motion.button
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={transition}
+              onClick={() => setIsOpen(true)}
+              className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-banc-dark-deep text-white shadow-lg hover:bg-banc-dark transition-colors duration-200 cursor-pointer"
+              aria-label="Open chat"
+            >
+              <MessageCircle className="h-6 w-6" />
+              <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-white" />
+            </motion.button>
+          </div>
         )}
       </AnimatePresence>
 
