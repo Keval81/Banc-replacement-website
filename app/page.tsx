@@ -7,7 +7,7 @@ import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
 import GoogleReviews from "@/app/sections/GoogleReviews";
-import TrustSection from "@/app/sections/TrustSection";
+// Partner logos moved to Footer
 import RecommendedProperties from "@/components/ai/RecommendedProperties";
 
 export const metadata: Metadata = {
@@ -81,7 +81,6 @@ export default function Home() {
           <Services />
           <GoogleReviews />
           <Testimonials />
-          <TrustSection />
         </main>
         <Footer />
       </div>
