@@ -68,6 +68,15 @@ export default function TheGuildPage() {
       
       {/* Hero Section */}
       <section className="relative bg-[#1a1a1a] min-h-[90vh] flex items-center overflow-hidden">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#4AC8E8]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />

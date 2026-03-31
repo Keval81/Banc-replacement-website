@@ -129,6 +129,15 @@ export default function LandlordsGuidePage() {
 
       {/* Hero Section - Premium Dark with Gradient */}
       <section className="relative bg-[#1A1917] py-28 lg:py-36 overflow-hidden">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-5">
           <div

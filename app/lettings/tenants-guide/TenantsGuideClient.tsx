@@ -227,6 +227,15 @@ export default function TenantsGuideClient() {
       
       {/* Premium Hero Section */}
       <section className="relative bg-[#1A1917] overflow-hidden">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         {/* Decorative elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#4AC8E8]/5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />

@@ -76,6 +76,15 @@ export default function LettingsPage() {
       
       {/* Hero - Mobile Optimized */}
       <section className="relative bg-[#1A1917] py-12 lg:py-24 overflow-hidden">
+        {/* Hero Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+        </div>
         {/* Background glow */}
         <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-[#4AC8E8]/10 blur-3xl" />
         <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#4AC8E8]/5 blur-3xl" />
