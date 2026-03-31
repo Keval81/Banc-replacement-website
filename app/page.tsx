@@ -6,7 +6,7 @@ import PropertySearch from "@/app/sections/PropertySearch";
 import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
-import GoogleReviews from "@/app/sections/GoogleReviews";
+// GoogleReviews removed — covered by Testimonials section
 // Partner logos moved to Footer
 import SoldBanner from "@/components/social/SoldBanner";
 import RecommendedProperties from "@/components/ai/RecommendedProperties";
@@ -80,7 +80,6 @@ export default function Home() {
             limit={3}
           />
           <Services />
-          <GoogleReviews />
           <Testimonials />
           <SoldBanner />
         </main>
