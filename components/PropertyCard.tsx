@@ -63,7 +63,7 @@ export default function PropertyCard({
   canCompare = true,
   onCompareToggle,
 }: PropertyCardProps): React.ReactElement {
-  const safeImages = images.length > 0 ? images : ["/placeholder-property.jpg"];
+  const safeImages = images.length > 0 ? images : ["/hertfordshire-home-1.png"];
   const [imageIndex, setImageIndex] = React.useState(0);
   const { isFavorite, toggleFavorite, isLoading } = useFavorites();
   const [isToggling, setIsToggling] = React.useState(false);

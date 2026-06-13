@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Grid3X3, List, Map, Loader2 } from "lucide-react";
+import { Grid3X3, List, Loader2 } from "lucide-react";
 
 // New search components
 import {
@@ -19,6 +19,7 @@ import {
   type SearchFilters,
 } from "@/components/property";
 import { useSearchFilters } from "@/hooks/useSearchFilters";
+import PropertyMap from "@/components/PropertyMap";
 
 // ============================================
 // Sample Properties Data
@@ -443,14 +444,11 @@ function SalesPropertiesPageContent() {
                       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
                       : viewMode === "list"
                       ? "flex flex-col gap-6"
-                      : "h-[600px] bg-[#F4F3F1] rounded-2xl flex items-center justify-center"
+                      : "h-[600px] bg-[#F4F3F1] rounded-2xl overflow-hidden"
                   }
                 >
                   {viewMode === "map" ? (
-                    <div className="text-center">
-                      <Map className="w-12 h-12 text-[#E0DFDC] mx-auto mb-4" />
-                      <p className="text-[#8A8880]">Map view coming soon</p>
-                    </div>
+                    <PropertyMap properties={filteredProperties} />
                   ) : (
                     filteredProperties.map((property) => (
                       <motion.div
