@@ -22,6 +22,7 @@ const TOWN_COORDS: Record<string, { lat: number; lng: number }> = {
   enfield: { lat: 51.6521, lng: -0.0807 },
   "mount street": { lat: 51.5106, lng: -0.1486 },
   mayfair: { lat: 51.5101, lng: -0.149 },
+  w1: { lat: 51.5101, lng: -0.149 },
 };
 
 const DEFAULT_CENTER = { lat: 51.7102, lng: -0.1131 }; // Cuffley
