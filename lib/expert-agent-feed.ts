@@ -184,5 +184,14 @@ export function toDbProperty(
     description,
     features: p.features,
     images: p.pictures.map((pic) => pic.filename),
+    tenure: p.tenure,
+    brochure_url: p.brochure,
+    virtual_tour_url: p.virtualTourUrl,
+    rooms: p.rooms.map((r) => ({
+      name: r.name,
+      measurement: r.measurement,
+      description: r.description,
+    })),
+    floorplans: p.floorplans.map((f) => f.filename).filter(Boolean),
   };
 }

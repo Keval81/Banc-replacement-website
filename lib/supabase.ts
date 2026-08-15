@@ -43,6 +43,11 @@ export interface DbProperty {
   features: string[];
   images: string[];
   epc_rating?: string;
+  tenure: string;
+  brochure_url: string;
+  virtual_tour_url: string;
+  rooms: Array<{ name: string; measurement: string; description: string }>;
+  floorplans: string[];
   latitude?: number;
   longitude?: number;
   created_at: string;

@@ -1,603 +1,368 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import * as React from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import PropertyCard from "@/components/PropertyCard";
 import { PropertyGallery } from "@/components/PropertyGallery";
 import { FloorplanViewer } from "@/components/FloorplanViewer";
-import { EPCVisualizer } from "@/components/EPCVisualizer";
-import { TransportLinks } from "@/components/TransportLinks";
-import { LocalAmenities } from "@/components/LocalAmenities";
-import { StreetViewComponent } from "@/components/StreetView";
-import { AgentContactCard } from "@/components/AgentContactCard";
-import { SimilarProperties } from "@/components/SimilarProperties";
-import { ShareButtons } from "@/components/ShareButtons";
-import MatchScore from "@/components/ai/MatchScore";
-import ViewingCounter from "@/components/social/ViewingCounter";
-import SmartDescription from "@/components/ai/SmartDescription";
+import { Button } from "@/components/ui/button";
 import {
   Bed,
   Bath,
-  Square,
-  MapPin,
-  Home,
+  Sofa,
   ChevronRight,
-  Clock,
   FileText,
-  Info,
-  Check,
-  TrendingUp,
-  History,
-  ImageIcon,
-  Play,
-  X,
+  Loader2,
   Phone,
+  Video,
 } from "lucide-react";
-import { sampleProperty, similarProperties, getPropertyById } from "@/lib/property-data";
 
-type GalleryTab = "photos" | "tour" | "map" | "floorplan";
+// Live property detail — data comes from /api/properties/[id]
+// (Expert Agent feed -> Supabase). No mock fallback: an unknown reference
+// renders a not-found state, never someone else's house.
 
-// Accordion Component
-function AccordionItem({ 
-  title, 
-  children, 
-  defaultOpen = false,
-  icon: Icon,
-  badge,
-}: { 
-  title: string; 
-  children: React.ReactNode; 
-  defaultOpen?: boolean;
-  icon?: React.ComponentType<{ className?: string }>;
-  badge?: string;
-}) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-
-  return (
-    <div className="border-b border-banc-grey/20 last:border-b-0">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-3 sm:py-4 text-left hover:bg-banc-grey-pale/50 transition-colors group min-h-[56px]"
-      >
-        <div className="flex items-center gap-2 sm:gap-3">
-          {Icon && <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8] flex-shrink-0" />}
-          <h3 className="text-sm sm:text-base font-semibold text-banc-dark">{title}</h3>
-          {badge && (
-            <span className="text-[10px] sm:text-xs bg-[#4AC8E8]/10 text-[#4AC8E8] px-1.5 sm:px-2 py-0.5 rounded-full font-medium flex-shrink-0">
-              {badge}
-            </span>
-          )}
-        </div>
-        <ChevronRight 
-          className={`h-4 w-4 sm:h-5 sm:w-5 text-banc-grey transition-transform duration-200 group-hover:text-[#4AC8E8] flex-shrink-0 ml-2 ${
-            isOpen ? "rotate-90" : ""
-          }`} 
-        />
-      </button>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="pb-5">{children}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+interface Gallery {
+  id: string;
+  url: string;
+  alt: string;
+  isPrimary: boolean;
 }
 
-// Virtual Tour Modal
-function VirtualTourModal({ 
-  url, 
-  isOpen, 
-  onClose 
-}: { 
-  url: string; 
-  isOpen: boolean; 
-  onClose: () => void;
-}) {
-  if (!isOpen) return null;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-black"
-    >
-      <div className="flex items-center justify-between px-6 py-4 bg-banc-dark-deep text-white">
-        <div className="flex items-center gap-3">
-          <Play className="h-5 w-5 text-[#4AC8E8]" />
-          <span className="font-medium">Virtual Tour</span>
-        </div>
-        <button 
-          onClick={onClose}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </div>
-      <div className="h-[calc(100vh-72px)]">
-        <iframe
-          src={url}
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          allowFullScreen
-          allow="xr-spatial-tracking"
-          className="w-full h-full"
-        />
-      </div>
-    </motion.div>
-  );
+interface LiveDetail {
+  id: string;
+  title: string;
+  address: string;
+  postcode: string;
+  price: string;
+  priceQualifier?: string;
+  tags: string[];
+  stats: { beds: number; baths: number };
+  receptions: number;
+  summary: string;
+  description: string;
+  features: string[];
+  tenure: string;
+  brochureUrl: string;
+  virtualTourUrl: string;
+  rooms: Array<{ name: string; measurement: string; description: string }>;
+  gallery: Gallery[];
+  floorplans: Array<{ id: string; url: string; title: string }>;
+  department: "sales" | "lettings";
 }
 
-export default function PropertyDetailPage({ params }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState<GalleryTab>("photos");
-  const [showTourModal, setShowTourModal] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const property = getPropertyById(params.id) ?? sampleProperty;
+interface SimilarCard {
+  id: string;
+  title: string;
+  address: string;
+  price: string;
+  tags: string[];
+  stats: { beds: number; baths: number };
+  images: string[];
+  summary: string;
+}
 
-  const handleSave = () => {
-    setIsSaved(!isSaved);
-  };
+type LoadState =
+  | { phase: "loading" }
+  | { phase: "notfound" }
+  | { phase: "ready"; property: LiveDetail; similar: SimilarCard[] };
+
+export default function PropertyDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = React.use(params);
+  const [state, setState] = React.useState<LoadState>({ phase: "loading" });
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/properties/${encodeURIComponent(id)}`)
+      .then(async (r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.json();
+      })
+      .then((d) => {
+        if (cancelled) return;
+        if (!d.property) setState({ phase: "notfound" });
+        else {
+          setState({ phase: "ready", property: d.property, similar: d.similar ?? [] });
+          document.title = `${d.property.title} | Banc Property Group`;
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setState({ phase: "notfound" });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   return (
     <div className="min-h-screen bg-white">
       <Header />
 
+      {state.phase === "loading" && (
+        <div className="flex min-h-[60vh] flex-col items-center justify-center">
+          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-sky" />
+          <p className="text-banc-grey">Loading property…</p>
+        </div>
+      )}
+
+      {state.phase === "notfound" && (
+        <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-6 text-center">
+          <h1 className="mb-3 text-2xl font-semibold text-banc-dark">
+            This property is no longer available
+          </h1>
+          <p className="mb-6 text-banc-grey">
+            It may have been sold or withdrawn. Our current listings are updated
+            directly from our sales system.
+          </p>
+          <Link href="/sales/properties">
+            <Button className="bg-banc-sky text-white hover:bg-banc-sky-dark">
+              View current properties
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {state.phase === "ready" && (
+        <DetailBody property={state.property} similar={state.similar} />
+      )}
+
+      <Footer />
+    </div>
+  );
+}
+
+function DetailBody({
+  property,
+  similar,
+}: {
+  property: LiveDetail;
+  similar: SimilarCard[];
+}) {
+  const paragraphs = property.description.split("\n\n").filter(Boolean);
+
+  return (
+    <>
       {/* Breadcrumb */}
-      <div className="bg-banc-grey-pale border-b border-banc-grey/20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+      <div className="border-b border-banc-grey/20 bg-banc-grey-pale">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-2 text-sm text-banc-grey">
-            <a href="/" className="hover:text-[#4AC8E8] transition-colors">Home</a>
+            <Link href="/" className="transition-colors hover:text-banc-sky">
+              Home
+            </Link>
             <ChevronRight className="h-4 w-4" />
-            <a href="/sales/properties" className="hover:text-[#4AC8E8] transition-colors">For Sale</a>
+            <Link
+              href={
+                property.department === "lettings"
+                  ? "/lettings/properties"
+                  : "/sales/properties"
+              }
+              className="transition-colors hover:text-banc-sky"
+            >
+              {property.department === "lettings" ? "To Let" : "For Sale"}
+            </Link>
             <ChevronRight className="h-4 w-4" />
-            <span className="text-banc-dark truncate max-w-[200px] sm:max-w-[400px]">{property.address}</span>
+            <span className="max-w-[200px] truncate text-banc-dark sm:max-w-[400px]">
+              {property.address}
+            </span>
           </nav>
         </div>
       </div>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pb-24 lg:pb-6">
-        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[65%_35%]">
-          {/* Left Column */}
+      <main className="mx-auto max-w-7xl px-4 py-4 pb-24 sm:px-6 sm:py-6 lg:px-8 lg:pb-6">
+        <div className="grid gap-6 lg:grid-cols-[65%_35%] lg:gap-8">
+          {/* Left: gallery + content */}
           <div>
-            {/* Gallery with Tabs */}
-            <div className="mb-6">
-              {/* Tab Navigation */}
-              <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-                <button
-                  onClick={() => setActiveTab("photos")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "photos" 
-                      ? "bg-[#4AC8E8] text-white" 
-                      : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
-                  }`}
-                >
-                  <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Photos ({property.images.length})</span>
-                  <span className="sm:hidden">Photos</span>
-                </button>
-                {property.virtualTour && (
-                  <button
-                    onClick={() => setActiveTab("tour")}
-                    className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                      activeTab === "tour" 
-                        ? "bg-[#4AC8E8] text-white" 
-                        : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
-                    }`}
-                  >
-                    <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                    <span className="hidden sm:inline">Virtual Tour</span>
-                    <span className="sm:hidden">Tour</span>
-                  </button>
-                )}
-                <button
-                  onClick={() => setActiveTab("map")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "map" 
-                      ? "bg-[#4AC8E8] text-white" 
-                      : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
-                  }`}
-                >
-                  <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Map & Street View</span>
-                  <span className="sm:hidden">Map</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("floorplan")}
-                  className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
-                    activeTab === "floorplan" 
-                      ? "bg-[#4AC8E8] text-white" 
-                      : "bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20"
-                  }`}
-                >
-                  <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Floorplans</span>
-                  <span className="sm:hidden">Plans</span>
-                </button>
-              </div>
+            <PropertyGallery images={property.gallery} className="mb-6" />
 
-              {/* Gallery Content */}
-              <AnimatePresence mode="wait">
-                {activeTab === "photos" && (
-                  <motion.div
-                    key="photos"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <PropertyGallery images={property.images} />
-                  </motion.div>
-                )}
-
-                {activeTab === "tour" && property.virtualTour && (
-                  <motion.div
-                    key="tour"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="relative bg-banc-dark-deep rounded-lg overflow-hidden"
-                  >
-                    <div className="aspect-video relative">
-                      <Image
-                        src={property.virtualTour.thumbnail || property.images[0]?.url || ""}
-                        alt="Virtual Tour Thumbnail"
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <button
-                          onClick={() => setShowTourModal(true)}
-                          className="flex items-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-full font-semibold hover:bg-[#4AC8E8]/90 transition-colors"
-                        >
-                          <Play className="h-5 w-5" />
-                          Launch Virtual Tour
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeTab === "map" && (
-                  <motion.div
-                    key="map"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <StreetViewComponent
-                      lat={property.mapCoordinates.lat}
-                      lng={property.mapCoordinates.lng}
-                      address={property.address}
-                    />
-                  </motion.div>
-                )}
-
-                {activeTab === "floorplan" && (
-                  <motion.div
-                    key="floorplan"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <FloorplanViewer floorplans={property.floorplans} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* Property Header */}
-            <div className="mb-4 sm:mb-6">
-              <div className="flex flex-wrap items-center gap-2 mb-2 sm:mb-3">
-                {property.newListing && (
-                  <span className="bg-[#4AC8E8] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
-                    NEW LISTING
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <div className="mb-6">
+                {property.tags.length > 0 && (
+                  <span className="mb-2 inline-block rounded-full bg-banc-dark px-3 py-1 text-xs font-medium uppercase tracking-wide text-white">
+                    {property.tags[0]}
                   </span>
                 )}
-                {property.featured && (
-                  <span className="bg-[#4AC8E8] text-white px-2 py-0.5 text-[10px] sm:text-xs font-semibold rounded">
-                    FEATURED
+                <h1 className="text-2xl font-semibold text-banc-dark sm:text-3xl">
+                  {property.title}
+                </h1>
+                <p className="mt-1 text-banc-grey">
+                  {property.address} · {property.postcode}
+                </p>
+                <p className="mt-3 text-3xl font-semibold text-banc-dark">
+                  {property.priceQualifier ?? property.price}
+                </p>
+
+                <div className="mt-4 flex flex-wrap items-center gap-5 border-y border-banc-grey/20 py-4 text-sm text-banc-dark">
+                  <span className="flex items-center gap-2">
+                    <Bed className="h-4 w-4 text-banc-grey" />
+                    {property.stats.beds} bedrooms
                   </span>
-                )}
-                <span className="flex items-center gap-1 text-[10px] sm:text-xs text-banc-grey bg-banc-grey-pale px-2 py-0.5 rounded">
-                  <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                  Added {property.addedDate}
-                </span>
-                {/* AI Match Score */}
-                <div className="hidden sm:block">
-                  <MatchScore 
-                    score={92} 
-                    size="sm" 
-                    showLabel={false}
-                    reasons={['Within your price range', '4 bedrooms as requested', 'Has Garden, Garage, Parking']}
-                  />
+                  <span className="flex items-center gap-2">
+                    <Bath className="h-4 w-4 text-banc-grey" />
+                    {property.stats.baths} bathrooms
+                  </span>
+                  {property.receptions > 0 && (
+                    <span className="flex items-center gap-2">
+                      <Sofa className="h-4 w-4 text-banc-grey" />
+                      {property.receptions} receptions
+                    </span>
+                  )}
+                  {property.tenure && (
+                    <span className="text-banc-grey">{property.tenure}</span>
+                  )}
                 </div>
               </div>
 
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-banc-dark mb-1 leading-tight">
-                {property.title}
-              </h1>
-              <p className="text-sm sm:text-base lg:text-lg text-banc-grey mb-2 sm:mb-3">{property.address}</p>
-              
-              {/* Price - Moved up for mobile visibility */}
-              <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
-                <p className="text-2xl sm:text-3xl font-bold text-[#4AC8E8]">{property.price}</p>
-                {property.priceQualifier && (
-                  <span className="text-xs sm:text-sm text-banc-grey">{property.priceQualifier}</span>
-                )}
-              </div>
-              
-              {/* Smart Description Tags */}
-              <div className="mb-2 sm:mb-3">
-                <SmartDescription 
-                  property={{
-                    features: property.features || [],
-                    bedrooms: property.beds || 0,
-                    location: property.address || '',
-                    propertyType: 'Detached House',
-                    nearbySchools: true,
-                    transportLinks: true,
-                  }}
-                />
-              </div>
-              
-              {/* Viewing Counter */}
-              <div className="mb-2 sm:mb-3">
-                <ViewingCounter propertyId={property.id} baseCount={18} />
-              </div>
-            </div>
-
-            {/* Key Stats */}
-            <div className="grid grid-cols-4 gap-2 sm:gap-4 py-3 sm:py-4 border-y border-banc-grey/20 mb-4 sm:mb-6">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                  <Bed className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
-                </div>
-                <div className="min-w-0">
-                  <span className="block font-bold text-banc-dark text-sm sm:text-base">{property.beds}</span>
-                  <span className="text-[10px] sm:text-sm text-banc-grey">Beds</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                  <Bath className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
-                </div>
-                <div className="min-w-0">
-                  <span className="block font-bold text-banc-dark text-sm sm:text-base">{property.baths}</span>
-                  <span className="text-[10px] sm:text-sm text-banc-grey">Baths</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                  <Home className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
-                </div>
-                <div className="min-w-0">
-                  <span className="block font-bold text-banc-dark text-sm sm:text-base">{property.receptions}</span>
-                  <span className="text-[10px] sm:text-sm text-banc-grey hidden sm:block">Receptions</span>
-                  <span className="text-[10px] sm:text-sm text-banc-grey sm:hidden">Recep</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                  <Square className="h-4 w-4 sm:h-5 sm:w-5 text-[#4AC8E8]" />
-                </div>
-                <div className="min-w-0">
-                  <span className="block font-bold text-banc-dark text-xs sm:text-base truncate">{property.sqft.toLocaleString()}</span>
-                  <span className="text-[10px] sm:text-sm text-banc-grey">sq ft</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Accordion Sections */}
-            <div className="mb-8">
               {/* Description */}
-              <AccordionItem title="Description" defaultOpen={true} icon={FileText}>
-                <div className="prose max-w-none">
-                  <p className="text-sm sm:text-base text-banc-grey whitespace-pre-line leading-relaxed">
-                    {property.description}
-                  </p>
-                </div>
-              </AccordionItem>
-
-              {/* Features */}
-              <AccordionItem title="Key Features" badge={`${property.features.length}`} icon={Check}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {property.features.map((feature, index) => (
-                    <div 
-                      key={index}
-                      className="flex items-start gap-2 p-2 sm:p-2.5 bg-banc-grey-pale rounded"
-                    >
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#4AC8E8] mt-2 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm text-banc-dark-mid leading-relaxed">{feature}</span>
-                    </div>
+              <section className="mb-8">
+                <h2 className="mb-3 text-lg font-semibold text-banc-dark">
+                  About this property
+                </h2>
+                <div className="space-y-4 leading-relaxed text-banc-dark-mid">
+                  {paragraphs.map((para, i) => (
+                    <p key={i}>{para}</p>
                   ))}
                 </div>
-              </AccordionItem>
+              </section>
 
-              {/* Further Information */}
-              <AccordionItem title="Further Information" icon={Info}>
-                <div className="grid gap-2 sm:gap-3 sm:grid-cols-2">
-                  <div className="bg-banc-grey-pale p-3 sm:p-4 rounded-lg">
-                    <p className="text-[10px] sm:text-xs text-banc-grey mb-0.5 sm:mb-1">Tenure</p>
-                    <p className="text-sm sm:text-base font-medium text-banc-dark">{property.tenure.type}</p>
-                  </div>
-                  {property.tenure.leaseExpires && (
-                    <div className="bg-banc-grey-pale p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-banc-grey mb-0.5 sm:mb-1">Lease Expires</p>
-                      <p className="text-sm sm:text-base font-medium text-banc-dark">{property.tenure.leaseExpires}</p>
-                    </div>
-                  )}
-                  {property.tenure.serviceCharge && (
-                    <div className="bg-banc-grey-pale p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-banc-grey mb-0.5 sm:mb-1">Service Charge</p>
-                      <p className="text-sm sm:text-base font-medium text-banc-dark">{property.tenure.serviceCharge}</p>
-                    </div>
-                  )}
-                  {property.tenure.councilTax && (
-                    <div className="bg-banc-grey-pale p-3 sm:p-4 rounded-lg">
-                      <p className="text-[10px] sm:text-xs text-banc-grey mb-0.5 sm:mb-1">Council Tax</p>
-                      <p className="text-sm sm:text-base font-medium text-banc-dark">{property.tenure.councilTax}</p>
-                    </div>
-                  )}
-                  {property.tenure.localAuthority && (
-                    <div className="bg-banc-grey-pale p-3 sm:p-4 rounded-lg sm:col-span-2">
-                      <p className="text-[10px] sm:text-xs text-banc-grey mb-0.5 sm:mb-1">Local Authority</p>
-                      <p className="text-sm sm:text-base font-medium text-banc-dark">{property.tenure.localAuthority}</p>
-                    </div>
-                  )}
-                </div>
-              </AccordionItem>
+              {/* Features */}
+              {property.features.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">
+                    Key features
+                  </h2>
+                  <ul className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+                    {property.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-banc-dark-mid">
+                        <span className="mt-[9px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-banc-sky" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
-              {/* EPC */}
-              <AccordionItem title="Energy Performance" badge={property.epc.currentRating} icon={TrendingUp}>
-                <EPCVisualizer epc={property.epc} />
-              </AccordionItem>
-
-              {/* Transport */}
-              <AccordionItem title="Transport Links" badge={`${property.transport.length}`} icon={MapPin}>
-                <TransportLinks 
-                  stations={property.transport} 
-                  propertyAddress={property.address}
-                />
-              </AccordionItem>
-
-              {/* Local Amenities */}
-              <AccordionItem title="Local Amenities" badge={`${property.amenities.length}`} icon={Home}>
-                <LocalAmenities 
-                  amenities={property.amenities}
-                  propertyAddress={property.address}
-                />
-              </AccordionItem>
-
-              {/* Property History */}
-              {property.history && property.history.length > 0 && (
-                <AccordionItem title="Property History" icon={History}>
-                  <div className="space-y-2 sm:space-y-3">
-                    {property.history.map((record, index) => (
-                      <div 
-                        key={index}
-                        className="flex items-center justify-between p-2.5 sm:p-3 bg-banc-grey-pale rounded-lg"
-                      >
-                        <div className="min-w-0 flex-1 pr-2">
-                          <p className="text-sm sm:text-base font-medium text-banc-dark">
-                            {record.event === 'sold' ? 'Sold' : 'Listed for sale'}
-                          </p>
-                          <p className="text-xs sm:text-sm text-banc-grey">
-                            {new Date(record.date).toLocaleDateString('en-GB', { 
-                              day: 'numeric', 
-                              month: 'short', 
-                              year: 'numeric' 
-                            })}
-                          </p>
-                          {record.agent && (
-                            <p className="text-[10px] sm:text-xs text-banc-grey truncate">{record.agent}</p>
-                          )}
-                        </div>
-                        <div className="text-right flex-shrink-0">
-                          <p className="text-sm sm:text-base font-semibold text-banc-dark">{record.price}</p>
-                          {record.priceChange && (
-                            <p className="text-xs sm:text-sm text-green-600">{record.priceChange}</p>
-                          )}
-                        </div>
+              {/* Rooms (feed rarely fills these — hide when empty) */}
+              {property.rooms.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">
+                    Room dimensions
+                  </h2>
+                  <div className="divide-y divide-banc-grey/15 border-y border-banc-grey/15">
+                    {property.rooms.map((room, i) => (
+                      <div key={i} className="flex flex-wrap items-baseline gap-x-4 py-2.5">
+                        <span className="font-medium text-banc-dark">{room.name}</span>
+                        <span className="text-sm text-banc-grey">{room.measurement}</span>
+                        {room.description && (
+                          <span className="w-full text-sm text-banc-dark-mid">
+                            {room.description}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
-                </AccordionItem>
+                </section>
+              )}
+
+              {/* Floorplan */}
+              {property.floorplans.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">Floorplan</h2>
+                  <FloorplanViewer floorplans={property.floorplans} />
+                </section>
+              )}
+            </motion.div>
+          </div>
+
+          {/* Right: enquiry panel */}
+          <aside className="lg:pt-0">
+            <div className="sticky top-24 space-y-4">
+              <div className="rounded-2xl border border-banc-grey/20 bg-banc-grey-pale p-6">
+                <p className="text-sm uppercase tracking-[0.15em] text-banc-grey">
+                  Banc Property Group
+                </p>
+                <p className="mt-1 font-medium text-banc-dark">
+                  1 Station Road, Cuffley, EN6 4HU
+                </p>
+                <div className="mt-4 flex flex-col gap-3">
+                  <Link href={`/book-viewing?property=${encodeURIComponent(property.id)}`}>
+                    <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
+                      Book a viewing
+                    </Button>
+                  </Link>
+                  <Link href={`/make-offer?property=${encodeURIComponent(property.id)}`}>
+                    <Button
+                      variant="outline"
+                      className="w-full border-banc-dark/25 text-banc-dark hover:border-banc-dark"
+                    >
+                      Make an offer
+                    </Button>
+                  </Link>
+                  <a
+                    href="tel:01707877781"
+                    className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-banc-dark transition-colors hover:text-banc-sky"
+                  >
+                    <Phone className="h-4 w-4" /> 01707 877781
+                  </a>
+                </div>
+              </div>
+
+              {(property.brochureUrl || property.virtualTourUrl) && (
+                <div className="rounded-2xl border border-banc-grey/20 p-6">
+                  <p className="mb-3 text-sm font-semibold text-banc-dark">
+                    More about this home
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {property.brochureUrl && (
+                      <a
+                        href={property.brochureUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-banc-dark transition-colors hover:text-banc-sky"
+                      >
+                        <FileText className="h-4 w-4" /> Full brochure (PDF)
+                      </a>
+                    )}
+                    {property.virtualTourUrl && (
+                      <a
+                        href={property.virtualTourUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm text-banc-dark transition-colors hover:text-banc-sky"
+                      >
+                        <Video className="h-4 w-4" /> Virtual tour
+                      </a>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
-
-            {/* Map Section (if not in tabs) */}
-            <div className="mb-8 lg:hidden">
-              <h2 className="text-lg font-bold text-banc-dark mb-4">Location</h2>
-              <StreetViewComponent
-                lat={property.mapCoordinates.lat}
-                lng={property.mapCoordinates.lng}
-                address={property.address}
-              />
-            </div>
-          </div>
-
-          {/* Right Column - Sticky Sidebar */}
-          <div className="lg:pl-6 order-first lg:order-last">
-            <div className="lg:sticky lg:top-24 space-y-3 sm:space-y-4">
-              {/* Share Buttons - Hidden on mobile (moved to sticky CTA) */}
-              <div className="hidden lg:block">
-                <ShareButtons
-                  propertyUrl={`/sales/properties/${property.id}`}
-                  propertyTitle={property.title}
-                  propertyPrice={property.price}
-                  onSave={handleSave}
-                  isSaved={isSaved}
-                />
-              </div>
-
-              {/* Agent Contact Card */}
-              <AgentContactCard
-                agent={property.agent}
-                propertyId={property.id}
-              />
-
-              {/* Reference Number */}
-              <div className="text-center text-[10px] sm:text-xs text-banc-grey pb-4 lg:pb-0">
-                Property Reference: {property.reference}
-              </div>
-            </div>
-          </div>
+          </aside>
         </div>
 
-        {/* Similar Properties */}
-        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-banc-grey/20">
-          <SimilarProperties properties={similarProperties} />
-        </div>
-      </main>
-
-      {/* Virtual Tour Modal */}
-      <AnimatePresence>
-        {showTourModal && property.virtualTour && (
-          <VirtualTourModal
-            url={property.virtualTour.url}
-            isOpen={showTourModal}
-            onClose={() => setShowTourModal(false)}
-          />
+        {/* Similar properties — live, same department, nearby price */}
+        {similar.length > 0 && (
+          <section className="mt-14">
+            <h2 className="mb-6 text-xl font-semibold text-banc-dark">
+              Similar properties
+            </h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {similar.map((s) => (
+                <PropertyCard key={s.id} {...s} />
+              ))}
+            </div>
+          </section>
         )}
-      </AnimatePresence>
-
-      {/* Mobile Sticky CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-banc-grey/20 p-3 sm:p-4 z-40 safe-area-pb">
-        <div className="flex gap-2 sm:gap-3 max-w-lg mx-auto">
-          <Button
-            variant="outline"
-            className="flex-1 h-12 sm:h-14 text-sm sm:text-base font-semibold"
-            onClick={handleSave}
-          >
-            {isSaved ? (
-              <span className="flex items-center gap-1.5">
-                <Check className="h-4 w-4 sm:h-5 sm:w-5" />
-                Saved
-              </span>
-            ) : (
-              "Save"
-            )}
-          </Button>
-          <Button className="flex-[2] h-12 sm:h-14 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white text-sm sm:text-base font-semibold shadow-lg">
-            <Phone className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5" />
-            Contact Agent
-          </Button>
-        </div>
-      </div>
-
-      <Footer />
-    </div>
+      </main>
+    </>
   );
 }

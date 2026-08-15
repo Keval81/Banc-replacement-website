@@ -61,3 +61,82 @@ export function dbToCard(p: DbProperty): PropertyCardData {
     status: p.status,
   };
 }
+
+// ---- Search feature flags -------------------------------------------------
+// The advanced-search feature filters (garden, parking, …) are booleans; the
+// feed gives free-text bullets. Derive flags from real bullet wording.
+export interface FeatureFlags {
+  garden: boolean;
+  parking: boolean;
+  garage: boolean;
+  conservatory: boolean;
+  fireplace: boolean;
+  periodFeatures: boolean;
+  newBuild: boolean;
+  chainFree: boolean;
+  virtualTour: boolean;
+  videoTour: boolean;
+}
+
+export function deriveFeatureFlags(features: string[], virtualTourUrl: string): FeatureFlags {
+  const text = features.join(" | ").toLowerCase();
+  return {
+    garden: /garden|outside space|patio|terrace/.test(text),
+    parking: /parking|driveway|off street|off-street/.test(text),
+    garage: /garage/.test(text),
+    conservatory: /conservator/.test(text),
+    fireplace: /fireplace|log burner|wood burner/.test(text),
+    periodFeatures: /period|character|listed/.test(text),
+    newBuild: /new build|newly built|new home/.test(text),
+    chainFree: /chain free|no chain|no onward chain/.test(text),
+    virtualTour: virtualTourUrl.trim() !== "",
+    videoTour: /video tour/.test(text),
+  };
+}
+
+// ---- Detail page view -----------------------------------------------------
+export interface LivePropertyDetail extends PropertyCardData {
+  postcode: string;
+  priceQualifier?: string;
+  receptions: number;
+  description: string;
+  features: string[];
+  featureFlags: FeatureFlags;
+  tenure: string;
+  brochureUrl: string;
+  virtualTourUrl: string;
+  addedDate: string;
+  rooms: DbProperty["rooms"];
+  gallery: Array<{ id: string; url: string; alt: string; isPrimary: boolean }>;
+  floorplans: Array<{ id: string; url: string; title: string }>;
+}
+
+export function dbToDetail(p: DbProperty): LivePropertyDetail {
+  const card = dbToCard(p);
+  const ref = card.id;
+  return {
+    ...card,
+    postcode: p.postcode,
+    priceQualifier: p.price_qualifier,
+    receptions: p.receptions,
+    description: p.description,
+    features: p.features,
+    featureFlags: deriveFeatureFlags(p.features, p.virtual_tour_url),
+    tenure: p.tenure,
+    brochureUrl: p.brochure_url,
+    virtualTourUrl: p.virtual_tour_url,
+    addedDate: p.created_at,
+    rooms: p.rooms,
+    gallery: p.images.map((url, i) => ({
+      id: `${ref}-${i}`,
+      url,
+      alt: i === 0 ? `${p.title} — main photo` : `${p.title} — photo ${i + 1}`,
+      isPrimary: i === 0,
+    })),
+    floorplans: p.floorplans.map((url, i) => ({
+      id: `${ref}-fp-${i}`,
+      url,
+      title: p.floorplans.length > 1 ? `Floorplan ${i + 1}` : "Floorplan",
+    })),
+  };
+}

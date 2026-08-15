@@ -115,3 +115,14 @@ test("sales rows carry department sales", () => {
   const row = toDbProperty(parseExpertAgentFeed(xml).properties[0]);
   assert.equal(row.department, "sales");
 });
+
+test("toDbProperty carries tenure, brochure, tour, rooms and floorplans", () => {
+  const p = parseExpertAgentFeed(xml).properties[0];
+  const row = toDbProperty(p);
+  assert.equal(row.tenure, "Freehold");
+  assert.match(row.brochure_url, /External\.pdf$/);
+  assert.match(row.virtual_tour_url, /panpics/);
+  assert.equal(row.rooms.length, 2);
+  assert.deepEqual(Object.keys(row.rooms[0]).sort(), ["description", "measurement", "name"]);
+  assert.equal(row.floorplans.length, 1);
+});

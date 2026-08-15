@@ -55,10 +55,9 @@ function useLiveProperties() {
       .then((d) => {
         if (cancelled) return;
         const mapped: SiteProperty[] = (d.properties ?? []).map(
-          (c: SiteProperty & { department?: string; status?: string }) => ({
+          (c: SiteProperty & { featureFlags?: Record<string, boolean> }) => ({
             ...c,
-            features: {},
-            addedDate: new Date().toISOString(),
+            features: c.featureFlags ?? {},
           })
         );
         setProperties(mapped);

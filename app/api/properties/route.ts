@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { dbToCard } from "@/lib/property-view";
+import { dbToCard, deriveFeatureFlags } from "@/lib/property-view";
 
 // Public listings API — reads via the anon client (RLS: public read).
 // /api/properties?department=sales|lettings&status=for_sale&limit=24
@@ -37,8 +37,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ properties: [] }, { status: 500 });
   }
 
+  const properties = (data ?? []).map((row) => ({
+    ...dbToCard(row),
+    featureFlags: deriveFeatureFlags(row.features, row.virtual_tour_url),
+    addedDate: row.created_at,
+  }));
+
   return NextResponse.json(
-    { properties: (data ?? []).map(dbToCard) },
+    { properties },
     { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
   );
 }
