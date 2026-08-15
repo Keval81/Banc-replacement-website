@@ -66,7 +66,13 @@ function text(v: unknown): string {
 }
 
 function joinAddress(parts: string[]): string {
-  return parts.filter(Boolean).join(", ");
+  const kept: string[] = [];
+  for (const part of parts) {
+    if (!part) continue;
+    if (kept.length && kept[kept.length - 1].toLowerCase() === part.toLowerCase()) continue;
+    kept.push(part);
+  }
+  return kept.join(", ");
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -151,20 +157,26 @@ const STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
   "sold": "sold",
   "sold stc": "under_offer",
   "withdrawn": "withdrawn",
+  "available to let": "to_let",
+  "let stc": "let_agreed",
+  "let": "let",
 };
 
 export function toDbProperty(
   p: FeedProperty
 ): Omit<DbProperty, "id" | "created_at" | "updated_at"> {
   const description = [p.mainAdvert, ...p.adverts].filter(Boolean).join("\n\n");
+  const lettings = /lettings/i.test(p.department);
+  const fallback: DbProperty["status"] = lettings ? "to_let" : "for_sale";
   return {
+    department: lettings ? "lettings" : "sales",
     expert_agent_id: p.reference,
     title: p.advertHeading || joinAddress([p.address]),
     address: p.address,
     postcode: p.postcode,
     price: p.numericPrice,
     price_qualifier: p.priceText || undefined,
-    status: STATUS_BY_PRIORITY[p.priority.toLowerCase()] ?? "for_sale",
+    status: STATUS_BY_PRIORITY[p.priority.toLowerCase()] ?? fallback,
     property_type: [p.propertyStyle, p.propertyType].filter(Boolean).join(" "),
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

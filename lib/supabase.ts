@@ -32,7 +32,8 @@ export interface DbProperty {
   postcode: string;
   price: number;
   price_qualifier?: string;
-  status: "for_sale" | "under_offer" | "sold" | "withdrawn";
+  status: "for_sale" | "under_offer" | "sold" | "withdrawn" | "to_let" | "let_agreed" | "let";
+  department: "sales" | "lettings";
   property_type: string;
   bedrooms: number;
   bathrooms: number;
