@@ -25,215 +25,53 @@ import PropertyMap from "@/components/PropertyMap";
 // Sample Properties Data
 // ============================================
 
-const allProperties = [
-  {
-    id: "the-laurels-hadley-wood",
-    title: "The Laurels",
-    address: "Hadley Wood, EN4",
-    price: "£2,450,000",
-    priceNum: 2450000,
-    tags: ["New Listing", "Premium", "Video Tour"],
-    stats: { beds: 5, baths: 4, sqft: 3820, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
-    summary: "Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
-    propertyType: "house",
-    features: { garden: true, parking: true, garage: true, videoTour: true },
-    addedDate: "2026-02-25",
-  },
-  {
-    id: "mayfair-penthouse-mount-street",
-    title: "Mayfair Penthouse",
-    address: "Mount Street, W1",
-    price: "£3,900,000",
-    priceNum: 3900000,
-    tags: ["Premium", "Video Tour"],
-    stats: { beds: 3, baths: 3, sqft: 2100, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
-    summary: "Light-filled penthouse with panoramic views, concierge service, and private terrace.",
-    propertyType: "flat",
-    features: { parking: true, videoTour: true },
-    addedDate: "2026-02-20",
-  },
-  {
-    id: "cuffley-house-hertfordshire",
-    title: "Cuffley House",
-    address: "Cuffley, Hertfordshire",
-    price: "£1,350,000",
-    priceNum: 1350000,
-    tags: ["New Listing", "Premium"],
-    stats: { beds: 4, baths: 3, sqft: 2600, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
-    summary: "Characterful family home with open-plan living, media room, and expansive gardens.",
-    propertyType: "house",
-    features: { garden: true, parking: true, periodFeatures: true },
-    addedDate: "2026-02-26",
-  },
-  {
-    id: "woodland-manor-brookmans-park",
-    title: "Woodland Manor",
-    address: "Brookmans Park, AL9",
-    price: "£1,850,000",
-    priceNum: 1850000,
-    tags: ["Premium", "Gardens"],
-    stats: { beds: 5, baths: 4, sqft: 3200, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    summary: "Stunning detached residence set within mature grounds with woodland views and triple garage.",
-    propertyType: "house",
-    features: { garden: true, parking: true, garage: true },
-    addedDate: "2026-02-15",
-  },
-  {
-    id: "the-old-rectory-potters-bar",
-    title: "The Old Rectory",
-    address: "Potters Bar, EN6",
-    price: "£2,100,000",
-    priceNum: 2100000,
-    tags: ["Period Property", "Grade II"],
-    stats: { beds: 6, baths: 3, sqft: 4100, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
-    summary: "Impressive Grade II listed former rectory with period features, modernised throughout.",
-    propertyType: "house",
-    features: { garden: true, parking: true, periodFeatures: true, fireplace: true },
-    addedDate: "2026-02-10",
-  },
-  {
-    id: "parkside-apartment-mayfair",
-    title: "Parkside Apartment",
-    address: "Mayfair, W1K",
-    price: "£1,650,000",
-    priceNum: 1650000,
-    tags: ["Apartment", "Park View"],
-    stats: { beds: 2, baths: 2, sqft: 1100, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    summary: "Elegant two-bedroom apartment overlooking Hyde Park with concierge and underground parking.",
-    propertyType: "flat",
-    features: { parking: true },
-    addedDate: "2026-02-22",
-  },
-  {
-    id: "modern-bungalow-cuffley",
-    title: "Modern Bungalow",
-    address: "Cuffley, Hertfordshire",
-    price: "£950,000",
-    priceNum: 950000,
-    tags: ["New Listing", "Bungalow"],
-    stats: { beds: 3, baths: 2, sqft: 1400, epc: "A" },
-    images: [
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "Stunning modern bungalow with open-plan living, large garden and off-street parking.",
-    propertyType: "bungalow",
-    features: { garden: true, parking: true, newBuild: true },
-    addedDate: "2026-02-27",
-  },
-  {
-    id: "riverside-maisonette",
-    title: "Riverside Maisonette",
-    address: "Brookmans Park, AL9",
-    price: "£750,000",
-    priceNum: 750000,
-    tags: ["Maisonette", "Chain Free"],
-    stats: { beds: 2, baths: 1, sqft: 900, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "Charming two-storey maisonette with river views, modern kitchen and chain-free sale.",
-    propertyType: "maisonette",
-    features: { chainFree: true },
-    addedDate: "2026-02-24",
-  },
-  {
-    id: "development-land-enfield",
-    title: "Development Land",
-    address: "Enfield, EN2",
-    price: "£1,200,000",
-    priceNum: 1200000,
-    tags: ["Land", "Development"],
-    stats: { beds: 0, baths: 0, sqft: 21780, epc: "N/A" },
-    images: [
-      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "0.5 acre development plot with planning permission for 4-bedroom detached house.",
-    propertyType: "land",
-    features: {},
-    addedDate: "2026-02-18",
-  },
-  {
-    id: "commercial-retail-unit",
-    title: "Prime Retail Unit",
-    address: "Potters Bar, EN6",
-    price: "£450,000",
-    priceNum: 450000,
-    tags: ["Commercial", "Investment"],
-    stats: { beds: 0, baths: 1, sqft: 1200, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "High-street retail unit with A1 use, rear storage and parking for 2 vehicles.",
-    propertyType: "commercial",
-    features: { parking: true },
-    addedDate: "2026-02-12",
-  },
-  {
-    id: "victorian-terrace",
-    title: "Victorian Terrace",
-    address: "Cuffley, Hertfordshire",
-    price: "£675,000",
-    priceNum: 675000,
-    tags: ["Period Property", "Reduced"],
-    stats: { beds: 3, baths: 1, sqft: 1100, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "Beautifully preserved Victorian terrace with original fireplaces and modern extension.",
-    propertyType: "house",
-    features: { periodFeatures: true, fireplace: true, garden: true },
-    addedDate: "2026-01-15",
-    reduced: true,
-  },
-  {
-    id: "luxury-apartment-w1",
-    title: "Luxury Studio Apartment",
-    address: "Mayfair, W1",
-    price: "£550,000",
-    priceNum: 550000,
-    tags: ["Apartment", "Virtual Tour"],
-    stats: { beds: 0, baths: 1, sqft: 450, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1600&q=80",
-    ],
-    summary: "Stunning studio apartment in prime Mayfair location with 24-hour concierge.",
-    propertyType: "flat",
-    features: { virtualTour: true },
-    addedDate: "2026-02-23",
-  },
-];
+// Live listings come from /api/properties (Expert Agent feed -> Supabase).
+// The item shape mirrors what PropertyCard and the filter pipeline expect.
+interface SiteProperty {
+  id: string;
+  title: string;
+  address: string;
+  price: string;
+  priceNum: number;
+  tags: string[];
+  stats: { beds: number; baths: number; sqft?: number; epc?: string };
+  images: string[];
+  summary: string;
+  propertyType: string;
+  features: Record<string, boolean>;
+  addedDate: string;
+}
+
+const allProperties: SiteProperty[] = [];
+
+function useLiveProperties() {
+  const [properties, setProperties] = React.useState<SiteProperty[]>([]);
+  const [loaded, setLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/api/properties?department=sales")
+      .then((r) => (r.ok ? r.json() : { properties: [] }))
+      .then((d) => {
+        if (cancelled) return;
+        const mapped: SiteProperty[] = (d.properties ?? []).map(
+          (c: SiteProperty & { department?: string; status?: string }) => ({
+            ...c,
+            features: {},
+            addedDate: new Date().toISOString(),
+          })
+        );
+        setProperties(mapped);
+        setLoaded(true);
+      })
+      .catch(() => setLoaded(true));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { properties, loaded };
+}
 
 // ============================================
 // Filter Logic
@@ -325,12 +163,13 @@ function SalesPropertiesPageContent() {
   });
   
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
+  const { properties: liveProperties, loaded } = useLiveProperties();
 
   // Filter and sort properties
   const filteredProperties = React.useMemo(() => {
-    const filtered = filterProperties(allProperties, filters);
+    const filtered = filterProperties(liveProperties, filters);
     return sortProperties(filtered, filters.sortBy);
-  }, [filters]);
+  }, [liveProperties, filters]);
 
   return (
     <div className="bg-white text-[#2C2A27] min-h-screen">
@@ -429,16 +268,10 @@ function SalesPropertiesPageContent() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.div
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.1 }}
-                  variants={{
-                    hidden: {},
-                    show: {
-                      transition: { staggerChildren: 0.08 },
-                    },
-                  }}
+                {/* Reveal is per-card: a whole-grid whileInView threshold can
+                    never fire once the grid is taller than ~10 viewports
+                    (100 live listings), leaving every card at opacity 0. */}
+                <div
                   className={
                     viewMode === "grid"
                       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
@@ -453,17 +286,17 @@ function SalesPropertiesPageContent() {
                     filteredProperties.map((property) => (
                       <motion.div
                         key={property.id}
-                        variants={{
-                          hidden: { opacity: 0, y: 20 },
-                          show: { opacity: 1, y: 0 },
-                        }}
+                        initial={{ opacity: 0, y: 16 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.15 }}
+                        transition={{ duration: 0.4 }}
                         className={viewMode === "list" ? "w-full" : ""}
                       >
                         <PropertyCard {...property} />
                       </motion.div>
                     ))
                   )}
-                </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

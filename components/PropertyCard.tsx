@@ -25,8 +25,8 @@ import { cn } from "@/lib/utils";
 interface PropertyStats {
   beds: number;
   baths: number;
-  sqft: number;
-  epc: string;
+  sqft?: number;
+  epc?: string;
 }
 
 /** Extended PropertyCard with compare and favorite functionality */
@@ -228,15 +228,19 @@ export default function PropertyCard({
             <span className="font-medium">{stats.baths}</span>
             <span className="hidden sm:inline"> Baths</span>
           </span>
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Square className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
-            <span className="font-medium">{stats.sqft.toLocaleString()}</span>
-            <span className="hidden sm:inline"> Sq Ft</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
-            <span className="font-medium">EPC {stats.epc}</span>
-          </span>
+          {stats.sqft !== undefined && (
+            <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
+              <Square className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+              <span className="font-medium">{stats.sqft.toLocaleString()}</span>
+              <span className="hidden sm:inline"> Sq Ft</span>
+            </span>
+          )}
+          {stats.epc !== undefined && (
+            <span className="flex items-center gap-1">
+              <Sparkles className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+              <span className="font-medium">EPC {stats.epc}</span>
+            </span>
+          )}
         </div>
 
         {/* Summary */}

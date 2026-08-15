@@ -8,8 +8,6 @@ import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
 // GoogleReviews removed — covered by Testimonials section
 // Partner logos moved to Footer
-import SoldBanner from "@/components/social/SoldBanner";
-import RecommendedProperties from "@/components/ai/RecommendedProperties";
 
 export const metadata: Metadata = {
   title: "Banc Property Group | Award-Winning Estate Agents",
@@ -74,14 +72,13 @@ export default function Home() {
           <Hero />
           <PropertySearch />
           <FeaturedListings />
-          <RecommendedProperties 
-            title="AI-Picked Properties For You"
-            location="Cuffley"
-            limit={3}
-          />
+          {/* RecommendedProperties removed: renders "No Image / £0" empty
+              states until the AI feed has real data. */}
           <Services />
           <Testimonials />
-          <SoldBanner />
+          {/* SoldBanner removed: seeded mock sold prices/addresses presented
+              as fact — misrepresentation risk. Restore with real sold data
+              (now available in Supabase: status=under_offer/sold). */}
         </main>
         <Footer />
       </div>
