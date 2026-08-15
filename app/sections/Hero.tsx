@@ -6,12 +6,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 
-// Videos in reverse order: 3, 2, 1
-const videos = [
-  "/videos/hero3.m4v",
-  "/videos/hero2.m4v",
-  "/videos/hero1.m4v",
-];
+// The Descent — single golden-hour hero film (27s loop), generated from
+// Banc's real listing photography. Replaces the 3-clip rotation.
+const videos = ["/videos/hero-descent.mp4"];
 
 interface Review {
   authorName: string;
@@ -159,8 +156,10 @@ export default function Hero() {
             }}
             src={videos[currentVideo]}
             muted
+            loop
             playsInline
             preload="auto"
+            poster="/videos/hero-descent-poster.jpg"
             aria-hidden="true"
           />
         </motion.div>
