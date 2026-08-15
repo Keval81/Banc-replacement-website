@@ -172,29 +172,19 @@ export default function Hero() {
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-10 pt-24 lg:px-10 lg:pt-28">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-sm font-serif text-lg leading-relaxed text-white/90"
-          >
-            Banc sells and lets homes across Cuffley and Hertfordshire — accurate
-            valuations, premium marketing, one team from instruction to completion.
-          </motion.p>
-
+      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-28 pt-20 lg:px-10 lg:pb-12 lg:pt-28">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-end">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.7 }}
             className="flex w-full max-w-sm flex-col gap-3 lg:items-end"
           >
-            <div className="w-full rounded-[10px] bg-banc-dark/90 p-5">
+            <div className="w-full rounded-[10px] bg-banc-dark/90 p-4 lg:p-5">
               <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                 Thinking of selling?
               </p>
-              <p className="mt-2 font-serif text-xl font-light text-white">
+              <p className="mt-2 font-serif text-lg font-light text-white lg:text-xl">
                 Know what your home is worth.
               </p>
               <Link
@@ -262,18 +252,10 @@ export default function Hero() {
             <img
               src="/banc-logo-white-clear.png"
               alt=""
-              className="block w-auto"
-              style={{ height: "clamp(80px, 12vw, 180px)" }}
+              className="block h-auto"
+              style={{ width: "min(82vw, 640px)" }}
             />
           </h1>
-          <div className="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-1 border-t border-white/20 pt-3">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-white/70">
-              Cuffley &middot; Hertfordshire
-            </p>
-            <p className="ml-auto hidden text-[11px] uppercase tracking-[0.18em] text-white/70 sm:block">
-              Valuations &middot; Sales &middot; Lettings
-            </p>
-          </div>
         </motion.div>
       </div>
     </section>

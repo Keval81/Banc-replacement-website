@@ -398,7 +398,8 @@ export default function Header({ transparent = false }: { transparent?: boolean 
       </AnimatePresence>
 
       {/* Header Spacer */}
-      <div className="h-[56px] bg-banc-dark-deep lg:h-[72px]" />
+      {/* Spacer only when the header has a bar — transparent mode floats over the hero */}
+      {!transparent && <div className="h-[56px] bg-banc-dark-deep lg:h-[72px]" />}
     </>
   );
 }
