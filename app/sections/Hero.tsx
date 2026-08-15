@@ -4,12 +4,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-// Videos in reverse order: 3, 2, 1
-const videos = [
-  "/videos/hero3.m4v",
-  "/videos/hero2.m4v",
-  "/videos/hero1.m4v",
-];
+// The Cut — fast 11s golden-hour hero film loop for the Aker direction.
+const videos = ["/videos/hero-cut.mp4"];
 
 interface Review {
   authorName: string;
@@ -153,8 +149,10 @@ export default function Hero() {
             style={{ minHeight: "100vh", minWidth: "100vw", objectPosition: "center center" }}
             src={videos[currentVideo]}
             muted
+            loop
             playsInline
             preload="auto"
+            poster="/videos/hero-cut-poster.jpg"
             aria-hidden="true"
           />
         </motion.div>
