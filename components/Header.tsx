@@ -48,7 +48,7 @@ function trackCallClick(source: string) {
   console.log(`Call clicked from: ${source}`);
 }
 
-export default function Header() {
+export default function Header({ transparent = false }: { transparent?: boolean } = {}) {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -84,19 +84,31 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
+      <header
+        className={
+          transparent
+            ? "fixed top-0 left-0 right-0 z-50 bg-transparent"
+            : "fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none"
+        }
+      >
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
-          {/* Logo */}
-          <Link href="/" aria-label="Banc Property Group" className="flex items-center">
-            <Image
-              src="/banc-logo-blue.png"
-              alt="Banc Property Group"
-              width={200}
-              height={60}
-              className="h-8 w-auto object-contain lg:h-12"
-              priority
-            />
-          </Link>
+          {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
+          {transparent ? (
+            <Link href="/" aria-label="Banc Property Group" className="flex items-center">
+              <span className="sr-only">Banc Property Group</span>
+            </Link>
+          ) : (
+            <Link href="/" aria-label="Banc Property Group" className="flex items-center">
+              <Image
+                src="/banc-logo-blue.png"
+                alt="Banc Property Group"
+                width={200}
+                height={60}
+                className="h-8 w-auto object-contain lg:h-12"
+                priority
+              />
+            </Link>
+          )}
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 lg:flex">

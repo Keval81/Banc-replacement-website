@@ -252,17 +252,21 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.9, ease: "easeOut" }}
         >
-          <h1
-            aria-label="Banc Property Group — estate agents in Cuffley and Hertfordshire"
-            className="font-serif font-light leading-[0.85] tracking-[-0.02em] text-white"
-            style={{ fontSize: "clamp(96px, 15vw, 210px)" }}
-          >
-            Banc
+          <h1 className="m-0">
+            <span className="sr-only">
+              Banc Property Group — estate agents in Cuffley and Hertfordshire
+            </span>
+            {/* Logo replaces the wordmark at the same scale (the old text was
+                clamp(96px,15vw,210px) tall; the lockup is wider, so height
+                maps to a slightly smaller clamp to hold the same presence). */}
+            <img
+              src="/banc-logo-white-clear.png"
+              alt=""
+              className="block w-auto"
+              style={{ height: "clamp(80px, 12vw, 180px)" }}
+            />
           </h1>
           <div className="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-1 border-t border-white/20 pt-3">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-white/70">
-              Property Group
-            </p>
             <p className="text-[11px] uppercase tracking-[0.18em] text-white/70">
               Cuffley &middot; Hertfordshire
             </p>

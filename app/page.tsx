@@ -65,7 +65,7 @@ export default function Home() {
         }}
       />
       <div className="bg-white text-[#2C2A27]">
-        <Header />
+        <Header transparent />
         <main>
           <Hero />
           <PropertySearch />
