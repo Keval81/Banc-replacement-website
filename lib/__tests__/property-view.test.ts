@@ -20,6 +20,7 @@ const base: DbProperty = {
   description: "A fine home.\n\nMore detail.",
   features: ["6 Bedrooms", "Double Garage"],
   images: ["http://med05.expertagent.co.uk/a/1.jpg", "http://med05.expertagent.co.uk/a/2.jpg"],
+  epc_image_url: "",
   tenure: "Freehold",
   brochure_url: "http://www.expertagent.co.uk/a/External.pdf",
   virtual_tour_url: "http://tours.example/t1",
@@ -129,4 +130,21 @@ test("dbToDetail builds gallery images, floorplans and keeps honest gaps", () =>
   assert.equal(d.priceQualifier, "Guide Price £2,350,000");
   assert.equal(d.addedDate, "2026-08-15T00:00:00Z");
   assert.equal(d.rooms.length, 1);
+});
+
+test("dbToDetail passes coordinates and epc through", () => {
+  const d = dbToDetail({
+    ...base,
+    latitude: 51.7101,
+    longitude: -0.1124,
+    epc_rating: "C",
+    epc_image_url: "http://med01.expertagent.co.uk/x/EPC_80827980.png",
+  });
+  assert.equal(d.latitude, 51.7101);
+  assert.equal(d.longitude, -0.1124);
+  assert.equal(d.epcRating, "C");
+  assert.match(d.epcImageUrl, /EPC_80827980/);
+  const bare = dbToDetail(base);
+  assert.equal(bare.latitude, undefined);
+  assert.equal(bare.epcRating, undefined);
 });

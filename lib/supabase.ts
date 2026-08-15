@@ -43,6 +43,7 @@ export interface DbProperty {
   features: string[];
   images: string[];
   epc_rating?: string;
+  epc_image_url: string;
   tenure: string;
   brochure_url: string;
   virtual_tour_url: string;

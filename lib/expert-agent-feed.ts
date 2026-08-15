@@ -37,6 +37,7 @@ export interface FeedProperty {
   features: string[];
   brochure: string;
   virtualTourUrl: string;
+  epcImageUrl: string;
   propertyType: string;
   propertyStyle: string;
   rooms: FeedRoom[];
@@ -113,6 +114,7 @@ function mapProperty(raw: any, branch: string): FeedProperty {
     features,
     brochure: text(raw.brochure),
     virtualTourUrl: text(raw.virtual_tour_url),
+    epcImageUrl: text(raw.epc),
     propertyType: text(raw.property_type),
     propertyStyle: text(raw.property_style),
     rooms: arr(raw.rooms?.room).map((r: any) => ({
@@ -162,6 +164,26 @@ const STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
   "let": "let",
 };
 
+// Standard EPC bands (SAP score -> letter).
+export function epcBand(score: number): string {
+  if (score >= 92) return "A";
+  if (score >= 81) return "B";
+  if (score >= 69) return "C";
+  if (score >= 55) return "D";
+  if (score >= 39) return "E";
+  if (score >= 21) return "F";
+  return "G";
+}
+
+// Expert Agent EPC image filenames encode the four scores as EPC_CCPPccpp
+// (energy current/potential, environmental current/potential, 2 digits each).
+function epcRatingFromImage(url: string): string | undefined {
+  // EPC_CCPPccpp (8 digits) or PEA_CCPP (4 digits) — first pair = current score
+  const m = url.match(/(?:EPC_(\d{2})\d{6}|PEA_(\d{2})\d{2})/i);
+  const current = m ? Number(m[1] ?? m[2]) : NaN;
+  return Number.isFinite(current) ? epcBand(current) : undefined;
+}
+
 export function toDbProperty(
   p: FeedProperty
 ): Omit<DbProperty, "id" | "created_at" | "updated_at"> {
@@ -185,6 +207,8 @@ export function toDbProperty(
     features: p.features,
     images: p.pictures.map((pic) => pic.filename),
     tenure: p.tenure,
+    epc_rating: epcRatingFromImage(p.epcImageUrl),
+    epc_image_url: p.epcImageUrl,
     brochure_url: p.brochure,
     virtual_tour_url: p.virtualTourUrl,
     rooms: p.rooms.map((r) => ({

@@ -78,6 +78,43 @@ try {
     return row;
   });
 
+  // Geocode at postcode level via postcodes.io (free, no key, UK-only).
+  // House-level coords aren't in the feed; postcode centroid is honest for
+  // an area map. Failures leave lat/lng null.
+  const postcodes = [...new Set(rows.map((r) => r.postcode.trim()).filter(Boolean))];
+  const coords = new Map<string, { latitude: number; longitude: number }>();
+  for (let i = 0; i < postcodes.length; i += 100) {
+    const batch = postcodes.slice(i, i + 100);
+    try {
+      const res = await fetch("https://api.postcodes.io/postcodes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postcodes: batch }),
+      });
+      const body = await res.json();
+      for (const item of body.result ?? []) {
+        if (item.result) {
+          coords.set(item.query.toUpperCase(), {
+            latitude: item.result.latitude,
+            longitude: item.result.longitude,
+          });
+        }
+      }
+    } catch {
+      console.warn(`geocode batch ${i / 100} failed — leaving those coords null`);
+    }
+  }
+  let geocoded = 0;
+  for (const r of rows) {
+    const c = coords.get(r.postcode.trim().toUpperCase());
+    if (c) {
+      r.latitude = c.latitude;
+      r.longitude = c.longitude;
+      geocoded++;
+    }
+  }
+  console.log(`geocoded ${geocoded}/${rows.length} at postcode level`);
+
   if (DRY_RUN) {
     for (const r of rows) {
       console.log(

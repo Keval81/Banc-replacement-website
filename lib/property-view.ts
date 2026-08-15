@@ -107,6 +107,10 @@ export interface LivePropertyDetail extends PropertyCardData {
   virtualTourUrl: string;
   addedDate: string;
   rooms: DbProperty["rooms"];
+  latitude?: number;
+  longitude?: number;
+  epcRating?: string;
+  epcImageUrl: string;
   gallery: Array<{ id: string; url: string; alt: string; isPrimary: boolean }>;
   floorplans: Array<{ id: string; url: string; title: string }>;
 }
@@ -127,6 +131,10 @@ export function dbToDetail(p: DbProperty): LivePropertyDetail {
     virtualTourUrl: p.virtual_tour_url,
     addedDate: p.created_at,
     rooms: p.rooms,
+    latitude: p.latitude,
+    longitude: p.longitude,
+    epcRating: p.epc_rating,
+    epcImageUrl: p.epc_image_url,
     gallery: p.images.map((url, i) => ({
       id: `${ref}-${i}`,
       url,

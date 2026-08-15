@@ -51,6 +51,10 @@ interface LiveDetail {
   gallery: Gallery[];
   floorplans: Array<{ id: string; url: string; title: string }>;
   department: "sales" | "lettings";
+  latitude?: number;
+  longitude?: number;
+  epcRating?: string;
+  epcImageUrl: string;
 }
 
 interface SimilarCard {
@@ -278,6 +282,52 @@ function DetailBody({
                 <section className="mb-8">
                   <h2 className="mb-3 text-lg font-semibold text-banc-dark">Floorplan</h2>
                   <FloorplanViewer floorplans={property.floorplans} />
+                </section>
+              )}
+
+              {/* EPC — official graph from the sales system; band derived
+                  from its filename when encoded */}
+              {property.epcImageUrl && (
+                <section className="mb-8">
+                  <h2 className="mb-3 flex items-center gap-3 text-lg font-semibold text-banc-dark">
+                    Energy performance
+                    {property.epcRating && (
+                      <span
+                        className={`inline-flex h-7 w-7 items-center justify-center rounded text-sm font-bold text-white ${
+                          { A: "bg-emerald-700", B: "bg-emerald-500", C: "bg-lime-500",
+                            D: "bg-yellow-500", E: "bg-orange-500", F: "bg-orange-700",
+                            G: "bg-red-700" }[property.epcRating] ?? "bg-banc-grey"
+                        }`}
+                      >
+                        {property.epcRating}
+                      </span>
+                    )}
+                  </h2>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={property.epcImageUrl}
+                    alt={`Energy performance certificate graph${property.epcRating ? `, current rating ${property.epcRating}` : ""}`}
+                    className="max-w-md rounded-lg border border-banc-grey/20"
+                  />
+                </section>
+              )}
+
+              {/* Location — postcode-level map (the feed carries no exact
+                  coordinates, so the pin marks the postcode area) */}
+              {property.latitude !== undefined && property.longitude !== undefined && (
+                <section className="mb-8">
+                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">Location</h2>
+                  <div className="overflow-hidden rounded-lg border border-banc-grey/20">
+                    <iframe
+                      title={`Map of ${property.postcode}`}
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.012}%2C${property.latitude - 0.006}%2C${property.longitude + 0.012}%2C${property.latitude + 0.006}&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`}
+                      className="h-[360px] w-full border-0"
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-banc-grey">
+                    Map shows the {property.postcode} postcode area.
+                  </p>
                 </section>
               )}
             </motion.div>
