@@ -1,3 +1,7 @@
+// DEPRECATED — this stub guessed a JSON REST API. The real Expert Agent
+// integration (spec v1.3) is an FTP-dropped XML feed: see
+// lib/expert-agent-feed.ts + scripts/sync-expert-agent.ts. This file stays
+// only so /api/cron/sync-properties keeps no-op'ing until it is retired.
 // Expert Agent CRM API Integration
 // Syncs live property listings from Expert Agent to Supabase
 // TODO: Add credentials to .env.local:
