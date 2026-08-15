@@ -2,9 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
 
 // Videos in reverse order: 3, 2, 1
 const videos = [
@@ -136,11 +134,11 @@ export default function Hero() {
   const activeReview = reviews[currentReview];
 
   return (
-    <section 
+    <section
       className="relative min-h-screen h-screen w-full overflow-hidden bg-banc-dark-deep text-white"
       onClick={handleInteraction}
     >
-      {/* Video Background */}
+      {/* Video background (mechanism unchanged) */}
       <div className="absolute inset-0 h-screen w-full overflow-hidden">
         <motion.div
           key={currentVideo}
@@ -152,11 +150,7 @@ export default function Hero() {
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
-            style={{ 
-              minHeight: '100vh', 
-              minWidth: '100vw',
-              objectPosition: 'center center'
-            }}
+            style={{ minHeight: "100vh", minWidth: "100vw", objectPosition: "center center" }}
             src={videos[currentVideo]}
             muted
             playsInline
@@ -164,139 +158,118 @@ export default function Hero() {
             aria-hidden="true"
           />
         </motion.div>
-
-        {/* Fallback while loading */}
-        {!isLoaded && (
-          <div className="absolute inset-0 h-screen w-full bg-banc-dark-deep">
-            <div 
-              className="absolute inset-0 h-full w-full opacity-50"
-              style={{
-                backgroundImage: "url('/map-area.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center center",
-                filter: "blur(20px) brightness(0.4)",
-              }}
-            />
-          </div>
-        )}
+        {!isLoaded && <div className="absolute inset-0 h-screen w-full bg-banc-dark-deep" />}
       </div>
-      
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 z-[3] bg-gradient-to-b from-banc-dark-deep/70 via-banc-dark-deep/40 to-banc-dark-deep/80" />
 
-      {/* Autoplay blocked notice */}
+      {/* Legibility scrim */}
+      <div className="absolute inset-0 z-[3] bg-banc-dark-deep/45" />
+
       {!canAutoplay && (
-        <motion.button
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full bg-banc-sky px-6 py-3 text-sm font-semibold text-white shadow-lg active:bg-[#1A9BBF] lg:hover:bg-[#1A9BBF]"
+        <button
+          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/40 px-6 py-3 text-sm text-white"
           onClick={startPlayback}
         >
-          Click to play video
-        </motion.button>
+          Play film
+        </button>
       )}
 
       {/* Content */}
-      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-7xl flex-col justify-start px-4 pb-24 pt-20 lg:justify-between lg:px-10 lg:py-20">
-        {/* Main Content */}
+      <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-10 pt-24 lg:px-10 lg:pt-28">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="max-w-sm font-serif text-lg leading-relaxed text-white/90"
+          >
+            Banc sells and lets homes across Cuffley and Hertfordshire — accurate
+            valuations, premium marketing, one team from instruction to completion.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.7 }}
+            className="flex w-full max-w-sm flex-col gap-3 lg:items-end"
+          >
+            <div className="w-full rounded-[10px] bg-banc-dark/90 p-5">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
+                Thinking of selling?
+              </p>
+              <p className="mt-2 font-serif text-xl font-light text-white">
+                Know what your home is worth.
+              </p>
+              <Link
+                href="/valuation"
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-banc-sky px-6 py-3 text-sm font-medium text-banc-dark-deep transition-colors hover:bg-banc-sky-mid"
+              >
+                Request a valuation
+                <span aria-hidden>&rarr;</span>
+              </Link>
+            </div>
+
+            <div className="flex w-full gap-3">
+              <Link
+                href="/sales/properties"
+                className="flex-1 rounded-full border border-white/25 px-5 py-2.5 text-center text-sm text-white transition-colors hover:border-white/60"
+              >
+                Sales
+              </Link>
+              <Link
+                href="/lettings/properties"
+                className="flex-1 rounded-full border border-white/25 px-5 py-2.5 text-center text-sm text-white transition-colors hover:border-white/60"
+              >
+                Lettings
+              </Link>
+            </div>
+
+            <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-5 sm:block">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentReview}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="line-clamp-3 text-sm leading-relaxed text-white/85">
+                    &ldquo;{activeReview.text}&rdquo;
+                  </p>
+                  <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
+                    <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
+                      {activeReview.authorName} &middot; Google
+                    </p>
+                    <p className="text-[11px] tracking-[0.08em] text-white/80">
+                      5.0 &#9733; ({totalReviews})
+                    </p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-2xl"
+          transition={{ delay: 0.15, duration: 0.9, ease: "easeOut" }}
         >
-          <h1 className="text-3xl font-semibold leading-tight tracking-tight text-white drop-shadow-lg sm:text-4xl lg:text-5xl xl:text-6xl">
-            Exceptional Properties.<br />
-            <span className="text-banc-sky-mid">Exceptional Service.</span>
+          <h1
+            aria-label="Banc Property Group — estate agents in Cuffley and Hertfordshire"
+            className="font-serif font-light leading-[0.85] tracking-[-0.02em] text-white"
+            style={{ fontSize: "clamp(96px, 15vw, 210px)" }}
+          >
+            Banc
           </h1>
-          <p className="mt-4 text-base text-white/90 sm:text-lg lg:text-xl drop-shadow-md">
-            Your local Cuffley &amp; Mayfair estate agent
-          </p>
-          <div className="mt-6 mb-8 flex flex-wrap items-center gap-3 lg:gap-4">
-            <Link href="/valuation">
-              <Button 
-                size="lg"
-                className="bg-banc-sky px-5 py-5 text-sm text-white hover:bg-[#1A9BBF] active:bg-[#1A9BBF] lg:px-8 lg:text-base"
-              >
-                Request a Valuation
-              </Button>
-            </Link>
-            <Link
-              href="/sales/properties"
-              className="px-2 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white/90 transition-colors hover:text-banc-sky-mid active:text-banc-sky-mid"
-            >
-              View Properties
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* Google Reviews Carousel Tile - Using REAL reviews from API */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="w-full max-w-xs self-start rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-sm mb-32 sm:mb-28 lg:mb-0 lg:mt-auto lg:max-w-sm lg:self-end lg:p-5"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentReview}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4 }}
-            >
-              {/* Reviewer info */}
-              <div className="flex items-center gap-3">
-                {activeReview.profilePhotoUrl ? (
-                  <Image
-                    src={activeReview.profilePhotoUrl}
-                    alt={activeReview.authorName}
-                    width={40}
-                    height={40}
-                    className="h-10 w-10 flex-shrink-0 rounded-full object-cover lg:h-11 lg:w-11"
-                  />
-                ) : (
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-banc-sky lg:h-11 lg:w-11">
-                    <span className="text-sm font-semibold text-white">
-                      {activeReview.authorName?.[0] || "B"}
-                    </span>
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-white">{activeReview.authorName}</p>
-                  <p className="text-xs text-white/70">{activeReview.relativeTime}</p>
-                </div>
-                {/* Stars */}
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="h-3 w-3 fill-banc-sky lg:h-4 lg:w-4" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                    </svg>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Review text */}
-              <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-white/90 lg:line-clamp-3">
-                &ldquo;{activeReview.text}&rdquo;
-              </p>
-            </motion.div>
-          </AnimatePresence>
-          
-          {/* Footer with Google logo + rating */}
-          <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3">
-            {/* Google Logo */}
-            <svg className="h-4 w-auto lg:h-5" viewBox="0 0 272 92" fill="none">
-              <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
-              <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC05"/>
-              <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
-              <path d="M225 3v65h-9.5V3h9.5z" fill="#34A853"/>
-              <path d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z" fill="#EA4335"/>
-              <path d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z" fill="#4285F4"/>
-            </svg>
-            
-            <p className="text-xs text-white/80">
-              5.0 ★ ({totalReviews})
+          <div className="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-1 border-t border-white/20 pt-3">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/70">
+              Property Group
+            </p>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/70">
+              Cuffley &middot; Hertfordshire
+            </p>
+            <p className="ml-auto hidden text-[11px] uppercase tracking-[0.18em] text-white/70 sm:block">
+              Valuations &middot; Sales &middot; Lettings
             </p>
           </div>
         </motion.div>

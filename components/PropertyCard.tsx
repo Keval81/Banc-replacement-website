@@ -115,7 +115,7 @@ export default function PropertyCard({
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        "group overflow-hidden rounded-[10px] border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md cursor-pointer",
+        "group overflow-hidden rounded-[10px] border border-banc-dark/15 bg-white transition-colors duration-200 hover:border-banc-dark/40 cursor-pointer",
         isCompared ? "border-banc-sky ring-1 ring-banc-sky" : "border-banc-grey/20"
       )}
     >
@@ -212,29 +212,29 @@ export default function PropertyCard({
             <h3 className="text-base font-semibold text-banc-dark group-hover/link:text-banc-sky transition-colors line-clamp-1">
               {title}
             </h3>
-            <p className="mt-2 text-xl font-bold text-banc-sky">{price}</p>
+            <p className="mt-2 font-serif text-xl font-light text-banc-dark">{price}</p>
           </div>
         </Link>
 
         {/* Stats Row */}
         <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-banc-grey">
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bed className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+            <Bed className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
             <span className="font-medium">{stats.beds}</span>
             <span className="hidden sm:inline"> Beds</span>
           </span>
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bath className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+            <Bath className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
             <span className="font-medium">{stats.baths}</span>
             <span className="hidden sm:inline"> Baths</span>
           </span>
           <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Square className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+            <Square className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
             <span className="font-medium">{stats.sqft.toLocaleString()}</span>
             <span className="hidden sm:inline"> Sq Ft</span>
           </span>
           <span className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-banc-sky flex-shrink-0" />
+            <Sparkles className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
             <span className="font-medium">EPC {stats.epc}</span>
           </span>
         </div>
@@ -247,8 +247,12 @@ export default function PropertyCard({
         {/* Action Buttons */}
         <div className="flex items-center gap-2 pt-1">
           <Link href={`/sales/properties/${id}`} className="flex-1">
-            <Button size="sm" className="w-full bg-banc-sky hover:bg-banc-sky-dark transition-colors text-xs min-h-[44px] sm:min-h-0">
-              View Details
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full rounded-full border-banc-dark/25 bg-transparent text-xs text-banc-dark transition-colors hover:border-banc-dark hover:bg-transparent min-h-[44px] sm:min-h-0"
+            >
+              View details &rarr;
             </Button>
           </Link>
           <button

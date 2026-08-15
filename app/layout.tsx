@@ -18,7 +18,7 @@ import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 
 const sourceSerif4 = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-serif",
   display: "swap",
 });

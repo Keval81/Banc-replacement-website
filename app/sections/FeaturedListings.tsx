@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import PropertyCard from "@/components/PropertyCard";
+import { SectionHeader } from "@/components/SectionHeader";
 
 const listings = [
   {
@@ -22,12 +23,12 @@ const listings = [
       "Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.",
   },
   {
-    id: "mayfair-penthouse-mount-street",
-    title: "Mayfair Penthouse",
-    address: "Mount Street, W1",
-    price: "£3,900,000",
+    id: "brookmans-park-oak-lodge",
+    title: "Oak Lodge",
+    address: "Brookmans Park, AL9",
+    price: "£1,875,000",
     tags: ["Premium", "Video Tour"],
-    stats: { beds: 3, baths: 3, sqft: 2100, epc: "C" },
+    stats: { beds: 5, baths: 3, sqft: 3100, epc: "C" },
     images: [
       "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
       "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80",
@@ -36,7 +37,7 @@ const listings = [
     mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
     floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
     summary:
-      "Light-filled penthouse with panoramic views, concierge service, and private terrace.",
+      "Substantial detached home by the golf course, with a garden studio and southerly views.",
   },
   {
     id: "cuffley-house-hertfordshire",
@@ -59,13 +60,8 @@ const listings = [
 export default function FeaturedListings() {
   return (
     <section id="featured" className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-16 sm:pb-20 pt-6 sm:pt-8 lg:px-10">
-        <div className="flex flex-col gap-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">Featured</p>
-          <h2 className="text-3xl font-semibold text-banc-dark sm:text-4xl">
-            Featured Properties
-          </h2>
-        </div>
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-20 lg:py-28 lg:px-10">
+        <SectionHeader number="02" label="Featured" title="Homes on the market now" />
 
         <motion.div
           initial="hidden"

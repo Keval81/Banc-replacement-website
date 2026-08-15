@@ -129,21 +129,24 @@ export default function PropertySearch() {
 
   return (
     <section className="relative bg-white">
-      <div className="mx-auto w-full max-w-7xl px-6 pb-6 pt-16 lg:px-10">
+      <div className="mx-auto w-full max-w-7xl px-6 py-14 lg:px-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-3xl border border-banc-grey/20 bg-banc-grey-pale p-6 shadow-sm lg:p-10"
+          className="rounded-[10px] border border-banc-dark/15 bg-banc-grey-pale p-6 lg:p-10"
         >
           <div className="flex flex-col gap-6">
             {/* Header */}
             <div className="flex flex-col gap-2">
-              <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-banc-grey">
                 Search
               </p>
-              <h2 className="text-2xl font-semibold text-banc-dark sm:text-3xl font-serif">
+              <h2
+                className="font-serif font-light leading-[1.05] tracking-[-0.02em] text-banc-dark"
+                style={{ fontSize: "clamp(28px, 3.5vw, 44px)" }}
+              >
                 Find your next property
               </h2>
             </div>

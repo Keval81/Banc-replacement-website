@@ -8,23 +8,19 @@ import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
 // GoogleReviews removed — covered by Testimonials section
 // Partner logos moved to Footer
-import SoldBanner from "@/components/social/SoldBanner";
-import RecommendedProperties from "@/components/ai/RecommendedProperties";
 
 export const metadata: Metadata = {
   title: "Banc Property Group | Award-Winning Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire. Award-winning team, premium marketing, and expert valuations. Your property journey starts here.",
+  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire. Award-winning team, premium marketing, and expert valuations. Your property journey starts here.",
   keywords: [
     "estate agents cuffley",
     "property for sale hertfordshire",
-    "estate agents mayfair",
-    "luxury homes for sale",
     "property valuations",
     "banc property group",
   ],
   openGraph: {
     title: "Banc Property Group | Award-Winning Estate Agents",
-    description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire.",
+    description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
     type: "website",
     url: "https://bancproperty.com",
     images: [
@@ -39,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Banc Property Group | Award-Winning Estate Agents",
-    description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire.",
+    description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
   },
   alternates: {
     canonical: "https://bancproperty.com",
@@ -51,7 +47,7 @@ const homepageStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Banc Property Group | Award-Winning Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire",
+  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire",
   url: "https://bancproperty.com",
   mainEntity: {
     "@type": "RealEstateAgent",
@@ -74,14 +70,14 @@ export default function Home() {
           <Hero />
           <PropertySearch />
           <FeaturedListings />
-          <RecommendedProperties 
-            title="AI-Picked Properties For You"
-            location="Cuffley"
-            limit={3}
-          />
+          {/* RecommendedProperties removed from homepage: renders empty-state
+              cards ("No Image / £0") until the AI feed has real data — see
+              DESIGN.md "no empty-state cards on the public homepage". */}
           <Services />
           <Testimonials />
-          <SoldBanner />
+          {/* SoldBanner removed: its sold prices/addresses are seeded mock
+              data presented as fact — misrepresentation risk on a live agency
+              site. Restore only with real sold records. */}
         </main>
         <Footer />
       </div>
