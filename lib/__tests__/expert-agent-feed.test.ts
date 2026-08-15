@@ -88,3 +88,30 @@ test("toDbProperty maps priority to status", () => {
   const b = parseExpertAgentFeed(xml).properties[1];
   assert.equal(toDbProperty(b).status, "under_offer");
 });
+
+test("deduplicates consecutive address parts (district repeated as town)", () => {
+  const dup = xml.replace("<district>Heytesbury</district>", "<district>Warminster</district>");
+  const p = parseExpertAgentFeed(dup).properties[0];
+  assert.equal(p.address, "18 Heytesbury Park, Warminster, Wiltshire");
+});
+
+test("maps lettings departments and priorities to lettings statuses", () => {
+  const lets = xml
+    .replace("<priority>Under Offer</priority>", "<priority>Available to Let</priority>");
+  const b = parseExpertAgentFeed(lets).properties[1];
+  const row = toDbProperty(b);
+  assert.equal(row.department, "lettings");
+  assert.equal(row.status, "to_let");
+});
+
+test("maps Let STC to let_agreed and Sold STC to under_offer", () => {
+  const a = xml.replace("<priority>On Market</priority>", "<priority>Sold STC</priority>");
+  assert.equal(toDbProperty(parseExpertAgentFeed(a).properties[0]).status, "under_offer");
+  const b = xml.replace("<priority>Under Offer</priority>", "<priority>Let STC</priority>");
+  assert.equal(toDbProperty(parseExpertAgentFeed(b).properties[1]).status, "let_agreed");
+});
+
+test("sales rows carry department sales", () => {
+  const row = toDbProperty(parseExpertAgentFeed(xml).properties[0]);
+  assert.equal(row.department, "sales");
+});

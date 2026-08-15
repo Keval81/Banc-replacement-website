@@ -73,6 +73,7 @@ export async function fetchProperties(page = 1, pageSize = 50): Promise<ExpertAg
 
 function mapToDbProperty(ea: ExpertAgentProperty): Omit<DbProperty, "id" | "created_at"> {
   return {
+    department: "sales",
     expert_agent_id: ea.propertyId,
     title: `${ea.bedrooms} Bedroom ${ea.propertyType}`,
     address: [ea.address.line1, ea.address.line2, ea.address.town, ea.address.county]
