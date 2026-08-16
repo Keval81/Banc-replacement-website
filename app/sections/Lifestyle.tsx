@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { motion } from "framer-motion";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -27,6 +28,7 @@ function Frame({
   sizes,
   className = "",
   rounded = true,
+  video,
 }: {
   src: StaticImageData;
   alt: string;
@@ -34,17 +36,47 @@ function Frame({
   sizes: string;
   className?: string;
   rounded?: boolean;
+  video?: string;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
     <motion.figure {...reveal} className={className}>
       <div className={`relative overflow-hidden ${rounded ? "rounded-[10px]" : ""}`}>
-        <Image
-          src={src}
-          alt={alt}
-          sizes={sizes}
-          placeholder="blur"
-          className="h-full w-full object-cover"
-        />
+        {video ? (
+          <video
+            ref={videoRef}
+            src={video}
+            poster={src.src}
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-label={alt}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <Image
+            src={src}
+            alt={alt}
+            sizes={sizes}
+            placeholder="blur"
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
       <figcaption className="mt-3 text-[11px] uppercase tracking-[0.18em] text-banc-grey">
         {caption}
@@ -93,7 +125,8 @@ export default function Lifestyle() {
           />
           <Frame
             src={familyReveal}
-            alt="A mother lifting her hands from her children's eyes as they see their new hallway for the first time"
+            video="/videos/loop-first-look.mp4"
+            alt="A couple stepping into the hallway of their new home for the first time, she gasps mid-stride"
             caption="First look"
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           />
@@ -110,7 +143,8 @@ export default function Lifestyle() {
         <div id="life-outside" className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           <Frame
             src={familyKeys}
-            alt="A couple celebrating on the doorstep of their new home, keys in hand"
+            video="/videos/loop-keys.mp4"
+            alt="House keys dropped mid-air into an open palm outside a red-brick home at golden hour"
             caption="The keys"
             sizes="(min-width: 640px) 50vw, 100vw"
           />
@@ -126,7 +160,8 @@ export default function Lifestyle() {
         <div id="life-dusk" className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           <Frame
             src={familyPoolFirst}
-            alt="Grandparents showing their grandchildren the garden pool for the first time at dusk"
+            video="/videos/loop-pool.mp4"
+            alt="Two children sprinting across the lawn toward the garden pool, parents laughing behind"
             caption="The pool, for the first time"
             sizes="(min-width: 640px) 50vw, 100vw"
           />
