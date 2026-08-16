@@ -1,0 +1,238 @@
+"use client";
+
+import * as Dialog from "@radix-ui/react-dialog";
+import { useReducedMotion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import Image from "next/image";
+import * as React from "react";
+
+import { getWrappedGalleryIndex } from "@/lib/property-detail-view";
+import type { PropertyImage } from "@/lib/types/property";
+import { cn } from "@/lib/utils";
+
+interface PropertyHeroGalleryProps {
+  images: PropertyImage[];
+  className?: string;
+}
+
+const FALLBACK_IMAGE: PropertyImage = {
+  id: "property-fallback",
+  url: "/hertfordshire-home-1.png",
+  alt: "Property image unavailable",
+  isPrimary: true,
+};
+
+export function PropertyHeroGallery({
+  images,
+  className,
+}: PropertyHeroGalleryProps): React.ReactElement {
+  const gallery = images.length > 0 ? images : [FALLBACK_IMAGE];
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  const touchStart = React.useRef<number | null>(null);
+  const triggerRef = React.useRef<HTMLButtonElement | null>(null);
+  const reduceMotion = useReducedMotion();
+
+  const move = React.useCallback(
+    (delta: -1 | 1) => {
+      setActiveIndex((current) =>
+        getWrappedGalleryIndex(current, delta, gallery.length)
+      );
+    },
+    [gallery.length]
+  );
+
+  const openAt = (index: number, trigger: HTMLButtonElement): void => {
+    triggerRef.current = trigger;
+    setActiveIndex(index);
+    setOpen(true);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLElement>): void => {
+    if (event.target instanceof Element && event.target.closest("button")) {
+      return;
+    }
+
+    touchStart.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLElement>): void => {
+    if (touchStart.current === null) return;
+
+    const distance = (event.changedTouches[0]?.clientX ?? touchStart.current) - touchStart.current;
+    touchStart.current = null;
+    if (Math.abs(distance) < 50) return;
+    move(distance < 0 ? 1 : -1);
+  };
+
+  const primaryColumnClass =
+    gallery.length === 1 ? "col-span-12" : gallery.length === 2 ? "col-span-8" : "col-span-7";
+  const secondaryGridClass =
+    gallery.length === 2
+      ? "col-span-4 grid-cols-1 grid-rows-1"
+      : gallery.length === 3
+        ? "col-span-5 grid-cols-1 grid-rows-2"
+        : "col-span-5 grid-cols-2 grid-rows-2";
+
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <section className={cn("relative", className)} aria-label="Property photos">
+        <div
+          className="relative aspect-[4/3] overflow-hidden bg-banc-dark lg:hidden"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          <button
+            type="button"
+            className="absolute inset-0 z-10"
+            onClick={(event) => openAt(activeIndex, event.currentTarget)}
+          >
+            <span className="sr-only">View all {gallery.length} property photos</span>
+          </button>
+          <Image
+            src={gallery[activeIndex].url}
+            alt={gallery[activeIndex].alt}
+            fill
+            priority
+            className={cn("object-cover", !reduceMotion && "transition-opacity duration-300")}
+            sizes="100vw"
+          />
+          {gallery.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Previous photo"
+                className="absolute left-3 top-1/2 z-20 h-11 w-11 -translate-y-1/2 rounded-full bg-white/90"
+                onClick={() => move(-1)}
+              >
+                <ChevronLeft className="mx-auto h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next photo"
+                className="absolute right-3 top-1/2 z-20 h-11 w-11 -translate-y-1/2 rounded-full bg-white/90"
+                onClick={() => move(1)}
+              >
+                <ChevronRight className="mx-auto h-5 w-5" />
+              </button>
+            </>
+          )}
+          <span className="absolute bottom-3 right-3 z-20 rounded-full bg-banc-dark/80 px-3 py-1.5 text-xs font-medium text-white">
+            {activeIndex + 1} / {gallery.length}
+          </span>
+        </div>
+
+        <div className="relative hidden aspect-[16/7] grid-cols-12 gap-2 overflow-hidden rounded-3xl lg:grid">
+          <button
+            type="button"
+            className={cn("relative row-span-2 overflow-hidden", primaryColumnClass)}
+            onClick={(event) => openAt(0, event.currentTarget)}
+          >
+            <Image
+              src={gallery[0].url}
+              alt={gallery[0].alt}
+              fill
+              priority
+              className={cn(
+                "object-cover",
+                !reduceMotion && "transition-transform duration-500 hover:scale-[1.02]"
+              )}
+              sizes="58vw"
+            />
+          </button>
+          {gallery.length > 1 && (
+            <div className={cn("grid gap-2", secondaryGridClass)}>
+              {gallery.slice(1, 5).map((image, offset) => (
+                <button
+                  key={image.id}
+                  type="button"
+                  className={cn(
+                    "relative overflow-hidden",
+                    gallery.length === 4 && offset === 2 && "col-span-2"
+                  )}
+                  onClick={(event) => openAt(offset + 1, event.currentTarget)}
+                >
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    className={cn(
+                      "object-cover",
+                      !reduceMotion && "transition-transform duration-500 hover:scale-[1.03]"
+                    )}
+                    sizes="21vw"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            className="absolute bottom-5 right-5 z-20 flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-banc-dark shadow-lg"
+            onClick={(event) => openAt(activeIndex, event.currentTarget)}
+          >
+            <Images className="h-4 w-4" /> View all {gallery.length} photos
+          </button>
+        </div>
+      </section>
+
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[100] bg-black/95" />
+        <Dialog.Content
+          className="fixed inset-0 z-[101] flex items-center justify-center p-3 sm:p-8"
+          aria-describedby={undefined}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            triggerRef.current?.focus();
+          }}
+        >
+          <Dialog.Title className="sr-only">Property photo gallery</Dialog.Title>
+          <Dialog.Close
+            type="button"
+            className="absolute right-4 top-4 z-20 h-12 w-12 rounded-full bg-white/10 text-white"
+            aria-label="Close photo gallery"
+          >
+            <X className="mx-auto h-6 w-6" />
+          </Dialog.Close>
+          <div
+            className="relative h-full w-full"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <Image
+              src={gallery[activeIndex].url}
+              alt={gallery[activeIndex].alt}
+              fill
+              priority
+              className="object-contain"
+              sizes="100vw"
+            />
+            {gallery.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  aria-label="Previous photo"
+                  className="absolute left-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white sm:left-4"
+                  onClick={() => move(-1)}
+                >
+                  <ChevronLeft className="mx-auto h-7 w-7" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next photo"
+                  className="absolute right-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white sm:right-4"
+                  onClick={() => move(1)}
+                >
+                  <ChevronRight className="mx-auto h-7 w-7" />
+                </button>
+              </>
+            )}
+            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-2 text-sm text-white">
+              {activeIndex + 1} / {gallery.length}
+            </p>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}

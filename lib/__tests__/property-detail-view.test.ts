@@ -67,3 +67,8 @@ test("wraps gallery navigation in both directions", () => {
   assert.equal(getWrappedGalleryIndex(2, 1, 5), 3);
   assert.equal(getWrappedGalleryIndex(0, 1, 0), 0);
 });
+
+test("keeps a single-image gallery on its only image", () => {
+  assert.equal(getWrappedGalleryIndex(0, -1, 1), 0);
+  assert.equal(getWrappedGalleryIndex(0, 1, 1), 0);
+});
