@@ -97,6 +97,12 @@ export default function PropertyDetailPage({
       )}
 
       <Footer />
+      {state.phase === "ready" && (
+        <div
+          className="h-[calc(8rem+env(safe-area-inset-bottom))] lg:hidden"
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 }
@@ -111,7 +117,7 @@ function DetailBody({
   return (
     <>
       <PropertyBreadcrumb property={property} />
-      <main className="pb-32 lg:pb-16">
+      <div className="pb-32 lg:pb-16">
         <div className="mx-auto max-w-[1440px] lg:px-6 xl:px-8">
           <PropertyHeroGallery images={property.gallery} />
         </div>
@@ -142,7 +148,7 @@ function DetailBody({
             </section>
           )}
         </div>
-      </main>
+      </div>
       <PropertyMobileActions property={property} />
     </>
   );
@@ -161,7 +167,7 @@ function PropertyBreadcrumb({
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
         <nav
           aria-label="Breadcrumb"
-          className="flex min-w-0 items-center gap-2 overflow-hidden text-sm text-banc-grey"
+          className="flex min-w-0 items-center gap-2 py-0.5 text-sm text-banc-grey"
         >
           <Link
             href="/"
@@ -177,7 +183,7 @@ function PropertyBreadcrumb({
             {resultsLabel}
           </Link>
           <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span aria-current="page" className="min-w-0 truncate text-banc-dark">
+          <span aria-current="page" className="min-w-0 flex-1 truncate text-banc-dark">
             {property.address}
           </span>
         </nav>
