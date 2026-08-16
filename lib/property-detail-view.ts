@@ -7,6 +7,11 @@ export interface PropertyMediaAvailability {
   longitude?: number;
 }
 
+export interface PropertyPhotoPresentation<T> {
+  items: ReadonlyArray<T>;
+  emptyMessage: "No photos available" | null;
+}
+
 const EMPTY_FACTS = new Set(["", "unknown", "n/a", "not known", "-"]);
 
 function normaliseWhitespace(value: string): string {
@@ -69,4 +74,12 @@ export function getWrappedGalleryIndex(
 ): number {
   if (count <= 0) return 0;
   return (current + delta + count) % count;
+}
+
+export function getPropertyPhotoPresentation<T>(
+  images: ReadonlyArray<T>
+): PropertyPhotoPresentation<T> {
+  return images.length > 0
+    ? { items: images, emptyMessage: null }
+    : { items: [], emptyMessage: "No photos available" };
 }

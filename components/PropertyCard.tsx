@@ -18,6 +18,8 @@ import {
   Square,
 } from "lucide-react";
 import { useFavorites } from "@/app/hooks/useFavorites";
+import { PropertyPhotoPlaceholder } from "@/components/property/PropertyPhotoPlaceholder";
+import { getPropertyPhotoPresentation } from "@/lib/property-detail-view";
 import {
   buildPropertyHref,
   buildPropertyShareData,
@@ -72,7 +74,8 @@ export function PropertyCard({
   canCompare = true,
   onCompareToggle,
 }: PropertyCardProps): React.ReactElement {
-  const safeImages = images.length > 0 ? images : ["/hertfordshire-home-1.png"];
+  const photoPresentation = getPropertyPhotoPresentation(images);
+  const safeImages = photoPresentation.items;
   const [imageIndex, setImageIndex] = React.useState(0);
   const [isToggling, setIsToggling] = React.useState(false);
   const [shareStatus, setShareStatus] = React.useState<PropertyShareResult | null>(null);
@@ -171,7 +174,7 @@ export function PropertyCard({
       <Link
         href={propertyHref}
         aria-label={`View ${title}, ${address}`}
-        className="absolute inset-0 z-[1] rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-banc-sky"
+        className="absolute inset-0 z-[1] rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-banc-focus"
       />
 
       <div
@@ -180,19 +183,25 @@ export function PropertyCard({
           variant === "list" && "md:aspect-auto md:min-h-[300px]"
         )}
       >
-        <Image
-          src={currentImageUrl}
-          alt={`${title}, ${address}`}
-          fill
-          sizes={
-            variant === "list"
-              ? "(max-width: 768px) 100vw, 42vw"
-              : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          }
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-          priority={imagePriority}
-        />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />
+        {currentImageUrl ? (
+          <>
+            <Image
+              src={currentImageUrl}
+              alt={`${title}, ${address}`}
+              fill
+              sizes={
+                variant === "list"
+                  ? "(max-width: 768px) 100vw, 42vw"
+                  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              }
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              priority={imagePriority}
+            />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />
+          </>
+        ) : (
+          <PropertyPhotoPlaceholder message={photoPresentation.emptyMessage ?? undefined} />
+        )}
 
         {tags.length > 0 && (
           <div className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-5rem)] flex-wrap gap-1.5 sm:left-4 sm:top-4">
@@ -266,7 +275,7 @@ export function PropertyCard({
         )}
       >
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-banc-grey">
+          <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">
             {address}
           </p>
           <h3 className="mt-2 line-clamp-2 font-heading text-xl font-medium leading-tight text-banc-dark sm:text-[1.35rem]">
@@ -279,16 +288,16 @@ export function PropertyCard({
 
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-banc-grey/20 py-3 text-xs text-banc-dark-mid sm:text-sm">
           <span className="flex items-center gap-1.5">
-            <Bed className="h-4 w-4 text-banc-grey" aria-hidden="true" />
+            <Bed className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
             <span className="font-semibold text-banc-dark">{stats.beds}</span> beds
           </span>
           <span className="flex items-center gap-1.5">
-            <Bath className="h-4 w-4 text-banc-grey" aria-hidden="true" />
+            <Bath className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
             <span className="font-semibold text-banc-dark">{stats.baths}</span> baths
           </span>
           {stats.sqft !== undefined && (
             <span className="flex items-center gap-1.5">
-              <Square className="h-4 w-4 text-banc-grey" aria-hidden="true" />
+              <Square className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
               <span className="font-semibold text-banc-dark">
                 {stats.sqft.toLocaleString("en-GB")}
               </span>{" "}
@@ -297,7 +306,7 @@ export function PropertyCard({
           )}
           {stats.epc !== undefined && (
             <span className="flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-banc-grey" aria-hidden="true" />
+              <Sparkles className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
               EPC <span className="font-semibold text-banc-dark">{stats.epc}</span>
             </span>
           )}
@@ -305,7 +314,7 @@ export function PropertyCard({
 
         <p
           className={cn(
-            "mt-4 hidden text-sm leading-relaxed text-banc-grey sm:line-clamp-2",
+            "mt-4 hidden text-sm leading-relaxed text-banc-muted-readable sm:line-clamp-2",
             variant === "list" && "md:line-clamp-3"
           )}
         >
@@ -313,7 +322,7 @@ export function PropertyCard({
         </p>
 
         <div className="mt-4 flex items-center gap-2 border-t border-banc-grey/20 pt-4 sm:mt-5">
-          <span className="mr-auto inline-flex items-center gap-1.5 text-sm font-semibold text-banc-dark transition-colors group-hover:text-banc-sky-dark">
+          <span className="mr-auto inline-flex items-center gap-1.5 text-sm font-semibold text-banc-dark transition-colors group-hover:text-banc-focus">
             View property
             <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
           </span>

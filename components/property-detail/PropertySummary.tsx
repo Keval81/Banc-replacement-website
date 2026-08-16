@@ -109,7 +109,7 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
           <h1 id="property-title" className="font-serif text-3xl leading-tight text-banc-dark sm:text-4xl">
             {property.title}
           </h1>
-          {location && <p className="mt-2 text-sm text-banc-grey sm:text-base">{location}</p>}
+          {location && <p className="mt-2 text-sm text-banc-muted-readable sm:text-base">{location}</p>}
           <p className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-banc-dark sm:text-4xl">
             {price}
           </p>
@@ -176,7 +176,7 @@ function PropertyFact({
 }): React.ReactElement {
   return (
     <div className="min-w-0 px-3 py-4 first:pl-0 sm:border-r sm:border-banc-grey/20 sm:px-4 sm:first:pl-0 sm:last:border-r-0">
-      <dt className="flex items-center gap-1.5 text-xs text-banc-grey">
+      <dt className="flex items-center gap-1.5 text-xs text-banc-muted-readable">
         {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
         {label}
       </dt>

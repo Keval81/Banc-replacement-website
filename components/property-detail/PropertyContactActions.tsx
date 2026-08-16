@@ -17,14 +17,14 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
 
   return (
     <aside className="hidden lg:block" aria-label="Property enquiry">
-      <div className="sticky top-24 rounded-3xl border border-banc-grey/20 bg-banc-grey-pale p-6 shadow-[0_24px_60px_-36px_rgba(16,34,56,0.35)]">
+      <div className="sticky top-[calc(env(safe-area-inset-top)+6rem)] rounded-3xl border border-banc-grey/20 bg-banc-grey-pale p-6 shadow-[0_24px_60px_-36px_rgba(16,34,56,0.35)]">
         <p className="font-serif text-2xl text-banc-dark">Arrange your viewing</p>
-        <p className="mt-2 text-sm leading-6 text-banc-grey">
+        <p className="mt-2 text-sm leading-6 text-banc-muted-readable">
           Speak with Banc&apos;s local team about this home.
         </p>
         <a
           href={actions.primaryHref}
-          className="mt-6 flex h-12 items-center justify-center rounded-full bg-banc-sky px-5 font-medium text-white"
+          className="mt-6 flex h-12 items-center justify-center rounded-full bg-banc-sky px-5 font-medium text-banc-dark hover:bg-banc-sky-mid"
         >
           {actions.primaryLabel}
         </a>
@@ -41,7 +41,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
                 href={brochureUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-sky"
+                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-focus"
               >
                 Full brochure
               </a>
@@ -51,7 +51,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
                 href={tourUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-sky"
+                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-focus"
               >
                 Virtual tour
               </a>
@@ -80,10 +80,10 @@ export function PropertyMobileActions({ property }: PropertyContactActionsProps)
       className="safe-area-pb fixed inset-x-0 bottom-0 z-40 border-t border-banc-grey/20 bg-white lg:hidden"
       aria-label="Property enquiry actions"
     >
-      <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 px-4 py-3">
+      <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 py-3 pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)]">
         <a
           href={actions.primaryHref}
-          className="flex h-12 items-center justify-center rounded-full bg-banc-sky px-4 text-center text-sm font-medium text-white"
+          className="flex h-12 items-center justify-center rounded-full bg-banc-sky px-4 text-center text-sm font-medium text-banc-dark"
         >
           {actions.primaryLabel}
         </a>

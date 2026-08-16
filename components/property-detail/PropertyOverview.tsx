@@ -54,7 +54,7 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
           <h2 id="about-property-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
             About this property
           </h2>
-          <div className="mt-5 max-w-[72ch] space-y-4 text-base leading-7 text-banc-grey">
+          <div className="mt-5 max-w-[72ch] space-y-4 text-base leading-7 text-banc-muted-readable">
             {paragraphs.map((paragraph, index) => (
               <p key={`${paragraph}-${index}`}>{paragraph}</p>
             ))}
@@ -74,8 +74,8 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
                 className="py-4 first:pt-0 last:pb-0"
               >
                 <dt className="font-medium text-banc-dark">{room.name ?? `Room ${index + 1}`}</dt>
-                {room.measurement && <dd className="mt-1 text-sm text-banc-grey">{room.measurement}</dd>}
-                {room.description && <dd className="mt-2 text-sm leading-6 text-banc-grey">{room.description}</dd>}
+                {room.measurement && <dd className="mt-1 text-sm text-banc-muted-readable">{room.measurement}</dd>}
+                {room.description && <dd className="mt-2 text-sm leading-6 text-banc-muted-readable">{room.description}</dd>}
               </div>
             ))}
           </dl>

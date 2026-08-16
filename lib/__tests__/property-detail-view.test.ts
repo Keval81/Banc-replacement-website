@@ -5,6 +5,7 @@ import {
   getAvailablePropertyMedia,
   getDisplayCount,
   getDisplayFact,
+  getPropertyPhotoPresentation,
   getSafeExternalUrl,
   getWrappedGalleryIndex,
   isPropertyDetailPath,
@@ -98,4 +99,15 @@ test("wraps gallery navigation in both directions", () => {
 test("keeps a single-image gallery on its only image", () => {
   assert.equal(getWrappedGalleryIndex(0, -1, 1), 0);
   assert.equal(getWrappedGalleryIndex(0, 1, 1), 0);
+});
+
+test("keeps an empty CRM gallery honest instead of fabricating a property photo", () => {
+  assert.deepEqual(getPropertyPhotoPresentation([]), {
+    items: [],
+    emptyMessage: "No photos available",
+  });
+  assert.deepEqual(getPropertyPhotoPresentation(["photo-a.jpg"]), {
+    items: ["photo-a.jpg"],
+    emptyMessage: null,
+  });
 });

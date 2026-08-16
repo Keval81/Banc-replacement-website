@@ -3,7 +3,7 @@
 import * as React from "react";
 import { ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -17,7 +17,12 @@ import { PropertyMediaTabs } from "@/components/property-detail/PropertyMediaTab
 import { PropertyOverview } from "@/components/property-detail/PropertyOverview";
 import { PropertySummary } from "@/components/property-detail/PropertySummary";
 import { Button } from "@/components/ui/button";
-import type { LivePropertyDetail, PropertyCardData } from "@/lib/property-view";
+import {
+  buildPropertyHref,
+  getCanonicalPropertyHref,
+  type LivePropertyDetail,
+  type PropertyCardData,
+} from "@/lib/property-view";
 
 type LoadState =
   | { phase: "loading" }
@@ -31,12 +36,36 @@ export default function PropertyDetailPage({
 }): React.ReactElement {
   const { id } = React.use(params);
   const pathname = usePathname();
-  const requestedDepartment = pathname.startsWith("/lettings/") ? "lettings" : "sales";
+  const requestedDepartment: LivePropertyDetail["department"] = pathname.startsWith(
+    "/lettings/"
+  )
+    ? "lettings"
+    : "sales";
+
+  return (
+    <PropertyDetailLoader
+      key={buildPropertyHref(requestedDepartment, id)}
+      id={id}
+      requestedDepartment={requestedDepartment}
+    />
+  );
+}
+
+function PropertyDetailLoader({
+  id,
+  requestedDepartment,
+}: {
+  id: string;
+  requestedDepartment: LivePropertyDetail["department"];
+}): React.ReactElement {
+  const router = useRouter();
   const resultsHref = `/${requestedDepartment}/properties`;
   const [state, setState] = React.useState<LoadState>({ phase: "loading" });
 
   React.useEffect(() => {
     let cancelled = false;
+    setState({ phase: "loading" });
+
     fetch(`/api/properties/${encodeURIComponent(id)}`)
       .then(async (response) => {
         if (!response.ok) throw new Error(String(response.status));
@@ -44,15 +73,28 @@ export default function PropertyDetailPage({
       })
       .then((data) => {
         if (cancelled) return;
-        if (!data.property) setState({ phase: "notfound" });
-        else {
-          setState({
-            phase: "ready",
-            property: data.property,
-            similar: data.similar ?? [],
-          });
-          document.title = `${data.property.title} | Banc Property Group`;
+        if (!data.property) {
+          setState({ phase: "notfound" });
+          return;
         }
+
+        const property = data.property as LivePropertyDetail;
+        const canonicalHref = getCanonicalPropertyHref(
+          requestedDepartment,
+          property.department,
+          property.id
+        );
+        if (canonicalHref) {
+          router.replace(canonicalHref);
+          return;
+        }
+
+        setState({
+          phase: "ready",
+          property,
+          similar: data.similar ?? [],
+        });
+        document.title = `${property.title} | Banc Property Group`;
       })
       .catch(() => {
         if (!cancelled) setState({ phase: "notfound" });
@@ -61,7 +103,7 @@ export default function PropertyDetailPage({
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, requestedDepartment, router]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -70,7 +112,7 @@ export default function PropertyDetailPage({
       {state.phase === "loading" && (
         <div className="flex min-h-[60vh] flex-col items-center justify-center">
           <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-sky motion-reduce:animate-none" />
-          <p className="text-banc-grey">Loading property…</p>
+          <p className="text-banc-muted-readable">Loading property…</p>
         </div>
       )}
 
@@ -79,13 +121,13 @@ export default function PropertyDetailPage({
           <h1 className="mb-3 text-2xl font-semibold text-banc-dark">
             This property is no longer available
           </h1>
-          <p className="mb-6 text-banc-grey">
+          <p className="mb-6 text-banc-muted-readable">
             It may have been{" "}
             {requestedDepartment === "lettings" ? "let or withdrawn" : "sold or withdrawn"}.
             Our current listings are updated directly from our property system.
           </p>
           <Link href={resultsHref}>
-            <Button className="bg-banc-sky text-white hover:bg-banc-sky-dark">
+            <Button className="bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
               View current properties
             </Button>
           </Link>
@@ -93,7 +135,11 @@ export default function PropertyDetailPage({
       )}
 
       {state.phase === "ready" && (
-        <DetailBody property={state.property} similar={state.similar} />
+        <DetailBody
+          key={buildPropertyHref(state.property.department, state.property.id)}
+          property={state.property}
+          similar={state.similar}
+        />
       )}
 
       <Footer />
@@ -167,18 +213,18 @@ function PropertyBreadcrumb({
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
         <nav
           aria-label="Breadcrumb"
-          className="flex min-w-0 items-center gap-2 py-0.5 text-sm text-banc-grey"
+          className="flex min-w-0 items-center gap-2 py-0.5 text-sm text-banc-muted-readable"
         >
           <Link
             href="/"
-            className="shrink-0 rounded-sm transition-colors hover:text-banc-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-dark"
+            className="shrink-0 rounded-sm transition-colors hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
             Home
           </Link>
           <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
           <Link
             href={resultsHref}
-            className="shrink-0 rounded-sm transition-colors hover:text-banc-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-dark"
+            className="shrink-0 rounded-sm transition-colors hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
             {resultsLabel}
           </Link>

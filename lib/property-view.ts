@@ -10,6 +10,16 @@ export function buildPropertyHref(
   return `/${department}/properties/${encodeURIComponent(id)}`;
 }
 
+export function getCanonicalPropertyHref(
+  requestedDepartment: DbProperty["department"],
+  propertyDepartment: DbProperty["department"],
+  id: string
+): string | null {
+  return requestedDepartment === propertyDepartment
+    ? null
+    : buildPropertyHref(propertyDepartment, id);
+}
+
 export interface PropertyLeadActions {
   primaryHref: string;
   primaryLabel: string;
@@ -21,10 +31,28 @@ export function buildPropertyLeadActions(
   department: DbProperty["department"],
   id: string
 ): PropertyLeadActions {
-  const viewingSubject = encodeURIComponent(`Viewing request — ${id}`);
+  const departmentLabel = department === "lettings" ? "Lettings" : "Sales";
+  const canonicalUrl = new URL(
+    buildPropertyHref(department, id),
+    "https://bancproperty.com"
+  ).toString();
+  const viewingSubject = encodeURIComponent(
+    `Viewing request — ${departmentLabel} — ${id}`
+  );
+  const viewingBody = encodeURIComponent(
+    [
+      "Hello Banc Property Group,",
+      "",
+      `I would like to arrange a viewing for this ${department} property.`,
+      "",
+      `Department: ${departmentLabel}`,
+      `Reference: ${id}`,
+      `Property: ${canonicalUrl}`,
+    ].join("\n")
+  );
 
   return {
-    primaryHref: `mailto:info@bancproperty.com?subject=${viewingSubject}`,
+    primaryHref: `mailto:info@bancproperty.com?subject=${viewingSubject}&body=${viewingBody}`,
     primaryLabel: "Request a viewing",
     secondaryHref: "tel:01707877781",
     secondaryLabel: department === "lettings" ? "Call the lettings team" : "Call the sales team",

@@ -32,7 +32,7 @@ function FloorplanViewerContent({ floorplans, className }: FloorplanViewerProps)
   if (floorplans.length === 0) {
     return (
       <div className={cn("rounded-lg bg-banc-grey-pale p-8 text-center", className)}>
-        <p className="text-banc-grey">No floorplans available</p>
+        <p className="text-banc-muted-readable">No floorplans available</p>
       </div>
     );
   }
@@ -61,7 +61,7 @@ function FloorplanViewerContent({ floorplans, className }: FloorplanViewerProps)
       <div className="min-w-0">
         <p className="truncate font-semibold">{currentFloorplan.title}</p>
         {floorplans.length > 1 && (
-          <p className={cn("text-sm", fullscreen ? "text-white/80" : "text-banc-grey")}>
+          <p className={cn("text-sm", fullscreen ? "text-white/80" : "text-banc-muted-readable")}>
             {safeCurrentIndex + 1} of {floorplans.length}
           </p>
         )}
@@ -99,7 +99,7 @@ function FloorplanViewerContent({ floorplans, className }: FloorplanViewerProps)
         <span
           className={cn(
             "flex h-11 min-w-12 items-center justify-center px-1 text-sm tabular-nums",
-            fullscreen ? "text-white" : "text-banc-grey"
+            fullscreen ? "text-white" : "text-banc-muted-readable"
           )}
           aria-label={`Floorplan zoom ${Math.round(zoom * 100)} percent`}
         >
@@ -212,6 +212,6 @@ function iconButtonClassName(fullscreen: boolean): string {
     "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-40",
     fullscreen
       ? "border border-white/60 bg-black/70 text-white hover:bg-white hover:text-banc-dark focus-visible:outline-white"
-      : "border border-banc-grey/30 bg-white text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale focus-visible:outline-banc-dark"
+      : "border border-banc-grey/30 bg-white text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale focus-visible:outline-banc-focus"
   );
 }

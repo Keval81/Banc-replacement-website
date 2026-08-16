@@ -6,7 +6,11 @@ import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
 
-import { getWrappedGalleryIndex } from "@/lib/property-detail-view";
+import { PropertyPhotoPlaceholder } from "@/components/property/PropertyPhotoPlaceholder";
+import {
+  getPropertyPhotoPresentation,
+  getWrappedGalleryIndex,
+} from "@/lib/property-detail-view";
 import type { PropertyImage } from "@/lib/types/property";
 import { cn } from "@/lib/utils";
 
@@ -15,18 +19,12 @@ interface PropertyHeroGalleryProps {
   className?: string;
 }
 
-const FALLBACK_IMAGE: PropertyImage = {
-  id: "property-fallback",
-  url: "/hertfordshire-home-1.png",
-  alt: "Property image unavailable",
-  isPrimary: true,
-};
-
 export function PropertyHeroGallery({
   images,
   className,
 }: PropertyHeroGalleryProps): React.ReactElement {
-  const gallery = images.length > 0 ? images : [FALLBACK_IMAGE];
+  const photoPresentation = getPropertyPhotoPresentation(images);
+  const gallery = photoPresentation.items;
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const touchStart = React.useRef<number | null>(null);
@@ -73,6 +71,16 @@ export function PropertyHeroGallery({
       : gallery.length === 3
         ? "col-span-5 grid-cols-1 grid-rows-2"
         : "col-span-5 grid-cols-2 grid-rows-2";
+
+  if (photoPresentation.emptyMessage) {
+    return (
+      <section className={cn("relative", className)} aria-label="Property photos">
+        <div className="aspect-[4/3] overflow-hidden bg-banc-grey-pale lg:aspect-[16/7] lg:rounded-3xl">
+          <PropertyPhotoPlaceholder message={photoPresentation.emptyMessage} />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

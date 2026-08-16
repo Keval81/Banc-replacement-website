@@ -15,6 +15,14 @@ interface FloatingWhatsAppProps {
   className?: string;
 }
 
+interface AnalyticsWindow extends Window {
+  gtag?: (
+    command: "event",
+    eventName: string,
+    parameters: Record<string, string>
+  ) => void;
+}
+
 const DEFAULT_PHONE = "447707877781"; // Banc's number with country code
 const DEFAULT_MESSAGE = "Hi, I'm interested in a property I saw on your website.";
 
@@ -32,17 +40,21 @@ export function FloatingWhatsApp({
 
   // Hide on scroll down, show on scroll up
   useEffect(() => {
-    if (!hideOnScrollDown) {
-      setIsVisible(true);
-      return;
-    }
+    const frame = window.requestAnimationFrame(() => {
+      if (!hideOnScrollDown) {
+        setIsVisible(true);
+        return;
+      }
 
-    if (scrollDirection === "down") {
-      setIsVisible(false);
-      setIsExpanded(false);
-    } else if (scrollDirection === "up") {
-      setIsVisible(true);
-    }
+      if (scrollDirection === "down") {
+        setIsVisible(false);
+        setIsExpanded(false);
+      } else if (scrollDirection === "up") {
+        setIsVisible(true);
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [scrollDirection, hideOnScrollDown]);
 
   // Don't show on desktop unless explicitly desired
@@ -54,8 +66,10 @@ export function FloatingWhatsApp({
 
   // On mobile, WhatsApp is positioned bottom-left above footer area
   const positionClasses = {
-    "bottom-right": "right-4 bottom-36",
-    "bottom-left": "left-4 bottom-36",
+    "bottom-right":
+      "right-[calc(1rem+env(safe-area-inset-right))] bottom-[calc(9rem+env(safe-area-inset-bottom))]",
+    "bottom-left":
+      "left-[calc(1rem+env(safe-area-inset-left))] bottom-[calc(9rem+env(safe-area-inset-bottom))]",
   };
 
   return (
@@ -91,9 +105,9 @@ export function FloatingWhatsApp({
                     rel="noopener noreferrer"
                     className="flex-1 rounded-lg bg-[#25D366] px-3 py-2 text-center text-sm font-medium text-white hover:bg-[#128C7E]"
                     onClick={() => {
-                      // Track WhatsApp click
-                      if (typeof window !== "undefined" && (window as any).gtag) {
-                        (window as any).gtag("event", "whatsapp_click", {
+                      const analyticsWindow = window as AnalyticsWindow;
+                      if (analyticsWindow.gtag) {
+                        analyticsWindow.gtag("event", "whatsapp_click", {
                           event_category: "engagement",
                           event_label: "floating_button",
                         });

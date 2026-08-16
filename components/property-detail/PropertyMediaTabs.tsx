@@ -1,5 +1,7 @@
 "use client";
 
+import * as Dialog from "@radix-ui/react-dialog";
+import { Maximize2, X } from "lucide-react";
 import * as React from "react";
 
 import { FloorplanViewer } from "@/components/FloorplanViewer";
@@ -99,7 +101,7 @@ export function PropertyMediaTabs({ property }: PropertyMediaTabsProps): React.R
               aria-controls={`property-media-panel-${tab}`}
               tabIndex={isActive ? 0 : -1}
               className={cn(
-                "min-h-11 rounded-md border px-3 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-dark",
+                "min-h-11 rounded-md border px-3 py-2.5 text-sm font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus",
                 isActive
                   ? "border-banc-dark bg-banc-dark text-white"
                   : "border-banc-grey/30 bg-white text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale"
@@ -122,9 +124,11 @@ export function PropertyMediaTabs({ property }: PropertyMediaTabsProps): React.R
           hidden={tab !== activeTab}
           className="mt-4"
         >
-          {tab === "floorplan" && <FloorplanViewer floorplans={property.floorplans} />}
-          {tab === "epc" && <EpcPanel property={property} />}
-          {tab === "map" && <MapPanel property={property} />}
+          {tab === activeTab && tab === "floorplan" && (
+            <FloorplanViewer floorplans={property.floorplans} />
+          )}
+          {tab === activeTab && tab === "epc" && <EpcPanel property={property} />}
+          {tab === activeTab && tab === "map" && <MapPanel property={property} />}
         </div>
       ))}
     </section>
@@ -133,34 +137,73 @@ export function PropertyMediaTabs({ property }: PropertyMediaTabsProps): React.R
 
 function EpcPanel({ property }: { property: PropertyMedia }): React.ReactElement {
   const rating = property.epcRating?.trim().toUpperCase();
+  const certificateAlt = `Energy performance certificate graph${
+    rating ? `, current rating ${rating}` : ""
+  }`;
 
   return (
-    <div className="rounded-lg border border-banc-grey/20 bg-white p-4 sm:p-6">
-      <div className="flex flex-wrap items-center gap-3">
-        {rating && (
-          <span
-            className={cn(
-              "inline-flex h-12 min-w-12 items-center justify-center rounded-md px-3 text-lg font-bold text-banc-dark",
-              EPC_RATING_COLOURS[rating] ?? "bg-banc-grey-pale"
-            )}
-            aria-label={`Energy performance rating ${rating}`}
+    <Dialog.Root>
+      <div className="rounded-lg border border-banc-grey/20 bg-white p-4 sm:p-6">
+        <div className="flex flex-wrap items-center gap-3">
+          {rating && (
+            <span
+              className={cn(
+                "inline-flex h-12 min-w-12 items-center justify-center rounded-md px-3 text-lg font-bold text-banc-dark",
+                EPC_RATING_COLOURS[rating] ?? "bg-banc-grey-pale"
+              )}
+              aria-label={`Energy performance rating ${rating}`}
+            >
+              {rating}
+            </span>
+          )}
+          <p className="max-w-xl text-sm text-banc-dark">
+            Energy efficiency runs from A (most efficient) to G (least efficient).
+          </p>
+        </div>
+        <Dialog.Trigger asChild>
+          <button
+            type="button"
+            aria-label="Expand EPC certificate"
+            className="group relative mt-5 flex min-h-11 w-full cursor-zoom-in justify-center overflow-hidden rounded-md bg-banc-grey-pale focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
-            {rating}
-          </span>
-        )}
-        <p className="max-w-xl text-sm text-banc-dark">
-          Energy efficiency runs from A (most efficient) to G (least efficient).
-        </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={property.epcImageUrl}
+              alt={certificateAlt}
+              loading="lazy"
+              className="max-h-[620px] w-full object-contain"
+            />
+            <span className="absolute bottom-3 right-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-banc-dark px-4 text-sm font-medium text-white shadow-lg">
+              <Maximize2 className="h-4 w-4" aria-hidden="true" />
+              Expand certificate
+            </span>
+          </button>
+        </Dialog.Trigger>
       </div>
-      <div className="mt-5 flex max-h-[620px] justify-center overflow-hidden rounded-md bg-banc-grey-pale">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={property.epcImageUrl}
-          alt={`Energy performance certificate graph${rating ? `, current rating ${rating}` : ""}`}
-          className="max-h-[620px] w-full object-contain"
-        />
-      </div>
-    </div>
+
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[100] bg-black/95" />
+        <Dialog.Content
+          aria-describedby={undefined}
+          className="fixed inset-0 z-[101] flex items-center justify-center overflow-auto bg-black p-[calc(env(safe-area-inset-top)+0.75rem)] pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pl-[calc(env(safe-area-inset-left)+0.75rem)] pr-[calc(env(safe-area-inset-right)+0.75rem)] sm:p-[calc(env(safe-area-inset-top)+1.5rem)] sm:pb-[calc(env(safe-area-inset-bottom)+1.5rem)] sm:pl-[calc(env(safe-area-inset-left)+1.5rem)] sm:pr-[calc(env(safe-area-inset-right)+1.5rem)]"
+        >
+          <Dialog.Title className="sr-only">Energy performance certificate</Dialog.Title>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={property.epcImageUrl}
+            alt={certificateAlt}
+            className="max-h-full max-w-full object-contain"
+          />
+          <Dialog.Close
+            type="button"
+            aria-label="Close EPC certificate"
+            className="absolute right-[calc(env(safe-area-inset-right)+1rem)] top-[calc(env(safe-area-inset-top)+1rem)] flex h-12 w-12 items-center justify-center rounded-full border border-white/70 bg-black/85 text-white shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <X className="h-6 w-6" aria-hidden="true" />
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
 

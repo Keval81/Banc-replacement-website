@@ -7,6 +7,7 @@ import {
   dbToCard,
   dbToDetail,
   deriveFeatureFlags,
+  getCanonicalPropertyHref,
   shareProperty,
 } from "../property-view.ts";
 import type { DbProperty } from "../supabase";
@@ -165,6 +166,19 @@ test("builds department-aware property detail links", () => {
   );
 });
 
+test("canonicalises a property opened under the wrong department prefix", () => {
+  assert.equal(getCanonicalPropertyHref("sales", "sales", "BPGC1479"), null);
+  assert.equal(getCanonicalPropertyHref("lettings", "lettings", "BPGC1607"), null);
+  assert.equal(
+    getCanonicalPropertyHref("sales", "lettings", "BPGC 1607"),
+    "/lettings/properties/BPGC%201607"
+  );
+  assert.equal(
+    getCanonicalPropertyHref("lettings", "sales", "BPGC/1479"),
+    "/sales/properties/BPGC%2F1479"
+  );
+});
+
 test("builds a concise share payload from the canonical property link", () => {
   assert.deepEqual(
     buildPropertyShareData({
@@ -245,19 +259,48 @@ test("copies the link when native sharing fails for a non-cancellation reason", 
   assert.deepEqual(copied, [data.url]);
 });
 
-test("builds department-appropriate property lead actions", () => {
-  assert.deepEqual(buildPropertyLeadActions("sales", "BPGC/1479"), {
-    primaryHref:
-      "mailto:info@bancproperty.com?subject=Viewing%20request%20%E2%80%94%20BPGC%2F1479",
-    primaryLabel: "Request a viewing",
-    secondaryHref: "tel:01707877781",
-    secondaryLabel: "Call the sales team",
-  });
-  assert.deepEqual(buildPropertyLeadActions("lettings", "BPGC 1607"), {
-    primaryHref:
-      "mailto:info@bancproperty.com?subject=Viewing%20request%20%E2%80%94%20BPGC%201607",
-    primaryLabel: "Request a viewing",
-    secondaryHref: "tel:01707877781",
-    secondaryLabel: "Call the lettings team",
-  });
+test("builds department-appropriate lead actions with complete property context", () => {
+  const cases = [
+    {
+      department: "sales" as const,
+      id: "BPGC/1479",
+      label: "Sales",
+      canonicalUrl: "https://bancproperty.com/sales/properties/BPGC%2F1479",
+      teamLabel: "Call the sales team",
+    },
+    {
+      department: "lettings" as const,
+      id: "BPGC 1607",
+      label: "Lettings",
+      canonicalUrl: "https://bancproperty.com/lettings/properties/BPGC%201607",
+      teamLabel: "Call the lettings team",
+    },
+  ];
+
+  for (const item of cases) {
+    const actions = buildPropertyLeadActions(item.department, item.id);
+    const mailto = new URL(actions.primaryHref);
+
+    assert.equal(mailto.protocol, "mailto:");
+    assert.equal(mailto.pathname, "info@bancproperty.com");
+    assert.equal(
+      mailto.searchParams.get("subject"),
+      `Viewing request — ${item.label} — ${item.id}`
+    );
+    assert.equal(
+      mailto.searchParams.get("body"),
+      [
+        "Hello Banc Property Group,",
+        "",
+        `I would like to arrange a viewing for this ${item.department} property.`,
+        "",
+        `Department: ${item.label}`,
+        `Reference: ${item.id}`,
+        `Property: ${item.canonicalUrl}`,
+      ].join("\n")
+    );
+    assert.equal(actions.primaryLabel, "Request a viewing");
+    assert.equal(actions.secondaryHref, "tel:01707877781");
+    assert.equal(actions.secondaryLabel, item.teamLabel);
+  }
 });
