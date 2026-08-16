@@ -21,6 +21,19 @@ test("accepts only direct Expert Agent floorplan media URLs", () => {
   assert.equal(getSafeFloorplanDownloadUrl("https://user:secret@expertagent.co.uk/floorplan.pdf"), null);
 });
 
+test("rejects explicitly supplied default ports without rejecting normal HTTP or HTTPS URLs", () => {
+  assert.equal(getSafeFloorplanDownloadUrl("https://expertagent.co.uk:443/HIPS/floorplan.pdf"), null);
+  assert.equal(getSafeFloorplanDownloadUrl("http://expertagent.co.uk:80/HIPS/floorplan.pdf"), null);
+  assert.equal(
+    getSafeFloorplanDownloadUrl("https://expertagent.co.uk/HIPS/floorplan.pdf")?.protocol,
+    "https:"
+  );
+  assert.equal(
+    getSafeFloorplanDownloadUrl("http://expertagent.co.uk/HIPS/floorplan.pdf")?.protocol,
+    "http:"
+  );
+});
+
 test("sanitises floorplan filenames while preserving a supported source extension", () => {
   assert.equal(
     getFloorplanDownloadFilename(

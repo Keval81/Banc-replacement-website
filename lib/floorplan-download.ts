@@ -12,7 +12,10 @@ const SUPPORTED_EXTENSIONS = new Set(["pdf", "jpg", "jpeg", "png", "webp", "gif"
 
 export function getSafeFloorplanDownloadUrl(value: string): URL | null {
   try {
-    const url = new URL(value);
+    const trimmedValue = value.trim();
+    if (hasExplicitNumericPort(trimmedValue)) return null;
+
+    const url = new URL(trimmedValue);
     const hostname = url.hostname.toLowerCase();
     const isExpertAgentHost = hostname === EXPERT_AGENT_HOST || hostname.endsWith(`.${EXPERT_AGENT_HOST}`);
 
@@ -30,6 +33,14 @@ export function getSafeFloorplanDownloadUrl(value: string): URL | null {
   } catch {
     return null;
   }
+}
+
+function hasExplicitNumericPort(value: string): boolean {
+  const authority = value.match(/^[a-z][a-z\d+.-]*:\/\/([^/?#]*)/i)?.[1];
+  if (!authority) return false;
+
+  const host = authority.slice(authority.lastIndexOf("@") + 1);
+  return /:\d+$/.test(host);
 }
 
 export function isAllowedFloorplanContentType(value: string | null): value is string {
