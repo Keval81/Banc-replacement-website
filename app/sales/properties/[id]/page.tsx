@@ -1,86 +1,34 @@
 "use client";
 
 import * as React from "react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import Header from "@/components/Header";
+
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import PropertyCard from "@/components/PropertyCard";
-import { PropertyGallery } from "@/components/PropertyGallery";
-import { FloorplanViewer } from "@/components/FloorplanViewer";
-import { Button } from "@/components/ui/button";
-import { buildPropertyLeadActions } from "@/lib/property-view";
 import {
-  Bed,
-  Bath,
-  Sofa,
-  ChevronRight,
-  FileText,
-  Loader2,
-  Phone,
-  Video,
-} from "lucide-react";
-
-// Live property detail — data comes from /api/properties/[id]
-// (Expert Agent feed -> Supabase). No mock fallback: an unknown reference
-// renders a not-found state, never someone else's house.
-
-interface Gallery {
-  id: string;
-  url: string;
-  alt: string;
-  isPrimary: boolean;
-}
-
-interface LiveDetail {
-  id: string;
-  title: string;
-  address: string;
-  postcode: string;
-  price: string;
-  priceQualifier?: string;
-  tags: string[];
-  stats: { beds: number; baths: number };
-  receptions: number;
-  summary: string;
-  description: string;
-  features: string[];
-  tenure: string;
-  brochureUrl: string;
-  virtualTourUrl: string;
-  rooms: Array<{ name: string; measurement: string; description: string }>;
-  gallery: Gallery[];
-  floorplans: Array<{ id: string; url: string; title: string }>;
-  department: "sales" | "lettings";
-  latitude?: number;
-  longitude?: number;
-  epcRating?: string;
-  epcImageUrl: string;
-}
-
-interface SimilarCard {
-  id: string;
-  title: string;
-  address: string;
-  price: string;
-  tags: string[];
-  stats: { beds: number; baths: number };
-  images: string[];
-  summary: string;
-  department: "sales" | "lettings";
-}
+  PropertyContactPanel,
+  PropertyMobileActions,
+} from "@/components/property-detail/PropertyContactActions";
+import { PropertyHeroGallery } from "@/components/property-detail/PropertyHeroGallery";
+import { PropertyMediaTabs } from "@/components/property-detail/PropertyMediaTabs";
+import { PropertyOverview } from "@/components/property-detail/PropertyOverview";
+import { PropertySummary } from "@/components/property-detail/PropertySummary";
+import { Button } from "@/components/ui/button";
+import type { LivePropertyDetail, PropertyCardData } from "@/lib/property-view";
 
 type LoadState =
   | { phase: "loading" }
   | { phase: "notfound" }
-  | { phase: "ready"; property: LiveDetail; similar: SimilarCard[] };
+  | { phase: "ready"; property: LivePropertyDetail; similar: PropertyCardData[] };
 
 export default function PropertyDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+}): React.ReactElement {
   const { id } = React.use(params);
   const pathname = usePathname();
   const requestedDepartment = pathname.startsWith("/lettings/") ? "lettings" : "sales";
@@ -90,21 +38,26 @@ export default function PropertyDetailPage({
   React.useEffect(() => {
     let cancelled = false;
     fetch(`/api/properties/${encodeURIComponent(id)}`)
-      .then(async (r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.json();
+      .then(async (response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json();
       })
-      .then((d) => {
+      .then((data) => {
         if (cancelled) return;
-        if (!d.property) setState({ phase: "notfound" });
+        if (!data.property) setState({ phase: "notfound" });
         else {
-          setState({ phase: "ready", property: d.property, similar: d.similar ?? [] });
-          document.title = `${d.property.title} | Banc Property Group`;
+          setState({
+            phase: "ready",
+            property: data.property,
+            similar: data.similar ?? [],
+          });
+          document.title = `${data.property.title} | Banc Property Group`;
         }
       })
       .catch(() => {
         if (!cancelled) setState({ phase: "notfound" });
       });
+
     return () => {
       cancelled = true;
     };
@@ -116,7 +69,7 @@ export default function PropertyDetailPage({
 
       {state.phase === "loading" && (
         <div className="flex min-h-[60vh] flex-col items-center justify-center">
-          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-sky" />
+          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-sky motion-reduce:animate-none" />
           <p className="text-banc-grey">Loading property…</p>
         </div>
       )}
@@ -127,7 +80,8 @@ export default function PropertyDetailPage({
             This property is no longer available
           </h1>
           <p className="mb-6 text-banc-grey">
-            It may have been {requestedDepartment === "lettings" ? "let or withdrawn" : "sold or withdrawn"}.
+            It may have been{" "}
+            {requestedDepartment === "lettings" ? "let or withdrawn" : "sold or withdrawn"}.
             Our current listings are updated directly from our property system.
           </p>
           <Link href={resultsHref}>
@@ -151,275 +105,83 @@ function DetailBody({
   property,
   similar,
 }: {
-  property: LiveDetail;
-  similar: SimilarCard[];
-}) {
-  const paragraphs = property.description.split("\n\n").filter(Boolean);
-  const leadActions = buildPropertyLeadActions(property.department, property.id);
-
+  property: LivePropertyDetail;
+  similar: PropertyCardData[];
+}): React.ReactElement {
   return (
     <>
-      {/* Breadcrumb */}
-      <div className="border-b border-banc-grey/20 bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-2 text-sm text-banc-grey">
-            <Link href="/" className="transition-colors hover:text-banc-sky">
-              Home
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <Link
-              href={
-                property.department === "lettings"
-                  ? "/lettings/properties"
-                  : "/sales/properties"
-              }
-              className="transition-colors hover:text-banc-sky"
-            >
-              {property.department === "lettings" ? "To Let" : "For Sale"}
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="max-w-[200px] truncate text-banc-dark sm:max-w-[400px]">
-              {property.address}
-            </span>
-          </nav>
+      <PropertyBreadcrumb property={property} />
+      <main className="pb-32 lg:pb-16">
+        <div className="mx-auto max-w-[1440px] lg:px-6 xl:px-8">
+          <PropertyHeroGallery images={property.gallery} />
         </div>
-      </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-4 pb-24 sm:px-6 sm:py-6 lg:px-8 lg:pb-6">
-        <div className="grid gap-6 lg:grid-cols-[65%_35%] lg:gap-8">
-          {/* Left: gallery + content */}
-          <div>
-            <PropertyGallery images={property.gallery} className="mb-6" />
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <div className="mb-6">
-                {property.tags.length > 0 && (
-                  <span className="mb-2 inline-block rounded-full bg-banc-dark px-3 py-1 text-xs font-medium uppercase tracking-wide text-white">
-                    {property.tags[0]}
-                  </span>
-                )}
-                <h1 className="text-2xl font-semibold text-banc-dark sm:text-3xl">
-                  {property.title}
-                </h1>
-                <p className="mt-1 text-banc-grey">
-                  {property.address} · {property.postcode}
-                </p>
-                <p className="mt-3 text-3xl font-semibold text-banc-dark">
-                  {property.priceQualifier ?? property.price}
-                </p>
-
-                <div className="mt-4 flex flex-wrap items-center gap-5 border-y border-banc-grey/20 py-4 text-sm text-banc-dark">
-                  <span className="flex items-center gap-2">
-                    <Bed className="h-4 w-4 text-banc-grey" />
-                    {property.stats.beds} bedrooms
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Bath className="h-4 w-4 text-banc-grey" />
-                    {property.stats.baths} bathrooms
-                  </span>
-                  {property.receptions > 0 && (
-                    <span className="flex items-center gap-2">
-                      <Sofa className="h-4 w-4 text-banc-grey" />
-                      {property.receptions} receptions
-                    </span>
-                  )}
-                  {property.tenure && (
-                    <span className="text-banc-grey">{property.tenure}</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Description */}
-              <section className="mb-8">
-                <h2 className="mb-3 text-lg font-semibold text-banc-dark">
-                  About this property
-                </h2>
-                <div className="space-y-4 leading-relaxed text-banc-dark-mid">
-                  {paragraphs.map((para, i) => (
-                    <p key={i}>{para}</p>
-                  ))}
-                </div>
-              </section>
-
-              {/* Features */}
-              {property.features.length > 0 && (
-                <section className="mb-8">
-                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">
-                    Key features
-                  </h2>
-                  <ul className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
-                    {property.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-banc-dark-mid">
-                        <span className="mt-[9px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-banc-sky" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {/* Rooms (feed rarely fills these — hide when empty) */}
-              {property.rooms.length > 0 && (
-                <section className="mb-8">
-                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">
-                    Room dimensions
-                  </h2>
-                  <div className="divide-y divide-banc-grey/15 border-y border-banc-grey/15">
-                    {property.rooms.map((room, i) => (
-                      <div key={i} className="flex flex-wrap items-baseline gap-x-4 py-2.5">
-                        <span className="font-medium text-banc-dark">{room.name}</span>
-                        <span className="text-sm text-banc-grey">{room.measurement}</span>
-                        {room.description && (
-                          <span className="w-full text-sm text-banc-dark-mid">
-                            {room.description}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
-              {/* Floorplan */}
-              {property.floorplans.length > 0 && (
-                <section className="mb-8">
-                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">Floorplan</h2>
-                  <FloorplanViewer floorplans={property.floorplans} />
-                </section>
-              )}
-
-              {/* EPC — official graph from the sales system; band derived
-                  from its filename when encoded */}
-              {property.epcImageUrl && (
-                <section className="mb-8">
-                  <h2 className="mb-3 flex items-center gap-3 text-lg font-semibold text-banc-dark">
-                    Energy performance
-                    {property.epcRating && (
-                      <span
-                        className={`inline-flex h-7 w-7 items-center justify-center rounded text-sm font-bold text-white ${
-                          { A: "bg-emerald-700", B: "bg-emerald-500", C: "bg-lime-500",
-                            D: "bg-yellow-500", E: "bg-orange-500", F: "bg-orange-700",
-                            G: "bg-red-700" }[property.epcRating] ?? "bg-banc-grey"
-                        }`}
-                      >
-                        {property.epcRating}
-                      </span>
-                    )}
-                  </h2>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={property.epcImageUrl}
-                    alt={`Energy performance certificate graph${property.epcRating ? `, current rating ${property.epcRating}` : ""}`}
-                    className="max-w-md rounded-lg border border-banc-grey/20"
-                  />
-                </section>
-              )}
-
-              {/* Location — postcode-level map (the feed carries no exact
-                  coordinates, so the pin marks the postcode area) */}
-              {property.latitude !== undefined && property.longitude !== undefined && (
-                <section className="mb-8">
-                  <h2 className="mb-3 text-lg font-semibold text-banc-dark">Location</h2>
-                  <div className="overflow-hidden rounded-lg border border-banc-grey/20">
-                    <iframe
-                      title={`Map of ${property.postcode}`}
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.012}%2C${property.latitude - 0.006}%2C${property.longitude + 0.012}%2C${property.latitude + 0.006}&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`}
-                      className="h-[360px] w-full border-0"
-                      loading="lazy"
-                    />
-                  </div>
-                  <p className="mt-2 text-xs text-banc-grey">
-                    Map shows the {property.postcode} postcode area.
-                  </p>
-                </section>
-              )}
-            </motion.div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <PropertySummary property={property} />
+          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
+            <div className="min-w-0 space-y-12">
+              <PropertyOverview property={property} />
+              <PropertyMediaTabs property={property} />
+            </div>
+            <PropertyContactPanel property={property} />
           </div>
 
-          {/* Right: enquiry panel */}
-          <aside className="lg:pt-0">
-            <div className="sticky top-24 space-y-4">
-              <div className="rounded-2xl border border-banc-grey/20 bg-banc-grey-pale p-6">
-                <p className="text-sm uppercase tracking-[0.15em] text-banc-grey">
-                  Banc Property Group
-                </p>
-                <p className="mt-1 font-medium text-banc-dark">
-                  1 Station Road, Cuffley, EN6 4HU
-                </p>
-                <div className="mt-4 flex flex-col gap-3">
-                  <Link href={leadActions.primaryHref}>
-                    <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
-                      {leadActions.primaryLabel}
-                    </Button>
-                  </Link>
-                  <Link href={leadActions.secondaryHref}>
-                    <Button
-                      variant="outline"
-                      className="w-full border-banc-dark/25 text-banc-dark hover:border-banc-dark"
-                    >
-                      {leadActions.secondaryLabel}
-                    </Button>
-                  </Link>
-                  <a
-                    href="tel:01707877781"
-                    className="flex items-center justify-center gap-2 py-2 text-sm font-medium text-banc-dark transition-colors hover:text-banc-sky"
-                  >
-                    <Phone className="h-4 w-4" /> 01707 877781
-                  </a>
-                </div>
+          {similar.length > 0 && (
+            <section
+              className="mt-16 border-t border-banc-grey/15 pt-12"
+              aria-labelledby="similar-properties-heading"
+            >
+              <h2 id="similar-properties-heading" className="font-serif text-3xl text-banc-dark">
+                Similar homes
+              </h2>
+              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {similar.slice(0, 3).map((item) => (
+                  <PropertyCard key={item.id} {...item} />
+                ))}
               </div>
-
-              {(property.brochureUrl || property.virtualTourUrl) && (
-                <div className="rounded-2xl border border-banc-grey/20 p-6">
-                  <p className="mb-3 text-sm font-semibold text-banc-dark">
-                    More about this home
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {property.brochureUrl && (
-                      <a
-                        href={property.brochureUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-banc-dark transition-colors hover:text-banc-sky"
-                      >
-                        <FileText className="h-4 w-4" /> Full brochure (PDF)
-                      </a>
-                    )}
-                    {property.virtualTourUrl && (
-                      <a
-                        href={property.virtualTourUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-banc-dark transition-colors hover:text-banc-sky"
-                      >
-                        <Video className="h-4 w-4" /> Virtual tour
-                      </a>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </aside>
+            </section>
+          )}
         </div>
-
-        {/* Similar properties — live, same department, nearby price */}
-        {similar.length > 0 && (
-          <section className="mt-14">
-            <h2 className="mb-6 text-xl font-semibold text-banc-dark">
-              Similar properties
-            </h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {similar.map((s) => (
-                <PropertyCard key={s.id} {...s} />
-              ))}
-            </div>
-          </section>
-        )}
       </main>
+      <PropertyMobileActions property={property} />
     </>
+  );
+}
+
+function PropertyBreadcrumb({
+  property,
+}: {
+  property: LivePropertyDetail;
+}): React.ReactElement {
+  const resultsHref = `/${property.department}/properties`;
+  const resultsLabel = property.department === "lettings" ? "To Let" : "For Sale";
+
+  return (
+    <div className="border-b border-banc-grey/20 bg-banc-grey-pale">
+      <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex min-w-0 items-center gap-2 overflow-hidden text-sm text-banc-grey"
+        >
+          <Link
+            href="/"
+            className="shrink-0 rounded-sm transition-colors hover:text-banc-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-dark"
+          >
+            Home
+          </Link>
+          <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <Link
+            href={resultsHref}
+            className="shrink-0 rounded-sm transition-colors hover:text-banc-sky focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-dark"
+          >
+            {resultsLabel}
+          </Link>
+          <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span aria-current="page" className="min-w-0 truncate text-banc-dark">
+            {property.address}
+          </span>
+        </nav>
+      </div>
+    </div>
   );
 }
