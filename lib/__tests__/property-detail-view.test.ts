@@ -68,6 +68,13 @@ test("returns only media tabs backed by live data in the intended order", () => 
   );
 });
 
+test("treats zero as a valid coordinate when both coordinates exist", () => {
+  assert.deepEqual(
+    getAvailablePropertyMedia({ floorplans: [], epcImageUrl: "", latitude: 0, longitude: 0 }),
+    ["map"]
+  );
+});
+
 test("recognises sales and lettings detail routes but not results routes", () => {
   assert.equal(isPropertyDetailPath("/sales/properties/BPGC869"), true);
   assert.equal(isPropertyDetailPath("/lettings/properties/BPGC%201607/"), true);
