@@ -49,7 +49,7 @@ export default function Services() {
   return (
     <section id="services" className="bg-banc-dark-deep py-20 lg:py-28">
       <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-10">
-        <SectionHeader number="01" label="What we do" title="Four ways we work" dark />
+        <SectionHeader number="03" label="What we do" title="Four ways we work" dark />
 
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
           {services.map((service, index) => (

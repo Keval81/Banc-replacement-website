@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Hero from "@/app/sections/Hero";
 import PropertySearch from "@/app/sections/PropertySearch";
+import Lifestyle from "@/app/sections/Lifestyle";
 import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
@@ -69,6 +70,7 @@ export default function Home() {
         <main>
           <Hero />
           <PropertySearch />
+          <Lifestyle />
           <FeaturedListings />
           {/* RecommendedProperties removed from homepage: renders empty-state
               cards ("No Image / £0") until the AI feed has real data — see

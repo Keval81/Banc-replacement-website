@@ -49,7 +49,7 @@ export default function Testimonials() {
   return (
     <section className="bg-white py-20 lg:py-28">
       <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-10">
-        <SectionHeader number="03" label="Clients" title="In their words" />
+        <SectionHeader number="04" label="Clients" title="In their words" />
 
         <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_auto]">
           <div className="min-h-[180px] max-w-3xl">
