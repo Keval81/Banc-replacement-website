@@ -18,6 +18,12 @@ const MAX_ZOOM = 4;
 const ZOOM_INCREMENT = 0.5;
 
 export function FloorplanViewer({ floorplans, className }: FloorplanViewerProps): React.ReactElement {
+  const floorplanIdentity = floorplans.map((floorplan) => `${floorplan.id}:${floorplan.url}`).join("|");
+
+  return <FloorplanViewerContent key={floorplanIdentity} floorplans={floorplans} className={className} />;
+}
+
+function FloorplanViewerContent({ floorplans, className }: FloorplanViewerProps): React.ReactElement {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [zoom, setZoom] = React.useState(MIN_ZOOM);
   const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -119,8 +125,7 @@ export function FloorplanViewer({ floorplans, className }: FloorplanViewerProps)
           </button>
         )}
         <a
-          href={currentFloorplan.url}
-          download={`${currentFloorplan.title.replace(/\s+/g, "_")}.pdf`}
+          href={`/api/property-media/floorplan-download?url=${encodeURIComponent(currentFloorplan.url)}`}
           className={iconButtonClassName(fullscreen)}
           aria-label="Download floorplan"
         >
@@ -152,19 +157,25 @@ export function FloorplanViewer({ floorplans, className }: FloorplanViewerProps)
   const floorplanImage = (fullscreen = false): React.ReactElement => (
     <div
       className={cn(
-        "relative overflow-hidden bg-banc-grey-pale",
-        fullscreen ? "h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-7rem)] min-h-56" : "h-[360px] sm:h-[500px]"
+        "relative min-h-0 bg-banc-grey-pale",
+        fullscreen ? "h-full flex-1" : "h-[360px] sm:h-[500px]"
       )}
     >
-      <Image
-        src={currentFloorplan.url}
-        alt={currentFloorplan.title}
-        fill
-        priority={fullscreen}
-        sizes={fullscreen ? "100vw" : "(max-width: 768px) 100vw, 800px"}
-        className="object-contain p-4 motion-reduce:transition-none"
-        style={{ transform: `scale(${zoom})` }}
-      />
+      <div className="h-full overflow-auto overscroll-contain touch-pan-x touch-pan-y">
+        <div
+          className="relative min-h-full min-w-full"
+          style={{ height: `${zoom * 100}%`, width: `${zoom * 100}%` }}
+        >
+          <Image
+            src={currentFloorplan.url}
+            alt={currentFloorplan.title}
+            fill
+            priority={fullscreen}
+            sizes={fullscreen ? "100vw" : "(max-width: 768px) 100vw, 800px"}
+            className="object-contain p-4"
+          />
+        </div>
+      </div>
     </div>
   );
 
@@ -188,7 +199,7 @@ export function FloorplanViewer({ floorplans, className }: FloorplanViewerProps)
           <Dialog.Title className="sr-only">Floorplan viewer</Dialog.Title>
           <div className="mx-auto flex h-full w-full max-w-7xl flex-col overflow-hidden rounded-lg border border-white/25 bg-banc-dark-deep shadow-2xl">
             {toolbar(true)}
-            <div className="min-h-0 flex-1">{floorplanImage(true)}</div>
+            {floorplanImage(true)}
           </div>
         </Dialog.Content>
       </Dialog.Portal>

@@ -17,13 +17,13 @@ const TAB_LABELS: Record<PropertyMediaTabId, string> = {
 };
 
 const EPC_RATING_COLOURS: Record<string, string> = {
-  A: "bg-emerald-700",
-  B: "bg-emerald-500",
-  C: "bg-lime-500",
-  D: "bg-yellow-500 text-banc-dark",
-  E: "bg-orange-500",
-  F: "bg-orange-700",
-  G: "bg-red-700",
+  A: "bg-emerald-100",
+  B: "bg-emerald-100",
+  C: "bg-lime-100",
+  D: "bg-yellow-100",
+  E: "bg-orange-100",
+  F: "bg-orange-200",
+  G: "bg-red-100",
 };
 
 type PropertyMedia = Pick<
@@ -113,16 +113,20 @@ export function PropertyMediaTabs({ property }: PropertyMediaTabsProps): React.R
         })}
       </div>
 
-      <div
-        id={`property-media-panel-${activeTab}`}
-        role="tabpanel"
-        aria-labelledby={`property-media-tab-${activeTab}`}
-        className="mt-4"
-      >
-        {activeTab === "floorplan" && <FloorplanViewer floorplans={property.floorplans} />}
-        {activeTab === "epc" && <EpcPanel property={property} />}
-        {activeTab === "map" && <MapPanel property={property} />}
-      </div>
+      {tabs.map((tab) => (
+        <div
+          key={tab}
+          id={`property-media-panel-${tab}`}
+          role="tabpanel"
+          aria-labelledby={`property-media-tab-${tab}`}
+          hidden={tab !== activeTab}
+          className="mt-4"
+        >
+          {tab === "floorplan" && <FloorplanViewer floorplans={property.floorplans} />}
+          {tab === "epc" && <EpcPanel property={property} />}
+          {tab === "map" && <MapPanel property={property} />}
+        </div>
+      ))}
     </section>
   );
 }
@@ -136,15 +140,15 @@ function EpcPanel({ property }: { property: PropertyMedia }): React.ReactElement
         {rating && (
           <span
             className={cn(
-              "inline-flex h-12 min-w-12 items-center justify-center rounded-md px-3 text-lg font-bold text-white",
-              EPC_RATING_COLOURS[rating] ?? "bg-banc-grey"
+              "inline-flex h-12 min-w-12 items-center justify-center rounded-md px-3 text-lg font-bold text-banc-dark",
+              EPC_RATING_COLOURS[rating] ?? "bg-banc-grey-pale"
             )}
             aria-label={`Energy performance rating ${rating}`}
           >
             {rating}
           </span>
         )}
-        <p className="max-w-xl text-sm text-banc-grey">
+        <p className="max-w-xl text-sm text-banc-dark">
           Energy efficiency runs from A (most efficient) to G (least efficient).
         </p>
       </div>
@@ -181,7 +185,7 @@ function MapPanel({ property }: { property: PropertyMedia }): React.ReactElement
           loading="lazy"
         />
       </div>
-      <p className="mt-2 text-sm text-banc-grey">
+      <p className="mt-2 text-sm text-banc-dark">
         Map shows the postcode area, not the property&apos;s precise position.
       </p>
     </div>
