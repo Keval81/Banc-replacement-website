@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 // The Cut — fast 11s golden-hour hero film loop for the Aker direction.
-const videos = ["/videos/hero-cut.mp4"];
+const videos = ["/videos/hero-first-day.mp4"];
 
 interface Review {
   authorName: string;
