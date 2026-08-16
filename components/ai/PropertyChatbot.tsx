@@ -68,7 +68,7 @@ export default function PropertyChatbot() {
   // Show prompt bubble after 8 seconds if chat hasn't been opened
   useEffect(() => {
     if (promptDismissed) return;
-    const timer = setTimeout(() => setShowPrompt(true), 8000);
+    const timer = setTimeout(() => setShowPrompt(true), 3500);
     return () => clearTimeout(timer);
   }, [promptDismissed]);
 
@@ -136,7 +136,7 @@ export default function PropertyChatbot() {
       {/* Floating Button + Prompt Bubble */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="fixed bottom-36 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3">
+          <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3">
             {/* Speech Bubble Prompt */}
             <AnimatePresence>
               {showPrompt && (
@@ -156,10 +156,10 @@ export default function PropertyChatbot() {
                     className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
                     <p className="text-sm font-medium text-banc-dark leading-snug">
-                      Need help finding a property?
+                      Talk to our chatbot about any of our current properties
                     </p>
                     <p className="text-xs text-banc-grey mt-1">
-                      Try our chat assistant →
+                      Ask about any home we&apos;re selling →
                     </p>
                   </button>
                   {/* Close button */}
