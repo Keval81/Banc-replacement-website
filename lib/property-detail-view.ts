@@ -32,6 +32,10 @@ export function getDisplayFact(value: string | null | undefined): string | null 
   return EMPTY_FACTS.has(normalised.toLocaleLowerCase("en-GB")) ? null : normalised;
 }
 
+export function getDisplayCount(value: number): number | null {
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
 export function getSafeExternalUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());

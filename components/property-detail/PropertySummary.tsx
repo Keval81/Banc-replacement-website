@@ -4,7 +4,7 @@ import * as React from "react";
 import { Bath, Bed, Check, Heart, Share2, Sofa } from "lucide-react";
 
 import { useFavorites } from "@/app/hooks/useFavorites";
-import { getDisplayFact } from "@/lib/property-detail-view";
+import { getDisplayCount, getDisplayFact } from "@/lib/property-detail-view";
 import {
   buildPropertyShareData,
   shareProperty,
@@ -27,7 +27,19 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
   const tag = property.tags
     .map(getDisplayFact)
     .find((value): value is string => value !== null);
-  const location = [property.address, property.postcode].filter(Boolean).join(", ");
+  const location = [getDisplayFact(property.address), getDisplayFact(property.postcode)]
+    .filter((part): part is string => part !== null)
+    .join(", ");
+  const numericFacts = [
+    { icon: Bed, label: "Bedrooms", value: getDisplayCount(property.stats.beds) },
+    { icon: Bath, label: "Bathrooms", value: getDisplayCount(property.stats.baths) },
+    { icon: Sofa, label: "Receptions", value: getDisplayCount(property.receptions) },
+  ].filter(
+    (fact): fact is { icon: typeof Bed; label: string; value: number } => fact.value !== null
+  );
+  const facts: Array<{ icon?: typeof Bed; label: string; value: number | string }> = tenure
+    ? [...numericFacts, { label: "Tenure", value: tenure }]
+    : numericFacts;
 
   const handleFavorite = async (): Promise<void> => {
     if (isLoading || isToggling) return;
@@ -138,12 +150,13 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-2 border-y border-banc-grey/20 sm:grid-cols-4">
-        <PropertyFact icon={Bed} label="Bedrooms" value={property.stats.beds} />
-        <PropertyFact icon={Bath} label="Bathrooms" value={property.stats.baths} />
-        <PropertyFact icon={Sofa} label="Receptions" value={property.receptions} />
-        {tenure && <PropertyFact label="Tenure" value={tenure} />}
-      </dl>
+      {facts.length > 0 && (
+        <dl className="mt-6 grid grid-cols-2 border-y border-banc-grey/20 sm:grid-cols-4">
+          {facts.map((fact) => (
+            <PropertyFact key={fact.label} {...fact} />
+          ))}
+        </dl>
+      )}
 
       <span className="sr-only" aria-live="polite">
         {shareAnnouncement}

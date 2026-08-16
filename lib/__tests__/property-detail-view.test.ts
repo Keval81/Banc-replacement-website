@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   cleanDescriptionParagraphs,
   getAvailablePropertyMedia,
+  getDisplayCount,
   getDisplayFact,
   getSafeExternalUrl,
   getWrappedGalleryIndex,
@@ -34,6 +35,13 @@ test("omits meaningless property facts", () => {
     assert.equal(getDisplayFact(value), null);
   }
   assert.equal(getDisplayFact(" Freehold "), "Freehold");
+});
+
+test("omits invalid property counts", () => {
+  assert.equal(getDisplayCount(0), null);
+  assert.equal(getDisplayCount(-1), null);
+  assert.equal(getDisplayCount(Number.NaN), null);
+  assert.equal(getDisplayCount(4), 4);
 });
 
 test("accepts only absolute http and https media URLs", () => {

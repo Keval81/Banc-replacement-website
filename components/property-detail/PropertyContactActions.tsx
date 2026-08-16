@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+
 import { useCookies } from "@/hooks/useCookies";
 import { getSafeExternalUrl } from "@/lib/property-detail-view";
 import { buildPropertyLeadActions, type LivePropertyDetail } from "@/lib/property-view";
@@ -39,7 +41,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
                 href={brochureUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-sm font-medium text-banc-dark hover:text-banc-sky"
+                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-sky"
               >
                 Full brochure
               </a>
@@ -49,7 +51,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
                 href={tourUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-sm font-medium text-banc-dark hover:text-banc-sky"
+                className="flex min-h-11 items-center text-sm font-medium text-banc-dark hover:text-banc-sky"
               >
                 Virtual tour
               </a>
@@ -62,10 +64,16 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
 }
 
 export function PropertyMobileActions({ property }: PropertyContactActionsProps): React.ReactElement | null {
+  const [isReady, setIsReady] = React.useState(false);
   const { hasConsented } = useCookies();
   const actions = buildPropertyLeadActions(property.department, property.id);
 
-  if (!hasConsented) return null;
+  React.useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setIsReady(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  if (!isReady || !hasConsented) return null;
 
   return (
     <aside
