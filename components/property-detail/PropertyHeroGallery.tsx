@@ -141,7 +141,7 @@ export function PropertyHeroGallery({
             />
           </button>
           {gallery.length > 1 && (
-            <div className={cn("grid gap-2", secondaryGridClass)}>
+            <div className={cn("row-span-2 grid gap-2", secondaryGridClass)}>
               {gallery.slice(1, 5).map((image, offset) => (
                 <button
                   key={image.id}

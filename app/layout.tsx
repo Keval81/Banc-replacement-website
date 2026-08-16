@@ -10,7 +10,6 @@ import { AuthProvider } from "@/components/AuthProvider";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Script from "next/script";
-import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 // SoldBanner moved to homepage as a section
 
@@ -94,9 +93,6 @@ export default function RootLayout({
                 </AuthProvider>
                 
                 <SiteOverlays />
-                
-                {/* Push Notifications */}
-                <PushNotificationPrompt />
                 
                 {/* Social Proof Elements */}
                 <LiveReviewFeed />
