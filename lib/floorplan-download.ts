@@ -36,7 +36,7 @@ export function getSafeFloorplanDownloadUrl(value: string): URL | null {
 }
 
 function hasExplicitNumericPort(value: string): boolean {
-  const authority = value.match(/^[a-z][a-z\d+.-]*:\/\/([^/?#]*)/i)?.[1];
+  const authority = value.match(/^[a-z][a-z\d+.-]*:\/\/([^/?#\\]*)/i)?.[1];
   if (!authority) return false;
 
   const host = authority.slice(authority.lastIndexOf("@") + 1);

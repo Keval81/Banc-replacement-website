@@ -25,6 +25,10 @@ test("rejects explicitly supplied default ports without rejecting normal HTTP or
   assert.equal(getSafeFloorplanDownloadUrl("https://expertagent.co.uk:443/HIPS/floorplan.pdf"), null);
   assert.equal(getSafeFloorplanDownloadUrl("http://expertagent.co.uk:80/HIPS/floorplan.pdf"), null);
   assert.equal(
+    getSafeFloorplanDownloadUrl("https://expertagent.co.uk:443\\evil.expertagent.co.uk/x"),
+    null
+  );
+  assert.equal(
     getSafeFloorplanDownloadUrl("https://expertagent.co.uk/HIPS/floorplan.pdf")?.protocol,
     "https:"
   );
