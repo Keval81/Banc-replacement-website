@@ -1,6 +1,7 @@
 export const BANC_ACCESSIBLE_COLORS = {
   dark: "#2C2A27",
   focus: "#0B657A",
+  focusDark: "#4AC8E8",
   muted: "#5F5D57",
   pale: "#F4F3F1",
   sky: "#4AC8E8",

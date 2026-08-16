@@ -13,6 +13,7 @@
   --banc-muted-readable: #5F5D57;
   --banc-grey-pale:    #F4F3F1;
   --banc-focus:        #0B657A;
+  --banc-focus-dark:   #4AC8E8;
   --banc-gold:         #D4AF37;
   --banc-gold-light:   #FBF5DC;
   --banc-gold-dark:    #7A5C00;
@@ -188,6 +189,11 @@ a:focus-visible {
 .keyboard-user *:focus-visible {
   outline: 3px solid var(--banc-focus);
   outline-offset: 4px;
+}
+
+/* Dark navigation surfaces need a brighter focus ring for contrast. */
+.banc-dark-surface *:focus-visible {
+  outline-color: var(--banc-focus-dark);
 }
 
 /* Touch target minimum size enforcement */

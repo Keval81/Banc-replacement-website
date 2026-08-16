@@ -32,3 +32,9 @@ test("uses a focus colour with at least 3 to 1 contrast on property surfaces", (
     assert.ok(getContrastRatio(BANC_ACCESSIBLE_COLORS.focus, background) >= 3);
   }
 });
+
+test("uses a dark-surface focus colour with at least 3 to 1 contrast", () => {
+  assert.ok(
+    getContrastRatio(BANC_ACCESSIBLE_COLORS.focusDark, "#1A1917") >= 3
+  );
+});

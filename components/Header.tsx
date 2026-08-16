@@ -84,7 +84,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="safe-area-header fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
+      <header className="banc-dark-surface safe-area-header fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
           {/* Logo */}
           <Link href="/" aria-label="Banc Property Group" className="flex items-center">
@@ -235,7 +235,7 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="safe-area-drawer fixed bottom-0 right-0 top-0 z-50 flex w-[85%] max-w-[340px] flex-col bg-banc-dark-deep shadow-2xl lg:hidden"
+              className="banc-dark-surface safe-area-drawer fixed bottom-0 right-0 top-0 z-50 flex w-[85%] max-w-[340px] flex-col bg-banc-dark-deep shadow-2xl lg:hidden"
             >
               {/* Mobile Header */}
               <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
