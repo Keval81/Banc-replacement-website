@@ -23,6 +23,12 @@ test("normalises whitespace and omits empty description paragraphs", () => {
   ]);
 });
 
+test("treats description duplicates as case insensitive", () => {
+  assert.deepEqual(cleanDescriptionParagraphs("A premium home.\n\na PREMIUM home."), [
+    "A premium home.",
+  ]);
+});
+
 test("omits meaningless property facts", () => {
   for (const value of [undefined, null, "", "  ", "Unknown", "N/A", "Not known", "-"]) {
     assert.equal(getDisplayFact(value), null);
