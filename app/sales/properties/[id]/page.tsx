@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -9,6 +10,7 @@ import PropertyCard from "@/components/PropertyCard";
 import { PropertyGallery } from "@/components/PropertyGallery";
 import { FloorplanViewer } from "@/components/FloorplanViewer";
 import { Button } from "@/components/ui/button";
+import { buildPropertyLeadActions } from "@/lib/property-view";
 import {
   Bed,
   Bath,
@@ -66,6 +68,7 @@ interface SimilarCard {
   stats: { beds: number; baths: number };
   images: string[];
   summary: string;
+  department: "sales" | "lettings";
 }
 
 type LoadState =
@@ -79,6 +82,9 @@ export default function PropertyDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = React.use(params);
+  const pathname = usePathname();
+  const requestedDepartment = pathname.startsWith("/lettings/") ? "lettings" : "sales";
+  const resultsHref = `/${requestedDepartment}/properties`;
   const [state, setState] = React.useState<LoadState>({ phase: "loading" });
 
   React.useEffect(() => {
@@ -121,10 +127,10 @@ export default function PropertyDetailPage({
             This property is no longer available
           </h1>
           <p className="mb-6 text-banc-grey">
-            It may have been sold or withdrawn. Our current listings are updated
-            directly from our sales system.
+            It may have been {requestedDepartment === "lettings" ? "let or withdrawn" : "sold or withdrawn"}.
+            Our current listings are updated directly from our property system.
           </p>
-          <Link href="/sales/properties">
+          <Link href={resultsHref}>
             <Button className="bg-banc-sky text-white hover:bg-banc-sky-dark">
               View current properties
             </Button>
@@ -149,6 +155,7 @@ function DetailBody({
   similar: SimilarCard[];
 }) {
   const paragraphs = property.description.split("\n\n").filter(Boolean);
+  const leadActions = buildPropertyLeadActions(property.department, property.id);
 
   return (
     <>
@@ -344,17 +351,17 @@ function DetailBody({
                   1 Station Road, Cuffley, EN6 4HU
                 </p>
                 <div className="mt-4 flex flex-col gap-3">
-                  <Link href={`/book-viewing?property=${encodeURIComponent(property.id)}`}>
+                  <Link href={leadActions.primaryHref}>
                     <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
-                      Book a viewing
+                      {leadActions.primaryLabel}
                     </Button>
                   </Link>
-                  <Link href={`/make-offer?property=${encodeURIComponent(property.id)}`}>
+                  <Link href={leadActions.secondaryHref}>
                     <Button
                       variant="outline"
                       className="w-full border-banc-dark/25 text-banc-dark hover:border-banc-dark"
                     >
-                      Make an offer
+                      {leadActions.secondaryLabel}
                     </Button>
                   </Link>
                   <a
