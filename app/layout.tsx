@@ -5,13 +5,11 @@ import { CookieProvider } from "@/hooks/useCookies";
 import { ComparisonProvider } from "@/app/hooks/usePropertyComparison";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { MobileBottomNav } from "@/components/mobile/MobileNav";
-import { FloatingWhatsApp } from "@/components/mobile/FloatingWhatsApp";
+import { SiteOverlays } from "@/components/mobile/SiteOverlays";
 import { AuthProvider } from "@/components/AuthProvider";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Script from "next/script";
-import PropertyChatbot from "@/components/ai/PropertyChatbot";
 import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 // SoldBanner moved to homepage as a section
@@ -95,14 +93,7 @@ export default function RootLayout({
                   </main>
                 </AuthProvider>
                 
-                {/* Mobile navigation */}
-                <MobileBottomNav />
-                
-                {/* Floating WhatsApp button - positioned bottom-left on mobile to avoid chatbot overlap */}
-                <FloatingWhatsApp position="bottom-left" />
-                
-                {/* AI Chatbot */}
-                <PropertyChatbot />
+                <SiteOverlays />
                 
                 {/* Push Notifications */}
                 <PushNotificationPrompt />

@@ -82,6 +82,12 @@ test("recognises sales and lettings detail routes but not results routes", () =>
   assert.equal(isPropertyDetailPath("/contact"), false);
 });
 
+test("does not classify nested or malformed routes as property details", () => {
+  assert.equal(isPropertyDetailPath("/sales/properties/BPGC869/gallery"), false);
+  assert.equal(isPropertyDetailPath("/sales/properties/"), false);
+  assert.equal(isPropertyDetailPath("/rentals/properties/BPGC869"), false);
+});
+
 test("wraps gallery navigation in both directions", () => {
   assert.equal(getWrappedGalleryIndex(0, -1, 5), 4);
   assert.equal(getWrappedGalleryIndex(4, 1, 5), 0);
