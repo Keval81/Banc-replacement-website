@@ -78,17 +78,10 @@ export function PropertyHeroGallery({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <section className={cn("relative", className)} aria-label="Property photos">
         <div
-          className="relative aspect-[4/3] overflow-hidden bg-banc-dark lg:hidden"
+          className="relative aspect-[4/3] touch-pan-y overflow-hidden bg-banc-dark lg:hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          <button
-            type="button"
-            className="absolute inset-0 z-10"
-            onClick={(event) => openAt(activeIndex, event.currentTarget)}
-          >
-            <span className="sr-only">View all {gallery.length} property photos</span>
-          </button>
           <Image
             src={gallery[activeIndex].url}
             alt={gallery[activeIndex].alt}
@@ -97,6 +90,13 @@ export function PropertyHeroGallery({
             className={cn("object-cover", !reduceMotion && "transition-opacity duration-300")}
             sizes="100vw"
           />
+          <button
+            type="button"
+            className="absolute bottom-3 left-3 z-20 flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-medium text-banc-dark shadow-lg"
+            onClick={(event) => openAt(activeIndex, event.currentTarget)}
+          >
+            <Images className="h-4 w-4" /> View all photos
+          </button>
           {gallery.length > 1 && (
             <>
               <button
@@ -189,13 +189,13 @@ export function PropertyHeroGallery({
           <Dialog.Title className="sr-only">Property photo gallery</Dialog.Title>
           <Dialog.Close
             type="button"
-            className="absolute right-4 top-4 z-20 h-12 w-12 rounded-full bg-white/10 text-white"
+            className="absolute right-[calc(env(safe-area-inset-right)+1rem)] top-[calc(env(safe-area-inset-top)+1rem)] z-20 h-12 w-12 rounded-full border border-white/70 bg-black/85 text-white shadow-lg"
             aria-label="Close photo gallery"
           >
             <X className="mx-auto h-6 w-6" />
           </Dialog.Close>
           <div
-            className="relative h-full w-full"
+            className="relative h-full w-full touch-pan-y"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -212,7 +212,7 @@ export function PropertyHeroGallery({
                 <button
                   type="button"
                   aria-label="Previous photo"
-                  className="absolute left-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white sm:left-4"
+                  className="absolute left-[calc(env(safe-area-inset-left)+0.75rem)] top-1/2 h-12 w-12 -translate-y-1/2 rounded-full border border-white/70 bg-black/85 text-white shadow-lg sm:left-[calc(env(safe-area-inset-left)+1rem)]"
                   onClick={() => move(-1)}
                 >
                   <ChevronLeft className="mx-auto h-7 w-7" />
@@ -220,14 +220,14 @@ export function PropertyHeroGallery({
                 <button
                   type="button"
                   aria-label="Next photo"
-                  className="absolute right-0 top-1/2 h-12 w-12 -translate-y-1/2 rounded-full bg-white/10 text-white sm:right-4"
+                  className="absolute right-[calc(env(safe-area-inset-right)+0.75rem)] top-1/2 h-12 w-12 -translate-y-1/2 rounded-full border border-white/70 bg-black/85 text-white shadow-lg sm:right-[calc(env(safe-area-inset-right)+1rem)]"
                   onClick={() => move(1)}
                 >
                   <ChevronRight className="mx-auto h-7 w-7" />
                 </button>
               </>
             )}
-            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-2 text-sm text-white">
+            <p className="absolute bottom-[calc(env(safe-area-inset-bottom)+1rem)] left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-black/85 px-4 py-2 text-sm text-white shadow-lg">
               {activeIndex + 1} / {gallery.length}
             </p>
           </div>
