@@ -7,6 +7,17 @@ export interface PropertyMediaAvailability {
   longitude?: number;
 }
 
+export type PropertyMediaMode = "photos" | PropertyMediaTabId;
+
+export interface PropertyMediaStageAvailability extends PropertyMediaAvailability {
+  images: ReadonlyArray<unknown>;
+}
+
+export interface PropertyResultsBackLink {
+  href: "/sales/properties" | "/lettings/properties";
+  label: "Back to properties";
+}
+
 export interface PropertyPhotoPresentation<T> {
   items: ReadonlyArray<T>;
   emptyMessage: "No photos available" | null;
@@ -61,6 +72,25 @@ export function getAvailablePropertyMedia({
   if (getSafeExternalUrl(epcImageUrl)) tabs.push("epc");
   if (Number.isFinite(latitude) && Number.isFinite(longitude)) tabs.push("map");
   return tabs;
+}
+
+export function getAvailablePropertyMediaModes({
+  images,
+  ...supportingMedia
+}: PropertyMediaStageAvailability): PropertyMediaMode[] {
+  const modes: PropertyMediaMode[] = [];
+  if (images.length > 0) modes.push("photos");
+  modes.push(...getAvailablePropertyMedia(supportingMedia));
+  return modes;
+}
+
+export function getPropertyResultsBackLink(
+  department: "sales" | "lettings"
+): PropertyResultsBackLink {
+  return {
+    href: `/${department}/properties`,
+    label: "Back to properties",
+  };
 }
 
 export function isPropertyDetailPath(pathname: string): boolean {

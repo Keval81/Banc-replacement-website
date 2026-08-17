@@ -3,13 +3,63 @@ import assert from "node:assert/strict";
 import {
   cleanDescriptionParagraphs,
   getAvailablePropertyMedia,
+  getAvailablePropertyMediaModes,
   getDisplayCount,
   getDisplayFact,
+  getPropertyResultsBackLink,
   getPropertyPhotoPresentation,
   getSafeExternalUrl,
   getWrappedGalleryIndex,
   isPropertyDetailPath,
 } from "../property-detail-view.ts";
+
+test("orders only live property media with photos first", () => {
+  assert.deepEqual(
+    getAvailablePropertyMediaModes({
+      images: [{ id: "photo-1" }],
+      floorplans: [{ id: "floorplan-1" }],
+      epcImageUrl: "https://example.com/epc.jpg",
+      latitude: 51.7252,
+      longitude: -0.2049,
+    }),
+    ["photos", "floorplan", "epc", "map"]
+  );
+});
+
+test("selects the first real non-photo medium when photos are unavailable", () => {
+  assert.deepEqual(
+    getAvailablePropertyMediaModes({
+      images: [],
+      floorplans: [{ id: "floorplan-1" }],
+      epcImageUrl: "",
+      latitude: 51.7252,
+      longitude: -0.2049,
+    }),
+    ["floorplan", "map"]
+  );
+});
+
+test("returns no media modes when the property has no media", () => {
+  assert.deepEqual(
+    getAvailablePropertyMediaModes({
+      images: [],
+      floorplans: [],
+      epcImageUrl: "",
+    }),
+    []
+  );
+});
+
+test("builds department-correct property results back links", () => {
+  assert.deepEqual(getPropertyResultsBackLink("sales"), {
+    href: "/sales/properties",
+    label: "Back to properties",
+  });
+  assert.deepEqual(getPropertyResultsBackLink("lettings"), {
+    href: "/lettings/properties",
+    label: "Back to properties",
+  });
+});
 
 test("deduplicates description paragraphs while preserving their first occurrence", () => {
   assert.deepEqual(
