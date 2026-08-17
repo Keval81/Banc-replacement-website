@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Loader2, Calendar, Tag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MessageCircle, X, Send, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
 
 interface Message {
@@ -136,7 +135,7 @@ export default function PropertyChatbot() {
       {/* Floating Button + Prompt Bubble */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3">
+          <div className="fixed bottom-[calc(9rem+env(safe-area-inset-bottom))] right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))]">
             {/* Speech Bubble Prompt */}
             <AnimatePresence>
               {showPrompt && (
@@ -205,7 +204,7 @@ export default function PropertyChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={transition}
-            className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 sm:w-[380px]"
+            className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:left-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:w-[380px]"
           >
             <div className="flex flex-col overflow-hidden rounded-[16px] border border-banc-grey/15 bg-white shadow-2xl max-h-[80dvh] sm:max-h-[520px]">
               {/* Header */}

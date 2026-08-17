@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { parseExpertAgentFeed, toDbProperty } from "../expert-agent-feed.ts";
+import { parseExpertAgentFeed, toDbProperty, epcBand } from "../expert-agent-feed.ts";
 
 const xml = readFileSync(join(import.meta.dirname, "fixtures", "expert-agent-feed.xml"), "utf8");
 
@@ -114,4 +114,43 @@ test("maps Let STC to let_agreed and Sold STC to under_offer", () => {
 test("sales rows carry department sales", () => {
   const row = toDbProperty(parseExpertAgentFeed(xml).properties[0]);
   assert.equal(row.department, "sales");
+});
+
+test("toDbProperty carries tenure, brochure, tour, rooms and floorplans", () => {
+  const p = parseExpertAgentFeed(xml).properties[0];
+  const row = toDbProperty(p);
+  assert.equal(row.tenure, "Freehold");
+  assert.match(row.brochure_url, /External\.pdf$/);
+  assert.match(row.virtual_tour_url, /panpics/);
+  assert.equal(row.rooms.length, 2);
+  assert.deepEqual(Object.keys(row.rooms[0]).sort(), ["description", "measurement", "name"]);
+  assert.equal(row.floorplans.length, 1);
+});
+
+test("captures the undocumented epc graph image and derives the band from its filename", () => {
+  const [withEpc, without] = parseExpertAgentFeed(xml).properties;
+  const row = toDbProperty(withEpc);
+  assert.match(row.epc_image_url, /EPC_80827980\.png$/);
+  assert.equal(row.epc_rating, "C"); // current energy score 80 -> band C
+  const bare = toDbProperty(without);
+  assert.equal(bare.epc_image_url, "");
+  assert.equal(bare.epc_rating, undefined);
+});
+
+test("epcBand maps scores to the standard bands", () => {
+  assert.equal(epcBand(95), "A");
+  assert.equal(epcBand(85), "B");
+  assert.equal(epcBand(69), "C");
+  assert.equal(epcBand(55), "D");
+  assert.equal(epcBand(40), "E");
+  assert.equal(epcBand(25), "F");
+  assert.equal(epcBand(10), "G");
+});
+
+test("derives the band from PEA_ four-digit filenames too", () => {
+  const pea = xml.replace("EPC_80827980.png", "PEA_6974.png");
+  const row = toDbProperty(parseExpertAgentFeed(pea).properties[0]);
+  assert.equal(row.epc_rating, "C"); // current 69 -> C
+  const noise = xml.replace("EPC_80827980.png", "Picture1.png");
+  assert.equal(toDbProperty(parseExpertAgentFeed(noise).properties[0]).epc_rating, undefined);
 });

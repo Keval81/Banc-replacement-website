@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      // Expert Agent media CDN (property photos come as http URLs in the feed)
+      {
+        protocol: "http",
+        hostname: "**.expertagent.co.uk",
+      },
+      {
+        protocol: "https",
+        hostname: "**.expertagent.co.uk",
+      },
       {
         protocol: "https",
         hostname: "fonts.gstatic.com",

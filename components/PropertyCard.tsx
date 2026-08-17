@@ -3,33 +3,38 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { 
-  Bed, 
-  Bath, 
-  Square, 
-  Sparkles, 
-  Share2, 
-  Heart,
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowUpRight,
+  Bath,
+  Bed,
+  Check,
   ChevronLeft,
   ChevronRight,
+  Heart,
   Scale,
-  Check
+  Share2,
+  Sparkles,
+  Square,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useFavorites } from "@/app/hooks/useFavorites";
+import { PropertyPhotoPlaceholder } from "@/components/property/PropertyPhotoPlaceholder";
+import { getPropertyPhotoPresentation } from "@/lib/property-detail-view";
+import {
+  buildPropertyHref,
+  buildPropertyShareData,
+  shareProperty,
+  type PropertyShareResult,
+} from "@/lib/property-view";
 import { cn } from "@/lib/utils";
 
-/** Property statistics shape */
 interface PropertyStats {
   beds: number;
   baths: number;
-  sqft: number;
-  epc: string;
+  sqft?: number;
+  epc?: string;
 }
 
-/** Extended PropertyCard with compare and favorite functionality */
 interface PropertyCardProps {
   id: string;
   title: string;
@@ -40,16 +45,19 @@ interface PropertyCardProps {
   stats: PropertyStats;
   images: string[];
   summary: string;
+  department?: "sales" | "lettings";
   type?: string;
   tenure?: string;
   dateAdded?: string;
+  variant?: "grid" | "list";
+  imagePriority?: boolean;
   showCompare?: boolean;
   isCompared?: boolean;
   canCompare?: boolean;
   onCompareToggle?: () => void;
 }
 
-export default function PropertyCard({
+export function PropertyCard({
   id,
   title,
   address,
@@ -58,45 +66,45 @@ export default function PropertyCard({
   stats,
   images,
   summary,
+  department = "sales",
+  variant = "grid",
+  imagePriority = false,
   showCompare = false,
   isCompared = false,
   canCompare = true,
   onCompareToggle,
 }: PropertyCardProps): React.ReactElement {
-  const safeImages = images.length > 0 ? images : ["/hertfordshire-home-1.png"];
+  const photoPresentation = getPropertyPhotoPresentation(images);
+  const safeImages = photoPresentation.items;
   const [imageIndex, setImageIndex] = React.useState(0);
-  const { isFavorite, toggleFavorite, isLoading } = useFavorites();
   const [isToggling, setIsToggling] = React.useState(false);
-
-  const nextImage = (e: React.MouseEvent): void => {
-    e.preventDefault();
-    e.stopPropagation();
-    setImageIndex((prev) => (prev + 1) % safeImages.length);
-  };
-
-  const prevImage = (e: React.MouseEvent): void => {
-    e.preventDefault();
-    e.stopPropagation();
-    setImageIndex((prev) => (prev - 1 + safeImages.length) % safeImages.length);
-  };
-
+  const [shareStatus, setShareStatus] = React.useState<PropertyShareResult | null>(null);
+  const { isFavorite, toggleFavorite, isLoading } = useFavorites();
+  const reduceMotion = useReducedMotion();
+  const propertyHref = buildPropertyHref(department, id);
   const currentImageUrl = safeImages[imageIndex];
   const hasMultipleImages = safeImages.length > 1;
   const favorited = isFavorite(id);
 
-  const handleFavoriteClick = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+  const changeImage = (event: React.MouseEvent, direction: -1 | 1): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    setImageIndex((current) => (current + direction + safeImages.length) % safeImages.length);
+  };
+
+  const handleFavoriteClick = async (event: React.MouseEvent): Promise<void> => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (isLoading || isToggling) return;
-    
+
     setIsToggling(true);
     try {
       await toggleFavorite({
         id,
         title,
         price,
-        image: images[0],
+        image: safeImages[0],
         address,
       });
     } finally {
@@ -104,182 +112,263 @@ export default function PropertyCard({
     }
   };
 
-  const handleCompareClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleCompareClick = (event: React.MouseEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
     onCompareToggle?.();
   };
 
+  const handleShareClick = async (event: React.MouseEvent): Promise<void> => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const data = buildPropertyShareData({
+      department,
+      id,
+      title,
+      address,
+      price,
+      origin: window.location.origin,
+    });
+
+    try {
+      const result = await shareProperty(data, {
+        nativeShare:
+          typeof navigator.share === "function"
+            ? (shareData) => navigator.share(shareData)
+            : undefined,
+        copyText: navigator.clipboard?.writeText
+          ? (value) => navigator.clipboard.writeText(value)
+          : undefined,
+      });
+      setShareStatus(result);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setShareStatus("unavailable");
+    }
+  };
+
+  const shareLabel =
+    shareStatus === "copied"
+      ? "Property link copied"
+      : shareStatus === "unavailable"
+        ? "Sharing unavailable"
+        : "Share property";
+  const shareAnnouncement =
+    shareStatus === "copied"
+      ? `${title} link copied to clipboard`
+      : shareStatus === "unavailable"
+        ? `${title} could not be shared on this device`
+        : "";
+
   return (
     <motion.article
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
+      whileHover={reduceMotion ? undefined : { y: -3 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
       className={cn(
-        "group overflow-hidden rounded-[10px] border border-banc-dark/15 bg-white transition-colors duration-200 hover:border-banc-dark/40 cursor-pointer",
-        isCompared ? "border-banc-sky ring-1 ring-banc-sky" : "border-banc-grey/20"
+        "group relative isolate overflow-hidden rounded-[14px] border bg-white transition-[border-color,box-shadow] duration-300 focus-within:border-banc-dark/40 hover:border-banc-dark/30 hover:shadow-[0_18px_50px_rgba(26,25,23,0.09)]",
+        isCompared ? "border-banc-sky ring-1 ring-banc-sky" : "border-banc-grey/25",
+        variant === "list" && "md:grid md:grid-cols-[minmax(280px,42%)_1fr]"
       )}
     >
-      {/* Simple Image Carousel - Click goes to property page */}
-      <Link href={`/sales/properties/${id}`} className="block">
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-banc-grey-pale">
-          <Image
-            src={currentImageUrl}
-            alt={`${title} - Property Image`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            priority
-          />
+      <Link
+        href={propertyHref}
+        aria-label={`View ${title}, ${address}`}
+        className="absolute inset-0 z-[1] rounded-[14px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-banc-focus"
+      />
 
-          {/* Tags Overlay */}
-          {tags.length > 0 && (
-            <div className="absolute left-2 sm:left-3 top-2 sm:top-3 flex flex-wrap gap-1 sm:gap-1.5 max-w-[calc(100%-4rem)]">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full bg-white/95 px-2 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs font-semibold text-banc-dark shadow-sm whitespace-nowrap"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
+      <div
+        className={cn(
+          "relative aspect-[4/3] overflow-hidden bg-banc-grey-pale",
+          variant === "list" && "md:aspect-auto md:min-h-[300px]"
+        )}
+      >
+        {currentImageUrl ? (
+          <>
+            <Image
+              src={currentImageUrl}
+              alt={`${title}, ${address}`}
+              fill
+              sizes={
+                variant === "list"
+                  ? "(max-width: 768px) 100vw, 42vw"
+                  : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              }
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              priority={imagePriority}
+            />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/45 to-transparent" />
+          </>
+        ) : (
+          <PropertyPhotoPlaceholder message={photoPresentation.emptyMessage ?? undefined} />
+        )}
 
-          {/* Compare Checkbox Overlay */}
-          {showCompare && (
-            <div className="absolute right-2 sm:right-3 top-2 sm:top-3 z-10">
-              <button
-                onClick={handleCompareClick}
-                disabled={!canCompare && !isCompared}
-                className={cn(
-                  "flex items-center gap-1 px-2 sm:gap-1.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium transition-all shadow-md",
-                  isCompared
-                    ? "bg-banc-sky text-white"
-                    : canCompare
-                    ? "bg-white/95 text-banc-dark-mid hover:bg-white"
-                    : "bg-banc-grey/20/80 text-banc-grey cursor-not-allowed"
-                )}
+        {tags.length > 0 && (
+          <div className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-5rem)] flex-wrap gap-1.5 sm:left-4 sm:top-4">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-white/30 bg-black/55 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white backdrop-blur-sm"
               >
-                {isCompared ? (
-                  <>
-                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="hidden sm:inline">Comparing</span>
-                  </>
-                ) : (
-                  <>
-                    <Scale className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    <span className="hidden sm:inline">Compare</span>
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-
-          {/* Navigation Arrows - only show if multiple images */}
-          {hasMultipleImages && (
-            <>
-              <button
-                type="button"
-                onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-banc-dark opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
-                aria-label="Previous image"
-                style={{ touchAction: 'manipulation' }}
-              >
-                <ChevronLeft className="h-5 w-5 sm:h-4 sm:w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-white/90 text-banc-dark opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-white shadow-md touch-manipulation"
-                aria-label="Next image"
-                style={{ touchAction: 'manipulation' }}
-              >
-                <ChevronRight className="h-5 w-5 sm:h-4 sm:w-4" />
-              </button>
-              <span className="absolute bottom-3 right-3 rounded-full bg-black/60 px-2 py-1 text-xs text-white font-medium">
-                {imageIndex + 1} / {safeImages.length}
+                {tag}
               </span>
-            </>
+            ))}
+          </div>
+        )}
+
+        {showCompare && (
+          <button
+            type="button"
+            onClick={handleCompareClick}
+            disabled={!canCompare && !isCompared}
+            aria-label={
+              isCompared ? "Remove property from comparison" : "Add property to comparison"
+            }
+            aria-pressed={isCompared}
+            className={cn(
+              "absolute right-3 top-3 z-20 flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-xs font-medium shadow-sm backdrop-blur-sm transition-colors sm:right-4 sm:top-4",
+              isCompared
+                ? "border-banc-sky bg-banc-sky text-banc-dark"
+                : canCompare
+                  ? "border-white/30 bg-black/55 text-white hover:bg-black/75"
+                  : "cursor-not-allowed border-white/20 bg-black/35 text-white/55"
+            )}
+          >
+            {isCompared ? (
+              <Check className="h-3.5 w-3.5" />
+            ) : (
+              <Scale className="h-3.5 w-3.5" />
+            )}
+            <span className="hidden sm:inline">{isCompared ? "Comparing" : "Compare"}</span>
+          </button>
+        )}
+
+        {hasMultipleImages && (
+          <>
+            <button
+              type="button"
+              onClick={(event) => changeImage(event, -1)}
+              className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              aria-label={`Previous image of ${title}`}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={(event) => changeImage(event, 1)}
+              className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              aria-label={`Next image of ${title}`}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm sm:bottom-4 sm:right-4">
+              {imageIndex + 1} / {safeImages.length}
+            </span>
+          </>
+        )}
+      </div>
+
+      <div
+        className={cn(
+          "flex min-w-0 flex-col p-4 sm:p-5",
+          variant === "list" && "md:p-7"
+        )}
+      >
+        <div className="min-w-0">
+          <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">
+            {address}
+          </p>
+          <h3 className="mt-2 line-clamp-2 font-heading text-xl font-medium leading-tight text-banc-dark sm:text-[1.35rem]">
+            {title}
+          </h3>
+          <p className="mt-3 text-xl font-semibold tracking-[-0.02em] text-banc-dark sm:text-2xl">
+            {price}
+          </p>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-y border-banc-grey/20 py-3 text-xs text-banc-dark-mid sm:text-sm">
+          <span className="flex items-center gap-1.5">
+            <Bed className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
+            <span className="font-semibold text-banc-dark">{stats.beds}</span> beds
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Bath className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
+            <span className="font-semibold text-banc-dark">{stats.baths}</span> baths
+          </span>
+          {stats.sqft !== undefined && (
+            <span className="flex items-center gap-1.5">
+              <Square className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
+              <span className="font-semibold text-banc-dark">
+                {stats.sqft.toLocaleString("en-GB")}
+              </span>{" "}
+              sq ft
+            </span>
+          )}
+          {stats.epc !== undefined && (
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="h-4 w-4 text-banc-muted-readable" aria-hidden="true" />
+              EPC <span className="font-semibold text-banc-dark">{stats.epc}</span>
+            </span>
           )}
         </div>
-      </Link>
 
-      {/* Property Details */}
-      <div className="flex flex-col gap-3 p-4">
-        <Link href={`/sales/properties/${id}`} className="block group/link">
-          <div>
-            <p className="text-xs text-banc-grey line-clamp-1 mb-0.5">{address}</p>
-            <h3 className="text-base font-semibold text-banc-dark group-hover/link:text-banc-sky transition-colors line-clamp-1">
-              {title}
-            </h3>
-            <p className="mt-2 font-serif text-xl font-light text-banc-dark">{price}</p>
-          </div>
-        </Link>
-
-        {/* Stats Row */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 text-xs text-banc-grey">
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bed className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
-            <span className="font-medium">{stats.beds}</span>
-            <span className="hidden sm:inline"> Beds</span>
-          </span>
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Bath className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
-            <span className="font-medium">{stats.baths}</span>
-            <span className="hidden sm:inline"> Baths</span>
-          </span>
-          <span className="flex items-center gap-1 min-w-[4.5rem] sm:min-w-0">
-            <Square className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
-            <span className="font-medium">{stats.sqft.toLocaleString()}</span>
-            <span className="hidden sm:inline"> Sq Ft</span>
-          </span>
-          <span className="flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-banc-grey flex-shrink-0" />
-            <span className="font-medium">EPC {stats.epc}</span>
-          </span>
-        </div>
-
-        {/* Summary */}
-        <p className="text-xs text-banc-grey line-clamp-2">
+        <p
+          className={cn(
+            "mt-4 hidden text-sm leading-relaxed text-banc-muted-readable sm:line-clamp-2",
+            variant === "list" && "md:line-clamp-3"
+          )}
+        >
           {summary}
         </p>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 pt-1">
-          <Link href={`/sales/properties/${id}`} className="flex-1">
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-full rounded-full border-banc-dark/25 bg-transparent text-xs text-banc-dark transition-colors hover:border-banc-dark hover:bg-transparent min-h-[44px] sm:min-h-0"
-            >
-              View details &rarr;
-            </Button>
-          </Link>
+        <div className="mt-4 flex items-center gap-2 border-t border-banc-grey/20 pt-4 sm:mt-5">
+          <span className="mr-auto inline-flex items-center gap-1.5 text-sm font-semibold text-banc-dark transition-colors group-hover:text-banc-focus">
+            View property
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </span>
           <button
             type="button"
             onClick={handleFavoriteClick}
             disabled={isLoading || isToggling}
+            aria-label={
+              favorited ? `Remove ${title} from saved properties` : `Save ${title}`
+            }
+            aria-pressed={favorited}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-200 cursor-pointer touch-manipulation",
+              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
               favorited
-                ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
-                : "border-banc-grey/20 text-banc-grey hover:border-red-400 hover:text-red-500"
+                ? "border-banc-dark bg-banc-dark text-white"
+                : "border-banc-grey/30 text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale"
             )}
-            aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
-            style={{ touchAction: 'manipulation' }}
           >
-            <Heart className={cn("h-5 w-5 sm:h-3.5 sm:w-3.5", favorited && "fill-current")} />
+            <Heart
+              className={cn("h-[18px] w-[18px]", favorited && "fill-current")}
+            />
           </button>
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-banc-grey/20 text-banc-grey transition-colors duration-200 hover:border-banc-sky hover:text-banc-sky cursor-pointer touch-manipulation"
-            aria-label="Share property"
-            style={{ touchAction: 'manipulation' }}
+            onClick={handleShareClick}
+            aria-label={`${shareLabel}: ${title}`}
+            className={cn(
+              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
+              shareStatus === "copied"
+                ? "border-banc-sky bg-banc-sky/15 text-banc-dark"
+                : "border-banc-grey/30 text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale"
+            )}
           >
-            <Share2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+            {shareStatus === "copied" ? (
+              <Check className="h-[18px] w-[18px]" />
+            ) : (
+              <Share2 className="h-[18px] w-[18px]" />
+            )}
           </button>
+          <span className="sr-only" aria-live="polite">
+            {shareAnnouncement}
+          </span>
         </div>
       </div>
     </motion.article>
   );
 }
+
+export default PropertyCard;

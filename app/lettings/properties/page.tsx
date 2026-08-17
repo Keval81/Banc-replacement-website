@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
@@ -25,231 +25,51 @@ import PropertyMap from "@/components/PropertyMap";
 // Sample Lettings Properties Data
 // ============================================
 
-const allLettingsProperties = [
-  {
-    id: "modern-townhouse-cuffley",
-    title: "Modern Townhouse",
-    address: "Cuffley, EN6",
-    price: "£2,850 pcm",
-    priceNum: 2850,
-    tags: ["New Listing", "Furnished"],
-    stats: { beds: 4, baths: 3, sqft: 1800, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    floorplanImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
-    summary: "Stunning modern townhouse with integrated garage, private garden, and modern kitchen.",
-    propertyType: "house",
-    features: { garden: true, parking: true, garage: true, furnished: true },
-    addedDate: "2026-02-25",
-    lettingType: "long_term",
-  },
-  {
-    id: "mayfair-studio-w1k",
-    title: "Mayfair Studio",
-    address: "South Audley Street, W1K",
-    price: "£2,200 pcm",
-    priceNum: 2200,
-    tags: ["Premium", "Bills Included"],
-    stats: { beds: 1, baths: 1, sqft: 450, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    summary: "Luxurious studio apartment in the heart of Mayfair with concierge service.",
-    propertyType: "flat",
-    features: { parking: true, billsIncluded: true, concierge: true },
-    addedDate: "2026-02-20",
-    lettingType: "long_term",
-  },
-  {
-    id: "family-detached-brookmans",
-    title: "Family Detached",
-    address: "Brookmans Park, AL9",
-    price: "£3,500 pcm",
-    priceNum: 3500,
-    tags: ["Unfurnished", "Garden"],
-    stats: { beds: 4, baths: 2, sqft: 2100, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    summary: "Spacious family home with large garden, close to excellent schools and station.",
-    propertyType: "house",
-    features: { garden: true, parking: true, unfurnished: true },
-    addedDate: "2026-02-26",
-    lettingType: "long_term",
-  },
-  {
-    id: "executive-apartment-hadley",
-    title: "Executive Apartment",
-    address: "Hadley Wood, EN4",
-    price: "£2,100 pcm",
-    priceNum: 2100,
-    tags: ["Furnished", "Parking"],
-    stats: { beds: 2, baths: 2, sqft: 950, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
-    summary: "High specification apartment with balcony, underground parking, and gym access.",
-    propertyType: "flat",
-    features: { parking: true, furnished: true, gym: true },
-    addedDate: "2026-02-15",
-    lettingType: "long_term",
-  },
-  {
-    id: "period-cottage-potters",
-    title: "Period Cottage",
-    address: "Potters Bar, EN6",
-    price: "£1,800 pcm",
-    priceNum: 1800,
-    tags: ["Character", "Parking"],
-    stats: { beds: 2, baths: 1, sqft: 800, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    summary: "Charming period cottage with exposed beams, modern kitchen, and courtyard garden.",
-    propertyType: "house",
-    features: { parking: true, garden: true, periodFeatures: true },
-    addedDate: "2026-02-18",
-    lettingType: "long_term",
-  },
-  {
-    id: "penthouse-suite-mount",
-    title: "Penthouse Suite",
-    address: "Mount Street, W1",
-    price: "£5,500 pcm",
-    priceNum: 5500,
-    tags: ["Premium", "Furnished", "Concierge"],
-    stats: { beds: 3, baths: 3, sqft: 1800, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1600&q=80",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    summary: "Exceptional three-bedroom penthouse with private terrace and 24-hour concierge.",
-    propertyType: "flat",
-    features: { parking: true, furnished: true, concierge: true, terrace: true },
-    addedDate: "2026-02-22",
-    lettingType: "long_term",
-  },
-  {
-    id: "modern-apartment-cuffley",
-    title: "Modern Apartment",
-    address: "Cuffley, Hertfordshire",
-    price: "£1,450 pcm",
-    priceNum: 1450,
-    tags: ["New Listing", "Unfurnished"],
-    stats: { beds: 2, baths: 1, sqft: 650, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
-    summary: "Contemporary two-bedroom apartment with open-plan living and allocated parking.",
-    propertyType: "flat",
-    features: { parking: true, unfurnished: true },
-    addedDate: "2026-02-27",
-    lettingType: "long_term",
-  },
-  {
-    id: "bungalow-brookmans",
-    title: "Bungalow Retreat",
-    address: "Brookmans Park, AL9",
-    price: "£2,400 pcm",
-    priceNum: 2400,
-    tags: ["Bungalow", "Garden"],
-    stats: { beds: 3, baths: 2, sqft: 1200, epc: "C" },
-    images: [
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    summary: "Single-storey living at its finest with wrap-around garden and off-street parking.",
-    propertyType: "bungalow",
-    features: { garden: true, parking: true },
-    addedDate: "2026-02-24",
-    lettingType: "long_term",
-  },
-  {
-    id: "maisonette-potters",
-    title: "Garden Maisonette",
-    address: "Potters Bar, EN6",
-    price: "£1,200 pcm",
-    priceNum: 1200,
-    tags: ["Maisonette", "Garden"],
-    stats: { beds: 1, baths: 1, sqft: 550, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1577086664693-8945ed4d2d7c?auto=format&fit=crop&w=1600&q=80",
-    summary: "Charming two-storey maisonette with private garden and modern fittings throughout.",
-    propertyType: "maisonette",
-    features: { garden: true },
-    addedDate: "2026-02-19",
-    lettingType: "long_term",
-  },
-  {
-    id: "luxury-flat-mayfair",
-    title: "Luxury One Bed Flat",
-    address: "Mayfair, W1K",
-    price: "£3,200 pcm",
-    priceNum: 3200,
-    tags: ["Premium", "Furnished", "Concierge"],
-    stats: { beds: 1, baths: 1, sqft: 600, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    summary: "Elegant one-bedroom apartment in prestigious Mayfair location with porter service.",
-    propertyType: "flat",
-    features: { parking: true, furnished: true, concierge: true },
-    addedDate: "2026-02-21",
-    lettingType: "long_term",
-  },
-  {
-    id: "student-house-enfield",
-    title: "Student House Share",
-    address: "Enfield, EN2",
-    price: "£650 pcm",
-    priceNum: 650,
-    tags: ["Student", "Bills Included"],
-    stats: { beds: 5, baths: 2, sqft: 1400, epc: "D" },
-    images: [
-      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1600&q=80",
-    summary: "Five-bedroom house perfect for students, close to transport links and university.",
-    propertyType: "house",
-    features: { billsIncluded: true },
-    addedDate: "2026-02-16",
-    lettingType: "student",
-  },
-  {
-    id: "short-let-mayfair",
-    title: "Short-Let Apartment",
-    address: "Mayfair, W1",
-    price: "£4,500 pcm",
-    priceNum: 4500,
-    tags: ["Short Let", "Furnished", "Premium"],
-    stats: { beds: 2, baths: 2, sqft: 900, epc: "B" },
-    images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1600&q=80",
-    ],
-    mapImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80",
-    summary: "Fully serviced short-let apartment available from 1 month to 12 months.",
-    propertyType: "flat",
-    features: { parking: true, furnished: true, concierge: true },
-    addedDate: "2026-02-23",
-    lettingType: "short_term",
-  },
-];
+interface SiteProperty {
+  id: string;
+  title: string;
+  address: string;
+  price: string;
+  priceNum: number;
+  tags: string[];
+  stats: { beds: number; baths: number; sqft?: number; epc?: string };
+  images: string[];
+  summary: string;
+  propertyType: string;
+  features: Record<string, boolean>;
+  addedDate: string;
+  lettingType: string;
+  department: "lettings";
+}
+
+const allLettingsProperties: SiteProperty[] = [];
+
+function useLiveProperties() {
+  const [properties, setProperties] = React.useState<SiteProperty[]>([]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/api/properties?department=lettings")
+      .then((r) => (r.ok ? r.json() : { properties: [] }))
+      .then((d) => {
+        if (cancelled) return;
+        const mapped: SiteProperty[] = (d.properties ?? []).map(
+          (c: SiteProperty & { featureFlags?: Record<string, boolean> }) => ({
+            ...c,
+            features: c.featureFlags ?? {},
+            lettingType: "long_term",
+          })
+        );
+        setProperties(mapped);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return properties;
+}
 
 // ============================================
 // Filter Logic
@@ -331,17 +151,19 @@ function sortProperties(properties: typeof allLettingsProperties, sortBy?: Searc
 type ViewMode = "grid" | "list" | "map";
 
 function LettingsPropertiesPageContent() {
+  const reduceMotion = useReducedMotion();
   const { filters, setFilters, clearFilters, hasActiveFilters, isLoading } = useSearchFilters({
     debounceMs: 300,
   });
   
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
+  const liveProperties = useLiveProperties();
 
   // Filter and sort properties
   const filteredProperties = React.useMemo(() => {
-    const filtered = filterProperties(allLettingsProperties, filters);
+    const filtered = filterProperties(liveProperties, filters);
     return sortProperties(filtered, filters.sortBy);
-  }, [filters]);
+  }, [liveProperties, filters]);
 
   return (
     <div className="bg-white text-[#2C2A27] min-h-screen">
@@ -440,16 +262,9 @@ function LettingsPropertiesPageContent() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <motion.div
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true, amount: 0.1 }}
-                  variants={{
-                    hidden: {},
-                    show: {
-                      transition: { staggerChildren: 0.08 },
-                    },
-                  }}
+                {/* Per-card reveal — whole-grid threshold can never fire on
+                    a tall live grid (see sales page). */}
+                <div
                   className={
                     viewMode === "grid"
                       ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
@@ -464,17 +279,20 @@ function LettingsPropertiesPageContent() {
                     filteredProperties.map((property) => (
                       <motion.div
                         key={property.id}
-                        variants={{
-                          hidden: { opacity: 0, y: 20 },
-                          show: { opacity: 1, y: 0 },
-                        }}
+                        initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                        whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.15 }}
+                        transition={reduceMotion ? undefined : { duration: 0.4 }}
                         className={viewMode === "list" ? "w-full" : ""}
                       >
-                        <PropertyCard {...property} />
+                        <PropertyCard
+                          {...property}
+                          variant={viewMode === "list" ? "list" : "grid"}
+                        />
                       </motion.div>
                     ))
                   )}
-                </motion.div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
