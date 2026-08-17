@@ -8,7 +8,7 @@ import Image from "next/image";
 
 // The Descent — single golden-hour hero film (27s loop), generated from
 // Banc's real listing photography. Replaces the 3-clip rotation.
-const videos = ["/videos/hero-descent.mp4"];
+const videos = ["/videos/hero-first-day.mp4"];
 
 interface Review {
   authorName: string;
@@ -51,7 +51,13 @@ export default function Hero() {
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
   const [currentReview, setCurrentReview] = useState(0);
   const [totalReviews, setTotalReviews] = useState(51);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Portrait phones get a dedicated 9:16 cut so the people stay in frame.
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 640px)").matches);
+  }, []);
 
   // Fetch real reviews from API
   useEffect(() => {
@@ -111,7 +117,7 @@ export default function Hero() {
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleVideoEnd);
     };
-  }, [currentVideo, handleCanPlay, handleVideoEnd, startPlayback]);
+  }, [currentVideo, isMobile, handleCanPlay, handleVideoEnd, startPlayback]);
 
   // Auto-rotate reviews
   useEffect(() => {
@@ -154,12 +160,12 @@ export default function Hero() {
               minWidth: '100vw',
               objectPosition: 'center center'
             }}
-            src={videos[currentVideo]}
+            src={isMobile ? "/videos/hero-first-day-mobile.mp4" : videos[currentVideo]}
             muted
             loop
             playsInline
             preload="auto"
-            poster="/videos/hero-descent-poster.jpg"
+            poster={isMobile ? "/videos/hero-first-day-mobile-poster.jpg" : "/videos/hero-first-day-poster.jpg"}
             aria-hidden="true"
           />
         </motion.div>
