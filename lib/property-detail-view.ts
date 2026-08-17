@@ -9,6 +9,8 @@ export interface PropertyMediaAvailability {
 
 export type PropertyMediaMode = "photos" | PropertyMediaTabId;
 
+export type PropertyMediaNavigationKey = "ArrowLeft" | "ArrowRight" | "Home" | "End";
+
 export interface PropertyMediaStageAvailability extends PropertyMediaAvailability {
   images: ReadonlyArray<unknown>;
 }
@@ -82,6 +84,19 @@ export function getAvailablePropertyMediaModes({
   if (images.length > 0) modes.push("photos");
   modes.push(...getAvailablePropertyMedia(supportingMedia));
   return modes;
+}
+
+export function getNextPropertyMediaMode(
+  modes: ReadonlyArray<PropertyMediaMode>,
+  current: PropertyMediaMode,
+  key: PropertyMediaNavigationKey
+): PropertyMediaMode {
+  if (modes.length === 0) return current;
+  if (key === "Home") return modes[0];
+  if (key === "End") return modes[modes.length - 1];
+  const currentIndex = Math.max(0, modes.indexOf(current));
+  const delta = key === "ArrowRight" ? 1 : -1;
+  return modes[(currentIndex + delta + modes.length) % modes.length];
 }
 
 export function getPropertyResultsBackLink(

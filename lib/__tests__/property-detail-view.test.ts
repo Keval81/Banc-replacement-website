@@ -6,12 +6,21 @@ import {
   getAvailablePropertyMediaModes,
   getDisplayCount,
   getDisplayFact,
+  getNextPropertyMediaMode,
   getPropertyResultsBackLink,
   getPropertyPhotoPresentation,
   getSafeExternalUrl,
   getWrappedGalleryIndex,
   isPropertyDetailPath,
 } from "../property-detail-view.ts";
+
+test("moves, wraps and jumps through available property media modes", () => {
+  const modes = ["photos", "floorplan", "epc", "map"] as const;
+  assert.equal(getNextPropertyMediaMode(modes, "photos", "ArrowLeft"), "map");
+  assert.equal(getNextPropertyMediaMode(modes, "map", "ArrowRight"), "photos");
+  assert.equal(getNextPropertyMediaMode(modes, "epc", "Home"), "photos");
+  assert.equal(getNextPropertyMediaMode(modes, "floorplan", "End"), "map");
+});
 
 test("orders only live property media with photos first", () => {
   assert.deepEqual(
