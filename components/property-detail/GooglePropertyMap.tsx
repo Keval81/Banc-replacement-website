@@ -70,6 +70,21 @@ function GooglePropertyMapLoader({
   const [hasMapInitialized, setHasMapInitialized] = React.useState(false);
   const [initializationWatchdogExpired, setInitializationWatchdogExpired] =
     React.useState(false);
+  const [authenticationFailed, setAuthenticationFailed] = React.useState(false);
+
+  // Google reports a rejected key (InvalidKey, RefererNotAllowedMapError) only
+  // through this global. Without it the map initializes and then paints an
+  // empty grey box, which the watchdog cannot detect.
+  React.useEffect(() => {
+    const previous = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      setAuthenticationFailed(true);
+      previous?.();
+    };
+    return () => {
+      window.gm_authFailure = previous;
+    };
+  }, []);
 
   React.useEffect(() => {
     if (!isLoaded || hasMapInitialized || initializationWatchdogExpired) return;
@@ -95,7 +110,8 @@ function GooglePropertyMapLoader({
   const loadState = getGoogleMapLoadState(
     isLoaded,
     hasMapInitialized,
-    initializationWatchdogExpired
+    initializationWatchdogExpired,
+    authenticationFailed
   );
 
   if (loadState === "fallback") {

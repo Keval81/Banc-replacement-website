@@ -54,8 +54,14 @@ export function getPropertyMapPresentation(
 export function getGoogleMapLoadState(
   isMapsLibraryLoaded: boolean,
   hasMapInitialized: boolean,
-  initializationWatchdogExpired: boolean
+  initializationWatchdogExpired: boolean,
+  // Google calls window.gm_authFailure for InvalidKey and
+  // RefererNotAllowedMapError. The library loads and the map object
+  // initializes normally, then paints nothing — so the watchdog never fires
+  // and this is the only signal that the key was rejected.
+  authenticationFailed = false
 ): GoogleMapLoadState {
+  if (authenticationFailed) return "fallback";
   if (!isMapsLibraryLoaded) return "loading";
   if (initializationWatchdogExpired) return "fallback";
   return hasMapInitialized ? "ready" : "initializing";

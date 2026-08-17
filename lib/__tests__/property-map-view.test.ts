@@ -57,3 +57,11 @@ test("keeps Google mounted while awaiting initialization and uses the keyless em
   assert.equal(getGoogleMapLoadState(true, true, false), "ready");
   assert.equal(getGoogleMapLoadState(true, false, true), "fallback");
 });
+
+test("falls back when Google rejects the key, even after the map initializes", () => {
+  // Google calls window.gm_authFailure for InvalidKey / RefererNotAllowedMapError:
+  // the library loads and the map object initializes, then paints nothing.
+  assert.equal(getGoogleMapLoadState(true, true, false, true), "fallback");
+  assert.equal(getGoogleMapLoadState(true, false, false, true), "fallback");
+  assert.equal(getGoogleMapLoadState(false, false, false, true), "fallback");
+});
