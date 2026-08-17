@@ -313,14 +313,18 @@ function DetailBody({
               )}
 
               {/* Location — postcode-level map (the feed carries no exact
-                  coordinates, so the pin marks the postcode area) */}
+                  coordinates, so the pin marks the postcode area).
+                  Google's keyless embed, matching /contact and /offices: the
+                  OpenStreetMap embed's WebGL renderer paints blank inside this
+                  page (verified: same URL renders standalone, and this URL
+                  renders in this exact slot). */}
               {property.latitude !== undefined && property.longitude !== undefined && (
                 <section className="mb-8">
                   <h2 className="mb-3 text-lg font-semibold text-banc-dark">Location</h2>
                   <div className="overflow-hidden rounded-lg border border-banc-grey/20">
                     <iframe
                       title={`Map of ${property.postcode}`}
-                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${property.longitude - 0.012}%2C${property.latitude - 0.006}%2C${property.longitude + 0.012}%2C${property.latitude + 0.006}&layer=mapnik&marker=${property.latitude}%2C${property.longitude}`}
+                      src={`https://www.google.com/maps?q=${property.latitude},${property.longitude}&z=14&output=embed`}
                       className="h-[360px] w-full border-0"
                       loading="lazy"
                     />
