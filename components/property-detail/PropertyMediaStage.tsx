@@ -4,7 +4,6 @@ import * as React from "react";
 
 import { FloorplanViewer } from "@/components/FloorplanViewer";
 import { GooglePropertyMap } from "@/components/property-detail/GooglePropertyMap";
-import { PropertyEpcViewer } from "@/components/property-detail/PropertyEpcViewer";
 import { PropertyHeroGallery } from "@/components/property-detail/PropertyHeroGallery";
 import {
   getAvailablePropertyMediaModes,
@@ -21,8 +20,6 @@ type PropertyMediaStageData = Pick<
   | "department"
   | "gallery"
   | "floorplans"
-  | "epcImageUrl"
-  | "epcRating"
   | "latitude"
   | "longitude"
   | "postcode"
@@ -30,7 +27,6 @@ type PropertyMediaStageData = Pick<
 
 const MODE_LABELS: Record<Exclude<PropertyMediaMode, "photos">, string> = {
   floorplan: "Floorplan",
-  epc: "EPC",
   map: "Map",
 };
 
@@ -55,7 +51,6 @@ function PropertyMediaStageContent({
   const modes = getAvailablePropertyMediaModes({
     images: property.gallery,
     floorplans: property.floorplans,
-    epcImageUrl: property.epcImageUrl,
     latitude: property.latitude,
     longitude: property.longitude,
   });
@@ -94,13 +89,11 @@ function PropertyMediaStageContent({
         aria-label="Property media"
         className={cn(
           "grid gap-2 bg-white px-4 py-3 lg:px-0",
-          modes.length === 4
-            ? "grid-cols-4"
-            : modes.length === 3
-              ? "grid-cols-3"
-              : modes.length === 2
-                ? "grid-cols-2"
-                : "grid-cols-1"
+          modes.length === 3
+            ? "grid-cols-3"
+            : modes.length === 2
+              ? "grid-cols-2"
+              : "grid-cols-1"
         )}
       >
         {modes.map((mode) => {
@@ -150,11 +143,6 @@ function PropertyMediaStageContent({
           {mode === "photos" && <PropertyHeroGallery images={property.gallery} />}
           {mode === activeMode && mode === "floorplan" && (
             <div className="px-4 pb-4 lg:px-0"><FloorplanViewer floorplans={property.floorplans} /></div>
-          )}
-          {mode === activeMode && mode === "epc" && (
-            <div className="px-4 pb-4 lg:px-0">
-              <PropertyEpcViewer epcImageUrl={property.epcImageUrl} epcRating={property.epcRating} />
-            </div>
           )}
           {mode === activeMode && mode === "map" &&
             typeof property.latitude === "number" &&

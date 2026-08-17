@@ -1,5 +1,5 @@
 export interface PropertyMapControls {
-  defaultMapType: "satellite";
+  defaultMapType: "hybrid";
   mapTypeControl: true;
   streetViewControl: true;
   rotateControl: true;
@@ -24,7 +24,7 @@ export type GoogleMapLoadState = "loading" | "initializing" | "ready" | "fallbac
 export const GOOGLE_MAP_INITIALIZATION_TIMEOUT_MS = 10_000;
 
 const GOOGLE_CONTROLS: PropertyMapControls = {
-  defaultMapType: "satellite",
+  defaultMapType: "hybrid",
   mapTypeControl: true,
   streetViewControl: true,
   rotateControl: true,

@@ -7,12 +7,12 @@ import {
   getPropertyMapPresentation,
 } from "../property-map-view.ts";
 
-test("uses Google satellite with standard controls when an API key exists", () => {
+test("uses labelled Google satellite with standard controls when an API key exists", () => {
   assert.deepEqual(getPropertyMapPresentation(" maps-key ", " map-id "), {
     provider: "google",
     mapId: "map-id",
     controls: {
-      defaultMapType: "satellite",
+      defaultMapType: "hybrid",
       mapTypeControl: true,
       streetViewControl: true,
       rotateControl: true,
@@ -26,13 +26,13 @@ test("uses Google satellite with standard controls when an API key exists", () =
   });
 });
 
-test("keeps Google satellite usable without a production map ID", () => {
+test("keeps labelled Google satellite usable without a production map ID", () => {
   const presentation = getPropertyMapPresentation("maps-key", "   ");
 
   assert.equal(presentation.provider, "google");
   if (presentation.provider === "google") {
     assert.equal(presentation.mapId, undefined);
-    assert.equal(presentation.controls.defaultMapType, "satellite");
+    assert.equal(presentation.controls.defaultMapType, "hybrid");
   }
 });
 

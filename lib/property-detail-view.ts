@@ -1,8 +1,7 @@
-export type PropertyMediaTabId = "floorplan" | "epc" | "map";
+export type PropertyMediaTabId = "floorplan" | "map";
 
 export interface PropertyMediaAvailability {
   floorplans: ReadonlyArray<unknown>;
-  epcImageUrl: string;
   latitude?: number;
   longitude?: number;
 }
@@ -65,13 +64,11 @@ export function getSafeExternalUrl(value: string): string | null {
 
 export function getAvailablePropertyMedia({
   floorplans,
-  epcImageUrl,
   latitude,
   longitude,
 }: PropertyMediaAvailability): PropertyMediaTabId[] {
   const tabs: PropertyMediaTabId[] = [];
   if (floorplans.length > 0) tabs.push("floorplan");
-  if (getSafeExternalUrl(epcImageUrl)) tabs.push("epc");
   if (Number.isFinite(latitude) && Number.isFinite(longitude)) tabs.push("map");
   return tabs;
 }

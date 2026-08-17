@@ -1,6 +1,8 @@
+import { PropertyEpcViewer } from "@/components/property-detail/PropertyEpcViewer";
 import {
   cleanDescriptionParagraphs,
   getDisplayFact,
+  getSafeExternalUrl,
 } from "@/lib/property-detail-view";
 import type { LivePropertyDetail } from "@/lib/property-view";
 
@@ -9,6 +11,7 @@ interface PropertyOverviewProps {
 }
 
 export function PropertyOverview({ property }: PropertyOverviewProps): React.ReactElement {
+  const epcImageUrl = getSafeExternalUrl(property.epcImageUrl);
   const features = property.features
     .map(getDisplayFact)
     .filter((feature): feature is string => feature !== null);
@@ -25,7 +28,14 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
     }))
     .filter((room) => room.name || room.measurement || room.description);
 
-  if (features.length === 0 && paragraphs.length === 0 && rooms.length === 0) return <></>;
+  if (
+    features.length === 0 &&
+    !epcImageUrl &&
+    paragraphs.length === 0 &&
+    rooms.length === 0
+  ) {
+    return <></>;
+  }
 
   return (
     <div className="space-y-10">
@@ -46,6 +56,23 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
               </li>
             ))}
           </ul>
+        </section>
+      )}
+
+      {epcImageUrl && (
+        <section aria-labelledby="energy-performance-heading">
+          <h2
+            id="energy-performance-heading"
+            className="font-serif text-2xl text-banc-dark sm:text-3xl"
+          >
+            Energy performance
+          </h2>
+          <div className="mt-5">
+            <PropertyEpcViewer
+              epcImageUrl={epcImageUrl}
+              epcRating={property.epcRating}
+            />
+          </div>
         </section>
       )}
 

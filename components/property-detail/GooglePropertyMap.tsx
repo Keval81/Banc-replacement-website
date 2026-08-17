@@ -123,7 +123,7 @@ function GooglePropertyMapLoader({
   const { controls } = presentation;
   const options: google.maps.MapOptions = {
     mapId: presentation.mapId,
-    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
     mapTypeControl: controls.mapTypeControl,
     streetViewControl: controls.streetViewControl,
     rotateControl: controls.rotateControl,
@@ -143,7 +143,7 @@ function GooglePropertyMapLoader({
         zoom={18}
         options={options}
         onLoad={(map) => {
-          map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+          map.setMapTypeId(google.maps.MapTypeId.HYBRID);
           map.setHeading(controls.heading);
           map.setTilt(controls.tilt);
           setHasMapInitialized(true);

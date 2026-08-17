@@ -1,6 +1,6 @@
 # Unified Property Media Stage
 
-**Status:** Approved design, awaiting written-spec review
+**Status:** Approved design, amended for EPC placement and labelled satellite
 **Date:** 2026-08-17
 **Branch:** `codex/property-card-premium`
 **Foundation:** `docs/superpowers/specs/2026-08-16-premium-property-detail-experience.md`
@@ -8,7 +8,8 @@
 ## Objective
 
 Refine Banc's shared sales and lettings property-detail page so its photography,
-floorplan, EPC and location media feel like one premium, coherent experience.
+floorplan and location media feel like one premium, coherent experience, while
+the EPC remains easy to read as supporting property information.
 
 The existing detail implementation is functional and remains the foundation. This
 slice improves visual hierarchy and media discovery without changing the CRM,
@@ -35,7 +36,6 @@ aware media rail:
 
 - `Photos {count}`
 - `Floorplan`
-- `EPC`
 - `Map`
 
 Photos are the default selection when the property has real images. Selecting a
@@ -45,9 +45,9 @@ When Photos is unavailable, the first available mode is selected. When no proper
 media exists at all, the stage renders the neutral `No photos available` state
 without an empty media rail.
 
-The existing lower `PropertyMediaTabs` section is removed after its floorplan, EPC
-and map responsibilities have moved into the unified stage. Property features and
-description then follow the summary without a duplicate media destination.
+The existing lower `PropertyMediaTabs` section is removed after its floorplan and
+map responsibilities have moved into the unified stage. Property features, EPC
+and description then follow the summary without a duplicate media destination.
 
 ### Photos
 
@@ -71,9 +71,10 @@ description then follow the summary without a duplicate media destination.
 ### EPC
 
 - Reuse the current rating treatment, certificate image and fullscreen dialog.
-- Keep the certificate contained within the shared media frame.
-- Retain active-only loading so the remote EPC image is not requested until EPC is
-  selected.
+- Present EPC as a dedicated `Energy performance` section after `At a glance` and
+  before `About this property`, rather than as a media-stage tab.
+- Render the section only when the property supplies a valid certificate URL.
+- Keep the certificate contained, lazy-loaded and expandable for detailed review.
 
 ### Google location view
 
@@ -82,7 +83,8 @@ The Map mode uses the existing `@react-google-maps/api` dependency and the exist
 
 Approved map behavior:
 
-- Satellite is the default map type.
+- Labelled satellite (`hybrid`) is the default map type so roads and place names
+  remain visible over the imagery.
 - Google's standard map-type control remains available for switching to Road.
 - Google's standard Street View Pegman remains enabled; no custom Street View CTA
   or separate branded Street View experience is added.
@@ -131,7 +133,7 @@ Canonical sales/lettings route handling remains unchanged.
 ### Mobile: 320px–767px
 
 - Back link sits between the fixed header and media rail.
-- Media rail fits within the viewport with four equal controls when all modes are
+- Media rail fits within the viewport with three equal controls when all modes are
   present; labels may use `Plan` visually while retaining the accessible name
   `Floorplan`.
 - Selected mode is visually unmistakable and keyboard state remains available to
@@ -150,7 +152,8 @@ Canonical sales/lettings route handling remains unchanged.
 
 - Media rail aligns with the hero width.
 - Photos use the existing editorial mosaic.
-- Floorplan, EPC and Map use the same premium outer frame and corner treatment.
+- Floorplan and Map use the same premium outer frame and corner treatment.
+- EPC remains a dedicated content section within the main property column.
 - Property summary and sticky contact panel retain their current balanced layout.
 
 ## Component architecture
@@ -163,7 +166,7 @@ New client component responsible for:
 - owning the active media mode;
 - resetting mode state when property identity changes;
 - rendering the shared media rail and stable media frame;
-- composing the existing gallery, floorplan, EPC and location viewers.
+- composing the existing gallery, floorplan and location viewers.
 
 It receives the live property media fields and does not fetch property data.
 
@@ -175,14 +178,14 @@ panel inside `PropertyMediaStage`; its photo state does not own cross-media stat
 ### `PropertyEpcViewer`
 
 Extract the current EPC presentation from `PropertyMediaTabs` into a focused viewer
-that can be composed by the new stage.
+that can be composed by the property overview after `At a glance`.
 
 ### `GooglePropertyMap`
 
 New focused client component responsible for:
 
 - on-demand Maps JavaScript initialization;
-- satellite default configuration;
+- labelled-satellite (`hybrid`) default configuration;
 - native map-type, Street View and supported rotate/tilt controls;
 - postcode-area centering and disclosure;
 - invoking the OpenStreetMap fallback when Google fails.
@@ -214,7 +217,7 @@ The lettings route continues to reuse the shared sales implementation.
 - Left and Right Arrow move between available modes; Home and End select the first
   and last available modes.
 - Mode changes do not unexpectedly move the viewport.
-- Inactive Floorplan, EPC and Map content is unmounted to avoid hidden interactions
+- Inactive Floorplan and Map content is unmounted to avoid hidden interactions
   and unnecessary network loads; stable empty tabpanel shells may remain for ARIA
   relationships.
 - Focus rings retain the branch's verified contrast treatments.
@@ -237,10 +240,11 @@ Follow TDD before implementation changes.
 ### Pure behavior tests
 
 - Photos appear first when available.
-- Floorplan, EPC and Map appear only with valid live backing data.
+- Floorplan and Map appear only with valid live backing data; EPC never becomes a
+  media-stage mode.
 - The first available mode is selected when Photos are unavailable.
 - Property identity changes reset mode selection.
-- Map configuration selects satellite and enables native map type, Street View and
+- Map configuration selects labelled satellite and enables native map type, Street View and
   supported rotate/tilt controls.
 - Missing Google configuration selects the OpenStreetMap fallback path.
 - Department-correct back-link data is generated for sales and lettings.
@@ -258,10 +262,11 @@ Verify sales and lettings details at 320x700, 375x812, 390x844, 768x1024,
 1024x768 and 1440x900:
 
 - no horizontal overflow;
-- Photos/Floorplan/EPC/Map switch within one stable stage;
+- Photos/Floorplan/Map switch within one stable stage;
+- EPC data and certificate appear after `At a glance` and before `About this property`;
 - unavailable modes are absent;
 - photo swipe/arrows and all fullscreen dialogs still work;
-- Google starts in satellite mode only after Map is selected;
+- Google starts in labelled-satellite mode only after Map is selected;
 - native Road, Street View and available tilt/rotate behavior works;
 - flat satellite fallback remains usable where 3D imagery is unavailable;
 - OpenStreetMap fallback works when Google is unavailable;
@@ -282,12 +287,12 @@ Verify sales and lettings details at 320x700, 375x812, 390x844, 768x1024,
 
 ## Acceptance criteria
 
-- Buyers can discover every available property medium from the top of the page.
+- Buyers can discover every available visual property medium from the top of the page.
 - Photography remains the default and strongest visual element.
-- Floorplan, EPC and Map feel like modes of one premium viewer, not unrelated page
-  sections.
+- Floorplan and Map feel like modes of one premium viewer, while EPC reads as
+  supporting property information in the main content flow.
 - Mobile navigation no longer displays a cramped full-address breadcrumb.
-- Map opens in satellite view, exposes Google's standard Road and Street View
+- Map opens in labelled satellite view, exposes Google's standard Road and Street View
   controls, and enables lightweight 3D tilt/rotation where available.
 - Location copy never implies an exact property position.
 - Missing media, Google configuration or 3D imagery degrades gracefully.

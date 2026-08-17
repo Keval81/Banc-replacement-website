@@ -15,23 +15,22 @@ import {
 } from "../property-detail-view.ts";
 
 test("moves, wraps and jumps through available property media modes", () => {
-  const modes = ["photos", "floorplan", "epc", "map"] as const;
+  const modes = ["photos", "floorplan", "map"] as const;
   assert.equal(getNextPropertyMediaMode(modes, "photos", "ArrowLeft"), "map");
   assert.equal(getNextPropertyMediaMode(modes, "map", "ArrowRight"), "photos");
-  assert.equal(getNextPropertyMediaMode(modes, "epc", "Home"), "photos");
+  assert.equal(getNextPropertyMediaMode(modes, "map", "Home"), "photos");
   assert.equal(getNextPropertyMediaMode(modes, "floorplan", "End"), "map");
 });
 
-test("orders only live property media with photos first", () => {
+test("keeps EPC out of the media stage while ordering live visual modes", () => {
   assert.deepEqual(
     getAvailablePropertyMediaModes({
       images: [{ id: "photo-1" }],
       floorplans: [{ id: "floorplan-1" }],
-      epcImageUrl: "https://example.com/epc.jpg",
       latitude: 51.7252,
       longitude: -0.2049,
     }),
-    ["photos", "floorplan", "epc", "map"]
+    ["photos", "floorplan", "map"]
   );
 });
 
@@ -40,7 +39,6 @@ test("selects the first real non-photo medium when photos are unavailable", () =
     getAvailablePropertyMediaModes({
       images: [],
       floorplans: [{ id: "floorplan-1" }],
-      epcImageUrl: "",
       latitude: 51.7252,
       longitude: -0.2049,
     }),
@@ -53,7 +51,6 @@ test("returns no media modes when the property has no media", () => {
     getAvailablePropertyMediaModes({
       images: [],
       floorplans: [],
-      epcImageUrl: "",
     }),
     []
   );
@@ -112,25 +109,24 @@ test("accepts only absolute http and https media URLs", () => {
   assert.equal(getSafeExternalUrl("not a url"), null);
 });
 
-test("returns only media tabs backed by live data in the intended order", () => {
+test("returns only floorplan and map tabs backed by live media data", () => {
   assert.deepEqual(
     getAvailablePropertyMedia({
       floorplans: [{ id: "fp-1" }],
-      epcImageUrl: "https://example.com/epc.png",
       latitude: 51.71,
       longitude: -0.11,
     }),
-    ["floorplan", "epc", "map"]
+    ["floorplan", "map"]
   );
   assert.deepEqual(
-    getAvailablePropertyMedia({ floorplans: [], epcImageUrl: "", latitude: 51.71 }),
+    getAvailablePropertyMedia({ floorplans: [], latitude: 51.71 }),
     []
   );
 });
 
 test("treats zero as a valid coordinate when both coordinates exist", () => {
   assert.deepEqual(
-    getAvailablePropertyMedia({ floorplans: [], epcImageUrl: "", latitude: 0, longitude: 0 }),
+    getAvailablePropertyMedia({ floorplans: [], latitude: 0, longitude: 0 }),
     ["map"]
   );
 });
