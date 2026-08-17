@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -12,8 +12,7 @@ import {
   PropertyContactPanel,
   PropertyMobileActions,
 } from "@/components/property-detail/PropertyContactActions";
-import { PropertyHeroGallery } from "@/components/property-detail/PropertyHeroGallery";
-import { PropertyMediaTabs } from "@/components/property-detail/PropertyMediaTabs";
+import { PropertyMediaStage } from "@/components/property-detail/PropertyMediaStage";
 import { PropertyOverview } from "@/components/property-detail/PropertyOverview";
 import { PropertySummary } from "@/components/property-detail/PropertySummary";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,7 @@ import {
   type LivePropertyDetail,
   type PropertyCardData,
 } from "@/lib/property-view";
+import { getPropertyResultsBackLink } from "@/lib/property-detail-view";
 
 type LoadState =
   | { phase: "loading" }
@@ -165,15 +165,14 @@ function DetailBody({
       <PropertyBreadcrumb property={property} />
       <div className="pb-32 lg:pb-16">
         <div className="mx-auto max-w-[1440px] lg:px-6 xl:px-8">
-          <PropertyHeroGallery images={property.gallery} />
+          <PropertyMediaStage property={property} />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <PropertySummary property={property} />
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
-            <div className="min-w-0 space-y-12">
+            <div className="min-w-0">
               <PropertyOverview property={property} />
-              <PropertyMediaTabs property={property} />
             </div>
             <PropertyContactPanel property={property} />
           </div>
@@ -205,32 +204,40 @@ function PropertyBreadcrumb({
 }: {
   property: LivePropertyDetail;
 }): React.ReactElement {
-  const resultsHref = `/${property.department}/properties`;
+  const backLink = getPropertyResultsBackLink(property.department);
   const resultsLabel = property.department === "lettings" ? "To Let" : "For Sale";
 
   return (
     <div className="border-b border-banc-grey/20 bg-banc-grey-pale">
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+        <Link
+          href={backLink.href}
+          className="inline-flex min-h-11 items-center gap-2 rounded-sm text-sm font-medium text-banc-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus lg:hidden"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          {backLink.label}
+        </Link>
+
         <nav
           aria-label="Breadcrumb"
-          className="flex min-w-0 items-center gap-2 py-0.5 text-sm text-banc-muted-readable"
+          className="hidden min-w-0 items-center gap-2 py-0.5 text-sm text-banc-muted-readable lg:flex"
         >
           <Link
             href="/"
-            className="shrink-0 rounded-sm transition-colors hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
+            className="shrink-0 rounded-sm hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
             Home
           </Link>
           <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
           <Link
-            href={resultsHref}
-            className="shrink-0 rounded-sm transition-colors hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
+            href={backLink.href}
+            className="shrink-0 rounded-sm hover:text-banc-focus focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
             {resultsLabel}
           </Link>
           <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span aria-current="page" className="min-w-0 flex-1 truncate text-banc-dark">
-            {property.address}
+            {property.title}
           </span>
         </nav>
       </div>
