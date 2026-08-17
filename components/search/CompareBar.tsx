@@ -34,16 +34,19 @@ export default function CompareBar({ className }: CompareBarProps) {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 100, opacity: 0 }}
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-40 bg-white border-t shadow-2xl",
+        "safe-area-px fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom))] left-0 right-0 z-40 border-t bg-white shadow-2xl lg:bottom-0",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <div className="flex items-center gap-2">
-          <Scale className="w-5 h-5 text-[#4AC8E8]" />
-          <span className="font-medium">
-            Compare ({comparedProperties.length}/3)
+      <div className="flex items-center justify-between gap-2 border-b px-3 py-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <Scale className="h-5 w-5 shrink-0 text-banc-focus" />
+          <span className="whitespace-nowrap font-medium">
+            <span className="sm:hidden">Compare {comparedProperties.length}/3</span>
+            <span className="hidden sm:inline">
+              Compare ({comparedProperties.length}/3)
+            </span>
           </span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -56,20 +59,21 @@ export default function CompareBar({ className }: CompareBarProps) {
             )}
           </button>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <button
             onClick={clearComparison}
-            className="text-sm text-banc-grey hover:text-banc-dark-mid"
+            className="text-sm text-banc-muted-readable hover:text-banc-dark-mid"
           >
             Clear
           </button>
           <Link href="/compare">
             <Button
               size="sm"
-              className="bg-[#4AC8E8] hover:bg-[#1A9BBF]"
+              className="bg-banc-sky text-banc-dark hover:bg-banc-sky-mid"
               disabled={comparedProperties.length < 2}
             >
-              Compare Now
+              <span className="sm:hidden">Compare</span>
+              <span className="hidden sm:inline">Compare Now</span>
             </Button>
           </Link>
         </div>
@@ -109,7 +113,7 @@ export default function CompareBar({ className }: CompareBarProps) {
                   </div>
                   <div className="p-2">
                     <p className="text-xs font-medium truncate">{property.title}</p>
-                    <p className="text-xs text-[#4AC8E8] font-semibold">
+                    <p className="text-xs font-semibold text-banc-dark">
                       {property.price}
                     </p>
                   </div>
@@ -120,7 +124,7 @@ export default function CompareBar({ className }: CompareBarProps) {
               {Array.from({ length: 3 - comparedProperties.length }).map((_, i) => (
                 <div
                   key={`empty-${i}`}
-                  className="flex-shrink-0 w-40 h-24 border-2 border-dashed border-banc-grey/20 rounded-lg flex items-center justify-center text-banc-grey text-xs"
+                  className="flex h-24 w-40 flex-shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-banc-grey/20 text-xs text-banc-muted-readable"
                 >
                   Add property
                 </div>

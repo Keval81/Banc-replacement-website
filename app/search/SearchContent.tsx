@@ -171,9 +171,11 @@ const sortOptions = [
   { value: "beds", label: "Bedrooms" },
 ];
 
+type SearchProperty = (typeof properties)[number];
+
 export default function SearchPage() {
   const { filters, updateFilters, clearFilters, hasActiveFilters } = useSearchParams();
-  const { addToComparison, removeFromComparison, isInComparison, canAddMore, comparedProperties } = useComparison();
+  const { addToComparison, removeFromComparison, isInComparison, canAddMore } = useComparison();
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   // Filter and sort properties
@@ -231,7 +233,7 @@ export default function SearchPage() {
     return result;
   }, [filters]);
 
-  const handleCompareToggle = (property: any) => {
+  const handleCompareToggle = (property: SearchProperty) => {
     if (isInComparison(property.id)) {
       removeFromComparison(property.id);
     } else {
@@ -388,6 +390,7 @@ export default function SearchPage() {
                     >
                       <PropertyCard
                         {...property}
+                        variant={filters.view === "list" ? "list" : "grid"}
                         showCompare
                         isCompared={isInComparison(property.id)}
                         canCompare={canAddMore}

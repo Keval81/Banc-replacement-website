@@ -10,7 +10,10 @@
   --banc-dark-deep:    #1A1917;
   --banc-dark-mid:     #3D3B37;
   --banc-grey:         #8A8880;
+  --banc-muted-readable: #5F5D57;
   --banc-grey-pale:    #F4F3F1;
+  --banc-focus:        #0B657A;
+  --banc-focus-dark:   #4AC8E8;
   --banc-gold:         #D4AF37;
   --banc-gold-light:   #FBF5DC;
   --banc-gold-dark:    #7A5C00;
@@ -44,7 +47,7 @@
   --destructive-foreground: var(--banc-white);
   --border: #E0DFDC;
   --input: #E0DFDC;
-  --ring: var(--banc-sky);
+  --ring: var(--banc-focus);
   --radius: 0.5rem;
 }
 
@@ -59,7 +62,9 @@
   --color-banc-dark-deep: var(--banc-dark-deep);
   --color-banc-dark-mid: var(--banc-dark-mid);
   --color-banc-grey: var(--banc-grey);
+  --color-banc-muted-readable: var(--banc-muted-readable);
   --color-banc-grey-pale: var(--banc-grey-pale);
+  --color-banc-focus: var(--banc-focus);
   --color-banc-gold: var(--banc-gold);
   --color-banc-gold-light: var(--banc-gold-light);
   --color-banc-gold-dark: var(--banc-gold-dark);
@@ -129,14 +134,14 @@ body {
 
 /* Focus visible styles */
 *:focus-visible {
-  outline: 2px solid var(--banc-sky);
+  outline: 2px solid var(--banc-focus);
   outline-offset: 2px;
 }
 
 /* Button focus states */
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--banc-sky);
+  outline: 2px solid var(--banc-focus);
   outline-offset: 4px;
   border-radius: 4px;
 }
@@ -150,12 +155,45 @@ a:focus-visible {
   .safe-area-pt {
     padding-top: env(safe-area-inset-top);
   }
+
+  .safe-area-px {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .safe-area-header {
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .safe-area-drawer {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+.safe-area-header-spacer {
+  height: calc(56px + env(safe-area-inset-top));
+}
+
+@media (min-width: 1024px) {
+  .safe-area-header-spacer {
+    height: calc(72px + env(safe-area-inset-top));
+  }
 }
 
 /* Keyboard user focus styles */
 .keyboard-user *:focus-visible {
-  outline: 3px solid var(--banc-sky);
+  outline: 3px solid var(--banc-focus);
   outline-offset: 4px;
+}
+
+/* Dark navigation surfaces need a brighter focus ring for contrast. */
+.banc-dark-surface *:focus-visible {
+  outline-color: var(--banc-focus-dark);
 }
 
 /* Touch target minimum size enforcement */

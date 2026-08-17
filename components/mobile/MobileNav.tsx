@@ -1,13 +1,12 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Home, 
   Search, 
   Heart, 
-  User, 
   Phone,
   MessageSquare
 } from "lucide-react";
@@ -58,7 +57,7 @@ export function MobileBottomNav({ className }: MobileBottomNavProps) {
     <nav 
       className={cn(
         "fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-lg lg:hidden",
-        "safe-area-pb", // Handle iOS safe area
+        "safe-area-pb safe-area-px", // Keep navigation clear of iOS home and side insets
         className
       )}
       aria-label="Mobile navigation"
@@ -152,7 +151,6 @@ interface MobilePropertyCTAProps {
 }
 
 export function MobilePropertyCTA({
-  propertyRef,
   onCall,
   onEnquire,
   className,
@@ -160,7 +158,7 @@ export function MobilePropertyCTA({
   return (
     <div 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background p-4 lg:hidden",
+        "fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] pl-[calc(1rem+env(safe-area-inset-left))] pr-[calc(1rem+env(safe-area-inset-right))] lg:hidden",
         className
       )}
     >

@@ -3,6 +3,120 @@
 
 import type { DbProperty } from "./supabase";
 
+export function buildPropertyHref(
+  department: DbProperty["department"],
+  id: string
+): string {
+  return `/${department}/properties/${encodeURIComponent(id)}`;
+}
+
+export function getCanonicalPropertyHref(
+  requestedDepartment: DbProperty["department"],
+  propertyDepartment: DbProperty["department"],
+  id: string
+): string | null {
+  return requestedDepartment === propertyDepartment
+    ? null
+    : buildPropertyHref(propertyDepartment, id);
+}
+
+export interface PropertyLeadActions {
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref: string;
+  secondaryLabel: string;
+}
+
+export function buildPropertyLeadActions(
+  department: DbProperty["department"],
+  id: string
+): PropertyLeadActions {
+  const departmentLabel = department === "lettings" ? "Lettings" : "Sales";
+  const canonicalUrl = new URL(
+    buildPropertyHref(department, id),
+    "https://bancproperty.com"
+  ).toString();
+  const viewingSubject = encodeURIComponent(
+    `Viewing request — ${departmentLabel} — ${id}`
+  );
+  const viewingBody = encodeURIComponent(
+    [
+      "Hello Banc Property Group,",
+      "",
+      `I would like to arrange a viewing for this ${department} property.`,
+      "",
+      `Department: ${departmentLabel}`,
+      `Reference: ${id}`,
+      `Property: ${canonicalUrl}`,
+    ].join("\n")
+  );
+
+  return {
+    primaryHref: `mailto:info@bancproperty.com?subject=${viewingSubject}&body=${viewingBody}`,
+    primaryLabel: "Request a viewing",
+    secondaryHref: "tel:01707877781",
+    secondaryLabel: department === "lettings" ? "Call the lettings team" : "Call the sales team",
+  };
+}
+
+interface PropertyShareInput {
+  department: DbProperty["department"];
+  id: string;
+  title: string;
+  address: string;
+  price: string;
+  origin: string;
+}
+
+export interface PropertyShareData {
+  title: string;
+  text: string;
+  url: string;
+}
+
+export function buildPropertyShareData({
+  department,
+  id,
+  title,
+  address,
+  price,
+  origin,
+}: PropertyShareInput): PropertyShareData {
+  return {
+    title: `${title} | Banc Property Group`,
+    text: `${title} — ${price} · ${address}`,
+    url: new URL(buildPropertyHref(department, id), origin).toString(),
+  };
+}
+
+interface ShareCapabilities {
+  nativeShare?: (data: PropertyShareData) => Promise<void>;
+  copyText?: (value: string) => Promise<void>;
+}
+
+export type PropertyShareResult = "shared" | "copied" | "unavailable";
+
+export async function shareProperty(
+  data: PropertyShareData,
+  capabilities: ShareCapabilities
+): Promise<PropertyShareResult> {
+  if (capabilities.nativeShare) {
+    try {
+      await capabilities.nativeShare(data);
+      return "shared";
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") throw error;
+    }
+  }
+
+  if (capabilities.copyText) {
+    await capabilities.copyText(data.url);
+    return "copied";
+  }
+
+  return "unavailable";
+}
+
 export interface PropertyCardData {
   id: string;
   title: string;

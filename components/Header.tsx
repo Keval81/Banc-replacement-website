@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, ChevronRight, Phone, User, Heart, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, User, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSession, signOut } from "next-auth/react";
@@ -84,8 +84,8 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
+      <header className="banc-dark-surface safe-area-header fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
+        <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
           {/* Logo */}
           <Link href="/" aria-label="Banc Property Group" className="flex items-center">
             <Image
@@ -201,7 +201,7 @@ export default function Header() {
 
             {/* CTA */}
             <Link href="/valuation">
-              <Button size="sm" className="bg-banc-sky text-white hover:bg-banc-sky-dark">
+              <Button size="sm" className="bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
                 Valuation
               </Button>
             </Link>
@@ -209,7 +209,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white active:bg-white/10 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white active:bg-white/10 lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
@@ -235,20 +235,21 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 z-50 w-[85%] max-w-[340px] bg-banc-dark-deep shadow-2xl lg:hidden"
+              className="banc-dark-surface safe-area-drawer fixed bottom-0 right-0 top-0 z-50 flex w-[85%] max-w-[340px] flex-col bg-banc-dark-deep shadow-2xl lg:hidden"
             >
               {/* Mobile Header */}
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
                 <span className="text-lg font-semibold text-white">Menu</span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg text-white/70"
+                  aria-label="Close menu"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-white/70"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <div className="h-[calc(100%-60px)] overflow-y-auto px-4 pb-24">
+              <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-24">
                 {/* Mobile Auth */}
                 {isAuthenticated ? (
                   <div className="my-4 flex items-center gap-3">
@@ -281,7 +282,7 @@ export default function Header() {
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setMobileOpen(false)} className="flex-1">
-                      <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
+                      <Button className="w-full bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
                         Register
                       </Button>
                     </Link>
@@ -369,7 +370,7 @@ export default function Header() {
                     01707 877781
                   </a>
                   <Link href="/valuation" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-banc-sky py-3 text-base text-white hover:bg-banc-sky-dark">
+                    <Button className="w-full bg-banc-sky py-3 text-base text-banc-dark hover:bg-banc-sky-mid">
                       Request Valuation
                     </Button>
                   </Link>
@@ -386,7 +387,7 @@ export default function Header() {
       </AnimatePresence>
 
       {/* Header Spacer */}
-      <div className="h-[56px] bg-banc-dark-deep lg:h-[72px]" />
+      <div className="safe-area-header-spacer bg-banc-dark-deep" />
     </>
   );
 }
