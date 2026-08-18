@@ -4,10 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, User, Heart, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Facebook, Instagram, Phone, User, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getLandingUi } from "@/lib/landing-ui";
 import { useSession, signOut } from "next-auth/react";
+
+const landingUi = getLandingUi("aker");
 
 const navItems = [
   { name: "Sales", href: "/sales" },
@@ -42,11 +45,6 @@ const mobileAdditionalLinks = [
   { title: "Land & New Homes", href: "/land-new-homes" },
   { title: "Become a Partner", href: "/become-partner" },
 ];
-
-function trackCallClick(source: string) {
-  // Analytics placeholder - implement with your analytics
-  console.log(`Call clicked from: ${source}`);
-}
 
 export default function Header({ transparent = false }: { transparent?: boolean } = {}) {
   const { data: session, status } = useSession();
@@ -94,10 +92,25 @@ export default function Header({ transparent = false }: { transparent?: boolean 
       >
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
           {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
-          {transparent ? (
-            <Link href="/" aria-label="Banc Property Group" className="flex items-center">
-              <span className="sr-only">Banc Property Group</span>
-            </Link>
+          {transparent && !landingUi.showLandingHeaderLogo ? (
+            <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group social media">
+              {landingUi.mobileSocialActions.map((action) => {
+                const SocialIcon = action.brand === "facebook" ? Facebook : Instagram;
+
+                return (
+                  <a
+                    key={action.brand}
+                    href={action.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={action.label}
+                    className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors duration-200 hover:bg-white/10 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  >
+                    <SocialIcon className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                );
+              })}
+            </div>
           ) : (
             <Link href="/" aria-label="Banc Property Group" className="flex items-center">
               <Image
@@ -168,12 +181,12 @@ export default function Header({ transparent = false }: { transparent?: boolean 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
             {/* Phone */}
-            <a 
-              href="tel:01707877781" 
-              className="text-sm text-white/70 hover:text-banc-sky transition-colors"
-              onClick={() => trackCallClick("header_desktop")}
+            <a
+              href={landingUi.phoneAction.href}
+              aria-label={landingUi.phoneAction.label}
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
             >
-              01707 877781
+              <Phone className="h-5 w-5" aria-hidden="true" />
             </a>
             
             {/* Favorites */}
@@ -213,9 +226,9 @@ export default function Header({ transparent = false }: { transparent?: boolean 
             )}
 
             {/* CTA */}
-            <Link href="/valuation">
+            <Link href={landingUi.valuationAction.href}>
               <Button size="sm" className="bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
-                Valuation
+                {landingUi.valuationAction.label}
               </Button>
             </Link>
           </div>
@@ -263,13 +276,35 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               </div>
 
               <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-24">
+                <div className="my-4 flex items-center gap-2">
+                  <Link
+                    href={landingUi.valuationAction.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1"
+                  >
+                    <Button className="h-11 w-full bg-banc-sky text-sm text-banc-dark hover:bg-banc-sky-mid">
+                      {landingUi.valuationAction.label}
+                    </Button>
+                  </Link>
+                  <a
+                    href={landingUi.phoneAction.href}
+                    aria-label={landingUi.phoneAction.label}
+                    className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-banc-sky/40 text-banc-sky transition-colors duration-200 hover:border-banc-sky hover:bg-banc-sky/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  >
+                    <Phone className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </div>
+
                 {/* Mobile Auth */}
                 {isAuthenticated ? (
                   <div className="my-4 flex items-center gap-3">
                     {session.user?.image ? (
-                      <img
+                      <Image
                         src={session.user.image}
                         alt={session.user.name || "User"}
+                        width={40}
+                        height={40}
+                        unoptimized
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (
@@ -371,23 +406,6 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                     </Link>
                   ))}
                 </nav>
-
-                {/* Mobile CTAs */}
-                <div className="mt-6 space-y-3">
-                  <a
-                    href="tel:01707877781"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 py-3 text-white"
-                    onClick={() => trackCallClick("header_mobile_menu")}
-                  >
-                    <Phone className="h-4 w-4" />
-                    01707 877781
-                  </a>
-                  <Link href="/valuation" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-banc-sky py-3 text-base text-banc-dark hover:bg-banc-sky-mid">
-                      Request Valuation
-                    </Button>
-                  </Link>
-                </div>
 
                 {/* Address */}
                 <div className="mt-6 border-t border-white/10 pt-6 text-center text-xs text-white/40">

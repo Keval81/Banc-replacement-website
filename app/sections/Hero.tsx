@@ -3,6 +3,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
+import { getLandingUi } from "@/lib/landing-ui";
+
+const landingUi = getLandingUi("aker");
 
 // The Cut — fast 11s golden-hour hero film loop for the Aker direction.
 const videos = ["/videos/hero-first-day.mp4"];
@@ -48,13 +52,7 @@ export default function Hero() {
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
   const [currentReview, setCurrentReview] = useState(0);
   const [totalReviews, setTotalReviews] = useState(51);
-  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Portrait phones get a dedicated 9:16 cut so the people stay in frame.
-  useEffect(() => {
-    setIsMobile(window.matchMedia("(max-width: 640px)").matches);
-  }, []);
 
   // Fetch real reviews from API
   useEffect(() => {
@@ -83,7 +81,7 @@ export default function Hero() {
       video.playbackRate = 0.60;
       await video.play();
       setCanAutoplay(true);
-    } catch (err) {
+    } catch {
       setCanAutoplay(false);
     }
   }, []);
@@ -108,13 +106,12 @@ export default function Hero() {
     video.addEventListener("canplay", handleCanPlay);
     video.addEventListener("ended", handleVideoEnd);
     video.load();
-    startPlayback();
 
     return () => {
       video.removeEventListener("canplay", handleCanPlay);
       video.removeEventListener("ended", handleVideoEnd);
     };
-  }, [currentVideo, isMobile, handleCanPlay, handleVideoEnd, startPlayback]);
+  }, [currentVideo, handleCanPlay, handleVideoEnd]);
 
   // Auto-rotate reviews
   useEffect(() => {
@@ -153,14 +150,16 @@ export default function Hero() {
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
             style={{ minHeight: "100vh", minWidth: "100vw", objectPosition: "center center" }}
-            src={isMobile ? "/videos/hero-first-day-mobile.mp4" : videos[currentVideo]}
             muted
             loop
             playsInline
             preload="auto"
-            poster={isMobile ? "/videos/hero-first-day-mobile-poster.jpg" : "/videos/hero-cut-poster.jpg"}
+            poster="/videos/hero-cut-poster.jpg"
             aria-hidden="true"
-          />
+          >
+            <source media="(max-width: 640px)" src="/videos/hero-first-day-mobile.mp4" />
+            <source src={videos[currentVideo]} />
+          </video>
         </motion.div>
         {!isLoaded && <div className="absolute inset-0 h-screen w-full bg-banc-dark-deep" />}
       </div>
@@ -186,25 +185,16 @@ export default function Hero() {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="flex w-full max-w-sm flex-col gap-3 lg:items-end"
           >
-            <div className="flex w-full flex-col gap-3 sm:hidden">
-              <Link
-                href="/sales/properties"
-                className="w-full rounded-full border border-white/35 px-6 py-3.5 text-center text-[15px] text-white"
-              >
-                Sales
-              </Link>
-              <Link
-                href="/lettings/properties"
-                className="w-full rounded-full border border-white/35 px-6 py-3.5 text-center text-[15px] text-white"
-              >
-                Lettings
-              </Link>
-              <Link
-                href="/valuation"
-                className="w-full rounded-full bg-banc-sky px-6 py-3.5 text-center text-[15px] font-medium text-banc-dark-deep"
-              >
-                Value my property
-              </Link>
+            <div className="inline-flex w-fit self-end rounded-full border border-white/30 bg-banc-dark-deep/30 p-1 backdrop-blur-sm sm:hidden">
+              {landingUi.heroActions.map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className="flex min-h-11 cursor-pointer items-center rounded-full px-5 text-sm font-medium tracking-wide text-white transition-colors duration-200 hover:bg-white/10 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                >
+                  {action.label}
+                </Link>
+              ))}
             </div>
 
             <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-4 sm:block lg:p-5">
@@ -283,9 +273,12 @@ export default function Hero() {
             {/* Logo replaces the wordmark at the same scale (the old text was
                 clamp(96px,15vw,210px) tall; the lockup is wider, so height
                 maps to a slightly smaller clamp to hold the same presence). */}
-            <img
+            <Image
               src="/banc-logo-white-clear.png"
               alt=""
+              width={800}
+              height={190}
+              priority
               className="block h-auto"
               style={{ width: "min(72vw, 560px)" }}
             />
