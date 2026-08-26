@@ -26,6 +26,10 @@ export type MobileContactControlPlacement =
   | "standard"
   | "right-action-rail";
 
+export type MobileWhatsappPanelPlacement =
+  | "above-trigger"
+  | "left-of-trigger";
+
 interface HeroVideo {
   desktop: {
     src: string;
@@ -60,7 +64,9 @@ export interface LandingUi {
 export interface LandingOverlayPolicy {
   showMobileBottomNavigation: boolean;
   showProactiveChatPrompt: boolean;
+  showPushNotificationPrompt: boolean;
   mobileContactControlPlacement: MobileContactControlPlacement;
+  mobileWhatsappPanelPlacement: MobileWhatsappPanelPlacement;
 }
 
 const sharedActions = {
@@ -153,8 +159,12 @@ export function getLandingOverlayPolicy(
   return {
     showMobileBottomNavigation: !isLandingPage,
     showProactiveChatPrompt: !isLandingPage,
+    showPushNotificationPrompt: !isLandingPage,
     mobileContactControlPlacement: isLandingPage
       ? "right-action-rail"
       : "standard",
+    mobileWhatsappPanelPlacement: isLandingPage
+      ? "left-of-trigger"
+      : "above-trigger",
   };
 }

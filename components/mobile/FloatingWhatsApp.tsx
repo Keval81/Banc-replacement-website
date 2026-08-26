@@ -6,6 +6,7 @@ import { MessageCircle, X } from "lucide-react";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
+import type { MobileWhatsappPanelPlacement } from "@/lib/landing-ui";
 
 interface FloatingWhatsAppProps {
   phoneNumber?: string;
@@ -13,6 +14,7 @@ interface FloatingWhatsAppProps {
   position?: "bottom-right" | "bottom-left";
   hideOnScrollDown?: boolean;
   className?: string;
+  panelPlacement?: MobileWhatsappPanelPlacement;
 }
 
 interface AnalyticsWindow extends Window {
@@ -32,6 +34,7 @@ export function FloatingWhatsApp({
   position = "bottom-right",
   hideOnScrollDown = true,
   className,
+  panelPlacement = "above-trigger",
 }: FloatingWhatsAppProps) {
   const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection({ threshold: 50 });
@@ -90,10 +93,23 @@ export function FloatingWhatsApp({
           <AnimatePresence>
             {isExpanded && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                className="mb-2 max-w-[200px] rounded-2xl rounded-br-none bg-white p-4 shadow-lg dark:bg-card"
+                initial={
+                  panelPlacement === "left-of-trigger"
+                    ? { opacity: 0, scale: 0.9, x: 12 }
+                    : { opacity: 0, scale: 0.8, y: 20 }
+                }
+                animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+                exit={
+                  panelPlacement === "left-of-trigger"
+                    ? { opacity: 0, scale: 0.9, x: 12 }
+                    : { opacity: 0, scale: 0.8, y: 20 }
+                }
+                className={cn(
+                  "rounded-2xl rounded-br-none bg-white p-4 shadow-lg dark:bg-card",
+                  panelPlacement === "left-of-trigger"
+                    ? "absolute bottom-0 right-[calc(100%+0.75rem)] w-[min(12.5rem,calc(100vw-6.5rem))]"
+                    : "mb-2 max-w-[200px]"
+                )}
               >
                 <p className="text-sm text-foreground">
                   Need help? Chat with us on WhatsApp!

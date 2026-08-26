@@ -21,6 +21,7 @@ export function SiteOverlays(): React.ReactElement | null {
       {overlayPolicy.showMobileBottomNavigation && <MobileBottomNav />}
       <FloatingWhatsApp
         position={usesRightActionRail ? "bottom-right" : "bottom-left"}
+        panelPlacement={overlayPolicy.mobileWhatsappPanelPlacement}
         className={
           usesRightActionRail
             ? "bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:left-[calc(1.5rem+env(safe-area-inset-left))] sm:right-auto"
@@ -33,7 +34,7 @@ export function SiteOverlays(): React.ReactElement | null {
         }
         showProactivePrompt={overlayPolicy.showProactiveChatPrompt}
       />
-      <PushNotificationPrompt />
+      {overlayPolicy.showPushNotificationPrompt && <PushNotificationPrompt />}
     </>
   );
 }

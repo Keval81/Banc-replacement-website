@@ -109,7 +109,9 @@ test("keeps automated overlays clear of the landing-page brand lockup", () => {
   assert.deepEqual(getLandingOverlayPolicy("/"), {
     showMobileBottomNavigation: false,
     showProactiveChatPrompt: false,
+    showPushNotificationPrompt: false,
     mobileContactControlPlacement: "right-action-rail",
+    mobileWhatsappPanelPlacement: "left-of-trigger",
   });
 });
 
@@ -117,6 +119,8 @@ test("keeps mobile navigation and proactive chat available on regular pages", ()
   assert.deepEqual(getLandingOverlayPolicy("/sales/properties"), {
     showMobileBottomNavigation: true,
     showProactiveChatPrompt: true,
+    showPushNotificationPrompt: true,
     mobileContactControlPlacement: "standard",
+    mobileWhatsappPanelPlacement: "above-trigger",
   });
 });
