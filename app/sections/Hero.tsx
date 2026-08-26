@@ -176,46 +176,6 @@ export default function Hero() {
         </button>
       )}
 
-      <motion.nav
-        initial={{ opacity: 0, x: 16 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.35, duration: 0.55, ease: "easeOut" }}
-        aria-label="Browse Banc properties"
-        data-placement={landingUi.mobileHeroActionPlacement}
-        className="absolute bottom-[calc(11rem+env(safe-area-inset-bottom))] right-[calc(1rem+env(safe-area-inset-right))] z-20 flex w-[10.75rem] flex-col gap-2 sm:hidden"
-      >
-        {landingUi.heroActions.map((action) => (
-          <Link
-            key={action.href}
-            href={action.href}
-            className={
-              action.tone === "primary"
-                ? "group relative flex min-h-[4.25rem] cursor-pointer items-center justify-between overflow-hidden rounded-[16px] border border-white/35 bg-banc-sky px-4 py-3 text-banc-dark-deep shadow-[0_12px_34px_rgba(20,34,43,0.3)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-banc-sky-mid hover:shadow-[0_16px_38px_rgba(20,34,43,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep active:translate-y-0 motion-reduce:transition-none"
-                : "group relative flex min-h-[4.25rem] cursor-pointer items-center justify-between overflow-hidden rounded-[16px] border border-white/30 bg-banc-dark-deep/72 px-4 py-3 text-white shadow-[0_12px_34px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-white/55 hover:bg-banc-dark-deep/88 hover:shadow-[0_16px_38px_rgba(0,0,0,0.36)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep active:translate-y-0 motion-reduce:transition-none"
-            }
-          >
-            <span className="relative z-10">
-              <span className="block text-[9px] font-semibold uppercase tracking-[0.2em] opacity-65">
-                {action.eyebrow}
-              </span>
-              <span className="mt-1 block font-serif text-[22px] font-normal leading-none tracking-[-0.02em]">
-                {action.label}
-              </span>
-            </span>
-            <span
-              aria-hidden="true"
-              className={
-                action.tone === "primary"
-                  ? "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-banc-dark-deep/15 bg-banc-dark-deep/10 text-base transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
-                  : "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-base transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
-              }
-            >
-              &rarr;
-            </span>
-          </Link>
-        ))}
-      </motion.nav>
-
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-12 pt-20 lg:px-10 lg:pb-12 lg:pt-28">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-end">
@@ -296,6 +256,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.9, ease: "easeOut" }}
+          className="space-y-5 pb-40 sm:space-y-0 sm:pb-0"
         >
           <h1 className="m-0">
             <span className="sr-only">
@@ -314,6 +275,31 @@ export default function Hero() {
               style={{ width: "min(72vw, 560px)" }}
             />
           </h1>
+
+          <nav
+            aria-label="Browse Banc properties"
+            data-placement={landingUi.mobileHeroActionPlacement}
+            className="mx-auto grid w-full max-w-md grid-cols-2 gap-2 sm:hidden"
+          >
+            {landingUi.heroActions.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className={
+                  action.tone === "primary"
+                    ? "flex min-h-14 cursor-pointer flex-col justify-center rounded-[14px] border border-white/35 bg-banc-sky px-4 text-banc-dark-deep shadow-[0_10px_28px_rgba(20,34,43,0.28)] transition-colors duration-200 hover:bg-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
+                    : "flex min-h-14 cursor-pointer flex-col justify-center rounded-[14px] border border-white/35 bg-banc-dark-deep/72 px-4 text-white shadow-[0_10px_28px_rgba(0,0,0,0.24)] backdrop-blur-xl transition-colors duration-200 hover:bg-banc-dark-deep/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
+                }
+              >
+                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] opacity-65">
+                  {action.eyebrow}
+                </span>
+                <span className="mt-1 font-serif text-lg leading-none">
+                  {action.label}
+                </span>
+              </Link>
+            ))}
+          </nav>
         </motion.div>
       </div>
     </section>

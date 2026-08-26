@@ -13,21 +13,16 @@ export function SiteOverlays(): React.ReactElement | null {
   if (isPropertyDetailPath(pathname)) return null;
 
   const overlayPolicy = getLandingOverlayPolicy(pathname);
-  const usesRightActionRail =
-    overlayPolicy.mobileContactControlPlacement === "right-action-rail";
 
   return (
     <>
       {overlayPolicy.showMobileBottomNavigation && <MobileBottomNav />}
-      <FloatingWhatsApp
-        position={usesRightActionRail ? "bottom-right" : "bottom-left"}
-        panelPlacement={overlayPolicy.mobileWhatsappPanelPlacement}
-        className={
-          usesRightActionRail
-            ? "bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:left-[calc(1.5rem+env(safe-area-inset-left))] sm:right-auto"
-            : undefined
-        }
-      />
+      {overlayPolicy.showStandaloneWhatsapp && (
+        <FloatingWhatsApp
+          position="bottom-left"
+          panelPlacement={overlayPolicy.mobileWhatsappPanelPlacement}
+        />
+      )}
       <PropertyChatbot
         mobileContactControlPlacement={
           overlayPolicy.mobileContactControlPlacement

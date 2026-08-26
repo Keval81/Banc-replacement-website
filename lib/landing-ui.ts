@@ -24,7 +24,7 @@ export interface MobileSocialPresentation {
 
 export type MobileContactControlPlacement =
   | "standard"
-  | "right-action-rail";
+  | "unified-help";
 
 export type MobileWhatsappPanelPlacement =
   | "above-trigger"
@@ -53,7 +53,13 @@ export interface LandingUi {
   showLandingHeaderLogo: boolean;
   mobileSocialActions: readonly SocialAction[];
   mobileSocialPresentation: MobileSocialPresentation;
-  mobileHeroActionPlacement: "lower-right-action-rail";
+  mobileContactLauncher: {
+    label: "Help";
+    assistantLabel: "Ask Banc Assistant";
+    whatsappLabel: "Chat on WhatsApp";
+    whatsappHref: string;
+  };
+  mobileHeroActionPlacement: "centered-action-row";
   showGoogleReview: {
     mobile: boolean;
     desktop: boolean;
@@ -65,6 +71,7 @@ export interface LandingOverlayPolicy {
   showMobileBottomNavigation: boolean;
   showProactiveChatPrompt: boolean;
   showPushNotificationPrompt: boolean;
+  showStandaloneWhatsapp: boolean;
   mobileContactControlPlacement: MobileContactControlPlacement;
   mobileWhatsappPanelPlacement: MobileWhatsappPanelPlacement;
 }
@@ -110,7 +117,14 @@ const sharedActions = {
     iconSize: 32,
     touchTargetSize: 48,
   },
-  mobileHeroActionPlacement: "lower-right-action-rail",
+  mobileContactLauncher: {
+    label: "Help",
+    assistantLabel: "Ask Banc Assistant",
+    whatsappLabel: "Chat on WhatsApp",
+    whatsappHref:
+      "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
+  },
+  mobileHeroActionPlacement: "centered-action-row",
 } as const;
 
 const landingUiByVariant: Record<LandingVariant, LandingUi> = {
@@ -160,11 +174,10 @@ export function getLandingOverlayPolicy(
     showMobileBottomNavigation: !isLandingPage,
     showProactiveChatPrompt: !isLandingPage,
     showPushNotificationPrompt: !isLandingPage,
+    showStandaloneWhatsapp: !isLandingPage,
     mobileContactControlPlacement: isLandingPage
-      ? "right-action-rail"
+      ? "unified-help"
       : "standard",
-    mobileWhatsappPanelPlacement: isLandingPage
-      ? "responsive-rail"
-      : "above-trigger",
+    mobileWhatsappPanelPlacement: "above-trigger",
   };
 }

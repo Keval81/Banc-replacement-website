@@ -31,21 +31,20 @@ export default function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed bottom-0 left-0 right-0 z-50 max-h-[100dvh] overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+1rem)] pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)] pt-[calc(env(safe-area-inset-top)+1rem)] md:pb-[calc(env(safe-area-inset-bottom)+1.5rem)] md:pl-[calc(env(safe-area-inset-left)+1.5rem)] md:pr-[calc(env(safe-area-inset-right)+1.5rem)] md:pt-[calc(env(safe-area-inset-top)+1.5rem)]"
+          className="fixed bottom-0 left-0 right-0 z-50 max-h-[100dvh] overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pl-[calc(env(safe-area-inset-left)+0.75rem)] pr-[calc(env(safe-area-inset-right)+0.75rem)] pt-3 md:pb-[calc(env(safe-area-inset-bottom)+1.5rem)] md:pl-[calc(env(safe-area-inset-left)+1.5rem)] md:pr-[calc(env(safe-area-inset-right)+1.5rem)] md:pt-[calc(env(safe-area-inset-top)+1.5rem)]"
         >
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
+          <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
             {/* Header */}
-            <div className="flex items-start gap-4 p-6">
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#4AC8E8]/10">
-                <Cookie className="h-6 w-6 text-[#4AC8E8]" />
+            <div className="flex items-start gap-3 p-4 sm:p-5">
+              <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#4AC8E8]/10 sm:flex">
+                <Cookie className="h-5 w-5 text-[#4AC8E8]" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-[#1A1917]">
+                <h3 className="text-base font-semibold text-[#1A1917] sm:text-lg">
                   We value your privacy
                 </h3>
-                <p className="mt-1 text-sm text-banc-muted-readable">
-                  We use cookies to enhance your browsing experience, serve personalised content, and analyse our traffic. 
-                  By clicking &ldquo;Accept All&rdquo;, you consent to our use of cookies. 
+                <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                  We use cookies to improve your experience and understand how the website is used.
                   <a href="/cookies" className="ml-1 text-banc-focus hover:underline">
                     Learn more
                   </a>
@@ -144,10 +143,16 @@ export default function CookieConsent() {
             </AnimatePresence>
 
             {/* Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#E5E5E5] p-4">
+            <div
+              className={
+                showDetails
+                  ? "flex flex-col gap-2 border-t border-[#E5E5E5] p-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:p-4"
+                  : "grid grid-cols-[auto_1fr] items-center gap-2 border-t border-[#E5E5E5] p-3 sm:flex sm:justify-between sm:gap-4 sm:p-4"
+              }
+            >
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="flex items-center gap-1 text-sm font-medium text-banc-muted-readable hover:text-[#1A1917]"
+                className="flex min-h-11 cursor-pointer items-center gap-1 text-sm font-medium text-banc-muted-readable hover:text-[#1A1917] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
               >
                 {showDetails ? (
                   <>
@@ -157,16 +162,17 @@ export default function CookieConsent() {
                 ) : (
                   <>
                     <ChevronDown className="h-4 w-4" />
-                    Manage Preferences
+                    <span className="sm:hidden">Settings</span>
+                    <span className="hidden sm:inline">Manage Preferences</span>
                   </>
                 )}
               </button>
 
-              <div className="flex flex-wrap items-center gap-3">
+              <div className={showDetails ? "w-full sm:w-auto" : "grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center"}>
                 {showDetails ? (
                   <Button
                     onClick={handleSavePreferences}
-                    className="bg-[#4AC8E8] text-banc-dark hover:bg-banc-sky-mid"
+                    className="min-h-11 w-full bg-[#4AC8E8] text-banc-dark hover:bg-banc-sky-mid sm:w-auto"
                   >
                     Save Preferences
                   </Button>
@@ -175,13 +181,13 @@ export default function CookieConsent() {
                     <Button
                       variant="outline"
                       onClick={rejectAll}
-                      className="border-[#E0DFDC] text-banc-muted-readable hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                      className="min-h-11 border-[#E0DFDC] text-banc-muted-readable hover:bg-[#F4F3F1] hover:text-[#1A1917]"
                     >
                       Reject All
                     </Button>
                     <Button
                       onClick={acceptAll}
-                      className="bg-[#1A1917] text-white hover:bg-[#2C2A27]"
+                      className="min-h-11 bg-[#1A1917] text-white hover:bg-[#2C2A27]"
                     >
                       Accept All
                     </Button>

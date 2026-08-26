@@ -69,10 +69,10 @@ test("presents Aker mobile social links as prominent icons on a clear surface", 
   });
 });
 
-test("places mobile property actions in the lower-right action rail", () => {
+test("places mobile property actions in a centered in-layout row", () => {
   const ui = getLandingUi("aker");
 
-  assert.equal(ui.mobileHeroActionPlacement, "lower-right-action-rail");
+  assert.equal(ui.mobileHeroActionPlacement, "centered-action-row");
 });
 
 test("keeps the Google wordmark on a transparent review surface", () => {
@@ -105,13 +105,24 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
-test("keeps automated overlays clear of the landing-page brand lockup", () => {
+test("uses one help launcher instead of competing contact controls on the landing page", () => {
   assert.deepEqual(getLandingOverlayPolicy("/"), {
     showMobileBottomNavigation: false,
     showProactiveChatPrompt: false,
     showPushNotificationPrompt: false,
-    mobileContactControlPlacement: "right-action-rail",
-    mobileWhatsappPanelPlacement: "responsive-rail",
+    showStandaloneWhatsapp: false,
+    mobileContactControlPlacement: "unified-help",
+    mobileWhatsappPanelPlacement: "above-trigger",
+  });
+});
+
+test("offers assistant and WhatsApp choices from the landing-page help launcher", () => {
+  assert.deepEqual(getLandingUi("aker").mobileContactLauncher, {
+    label: "Help",
+    assistantLabel: "Ask Banc Assistant",
+    whatsappLabel: "Chat on WhatsApp",
+    whatsappHref:
+      "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
   });
 });
 
@@ -120,6 +131,7 @@ test("keeps mobile navigation and proactive chat available on regular pages", ()
     showMobileBottomNavigation: true,
     showProactiveChatPrompt: true,
     showPushNotificationPrompt: true,
+    showStandaloneWhatsapp: true,
     mobileContactControlPlacement: "standard",
     mobileWhatsappPanelPlacement: "above-trigger",
   });

@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
-import type { MobileContactControlPlacement } from "@/lib/landing-ui";
+import {
+  getLandingUi,
+  type MobileContactControlPlacement,
+} from "@/lib/landing-ui";
 
 interface Message {
   id: string;
@@ -35,6 +38,8 @@ const transition = {
   duration: 0.35,
 };
 
+const landingContactLauncher = getLandingUi("aker").mobileContactLauncher;
+
 interface PropertyChatbotProps {
   mobileContactControlPlacement?: MobileContactControlPlacement;
   showProactivePrompt?: boolean;
@@ -45,6 +50,7 @@ export default function PropertyChatbot({
   showProactivePrompt = true,
 }: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -60,6 +66,9 @@ export default function PropertyChatbot({
   const [promptDismissed, setPromptDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const firstHelpOptionRef = useRef<HTMLButtonElement>(null);
+  const helpTriggerRef = useRef<HTMLButtonElement>(null);
+  const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -68,10 +77,21 @@ export default function PropertyChatbot({
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 150);
+      setIsHelpMenuOpen(false);
       setShowPrompt(false);
       setPromptDismissed(true);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!usesUnifiedHelp || !isHelpMenuOpen) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      firstHelpOptionRef.current?.focus();
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [isHelpMenuOpen, usesUnifiedHelp]);
 
   // Show prompt bubble after 8 seconds if chat hasn't been opened
   useEffect(() => {
@@ -146,8 +166,8 @@ export default function PropertyChatbot({
         {!isOpen && (
           <div
             className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
-              mobileContactControlPlacement === "right-action-rail"
-                ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom))]"
+              usesUnifiedHelp
+                ? "bottom-[calc(1rem+env(safe-area-inset-bottom))] flex-col"
                 : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
             }`}
           >
@@ -194,18 +214,88 @@ export default function PropertyChatbot({
               )}
             </AnimatePresence>
 
+            <AnimatePresence>
+              {usesUnifiedHelp && isHelpMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="w-56 overflow-hidden rounded-[14px] border border-banc-grey/15 bg-white p-2 shadow-2xl"
+                  onKeyDown={(event) => {
+                    if (event.key !== "Escape") return;
+                    event.preventDefault();
+                    setIsHelpMenuOpen(false);
+                    window.requestAnimationFrame(() => {
+                      helpTriggerRef.current?.focus();
+                    });
+                  }}
+                >
+                  <button
+                    ref={firstHelpOptionRef}
+                    type="button"
+                    onClick={() => setIsOpen(true)}
+                    className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-left text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-banc-dark-deep text-white">
+                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    {landingContactLauncher.assistantLabel}
+                  </button>
+                  <a
+                    href={landingContactLauncher.whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
+                  >
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25D366] text-white">
+                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                    {landingContactLauncher.whatsappLabel}
+                  </a>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Chat Button */}
             <motion.button
+              ref={helpTriggerRef}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
               transition={transition}
-              onClick={() => setIsOpen(true)}
-              className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-banc-dark-deep text-white shadow-lg hover:bg-banc-dark transition-colors duration-200 cursor-pointer"
-              aria-label="Open chat"
+              onClick={() =>
+                usesUnifiedHelp
+                  ? setIsHelpMenuOpen((current) => !current)
+                  : setIsOpen(true)
+              }
+              className={
+                usesUnifiedHelp
+                  ? "flex h-12 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/20 bg-banc-dark-deep px-4 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:bg-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-2"
+                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-banc-dark-deep text-white shadow-lg transition-colors duration-200 hover:bg-banc-dark"
+              }
+              aria-label={
+                usesUnifiedHelp
+                  ? isHelpMenuOpen
+                    ? "Close help options"
+                    : "Open help options"
+                  : "Open chat"
+              }
+              aria-expanded={usesUnifiedHelp ? isHelpMenuOpen : undefined}
             >
-              <MessageCircle className="h-6 w-6" />
-              <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-white" />
+              {usesUnifiedHelp && isHelpMenuOpen ? (
+                <X className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <MessageCircle
+                  className={usesUnifiedHelp ? "h-4 w-4" : "h-6 w-6"}
+                  aria-hidden="true"
+                />
+              )}
+              {usesUnifiedHelp ? (
+                <span>{landingContactLauncher.label}</span>
+              ) : (
+                <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-white" />
+              )}
             </motion.button>
           </div>
         )}
