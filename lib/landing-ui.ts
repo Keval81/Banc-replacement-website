@@ -6,6 +6,7 @@ interface LandingAction {
 }
 
 interface HeroAction extends LandingAction {
+  eyebrow: "Buy a home" | "Rent a home";
   tone: "primary" | "secondary";
 }
 
@@ -14,6 +15,16 @@ interface SocialAction extends LandingAction {
   iconSrc: string;
   imageLoading: "eager";
 }
+
+export interface MobileSocialPresentation {
+  surface: "transparent";
+  iconSize: 32;
+  touchTargetSize: 48;
+}
+
+export type MobileContactControlPlacement =
+  | "standard"
+  | "right-action-rail";
 
 interface HeroVideo {
   desktop: {
@@ -37,6 +48,8 @@ export interface LandingUi {
   reviewLogoSurface: "transparent";
   showLandingHeaderLogo: boolean;
   mobileSocialActions: readonly SocialAction[];
+  mobileSocialPresentation: MobileSocialPresentation;
+  mobileHeroActionPlacement: "lower-right-action-rail";
   showGoogleReview: {
     mobile: boolean;
     desktop: boolean;
@@ -47,13 +60,23 @@ export interface LandingUi {
 export interface LandingOverlayPolicy {
   showMobileBottomNavigation: boolean;
   showProactiveChatPrompt: boolean;
-  mobileContactControlPlacement: "standard" | "above-brand-lockup";
+  mobileContactControlPlacement: MobileContactControlPlacement;
 }
 
 const sharedActions = {
   heroActions: [
-    { label: "Sales", href: "/sales/properties", tone: "primary" },
-    { label: "Lettings", href: "/lettings/properties", tone: "secondary" },
+    {
+      label: "Sales",
+      eyebrow: "Buy a home",
+      href: "/sales/properties",
+      tone: "primary",
+    },
+    {
+      label: "Lettings",
+      eyebrow: "Rent a home",
+      href: "/lettings/properties",
+      tone: "secondary",
+    },
   ],
   heroVideo: {
     desktop: {
@@ -76,6 +99,12 @@ const sharedActions = {
     label: "Call Banc Property Group",
     href: "tel:01707877781",
   },
+  mobileSocialPresentation: {
+    surface: "transparent",
+    iconSize: 32,
+    touchTargetSize: 48,
+  },
+  mobileHeroActionPlacement: "lower-right-action-rail",
 } as const;
 
 const landingUiByVariant: Record<LandingVariant, LandingUi> = {
@@ -125,7 +154,7 @@ export function getLandingOverlayPolicy(
     showMobileBottomNavigation: !isLandingPage,
     showProactiveChatPrompt: !isLandingPage,
     mobileContactControlPlacement: isLandingPage
-      ? "above-brand-lockup"
+      ? "right-action-rail"
       : "standard",
   };
 }

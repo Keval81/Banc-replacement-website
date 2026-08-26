@@ -102,6 +102,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                   label={action.label}
                   iconSrc={action.iconSrc}
                   imageLoading={action.imageLoading}
+                  presentation={landingUi.mobileSocialPresentation}
                 />
               ))}
             </div>

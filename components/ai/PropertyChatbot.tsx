@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
+import type { MobileContactControlPlacement } from "@/lib/landing-ui";
 
 interface Message {
   id: string;
@@ -35,7 +36,7 @@ const transition = {
 };
 
 interface PropertyChatbotProps {
-  mobileContactControlPlacement?: "standard" | "above-brand-lockup";
+  mobileContactControlPlacement?: MobileContactControlPlacement;
   showProactivePrompt?: boolean;
 }
 
@@ -145,8 +146,8 @@ export default function PropertyChatbot({
         {!isOpen && (
           <div
             className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
-              mobileContactControlPlacement === "above-brand-lockup"
-                ? "bottom-40"
+              mobileContactControlPlacement === "right-action-rail"
+                ? "bottom-[calc(5.5rem+env(safe-area-inset-bottom))]"
                 : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
             }`}
           >

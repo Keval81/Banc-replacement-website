@@ -176,6 +176,46 @@ export default function Hero() {
         </button>
       )}
 
+      <motion.nav
+        initial={{ opacity: 0, x: 16 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.35, duration: 0.55, ease: "easeOut" }}
+        aria-label="Browse Banc properties"
+        data-placement={landingUi.mobileHeroActionPlacement}
+        className="absolute bottom-[calc(11rem+env(safe-area-inset-bottom))] right-[calc(1rem+env(safe-area-inset-right))] z-20 flex w-[10.75rem] flex-col gap-2 sm:hidden"
+      >
+        {landingUi.heroActions.map((action) => (
+          <Link
+            key={action.href}
+            href={action.href}
+            className={
+              action.tone === "primary"
+                ? "group relative flex min-h-[4.25rem] cursor-pointer items-center justify-between overflow-hidden rounded-[16px] border border-white/35 bg-banc-sky px-4 py-3 text-banc-dark-deep shadow-[0_12px_34px_rgba(20,34,43,0.3)] transition-[transform,background-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-banc-sky-mid hover:shadow-[0_16px_38px_rgba(20,34,43,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep active:translate-y-0 motion-reduce:transition-none"
+                : "group relative flex min-h-[4.25rem] cursor-pointer items-center justify-between overflow-hidden rounded-[16px] border border-white/30 bg-banc-dark-deep/72 px-4 py-3 text-white shadow-[0_12px_34px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-[transform,background-color,border-color,box-shadow] duration-200 hover:-translate-y-0.5 hover:border-white/55 hover:bg-banc-dark-deep/88 hover:shadow-[0_16px_38px_rgba(0,0,0,0.36)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep active:translate-y-0 motion-reduce:transition-none"
+            }
+          >
+            <span className="relative z-10">
+              <span className="block text-[9px] font-semibold uppercase tracking-[0.2em] opacity-65">
+                {action.eyebrow}
+              </span>
+              <span className="mt-1 block font-serif text-[22px] font-normal leading-none tracking-[-0.02em]">
+                {action.label}
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className={
+                action.tone === "primary"
+                  ? "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-banc-dark-deep/15 bg-banc-dark-deep/10 text-base transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  : "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-base transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none"
+              }
+            >
+              &rarr;
+            </span>
+          </Link>
+        ))}
+      </motion.nav>
+
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-12 pt-20 lg:px-10 lg:pb-12 lg:pt-28">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-end">
@@ -183,24 +223,8 @@ export default function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25, duration: 0.7 }}
-            className="flex w-full max-w-sm flex-col gap-3 lg:items-end"
+            className="hidden w-full max-w-sm flex-col gap-3 sm:flex lg:items-end"
           >
-            <div className="grid w-full grid-cols-2 gap-3 sm:hidden">
-              {landingUi.heroActions.map((action) => (
-                <Link
-                  key={action.href}
-                  href={action.href}
-                  className={
-                    action.tone === "primary"
-                      ? "flex min-h-12 cursor-pointer items-center justify-center rounded-full bg-banc-sky px-5 text-sm font-semibold tracking-wide text-banc-dark-deep shadow-[0_8px_24px_rgba(74,200,232,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-banc-sky-mid hover:shadow-[0_10px_28px_rgba(74,200,232,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-                      : "flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-white/55 bg-banc-dark-deep/55 px-5 text-sm font-semibold tracking-wide text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background-color,border-color] duration-200 hover:border-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-                  }
-                >
-                  {action.label}
-                </Link>
-              ))}
-            </div>
-
             <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-4 sm:block lg:p-5">
               <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                 Thinking of selling?

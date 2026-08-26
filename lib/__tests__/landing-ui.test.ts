@@ -8,8 +8,18 @@ test("keeps both landing variants focused on sales and lettings", () => {
     const ui = getLandingUi(variant);
 
     assert.deepEqual(ui.heroActions, [
-      { label: "Sales", href: "/sales/properties", tone: "primary" },
-      { label: "Lettings", href: "/lettings/properties", tone: "secondary" },
+      {
+        label: "Sales",
+        eyebrow: "Buy a home",
+        href: "/sales/properties",
+        tone: "primary",
+      },
+      {
+        label: "Lettings",
+        eyebrow: "Rent a home",
+        href: "/lettings/properties",
+        tone: "secondary",
+      },
     ]);
   }
 });
@@ -49,6 +59,22 @@ test("uses social actions instead of a duplicate logo in the Aker mobile header"
   ]);
 });
 
+test("presents Aker mobile social links as prominent icons on a clear surface", () => {
+  const ui = getLandingUi("aker");
+
+  assert.deepEqual(ui.mobileSocialPresentation, {
+    surface: "transparent",
+    iconSize: 32,
+    touchTargetSize: 48,
+  });
+});
+
+test("places mobile property actions in the lower-right action rail", () => {
+  const ui = getLandingUi("aker");
+
+  assert.equal(ui.mobileHeroActionPlacement, "lower-right-action-rail");
+});
+
 test("keeps the Google wordmark on a transparent review surface", () => {
   for (const variant of ["classic", "aker"] as const) {
     assert.equal(getLandingUi(variant).reviewLogoSurface, "transparent");
@@ -83,7 +109,7 @@ test("keeps automated overlays clear of the landing-page brand lockup", () => {
   assert.deepEqual(getLandingOverlayPolicy("/"), {
     showMobileBottomNavigation: false,
     showProactiveChatPrompt: false,
-    mobileContactControlPlacement: "above-brand-lockup",
+    mobileContactControlPlacement: "right-action-rail",
   });
 });
 

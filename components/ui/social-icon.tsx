@@ -1,12 +1,14 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
+import type { MobileSocialPresentation } from "@/lib/landing-ui";
 
 interface SocialIconLinkProps {
   href: string;
   label: string;
   iconSrc: string;
   imageLoading: "eager";
+  presentation: MobileSocialPresentation;
 }
 
 export function SocialIconLink({
@@ -14,22 +16,32 @@ export function SocialIconLink({
   label,
   iconSrc,
   imageLoading,
+  presentation,
 }: SocialIconLinkProps): React.ReactElement {
   return (
     <Button
       asChild
-      variant="outline"
+      variant="ghost"
       size="icon"
-      className="h-11 w-11 cursor-pointer rounded-lg border-white/35 bg-white/95 p-0 shadow-[0_6px_18px_rgba(0,0,0,0.24)] transition-[filter,box-shadow,border-color] duration-200 hover:border-white hover:bg-white hover:brightness-105 hover:shadow-[0_8px_22px_rgba(0,0,0,0.3)] focus-visible:ring-white focus-visible:ring-offset-banc-dark-deep"
+      className="cursor-pointer rounded-full border-0 bg-transparent p-0 shadow-none transition-transform duration-200 hover:scale-105 hover:bg-transparent focus-visible:ring-white/90 focus-visible:ring-offset-banc-dark-deep active:scale-95 motion-reduce:transition-none"
+      style={{
+        width: presentation.touchTargetSize,
+        height: presentation.touchTargetSize,
+        backgroundColor: presentation.surface,
+      }}
     >
       <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
         <Image
           src={iconSrc}
           alt=""
-          width={20}
-          height={20}
+          width={presentation.iconSize}
+          height={presentation.iconSize}
           loading={imageLoading}
-          className="h-5 w-5"
+          className="drop-shadow-[0_3px_10px_rgba(0,0,0,0.28)]"
+          style={{
+            width: presentation.iconSize,
+            height: presentation.iconSize,
+          }}
           aria-hidden="true"
         />
       </a>
