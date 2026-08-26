@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Cookie, ChevronDown, ChevronUp, Shield, BarChart3, Megaphone } from "lucide-react";
+import { Cookie, ChevronDown, ChevronUp, Shield, BarChart3, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCookies } from "@/hooks/useCookies";
 
@@ -31,7 +31,7 @@ export default function CookieConsent() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6"
+          className="fixed bottom-0 left-0 right-0 z-50 max-h-[100dvh] overflow-y-auto pb-[calc(env(safe-area-inset-bottom)+1rem)] pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)] pt-[calc(env(safe-area-inset-top)+1rem)] md:pb-[calc(env(safe-area-inset-bottom)+1.5rem)] md:pl-[calc(env(safe-area-inset-left)+1.5rem)] md:pr-[calc(env(safe-area-inset-right)+1.5rem)] md:pt-[calc(env(safe-area-inset-top)+1.5rem)]"
         >
           <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
             {/* Header */}
@@ -43,10 +43,10 @@ export default function CookieConsent() {
                 <h3 className="text-lg font-semibold text-[#1A1917]">
                   We value your privacy
                 </h3>
-                <p className="mt-1 text-sm text-[#8A8880]">
+                <p className="mt-1 text-sm text-banc-muted-readable">
                   We use cookies to enhance your browsing experience, serve personalised content, and analyse our traffic. 
                   By clicking &ldquo;Accept All&rdquo;, you consent to our use of cookies. 
-                  <a href="/cookies" className="ml-1 text-[#4AC8E8] hover:underline">
+                  <a href="/cookies" className="ml-1 text-banc-focus hover:underline">
                     Learn more
                   </a>
                 </p>
@@ -76,7 +76,7 @@ export default function CookieConsent() {
                             Always On
                           </span>
                         </div>
-                        <p className="mt-1 text-sm text-[#8A8880]">
+                        <p className="mt-1 text-sm text-banc-muted-readable">
                           These cookies are necessary for the website to function and cannot be switched off. 
                           They are usually only set in response to actions you make such as logging in or filling in forms.
                         </p>
@@ -86,7 +86,7 @@ export default function CookieConsent() {
                     {/* Analytics Cookies */}
                     <div className="flex items-start gap-4 rounded-xl border border-[#E5E5E5] p-4">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#4AC8E8]/10">
-                        <BarChart3 className="h-5 w-5 text-[#4AC8E8]" />
+                        <BarChart3 className="h-5 w-5 text-banc-focus" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -104,7 +104,7 @@ export default function CookieConsent() {
                             />
                           </button>
                         </div>
-                        <p className="mt-1 text-sm text-[#8A8880]">
+                        <p className="mt-1 text-sm text-banc-muted-readable">
                           These cookies allow us to count visits and traffic sources so we can measure and improve the 
                           performance of our site. They help us know which pages are the most and least popular.
                         </p>
@@ -114,7 +114,7 @@ export default function CookieConsent() {
                     {/* Marketing Cookies */}
                     <div className="flex items-start gap-4 rounded-xl border border-[#E5E5E5] p-4">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#4AC8E8]/10">
-                        <Megaphone className="h-5 w-5 text-[#4AC8E8]" />
+                        <Megaphone className="h-5 w-5 text-banc-focus" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ export default function CookieConsent() {
                             />
                           </button>
                         </div>
-                        <p className="mt-1 text-sm text-[#8A8880]">
+                        <p className="mt-1 text-sm text-banc-muted-readable">
                           These cookies may be set through our site by our advertising partners. They may be used by 
                           those companies to build a profile of your interests and show you relevant adverts.
                         </p>
@@ -147,7 +147,7 @@ export default function CookieConsent() {
             <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#E5E5E5] p-4">
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="flex items-center gap-1 text-sm font-medium text-[#8A8880] hover:text-[#1A1917]"
+                className="flex items-center gap-1 text-sm font-medium text-banc-muted-readable hover:text-[#1A1917]"
               >
                 {showDetails ? (
                   <>
@@ -166,7 +166,7 @@ export default function CookieConsent() {
                 {showDetails ? (
                   <Button
                     onClick={handleSavePreferences}
-                    className="bg-[#4AC8E8] text-white hover:bg-[#1A9BBF]"
+                    className="bg-[#4AC8E8] text-banc-dark hover:bg-banc-sky-mid"
                   >
                     Save Preferences
                   </Button>
@@ -175,13 +175,13 @@ export default function CookieConsent() {
                     <Button
                       variant="outline"
                       onClick={rejectAll}
-                      className="border-[#E0DFDC] text-[#8A8880] hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                      className="border-[#E0DFDC] text-banc-muted-readable hover:bg-[#F4F3F1] hover:text-[#1A1917]"
                     >
                       Reject All
                     </Button>
                     <Button
                       onClick={acceptAll}
-                      className="bg-[#1A1917] text-white hover:bg-[#4AC8E8]"
+                      className="bg-[#1A1917] text-white hover:bg-[#2C2A27]"
                     >
                       Accept All
                     </Button>

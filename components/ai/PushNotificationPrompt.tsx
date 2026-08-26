@@ -12,31 +12,24 @@ import {
 } from '@/lib/ai/notifications';
 
 export default function PushNotificationPrompt() {
-  const [isSupported, setIsSupported] = useState(false);
-  const [permission, setPermission] = useState<NotificationPermission | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSupported] = useState(() => areNotificationsSupported());
+  const [permission, setPermission] = useState<NotificationPermission | null>(() =>
+    getNotificationPermission()
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem("notificationPromptDismissed") === "true"
+  );
 
   useEffect(() => {
-    // Check support and permission on mount
-    const supported = areNotificationsSupported();
-    setIsSupported(supported);
+    if (!isSupported || permission !== "default" || isDismissed) return;
 
-    if (supported) {
-      const currentPermission = getNotificationPermission();
-      setPermission(currentPermission);
-
-      // Show prompt after 30 seconds if not decided
-      if (currentPermission === 'default' && !isDismissed) {
-        const timer = setTimeout(() => {
-          setShowPrompt(true);
-        }, 30000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [isDismissed]);
+    const timer = setTimeout(() => setShowPrompt(true), 30_000);
+    return () => clearTimeout(timer);
+  }, [isDismissed, isSupported, permission]);
 
   const handleEnable = async () => {
     setIsLoading(true);
@@ -45,8 +38,7 @@ export default function PushNotificationPrompt() {
     setPermission(granted ? 'granted' : 'denied');
 
     if (granted) {
-      const subscription = await subscribeToPushNotifications();
-      setIsSubscribed(!!subscription);
+      await subscribeToPushNotifications();
       setShowPrompt(false);
     }
 
@@ -60,15 +52,6 @@ export default function PushNotificationPrompt() {
     localStorage.setItem('notificationPromptDismissed', 'true');
   };
 
-  // Check if previously dismissed
-  useEffect(() => {
-    const dismissed = localStorage.getItem('notificationPromptDismissed');
-    if (dismissed === 'true') {
-      setIsDismissed(true);
-      setShowPrompt(false);
-    }
-  }, []);
-
   if (!isSupported || permission === 'denied' || !showPrompt) {
     return null;
   }
@@ -80,7 +63,7 @@ export default function PushNotificationPrompt() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
-          className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-50"
+          className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 md:left-auto md:right-[calc(1rem+env(safe-area-inset-right))] md:w-96"
         >
           <div className="bg-white rounded-xl shadow-2xl border p-4">
             <div className="flex items-start gap-3">

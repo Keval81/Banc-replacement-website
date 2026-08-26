@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PropertyCard from "@/components/PropertyCard";
+import { SectionHeader } from "@/components/SectionHeader";
 
 // Featured = the three highest-priced live for-sale listings from the
 // Expert Agent feed (via /api/properties). No mock fallback: until data
@@ -40,13 +41,8 @@ export default function FeaturedListings() {
 
   return (
     <section id="featured" className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 pb-16 sm:pb-20 pt-6 sm:pt-8 lg:px-10">
-        <div className="flex flex-col gap-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-banc-grey">Featured</p>
-          <h2 className="text-3xl font-semibold text-banc-dark sm:text-4xl">
-            Featured Properties
-          </h2>
-        </div>
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-20 lg:py-28 lg:px-10">
+        <SectionHeader number="02" label="Featured" title="Homes on the market now" />
 
         <motion.div
           initial="hidden"

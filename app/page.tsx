@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Hero from "@/app/sections/Hero";
 import PropertySearch from "@/app/sections/PropertySearch";
+import Lifestyle from "@/app/sections/Lifestyle";
 import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
@@ -11,18 +12,16 @@ import Testimonials from "@/app/sections/Testimonials";
 
 export const metadata: Metadata = {
   title: "Banc Property Group | Award-Winning Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire. Award-winning team, premium marketing, and expert valuations. Your property journey starts here.",
+  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire. Award-winning team, premium marketing, and expert valuations. Your property journey starts here.",
   keywords: [
     "estate agents cuffley",
     "property for sale hertfordshire",
-    "estate agents mayfair",
-    "luxury homes for sale",
     "property valuations",
     "banc property group",
   ],
   openGraph: {
     title: "Banc Property Group | Award-Winning Estate Agents",
-    description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire.",
+    description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
     type: "website",
     url: "https://bancproperty.com",
     images: [
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Banc Property Group | Award-Winning Estate Agents",
-    description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire.",
+    description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
   },
   alternates: {
     canonical: "https://bancproperty.com",
@@ -49,7 +48,7 @@ const homepageStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Banc Property Group | Award-Winning Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley, Mayfair, and Hertfordshire",
+  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire",
   url: "https://bancproperty.com",
   mainEntity: {
     "@type": "RealEstateAgent",
@@ -67,18 +66,20 @@ export default function Home() {
         }}
       />
       <div className="bg-white text-[#2C2A27]">
-        <Header />
+        <Header transparent />
         <main>
           <Hero />
           <PropertySearch />
+          <Lifestyle />
           <FeaturedListings />
-          {/* RecommendedProperties removed: renders "No Image / £0" empty
-              states until the AI feed has real data. */}
+          {/* RecommendedProperties removed from homepage: renders empty-state
+              cards ("No Image / £0") until the AI feed has real data — see
+              DESIGN.md "no empty-state cards on the public homepage". */}
           <Services />
           <Testimonials />
-          {/* SoldBanner removed: seeded mock sold prices/addresses presented
-              as fact — misrepresentation risk. Restore with real sold data
-              (now available in Supabase: status=under_offer/sold). */}
+          {/* SoldBanner removed: its sold prices/addresses are seeded mock
+              data presented as fact — misrepresentation risk on a live agency
+              site. Restore only with real sold records. */}
         </main>
         <Footer />
       </div>

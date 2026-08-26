@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Loader2, Calendar, Tag } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MessageCircle, X, Send, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
 
 interface Message {
@@ -35,7 +34,15 @@ const transition = {
   duration: 0.35,
 };
 
-export default function PropertyChatbot() {
+interface PropertyChatbotProps {
+  mobileContactControlPlacement?: "standard" | "above-brand-lockup";
+  showProactivePrompt?: boolean;
+}
+
+export default function PropertyChatbot({
+  mobileContactControlPlacement = "standard",
+  showProactivePrompt = true,
+}: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -67,10 +74,10 @@ export default function PropertyChatbot() {
 
   // Show prompt bubble after 8 seconds if chat hasn't been opened
   useEffect(() => {
-    if (promptDismissed) return;
-    const timer = setTimeout(() => setShowPrompt(true), 8000);
+    if (!showProactivePrompt || promptDismissed) return;
+    const timer = setTimeout(() => setShowPrompt(true), 3500);
     return () => clearTimeout(timer);
-  }, [promptDismissed]);
+  }, [promptDismissed, showProactivePrompt]);
 
   // Auto-hide prompt after 15 seconds
   useEffect(() => {
@@ -136,10 +143,16 @@ export default function PropertyChatbot() {
       {/* Floating Button + Prompt Bubble */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="fixed bottom-36 right-4 sm:bottom-6 sm:right-6 z-40 flex items-end gap-3">
+          <div
+            className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
+              mobileContactControlPlacement === "above-brand-lockup"
+                ? "bottom-40"
+                : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
+            }`}
+          >
             {/* Speech Bubble Prompt */}
             <AnimatePresence>
-              {showPrompt && (
+              {showProactivePrompt && showPrompt && (
                 <motion.div
                   initial={{ opacity: 0, x: 10, scale: 0.9 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -156,10 +169,10 @@ export default function PropertyChatbot() {
                     className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
                     <p className="text-sm font-medium text-banc-dark leading-snug">
-                      Need help finding a property?
+                      Talk to our chatbot about any of our current properties
                     </p>
                     <p className="text-xs text-banc-grey mt-1">
-                      Try our chat assistant →
+                      Ask about any home we&apos;re selling →
                     </p>
                   </button>
                   {/* Close button */}
@@ -205,7 +218,7 @@ export default function PropertyChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={transition}
-            className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 sm:w-[380px]"
+            className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:left-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:w-[380px]"
           >
             <div className="flex flex-col overflow-hidden rounded-[16px] border border-banc-grey/15 bg-white shadow-2xl max-h-[80dvh] sm:max-h-[520px]">
               {/* Header */}

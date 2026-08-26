@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
@@ -40,6 +40,7 @@ interface SiteProperty {
   propertyType: string;
   features: Record<string, boolean>;
   addedDate: string;
+  department: "sales";
 }
 
 const allProperties: SiteProperty[] = [];
@@ -157,6 +158,7 @@ function sortProperties(properties: typeof allProperties, sortBy?: SearchFilters
 type ViewMode = "grid" | "list" | "map";
 
 function SalesPropertiesPageContent() {
+  const reduceMotion = useReducedMotion();
   const { filters, setFilters, clearFilters, hasActiveFilters, isLoading } = useSearchFilters({
     debounceMs: 300,
   });
@@ -285,13 +287,16 @@ function SalesPropertiesPageContent() {
                     filteredProperties.map((property) => (
                       <motion.div
                         key={property.id}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                        whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
                         viewport={{ once: true, amount: 0.15 }}
-                        transition={{ duration: 0.4 }}
+                        transition={reduceMotion ? undefined : { duration: 0.4 }}
                         className={viewMode === "list" ? "w-full" : ""}
                       >
-                        <PropertyCard {...property} />
+                        <PropertyCard
+                          {...property}
+                          variant={viewMode === "list" ? "list" : "grid"}
+                        />
                       </motion.div>
                     ))
                   )}

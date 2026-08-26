@@ -4,10 +4,14 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, ChevronRight, Phone, User, Heart, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, User, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
+import { getLandingUi } from "@/lib/landing-ui";
 import { useSession, signOut } from "next-auth/react";
+
+const landingUi = getLandingUi("aker");
 
 const navItems = [
   { name: "Sales", href: "/sales" },
@@ -43,12 +47,7 @@ const mobileAdditionalLinks = [
   { title: "Become a Partner", href: "/become-partner" },
 ];
 
-function trackCallClick(source: string) {
-  // Analytics placeholder - implement with your analytics
-  console.log(`Call clicked from: ${source}`);
-}
-
-export default function Header() {
+export default function Header({ transparent = false }: { transparent?: boolean } = {}) {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -84,19 +83,40 @@ export default function Header() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-banc-dark-deep backdrop-blur-none">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
-          {/* Logo */}
-          <Link href="/" aria-label="Banc Property Group" className="flex items-center">
-            <Image
-              src="/banc-logo-blue.png"
-              alt="Banc Property Group"
-              width={200}
-              height={60}
-              className="h-8 w-auto object-contain lg:h-12"
-              priority
-            />
-          </Link>
+      <header
+        className={cn(
+          "safe-area-header fixed left-0 right-0 top-0 z-50",
+          transparent
+            ? "bg-transparent"
+            : "banc-dark-surface border-b border-white/10 bg-banc-dark-deep backdrop-blur-none"
+        )}
+      >
+        <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
+          {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
+          {transparent && !landingUi.showLandingHeaderLogo ? (
+            <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group social media">
+              {landingUi.mobileSocialActions.map((action) => (
+                <SocialIconLink
+                  key={action.brand}
+                  href={action.href}
+                  label={action.label}
+                  iconSrc={action.iconSrc}
+                  imageLoading={action.imageLoading}
+                />
+              ))}
+            </div>
+          ) : (
+            <Link href="/" aria-label="Banc Property Group" className="flex items-center">
+              <Image
+                src="/banc-logo-blue.png"
+                alt="Banc Property Group"
+                width={200}
+                height={60}
+                className="h-8 w-auto object-contain lg:h-12"
+                priority
+              />
+            </Link>
+          )}
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 lg:flex">
@@ -155,12 +175,12 @@ export default function Header() {
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
             {/* Phone */}
-            <a 
-              href="tel:01707877781" 
-              className="text-sm text-white/70 hover:text-banc-sky transition-colors"
-              onClick={() => trackCallClick("header_desktop")}
+            <a
+              href={landingUi.phoneAction.href}
+              aria-label={landingUi.phoneAction.label}
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
             >
-              01707 877781
+              <Phone className="h-5 w-5" aria-hidden="true" />
             </a>
             
             {/* Favorites */}
@@ -200,16 +220,16 @@ export default function Header() {
             )}
 
             {/* CTA */}
-            <Link href="/valuation">
-              <Button size="sm" className="bg-banc-sky text-white hover:bg-banc-sky-dark">
-                Valuation
+            <Link href={landingUi.valuationAction.href}>
+              <Button size="sm" className="bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
+                {landingUi.valuationAction.label}
               </Button>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white active:bg-white/10 lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white active:bg-white/10 lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
@@ -235,27 +255,50 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 z-50 w-[85%] max-w-[340px] bg-banc-dark-deep shadow-2xl lg:hidden"
+              className="banc-dark-surface safe-area-drawer fixed bottom-0 right-0 top-0 z-50 flex w-[85%] max-w-[340px] flex-col bg-banc-dark-deep shadow-2xl lg:hidden"
             >
               {/* Mobile Header */}
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
                 <span className="text-lg font-semibold text-white">Menu</span>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg text-white/70"
+                  aria-label="Close menu"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg text-white/70"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <div className="h-[calc(100%-60px)] overflow-y-auto px-4 pb-24">
+              <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-24">
+                <div className="my-4 flex items-center gap-2">
+                  <Link
+                    href={landingUi.valuationAction.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1"
+                  >
+                    <Button className="h-11 w-full bg-banc-sky text-sm text-banc-dark hover:bg-banc-sky-mid">
+                      {landingUi.valuationAction.label}
+                    </Button>
+                  </Link>
+                  <a
+                    href={landingUi.phoneAction.href}
+                    aria-label={landingUi.phoneAction.label}
+                    className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-banc-sky/40 text-banc-sky transition-colors duration-200 hover:border-banc-sky hover:bg-banc-sky/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  >
+                    <Phone className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </div>
+
                 {/* Mobile Auth */}
                 {isAuthenticated ? (
                   <div className="my-4 flex items-center gap-3">
                     {session.user?.image ? (
-                      <img
+                      <Image
                         src={session.user.image}
                         alt={session.user.name || "User"}
+                        width={40}
+                        height={40}
+                        unoptimized
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (
@@ -281,7 +324,7 @@ export default function Header() {
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setMobileOpen(false)} className="flex-1">
-                      <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark">
+                      <Button className="w-full bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
                         Register
                       </Button>
                     </Link>
@@ -358,23 +401,6 @@ export default function Header() {
                   ))}
                 </nav>
 
-                {/* Mobile CTAs */}
-                <div className="mt-6 space-y-3">
-                  <a
-                    href="tel:01707877781"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 py-3 text-white"
-                    onClick={() => trackCallClick("header_mobile_menu")}
-                  >
-                    <Phone className="h-4 w-4" />
-                    01707 877781
-                  </a>
-                  <Link href="/valuation" onClick={() => setMobileOpen(false)}>
-                    <Button className="w-full bg-banc-sky py-3 text-base text-white hover:bg-banc-sky-dark">
-                      Request Valuation
-                    </Button>
-                  </Link>
-                </div>
-
                 {/* Address */}
                 <div className="mt-6 border-t border-white/10 pt-6 text-center text-xs text-white/40">
                   <p>1 Station Road, Cuffley, EN6 4HU</p>
@@ -386,7 +412,8 @@ export default function Header() {
       </AnimatePresence>
 
       {/* Header Spacer */}
-      <div className="h-[56px] bg-banc-dark-deep lg:h-[72px]" />
+      {/* Spacer only when the header has a bar — transparent mode floats over the hero */}
+      {!transparent && <div className="safe-area-header-spacer bg-banc-dark-deep" />}
     </>
   );
 }

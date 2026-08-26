@@ -5,20 +5,18 @@ import { CookieProvider } from "@/hooks/useCookies";
 import { ComparisonProvider } from "@/app/hooks/usePropertyComparison";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { MobileBottomNav } from "@/components/mobile/MobileNav";
-import { FloatingWhatsApp } from "@/components/mobile/FloatingWhatsApp";
+import { MotionProvider } from "@/components/ui/MotionProvider";
+import { SiteOverlays } from "@/components/mobile/SiteOverlays";
 import { AuthProvider } from "@/components/AuthProvider";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Script from "next/script";
-import PropertyChatbot from "@/components/ai/PropertyChatbot";
-import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 // SoldBanner moved to homepage as a section
 
 const sourceSerif4 = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -60,6 +58,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  viewportFit: "cover",
   themeColor: "#F4F3F1",
   colorScheme: "light",
 };
@@ -72,50 +71,42 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${sourceSerif4.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
-        <ThemeProvider
-          defaultTheme="system"
-          enableSystem
-          attribute="class"
-          disableTransitionOnChange={false}
-        >
-          <ToastProvider position="bottom-center">
-            <CookieProvider>
-              <ComparisonProvider>
-                {/* Skip to content link for accessibility */}
-                <a
-                  href="#main-content"
-                  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1000] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg"
-                >
-                  Skip to main content
-                </a>
-                
-                <AuthProvider>
-                  <main id="main-content" className="min-h-screen">
-                    {children}
-                  </main>
-                </AuthProvider>
-                
-                {/* Mobile navigation */}
-                <MobileBottomNav />
-                
-                {/* Floating WhatsApp button - positioned bottom-left on mobile to avoid chatbot overlap */}
-                <FloatingWhatsApp position="bottom-left" />
-                
-                {/* AI Chatbot */}
-                <PropertyChatbot />
-                
-                {/* Push Notifications */}
-                <PushNotificationPrompt />
-                
-                {/* Social Proof Elements */}
-                <LiveReviewFeed />
-                
-                <CookieConsent />
-                <GoogleAnalytics />
-              </ComparisonProvider>
-            </CookieProvider>
-          </ToastProvider>
-        </ThemeProvider>
+        <MotionProvider>
+          <ThemeProvider
+            defaultTheme="system"
+            enableSystem
+            attribute="class"
+            disableTransitionOnChange={false}
+          >
+            <ToastProvider position="bottom-center">
+              <CookieProvider>
+                <ComparisonProvider>
+                  {/* Skip to content link for accessibility */}
+                  <a
+                    href="#main-content"
+                    className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1000] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg"
+                  >
+                    Skip to main content
+                  </a>
+
+                  <AuthProvider>
+                    <main id="main-content" className="min-h-screen">
+                      {children}
+                    </main>
+                  </AuthProvider>
+
+                  <SiteOverlays />
+
+                  {/* Social Proof Elements */}
+                  <LiveReviewFeed />
+
+                  <CookieConsent />
+                  <GoogleAnalytics />
+                </ComparisonProvider>
+              </CookieProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </MotionProvider>
         
         {/* Service Worker Registration */}
         <Script id="sw-register" strategy="afterInteractive">

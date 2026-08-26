@@ -1,6 +1,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { dbToCard, dbToDetail, deriveFeatureFlags } from "../property-view.ts";
+import {
+  buildPropertyLeadActions,
+  buildPropertyHref,
+  buildPropertyShareData,
+  dbToCard,
+  dbToDetail,
+  deriveFeatureFlags,
+  getCanonicalPropertyHref,
+  shareProperty,
+} from "../property-view.ts";
 import type { DbProperty } from "../supabase";
 
 const base: DbProperty = {
@@ -147,4 +156,151 @@ test("dbToDetail passes coordinates and epc through", () => {
   const bare = dbToDetail(base);
   assert.equal(bare.latitude, undefined);
   assert.equal(bare.epcRating, undefined);
+});
+
+test("builds department-aware property detail links", () => {
+  assert.equal(buildPropertyHref("sales", "BPGC 1479"), "/sales/properties/BPGC%201479");
+  assert.equal(
+    buildPropertyHref("lettings", "BPGC/1607"),
+    "/lettings/properties/BPGC%2F1607"
+  );
+});
+
+test("canonicalises a property opened under the wrong department prefix", () => {
+  assert.equal(getCanonicalPropertyHref("sales", "sales", "BPGC1479"), null);
+  assert.equal(getCanonicalPropertyHref("lettings", "lettings", "BPGC1607"), null);
+  assert.equal(
+    getCanonicalPropertyHref("sales", "lettings", "BPGC 1607"),
+    "/lettings/properties/BPGC%201607"
+  );
+  assert.equal(
+    getCanonicalPropertyHref("lettings", "sales", "BPGC/1479"),
+    "/sales/properties/BPGC%2F1479"
+  );
+});
+
+test("builds a concise share payload from the canonical property link", () => {
+  assert.deepEqual(
+    buildPropertyShareData({
+      department: "lettings",
+      id: "BPGC1607",
+      title: "Nursery Gardens",
+      address: "Cuffley, Hertfordshire",
+      price: "£5,000 pcm",
+      origin: "https://www.bancproperty.com/",
+    }),
+    {
+      title: "Nursery Gardens | Banc Property Group",
+      text: "Nursery Gardens — £5,000 pcm · Cuffley, Hertfordshire",
+      url: "https://www.bancproperty.com/lettings/properties/BPGC1607",
+    }
+  );
+});
+
+test("copies the canonical property link when native sharing is unavailable", async () => {
+  const copied: string[] = [];
+  const data = {
+    title: "Nursery Gardens | Banc Property Group",
+    text: "Nursery Gardens — £5,000 pcm · Cuffley, Hertfordshire",
+    url: "https://www.bancproperty.com/lettings/properties/BPGC1607",
+  };
+
+  const result = await shareProperty(data, {
+    copyText: async (value) => {
+      copied.push(value);
+    },
+  });
+
+  assert.equal(result, "copied");
+  assert.deepEqual(copied, [data.url]);
+});
+
+test("prefers native sharing when the browser supports it", async () => {
+  const shared: Array<{ title: string; text: string; url: string }> = [];
+  const copied: string[] = [];
+  const data = {
+    title: "Hanyards Lane | Banc Property Group",
+    text: "Hanyards Lane — £2,350,000 · Cuffley, Hertfordshire",
+    url: "https://www.bancproperty.com/sales/properties/BPGC1479",
+  };
+
+  const result = await shareProperty(data, {
+    nativeShare: async (value) => {
+      shared.push(value);
+    },
+    copyText: async (value) => {
+      copied.push(value);
+    },
+  });
+
+  assert.equal(result, "shared");
+  assert.deepEqual(shared, [data]);
+  assert.deepEqual(copied, []);
+});
+
+test("copies the link when native sharing fails for a non-cancellation reason", async () => {
+  const copied: string[] = [];
+  const data = {
+    title: "Hanyards Lane | Banc Property Group",
+    text: "Hanyards Lane — £2,350,000 · Cuffley, Hertfordshire",
+    url: "https://www.bancproperty.com/sales/properties/BPGC1479",
+  };
+
+  const result = await shareProperty(data, {
+    nativeShare: async () => {
+      throw new Error("Native share failed");
+    },
+    copyText: async (value) => {
+      copied.push(value);
+    },
+  });
+
+  assert.equal(result, "copied");
+  assert.deepEqual(copied, [data.url]);
+});
+
+test("builds department-appropriate lead actions with complete property context", () => {
+  const cases = [
+    {
+      department: "sales" as const,
+      id: "BPGC/1479",
+      label: "Sales",
+      canonicalUrl: "https://bancproperty.com/sales/properties/BPGC%2F1479",
+      teamLabel: "Call the sales team",
+    },
+    {
+      department: "lettings" as const,
+      id: "BPGC 1607",
+      label: "Lettings",
+      canonicalUrl: "https://bancproperty.com/lettings/properties/BPGC%201607",
+      teamLabel: "Call the lettings team",
+    },
+  ];
+
+  for (const item of cases) {
+    const actions = buildPropertyLeadActions(item.department, item.id);
+    const mailto = new URL(actions.primaryHref);
+
+    assert.equal(mailto.protocol, "mailto:");
+    assert.equal(mailto.pathname, "info@bancproperty.com");
+    assert.equal(
+      mailto.searchParams.get("subject"),
+      `Viewing request — ${item.label} — ${item.id}`
+    );
+    assert.equal(
+      mailto.searchParams.get("body"),
+      [
+        "Hello Banc Property Group,",
+        "",
+        `I would like to arrange a viewing for this ${item.department} property.`,
+        "",
+        `Department: ${item.label}`,
+        `Reference: ${item.id}`,
+        `Property: ${item.canonicalUrl}`,
+      ].join("\n")
+    );
+    assert.equal(actions.primaryLabel, "Request a viewing");
+    assert.equal(actions.secondaryHref, "tel:01707877781");
+    assert.equal(actions.secondaryLabel, item.teamLabel);
+  }
 });

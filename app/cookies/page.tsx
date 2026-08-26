@@ -164,7 +164,7 @@ export default function CookiePolicyPage() {
                 </p>
                 <ul className="mt-3 list-disc space-y-2 pl-6">
                   <li><strong className="text-[#1A1917]">Google Analytics:</strong> Used to analyse website traffic and usage patterns</li>
-                  <li><strong className="text-[#1A1917]">Google Maps:</strong> Used for embedding interactive maps on our contact page</li>
+                  <li><strong className="text-[#1A1917]">Google Maps:</strong> Used for interactive maps on our contact and property pages</li>
                   <li><strong className="text-[#1A1917]">Facebook/Meta:</strong> Used for advertising and social media integration</li>
                   <li><strong className="text-[#1A1917]">YouTube:</strong> Used for embedding video content</li>
                 </ul>
