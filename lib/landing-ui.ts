@@ -28,7 +28,7 @@ export type MobileContactControlPlacement =
 
 export type MobileWhatsappPanelPlacement =
   | "above-trigger"
-  | "left-of-trigger";
+  | "responsive-rail";
 
 interface HeroVideo {
   desktop: {
@@ -164,7 +164,7 @@ export function getLandingOverlayPolicy(
       ? "right-action-rail"
       : "standard",
     mobileWhatsappPanelPlacement: isLandingPage
-      ? "left-of-trigger"
+      ? "responsive-rail"
       : "above-trigger",
   };
 }

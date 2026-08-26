@@ -111,7 +111,7 @@ test("keeps automated overlays clear of the landing-page brand lockup", () => {
     showProactiveChatPrompt: false,
     showPushNotificationPrompt: false,
     mobileContactControlPlacement: "right-action-rail",
-    mobileWhatsappPanelPlacement: "left-of-trigger",
+    mobileWhatsappPanelPlacement: "responsive-rail",
   });
 });
 

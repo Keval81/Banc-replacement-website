@@ -94,20 +94,20 @@ export function FloatingWhatsApp({
             {isExpanded && (
               <motion.div
                 initial={
-                  panelPlacement === "left-of-trigger"
+                  panelPlacement === "responsive-rail"
                     ? { opacity: 0, scale: 0.9, x: 12 }
                     : { opacity: 0, scale: 0.8, y: 20 }
                 }
                 animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
                 exit={
-                  panelPlacement === "left-of-trigger"
+                  panelPlacement === "responsive-rail"
                     ? { opacity: 0, scale: 0.9, x: 12 }
                     : { opacity: 0, scale: 0.8, y: 20 }
                 }
                 className={cn(
                   "rounded-2xl rounded-br-none bg-white p-4 shadow-lg dark:bg-card",
-                  panelPlacement === "left-of-trigger"
-                    ? "absolute bottom-0 right-[calc(100%+0.75rem)] w-[min(12.5rem,calc(100vw-6.5rem))]"
+                  panelPlacement === "responsive-rail"
+                    ? "absolute bottom-0 right-[calc(100%+0.75rem)] w-[min(12.5rem,calc(100vw-6.5rem))] sm:left-[calc(100%+0.75rem)] sm:right-auto sm:rounded-bl-none sm:rounded-br-2xl"
                     : "mb-2 max-w-[200px]"
                 )}
               >
