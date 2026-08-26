@@ -4,8 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Facebook, Instagram, Phone, User, Heart, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, User, Heart, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
 import { getLandingUi } from "@/lib/landing-ui";
 import { useSession, signOut } from "next-auth/react";
@@ -94,22 +95,15 @@ export default function Header({ transparent = false }: { transparent?: boolean 
           {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
           {transparent && !landingUi.showLandingHeaderLogo ? (
             <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group social media">
-              {landingUi.mobileSocialActions.map((action) => {
-                const SocialIcon = action.brand === "facebook" ? Facebook : Instagram;
-
-                return (
-                  <a
-                    key={action.brand}
-                    href={action.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={action.label}
-                    className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors duration-200 hover:bg-white/10 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
-                  >
-                    <SocialIcon className="h-5 w-5" aria-hidden="true" />
-                  </a>
-                );
-              })}
+              {landingUi.mobileSocialActions.map((action) => (
+                <SocialIconLink
+                  key={action.brand}
+                  href={action.href}
+                  label={action.label}
+                  iconSrc={action.iconSrc}
+                  imageLoading={action.imageLoading}
+                />
+              ))}
             </div>
           ) : (
             <Link href="/" aria-label="Banc Property Group" className="flex items-center">

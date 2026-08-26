@@ -9,7 +9,7 @@ import { getLandingUi } from "@/lib/landing-ui";
 const landingUi = getLandingUi("aker");
 
 // The Cut — fast 11s golden-hour hero film loop for the Aker direction.
-const videos = ["/videos/hero-first-day.mp4"];
+const videos = [landingUi.heroVideo.desktop.src];
 
 interface Review {
   authorName: string;
@@ -157,7 +157,7 @@ export default function Hero() {
             poster="/videos/hero-cut-poster.jpg"
             aria-hidden="true"
           >
-            <source media="(max-width: 640px)" src="/videos/hero-first-day-mobile.mp4" />
+            <source media="(max-width: 640px)" src={landingUi.heroVideo.mobile.src} />
             <source src={videos[currentVideo]} />
           </video>
         </motion.div>
@@ -185,12 +185,16 @@ export default function Hero() {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="flex w-full max-w-sm flex-col gap-3 lg:items-end"
           >
-            <div className="inline-flex w-fit self-end rounded-full border border-white/30 bg-banc-dark-deep/30 p-1 backdrop-blur-sm sm:hidden">
+            <div className="grid w-full grid-cols-2 gap-3 sm:hidden">
               {landingUi.heroActions.map((action) => (
                 <Link
                   key={action.href}
                   href={action.href}
-                  className="flex min-h-11 cursor-pointer items-center rounded-full px-5 text-sm font-medium tracking-wide text-white transition-colors duration-200 hover:bg-white/10 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  className={
+                    action.tone === "primary"
+                      ? "flex min-h-12 cursor-pointer items-center justify-center rounded-full bg-banc-sky px-5 text-sm font-semibold tracking-wide text-banc-dark-deep shadow-[0_8px_24px_rgba(74,200,232,0.28)] transition-[background-color,box-shadow] duration-200 hover:bg-banc-sky-mid hover:shadow-[0_10px_28px_rgba(74,200,232,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
+                      : "flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-white/55 bg-banc-dark-deep/55 px-5 text-sm font-semibold tracking-wide text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-md transition-[background-color,border-color] duration-200 hover:border-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
+                  }
                 >
                   {action.label}
                 </Link>
@@ -216,13 +220,13 @@ export default function Hero() {
             <div className="hidden w-full gap-3 sm:flex">
               <Link
                 href="/sales/properties"
-                className="flex-1 rounded-full border border-white/25 px-5 py-2.5 text-center text-sm text-white transition-colors hover:border-white/60"
+                className="flex-1 rounded-full bg-banc-sky px-5 py-3 text-center text-sm font-semibold text-banc-dark-deep shadow-[0_8px_24px_rgba(74,200,232,0.22)] transition-colors hover:bg-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 Sales
               </Link>
               <Link
                 href="/lettings/properties"
-                className="flex-1 rounded-full border border-white/25 px-5 py-2.5 text-center text-sm text-white transition-colors hover:border-white/60"
+                className="flex-1 rounded-full border border-white/40 bg-white/5 px-5 py-3 text-center text-sm font-semibold text-white transition-colors hover:border-white/70 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
               >
                 Lettings
               </Link>
@@ -244,8 +248,11 @@ export default function Hero() {
                     <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                       {activeReview.authorName} &middot; 5.0 &#9733; ({totalReviews})
                     </p>
-                    <span className="flex items-center rounded-full bg-white px-2.5 py-1">
-                      <svg className="h-3.5 w-auto" viewBox="0 0 272 92" fill="none" aria-label="Google">
+                    <span
+                      className="flex items-center"
+                      style={{ background: landingUi.reviewLogoSurface }}
+                    >
+                      <svg className="h-4 w-auto" viewBox="0 0 272 92" fill="none" aria-label="Google">
                         <path d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#EA4335"/>
                         <path d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z" fill="#FBBC05"/>
                         <path d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z" fill="#4285F4"/>
