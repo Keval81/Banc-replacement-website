@@ -34,7 +34,15 @@ const transition = {
   duration: 0.35,
 };
 
-export default function PropertyChatbot() {
+interface PropertyChatbotProps {
+  mobileContactControlPlacement?: "standard" | "above-brand-lockup";
+  showProactivePrompt?: boolean;
+}
+
+export default function PropertyChatbot({
+  mobileContactControlPlacement = "standard",
+  showProactivePrompt = true,
+}: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -66,10 +74,10 @@ export default function PropertyChatbot() {
 
   // Show prompt bubble after 8 seconds if chat hasn't been opened
   useEffect(() => {
-    if (promptDismissed) return;
+    if (!showProactivePrompt || promptDismissed) return;
     const timer = setTimeout(() => setShowPrompt(true), 3500);
     return () => clearTimeout(timer);
-  }, [promptDismissed]);
+  }, [promptDismissed, showProactivePrompt]);
 
   // Auto-hide prompt after 15 seconds
   useEffect(() => {
@@ -135,10 +143,16 @@ export default function PropertyChatbot() {
       {/* Floating Button + Prompt Bubble */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="fixed bottom-[calc(9rem+env(safe-area-inset-bottom))] right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))]">
+          <div
+            className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
+              mobileContactControlPlacement === "above-brand-lockup"
+                ? "bottom-40"
+                : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
+            }`}
+          >
             {/* Speech Bubble Prompt */}
             <AnimatePresence>
-              {showPrompt && (
+              {showProactivePrompt && showPrompt && (
                 <motion.div
                   initial={{ opacity: 0, x: 10, scale: 0.9 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}

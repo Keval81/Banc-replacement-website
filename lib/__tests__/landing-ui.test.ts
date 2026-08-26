@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { getLandingUi } from "../landing-ui.ts";
+import { getLandingOverlayPolicy, getLandingUi } from "../landing-ui.ts";
 
 test("keeps both landing variants focused on sales and lettings", () => {
   for (const variant of ["classic", "aker"] as const) {
@@ -77,4 +77,20 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
     assert.deepEqual(ui.showGoogleReview, { mobile: false, desktop: true });
     assert.equal(ui.showMobileBottomNavigation, false);
   }
+});
+
+test("keeps automated overlays clear of the landing-page brand lockup", () => {
+  assert.deepEqual(getLandingOverlayPolicy("/"), {
+    showMobileBottomNavigation: false,
+    showProactiveChatPrompt: false,
+    mobileContactControlPlacement: "above-brand-lockup",
+  });
+});
+
+test("keeps mobile navigation and proactive chat available on regular pages", () => {
+  assert.deepEqual(getLandingOverlayPolicy("/sales/properties"), {
+    showMobileBottomNavigation: true,
+    showProactiveChatPrompt: true,
+    mobileContactControlPlacement: "standard",
+  });
 });

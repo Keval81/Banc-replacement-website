@@ -44,6 +44,12 @@ export interface LandingUi {
   showMobileBottomNavigation: boolean;
 }
 
+export interface LandingOverlayPolicy {
+  showMobileBottomNavigation: boolean;
+  showProactiveChatPrompt: boolean;
+  mobileContactControlPlacement: "standard" | "above-brand-lockup";
+}
+
 const sharedActions = {
   heroActions: [
     { label: "Sales", href: "/sales/properties", tone: "primary" },
@@ -108,4 +114,18 @@ const landingUiByVariant: Record<LandingVariant, LandingUi> = {
 
 export function getLandingUi(variant: LandingVariant): LandingUi {
   return landingUiByVariant[variant];
+}
+
+export function getLandingOverlayPolicy(
+  pathname: string,
+): LandingOverlayPolicy {
+  const isLandingPage = pathname === "/";
+
+  return {
+    showMobileBottomNavigation: !isLandingPage,
+    showProactiveChatPrompt: !isLandingPage,
+    mobileContactControlPlacement: isLandingPage
+      ? "above-brand-lockup"
+      : "standard",
+  };
 }
