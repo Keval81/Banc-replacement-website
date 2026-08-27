@@ -142,13 +142,45 @@ const TRANSACTION_HANDOFF =
 const HUMAN_HANDOFF =
   "You can speak with the Banc team by calling 01707 877781 or using the contact page.";
 
+const GENERIC_LOCATION_NOUNS = new Set([
+  "house",
+  "home",
+  "property",
+  "listing",
+  "area",
+  "place",
+  "neighborhood",
+  "neighbourhood",
+  "one",
+]);
+
+const GENERIC_LOCATION_MODIFIERS = new Set([
+  "this",
+  "that",
+  "the",
+  "a",
+  "an",
+  "my",
+  "our",
+  "your",
+  "its",
+  "local",
+  "surrounding",
+  "nearby",
+  "immediate",
+  "current",
+  "same",
+  "particular",
+]);
+
 function parseCount(
   message: string,
   subject: "bed" | "bath",
 ): { matched: boolean; value?: number } {
+  const numberWords = Object.keys(NUMBER_WORDS).join("|");
   const phrase = message.match(
     new RegExp(
-      `(?:^|[^\\w,.])([^\\s]+?)[-\\s]+(?:${subject}|${subject}room)s?\\b`,
+      `(?:^|[^\\w,.])([+-]?[\\d.,]+(?:\\s+[\\d.,]+)*(?:[a-z]+)?|${numberWords})[-\\s]+(?:${subject}|${subject}room)s?\\b`,
       "i",
     ),
   );
@@ -174,67 +206,145 @@ function parseCount(
   return { matched: true, value };
 }
 
+const PRICE_PREFIX_CUE = String.raw`(?:budget\s+(?:of\s+at\s+most|set\s+at|of|is)|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget)`;
+const PRICE_SUFFIX_CUE = String.raw`(?:max(?:imum)?|or\s+(?:less|under)|budget)`;
+const PRICE_UNIT_PATTERN = /^(?:k|m|thousand|million)$/i;
+const PRICE_NUMBER_PATTERN =
+  /^[+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)$/;
+
+interface PriceCandidate {
+  index: number;
+  end: number;
+  rawNumber: string;
+  rawUnit?: string;
+}
+
+function prefixPriceCandidates(message: string): PriceCandidate[] {
+  const candidates: PriceCandidate[] = [];
+  const cuePattern = new RegExp(String.raw`\b${PRICE_PREFIX_CUE}`, "gi");
+  for (const cue of message.matchAll(cuePattern)) {
+    if (cue.index === undefined) continue;
+    const cueEnd = cue.index + cue[0].length;
+    const afterCue = message.slice(cueEnd);
+    const separator = afterCue.match(/^\s*[:=\-]?\s*/)?.[0] ?? "";
+    const remainder = afterCue.slice(separator.length);
+    const amount = remainder.match(
+      /^(£)?\s*([+-]?[\d.,]+(?:\s+[\d.,]+)*)(?:\s*(k|m|thousand|million)\b)?/i,
+    );
+    if (amount === null) {
+      if (/^(?:£\s*|[+-]?[\d.,])/.test(remainder)) {
+        throw new RangeError("Price is outside the supported search range");
+      }
+      continue;
+    }
+    const amountStart = cueEnd + separator.length;
+    candidates.push({
+      index: cue.index,
+      end: amountStart + amount[0].length,
+      rawNumber: amount[2],
+      rawUnit: amount[3],
+    });
+  }
+  return candidates;
+}
+
+function suffixPriceCandidates(message: string): PriceCandidate[] {
+  const candidates: PriceCandidate[] = [];
+  const cuePattern = new RegExp(String.raw`\b${PRICE_SUFFIX_CUE}\b`, "gi");
+  for (const cue of message.matchAll(cuePattern)) {
+    if (cue.index === undefined) continue;
+    const beforeCue = message.slice(0, cue.index);
+    const amount = beforeCue.match(
+      /(?:^|[^\w,.])((?:£)?\s*([+-]?[\d.,]+(?:\s+[\d.,]+)*)(?:\s*([a-z]+))?)([\s,;:\-]*)$/i,
+    );
+    if (amount === null) {
+      if (/£\s*\S+(?:\s+\S+)?[\s,;:\-]*$/i.test(beforeCue)) {
+        throw new RangeError("Price is outside the supported search range");
+      }
+      continue;
+    }
+    const trailingSeparators = amount[4] ?? "";
+    candidates.push({
+      index: amount.index ?? cue.index,
+      end: cue.index - trailingSeparators.length,
+      rawNumber: amount[2],
+      rawUnit: amount[3],
+    });
+  }
+  return candidates;
+}
+
+function isCountCeilingTail(value: string): boolean {
+  return /^[\s,]*(?:(?:(?:and|or)\s+)?[a-z][a-z-]*(?:\s+|,\s*)){0,12}(?:bed|bedroom|bath|bathroom)s?\b/i.test(
+    value,
+  );
+}
+
+function normalizePriceNumber(
+  rawNumber: string,
+  end: number,
+): { number: string; end: number } {
+  const withoutTrailingPunctuation = rawNumber.slice(0, -1);
+  if (
+    /[,.]$/.test(rawNumber) &&
+    PRICE_NUMBER_PATTERN.test(withoutTrailingPunctuation)
+  ) {
+    return { number: withoutTrailingPunctuation, end: end - 1 };
+  }
+  return { number: rawNumber, end };
+}
+
+function hasMalformedPriceContinuation(value: string): boolean {
+  if (/^[\w]/.test(value)) return true;
+  if (/^[,.]\s*\d/.test(value)) return true;
+  return /^[,.](?!$|\s)/.test(value);
+}
+
 function parsePrice(message: string): { matched: boolean; value?: number } {
-  const number = String.raw`([+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+))`;
-  const unit = String.raw`(k|m|thousand|million)?`;
-  const prefixCue = String.raw`(?:budget\s+(?:of\s+at\s+most|set\s+at|of|is)|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget)`;
-  const patterns = [
-    new RegExp(
-      String.raw`\b${prefixCue}\s*[:=\-]?\s*£?\s*${number}\s*${unit}(?=$|[\s!?]|[,.](?:$|\s))`,
-      "i",
-    ),
-    new RegExp(
-      String.raw`£?\s*${number}\s*${unit}(?=$|[\s!?]|[,.](?:$|\s))[\s,;:\-]*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b`,
-      "i",
-    ),
-  ];
-  const match = patterns
-    .map((pattern) => message.match(pattern))
-    .find((candidate) => candidate?.[1] !== undefined);
-  if (
-    match?.index !== undefined &&
-    /^[\s,;:\-]*(?:[a-z][a-z-]*\s+){0,4}(?:bed|bedroom|bath|bathroom)s?\b/i.test(
-      message.slice(match.index + match[0].length),
-    )
-  ) {
-    return { matched: false };
-  }
-  if (
-    match?.index !== undefined &&
-    /^\s+(?:hundred|thousands?|millions?|billions?|trillions?)\b/i.test(
-      message.slice(match.index + match[0].length),
-    )
-  ) {
-    throw new RangeError("Price is outside the supported search range");
-  }
-  if (!match?.[1]) {
-    const invalidCeiling =
-      new RegExp(
-        String.raw`\b${prefixCue}\s*[:=\-]?\s*(?:£\s*\S+|[+-]?[\d.,]\S*)`,
-        "i",
-      ).test(message) ||
-      /£\s*\S+(?:\s+\S+)?[\s,;:\-]*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b/i.test(message);
-    if (invalidCeiling) {
+  const candidates = [
+    ...prefixPriceCandidates(message),
+    ...suffixPriceCandidates(message),
+  ].sort((left, right) => left.index - right.index || left.end - right.end);
+  let firstPrice: number | undefined;
+
+  for (const candidate of candidates) {
+    const normalized = normalizePriceNumber(candidate.rawNumber, candidate.end);
+    const unit = candidate.rawUnit?.toLowerCase();
+    const tail = message.slice(normalized.end);
+    const isCountCandidate =
+      (unit !== undefined && /^(?:bed|bedroom|bath|bathroom)s?$/.test(unit)) ||
+      isCountCeilingTail(tail);
+    if (isCountCandidate) continue;
+
+    if (
+      !PRICE_NUMBER_PATTERN.test(normalized.number) ||
+      (unit !== undefined && !PRICE_UNIT_PATTERN.test(unit)) ||
+      hasMalformedPriceContinuation(tail) ||
+      /^\s+(?:hundred|thousands?|millions?|billions?|trillions?)\b/i.test(tail)
+    ) {
       throw new RangeError("Price is outside the supported search range");
     }
-    return { matched: false };
+
+    const numeric = Number(normalized.number.replaceAll(",", ""));
+    const multiplier = unit === "m" || unit === "million"
+      ? 1_000_000
+      : unit === "k" || unit === "thousand"
+        ? 1_000
+        : 1;
+    const value = Math.round(numeric * multiplier);
+    if (
+      !Number.isSafeInteger(value) ||
+      value < 0 ||
+      value > MAX_PROPERTY_SEARCH_PRICE
+    ) {
+      throw new RangeError("Price is outside the supported search range");
+    }
+    firstPrice ??= value;
   }
-  const numeric = Number(match[1].replaceAll(",", ""));
-  const normalizedUnit = match[2]?.toLowerCase();
-  const multiplier = normalizedUnit === "m" || normalizedUnit === "million"
-    ? 1_000_000
-    : normalizedUnit === "k" || normalizedUnit === "thousand"
-      ? 1_000
-      : 1;
-  const value = Math.round(numeric * multiplier);
-  if (
-    !Number.isSafeInteger(value) ||
-    value < 0 ||
-    value > MAX_PROPERTY_SEARCH_PRICE
-  ) {
-    throw new RangeError("Price is outside the supported search range");
-  }
-  return { matched: true, value };
+
+  return firstPrice === undefined
+    ? { matched: false }
+    : { matched: true, value: firstPrice };
 }
 
 function parseLocation(message: string): string | undefined {
@@ -247,13 +357,24 @@ function parseLocation(message: string): string | undefined {
     .map((match) => match[1]?.trim())
     .filter((candidate): candidate is string => candidate !== undefined)
     .filter(
-      (candidate) =>
-        !/^(?:(?:this|that|the|a|my|our|your|its|local|surrounding)\s+)?(?:house|home|property|listing|area|place|neighbou?rhood|one)$|^(?:this|that|it|here|there)$/i.test(
-          candidate.replace(/\s+/g, " "),
-        ),
+      (candidate) => !isGenericLocationCandidate(candidate),
     )
     .at(-1);
   return location && location.length <= 120 ? location : undefined;
+}
+
+function isGenericLocationCandidate(candidate: string): boolean {
+  const normalized = candidate.toLowerCase().trim().replace(/\s+/g, " ");
+  if (/^(?:this|that|it|here|there)$/.test(normalized)) return true;
+
+  const tokens = normalized.split(" ");
+  const finalToken = tokens.at(-1);
+  if (finalToken === undefined || !GENERIC_LOCATION_NOUNS.has(finalToken)) {
+    return false;
+  }
+  return tokens.slice(0, -1).every((token) =>
+    GENERIC_LOCATION_MODIFIERS.has(token)
+  );
 }
 
 function parseDepartment(message: string): PropertyDepartment | "ambiguous" | undefined {

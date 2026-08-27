@@ -169,6 +169,8 @@ test("parses common maximum-budget phrases with suffixes and decimals", () => {
     ["buy with £500 million max", 500000000],
     ["buy under £500k.", 500000],
     ["buy under £500,000, please", 500000],
+    ["buy under £500k; with parking", 500000],
+    ["buy under £500k: ideally in Cuffley", 500000],
   ] as const) {
     assert.equal(parsePropertyChatPatch(message).maxPrice, expected, message);
   }
@@ -190,6 +192,29 @@ test("does not mistake bedroom and bathroom ceilings for a price budget", () => 
   assert.equal(
     parsePropertyChatPatch("buy at most 3 unusually large bedrooms").maxPrice,
     undefined,
+  );
+  assert.equal(
+    parsePropertyChatPatch("buy at most 3 large, double bedrooms").maxPrice,
+    undefined,
+  );
+  assert.equal(
+    parsePropertyChatPatch("buy at most 3 large, airy and double bedrooms").maxPrice,
+    undefined,
+  );
+});
+
+test("continues past count-shaped ceilings to a later real budget", () => {
+  assert.equal(
+    parsePropertyChatPatch(
+      "buy at most 3 large, airy and double bedrooms, under £500k",
+    ).maxPrice,
+    500000,
+  );
+  assert.equal(
+    parsePropertyChatPatch(
+      "buy no more than 2 modern bathrooms and with a budget of £1.25m",
+    ).maxPrice,
+    1250000,
   );
 });
 
@@ -464,6 +489,10 @@ test("treats generic and deictic property phrases as missing facts, not location
     "Is there parking near this place?",
     "Are there schools in the neighbourhood?",
     "Is there fibre broadband in that listing?",
+    "Are there schools in the local area?",
+    "Is there fibre broadband in this particular property?",
+    "Does it have a garden near our immediate neighbourhood?",
+    "Is there parking in that same listing?",
   ]) {
     const result = await handle({ message, history: [], context });
     assert.deepEqual(result, {
@@ -502,6 +531,12 @@ test("search intent in a missing-fact-shaped question wins over the listing hand
       location: "Cuffley",
       propertyTypes: ["house"],
       features: ["garden"],
+    }],
+    ["Does this house in Cuffley have parking?", {
+      department: "sales",
+      location: "Cuffley",
+      propertyTypes: ["house"],
+      features: ["parking"],
     }],
   ] as const) {
     const result = await handle({ message, history: [], context });
@@ -729,12 +764,19 @@ test("fails safely when stated count or price ceilings are invalid", async () =>
     "I want to buy a 1,000.5-bedroom house",
     "I want to buy a -3-bedroom house",
     "I want to buy a 2,147,483,648-bedroom house",
+    "I want to buy a 1, 000-bedroom house",
     "I want to buy a 3000000000-bathroom house",
     "I want to buy a 999999999999999999999-bathroom house",
+    "I want to buy a 1, 000-bathroom house",
+    "I want to buy a 2,147,483,648-bathroom house",
     "I want to buy with a budget of £999999999999999999999m",
     "I want to buy for less than £5,,00k",
     "I want to buy for under £500 trillions",
     "I want to buy with a budget is £5,,00 thousand",
+    "I want to buy under £500, 000",
+    "I want to buy under £500, 000k",
+    "I want to buy under £500k but below £5,,00k",
+    "I want to buy below £5,,00k but under £500k",
   ]) {
     const result = await handle({ message, history: [] });
     assert.equal(result.action, "contact_team", message);
