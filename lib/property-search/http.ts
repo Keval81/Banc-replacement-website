@@ -14,6 +14,7 @@ const INVALID_FILTERS_RESPONSE = {
 const UNAVAILABLE_RESPONSE = {
   error: "Live listings are temporarily unavailable. Please try again shortly.",
 };
+const SUCCESS_CACHE_CONTROL = "s-maxage=300, stale-while-revalidate=600";
 
 function parseDepartment(url: URL): PropertyDepartment | null {
   const departments = url.searchParams.getAll("department");
@@ -21,6 +22,14 @@ function parseDepartment(url: URL): PropertyDepartment | null {
   return departments[0] === "sales" || departments[0] === "lettings"
     ? departments[0]
     : null;
+}
+
+export function applyPropertySearchCachePolicy(response: Response): Response {
+  response.headers.set(
+    "Cache-Control",
+    response.status === 200 ? SUCCESS_CACHE_CONTROL : "no-store",
+  );
+  return response;
 }
 
 export async function handlePropertySearchRequest(

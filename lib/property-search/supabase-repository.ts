@@ -61,6 +61,34 @@ function getConsistentTotal(rows: SearchRpcRow[]): number {
   return total;
 }
 
+function validatePageShape(
+  rpcRows: SearchRpcRow[],
+  total: number,
+  offset: number,
+  pageSize: number,
+): DbProperty[] {
+  const expectedPropertyCount = Math.min(
+    pageSize,
+    Math.max(total - offset, 0),
+  );
+
+  if (expectedPropertyCount === 0) {
+    if (rpcRows.length !== 1 || rpcRows[0].property !== null) {
+      throw new Error("Property search returned an invalid result");
+    }
+    return [];
+  }
+
+  if (
+    rpcRows.length !== expectedPropertyCount ||
+    rpcRows.some((row) => row.property === null)
+  ) {
+    throw new Error("Property search returned an invalid result");
+  }
+
+  return rpcRows.map((row) => row.property as DbProperty);
+}
+
 export class SupabasePropertySearchRepository
   implements PropertySearchRepository
 {
@@ -109,15 +137,7 @@ export class SupabasePropertySearchRepository
 
     const rpcRows = parseSearchRows(data);
     const total = getConsistentTotal(rpcRows);
-    const rows = rpcRows.flatMap((row) =>
-      row.property === null ? [] : [row.property],
-    );
-    if (
-      rows.length > query.pageSize ||
-      (rows.length > 0 && total < offset + rows.length)
-    ) {
-      throw new Error("Property search returned an invalid result");
-    }
+    const rows = validatePageShape(rpcRows, total, offset, query.pageSize);
     const freshnessQuery = await this.client
       .from("crm_sync_runs")
       .select("finished_at")

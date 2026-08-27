@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { handlePropertySearchRequest } from "../property-search/http.ts";
+import {
+  applyPropertySearchCachePolicy,
+  handlePropertySearchRequest,
+} from "../property-search/http.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
 import type { PropertySearchResult } from "../property-search/types.ts";
 
@@ -87,3 +91,23 @@ test("returns a fixed 503 response without leaking search exception details", as
   assert.doesNotMatch(JSON.stringify(body), /database|SQL|credentials/i);
 });
 
+test("caches only successful searches and prevents storage of every error response", () => {
+  for (const [status, expected] of [
+    [200, "s-maxage=300, stale-while-revalidate=600"],
+    [400, "no-store"],
+    [503, "no-store"],
+  ] as const) {
+    const response = applyPropertySearchCachePolicy(
+      Response.json({}, { status }),
+    );
+    assert.equal(response.headers.get("Cache-Control"), expected);
+  }
+});
+
+test("the public property route applies the shared cache policy", () => {
+  const routeSource = readFileSync(
+    new URL("../../app/api/properties/route.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(routeSource, /applyPropertySearchCachePolicy\(response\)/);
+});

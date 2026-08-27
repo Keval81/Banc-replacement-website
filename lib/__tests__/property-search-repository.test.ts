@@ -48,6 +48,13 @@ function fullQuery(): PropertySearchQuery {
   };
 }
 
+function propertyRows(count: number, total: number) {
+  return Array.from({ length: count }, (_, index) => ({
+    property: canonicalDbProperty(`EA-${index + 1}`),
+    total_count: total,
+  }));
+}
+
 interface FakeOptions {
   rpcData?: unknown;
   rpcError?: unknown;
@@ -107,9 +114,9 @@ function createFakeClient(options: FakeOptions = {}) {
 }
 
 test("maps every validated query field to the search RPC and reads dataset freshness", async () => {
-  const row = canonicalDbProperty("EA-1");
+  const rpcData = propertyRows(12, 27);
   const fake = createFakeClient({
-    rpcData: [{ property: row, total_count: "27" }],
+    rpcData: rpcData.map((row) => ({ ...row, total_count: "27" })),
   });
   const repository = new SupabasePropertySearchRepository(fake.client as never);
 
@@ -136,7 +143,7 @@ test("maps every validated query field to the search RPC and reads dataset fresh
     },
   ]);
   assert.deepEqual(result, {
-    rows: [row],
+    rows: rpcData.map((row) => row.property),
     total: 27,
     lastSyncedAt: "2026-08-27T09:00:00.000Z",
   });
@@ -152,7 +159,9 @@ test("maps every validated query field to the search RPC and reads dataset fresh
 });
 
 test("passes explicit nulls and zero offset for omitted optional filters", async () => {
-  const fake = createFakeClient();
+  const fake = createFakeClient({
+    rpcData: [{ property: null, total_count: 0 }],
+  });
   const repository = new SupabasePropertySearchRepository(fake.client as never);
 
   await repository.search(createDefaultPropertySearchQuery("lettings"));
@@ -195,9 +204,19 @@ test("preserves the total from an out-of-range total-only row while skipping nul
   });
   const repository = new SupabasePropertySearchRepository(fake.client as never);
 
-  const result = await repository.search(fullQuery());
+  const result = await repository.search({ ...fullQuery(), page: 4 });
 
   assert.deepEqual(result.rows, []);
+  assert.equal(result.total, 27);
+});
+
+test("accepts the exact partial final-page shape", async () => {
+  const fake = createFakeClient({ rpcData: propertyRows(3, 27) });
+  const repository = new SupabasePropertySearchRepository(fake.client as never);
+
+  const result = await repository.search({ ...fullQuery(), page: 3 });
+
+  assert.equal(result.rows.length, 3);
   assert.equal(result.total, 27);
 });
 
@@ -230,6 +249,67 @@ test("rejects invalid or inconsistent RPC totals instead of publishing misleadin
     await assert.rejects(
       repository.search(fullQuery()),
       new Error("Property search returned an invalid result"),
+    );
+  }
+});
+
+test("rejects every RPC page shape that contradicts the migration contract", async () => {
+  const inRangeQuery = fullQuery();
+  const invalidCases: Array<{ name: string; rpcData: unknown }> = [
+    { name: "empty data", rpcData: [] },
+    {
+      name: "total-only fallback on an in-range page",
+      rpcData: [{ property: null, total_count: 27 }],
+    },
+    { name: "short in-range page", rpcData: propertyRows(11, 27) },
+    { name: "long in-range page", rpcData: propertyRows(13, 27) },
+    {
+      name: "null mixed with property rows",
+      rpcData: [
+        ...propertyRows(11, 27),
+        { property: null, total_count: 27 },
+      ],
+    },
+  ];
+
+  for (const invalidCase of invalidCases) {
+    const fake = createFakeClient({ rpcData: invalidCase.rpcData });
+    const repository = new SupabasePropertySearchRepository(fake.client as never);
+    await assert.rejects(
+      repository.search(inRangeQuery),
+      new Error("Property search returned an invalid result"),
+      invalidCase.name,
+    );
+  }
+
+  for (const invalidCase of [
+    { name: "empty zero-match data", rpcData: [] },
+    {
+      name: "property row for zero matches",
+      rpcData: [{ property: canonicalDbProperty("EA-1"), total_count: 0 }],
+    },
+    {
+      name: "property row beyond the final page",
+      rpcData: [{ property: canonicalDbProperty("EA-1"), total_count: 27 }],
+    },
+    {
+      name: "multiple total-only fallback rows",
+      rpcData: [
+        { property: null, total_count: 27 },
+        { property: null, total_count: 27 },
+      ],
+    },
+  ]) {
+    const fake = createFakeClient({ rpcData: invalidCase.rpcData });
+    const repository = new SupabasePropertySearchRepository(fake.client as never);
+    const query =
+      invalidCase.name.includes("zero") || invalidCase.name.includes("matches")
+        ? { ...fullQuery(), page: 1 }
+        : { ...fullQuery(), page: 4 };
+    await assert.rejects(
+      repository.search(query),
+      new Error("Property search returned an invalid result"),
+      invalidCase.name,
     );
   }
 });
