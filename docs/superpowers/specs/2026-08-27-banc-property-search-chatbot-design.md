@@ -77,6 +77,8 @@ The properties table will gain neutral source metadata:
 - `source_updated_at`: the source timestamp when provided;
 - `last_synced_at`: the most recent successful observation of the record;
 - `is_active`: whether the record was present in the latest complete source feed;
+- `search_property_type`: the normalized public type used by filters;
+- `search_tenure`: the normalized tenure used by filters;
 - `search_features`: a normalized text array for verified filters such as `garden`, `parking`, `garage`, `balcony`, `chain_free`, and `new_home`.
 
 `(source_system, source_id)` is the durable unique key. The existing `expert_agent_id` remains temporarily for current property URLs and backwards compatibility. It can be retired only in a separately approved URL migration.
@@ -92,6 +94,7 @@ One validated `PropertySearchQuery` is shared by URL helpers, the property API, 
 - `minPrice` and `maxPrice`;
 - `minBedrooms` and `minBathrooms`;
 - `propertyTypes`: zero or more canonical types;
+- `tenures`: zero or more canonical tenure values;
 - `features`: zero or more verified normalized features;
 - `statuses`: optional public marketing statuses appropriate to the department;
 - `sort`: `default`, `price_asc`, or `price_desc`;
