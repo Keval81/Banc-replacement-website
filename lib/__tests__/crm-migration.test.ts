@@ -27,3 +27,21 @@ test("migration exposes a parameterized paginated search function", () => {
   assert.match(sql, /count\(\*\) over\(\)/i);
   assert.match(sql, /p\.is_active = true/i);
 });
+
+test("migration returns a total-only fallback row beyond the final page", () => {
+  assert.match(sql, /with filtered_properties as/i);
+  assert.match(sql, /with[\s\S]*count\(\*\) over\(\)/i);
+  assert.match(sql, /where not exists \(select 1 from paged_properties\)/i);
+  assert.match(sql, /select null::jsonb,[\s\S]*from filtered_properties/i);
+});
+
+test("migration uses the full source identity as a deterministic sort tie-breaker", () => {
+  assert.match(sql, /p\.source_system asc,[\s\S]*p\.source_id asc/i);
+});
+
+test("migration escapes literal LIKE metacharacters in both location searches", () => {
+  const escapedLocationPattern = /replace\(replace\(replace\(lower\(btrim\(p_location\)\)/gi;
+
+  assert.equal(sql.match(escapedLocationPattern)?.length, 2);
+  assert.match(sql, /like[\s\S]*escape '\\'/i);
+});

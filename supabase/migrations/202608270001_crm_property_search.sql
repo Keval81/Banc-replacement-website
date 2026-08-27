@@ -64,32 +64,47 @@ language sql
 stable
 security invoker
 as $function$
-  select to_jsonb(p), count(*) over()
-  from public.properties p
-  where p.is_active = true
-    and p.department = p_department
-    and (cardinality(p_statuses) = 0 or p.status = any(p_statuses))
-    and (p_min_price is null or p.price >= p_min_price)
-    and (p_max_price is null or p.price <= p_max_price)
-    and (p_min_bedrooms is null or p.bedrooms >= p_min_bedrooms)
-    and (p_min_bathrooms is null or p.bathrooms >= p_min_bathrooms)
-    and (cardinality(p_property_types) = 0 or p.search_property_type = any(p_property_types))
-    and (cardinality(p_tenures) = 0 or p.search_tenure = any(p_tenures))
-    and (cardinality(p_features) = 0 or p.search_features @> p_features)
-    and (
-      p_location is null
-      or btrim(p_location) = ''
-      or lower(concat_ws(' ', p.title, p.address)) like '%' || lower(btrim(p_location)) || '%'
-      or replace(lower(coalesce(p.postcode, '')), ' ', '') like
-         '%' || replace(lower(btrim(p_location)), ' ', '') || '%'
-    )
-  order by
-    case when p_sort = 'price_asc' then p.price end asc nulls last,
-    case when p_sort = 'price_desc' then p.price end desc nulls last,
-    coalesce(p.source_updated_at, p.created_at) desc,
-    p.source_id asc
-  limit least(greatest(p_limit, 1), 48)
-  offset greatest(p_offset, 0);
+  with filtered_properties as (
+    select p.*, count(*) over() as total_count
+    from public.properties p
+    where p.is_active = true
+      and p.department = p_department
+      and (cardinality(p_statuses) = 0 or p.status = any(p_statuses))
+      and (p_min_price is null or p.price >= p_min_price)
+      and (p_max_price is null or p.price <= p_max_price)
+      and (p_min_bedrooms is null or p.bedrooms >= p_min_bedrooms)
+      and (p_min_bathrooms is null or p.bathrooms >= p_min_bathrooms)
+      and (cardinality(p_property_types) = 0 or p.search_property_type = any(p_property_types))
+      and (cardinality(p_tenures) = 0 or p.search_tenure = any(p_tenures))
+      and (cardinality(p_features) = 0 or p.search_features @> p_features)
+      and (
+        p_location is null
+        or btrim(p_location) = ''
+        or lower(concat_ws(' ', p.title, p.address)) like '%' ||
+           replace(replace(replace(lower(btrim(p_location)), '\', '\\'), '%', '\%'), '_', '\_') || '%'
+           escape '\'
+        or replace(lower(coalesce(p.postcode, '')), ' ', '') like '%' ||
+           replace(replace(replace(replace(lower(btrim(p_location)), '\', '\\'), '%', '\%'), '_', '\_'), ' ', '') || '%'
+           escape '\'
+      )
+  ),
+  paged_properties as (
+    select to_jsonb(p) as property, p.total_count
+    from filtered_properties p
+    order by
+      case when p_sort = 'price_asc' then p.price end asc nulls last,
+      case when p_sort = 'price_desc' then p.price end desc nulls last,
+      coalesce(p.source_updated_at, p.created_at) desc,
+      p.source_system asc,
+      p.source_id asc
+    limit least(greatest(p_limit, 1), 48)
+    offset greatest(p_offset, 0)
+  )
+  select property, total_count
+  from paged_properties
+  union all
+  select null::jsonb, coalesce((select max(total_count) from filtered_properties), 0)
+  where not exists (select 1 from paged_properties);
 $function$;
 
 grant execute on function public.search_properties(
