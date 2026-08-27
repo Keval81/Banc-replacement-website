@@ -71,7 +71,21 @@ export async function fetchProperties(page = 1, pageSize = 50): Promise<ExpertAg
   return response.json();
 }
 
-function mapToDbProperty(ea: ExpertAgentProperty): Omit<DbProperty, "id" | "created_at"> {
+function mapToDbProperty(
+  ea: ExpertAgentProperty
+): Omit<
+  DbProperty,
+  | "id"
+  | "created_at"
+  | "source_system"
+  | "source_id"
+  | "source_updated_at"
+  | "last_synced_at"
+  | "is_active"
+  | "search_property_type"
+  | "search_tenure"
+  | "search_features"
+> {
   return {
     department: "sales",
     epc_image_url: "",

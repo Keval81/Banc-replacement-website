@@ -5,6 +5,12 @@
 //   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
 import { createClient } from "@supabase/supabase-js";
+import type {
+  CrmSourceSystem,
+  SearchFeature,
+  SearchPropertyType,
+  SearchTenure,
+} from "./crm/property-source";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
@@ -27,6 +33,14 @@ export const supabaseAdmin = supabaseUrl && supabaseServiceKey
 export interface DbProperty {
   id: string;
   expert_agent_id?: string;
+  source_system: CrmSourceSystem;
+  source_id: string;
+  source_updated_at?: string;
+  last_synced_at: string;
+  is_active: boolean;
+  search_property_type: SearchPropertyType;
+  search_tenure: SearchTenure;
+  search_features: SearchFeature[];
   title: string;
   address: string;
   postcode: string;

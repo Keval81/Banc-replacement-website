@@ -2,6 +2,11 @@
 // PropertyCard and the listing pages render.
 
 import type { DbProperty } from "./supabase";
+import {
+  deriveSearchFeatures,
+  normalizePropertyType,
+  type SearchPropertyType,
+} from "./crm/property-source.ts";
 
 export function buildPropertyHref(
   department: DbProperty["department"],
@@ -142,14 +147,8 @@ const TAG_BY_STATUS: Partial<Record<DbProperty["status"], string>> = {
 // Live feed type strings ("Upper Floor Flat Flat", "Detached", "Building
 // Plot") folded into the search filter's canonical ids. Order matters:
 // bungalow before house, flat before house.
-export function categorisePropertyType(raw: string): string {
-  const t = raw.toLowerCase();
-  if (/maisonette/.test(t)) return "maisonette";
-  if (/bungalow/.test(t)) return "bungalow";
-  if (/flat|apartment|studio/.test(t)) return "flat";
-  if (/plot|\bland\b/.test(t)) return "land";
-  if (/commercial|office|retail|shop|hotel/.test(t)) return "commercial";
-  return "house";
+export function categorisePropertyType(raw: string): SearchPropertyType {
+  return normalizePropertyType(raw);
 }
 
 export function dbToCard(p: DbProperty): PropertyCardData {
@@ -193,18 +192,18 @@ export interface FeatureFlags {
 }
 
 export function deriveFeatureFlags(features: string[], virtualTourUrl: string): FeatureFlags {
-  const text = features.join(" | ").toLowerCase();
+  const searchFeatures = deriveSearchFeatures(features, virtualTourUrl);
   return {
-    garden: /garden|outside space|patio|terrace/.test(text),
-    parking: /parking|driveway|off street|off-street/.test(text),
-    garage: /garage/.test(text),
-    conservatory: /conservator/.test(text),
-    fireplace: /fireplace|log burner|wood burner/.test(text),
-    periodFeatures: /period|character|listed/.test(text),
-    newBuild: /new build|newly built|new home/.test(text),
-    chainFree: /chain free|no chain|no onward chain/.test(text),
-    virtualTour: virtualTourUrl.trim() !== "",
-    videoTour: /video tour/.test(text),
+    garden: searchFeatures.includes("garden"),
+    parking: searchFeatures.includes("parking"),
+    garage: searchFeatures.includes("garage"),
+    conservatory: searchFeatures.includes("conservatory"),
+    fireplace: searchFeatures.includes("fireplace"),
+    periodFeatures: searchFeatures.includes("period_features"),
+    newBuild: searchFeatures.includes("new_home"),
+    chainFree: searchFeatures.includes("chain_free"),
+    virtualTour: searchFeatures.includes("virtual_tour"),
+    videoTour: searchFeatures.includes("video_tour"),
   };
 }
 

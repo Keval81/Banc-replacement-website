@@ -186,7 +186,20 @@ function epcRatingFromImage(url: string): string | undefined {
 
 export function toDbProperty(
   p: FeedProperty
-): Omit<DbProperty, "id" | "created_at" | "updated_at"> {
+): Omit<
+  DbProperty,
+  | "id"
+  | "created_at"
+  | "updated_at"
+  | "source_system"
+  | "source_id"
+  | "source_updated_at"
+  | "last_synced_at"
+  | "is_active"
+  | "search_property_type"
+  | "search_tenure"
+  | "search_features"
+> {
   const description = [p.mainAdvert, ...p.adverts].filter(Boolean).join("\n\n");
   const lettings = /lettings/i.test(p.department);
   const fallback: DbProperty["status"] = lettings ? "to_let" : "for_sale";
