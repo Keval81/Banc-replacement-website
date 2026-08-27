@@ -7,6 +7,27 @@ Actions definition exist on this branch. The database migration, repository
 secrets, workflow activation, and first write-enabled run remain external
 release steps. None of them was performed while creating this contract.
 
+## Local branch verification
+
+Verified on 2026-08-27 against branch
+`codex/expert-agent-search-chat-design`:
+
+- The complete Node test suite passed: 219 tests, 0 failures, 0 cancelled.
+- `npx --no-install tsc --noEmit` exited successfully.
+- `npm run build` exited successfully and generated all 88 static pages.
+- The full-repository `npm run lint` gate remains red with 116 errors and 213
+  warnings in legacy code outside this branch's changed-file set. Linting the
+  branch's current TypeScript changes produced 0 errors and 3 existing
+  `no-img-element` warnings. The repository-wide lint debt must still be
+  resolved or explicitly baselined before calling the release gate clean.
+
+No `.env.local` was present, so the FTP dry run was not attempted. The current
+`.env.example` also omits `EXPERT_AGENT_FTP_URL`, `EXPERT_AGENT_FTP_USER`, and
+`EXPERT_AGENT_FTP_PASS`; add those names before handing the dry-run setup to an
+operator. No migration, write-enabled sync, GitHub workflow dispatch, browser
+QA against live CRM data, or deployment was performed during local
+verification.
+
 ## Canonical data flow
 
 ```text
