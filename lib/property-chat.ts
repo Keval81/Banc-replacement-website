@@ -154,24 +154,27 @@ const GENERIC_LOCATION_NOUNS = new Set([
   "one",
 ]);
 
-const GENERIC_LOCATION_MODIFIERS = new Set([
-  "this",
-  "that",
-  "the",
-  "a",
-  "an",
-  "my",
-  "our",
-  "your",
-  "its",
-  "local",
-  "surrounding",
-  "nearby",
-  "immediate",
-  "current",
-  "same",
-  "particular",
-]);
+function parseCountValue(raw: string): number | undefined {
+  const normalized = raw.toLowerCase();
+  const wordValue = NUMBER_WORDS[normalized];
+  const numericShaped = /^[+-]?[\d.,]/.test(normalized);
+  if (wordValue === undefined && !numericShaped) return undefined;
+  if (
+    wordValue === undefined &&
+    !/^[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)$/.test(normalized)
+  ) {
+    throw new RangeError("Count is outside the supported search range");
+  }
+  const value = wordValue ?? Number(normalized.replaceAll(",", ""));
+  if (
+    !Number.isSafeInteger(value) ||
+    value < 0 ||
+    value > POSTGRES_SIGNED_INTEGER_MAX
+  ) {
+    throw new RangeError("Count is outside the supported search range");
+  }
+  return value;
+}
 
 function parseCount(
   message: string,
@@ -185,24 +188,8 @@ function parseCount(
     ),
   );
   if (!phrase?.[1]) return { matched: false };
-  const raw = phrase[1].toLowerCase();
-  const wordValue = NUMBER_WORDS[raw];
-  const numericShaped = /^[+-]?[\d.,]/.test(raw);
-  if (wordValue === undefined && !numericShaped) return { matched: false };
-  if (
-    wordValue === undefined &&
-    !/^[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)$/.test(raw)
-  ) {
-    throw new RangeError("Count is outside the supported search range");
-  }
-  const value = wordValue ?? Number(raw.replaceAll(",", ""));
-  if (
-    !Number.isSafeInteger(value) ||
-    value < 0 ||
-    value > POSTGRES_SIGNED_INTEGER_MAX
-  ) {
-    throw new RangeError("Count is outside the supported search range");
-  }
+  const value = parseCountValue(phrase[1]);
+  if (value === undefined) return { matched: false };
   return { matched: true, value };
 }
 
@@ -226,7 +213,7 @@ function prefixPriceCandidates(message: string): PriceCandidate[] {
     if (cue.index === undefined) continue;
     const cueEnd = cue.index + cue[0].length;
     const afterCue = message.slice(cueEnd);
-    const separator = afterCue.match(/^\s*[:=\-]?\s*/)?.[0] ?? "";
+    const separator = afterCue.match(/^\s*(?:[:=]\s*|-\s+)?/)?.[0] ?? "";
     const remainder = afterCue.slice(separator.length);
     const amount = remainder.match(
       /^(£)?\s*([+-]?[\d.,]+(?:\s+[\d.,]+)*)(?:\s*(k|m|thousand|million)\b)?/i,
@@ -314,7 +301,10 @@ function parsePrice(message: string): { matched: boolean; value?: number } {
     const isCountCandidate =
       (unit !== undefined && /^(?:bed|bedroom|bath|bathroom)s?$/.test(unit)) ||
       isCountCeilingTail(tail);
-    if (isCountCandidate) continue;
+    if (isCountCandidate) {
+      parseCountValue(normalized.number);
+      continue;
+    }
 
     if (
       !PRICE_NUMBER_PATTERN.test(normalized.number) ||
@@ -372,9 +362,7 @@ function isGenericLocationCandidate(candidate: string): boolean {
   if (finalToken === undefined || !GENERIC_LOCATION_NOUNS.has(finalToken)) {
     return false;
   }
-  return tokens.slice(0, -1).every((token) =>
-    GENERIC_LOCATION_MODIFIERS.has(token)
-  );
+  return true;
 }
 
 function parseDepartment(message: string): PropertyDepartment | "ambiguous" | undefined {

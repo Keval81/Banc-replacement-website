@@ -206,6 +206,12 @@ test("does not mistake bedroom and bathroom ceilings for a price budget", () => 
 test("continues past count-shaped ceilings to a later real budget", () => {
   assert.equal(
     parsePropertyChatPatch(
+      "buy at most 3 spacious bedrooms, under £500k",
+    ).maxPrice,
+    500000,
+  );
+  assert.equal(
+    parsePropertyChatPatch(
       "buy at most 3 large, airy and double bedrooms, under £500k",
     ).maxPrice,
     500000,
@@ -505,6 +511,29 @@ test("treats generic and deictic property phrases as missing facts, not location
   assert.equal(searches, 0);
 });
 
+test("rejects a generic final location noun regardless of adjective wording", async () => {
+  let searches = 0;
+  const handle = createPropertyChatHandler(async () => {
+    searches += 1;
+    return searchResult([]);
+  });
+  const context = { query: validSalesQuery({ location: "Cuffley" }) };
+
+  for (const message of [
+    "Is there fibre broadband in this specific property?",
+    "Are there schools in the wider local area?",
+  ]) {
+    const result = await handle({ message, history: [], context });
+    assert.deepEqual(result, {
+      response:
+        "The listing doesn't specify that. The Banc team can confirm it for you.",
+      action: "contact_team",
+      context,
+    }, message);
+  }
+  assert.equal(searches, 0);
+});
+
 test("search intent in a missing-fact-shaped question wins over the listing handoff", async () => {
   const seen: PropertySearchQuery[] = [];
   const handle = createPropertyChatHandler(async (query) => {
@@ -781,6 +810,30 @@ test("fails safely when stated count or price ceilings are invalid", async () =>
     const result = await handle({ message, history: [] });
     assert.equal(result.action, "contact_team", message);
     assert.match(result.response, /temporarily unavailable/i, message);
+  }
+  assert.equal(searches, 0);
+});
+
+test("validates count-shaped price candidates before skipping them", async () => {
+  let searches = 0;
+  const handle = createPropertyChatHandler(async () => {
+    searches += 1;
+    return searchResult([]);
+  });
+
+  for (const message of [
+    "I want to buy at most 3.0 spacious bedrooms, under £500k",
+    "I want to buy at most 3,00 spacious bedrooms, under £500k",
+    "I want to buy at most 2,147,483,648 spacious bedrooms, under £500k",
+    "I want to buy at most -3 spacious bedrooms, under £500k",
+  ]) {
+    const result = await handle({ message, history: [] });
+    assert.equal(result.action, "contact_team", message);
+    assert.equal(
+      result.response,
+      "Live listings are temporarily unavailable. Please try again shortly or call Banc on 01707 877781.",
+      message,
+    );
   }
   assert.equal(searches, 0);
 });
