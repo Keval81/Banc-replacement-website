@@ -10,21 +10,21 @@ import { SectionHeader } from "@/components/SectionHeader";
 const testimonials = [
   {
     quote:
-      "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful throughout the entire process.",
-    name: "Dawn P.",
-    location: "Cuffley, Hertfordshire",
+      "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful. We achieved the asking price very quickly.",
+    name: "Dawn",
+    location: "Leefe Way, Cuffley",
   },
   {
     quote:
-      "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process. Would highly recommend.",
-    name: "Iwona K.",
-    location: "Potters Bar, Hertfordshire",
+      "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process. I am a happy, satisfied customer and can highly recommend Banc estate agents.",
+    name: "Iwona",
+    location: "Chestnut Close, Oakwood",
   },
   {
     quote:
-      "The entire team were extremely helpful finding a rental property. The process was made extremely smooth and I would definitely recommend them to anyone.",
-    name: "James M.",
-    location: "Hadley Wood, London",
+      "The entire team were extremely helpful finding a rental property. The process was made extremely smooth, paperwork was simple, clear and concise and I was able to move in very quickly.",
+    name: "James",
+    location: "Myles Court, Goffs Oak",
   },
 ];
 

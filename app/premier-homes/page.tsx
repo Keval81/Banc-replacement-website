@@ -114,7 +114,8 @@ export default function PremierHomesPage() {
             <div className="bg-[#1A1917] rounded-2xl p-8 text-white">
               <h3 className="text-xl font-semibold">Request a Premier Valuation</h3>
               <p className="mt-2 text-white/70">
-                Speak to our Premier Homes specialist for a confidential valuation.
+                Andrew Crump heads up Banc Premier Homes — your dedicated point of contact from
+                valuation right through to completion.
               </p>
               <Button className="mt-6 bg-[#D4AF37] hover:bg-[#7A5C00] text-white w-full">
                 Book Premier Valuation

@@ -238,6 +238,15 @@ export default function LandlordsGuidePage() {
                     <p className="text-xs text-[#8A8880]">Client Money</p>
                   </div>
                 </div>
+                <div className="flex items-center gap-3 px-5 py-3 bg-[#F4F3F1] rounded-xl">
+                  <Shield className="h-6 w-6 text-[#4AC8E8]" />
+                  <div>
+                    <p className="text-sm font-semibold text-[#1A1917]">
+                      The Property Ombudsman
+                    </p>
+                    <p className="text-xs text-[#8A8880]">Redress Scheme</p>
+                  </div>
+                </div>
               </div>
             </div>
 

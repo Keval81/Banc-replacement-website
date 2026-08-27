@@ -2,69 +2,19 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { areaGuides } from "@/lib/area-guides";
 
 export const metadata: Metadata = {
   title: "Area Guides | Banc Property Services",
-  description: "Explore our comprehensive area guides for Cuffley, Potters Bar, Cheshunt, Northaw, Brookmans Park, Goffs Oak, Newgate Street Village, Enfield, and Essendon. Discover the best of Hertfordshire and Essex living.",
+  description: "Explore our area guides for Cuffley, Potters Bar, Cheshunt, Northaw, Brookmans Park, Goffs Oak, Newgate Street Village, Enfield, and Essendon. Discover the best of Hertfordshire and North London living.",
 };
 
-// Premium area data with high-quality Unsplash images capturing countryside/suburban charm
-const areas = [
-  {
-    name: "Cuffley",
-    slug: "cuffley",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=85",
-    description: "Picturesque village living",
-  },
-  {
-    name: "Potters Bar",
-    slug: "potters-bar",
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=85",
-    description: "Commuter haven with charm",
-  },
-  {
-    name: "Cheshunt",
-    slug: "cheshunt",
-    image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1200&q=85",
-    description: "Riverside community",
-  },
-  {
-    name: "Northaw",
-    slug: "northaw",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=85",
-    description: "Rural retreat",
-  },
-  {
-    name: "Brookmans Park",
-    slug: "brookmans-park",
-    image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=85",
-    description: "Affluent suburban elegance",
-  },
-  {
-    name: "Goffs Oak",
-    slug: "goffs-oak",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85",
-    description: "Village community spirit",
-  },
-  {
-    name: "Newgate Street Village",
-    slug: "newgate-street-village",
-    image: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=1200&q=85",
-    description: "Historic rural setting",
-  },
-  {
-    name: "Enfield",
-    slug: "enfield",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85",
-    description: "Urban convenience meets green space",
-  },
-  {
-    name: "Essendon",
-    slug: "essendon",
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&q=85",
-    description: "Countryside tranquillity",
-  },
-];
+const areas = areaGuides.map(({ name, slug, image, teaser }) => ({
+  name,
+  slug,
+  image,
+  description: teaser,
+}));
 
 export default function AreaGuidesPage() {
   return (
@@ -120,7 +70,7 @@ export default function AreaGuidesPage() {
             
             {/* Description */}
             <p className="mt-8 text-base sm:text-lg text-white/50 max-w-2xl mx-auto leading-relaxed">
-              Discover the unique character of Hertfordshire and Essex through our comprehensive area guides. 
+              Discover the unique character of Hertfordshire and North London through our comprehensive area guides.
               From charming villages to thriving commuter towns, find your perfect location.
             </p>
           </div>
@@ -205,7 +155,7 @@ export default function AreaGuidesPage() {
                 Can't find what you're looking for?
               </h3>
               <p className="text-[var(--mid-grey)] mb-8 leading-relaxed">
-                We cover many more areas across Hertfordshire and Essex. 
+                We cover many more areas across Hertfordshire and North London.
                 Get in touch to discuss your specific location requirements.
               </p>
               <Link

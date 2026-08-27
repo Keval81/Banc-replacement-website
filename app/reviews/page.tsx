@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Star, Quote, MapPin } from "lucide-react";
+import { Quote, MapPin } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Reviews | Banc Property Services",
-  description: "Read what our clients say about Banc Property Group. 5-star rated estate agency service across Cuffley, Cheshunt, Goffs Oak and beyond.",
+  description: "Read what our clients say about Banc Property Group. Estate agency service across Cuffley, Cheshunt, Goffs Oak and beyond.",
 };
 
 interface Review {
@@ -75,7 +75,7 @@ const reviews: Review[] = [
     text: "You guys are brilliant, when you valued our property at a much higher price than other agents we were sceptical we could achieve that but it sold for exactly that. You really know what you're talking about and because of your expert knowledge we were able to move to a location we thought we couldn't afford."
   },
   {
-    title: "Thank you to all the staff",
+    title: "Thank you to all the staff at Banc Property Group",
     name: "Gerard and Thuzar",
     location: "Barrow Lane, Cheshunt",
     text: "Thank you to all the staff at Banc Property Group for making our house sale and purchase a pleasant experience. We have dealt with agents in the past but you and your team have done above and beyond in dealing with our sale and purchase. We would not hesitate in recommending Banc Property Group to friends and family."
@@ -146,42 +146,15 @@ export default function ReviewsPage() {
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
           <div className="text-center">
-            {/* Rating Stars */}
-            <div className="flex justify-center items-center gap-1.5 mb-8">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <Star 
-                  key={star} 
-                  className="h-7 w-7 fill-[#4AC8E8] text-[#4AC8E8] drop-shadow-[0_0_8px_rgba(29,191,221,0.4)]" 
-                />
-              ))}
-              <span className="ml-3 text-white/90 text-lg font-medium">5.0 Rating</span>
-            </div>
-            
             {/* Title */}
             <h1 className="text-5xl font-semibold text-white sm:text-6xl lg:text-7xl tracking-tight">
               Reviews
             </h1>
-            
+
             {/* Subtitle */}
             <p className="mt-6 text-xl text-white/70 max-w-2xl mx-auto font-light leading-relaxed">
-              Take a look at what our clients have to say
+              Take a look at what our clients have to say about us.
             </p>
-            
-            {/* Stats Row */}
-            <div className="mt-12 flex flex-wrap justify-center gap-6 sm:gap-12">
-              <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">5.0</p>
-                <p className="text-sm text-white/60 mt-1">Average Rating</p>
-              </div>
-              <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">50+</p>
-                <p className="text-sm text-white/60 mt-1">Google Reviews</p>
-              </div>
-              <div className="text-center px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
-                <p className="text-4xl lg:text-5xl font-bold text-[#4AC8E8]">100%</p>
-                <p className="text-sm text-white/60 mt-1">Would Recommend</p>
-              </div>
-            </div>
           </div>
         </div>
         
@@ -254,67 +227,29 @@ export default function ReviewsPage() {
         </div>
       </section>
 
-      {/* Google Reviews CTA Section */}
+      {/* Valuation CTA Section */}
       <section className="py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="relative overflow-hidden rounded-3xl bg-[#1A1917] p-12 lg:p-16">
             {/* Background Decoration */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-            
+
             <div className="relative text-center">
-              {/* Google Logo Placeholder */}
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white mb-6 shadow-lg">
-                <svg viewBox="0 0 24 24" className="w-8 h-8">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-              </div>
-              
               <h2 className="text-3xl lg:text-4xl font-semibold text-white">
-                See More Reviews on Google
+                Ready to Experience It Yourself?
               </h2>
               <p className="mt-4 text-lg text-white/70 max-w-xl mx-auto">
-                We're proud to be rated 5.0 stars from over 50 verified reviews on Google. Read more about what our clients say about their experience with us.
+                At Banc Property, we think very highly of our clients and we are delighted to say
+                they seem to feel the same about us. Let&apos;s talk about your move.
               </p>
-              
-              <a 
-                href="https://g.co/kgs/example" 
-                target="_blank" 
-                rel="noopener noreferrer"
+
+              <a
+                href="/valuation"
                 className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#4AC8E8] px-8 py-4 text-white font-semibold hover:bg-[#1A9BBF] transition-colors duration-200 shadow-lg shadow-[#4AC8E8]/25 hover:shadow-[#4AC8E8]/40"
               >
-                <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
-                  <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
-                </svg>
-                Read Google Reviews
+                Request a Valuation
               </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16 border-t border-[#E0DFDC]/50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="text-3xl font-bold text-[#4AC8E8]">7+</p>
-              <p className="text-sm text-[#8A8880] mt-1">Years Experience</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-[#4AC8E8]">500+</p>
-              <p className="text-sm text-[#8A8880] mt-1">Properties Sold</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-[#4AC8E8]">300+</p>
-              <p className="text-sm text-[#8A8880] mt-1">Happy Tenants</p>
-            </div>
-            <div>
-              <p className="text-3xl font-bold text-[#4AC8E8]">4</p>
-              <p className="text-sm text-[#8A8880] mt-1">Local Areas Covered</p>
             </div>
           </div>
         </div>

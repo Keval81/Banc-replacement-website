@@ -68,6 +68,7 @@ export default function ValuationPage() {
     timeframe: "",
     message: "",
   });
+  const [consent, setConsent] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -87,6 +88,10 @@ export default function ValuationPage() {
       case 3:
         if (!formData.firstName.trim() || !formData.email.trim() || !formData.phone.trim()) {
           setError("Please fill in your name, email, and phone number.");
+          return false;
+        }
+        if (!consent) {
+          setError("Please confirm you are happy for us to contact you via phone and email.");
           return false;
         }
         return true;
@@ -431,6 +436,22 @@ export default function ValuationPage() {
                         placeholder="Anything else we should know..."
                       />
                     </div>
+
+                    <label htmlFor="consent" className="flex items-start gap-3 text-sm text-banc-grey cursor-pointer">
+                      <input
+                        id="consent"
+                        type="checkbox"
+                        checked={consent}
+                        onChange={(e) => {
+                          setConsent(e.target.checked);
+                          setError(null);
+                        }}
+                        className="mt-0.5 h-4 w-4 rounded border-banc-grey/40 accent-[#4AC8E8]"
+                      />
+                      <span>
+                        Please tick this box if you are happy for us to contact you via phone and email. *
+                      </span>
+                    </label>
                   </div>
                 </motion.div>
               )}

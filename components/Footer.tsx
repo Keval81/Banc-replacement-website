@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Linkedin, Facebook, Phone, Mail, MapPin, Loader2, Check } from "lucide-react";
+import { Instagram, Youtube, Facebook, Phone, Mail, MapPin, Loader2, Check } from "lucide-react";
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,8 +16,9 @@ const footerLinks = {
     { name: "The Guild", href: "/the-guild" },
     { name: "Reviews", href: "/reviews" },
     { name: "Area Guides", href: "/area-guides" },
+    { name: "Community", href: "/community" },
+    { name: "Blog", href: "/blog" },
     { name: "Our Offices", href: "/offices" },
-    { name: "Careers", href: "/careers" },
   ],
   services: [
     { name: "Sell Your Home", href: "/sales/sellers-guide" },
@@ -26,8 +27,8 @@ const footerLinks = {
     { name: "Lettings", href: "/lettings" },
     { name: "Property Management", href: "/lettings/landlords-guide" },
     { name: "Premier Homes", href: "/premier-homes" },
-    { name: "New Homes", href: "/new-homes" },
-    { name: "Land & Development", href: "/land-development" },
+    { name: "Land & New Homes", href: "/land-new-homes" },
+    { name: "Become a Partner", href: "/become-partner" },
   ],
   resources: [
     { name: "Stamp Duty Calculator", href: "/tools/stamp-duty" },
@@ -37,14 +38,14 @@ const footerLinks = {
     { name: "Catchment Checker", href: "/tools/catchment-checker" },
     { name: "Buying Guide", href: "/sales/buyers-guide" },
     { name: "Selling Guide", href: "/sales/sellers-guide" },
-    { name: "Lettings Guide", href: "/lettings/landlords-guide" },
+    { name: "Lettings Fees", href: "/lettings/fees" },
+    { name: "Life Magazine", href: "https://pageturner.guildproperty.co.uk/bancp1" },
   ],
   legal: [
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Use", href: "/terms" },
     { name: "Cookie Policy", href: "/cookies" },
     { name: "Complaints Procedure", href: "/complaints" },
-    { name: "Modern Slavery Statement", href: "/modern-slavery" },
   ],
 };
 
@@ -83,7 +84,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-banc-grey mb-6 max-w-sm">
-              Award-winning estate agents serving Hertfordshire and North London. 
+              Independent estate agents serving Hertfordshire and North London.
               Exceptional service, exceptional results.
             </p>
             
@@ -106,7 +107,7 @@ export default function Footer() {
             {/* Social Links */}
             <div className="flex items-center gap-4 mt-6">
               <a
-                href="https://facebook.com/bancproperty"
+                href="https://www.facebook.com/BANCpropertygroup"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
@@ -124,13 +125,13 @@ export default function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href="https://linkedin.com/company/bancproperty"
+                href="https://www.youtube.com/channel/UCuNRAhFmoSsDzyL6sFpOGtQ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
-                aria-label="LinkedIn"
+                aria-label="YouTube"
               >
-                <Linkedin className="h-5 w-5" />
+                <Youtube className="h-5 w-5" />
               </a>
             </div>
           </div>

@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Meet The Team | Banc Property Group",
@@ -23,7 +22,7 @@ const team = [
       "Having lived in the local area and raising a young family I feel well placed to highlight all the wonderful activities and amenities the area has to offer.",
       "Outside of work, I have two beautiful children and a very patient better half who motivates me each day and keeps me grounded and busy! I'm a huge United and sports fan, albeit more armchair these days since my 'knee injury'! I love going to live music events, family days out and catching up with the latest sports news on Talk sport and enjoy good food followed by a good movie or better still the latest box sets."
     ],
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80",
+    initials: "NB",
     phone: "01707 877781",
     mobile: "07850 082541",
     email: "nitesh@bancproperty.com",
@@ -38,7 +37,7 @@ const team = [
       "In the winter I love nothing more than hitting the Italian Aosta region on my snow board and enjoy the odd glass of red wine, and in the summer I love to visit our family apartment in the sunny Mediterranean of Menorca. My family have been in Cuffley nearly 50 years, and I started my education at Cuffley JMI School where I have many happy memories.",
       "I also head up Banc Premier Homes being your dedicated point of contact from viewings right through to completion. I have vast experience in selling some of the finest homes locally, we can offer bespoke exclusive marketing to tailor each and every prestigious home."
     ],
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80",
+    initials: "AC",
     phone: "01707 877781",
     mobile: "07565 543153",
     email: "andrew@bancproperty.com",
@@ -52,7 +51,7 @@ const team = [
       "I have several years' experience in office administration and personal assistant roles and am delighted to have joined the BANC team 5 years ago. As the Office Manager my role is varied and fulfilling.",
       "I am involved in bringing properties to market, liaising with clients in those initial stages, and ensuring the smooth operation of the Cuffley office. I also work with our Managing Directors to support the drive for growth and development of Banc Property Group and strive for greatness."
     ],
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
+    initials: "VG",
     phone: "01707 877781",
     email: "vicki@bancproperty.com",
     location: "Cuffley Office"
@@ -67,7 +66,7 @@ const team = [
       "Weekends, I love to watch rugby with my partner as we are season ticket holders for Saracens Rugby Team.",
       "It's a pleasure working at Banc who are the best local Estate Agents based on performance and board presence."
     ],
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80",
+    initials: "KS",
     phone: "01707 877781",
     email: "kay@bancproperty.com",
     location: "Cuffley Office"
@@ -162,18 +161,18 @@ export default function TeamPage() {
                     {/* Decorative frame */}
                     <div className={`absolute -inset-4 border-2 border-[#4AC8E8]/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
                     
-                    {/* Image container */}
+                    {/* Monogram container — real headshots to follow from the client */}
                     <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-[#1A1917]">
-                      <Image 
-                        src={member.image} 
-                        alt={member.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        sizes="(max-width: 1024px) 100vw, 40vw"
-                      />
-                      {/* Gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#1A1917]/60 via-transparent to-transparent" />
-                      
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#4AC8E8]/10 rounded-full blur-3xl" />
+                        <span
+                          aria-hidden="true"
+                          className="relative text-8xl font-bold tracking-tight text-[#4AC8E8] transition-transform duration-700 group-hover:scale-105"
+                        >
+                          {member.initials}
+                        </span>
+                      </div>
+
                       {/* Role badge */}
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4AC8E8] text-white text-xs font-semibold uppercase tracking-wider">

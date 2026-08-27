@@ -11,48 +11,60 @@ interface TaxBand {
   rate: number;
 }
 
-// England & NI 2024/2025 SDLT bands
+// Rates verified against gov.uk / revenue.scot / gov.wales, 2026-08-27.
+// Band `min` is the exclusive lower boundary: tax applies to the portion above it.
+
+// England & NI SDLT bands (from 1 April 2025)
 const englandBands: TaxBand[] = [
-  { min: 0, max: 250000, rate: 0 },
-  { min: 250001, max: 925000, rate: 0.05 },
-  { min: 925001, max: 1500000, rate: 0.10 },
-  { min: 1500001, max: null, rate: 0.12 },
+  { min: 0, max: 125000, rate: 0 },
+  { min: 125000, max: 250000, rate: 0.02 },
+  { min: 250000, max: 925000, rate: 0.05 },
+  { min: 925000, max: 1500000, rate: 0.10 },
+  { min: 1500000, max: null, rate: 0.12 },
 ];
 
-// England First-time buyer bands
+// England first-time buyer bands (relief up to £500,000)
 const ftbBands: TaxBand[] = [
-  { min: 0, max: 425000, rate: 0 },
-  { min: 425001, max: 625000, rate: 0.05 },
-  { min: 625001, max: 925000, rate: 0.05 },
-  { min: 925001, max: 1500000, rate: 0.10 },
-  { min: 1500001, max: null, rate: 0.12 },
+  { min: 0, max: 300000, rate: 0 },
+  { min: 300000, max: 500000, rate: 0.05 },
 ];
 
-// Scotland LBTT bands 2024/2025
+// Scotland LBTT bands (from 1 April 2021)
 const scotlandBands: TaxBand[] = [
   { min: 0, max: 145000, rate: 0 },
-  { min: 145001, max: 250000, rate: 0.02 },
-  { min: 250001, max: 325000, rate: 0.05 },
-  { min: 325001, max: 750000, rate: 0.10 },
-  { min: 750001, max: null, rate: 0.12 },
+  { min: 145000, max: 250000, rate: 0.02 },
+  { min: 250000, max: 325000, rate: 0.05 },
+  { min: 325000, max: 750000, rate: 0.10 },
+  { min: 750000, max: null, rate: 0.12 },
 ];
 
-// Scotland first-time buyer bands
+// Scotland first-time buyer bands (nil rate band raised to £175,000)
 const scotlandFtbBands: TaxBand[] = [
   { min: 0, max: 175000, rate: 0 },
-  { min: 175001, max: 250000, rate: 0.02 },
-  { min: 250001, max: 325000, rate: 0.05 },
-  { min: 325001, max: 750000, rate: 0.10 },
-  { min: 750001, max: null, rate: 0.12 },
+  { min: 175000, max: 250000, rate: 0.02 },
+  { min: 250000, max: 325000, rate: 0.05 },
+  { min: 325000, max: 750000, rate: 0.10 },
+  { min: 750000, max: null, rate: 0.12 },
 ];
 
-// Wales LTT bands 2024/2025
+// Wales LTT main residential bands (from 10 October 2022)
 const walesBands: TaxBand[] = [
   { min: 0, max: 225000, rate: 0 },
-  { min: 225001, max: 400000, rate: 0.06 },
-  { min: 400001, max: 750000, rate: 0.075 },
-  { min: 750001, max: 1500000, rate: 0.10 },
-  { min: 1500001, max: null, rate: 0.12 },
+  { min: 225000, max: 400000, rate: 0.06 },
+  { min: 400000, max: 750000, rate: 0.075 },
+  { min: 750000, max: 1500000, rate: 0.10 },
+  { min: 1500000, max: null, rate: 0.12 },
+];
+
+// Wales LTT higher residential rates (from 11 December 2024) — its own band table,
+// not the main bands plus a flat surcharge
+const walesHigherBands: TaxBand[] = [
+  { min: 0, max: 180000, rate: 0.05 },
+  { min: 180000, max: 250000, rate: 0.085 },
+  { min: 250000, max: 400000, rate: 0.10 },
+  { min: 400000, max: 750000, rate: 0.125 },
+  { min: 750000, max: 1500000, rate: 0.15 },
+  { min: 1500000, max: null, rate: 0.17 },
 ];
 
 export interface BandBreakdown {
@@ -82,30 +94,25 @@ export function calculateStampDuty(
 
   // Select appropriate bands
   if (location === "england") {
-    if (buyerType === "first-time") {
-      // First-time buyer relief only applies up to £625k
-      if (price > 625000) {
-        bands = englandBands;
-      } else {
-        bands = ftbBands;
-      }
+    if (buyerType === "first-time" && price <= 500000) {
+      // First-time buyer relief is lost entirely above £500k
+      bands = ftbBands;
     } else {
       bands = englandBands;
     }
   } else if (location === "scotland") {
     bands = buyerType === "first-time" ? scotlandFtbBands : scotlandBands;
   } else {
-    bands = walesBands;
+    bands = buyerType === "additional-property" ? walesHigherBands : walesBands;
   }
 
-  // Additional property surcharge (+3% in England, different in Scotland/Wales)
+  // Additional property surcharge (England +5% per band; Scotland ADS 8% of price,
+  // applied per band which sums to the same; Wales uses its own higher-rate bands)
   if (buyerType === "additional-property") {
     if (location === "england") {
-      surcharge = 0.03;
+      surcharge = 0.05;
     } else if (location === "scotland") {
-      surcharge = 0.06; // ADS in Scotland
-    } else {
-      surcharge = 0.04; // Wales
+      surcharge = 0.08;
     }
   }
 

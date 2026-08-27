@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { areaGuides as areaGuideData } from "@/lib/area-guides";
 
 // Static pages with their priorities and change frequencies
 const staticPages = [
@@ -22,18 +23,12 @@ const staticPages = [
   { url: "/land-new-homes", priority: 0.7, changeFrequency: "weekly" as const },
   { url: "/the-guild", priority: 0.6, changeFrequency: "monthly" as const },
   { url: "/become-partner", priority: 0.6, changeFrequency: "monthly" as const },
+  { url: "/community", priority: 0.6, changeFrequency: "monthly" as const },
   { url: "/blog", priority: 0.8, changeFrequency: "daily" as const },
 ];
 
-// Area guides
-const areaGuides = [
-  { slug: "cuffley", name: "Cuffley" },
-  { slug: "mayfair", name: "Mayfair" },
-  { slug: "hertfordshire", name: "Hertfordshire" },
-  { slug: "broxbourne", name: "Broxbourne" },
-  { slug: "cheshunt", name: "Cheshunt" },
-  { slug: "goffs-oak", name: "Goffs Oak" },
-];
+// Area guides — real coverage areas from lib/area-guides
+const areaGuides = areaGuideData.map(({ slug, name }) => ({ slug, name }));
 
 // Blog categories
 const blogCategories = [

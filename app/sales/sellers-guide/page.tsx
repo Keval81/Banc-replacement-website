@@ -181,7 +181,7 @@ const guideSteps: GuideStep[] = [
     items: [
       {
         icon: Camera,
-        text: "Professional photography with full copyright transfer included",
+        text: "Expert professional photography and copywriting that brings your home to life",
       },
       {
         icon: Sparkles,
