@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { SEARCH_PROPERTY_TYPES } from "../crm/property-source.ts";
 import {
   propertySearchQuerySchema,
   serializePropertySearchQuery,
@@ -15,6 +17,42 @@ export type PropertySearchFetch = (
   input: RequestInfo | URL,
   init?: RequestInit,
 ) => Promise<Response>;
+
+const propertyCardSchema = z
+  .object({
+    id: z.string(),
+    title: z.string(),
+    address: z.string(),
+    price: z.string(),
+    priceNum: z.number().finite().nonnegative(),
+    tags: z.array(z.string()),
+    stats: z
+      .object({
+        beds: z.number().int().nonnegative(),
+        baths: z.number().int().nonnegative(),
+        sqft: z.number().finite().positive().optional(),
+        epc: z.string().optional(),
+      })
+      .strict(),
+    images: z.array(z.string()),
+    summary: z.string(),
+    propertyType: z.enum(SEARCH_PROPERTY_TYPES),
+    department: z.enum(["sales", "lettings"]),
+    status: z.enum(["for_sale", "under_offer", "to_let", "let_agreed"]),
+  })
+  .strict();
+
+const propertySearchResultSchema = z
+  .object({
+    query: propertySearchQuerySchema,
+    properties: z.array(propertyCardSchema),
+    total: z.number().int().nonnegative(),
+    page: z.number().int().positive(),
+    pageSize: z.number().int().positive(),
+    totalPages: z.number().int().nonnegative(),
+    lastSyncedAt: z.string().datetime({ offset: true }).nullable(),
+  })
+  .strict();
 
 export function getPropertySearchFilters(
   query: PropertySearchQuery,
@@ -62,19 +100,45 @@ export function buildPropertyApiHref(query: PropertySearchQuery): string {
   return appendQuery("/api/properties", ordered);
 }
 
-function isPropertySearchResult(value: unknown): value is PropertySearchResult {
-  if (typeof value !== "object" || value === null) return false;
-  const candidate = value as Partial<PropertySearchResult>;
-  return (
-    typeof candidate.query === "object" &&
-    candidate.query !== null &&
-    Array.isArray(candidate.properties) &&
-    Number.isSafeInteger(candidate.total) &&
-    Number.isSafeInteger(candidate.page) &&
-    Number.isSafeInteger(candidate.pageSize) &&
-    Number.isSafeInteger(candidate.totalPages) &&
-    (typeof candidate.lastSyncedAt === "string" || candidate.lastSyncedAt === null)
-  );
+function parsePropertySearchResult(
+  value: unknown,
+  requestedQuery: PropertySearchQuery,
+): PropertySearchResult {
+  const result = propertySearchResultSchema.parse(value);
+  if (buildPropertyApiHref(result.query) !== buildPropertyApiHref(requestedQuery)) {
+    throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
+  }
+  if (result.page !== result.query.page || result.pageSize !== result.query.pageSize) {
+    throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
+  }
+
+  const expectedTotalPages =
+    result.total === 0 ? 0 : Math.ceil(result.total / result.pageSize);
+  if (result.totalPages !== expectedTotalPages) {
+    throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
+  }
+
+  const expectedProperties =
+    result.page > result.totalPages
+      ? 0
+      : Math.min(
+          result.pageSize,
+          result.total - (result.page - 1) * result.pageSize,
+        );
+  if (result.properties.length !== expectedProperties) {
+    throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
+  }
+
+  for (const property of result.properties) {
+    if (
+      property.department !== result.query.department ||
+      !result.query.statuses.some((status) => status === property.status)
+    ) {
+      throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
+    }
+  }
+
+  return result;
 }
 
 function isAbortError(error: unknown): boolean {
@@ -96,12 +160,23 @@ export async function fetchPropertySearchResults(
     if (!response.ok) throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
 
     const result: unknown = await response.json();
-    if (!isPropertySearchResult(result)) {
-      throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
-    }
-    return result;
+    return parsePropertySearchResult(result, query);
   } catch (error) {
-    if (isAbortError(error)) throw error;
+    if (init.signal?.aborted && isAbortError(error)) throw error;
     throw new Error(PROPERTY_SEARCH_UNAVAILABLE_MESSAGE);
   }
+}
+
+export function getLastValidPropertyPage(
+  requestedQuery: PropertySearchQuery,
+  result: PropertySearchResult,
+): number | null {
+  if (
+    result.total > 0 &&
+    result.totalPages > 0 &&
+    requestedQuery.page > result.totalPages
+  ) {
+    return result.totalPages;
+  }
+  return null;
 }

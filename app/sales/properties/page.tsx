@@ -34,7 +34,9 @@ function SalesPropertiesPageContent() {
     debounceMs: 300,
   });
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
-  const { result, isLoading, error, retry } = usePropertySearchResults(query);
+  const { result, isLoading, error, retry } = usePropertySearchResults(query, {
+    onOutOfRangePage: setPage,
+  });
   const properties = result?.properties ?? [];
 
   return (
@@ -217,20 +219,20 @@ function SalesPropertiesPageContent() {
               type="button"
               variant="outline"
               className="min-h-11 border-[#5F5D57] text-[#1A1917] hover:border-[#0B6F89] focus-visible:ring-[#0B6F89]"
-              onClick={() => setPage(query.page - 1)}
-              disabled={isLoading || query.page <= 1}
+              onClick={() => setPage(result.page - 1)}
+              disabled={isLoading || result.page <= 1}
             >
               Previous
             </Button>
             <span className="px-2 text-sm font-medium text-[#5F5D57]" aria-live="polite">
-              Page {query.page} of {result.totalPages}
+              Page {result.page} of {result.totalPages}
             </span>
             <Button
               type="button"
               variant="outline"
               className="min-h-11 border-[#5F5D57] text-[#1A1917] hover:border-[#0B6F89] focus-visible:ring-[#0B6F89]"
-              onClick={() => setPage(query.page + 1)}
-              disabled={isLoading || query.page >= result.totalPages}
+              onClick={() => setPage(result.page + 1)}
+              disabled={isLoading || result.page >= result.totalPages}
             >
               Next
             </Button>

@@ -5,6 +5,7 @@ import * as React from "react";
 import {
   buildPropertyApiHref,
   fetchPropertySearchResults,
+  getLastValidPropertyPage,
   PROPERTY_SEARCH_UNAVAILABLE_MESSAGE,
   type PropertySearchFetch,
 } from "../lib/property-search/navigation.ts";
@@ -24,6 +25,7 @@ interface StartPropertySearchRequestOptions {
   fetcher: PropertySearchFetch;
   onResult: (result: PropertySearchResult) => void;
   onError: (message: string) => void;
+  onOutOfRangePage?: (page: number) => void;
 }
 
 export function startPropertySearchRequest({
@@ -31,6 +33,7 @@ export function startPropertySearchRequest({
   fetcher,
   onResult,
   onError,
+  onOutOfRangePage,
 }: StartPropertySearchRequestOptions): () => void {
   const controller = new AbortController();
 
@@ -38,7 +41,15 @@ export function startPropertySearchRequest({
     signal: controller.signal,
   })
     .then((result) => {
-      if (!controller.signal.aborted) onResult(result);
+      if (controller.signal.aborted) return;
+
+      const recoveryPage = getLastValidPropertyPage(query, result);
+      if (recoveryPage !== null && onOutOfRangePage) {
+        onOutOfRangePage(recoveryPage);
+        return;
+      }
+
+      onResult(result);
     })
     .catch((error: unknown) => {
       if (controller.signal.aborted) return;
@@ -52,7 +63,10 @@ export function startPropertySearchRequest({
   return () => controller.abort();
 }
 
-export function usePropertySearchResults(query: PropertySearchQuery): {
+export function usePropertySearchResults(
+  query: PropertySearchQuery,
+  options: { onOutOfRangePage?: (page: number) => void } = {},
+): {
   result: PropertySearchResult | null;
   isLoading: boolean;
   error: string | null;
@@ -64,6 +78,8 @@ export function usePropertySearchResults(query: PropertySearchQuery): {
     error: null,
   });
   const [retryVersion, setRetryVersion] = React.useState(0);
+  const onOutOfRangePageRef = React.useRef(options.onOutOfRangePage);
+  onOutOfRangePageRef.current = options.onOutOfRangePage;
   const serializedQuery = buildPropertyApiHref(query);
 
   React.useEffect(() => {
@@ -85,6 +101,9 @@ export function usePropertySearchResults(query: PropertySearchQuery): {
           isLoading: false,
           error,
         }));
+      },
+      onOutOfRangePage: (page) => {
+        onOutOfRangePageRef.current?.(page);
       },
     });
   // The canonical serialized query is the request identity; object references are not.

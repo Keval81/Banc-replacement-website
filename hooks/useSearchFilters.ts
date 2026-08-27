@@ -4,16 +4,17 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import {
-  applyPropertySearchFilterPatch,
-  buildPropertyResultsHref,
   getPropertySearchFilters,
 } from "../lib/property-search/navigation";
 import {
-  createDefaultPropertySearchQuery,
   hasActivePropertyFilters,
   parsePropertySearchParams,
-  propertySearchQuerySchema,
 } from "../lib/property-search/query";
+import {
+  createPropertySearchUrlController,
+  type PropertySearchUrlController,
+  type PropertySearchUrlSnapshot,
+} from "../lib/property-search/url-controller";
 import type {
   PropertyDepartment,
   PropertySearchFilters,
@@ -50,56 +51,57 @@ export function useSearchFilters({
       ),
     [department, searchParamsString],
   );
-  const queryHref = buildPropertyResultsHref(query);
-  const [draftQuery, setDraftQuery] = React.useState<PropertySearchQuery>(query);
+  const [snapshot, setSnapshot] = React.useState<PropertySearchUrlSnapshot>({
+    query,
+    draftQuery: query,
+  });
+  const [controller] = React.useState<PropertySearchUrlController>(() =>
+    createPropertySearchUrlController(query, {
+      replace: (href) => router.replace(href, { scroll: false }),
+      schedule: (callback, delay) => window.setTimeout(callback, delay),
+      cancel: (timer) => window.clearTimeout(timer),
+      debounceMs,
+      onChange: setSnapshot,
+    }),
+  );
 
   React.useEffect(() => {
-    setDraftQuery(query);
-  }, [query, queryHref]);
+    controller.acceptUrl(query);
+  }, [controller, query]);
 
-  const draftHref = buildPropertyResultsHref(draftQuery);
-  React.useEffect(() => {
-    if (draftHref === queryHref) return;
-
-    const timer = window.setTimeout(() => {
-      router.replace(draftHref, { scroll: false });
-    }, debounceMs);
-
-    return () => window.clearTimeout(timer);
-  }, [debounceMs, draftHref, queryHref, router]);
+  React.useEffect(
+    () => () => controller.dispose(),
+    [controller],
+  );
 
   const setFilters = React.useCallback(
     (patch: Partial<PropertySearchFilters>) => {
-      setDraftQuery((current) =>
-        applyPropertySearchFilterPatch(current, patch),
-      );
+      controller.patchFilters(patch);
     },
-    [],
+    [controller],
   );
 
   const clearFilters = React.useCallback(() => {
-    setDraftQuery(createDefaultPropertySearchQuery(department));
-  }, [department]);
+    controller.clearFilters();
+  }, [controller]);
 
   const submitSearch = React.useCallback(() => {
-    router.replace(buildPropertyResultsHref(draftQuery), { scroll: false });
-  }, [draftQuery, router]);
+    controller.submit();
+  }, [controller]);
 
   const setPage = React.useCallback(
     (page: number) => {
-      const pagedQuery = propertySearchQuerySchema.parse({ ...query, page });
-      setDraftQuery(pagedQuery);
-      router.replace(buildPropertyResultsHref(pagedQuery), { scroll: false });
+      controller.setPage(page);
     },
-    [query, router],
+    [controller],
   );
 
   return {
-    query,
-    filters: getPropertySearchFilters(draftQuery),
+    query: snapshot.query,
+    filters: getPropertySearchFilters(snapshot.draftQuery),
     setFilters,
     clearFilters,
-    hasActiveFilters: hasActivePropertyFilters(draftQuery),
+    hasActiveFilters: hasActivePropertyFilters(snapshot.draftQuery),
     setPage,
     submitSearch,
   };

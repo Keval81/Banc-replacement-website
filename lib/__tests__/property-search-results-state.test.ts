@@ -62,3 +62,34 @@ test("reports the fixed public error for an active failed request", async () => 
     "Live listings are temporarily unavailable. Please try again shortly.",
   ]);
 });
+
+test("recovers an out-of-range page before publishing it as an empty result", async () => {
+  for (const department of ["sales", "lettings"] as const) {
+    const query = {
+      ...createDefaultPropertySearchQuery(department),
+      page: 4,
+      pageSize: 12,
+    };
+    const result: PropertySearchResult = {
+      query,
+      properties: [],
+      total: 24,
+      page: 4,
+      pageSize: 12,
+      totalPages: 2,
+      lastSyncedAt: null,
+    };
+    const recoveredPages: number[] = [];
+
+    startPropertySearchRequest({
+      query,
+      fetcher: async () => Response.json(result),
+      onResult: () => assert.fail("fallback pages must not publish as empty"),
+      onError: (message) => assert.fail(message),
+      onOutOfRangePage: (page) => recoveredPages.push(page),
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    assert.deepEqual(recoveredPages, [2]);
+  }
+});

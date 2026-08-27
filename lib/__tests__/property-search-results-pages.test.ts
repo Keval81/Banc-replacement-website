@@ -12,12 +12,14 @@ for (const [department, relativePath] of pages) {
     const source = readFileSync(new URL(relativePath, import.meta.url), "utf8");
 
     assert.match(source, new RegExp(`department: "${department}"`));
-    assert.match(source, /usePropertySearchResults\(query\)/);
+    assert.match(source, /usePropertySearchResults\(query, \{/);
+    assert.match(source, /onOutOfRangePage: setPage/);
     assert.match(source, /result\?\.properties \?\? \[\]/);
     assert.match(source, /result\?\.total/);
     assert.match(source, /onSearch=\{submitSearch\}/);
-    assert.match(source, /setPage\(query\.page - 1\)/);
-    assert.match(source, /setPage\(query\.page \+ 1\)/);
+    assert.match(source, /setPage\(result\.page - 1\)/);
+    assert.match(source, /setPage\(result\.page \+ 1\)/);
+    assert.match(source, /Page \{result\.page\} of \{result\.totalPages\}/);
     assert.match(source, /Live listings are temporarily unavailable/);
     assert.match(source, /widening the location or removing one filter/i);
     assert.match(source, /<PropertyMap properties=\{properties\}/);
