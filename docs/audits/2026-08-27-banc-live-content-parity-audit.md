@@ -176,4 +176,12 @@ Still present but out of content-parity scope (flagged, unchanged): inert newsle
 
 `~/brain/PROJECTS.md` (2026-08-26) records `~/Projects/banc-replacement-website` @ `aker-restyle` as canonical and calls this clone stale. Today's brief names this repo (`~/Projects/banc-website`) and `codex/mobile-action-rail` — which contains the aker-restyle work via merge PR #2 plus newer mobile work, so the brief was followed. Registry updated this session. Local unpushed branch `codex/mobile-audit-20260228-1549` (5 commits) left untouched.
 
+## Handoff
+
+- **Branch:** `content-parity-2026-08-27`, commit `482984a`, pushed to origin.
+- **Preview deploy:** https://banc-website-8mmakqwmf-digital-inroads.vercel.app (SSO-protected; 23h share link minted at handoff).
+- **Verification:** 92/92 node tests, tsc clean, ESLint clean on changed files, production build green (98 pages incl. 9 area guides + /community), `git diff --check` clean.
+- **Visual sweep:** 62 CDP-driven checks across 23 pages at 375/390/768/1440px — zero horizontal overflow, zero broken images, zero missing alt after fixes (review-strip flex shrink, dead track-record hero URL).
+- **Smoke test on deployed preview:** 9 key pages 200 with correct titles, 5 legacy-URL redirects verified 308, live fee schedule / Mayfair details / why-us figures confirmed rendering, zero fabricated names or placeholder links on homepage.
+
 *Last updated: 2026-08-27*
