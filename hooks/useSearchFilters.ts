@@ -33,6 +33,10 @@ interface UseSearchFiltersReturn {
   clearFilters: () => void;
   hasActiveFilters: boolean;
   setPage: (page: number) => void;
+  recoverOutOfRangePage: (
+    requestedQuery: PropertySearchQuery,
+    page: number,
+  ) => void;
   submitSearch: () => void;
 }
 
@@ -96,6 +100,13 @@ export function useSearchFilters({
     [controller],
   );
 
+  const recoverOutOfRangePage = React.useCallback(
+    (requestedQuery: PropertySearchQuery, page: number) => {
+      controller.recoverOutOfRangePage(requestedQuery, page);
+    },
+    [controller],
+  );
+
   return {
     query: snapshot.query,
     filters: getPropertySearchFilters(snapshot.draftQuery),
@@ -103,6 +114,7 @@ export function useSearchFilters({
     clearFilters,
     hasActiveFilters: hasActivePropertyFilters(snapshot.draftQuery),
     setPage,
+    recoverOutOfRangePage,
     submitSearch,
   };
 }

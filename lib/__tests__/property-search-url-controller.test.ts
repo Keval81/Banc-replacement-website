@@ -3,13 +3,16 @@ import test from "node:test";
 
 import { createPropertySearchUrlController } from "../property-search/url-controller.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
+import type { PropertySearchQuery } from "../property-search/types.ts";
 
-function createHarness() {
+function createHarness(
+  initialQuery: PropertySearchQuery = createDefaultPropertySearchQuery("sales"),
+) {
   let nextTimer = 1;
   const timers = new Map<number, () => void>();
   const replacements: string[] = [];
   const controller = createPropertySearchUrlController(
-    createDefaultPropertySearchQuery("sales"),
+    initialQuery,
     {
       replace: (href) => replacements.push(href),
       schedule: (callback) => {
@@ -97,4 +100,57 @@ test("external back or forward navigation replaces the committed query and draft
     draftQuery: external,
   });
   assert.deepEqual(replacements, []);
+});
+
+test("stale page recovery leaves a newer filter draft and its debounce untouched", () => {
+  const requestedQuery = {
+    ...createDefaultPropertySearchQuery("sales"),
+    page: 4,
+  };
+  const { controller, replacements, runTimers } = createHarness(requestedQuery);
+
+  controller.patchFilters({ location: "Potters Bar" });
+  controller.recoverOutOfRangePage(requestedQuery, 2);
+
+  assert.deepEqual(replacements, []);
+  runTimers();
+  assert.deepEqual(replacements, ["/sales/properties?location=Potters+Bar"]);
+  assert.equal(controller.getSnapshot().draftQuery.page, 1);
+});
+
+test("unchanged page recovery navigates to the last valid page exactly once", () => {
+  const requestedQuery = {
+    ...createDefaultPropertySearchQuery("lettings"),
+    page: 4,
+  };
+  const { controller, replacements } = createHarness(requestedQuery);
+
+  controller.recoverOutOfRangePage(requestedQuery, 2);
+  controller.recoverOutOfRangePage(requestedQuery, 2);
+
+  assert.deepEqual(replacements, ["/lettings/properties?page=2"]);
+  assert.equal(controller.getSnapshot().draftQuery.page, 2);
+});
+
+test("acknowledging a coalesced replace clears it and every older destination", () => {
+  const { controller, replacements, runTimers } = createHarness();
+  const coalescedDestination = {
+    ...createDefaultPropertySearchQuery("sales"),
+    location: "Mayfair",
+  };
+
+  controller.patchFilters({ location: "Cuffley" });
+  runTimers();
+  controller.patchFilters({ location: "Mayfair" });
+  runTimers();
+  controller.acceptUrl(coalescedDestination);
+  controller.patchFilters({ location: "Cuffley" });
+  controller.submit();
+  runTimers();
+
+  assert.deepEqual(replacements, [
+    "/sales/properties?location=Cuffley",
+    "/sales/properties?location=Mayfair",
+    "/sales/properties?location=Cuffley",
+  ]);
 });

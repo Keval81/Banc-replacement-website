@@ -28,6 +28,7 @@ function SalesPropertiesPageContent() {
     clearFilters,
     hasActiveFilters,
     setPage,
+    recoverOutOfRangePage,
     submitSearch,
   } = useSearchFilters({
     department: "sales",
@@ -35,7 +36,7 @@ function SalesPropertiesPageContent() {
   });
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
   const { result, isLoading, error, retry } = usePropertySearchResults(query, {
-    onOutOfRangePage: setPage,
+    onOutOfRangePage: recoverOutOfRangePage,
   });
   const properties = result?.properties ?? [];
 

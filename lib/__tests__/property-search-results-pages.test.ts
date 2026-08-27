@@ -13,7 +13,7 @@ for (const [department, relativePath] of pages) {
 
     assert.match(source, new RegExp(`department: "${department}"`));
     assert.match(source, /usePropertySearchResults\(query, \{/);
-    assert.match(source, /onOutOfRangePage: setPage/);
+    assert.match(source, /onOutOfRangePage: recoverOutOfRangePage/);
     assert.match(source, /result\?\.properties \?\? \[\]/);
     assert.match(source, /result\?\.total/);
     assert.match(source, /onSearch=\{submitSearch\}/);

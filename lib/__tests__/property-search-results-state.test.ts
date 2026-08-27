@@ -79,17 +79,22 @@ test("recovers an out-of-range page before publishing it as an empty result", as
       totalPages: 2,
       lastSyncedAt: null,
     };
-    const recoveredPages: number[] = [];
+    const recoveries: Array<{
+      requestedQuery: PropertySearchResult["query"];
+      page: number;
+    }> = [];
 
     startPropertySearchRequest({
       query,
       fetcher: async () => Response.json(result),
       onResult: () => assert.fail("fallback pages must not publish as empty"),
       onError: (message) => assert.fail(message),
-      onOutOfRangePage: (page) => recoveredPages.push(page),
+      onOutOfRangePage: (requestedQuery, page) => {
+        recoveries.push({ requestedQuery, page });
+      },
     });
 
     await new Promise((resolve) => setTimeout(resolve, 0));
-    assert.deepEqual(recoveredPages, [2]);
+    assert.deepEqual(recoveries, [{ requestedQuery: query, page: 2 }]);
   }
 });

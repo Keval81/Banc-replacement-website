@@ -25,7 +25,10 @@ interface StartPropertySearchRequestOptions {
   fetcher: PropertySearchFetch;
   onResult: (result: PropertySearchResult) => void;
   onError: (message: string) => void;
-  onOutOfRangePage?: (page: number) => void;
+  onOutOfRangePage?: (
+    requestedQuery: PropertySearchQuery,
+    page: number,
+  ) => void;
 }
 
 export function startPropertySearchRequest({
@@ -45,7 +48,7 @@ export function startPropertySearchRequest({
 
       const recoveryPage = getLastValidPropertyPage(query, result);
       if (recoveryPage !== null && onOutOfRangePage) {
-        onOutOfRangePage(recoveryPage);
+        onOutOfRangePage(query, recoveryPage);
         return;
       }
 
@@ -65,7 +68,12 @@ export function startPropertySearchRequest({
 
 export function usePropertySearchResults(
   query: PropertySearchQuery,
-  options: { onOutOfRangePage?: (page: number) => void } = {},
+  options: {
+    onOutOfRangePage?: (
+      requestedQuery: PropertySearchQuery,
+      page: number,
+    ) => void;
+  } = {},
 ): {
   result: PropertySearchResult | null;
   isLoading: boolean;
@@ -102,8 +110,8 @@ export function usePropertySearchResults(
           error,
         }));
       },
-      onOutOfRangePage: (page) => {
-        onOutOfRangePageRef.current?.(page);
+      onOutOfRangePage: (requestedQuery, page) => {
+        onOutOfRangePageRef.current?.(requestedQuery, page);
       },
     });
   // The canonical serialized query is the request identity; object references are not.

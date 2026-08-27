@@ -30,6 +30,10 @@ export interface PropertySearchUrlController {
   clearFilters(): void;
   submit(): void;
   setPage(page: number): void;
+  recoverOutOfRangePage(
+    requestedQuery: PropertySearchQuery,
+    page: number,
+  ): void;
   acceptUrl(query: PropertySearchQuery): void;
   dispose(): void;
 }
@@ -110,6 +114,23 @@ export function createPropertySearchUrlController<TTimer>(
       notify();
       navigate(draftQuery);
     },
+    recoverOutOfRangePage: (requestedQuery, page) => {
+      const requestedHref = buildPropertyResultsHref(requestedQuery);
+      if (
+        buildPropertyResultsHref(snapshot.query) !== requestedHref ||
+        buildPropertyResultsHref(snapshot.draftQuery) !== requestedHref
+      ) {
+        return;
+      }
+
+      const draftQuery = propertySearchQuerySchema.parse({
+        ...requestedQuery,
+        page,
+      });
+      snapshot = { ...snapshot, draftQuery };
+      notify();
+      navigate(draftQuery);
+    },
     acceptUrl: (query) => {
       const href = buildPropertyResultsHref(query);
       const selfAuthoredIndex = selfAuthoredHrefs.indexOf(href);
@@ -121,7 +142,7 @@ export function createPropertySearchUrlController<TTimer>(
         return;
       }
 
-      selfAuthoredHrefs.splice(selfAuthoredIndex, 1);
+      selfAuthoredHrefs.splice(0, selfAuthoredIndex + 1);
       snapshot = {
         query,
         draftQuery:
