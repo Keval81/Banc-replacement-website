@@ -45,13 +45,13 @@ export default function ActiveFilters({ department, filters, onFilterChange, onC
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2" aria-live="polite">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#4AC8E8]/10"><SlidersHorizontal className="h-4 w-4 text-[#4AC8E8]" /></span>
-          {isLoading ? <span className="text-[#8A8880]">Loading properties…</span> : <span><strong className="text-[#1A1917]">{(resultCount ?? 0).toLocaleString()}</strong><span className="text-[#8A8880]"> propert{resultCount === 1 ? "y" : "ies"} found</span></span>}
+          {isLoading ? <span className="text-[#5F5D57]">Loading properties…</span> : <span><strong className="text-[#1A1917]">{(resultCount ?? 0).toLocaleString()}</strong><span className="text-[#5F5D57]"> propert{resultCount === 1 ? "y" : "ies"} found</span></span>}
         </div>
         {chips.length > 0 && (
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             {chips.slice(0, 5).map((chip) => <button key={chip.id} type="button" onClick={chip.remove} aria-label={`Remove ${chip.label} filter`} className="inline-flex min-h-11 max-w-full items-center gap-1.5 rounded-full border border-[#4AC8E8]/20 bg-[#4AC8E8]/10 px-3 text-sm font-medium text-[#4AC8E8] transition-colors duration-200 hover:bg-[#4AC8E8]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4AC8E8] focus-visible:ring-offset-1"><span className="truncate">{chip.label}</span><X className="h-3.5 w-3.5 shrink-0" /></button>)}
-            {chips.length > 5 && <span className="px-2 text-sm text-[#8A8880]">+{chips.length - 5} more</span>}
-            <button type="button" onClick={onClearAll} className="inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-medium text-[#8A8880] transition-colors duration-200 hover:text-[#4AC8E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4AC8E8]"><RotateCcw className="h-3.5 w-3.5" />Clear all</button>
+            {chips.length > 5 && <span className="px-2 text-sm text-[#5F5D57]">+{chips.length - 5} more</span>}
+            <button type="button" onClick={onClearAll} className="inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-medium text-[#5F5D57] transition-colors duration-200 hover:text-[#4AC8E8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4AC8E8]"><RotateCcw className="h-3.5 w-3.5" />Clear all</button>
           </div>
         )}
       </div>

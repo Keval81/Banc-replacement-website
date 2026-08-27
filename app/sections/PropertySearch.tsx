@@ -115,18 +115,6 @@ export default function PropertySearch() {
     router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
   }, [filters, router]);
 
-  // Custom onFilterChange that also triggers search on location submit
-  const handleFilterChangeWithSearch = React.useCallback((newFilters: Partial<SearchFilters>) => {
-    handleFilterChange(newFilters);
-    
-    // If location is being set (search submitted), navigate to properties page
-    if (newFilters.location !== undefined) {
-      const updatedFilters = { ...filters, ...newFilters };
-      const queryString = buildQueryString(updatedFilters);
-      router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
-    }
-  }, [filters, handleFilterChange, router]);
-
   return (
     <section className="relative bg-white">
       <div className="mx-auto w-full max-w-7xl px-6 py-14 lg:px-10">
@@ -155,8 +143,9 @@ export default function PropertySearch() {
             <PropertySearchBar
               department="sales"
               filters={filters}
-              onFilterChange={handleFilterChangeWithSearch}
+              onFilterChange={handleFilterChange}
               onClearFilters={handleClearFilters}
+              onSearch={handleSearch}
               hasActiveFilters={hasActiveFilters}
               isLoading={false}
               showMapButton={false}

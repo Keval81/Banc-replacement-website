@@ -135,26 +135,15 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
     router.push(`/lettings/properties${queryString ? `?${queryString}` : ""}`);
   }, [filters, router]);
 
-  // Custom onFilterChange that also triggers search on location submit
-  const handleFilterChangeWithSearch = React.useCallback((newFilters: Partial<SearchFilters>) => {
-    handleFilterChange(newFilters);
-    
-    // If location is being set (search submitted), navigate to properties page
-    if (newFilters.location !== undefined) {
-      const updatedFilters = { ...filters, ...newFilters };
-      const queryString = buildQueryString(updatedFilters);
-      router.push(`/lettings/properties${queryString ? `?${queryString}` : ""}`);
-    }
-  }, [filters, handleFilterChange, router]);
-
   if (variant === "hero") {
     return (
       <div className="w-full">
         <PropertySearchBar
           department="lettings"
           filters={filters}
-          onFilterChange={handleFilterChangeWithSearch}
+          onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
+          onSearch={handleSearch}
           hasActiveFilters={hasActiveFilters}
           isLoading={false}
           showMapButton={false}
@@ -188,8 +177,9 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
             <PropertySearchBar
               department="lettings"
               filters={filters}
-              onFilterChange={handleFilterChangeWithSearch}
+              onFilterChange={handleFilterChange}
               onClearFilters={handleClearFilters}
+              onSearch={handleSearch}
               hasActiveFilters={hasActiveFilters}
               isLoading={false}
               showMapButton={false}

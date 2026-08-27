@@ -18,6 +18,7 @@ interface MobileFilterDrawerProps {
   filters: PropertySearchFilters;
   onFilterChange: (filters: Partial<PropertySearchFilters>) => void;
   onClearFilters: () => void;
+  onSearch?: () => void;
   hasActiveFilters: boolean;
   isLoading?: boolean;
   resultCount?: number;
@@ -34,34 +35,69 @@ export default function MobileFilterDrawer({
   filters,
   onFilterChange,
   onClearFilters,
+  onSearch,
   hasActiveFilters,
   isLoading,
   resultCount,
 }: MobileFilterDrawerProps) {
-  // Prevent body scroll when drawer is open
-  React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
+  const previouslyFocused = React.useRef<HTMLElement | null>(null);
+  const onCloseRef = React.useRef(onClose);
+  React.useLayoutEffect(() => {
+    onCloseRef.current = onClose;
+  });
 
-  // Handle escape key to close drawer
   React.useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
+    if (!isOpen) return;
+
+    previouslyFocused.current = document.activeElement as HTMLElement | null;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusableSelector = [
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "[tabindex]:not([tabindex='-1'])",
+    ].join(",");
+    const focusableElements = () =>
+      Array.from(drawerRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? []);
+    const animationFrame = requestAnimationFrame(() => focusableElements()[0]?.focus());
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const elements = focusableElements();
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (!drawerRef.current?.contains(document.activeElement)) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousBodyOverflow;
+      previouslyFocused.current?.focus();
+    };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -80,6 +116,7 @@ export default function MobileFilterDrawer({
 
           {/* Drawer */}
           <motion.div
+            ref={drawerRef}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -105,6 +142,7 @@ export default function MobileFilterDrawer({
               filters={filters}
               onFilterChange={onFilterChange}
               onClearFilters={onClearFilters}
+              onSearch={onSearch}
               hasActiveFilters={hasActiveFilters}
               isMobile
               onClose={onClose}
@@ -135,6 +173,7 @@ export function MobileFilterButton({
 }: MobileFilterButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={cn(
         "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-xl",

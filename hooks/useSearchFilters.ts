@@ -3,6 +3,11 @@
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import type { LegacySearchFilters as SearchFilters } from "../lib/property-search/ui-options";
+import {
+  filtersToLegacySearchParams,
+  hasActiveLegacyFilters,
+  parseLegacySearchParams,
+} from "../lib/property-search/legacy-search-query";
 
 // ============================================
 // Types
@@ -28,136 +33,21 @@ interface UseSearchFiltersReturn {
  * Parse URL search params into filter state
  */
 function parseSearchParams(searchParams: URLSearchParams): SearchFilters {
-  const filters: SearchFilters = {};
-
-  // Location
-  const location = searchParams.get("location");
-  if (location) filters.location = location;
-
-  // Radius
-  const radius = searchParams.get("radius");
-  if (radius) filters.radius = parseFloat(radius);
-
-  // Price
-  const minPrice = searchParams.get("minPrice");
-  if (minPrice) filters.minPrice = parseInt(minPrice, 10);
-
-  const maxPrice = searchParams.get("maxPrice");
-  if (maxPrice) filters.maxPrice = parseInt(maxPrice, 10);
-
-  // Bedrooms
-  const minBeds = searchParams.get("minBeds");
-  if (minBeds) filters.minBeds = parseInt(minBeds, 10);
-
-  const maxBeds = searchParams.get("maxBeds");
-  if (maxBeds) filters.maxBeds = parseInt(maxBeds, 10);
-
-  // Bathrooms
-  const minBaths = searchParams.get("minBaths");
-  if (minBaths) filters.minBaths = parseInt(minBaths, 10);
-
-  const maxBaths = searchParams.get("maxBaths");
-  if (maxBaths) filters.maxBaths = parseInt(maxBaths, 10);
-
-  // Property Type
-  const propertyType = searchParams.get("propertyType");
-  if (propertyType) filters.propertyType = propertyType.split(",");
-
-  // Tenure
-  const tenure = searchParams.get("tenure");
-  if (tenure) filters.tenure = tenure.split(",");
-
-  // Features
-  const features: SearchFilters["features"] = {};
-  if (searchParams.get("garden") === "true") features.garden = true;
-  if (searchParams.get("parking") === "true") features.parking = true;
-  if (searchParams.get("garage") === "true") features.garage = true;
-  if (searchParams.get("conservatory") === "true") features.conservatory = true;
-  if (searchParams.get("fireplace") === "true") features.fireplace = true;
-  if (searchParams.get("periodFeatures") === "true") features.periodFeatures = true;
-  if (searchParams.get("newBuild") === "true") features.newBuild = true;
-  if (searchParams.get("chainFree") === "true") features.chainFree = true;
-  if (searchParams.get("virtualTour") === "true") features.virtualTour = true;
-  if (searchParams.get("videoTour") === "true") features.videoTour = true;
-  
-  if (Object.keys(features).length > 0) {
-    filters.features = features;
-  }
-
-  // Sort
-  const sortBy = searchParams.get("sortBy");
-  if (sortBy) {
-    filters.sortBy = sortBy as SearchFilters["sortBy"];
-  }
-
-  return filters;
+  return parseLegacySearchParams(searchParams);
 }
 
 /**
  * Convert filter state to URL search params
  */
 function filtersToSearchParams(filters: SearchFilters): URLSearchParams {
-  const params = new URLSearchParams();
-
-  // Location
-  if (filters.location) params.set("location", filters.location);
-
-  // Radius
-  if (filters.radius !== undefined) params.set("radius", filters.radius.toString());
-
-  // Price
-  if (filters.minPrice !== undefined) params.set("minPrice", filters.minPrice.toString());
-  if (filters.maxPrice !== undefined) params.set("maxPrice", filters.maxPrice.toString());
-
-  // Bedrooms
-  if (filters.minBeds !== undefined) params.set("minBeds", filters.minBeds.toString());
-  if (filters.maxBeds !== undefined) params.set("maxBeds", filters.maxBeds.toString());
-
-  // Bathrooms
-  if (filters.minBaths !== undefined) params.set("minBaths", filters.minBaths.toString());
-  if (filters.maxBaths !== undefined) params.set("maxBaths", filters.maxBaths.toString());
-
-  // Property Type
-  if (filters.propertyType?.length) {
-    params.set("propertyType", filters.propertyType.join(","));
-  }
-
-  // Tenure
-  if (filters.tenure?.length) {
-    params.set("tenure", filters.tenure.join(","));
-  }
-
-  // Features
-  if (filters.features) {
-    Object.entries(filters.features).forEach(([key, value]) => {
-      if (value) params.set(key, "true");
-    });
-  }
-
-  // Sort
-  if (filters.sortBy) params.set("sortBy", filters.sortBy);
-
-  return params;
+  return filtersToLegacySearchParams(filters);
 }
 
 /**
  * Check if any filters are active
  */
 function hasActiveFilters(filters: SearchFilters): boolean {
-  return (
-    filters.location !== undefined ||
-    filters.radius !== undefined ||
-    filters.minPrice !== undefined ||
-    filters.maxPrice !== undefined ||
-    filters.minBeds !== undefined ||
-    filters.maxBeds !== undefined ||
-    filters.minBaths !== undefined ||
-    filters.maxBaths !== undefined ||
-    (filters.propertyType?.length ?? 0) > 0 ||
-    (filters.tenure?.length ?? 0) > 0 ||
-    Object.values(filters.features || {}).some(Boolean) ||
-    (filters.sortBy !== undefined && filters.sortBy !== "newest")
-  );
+  return hasActiveLegacyFilters(filters);
 }
 
 /**

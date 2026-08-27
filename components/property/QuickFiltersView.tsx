@@ -56,7 +56,7 @@ export default function QuickFilters({ filters, onFilterChange, className }: Qui
               className={cn(
                 "inline-flex min-h-11 shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-xl border px-4 text-sm font-medium transition-colors duration-200",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4AC8E8] focus-visible:ring-offset-2",
-                active ? "border-[#4AC8E8] bg-[#4AC8E8] text-white shadow-md shadow-[#4AC8E8]/20" : "border-[#E0DFDC] bg-white text-[#8A8880] hover:border-[#4AC8E8] hover:text-[#4AC8E8]",
+                active ? "border-[#4AC8E8] bg-[#4AC8E8] text-white shadow-md shadow-[#4AC8E8]/20" : "border-[#E0DFDC] bg-white text-[#5F5D57] hover:border-[#4AC8E8] hover:text-[#4AC8E8]",
               )}
             >
               <Icon className="h-4 w-4" />{filter.label}

@@ -85,9 +85,33 @@ test("temporarily adapts legacy filters without carrying unsupported fields", ()
     features: ["garden", "chain_free"],
     sort: "default",
   });
-  assert.deepEqual(canonicalFiltersToLegacyPatch({ features: ["balcony", "new_home"] }), {
-    features: { balcony: true, newBuild: true },
-  });
+  const selectedPatch = canonicalFiltersToLegacyPatch({ features: ["balcony", "new_home"] });
+  assert.equal(selectedPatch.features?.balcony, true);
+  assert.equal(selectedPatch.features?.newBuild, true);
+  assert.equal(selectedPatch.features?.garden, false);
+});
+
+test("legacy feature patches clear deselected values in merge-based parents", () => {
+  const mergeParent = (
+    current: Record<string, boolean>,
+    patch: ReturnType<typeof canonicalFiltersToLegacyPatch>,
+  ) => ({ ...current, ...patch.features });
+
+  const initial = { garden: true, parking: true };
+  const afterOneRemoval = mergeParent(
+    initial,
+    canonicalFiltersToLegacyPatch({ features: ["garden"] }),
+  );
+  assert.equal(afterOneRemoval.garden, true);
+  assert.equal(afterOneRemoval.parking, false);
+
+  const afterFinalRemoval = mergeParent(
+    afterOneRemoval,
+    canonicalFiltersToLegacyPatch({ features: [] }),
+  );
+  assert.equal(afterFinalRemoval.garden, false);
+  assert.equal(afterFinalRemoval.parking, false);
+  assert.equal(canonicalFiltersToLegacyPatch({ features: undefined }).features, undefined);
 });
 
 test("scoped property controls do not render unsupported controls", () => {
@@ -124,7 +148,62 @@ test("the search bar commits the visible location before explicit search", () =>
 
   assert.match(source, /department: PropertyDepartment/);
   assert.match(source, /onSearch: \(\) => void/);
-  assert.ok(commit.indexOf("flushSync") < commit.indexOf("onSearch()"));
+  assert.match(source, /const onSearchRef = React\.useRef\(onSearch\)/);
+  assert.match(source, /onSearchRef\.current = onSearch/);
+  assert.ok(commit.indexOf("flushSync") < commit.indexOf("onSearchRef.current()"));
   assert.match(source, /disabled=\{isLoading\}/);
   assert.match(source, /resultCount !== undefined/);
+});
+
+test("mobile controls cannot submit accidentally and preserve modal keyboard behavior", () => {
+  const componentDirectory = join(import.meta.dirname, "..", "..", "components", "property");
+  const drawer = readFileSync(join(componentDirectory, "MobileFilterDrawer.tsx"), "utf8");
+  const advanced = readFileSync(join(componentDirectory, "AdvancedSearchView.tsx"), "utf8");
+
+  assert.match(drawer, /export function MobileFilterButton[\s\S]*?<button[\s\S]*?type="button"/);
+  assert.match(drawer, /drawerRef/);
+  assert.match(drawer, /previouslyFocused/);
+  assert.match(drawer, /onCloseRef\.current\(\)/);
+  assert.match(drawer, /}, \[isOpen\]\);/);
+  assert.match(drawer, /event\.key !== "Tab"/);
+  assert.match(drawer, /<motion\.div[\s\S]*?ref=\{drawerRef\}[\s\S]*?role="dialog"/);
+  assert.match(drawer, /\.focus\(\)/);
+  assert.match(drawer, /previouslyFocused\.current\?\.focus\(\)/);
+  assert.match(advanced, /onSearch\?\.\(\)[\s\S]*?onClose\?\.\(\)/);
+});
+
+test("the compatibility graph uses canonical filters without callback-shape guessing", () => {
+  const root = join(import.meta.dirname, "..", "..");
+  const componentDirectory = join(root, "components", "property");
+  const compat = readFileSync(join(componentDirectory, "PropertySearchBarCompat.tsx"), "utf8");
+  const barrel = readFileSync(join(componentDirectory, "index.ts"), "utf8");
+  const landingSources = [
+    "app/sections/PropertySearch.tsx",
+    "app/sections/LettingsPropertySearch.tsx",
+    "app/sales/SalesPageClient.tsx",
+  ].map((file) => readFileSync(join(root, file), "utf8")).join("\n");
+
+  assert.match(compat, /isCanonicalPropertySearchBarProps/);
+  assert.match(compat, /Array\.isArray\(props\.filters\.propertyTypes\)/);
+  assert.doesNotMatch(compat, /"onSearch" in props/);
+  assert.match(compat, /onSearch=\{props\.onSearch \?\? \(\(\) => undefined\)\}/);
+  assert.equal((landingSources.match(/onSearch=\{handleSearch\}/g) ?? []).length, 4);
+  assert.match(barrel, /AdvancedSearchView/);
+  assert.match(barrel, /ActiveFiltersView/);
+  assert.match(barrel, /QuickFiltersView/);
+  assert.match(barrel, /PropertySearchBarCompat/);
+});
+
+test("active Task 7 controls use the accessible neutral text color", () => {
+  const componentDirectory = join(import.meta.dirname, "..", "..", "components", "property");
+  const source = [
+    "AdvancedSearchView.tsx",
+    "ActiveFiltersView.tsx",
+    "QuickFiltersView.tsx",
+    "MobileFilterDrawer.tsx",
+    "PropertySearchBarView.tsx",
+  ].map((file) => readFileSync(join(componentDirectory, file), "utf8")).join("\n");
+
+  assert.doesNotMatch(source, /#8A8880|#9CA3AF/);
+  assert.match(source, /#5F5D57/);
 });

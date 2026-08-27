@@ -39,7 +39,7 @@ export interface LegacySearchFilters {
   propertyType?: string[];
   tenure?: string[];
   features?: LegacySearchFeatureFlags;
-  sortBy?: "price_asc" | "price_desc" | "newest" | "reduced" | "popular";
+  sortBy?: "default" | "price_asc" | "price_desc" | "newest" | "reduced" | "popular";
 }
 
 interface SearchOption<TValue extends string | number> {
@@ -217,11 +217,14 @@ export function canonicalFiltersToLegacyPatch(
     patch.sortBy = filters.sort === "default" ? undefined : filters.sort;
   }
   if ("features" in filters) {
-    const selected = new Set(filters.features ?? []);
-    const mapped = Object.fromEntries(
-      LEGACY_FEATURE_MAP.filter(([, feature]) => selected.has(feature)).map(([key]) => [key, true]),
-    ) as LegacySearchFeatureFlags;
-    patch.features = Object.keys(mapped).length > 0 ? mapped : undefined;
+    if (filters.features === undefined) {
+      patch.features = undefined;
+    } else {
+      const selected = new Set(filters.features);
+      patch.features = Object.fromEntries(
+        LEGACY_FEATURE_MAP.map(([key, feature]) => [key, selected.has(feature)]),
+      ) as LegacySearchFeatureFlags;
+    }
   }
   return patch;
 }

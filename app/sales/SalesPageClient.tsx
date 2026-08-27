@@ -112,17 +112,10 @@ export default function SalesPageClient() {
     return params.toString();
   };
 
-  // Handle search - navigate to properties page
-  const handleFilterChangeWithSearch = React.useCallback((newFilters: Partial<SearchFilters>) => {
-    handleFilterChange(newFilters);
-    
-    // If location is being set (search submitted), navigate to properties page
-    if (newFilters.location !== undefined) {
-      const updatedFilters = { ...filters, ...newFilters };
-      const queryString = buildQueryString(updatedFilters);
-      router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
-    }
-  }, [filters, handleFilterChange, router]);
+  const handleSearch = React.useCallback(() => {
+    const queryString = buildQueryString(filters);
+    router.push(`/sales/properties${queryString ? `?${queryString}` : ""}`);
+  }, [filters, router]);
 
   return (
     <div className="bg-white text-[#2C2A27]">
@@ -172,8 +165,9 @@ export default function SalesPageClient() {
           <PropertySearchBar
             department="sales"
             filters={filters}
-            onFilterChange={handleFilterChangeWithSearch}
+            onFilterChange={handleFilterChange}
             onClearFilters={handleClearFilters}
+            onSearch={handleSearch}
             hasActiveFilters={hasActiveFilters}
             isLoading={false}
             showMapButton={false}
