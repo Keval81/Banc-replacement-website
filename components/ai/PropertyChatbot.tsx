@@ -9,6 +9,7 @@ import type {
   ChatSearchContext,
   PropertyChatResponse,
 } from "@/lib/property-chat";
+import { createSingleFlightRunner } from "@/lib/property-chat-submit";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 import { getSafeExternalUrl } from "@/lib/property-detail-view";
 import {
@@ -73,6 +74,8 @@ export default function PropertyChatbot({
   const firstHelpOptionRef = useRef<HTMLButtonElement>(null);
   const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const chatPanelRef = useRef<HTMLDivElement>(null);
+  const submissionRunnerRef = useRef(createSingleFlightRunner());
+  const messageIdRef = useRef(0);
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
   const closeChat = useCallback(() => setIsOpen(false), []);
 
@@ -139,59 +142,64 @@ export default function PropertyChatbot({
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
+    await submissionRunnerRef.current(async () => {
+      const nextMessageId = () => {
+        messageIdRef.current += 1;
+        return `property-chat-${messageIdRef.current}`;
+      };
+      const userMessage: Message = {
+        id: nextMessageId(),
+        role: "user",
+        content: input.trim(),
+        timestamp: new Date(),
+      };
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-      timestamp: new Date(),
-    };
+      setMessages((prev) => [...prev, userMessage]);
+      setInput("");
+      setIsLoading(true);
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: userMessage.content,
+            history: messages
+              .slice(-20)
+              .map((message) => ({ role: message.role, content: message.content })),
+            ...(searchContext === undefined ? {} : { context: searchContext }),
+          }),
+        });
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: userMessage.content,
-          history: messages
-            .slice(-20)
-            .map((message) => ({ role: message.role, content: message.content })),
-          ...(searchContext === undefined ? {} : { context: searchContext }),
-        }),
-      });
+        if (!response.ok) throw new Error("Chat request failed");
+        const data = (await response.json()) as PropertyChatResponse;
+        if (data.context !== undefined) setSearchContext(data.context);
 
-      if (!response.ok) throw new Error("Chat request failed");
-      const data = (await response.json()) as PropertyChatResponse;
-      if (data.context !== undefined) setSearchContext(data.context);
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: data.response || "I'm sorry, could you rephrase that?",
-          properties: data.properties,
-          action: data.action,
-          timestamp: new Date(),
-        },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: "I'm having trouble connecting. Please try again or call us at 01707 877781.",
-          timestamp: new Date(),
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nextMessageId(),
+            role: "assistant",
+            content: data.response || "I'm sorry, could you rephrase that?",
+            properties: data.properties,
+            action: data.action,
+            timestamp: new Date(),
+          },
+        ]);
+      } catch {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: nextMessageId(),
+            role: "assistant",
+            content: "I'm having trouble connecting. Please try again or call us at 01707 877781.",
+            timestamp: new Date(),
+          },
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    });
   };
 
   return (

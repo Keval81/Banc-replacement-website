@@ -7,6 +7,7 @@ import {
   parsePropertyChatPatch,
   parsePropertyChatRequest,
 } from "../property-chat.ts";
+import { createSingleFlightRunner } from "../property-chat-submit.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
 import type {
   PropertySearchQuery,
@@ -150,13 +151,29 @@ test("parses supported deterministic filters without treating instructions as fa
 test("parses common maximum-budget phrases with suffixes and decimals", () => {
   for (const [message, expected] of [
     ["buy under £500k", 500000],
+    ["buy at most £500k", 500000],
+    ["buy less than £500k", 500000],
     ["buy with £500k max", 500000],
     ["buy with a budget of £500k", 500000],
+    ["buy with a budget of at most £500k", 500000],
+    ["buy with a budget set at £500k", 500000],
+    ["buy with £500k or under", 500000],
     ["buy up to £1.25m", 1250000],
     ["rent for £2,500 or less", 2500],
   ] as const) {
     assert.equal(parsePropertyChatPatch(message).maxPrice, expected, message);
   }
+});
+
+test("does not mistake bedroom and bathroom ceilings for a price budget", () => {
+  assert.equal(
+    parsePropertyChatPatch("buy at most 3 bedrooms").maxPrice,
+    undefined,
+  );
+  assert.equal(
+    parsePropertyChatPatch("buy no more than 2 bathrooms").maxPrice,
+    undefined,
+  );
 });
 
 test("does not search when the current message contains conflicting departments", async () => {
@@ -388,6 +405,63 @@ test("does not invent common requested listing facts", async () => {
   assert.equal(searches, 0);
 });
 
+test("only treats a missing fact as listing-specific when structured context exists", async () => {
+  let searches = 0;
+  const handle = createPropertyChatHandler(async () => {
+    searches += 1;
+    return searchResult([]);
+  });
+
+  const result = await handle({
+    message: "Is there fibre broadband?",
+    history: [],
+  });
+
+  assert.deepEqual(result, {
+    response: "Are you looking to buy or rent?",
+    action: "clarify_department",
+  });
+  assert.equal(searches, 0);
+});
+
+test("search intent in a missing-fact-shaped question wins over the listing handoff", async () => {
+  const seen: PropertySearchQuery[] = [];
+  const handle = createPropertyChatHandler(async (query) => {
+    seen.push(query);
+    return searchResult([], { query });
+  });
+  const context = { query: validSalesQuery({ location: "Potters Bar" }) };
+
+  for (const [message, expected] of [
+    ["Is there parking in homes to buy in Cuffley?", {
+      department: "sales",
+      location: "Cuffley",
+      propertyTypes: ["house"],
+      features: ["parking"],
+    }],
+    ["Does it have a garden near Cuffley?", {
+      department: "sales",
+      location: "Cuffley",
+      propertyTypes: [],
+      features: ["garden"],
+    }],
+    ["Does a house near Cuffley have a garden?", {
+      department: "sales",
+      location: "Cuffley",
+      propertyTypes: ["house"],
+      features: ["garden"],
+    }],
+  ] as const) {
+    const result = await handle({ message, history: [], context });
+    const query = seen.at(-1);
+    assert.equal(result.action, "no_results", message);
+    assert.equal(query?.department, expected.department, message);
+    assert.equal(query?.location, expected.location, message);
+    assert.deepEqual(query?.propertyTypes, expected.propertyTypes, message);
+    assert.deepEqual(query?.features, expected.features, message);
+  }
+});
+
 test("does not mistake an explicit feature search for a missing-fact question", async () => {
   const seen: PropertySearchQuery[] = [];
   const handle = createPropertyChatHandler(async (query) => {
@@ -501,6 +575,45 @@ test("rejects every impossible shared-search result and retains retry context", 
   }
 });
 
+test("rejects raw service queries that only match after coercion or normalization", async () => {
+  const malformedQueries: Array<
+    readonly [string, (query: PropertySearchQuery) => unknown]
+  > = [
+    ["string page", (query) => ({ ...query, page: "1" })],
+    ["string page size", (query) => ({ ...query, pageSize: "3" })],
+    ["duplicate property types", (query) => ({
+      ...query,
+      propertyTypes: ["house", "house"],
+    })],
+    ["reordered statuses", (query) => ({
+      ...query,
+      statuses: [...query.statuses].reverse(),
+    })],
+    ["missing required features", (query) => {
+      const incomplete: Partial<PropertySearchQuery> = { ...query };
+      delete incomplete.features;
+      return incomplete;
+    }],
+  ];
+
+  for (const [name, mutateQuery] of malformedQueries) {
+    const handle = createPropertyChatHandler(async (query) =>
+      searchResult([], {
+        query: mutateQuery(query) as PropertySearchQuery,
+      }),
+    );
+    const result = await handle({
+      message: "I want to buy a house in Cuffley",
+      history: [],
+    });
+
+    assert.equal(result.action, "contact_team", name);
+    assert.match(result.response, /temporarily unavailable/i, name);
+    assert.equal(result.properties, undefined, name);
+    assert.equal(result.context?.query.location, "Cuffley", name);
+  }
+});
+
 test("removes unsafe image schemes before returning canonical cards", async () => {
   const handle = createPropertyChatHandler(async (query) => searchResult([
     card("EA-1", {
@@ -546,7 +659,7 @@ test("strictly validates the route request shape", () => {
   }
 });
 
-test("fails safely when parsed bedroom or price input exceeds canonical bounds", async () => {
+test("fails safely when stated count or price ceilings are invalid", async () => {
   let searches = 0;
   const handle = createPropertyChatHandler(async () => {
     searches += 1;
@@ -555,13 +668,43 @@ test("fails safely when parsed bedroom or price input exceeds canonical bounds",
 
   for (const message of [
     "I want to buy a 3000000000-bedroom house",
+    "I want to buy a 999999999999999999999-bedroom house",
+    "I want to buy a 2.5-bedroom house",
+    "I want to buy a 3000000000-bathroom house",
+    "I want to buy a 999999999999999999999-bathroom house",
     "I want to buy with a budget of £999999999999999999999m",
+    "I want to buy for less than £5,,00k",
   ]) {
     const result = await handle({ message, history: [] });
     assert.equal(result.action, "contact_team", message);
     assert.match(result.response, /temporarily unavailable/i, message);
   }
   assert.equal(searches, 0);
+});
+
+test("single-flight chat submission rejects a same-tick duplicate and releases after failure", async () => {
+  const runSingleFlight = createSingleFlightRunner();
+  let finishFirst: (() => void) | undefined;
+  let requests = 0;
+  const first = runSingleFlight(async () => {
+    requests += 1;
+    await new Promise<void>((resolve) => { finishFirst = resolve; });
+  });
+  const duplicate = runSingleFlight(async () => {
+    requests += 1;
+  });
+
+  assert.equal(await duplicate, false);
+  assert.equal(requests, 1);
+  finishFirst?.();
+  assert.equal(await first, true);
+
+  await assert.rejects(
+    runSingleFlight(async () => { throw new Error("request failed"); }),
+    /request failed/,
+  );
+  assert.equal(await runSingleFlight(async () => { requests += 1; }), true);
+  assert.equal(requests, 2);
 });
 
 test("the chatbot UI wires safe images and an accessible modal lifecycle", () => {
@@ -584,4 +727,6 @@ test("the chatbot UI wires safe images and an accessible modal lifecycle", () =>
   assert.match(source, /id="property-chat-input"/);
   assert.match(source, /getInitialFocusElement: \(\) => inputRef\.current/);
   assert.match(source, /restoreFocus: \(\) => helpTriggerRef\.current\?\.focus\(\)/);
+  assert.match(source, /createSingleFlightRunner/);
+  assert.match(source, /submissionRunnerRef\.current/);
 });

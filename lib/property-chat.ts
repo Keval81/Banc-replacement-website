@@ -8,6 +8,8 @@ import {
 } from "./crm/property-source.ts";
 import {
   createDefaultPropertySearchQuery,
+  MAX_PROPERTY_SEARCH_PRICE,
+  POSTGRES_SIGNED_INTEGER_MAX,
   propertySearchQuerySchema,
   switchSearchDepartment,
 } from "./property-search/query.ts";
@@ -104,7 +106,7 @@ const PROPERTY_TYPE_ALIASES: ReadonlyArray<
   [/\bbungalow\b/i, "bungalow"],
   [/\b(?:land|plot)\b/i, "land"],
   [/\b(?:commercial|office|retail|shop)\b/i, "commercial"],
-  [/\b(?:house|home|cottage|villa)\b/i, "house"],
+  [/\b(?:houses?|homes?|cottage|villa)\b/i, "house"],
 ];
 
 const FEATURE_PATTERNS: Readonly<Record<SearchFeature, RegExp>> = {
@@ -140,28 +142,65 @@ const TRANSACTION_HANDOFF =
 const HUMAN_HANDOFF =
   "You can speak with the Banc team by calling 01707 877781 or using the contact page.";
 
-function parseCount(message: string, subject: "bed" | "bath"): number | undefined {
+function parseCount(
+  message: string,
+  subject: "bed" | "bath",
+): { matched: boolean; value?: number } {
   const match = message.match(
     new RegExp(
-      `\\b(\\d+|${Object.keys(NUMBER_WORDS).join("|")})[-\\s]*(?:${subject}|${subject}room)s?\\b`,
+      `(?:^|[^\\w.])(-?\\d+(?:\\.\\d+)?|${Object.keys(NUMBER_WORDS).join("|")})[-\\s]*(?:${subject}|${subject}room)s?\\b`,
       "i",
     ),
   );
-  if (!match?.[1]) return undefined;
+  if (!match?.[1]) return { matched: false };
   const raw = match[1].toLowerCase();
   const value = NUMBER_WORDS[raw] ?? Number(raw);
-  return Number.isSafeInteger(value) && value >= 0 ? value : undefined;
+  if (
+    !Number.isSafeInteger(value) ||
+    value < 0 ||
+    value > POSTGRES_SIGNED_INTEGER_MAX
+  ) {
+    throw new RangeError("Count is outside the supported search range");
+  }
+  return { matched: true, value };
 }
 
 function parsePrice(message: string): { matched: boolean; value?: number } {
+  const number = String.raw`([+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+))`;
   const patterns = [
-    /\b(?:under|below|up to|no more than|max(?:imum)?(?: of)?|budget(?: of)?)\s*£?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\b/i,
-    /£?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\s*(?:max(?:imum)?|or less|budget)\b/i,
+    new RegExp(
+      String.raw`\b(?:budget\s+(?:of\s+)?at\s+most|budget\s+set\s+at|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget(?:\s+of)?)\s*£?\s*${number}\s*(k|m)?(?![\w,.])`,
+      "i",
+    ),
+    new RegExp(
+      String.raw`£?\s*${number}\s*(k|m)?\s*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b`,
+      "i",
+    ),
   ];
   const match = patterns
     .map((pattern) => message.match(pattern))
     .find((candidate) => candidate?.[1] !== undefined);
-  if (!match?.[1]) return { matched: false };
+  if (
+    match?.index !== undefined &&
+    /^\s*(?:bed|bedroom|bath|bathroom)s?\b/i.test(
+      message.slice(match.index + match[0].length),
+    )
+  ) {
+    return { matched: false };
+  }
+  if (!match?.[1]) {
+    const invalidCeiling =
+      /\b(?:budget\s+(?:of\s+)?at\s+most|budget\s+set\s+at|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget(?:\s+of)?)\s*(?:£\s*\S+|[+-]?[\d.,]\S*)/i.test(
+        message,
+      ) ||
+      /£\s*\S+\s*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b/i.test(
+        message,
+      );
+    if (invalidCeiling) {
+      throw new RangeError("Price is outside the supported search range");
+    }
+    return { matched: false };
+  }
   const numeric = Number(match[1].replaceAll(",", ""));
   const multiplier = match[2]?.toLowerCase() === "m"
     ? 1_000_000
@@ -169,17 +208,23 @@ function parsePrice(message: string): { matched: boolean; value?: number } {
       ? 1_000
       : 1;
   const value = Math.round(numeric * multiplier);
-  if (!Number.isSafeInteger(value) || value < 0) {
+  if (
+    !Number.isSafeInteger(value) ||
+    value < 0 ||
+    value > MAX_PROPERTY_SEARCH_PRICE
+  ) {
     throw new RangeError("Price is outside the supported search range");
   }
   return { matched: true, value };
 }
 
 function parseLocation(message: string): string | undefined {
-  const match = message.match(
-    /\b(?:in|near)\s+([a-z0-9][a-z0-9 '\u2019-]*?)(?=\s+(?:under|below|up to|max(?:imum)?|with|for|at|from|having|that|which)\b|\s+\d+\s*(?:bed|bath)|[?!,.]|$)/i,
-  );
-  const location = match?.[1]?.trim();
+  const matches = [
+    ...message.matchAll(
+      /(?=\b(?:in|near)\s+([a-z0-9][a-z0-9 '\u2019-]*?)(?=\s+(?:under|below|up to|max(?:imum)?|with|for|at|from|have|has|having|that|which)\b|\s+\d+\s*(?:bed|bath)|[?!,.]|$))/gi,
+    ),
+  ];
+  const location = matches.at(-1)?.[1]?.trim();
   return location && location.length <= 120 ? location : undefined;
 }
 
@@ -206,9 +251,9 @@ export function parsePropertyChatPatch(message: string): PropertyChatPatch {
     patch.maxPrice = parsedPrice.value;
   }
   const minBedrooms = parseCount(message, "bed");
-  if (minBedrooms !== undefined) patch.minBedrooms = minBedrooms;
+  if (minBedrooms.matched) patch.minBedrooms = minBedrooms.value;
   const minBathrooms = parseCount(message, "bath");
-  if (minBathrooms !== undefined) patch.minBathrooms = minBathrooms;
+  if (minBathrooms.matched) patch.minBathrooms = minBathrooms.value;
 
   const propertyTypes = PROPERTY_TYPE_ALIASES
     .filter(([pattern]) => pattern.test(message))
@@ -399,6 +444,37 @@ function searchQueriesEqual(
     left.pageSize === right.pageSize;
 }
 
+function rawValuesEqual(left: unknown, right: unknown): boolean {
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left) &&
+      Array.isArray(right) &&
+      left.length === right.length &&
+      left.every((value, index) => rawValuesEqual(value, right[index]));
+  }
+  if (
+    typeof left === "object" ||
+    typeof right === "object" ||
+    left === null ||
+    right === null
+  ) {
+    if (
+      typeof left !== "object" ||
+      typeof right !== "object" ||
+      left === null ||
+      right === null
+    ) {
+      return false;
+    }
+    const leftRecord = left as Record<string, unknown>;
+    const rightRecord = right as Record<string, unknown>;
+    const leftKeys = Object.keys(leftRecord).sort();
+    const rightKeys = Object.keys(rightRecord).sort();
+    return arraysEqual(leftKeys, rightKeys) &&
+      leftKeys.every((key) => rawValuesEqual(leftRecord[key], rightRecord[key]));
+  }
+  return Object.is(left, right);
+}
+
 function parseSafeSearchResult(
   value: unknown,
   query: PropertySearchQuery,
@@ -407,7 +483,8 @@ function parseSafeSearchResult(
     typeof value !== "object" ||
     value === null ||
     !("query" in value) ||
-    !hasCompletePropertySearchQuery(value.query)
+    !hasCompletePropertySearchQuery(value.query) ||
+    !rawValuesEqual(value.query, query)
   ) {
     return null;
   }
@@ -464,6 +541,7 @@ function clarificationHistoryPatch(
 export function createPropertyChatHandler(search: PropertySearch) {
   return async (request: PropertyChatRequest): Promise<PropertyChatResponse> => {
     const currentContext = request.context;
+    const departmentIntent = parseDepartment(request.message);
 
     if (isViewingRequest(request.message)) {
       return withContext(
@@ -489,14 +567,20 @@ export function createPropertyChatHandler(search: PropertySearch) {
         currentContext,
       );
     }
-    if (isMissingFactQuestion(request.message)) {
+    const hasExplicitSearchIntent =
+      departmentIntent !== undefined || parseLocation(request.message) !== undefined;
+    if (
+      currentContext !== undefined &&
+      !hasExplicitSearchIntent &&
+      isMissingFactQuestion(request.message)
+    ) {
       return withContext(
         { response: MISSING_FACT, action: "contact_team" },
         currentContext,
       );
     }
 
-    if (parseDepartment(request.message) === "ambiguous") {
+    if (departmentIntent === "ambiguous") {
       return { response: CLARIFY_DEPARTMENT, action: "clarify_department" };
     }
 
