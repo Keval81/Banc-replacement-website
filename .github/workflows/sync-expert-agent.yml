@@ -1,0 +1,34 @@
+name: Sync Expert Agent properties
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+concurrency:
+  group: expert-agent-property-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Sync canonical properties
+        run: node --experimental-strip-types scripts/sync-expert-agent.ts
+        env:
+          EXPERT_AGENT_FTP_URL: ${{ secrets.EXPERT_AGENT_FTP_URL }}
+          EXPERT_AGENT_FTP_USER: ${{ secrets.EXPERT_AGENT_FTP_USER }}
+          EXPERT_AGENT_FTP_PASS: ${{ secrets.EXPERT_AGENT_FTP_PASS }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

@@ -1,49 +1,167 @@
-# Expert Agent CRM Integration — status (2026-08-15)
+# CRM integration and sync operations
 
-Live end-to-end: FTP feed → parser → Supabase → site. Written as a handoff
-for the next session (any agent).
+**Updated:** 2026-08-27
 
-## Working, deployed (branch `claude-build`)
+**Implementation state:** the failure-safe Expert Agent sync and its GitHub
+Actions definition exist on this branch. The database migration, repository
+secrets, workflow activation, and first write-enabled run remain external
+release steps. None of them was performed while creating this contract.
 
-- **Sync**: `scripts/sync-expert-agent.ts` (`--dry-run` supported). curl FTP →
-  parse XML → geocode postcodes (postcodes.io bulk, free) → upsert Supabase on
-  `expert_agent_id`. Creds in `.env.local` (FTP trio + Supabase trio) — NOT in
-  git; also in Vercel env (public pair only).
-- **Parser**: `lib/expert-agent-feed.ts`, spec v1.3 + two undocumented live
-  realities: `<epc>` graph image (band letter derivable from
-  `EPC_CCPPccpp` / `PEA_CCPP` filenames; first pair = current SAP score) and
-  district=town duplication. Tests: `node --test lib/__tests__/*.test.ts`
-  (27, all TDD).
-- **Data**: Supabase `banc-property` (eu-west-2, ref aogtwibafvlvcchygool,
-  $10/mo). 353 rows: 43 for_sale / 251 under_offer / 57 let_agreed / 2 to_let.
-  353 geocoded (postcode centroid), 301 EPC images, 105 parsed bands.
-- **Site**: `/api/properties` + `/api/properties/[id]` (anon key, RLS public
-  read). Homepage Featured, sales + lettings grids, detail pages (gallery,
-  features, rooms-when-present, floorplans, EPC band+graph, OSM postcode map,
-  brochure/tour, real branch panel), similar properties. Search filters
-  verified against live rows (feature flags derived from bullet wording in
-  `lib/property-view.ts`).
+## Canonical data flow
 
-## Known gotchas
+```text
+Expert Agent FTP XML
+  -> Expert Agent parser and source adapter
+  -> CRM-neutral canonical property rows
+  -> service-role-only reconciliation RPC
+  -> Supabase properties + crm_sync_runs
+  -> shared property search service
+  -> homepage, results pages, API, and chatbot
+```
 
-- Feed list endpoint on FTP: `properties2.xml` is current; `properties.xml`
-  stale twin. Images are absolute `med05.expertagent.co.uk` URLs (hotlinked;
-  next/image hosts allowlisted).
-- Feed has NO house-level coords, NO sqft; EPC only via the image filename.
-- Deploys: every Vercel deploy invalidates `_vercel_share` tokens; NEXT_PUBLIC
-  env inlines at build time (rebuild after env changes); occasional transient
-  Google Fonts build failure — empty-commit retry fixes.
-- The old `lib/expert-agent.ts` is a DEPRECATED wrong-guess JSON stub kept only
-  so `/api/cron/sync-properties` no-ops. Retire both together.
+`scripts/sync-expert-agent.ts` downloads and parses the feed, geocodes UK
+postcodes at centroid level, and maps each listing through the Expert Agent
+adapter. The canonical identity is `(source_system, source_id)`. The legacy
+`expert_agent_id` remains populated so existing property links continue to
+work.
 
-## Open items (in rough priority)
+The migration is
+`supabase/migrations/202608270001_crm_property_search.sql`. It creates the
+canonical search fields, `crm_sync_runs`, the public search function, and the
+private reconciliation function.
 
-1. **Sync schedule** — decide launchd (mac mini) vs GitHub Action; script is
-   ready, needs env + `node scripts/sync-expert-agent.ts`.
-2. Lettings detail URL semantics — lettings cards link via
-   `/sales/properties/[id]` (works, department-aware; cosmetic).
-3. `aker-restyle` branch — hero-film/logo landing design (SanSan direction B);
-   gets all CRM work via merge from claude-build when design is chosen.
-4. Optional honest add-ons: transport links from postcode coords (TfL/rail
-   APIs); mirror feed images to Supabase storage instead of hotlinking.
-5. Promote decision: claude-build → production + DNS (standing P0 path).
+## Failure-safety contract
+
+The sync protects the current public inventory at two boundaries:
+
+- Every incoming row must have the correct source identity, a unique and
+  trimmed source ID, a valid department, non-empty title and address, a
+  positive finite price, and supported canonical search values.
+- Before the database call, the client reads all active IDs with ordered,
+  paginated queries. It rejects a feed that would deactivate more than 50% of
+  that source's current active inventory.
+- `reconcile_property_source_feed(...)` repeats the greater-than-50% guard
+  inside a source-scoped transaction lock. This database check is
+  authoritative if inventory changes after the client preflight.
+- The RPC upserts incoming rows, marks only absent active rows from the same
+  source inactive, records a successful `crm_sync_runs` row, and returns its
+  database completion time in one transaction. It never deletes properties.
+- Download, parse, validation, and preflight failures leave the last
+  successful dataset unchanged. They are best-effort recorded as failed runs
+  with a redacted error summary. An audit-write failure cannot replace the
+  original sync error.
+- After the RPC has been invoked, an ambiguous transport error is not recorded
+  as a second speculative failure. Operators must inspect `crm_sync_runs` to
+  determine whether the transaction committed.
+
+The reconciliation RPC is revoked from `PUBLIC`, `anon`, and `authenticated`
+and granted only to `service_role`. FTP credentials and the service-role key
+must remain server-side and must never be pasted into logs, issues, fixtures,
+or commits.
+
+## Schedule and required GitHub secrets
+
+`.github/workflows/sync-expert-agent.yml` supports a manual
+`workflow_dispatch` and runs hourly at minute 17 UTC. Concurrency is serialized
+so an existing sync is allowed to finish instead of being cancelled by the
+next one.
+
+Configure these six repository secrets before activating the workflow:
+
+- `EXPERT_AGENT_FTP_URL`
+- `EXPERT_AGENT_FTP_USER`
+- `EXPERT_AGENT_FTP_PASS`
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Only secret references belong in the workflow. Values belong in the approved
+GitHub repository's encrypted Actions secrets.
+
+## Local dry run (future external check)
+
+After explicit approval to contact the Expert Agent FTP server, an operator
+can load the local environment and run:
+
+```bash
+node --env-file=.env.local --experimental-strip-types scripts/sync-expert-agent.ts --dry-run
+```
+
+Dry-run mode contacts the FTP server and postcode service, parses and prints
+the canonical rows, and then exits without creating a Supabase client,
+reconciling properties, or writing `crm_sync_runs`. It was deliberately not
+run as part of this documentation task.
+
+## Activation and manual verification (future external steps)
+
+These steps require explicit approval for the exact Supabase project and
+GitHub repository:
+
+1. Review and apply the migration to the approved Supabase project.
+2. Add all six encrypted repository secrets without exposing their values.
+3. Push the workflow, confirm Actions are permitted, and manually dispatch
+   **Sync Expert Agent properties** once. Do not rely on the hourly schedule
+   until this run succeeds.
+4. Check the Actions log for a non-zero parsed record count, a completed
+   upsert summary, no credential values, and no unexpected deactivation guard.
+5. Inspect the database with the approved SQL console:
+
+```sql
+select source_system, started_at, finished_at, status,
+       records_read, records_written, records_deactivated, error_summary
+from public.crm_sync_runs
+where source_system = 'expert_agent'
+order by started_at desc
+limit 5;
+
+select is_active, count(*)
+from public.properties
+where source_system = 'expert_agent'
+group by is_active
+order by is_active desc;
+
+select count(*) as invalid_active_rows
+from public.properties
+where source_system = 'expert_agent'
+  and is_active = true
+  and (
+    source_id is null or btrim(source_id) = ''
+    or last_synced_at is null
+    or search_property_type is null
+    or search_tenure is null
+    or search_features is null
+  );
+```
+
+The newest audit row must be `success`, its counts must be plausible for the
+feed, `invalid_active_rows` must be zero, and existing property URLs must still
+resolve. Only then leave the hourly schedule enabled. If any check fails, stop
+activation and investigate; do not weaken the validation or removal guards to
+force a run through.
+
+## Expert Agent feed notes
+
+- The current feed has used `properties2.xml`; `properties.xml` has previously
+  been a stale twin. Confirm the live FTP listing during the approved dry run.
+- Image URLs may be absolute Expert Agent CDN URLs. Bare filenames are retained
+  as `zip://` markers until a storage-import step is explicitly designed.
+- The feed does not provide house-level coordinates or reliable square
+  footage. Postcode coordinates are centroids and must not be presented as an
+  exact property location.
+- EPC data may be supplied through its graph image filename rather than a
+  dedicated rating field.
+
+## Streets migration boundary
+
+The website is intentionally not limited to Expert Agent parity. A future
+`StreetsAdapter` can map Streets records into the same canonical property store
+without changing ordinary search consumers. CRM actions are separate,
+capability-checked extensions: Streets may later expose independently approved
+features such as real-time updates, viewing availability and booking,
+applicant creation, matching, offers, or sales progression.
+
+Those capabilities must be enabled only when Streets documentation,
+credentials, permissions, and truthful source data are available. The UI and
+chatbot must test for a capability before offering it; no Streets-only action
+is simulated against Expert Agent, and future Streets functionality is not
+restricted to what the current FTP feed can do.
