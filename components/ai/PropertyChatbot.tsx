@@ -3,8 +3,13 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Calendar, Tag } from "lucide-react";
+import { MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
+import type {
+  ChatSearchContext,
+  PropertyChatResponse,
+} from "@/lib/property-chat";
+import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 import {
   getLandingUi,
   type MobileContactControlPlacement,
@@ -14,22 +19,15 @@ interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
-  properties?: Array<{
-    id: string;
-    title: string;
-    bedrooms: number;
-    price: number;
-    location: string;
-    images?: string[];
-  }>;
-  action?: string;
+  properties?: PropertyCardData[];
+  action?: PropertyChatResponse["action"];
   timestamp: Date;
 }
 
 const quickReplies = [
-  "Find me a 3-bed in Cuffley",
-  "What's my property worth?",
-  "Book a viewing",
+  "I want to buy a 3-bed in Cuffley",
+  "I'm looking to rent",
+  "I need to speak to the Banc team",
 ];
 
 const transition = {
@@ -56,11 +54,12 @@ export default function PropertyChatbot({
       id: "welcome",
       role: "assistant",
       content:
-        "Hello! I'm Banc's property assistant. I can help you find properties, arrange viewings, or get a valuation. How can I help?",
+        "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, or help you contact the team. What are you looking for?",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState("");
+  const [searchContext, setSearchContext] = useState<ChatSearchContext>();
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
@@ -127,11 +126,16 @@ export default function PropertyChatbot({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage.content,
-          history: messages.map((m) => ({ role: m.role, content: m.content })),
+          history: messages
+            .slice(-20)
+            .map((message) => ({ role: message.role, content: message.content })),
+          ...(searchContext === undefined ? {} : { context: searchContext }),
         }),
       });
 
-      const data = await response.json();
+      if (!response.ok) throw new Error("Chat request failed");
+      const data = (await response.json()) as PropertyChatResponse;
+      if (data.context !== undefined) setSearchContext(data.context);
 
       setMessages((prev) => [
         ...prev,
@@ -363,19 +367,27 @@ export default function PropertyChatbot({
                           {message.properties.map((property) => (
                             <a
                               key={property.id}
-                              href={`/sales/properties/${property.id}`}
-                              className="flex items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 hover:bg-banc-grey/10 transition-colors duration-200"
+                              href={buildPropertyHref(property.department, property.id)}
+                              className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"
                             >
                               <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
                                 {property.images?.[0] && (
-                                  <img src={property.images[0]} alt="" className="h-full w-full object-cover" />
+                                  <Image
+                                    src={property.images[0]}
+                                    alt={`${property.title} thumbnail`}
+                                    width={56}
+                                    height={40}
+                                    unoptimized
+                                    className="h-full w-full object-cover"
+                                  />
                                 )}
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-xs font-medium text-banc-dark truncate">{property.title}</p>
                                 <p className="text-[10px] text-banc-grey">
-                                  {property.bedrooms} bed · £{property.price.toLocaleString()}
+                                  {property.stats.beds} bed · {property.price}
                                 </p>
+                                <p className="truncate text-[10px] text-banc-grey">{property.address}</p>
                               </div>
                             </a>
                           ))}
@@ -383,16 +395,10 @@ export default function PropertyChatbot({
                       )}
 
                       {/* Action buttons */}
-                      {message.action === "valuation" && (
-                        <a href="/valuation" className="mt-2.5 flex items-center justify-center gap-2 rounded-lg bg-banc-sky px-3 py-2 text-xs font-medium text-white hover:bg-banc-sky-dark transition-colors duration-200">
-                          <Tag className="h-3.5 w-3.5" />
-                          Get Free Valuation
-                        </a>
-                      )}
-                      {message.action === "viewing" && (
-                        <a href="/contact" className="mt-2.5 flex items-center justify-center gap-2 rounded-lg bg-banc-sky px-3 py-2 text-xs font-medium text-white hover:bg-banc-sky-dark transition-colors duration-200">
-                          <Calendar className="h-3.5 w-3.5" />
-                          Contact Us
+                      {message.action === "contact_team" && (
+                        <a href="/contact" className="mt-2.5 flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#0B6F89] px-3 py-2 text-xs font-medium text-white transition-colors duration-200 hover:bg-[#075E75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2">
+                          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                          Contact the Banc team
                         </a>
                       )}
                     </div>
