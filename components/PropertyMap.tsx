@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from "@react-google-maps/api";
+import { buildPropertyHref } from "@/lib/property-view";
 
 interface MapProperty {
   id: string;
@@ -10,6 +11,7 @@ interface MapProperty {
   address: string;
   price: string;
   images: string[];
+  department: "sales" | "lettings";
 }
 
 // Approximate town-centre coordinates for the agency's coverage area.
@@ -107,7 +109,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
             position={p.position}
             onCloseClick={() => setActiveId(null)}
           >
-            <Link href={`/sales/properties/${p.id}`} className="block w-44">
+            <Link href={buildPropertyHref(p.department, p.id)} className="block w-44">
               {p.images?.[0] ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

@@ -7,142 +7,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import { Button } from "@/components/ui/button";
-import { Grid3X3, List, Loader2, Home } from "lucide-react";
-
-// New search components
-import {
-  PropertySearchBar,
-  AdvancedSearch,
-  QuickFilters,
-  ActiveFilters,
-  MobileFilterDrawer,
-  type SearchFilters,
-} from "@/components/property";
+import { AlertCircle, Loader2, Home } from "lucide-react";
+import PropertySearchBar from "@/components/property/PropertySearchBarView";
 import { useSearchFilters } from "@/hooks/useSearchFilters";
+import { usePropertySearchResults } from "@/hooks/usePropertySearchResults";
 import PropertyMap from "@/components/PropertyMap";
-
-// ============================================
-// Sample Lettings Properties Data
-// ============================================
-
-interface SiteProperty {
-  id: string;
-  title: string;
-  address: string;
-  price: string;
-  priceNum: number;
-  tags: string[];
-  stats: { beds: number; baths: number; sqft?: number; epc?: string };
-  images: string[];
-  summary: string;
-  propertyType: string;
-  features: Record<string, boolean>;
-  addedDate: string;
-  lettingType: string;
-  department: "lettings";
-}
-
-const allLettingsProperties: SiteProperty[] = [];
-
-function useLiveProperties() {
-  const [properties, setProperties] = React.useState<SiteProperty[]>([]);
-
-  React.useEffect(() => {
-    let cancelled = false;
-    fetch("/api/properties?department=lettings")
-      .then((r) => (r.ok ? r.json() : { properties: [] }))
-      .then((d) => {
-        if (cancelled) return;
-        const mapped: SiteProperty[] = (d.properties ?? []).map(
-          (c: SiteProperty & { featureFlags?: Record<string, boolean> }) => ({
-            ...c,
-            features: c.featureFlags ?? {},
-            lettingType: "long_term",
-          })
-        );
-        setProperties(mapped);
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return properties;
-}
-
-// ============================================
-// Filter Logic
-// ============================================
-
-function filterProperties(properties: typeof allLettingsProperties, filters: SearchFilters) {
-  return properties.filter((property) => {
-    // Location filter
-    if (filters.location) {
-      const searchTerm = filters.location.toLowerCase();
-      const addressMatch = property.address.toLowerCase().includes(searchTerm);
-      const titleMatch = property.title.toLowerCase().includes(searchTerm);
-      if (!addressMatch && !titleMatch) return false;
-    }
-
-    // Price filters (monthly rent pcm)
-    if (filters.minPrice !== undefined && property.priceNum < filters.minPrice) return false;
-    if (filters.maxPrice !== undefined && property.priceNum > filters.maxPrice) return false;
-
-    // Bedroom filters
-    if (filters.minBeds !== undefined && property.stats.beds < filters.minBeds) return false;
-    if (filters.maxBeds !== undefined && property.stats.beds > filters.maxBeds) return false;
-
-    // Bathroom filters
-    if (filters.minBaths !== undefined && property.stats.baths < filters.minBaths) return false;
-    if (filters.maxBaths !== undefined && property.stats.baths > filters.maxBaths) return false;
-
-    // Property type filter
-    if (filters.propertyType?.length) {
-      if (!filters.propertyType.includes(property.propertyType)) return false;
-    }
-
-    // Features filter
-    if (filters.features) {
-      for (const [key, value] of Object.entries(filters.features)) {
-        if (value && !property.features[key as keyof typeof property.features]) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  });
-}
-
-function sortProperties(properties: typeof allLettingsProperties, sortBy?: SearchFilters["sortBy"]) {
-  const sorted = [...properties];
-  
-  switch (sortBy) {
-    case "price_asc":
-      sorted.sort((a, b) => a.priceNum - b.priceNum);
-      break;
-    case "price_desc":
-      sorted.sort((a, b) => b.priceNum - a.priceNum);
-      break;
-    case "newest":
-      sorted.sort((a, b) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime());
-      break;
-    case "reduced":
-      // For lettings, show newest as default for reduced
-      sorted.sort((a, b) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime());
-      break;
-    case "popular":
-      // Sort by number of tags (more tags = more popular for demo)
-      sorted.sort((a, b) => b.tags.length - a.tags.length);
-      break;
-    default:
-      // Default to newest
-      sorted.sort((a, b) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime());
-  }
-  
-  return sorted;
-}
 
 // ============================================
 // Main Page Component
@@ -152,18 +21,21 @@ type ViewMode = "grid" | "list" | "map";
 
 function LettingsPropertiesPageContent() {
   const reduceMotion = useReducedMotion();
-  const { filters, setFilters, clearFilters, hasActiveFilters, isLoading } = useSearchFilters({
+  const {
+    query,
+    filters,
+    setFilters,
+    clearFilters,
+    hasActiveFilters,
+    setPage,
+    submitSearch,
+  } = useSearchFilters({
+    department: "lettings",
     debounceMs: 300,
   });
-  
   const [viewMode, setViewMode] = React.useState<ViewMode>("grid");
-  const liveProperties = useLiveProperties();
-
-  // Filter and sort properties
-  const filteredProperties = React.useMemo(() => {
-    const filtered = filterProperties(liveProperties, filters);
-    return sortProperties(filtered, filters.sortBy);
-  }, [liveProperties, filters]);
+  const { result, isLoading, error, retry } = usePropertySearchResults(query);
+  const properties = result?.properties ?? [];
 
   return (
     <div className="bg-white text-[#2C2A27] min-h-screen">
@@ -205,52 +77,89 @@ function LettingsPropertiesPageContent() {
             filters={filters}
             onFilterChange={setFilters}
             onClearFilters={clearFilters}
+            onSearch={submitSearch}
             hasActiveFilters={hasActiveFilters}
             isLoading={isLoading}
-            resultCount={filteredProperties.length}
+            resultCount={result?.total}
             viewMode={viewMode}
             onViewModeChange={setViewMode}
           />
         </div>
       </section>
 
-      {/* Properties Grid */}
-      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-10">
+      <section
+        className="px-4 py-8 sm:px-6 sm:py-12 lg:px-10"
+        aria-busy={isLoading}
+      >
         <div className="mx-auto max-w-7xl">
+          {isLoading && result !== null && (
+            <div
+              className="mb-5 flex items-center gap-2 text-sm text-[#0B6F89]"
+              role="status"
+            >
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Updating live results…
+            </div>
+          )}
           <AnimatePresence mode="wait">
-            {isLoading ? (
+            {isLoading && result === null ? (
               <motion.div
                 key="loading"
-                initial={{ opacity: 0 }}
+                initial={reduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0 }}
                 className="flex flex-col items-center justify-center py-20"
+                role="status"
               >
-                <Loader2 className="w-10 h-10 text-[#4AC8E8] animate-spin mb-4" />
-                <p className="text-[#8A8880]">Loading properties...</p>
+                <Loader2 className="mb-4 h-10 w-10 animate-spin text-[#0B6F89]" />
+                <p className="text-[#5F5D57]">Loading live properties…</p>
               </motion.div>
-            ) : filteredProperties.length === 0 ? (
+            ) : error ? (
               <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 20 }}
+                key="error"
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="text-center py-20"
+                exit={reduceMotion ? undefined : { opacity: 0 }}
+                className="rounded-2xl border border-[#E0DFDC] bg-[#F4F3F1] px-6 py-16 text-center"
+                role="alert"
               >
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#F4F3F1] flex items-center justify-center">
-                  <Home className="w-8 h-8 text-[#E0DFDC]" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#1A1917] mb-2">
-                  No properties found
-                </h3>
-                <p className="text-[#8A8880] max-w-md mx-auto mb-6">
-                  We couldn&apos;t find any rental properties matching your current filters. 
-                  Try adjusting your search criteria or clearing some filters.
+                <AlertCircle className="mx-auto mb-5 h-10 w-10 text-[#0B6F89]" />
+                <h2 className="text-xl font-semibold text-[#1A1917]">
+                  Live listings are temporarily unavailable
+                </h2>
+                <p className="mx-auto mt-2 max-w-md text-[#5F5D57]">
+                  Please try again shortly. Your search filters have been kept.
                 </p>
                 <Button
+                  type="button"
+                  onClick={retry}
+                  className="mt-6 min-h-11 bg-[#0B6F89] text-white hover:bg-[#075E75] focus-visible:ring-[#0B6F89]"
+                >
+                  Retry live search
+                </Button>
+              </motion.div>
+            ) : result?.total === 0 ? (
+              <motion.div
+                key="empty"
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0 }}
+                className="py-20 text-center"
+              >
+                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#F4F3F1]">
+                  <Home className="h-8 w-8 text-[#5F5D57]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#1A1917]">
+                  No rental properties match this search
+                </h2>
+                <p className="mx-auto mb-6 mt-2 max-w-md text-[#5F5D57]">
+                  Try widening the location or removing one filter to see more homes.
+                </p>
+                <Button
+                  type="button"
                   onClick={clearFilters}
                   variant="outline"
-                  className="border-[#4AC8E8] text-[#4AC8E8] hover:bg-[#4AC8E8] hover:text-white"
+                  className="min-h-11 border-[#0B6F89] text-[#0B6F89] hover:border-[#075E75] hover:text-[#075E75] focus-visible:ring-[#0B6F89]"
                 >
                   Clear all filters
                 </Button>
@@ -258,26 +167,24 @@ function LettingsPropertiesPageContent() {
             ) : (
               <motion.div
                 key="results"
-                initial={{ opacity: 0 }}
+                initial={reduceMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                exit={reduceMotion ? undefined : { opacity: 0 }}
+                transition={reduceMotion ? undefined : { duration: 0.3 }}
               >
-                {/* Per-card reveal — whole-grid threshold can never fire on
-                    a tall live grid (see sales page). */}
                 <div
                   className={
                     viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+                      ? "grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
                       : viewMode === "list"
-                      ? "flex flex-col gap-6"
-                      : "h-[600px] bg-[#F4F3F1] rounded-2xl overflow-hidden"
+                        ? "flex flex-col gap-6"
+                        : "h-[600px] overflow-hidden rounded-2xl bg-[#F4F3F1]"
                   }
                 >
                   {viewMode === "map" ? (
-                    <PropertyMap properties={filteredProperties} />
+                    <PropertyMap properties={properties} />
                   ) : (
-                    filteredProperties.map((property) => (
+                    properties.map((property) => (
                       <motion.div
                         key={property.id}
                         initial={reduceMotion ? false : { opacity: 0, y: 16 }}
@@ -300,23 +207,35 @@ function LettingsPropertiesPageContent() {
         </div>
       </section>
 
-      {/* Pagination */}
-      {filteredProperties.length > 0 && (
-        <section className="border-t border-[#E0DFDC] py-8 px-6 lg:px-10">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex items-center justify-center gap-2">
-              <Button variant="outline" className="border-[#E0DFDC]" disabled>
-                Previous
-              </Button>
-              <Button className="bg-[#4AC8E8] text-white">1</Button>
-              <Button variant="outline" className="border-[#E0DFDC]">2</Button>
-              <Button variant="outline" className="border-[#E0DFDC]">3</Button>
-              <Button variant="outline" className="border-[#E0DFDC]">
-                Next
-              </Button>
-            </div>
+      {result !== null && result.totalPages > 1 && !error && (
+        <nav
+          className="border-t border-[#E0DFDC] px-6 py-8 lg:px-10"
+          aria-label="Property result pages"
+        >
+          <div className="mx-auto flex max-w-7xl items-center justify-center gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11 border-[#5F5D57] text-[#1A1917] hover:border-[#0B6F89] focus-visible:ring-[#0B6F89]"
+              onClick={() => setPage(query.page - 1)}
+              disabled={isLoading || query.page <= 1}
+            >
+              Previous
+            </Button>
+            <span className="px-2 text-sm font-medium text-[#5F5D57]" aria-live="polite">
+              Page {query.page} of {result.totalPages}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              className="min-h-11 border-[#5F5D57] text-[#1A1917] hover:border-[#0B6F89] focus-visible:ring-[#0B6F89]"
+              onClick={() => setPage(query.page + 1)}
+              disabled={isLoading || query.page >= result.totalPages}
+            >
+              Next
+            </Button>
           </div>
-        </section>
+        </nav>
       )}
 
       {/* Tenant Registration CTA */}
