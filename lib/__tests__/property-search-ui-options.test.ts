@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -9,9 +9,7 @@ import {
   SORT_OPTIONS,
   TENURE_OPTIONS,
   UNSUPPORTED_FILTER_KEYS,
-  canonicalFiltersToLegacyPatch,
   getPriceOptions,
-  legacyFiltersToCanonical,
   toggleCanonicalOption,
 } from "../property-search/ui-options.ts";
 import {
@@ -66,54 +64,6 @@ test("toggles canonical array values without duplicates", () => {
   );
 });
 
-test("temporarily adapts legacy filters without carrying unsupported fields", () => {
-  const canonical = legacyFiltersToCanonical({
-    location: "Cuffley",
-    radius: 5,
-    minBeds: 3,
-    maxBeds: 5,
-    propertyType: ["flat", "made_up"],
-    features: { garden: true, chainFree: true },
-    sortBy: "popular",
-  });
-
-  assert.deepEqual(canonical, {
-    location: "Cuffley",
-    minBedrooms: 3,
-    propertyTypes: ["flat"],
-    tenures: [],
-    features: ["garden", "chain_free"],
-    sort: "default",
-  });
-  const selectedPatch = canonicalFiltersToLegacyPatch({ features: ["balcony", "new_home"] });
-  assert.equal(selectedPatch.features?.balcony, true);
-  assert.equal(selectedPatch.features?.newBuild, true);
-  assert.equal(selectedPatch.features?.garden, false);
-});
-
-test("legacy feature patches clear deselected values in merge-based parents", () => {
-  const mergeParent = (
-    current: Record<string, boolean>,
-    patch: ReturnType<typeof canonicalFiltersToLegacyPatch>,
-  ) => ({ ...current, ...patch.features });
-
-  const initial = { garden: true, parking: true };
-  const afterOneRemoval = mergeParent(
-    initial,
-    canonicalFiltersToLegacyPatch({ features: ["garden"] }),
-  );
-  assert.equal(afterOneRemoval.garden, true);
-  assert.equal(afterOneRemoval.parking, false);
-
-  const afterFinalRemoval = mergeParent(
-    afterOneRemoval,
-    canonicalFiltersToLegacyPatch({ features: [] }),
-  );
-  assert.equal(afterFinalRemoval.garden, false);
-  assert.equal(afterFinalRemoval.parking, false);
-  assert.equal(canonicalFiltersToLegacyPatch({ features: undefined }).features, undefined);
-});
-
 test("scoped property controls do not render unsupported controls", () => {
   const componentDirectory = join(import.meta.dirname, "..", "..", "components", "property");
   const source = [
@@ -162,26 +112,48 @@ test("mobile controls cannot submit accidentally and preserve modal keyboard beh
   assert.match(advanced, /searchThenClose\(onSearch, onClose\)/);
 });
 
-test("the compatibility graph uses canonical filters without callback-shape guessing", () => {
+test("the active property search graph has no temporary compatibility layer", () => {
   const root = join(import.meta.dirname, "..", "..");
   const componentDirectory = join(root, "components", "property");
-  const compat = readFileSync(join(componentDirectory, "PropertySearchBarCompat.tsx"), "utf8");
-  const barrel = readFileSync(join(componentDirectory, "index.ts"), "utf8");
-  const landingSources = [
+  const activeSources = [
+    "components/property/index.ts",
+    "components/property/PropertySearchBarView.tsx",
+    "lib/property-search/ui-options.ts",
     "app/sections/PropertySearch.tsx",
     "app/sections/LettingsPropertySearch.tsx",
     "app/sales/SalesPageClient.tsx",
+    "app/sales/properties/page.tsx",
+    "app/lettings/properties/page.tsx",
   ].map((file) => readFileSync(join(root, file), "utf8")).join("\n");
 
-  assert.match(compat, /isCanonicalPropertySearchBarProps/);
-  assert.match(compat, /Array\.isArray\(props\.filters\.propertyTypes\)/);
-  assert.doesNotMatch(compat, /"onSearch" in props/);
-  assert.match(compat, /onSearch=\{props\.onSearch \?\? \(\(\) => undefined\)\}/);
-  assert.equal((landingSources.match(/onSearch=\{handleSearch\}/g) ?? []).length, 4);
-  assert.match(barrel, /AdvancedSearchView/);
-  assert.match(barrel, /ActiveFiltersView/);
-  assert.match(barrel, /QuickFiltersView/);
-  assert.match(barrel, /PropertySearchBarCompat/);
+  for (const temporaryName of [
+    "PropertySearchBarCompat",
+    "LegacySearchFilters",
+    "legacyFiltersToCanonical",
+    "canonicalFiltersToLegacyPatch",
+    "legacy-search-query",
+    "type SearchFilters",
+  ]) {
+    assert.equal(
+      activeSources.includes(temporaryName),
+      false,
+      `${temporaryName} should be absent from the active graph`,
+    );
+  }
+
+  for (const retiredFile of [
+    "PropertySearchBarCompat.tsx",
+    "PropertySearchBar.tsx",
+    "AdvancedSearch.tsx",
+    "ActiveFilters.tsx",
+    "QuickFilters.tsx",
+  ]) {
+    assert.equal(existsSync(join(componentDirectory, retiredFile)), false);
+  }
+  assert.equal(
+    existsSync(join(root, "lib", "property-search", "legacy-search-query.ts")),
+    false,
+  );
 });
 
 test("active Task 7 controls use the accessible neutral text color", () => {
@@ -207,7 +179,6 @@ test("active Task 7 controls reserve cyan for decorative pale fills", () => {
     "QuickFiltersView.tsx",
     "MobileFilterDrawer.tsx",
     "PropertySearchBarView.tsx",
-    "PropertySearchBarCompat.tsx",
   ].map((file) => readFileSync(join(componentDirectory, file), "utf8")).join("\n");
 
   assert.doesNotMatch(source, /text-\[#4AC8E8\]|border-\[#4AC8E8\]|ring-\[#4AC8E8\]|bg-\[#4AC8E8\](?!\/)/);

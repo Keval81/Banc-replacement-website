@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { SEARCH_PROPERTY_TYPES } from "../crm/property-source.ts";
 import {
+  createDefaultPropertySearchQuery,
   propertySearchQuerySchema,
   serializePropertySearchQuery,
 } from "./query.ts";
 import type {
+  PropertyDepartment,
   PropertySearchFilters,
   PropertySearchQuery,
   PropertySearchResult,
@@ -91,6 +93,17 @@ export function buildPropertyResultsHref(query: PropertySearchQuery): string {
     `/${query.department}/properties`,
     serializePropertySearchQuery(query),
   );
+}
+
+export function buildHomeSearchSubmission(
+  department: PropertyDepartment,
+  filters: PropertySearchFilters,
+): string {
+  const query = propertySearchQuerySchema.parse({
+    ...createDefaultPropertySearchQuery(department),
+    ...filters,
+  });
+  return buildPropertyResultsHref(query);
 }
 
 export function buildPropertyApiHref(query: PropertySearchQuery): string {

@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import { getLandingOverlayPolicy, getLandingUi } from "../landing-ui.ts";
@@ -22,6 +24,19 @@ test("keeps both landing variants focused on sales and lettings", () => {
       },
     ]);
   }
+});
+
+test("keeps homepage Buy and Rent selection accessible and submits only through Search", () => {
+  const source = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "PropertySearch.tsx"),
+    "utf8",
+  );
+
+  assert.match(source, />\s*Buy\s*</);
+  assert.match(source, />\s*Rent\s*</);
+  assert.equal((source.match(/aria-pressed=/g) ?? []).length, 2);
+  assert.match(source, /onSearch=\{handleSearch\}/);
+  assert.doesNotMatch(source, /useEffect\([\s\S]*?router\.push/);
 });
 
 test("keeps the valuation and labelled phone actions available outside the hero", () => {

@@ -10,16 +10,20 @@ export { default as AdvancedSearch } from "./AdvancedSearchView";
 export { default as ActiveFilters } from "./ActiveFiltersView";
 export { default as QuickFilters } from "./QuickFiltersView";
 export { default as MobileFilterDrawer, MobileFilterButton } from "./MobileFilterDrawer";
-export { default as PropertySearchBar } from "./PropertySearchBarCompat";
+export {
+  default as PropertySearchBar,
+  default as PropertySearchBarView,
+} from "./PropertySearchBarView";
 
 // Types
-export type { LegacySearchFilters as SearchFilters } from "@/lib/property-search/ui-options";
 export type { MobileFilterDrawerProps, MobileFilterButtonProps } from "./MobileFilterDrawer";
-export type { PropertySearchBarProps, ViewMode } from "./PropertySearchBarCompat";
+export type { PropertySearchBarProps, ViewMode } from "./PropertySearchBarView";
 export type {
   PropertyDepartment,
   PropertySearchFilters,
+  PropertySearchQuery,
   PropertySort,
+  PublicPropertyStatus,
 } from "@/lib/property-search/types";
 
 // Constants
