@@ -160,6 +160,15 @@ test("parses common maximum-budget phrases with suffixes and decimals", () => {
     ["buy with £500k or under", 500000],
     ["buy up to £1.25m", 1250000],
     ["rent for £2,500 or less", 2500],
+    ["buy under £500 thousand", 500000],
+    ["buy under £1.25 million", 1250000],
+    ["buy with a budget is £500k", 500000],
+    ["buy with a budget is: £500,000", 500000],
+    ["buy with a budget: £500 thousand", 500000],
+    ["buy with £500 thousand or under", 500000],
+    ["buy with £500 million max", 500000000],
+    ["buy under £500k.", 500000],
+    ["buy under £500,000, please", 500000],
   ] as const) {
     assert.equal(parsePropertyChatPatch(message).maxPrice, expected, message);
   }
@@ -173,6 +182,21 @@ test("does not mistake bedroom and bathroom ceilings for a price budget", () => 
   assert.equal(
     parsePropertyChatPatch("buy no more than 2 bathrooms").maxPrice,
     undefined,
+  );
+  assert.equal(
+    parsePropertyChatPatch("buy at most 3 large bedrooms").maxPrice,
+    undefined,
+  );
+  assert.equal(
+    parsePropertyChatPatch("buy at most 3 unusually large bedrooms").maxPrice,
+    undefined,
+  );
+});
+
+test("parses a complete comma-grouped count instead of a numeric suffix", () => {
+  assert.equal(
+    parsePropertyChatPatch("buy a 1,000-bedroom house").minBedrooms,
+    1000,
   );
 });
 
@@ -424,6 +448,34 @@ test("only treats a missing fact as listing-specific when structured context exi
   assert.equal(searches, 0);
 });
 
+test("treats generic and deictic property phrases as missing facts, not locations", async () => {
+  let searches = 0;
+  const handle = createPropertyChatHandler(async () => {
+    searches += 1;
+    return searchResult([]);
+  });
+  const context = { query: validSalesQuery({ location: "Cuffley" }) };
+
+  for (const message of [
+    "Is there parking in this house?",
+    "Are there schools in the area?",
+    "Is there fibre broadband in the property?",
+    "Does it have a garden near that home?",
+    "Is there parking near this place?",
+    "Are there schools in the neighbourhood?",
+    "Is there fibre broadband in that listing?",
+  ]) {
+    const result = await handle({ message, history: [], context });
+    assert.deepEqual(result, {
+      response:
+        "The listing doesn't specify that. The Banc team can confirm it for you.",
+      action: "contact_team",
+      context,
+    }, message);
+  }
+  assert.equal(searches, 0);
+});
+
 test("search intent in a missing-fact-shaped question wins over the listing handoff", async () => {
   const seen: PropertySearchQuery[] = [];
   const handle = createPropertyChatHandler(async (query) => {
@@ -670,10 +722,19 @@ test("fails safely when stated count or price ceilings are invalid", async () =>
     "I want to buy a 3000000000-bedroom house",
     "I want to buy a 999999999999999999999-bedroom house",
     "I want to buy a 2.5-bedroom house",
+    "I want to buy a 1.0-bedroom house",
+    "I want to buy a .5-bedroom house",
+    "I want to buy a 1,,000-bedroom house",
+    "I want to buy a 1,00-bedroom house",
+    "I want to buy a 1,000.5-bedroom house",
+    "I want to buy a -3-bedroom house",
+    "I want to buy a 2,147,483,648-bedroom house",
     "I want to buy a 3000000000-bathroom house",
     "I want to buy a 999999999999999999999-bathroom house",
     "I want to buy with a budget of £999999999999999999999m",
     "I want to buy for less than £5,,00k",
+    "I want to buy for under £500 trillions",
+    "I want to buy with a budget is £5,,00 thousand",
   ]) {
     const result = await handle({ message, history: [] });
     assert.equal(result.action, "contact_team", message);

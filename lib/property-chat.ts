@@ -146,15 +146,24 @@ function parseCount(
   message: string,
   subject: "bed" | "bath",
 ): { matched: boolean; value?: number } {
-  const match = message.match(
+  const phrase = message.match(
     new RegExp(
-      `(?:^|[^\\w.])(-?\\d+(?:\\.\\d+)?|${Object.keys(NUMBER_WORDS).join("|")})[-\\s]*(?:${subject}|${subject}room)s?\\b`,
+      `(?:^|[^\\w,.])([^\\s]+?)[-\\s]+(?:${subject}|${subject}room)s?\\b`,
       "i",
     ),
   );
-  if (!match?.[1]) return { matched: false };
-  const raw = match[1].toLowerCase();
-  const value = NUMBER_WORDS[raw] ?? Number(raw);
+  if (!phrase?.[1]) return { matched: false };
+  const raw = phrase[1].toLowerCase();
+  const wordValue = NUMBER_WORDS[raw];
+  const numericShaped = /^[+-]?[\d.,]/.test(raw);
+  if (wordValue === undefined && !numericShaped) return { matched: false };
+  if (
+    wordValue === undefined &&
+    !/^[+-]?(?:\d{1,3}(?:,\d{3})+|\d+)$/.test(raw)
+  ) {
+    throw new RangeError("Count is outside the supported search range");
+  }
+  const value = wordValue ?? Number(raw.replaceAll(",", ""));
   if (
     !Number.isSafeInteger(value) ||
     value < 0 ||
@@ -167,13 +176,15 @@ function parseCount(
 
 function parsePrice(message: string): { matched: boolean; value?: number } {
   const number = String.raw`([+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+))`;
+  const unit = String.raw`(k|m|thousand|million)?`;
+  const prefixCue = String.raw`(?:budget\s+(?:of\s+at\s+most|set\s+at|of|is)|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget)`;
   const patterns = [
     new RegExp(
-      String.raw`\b(?:budget\s+(?:of\s+)?at\s+most|budget\s+set\s+at|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget(?:\s+of)?)\s*£?\s*${number}\s*(k|m)?(?![\w,.])`,
+      String.raw`\b${prefixCue}\s*[:=\-]?\s*£?\s*${number}\s*${unit}(?=$|[\s!?]|[,.](?:$|\s))`,
       "i",
     ),
     new RegExp(
-      String.raw`£?\s*${number}\s*(k|m)?\s*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b`,
+      String.raw`£?\s*${number}\s*${unit}(?=$|[\s!?]|[,.](?:$|\s))[\s,;:\-]*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b`,
       "i",
     ),
   ];
@@ -182,29 +193,37 @@ function parsePrice(message: string): { matched: boolean; value?: number } {
     .find((candidate) => candidate?.[1] !== undefined);
   if (
     match?.index !== undefined &&
-    /^\s*(?:bed|bedroom|bath|bathroom)s?\b/i.test(
+    /^[\s,;:\-]*(?:[a-z][a-z-]*\s+){0,4}(?:bed|bedroom|bath|bathroom)s?\b/i.test(
       message.slice(match.index + match[0].length),
     )
   ) {
     return { matched: false };
   }
+  if (
+    match?.index !== undefined &&
+    /^\s+(?:hundred|thousands?|millions?|billions?|trillions?)\b/i.test(
+      message.slice(match.index + match[0].length),
+    )
+  ) {
+    throw new RangeError("Price is outside the supported search range");
+  }
   if (!match?.[1]) {
     const invalidCeiling =
-      /\b(?:budget\s+(?:of\s+)?at\s+most|budget\s+set\s+at|under|below|less\s+than|up\s+to|no\s+more\s+than|at\s+most|max(?:imum)?(?:\s+of)?|budget(?:\s+of)?)\s*(?:£\s*\S+|[+-]?[\d.,]\S*)/i.test(
-        message,
-      ) ||
-      /£\s*\S+\s*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b/i.test(
-        message,
-      );
+      new RegExp(
+        String.raw`\b${prefixCue}\s*[:=\-]?\s*(?:£\s*\S+|[+-]?[\d.,]\S*)`,
+        "i",
+      ).test(message) ||
+      /£\s*\S+(?:\s+\S+)?[\s,;:\-]*(?:max(?:imum)?|or\s+(?:less|under)|budget)\b/i.test(message);
     if (invalidCeiling) {
       throw new RangeError("Price is outside the supported search range");
     }
     return { matched: false };
   }
   const numeric = Number(match[1].replaceAll(",", ""));
-  const multiplier = match[2]?.toLowerCase() === "m"
+  const normalizedUnit = match[2]?.toLowerCase();
+  const multiplier = normalizedUnit === "m" || normalizedUnit === "million"
     ? 1_000_000
-    : match[2]?.toLowerCase() === "k"
+    : normalizedUnit === "k" || normalizedUnit === "thousand"
       ? 1_000
       : 1;
   const value = Math.round(numeric * multiplier);
@@ -224,7 +243,16 @@ function parseLocation(message: string): string | undefined {
       /(?=\b(?:in|near)\s+([a-z0-9][a-z0-9 '\u2019-]*?)(?=\s+(?:under|below|up to|max(?:imum)?|with|for|at|from|have|has|having|that|which)\b|\s+\d+\s*(?:bed|bath)|[?!,.]|$))/gi,
     ),
   ];
-  const location = matches.at(-1)?.[1]?.trim();
+  const location = matches
+    .map((match) => match[1]?.trim())
+    .filter((candidate): candidate is string => candidate !== undefined)
+    .filter(
+      (candidate) =>
+        !/^(?:(?:this|that|the|a|my|our|your|its|local|surrounding)\s+)?(?:house|home|property|listing|area|place|neighbou?rhood|one)$|^(?:this|that|it|here|there)$/i.test(
+          candidate.replace(/\s+/g, " "),
+        ),
+    )
+    .at(-1);
   return location && location.length <= 120 ? location : undefined;
 }
 
