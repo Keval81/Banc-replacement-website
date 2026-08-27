@@ -101,6 +101,46 @@ test("defaults empty, non-finite, fractional, negative and out-of-range numeric 
   assert.equal(query.pageSize, 24);
 });
 
+test("ignores oversized URL integers without throwing and accepts RPC-safe boundaries", () => {
+  assert.doesNotThrow(() =>
+    parsePropertySearchParams(
+      new URLSearchParams(
+        "page=1e100&minBedrooms=2147483648&minBathrooms=2147483648" +
+          "&minPrice=9007199254740992&maxPrice=1e100",
+      ),
+      "sales",
+    ),
+  );
+
+  const invalid = parsePropertySearchParams(
+    new URLSearchParams(
+      "page=44739244&minBedrooms=2147483648&minBathrooms=2147483648" +
+        "&minPrice=9007199254740992&maxPrice=1e100",
+    ),
+    "sales",
+  );
+  assert.equal(invalid.page, 1);
+  assert.equal(invalid.minBedrooms, undefined);
+  assert.equal(invalid.minBathrooms, undefined);
+  assert.equal(invalid.minPrice, undefined);
+  assert.equal(invalid.maxPrice, undefined);
+
+  const boundary = parsePropertySearchParams(
+    new URLSearchParams(
+      "page=44739243&pageSize=48&minBedrooms=2147483647&minBathrooms=2147483647" +
+        "&minPrice=9007199254740991&maxPrice=9007199254740991",
+    ),
+    "sales",
+  );
+  assert.equal(boundary.page, 44_739_243);
+  assert.equal(boundary.pageSize, 48);
+  assert.equal((boundary.page - 1) * boundary.pageSize <= 2_147_483_647, true);
+  assert.equal(boundary.minBedrooms, 2_147_483_647);
+  assert.equal(boundary.minBathrooms, 2_147_483_647);
+  assert.equal(boundary.minPrice, Number.MAX_SAFE_INTEGER);
+  assert.equal(boundary.maxPrice, Number.MAX_SAFE_INTEGER);
+});
+
 test("parses documented legacy aliases into canonical fields", () => {
   const query = parsePropertySearchParams(
     new URLSearchParams(
@@ -198,6 +238,35 @@ test("the exported schema canonicalizes enum arrays and requires a public status
   );
 });
 
+test("the exported schema rejects values outside RPC-safe integer bounds", () => {
+  for (const oversized of [
+    { page: 44_739_244 },
+    { minBedrooms: 2_147_483_648 },
+    { minBathrooms: 2_147_483_648 },
+    { minPrice: 9_007_199_254_740_992 },
+    { maxPrice: 1e100 },
+  ]) {
+    assert.throws(() =>
+      propertySearchQuerySchema.parse({
+        ...createDefaultPropertySearchQuery("sales"),
+        ...oversized,
+      }),
+    );
+  }
+
+  assert.doesNotThrow(() =>
+    propertySearchQuerySchema.parse({
+      ...createDefaultPropertySearchQuery("sales"),
+      page: 44_739_243,
+      pageSize: 48,
+      minBedrooms: 2_147_483_647,
+      minBathrooms: 2_147_483_647,
+      minPrice: Number.MAX_SAFE_INTEGER,
+      maxPrice: Number.MAX_SAFE_INTEGER,
+    }),
+  );
+});
+
 test("switching department resets incompatible fields and preserves compatible search intent", () => {
   const sales = parsePropertySearchParams(
     new URLSearchParams(
@@ -221,6 +290,24 @@ test("switching department resets incompatible fields and preserves compatible s
     page: 1,
     pageSize: 12,
   });
+});
+
+test("switching to the current department preserves the validated query without array aliases", () => {
+  const current = parsePropertySearchParams(
+    new URLSearchParams(
+      "location=Cuffley&minPrice=500000&tenures=freehold&propertyTypes=house" +
+        "&statuses=under_offer&page=3",
+    ),
+    "sales",
+  );
+  const unchanged = switchSearchDepartment(current, "sales");
+
+  assert.deepEqual(unchanged, current);
+  assert.notEqual(unchanged.propertyTypes, current.propertyTypes);
+  assert.notEqual(unchanged.tenures, current.tenures);
+  assert.notEqual(unchanged.statuses, current.statuses);
+  unchanged.propertyTypes.push("flat");
+  assert.deepEqual(current.propertyTypes, ["house"]);
 });
 
 test("reports only user-selected filters as active", () => {

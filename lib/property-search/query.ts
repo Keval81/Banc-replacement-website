@@ -16,6 +16,12 @@ const SALES_STATUSES = ["for_sale", "under_offer"] as const;
 const LETTINGS_STATUSES = ["to_let", "let_agreed"] as const;
 const PROPERTY_SORTS = ["default", "price_asc", "price_desc"] as const;
 
+export const POSTGRES_SIGNED_INTEGER_MAX = 2_147_483_647;
+export const MAX_PROPERTY_SEARCH_PRICE = Number.MAX_SAFE_INTEGER;
+export const MAX_PROPERTY_SEARCH_PAGE_SIZE = 48;
+export const MAX_PROPERTY_SEARCH_PAGE =
+  Math.floor(POSTGRES_SIGNED_INTEGER_MAX / MAX_PROPERTY_SEARCH_PAGE_SIZE) + 1;
+
 const LEGACY_FEATURE_FLAGS: ReadonlyArray<readonly [string, SearchFeature]> = [
   ["garden", "garden"],
   ["parking", "parking"],
@@ -36,10 +42,21 @@ function coerceOptionalNumber(value: unknown): unknown {
   return trimmed === "" ? undefined : Number(trimmed);
 }
 
-const optionalNonNegativeInteger = z.preprocess(
-  coerceOptionalNumber,
-  z.number().finite().int().nonnegative().optional(),
-);
+function boundedIntegerSchema(minimum: number, maximum: number) {
+  return z
+    .number()
+    .finite()
+    .min(minimum)
+    .max(maximum)
+    .refine((value) => Number.isSafeInteger(value), "Expected a safe integer");
+}
+
+function optionalBoundedIntegerSchema(maximum: number) {
+  return z.preprocess(
+    coerceOptionalNumber,
+    boundedIntegerSchema(0, maximum).optional(),
+  );
+}
 
 const locationSchema = z.preprocess(
   (value) => {
@@ -94,18 +111,21 @@ const lettingsStatusesSchema = z
 
 const commonQueryShape = {
   location: locationSchema,
-  minPrice: optionalNonNegativeInteger,
-  maxPrice: optionalNonNegativeInteger,
-  minBedrooms: optionalNonNegativeInteger,
-  minBathrooms: optionalNonNegativeInteger,
+  minPrice: optionalBoundedIntegerSchema(MAX_PROPERTY_SEARCH_PRICE),
+  maxPrice: optionalBoundedIntegerSchema(MAX_PROPERTY_SEARCH_PRICE),
+  minBedrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
+  minBathrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
   propertyTypes: propertyTypesSchema,
   tenures: tenuresSchema,
   features: featuresSchema,
   sort: z.enum(PROPERTY_SORTS).default("default"),
-  page: z.preprocess(coerceOptionalNumber, z.number().finite().int().min(1).default(1)),
+  page: z.preprocess(
+    coerceOptionalNumber,
+    boundedIntegerSchema(1, MAX_PROPERTY_SEARCH_PAGE).default(1),
+  ),
   pageSize: z.preprocess(
     coerceOptionalNumber,
-    z.number().finite().int().min(1).max(48).default(24),
+    boundedIntegerSchema(1, MAX_PROPERTY_SEARCH_PAGE_SIZE).default(24),
   ),
 };
 
@@ -161,12 +181,12 @@ function selectedParam(
 
 function parseInteger(
   raw: string | null,
-  options: { min: number; max?: number },
+  options: { min: number; max: number },
 ): number | undefined {
   if (raw === null || raw.trim() === "") return undefined;
   const value = Number(raw);
-  if (!Number.isFinite(value) || !Number.isInteger(value)) return undefined;
-  if (value < options.min || (options.max !== undefined && value > options.max)) {
+  if (!Number.isSafeInteger(value)) return undefined;
+  if (value < options.min || value > options.max) {
     return undefined;
   }
   return value;
@@ -216,19 +236,30 @@ export function parsePropertySearchParams(
   const allowedStatuses = department === "sales" ? SALES_STATUSES : LETTINGS_STATUSES;
   const statuses = parseAllowedList(params.get("statuses"), allowedStatuses);
   const location = parseLocation(params.get("location"));
-  const minPrice = parseInteger(params.get("minPrice"), { min: 0 });
-  const maxPrice = parseInteger(params.get("maxPrice"), { min: 0 });
+  const minPrice = parseInteger(params.get("minPrice"), {
+    min: 0,
+    max: MAX_PROPERTY_SEARCH_PRICE,
+  });
+  const maxPrice = parseInteger(params.get("maxPrice"), {
+    min: 0,
+    max: MAX_PROPERTY_SEARCH_PRICE,
+  });
   const minBedrooms = parseInteger(
     selectedParam(params, "minBedrooms", ["minBeds"]),
-    { min: 0 },
+    { min: 0, max: POSTGRES_SIGNED_INTEGER_MAX },
   );
   const minBathrooms = parseInteger(
     selectedParam(params, "minBathrooms", ["minBaths"]),
-    { min: 0 },
+    { min: 0, max: POSTGRES_SIGNED_INTEGER_MAX },
   );
-  const page = parseInteger(params.get("page"), { min: 1 }) ?? defaults.page;
+  const page =
+    parseInteger(params.get("page"), { min: 1, max: MAX_PROPERTY_SEARCH_PAGE }) ??
+    defaults.page;
   const pageSize =
-    parseInteger(params.get("pageSize"), { min: 1, max: 48 }) ?? defaults.pageSize;
+    parseInteger(params.get("pageSize"), {
+      min: 1,
+      max: MAX_PROPERTY_SEARCH_PAGE_SIZE,
+    }) ?? defaults.pageSize;
 
   return propertySearchQuerySchema.parse({
     ...defaults,
@@ -304,6 +335,7 @@ export function switchSearchDepartment(
   department: PropertyDepartment,
 ): PropertySearchQuery {
   const current = propertySearchQuerySchema.parse(query);
+  if (current.department === department) return current;
   const defaults = createDefaultPropertySearchQuery(department);
   return propertySearchQuerySchema.parse({
     ...defaults,
