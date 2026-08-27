@@ -17,7 +17,7 @@ test("submits the trimmed location with the callback refreshed by flush", () => 
 
   const submitted = submitPropertyLocation({
     isLoading: false,
-    locationInput: "  Cuffley  ",
+    getLocationInput: () => "  Cuffley  ",
     flush: (commit) => {
       events.push("flush:start");
       commit();
@@ -47,7 +47,7 @@ test("submits blank locations as undefined and searches once", () => {
 
   const submitted = submitPropertyLocation({
     isLoading: false,
-    locationInput: "   ",
+    getLocationInput: () => "   ",
     flush: (commit) => commit(),
     commitLocation: (location) => committed.push(location),
     getLatestSearch: () => () => {
@@ -65,7 +65,7 @@ test("skips location submission while loading", () => {
 
   const submitted = submitPropertyLocation({
     isLoading: true,
-    locationInput: "Cuffley",
+    getLocationInput: () => "Cuffley",
     flush: () => {
       effects += 1;
     },
@@ -79,6 +79,38 @@ test("skips location submission while loading", () => {
 
   assert.equal(submitted, false);
   assert.equal(effects, 0);
+});
+
+test("immediate click and Enter submission read the latest input event value", () => {
+  const pathways = [
+    { name: "click", trigger: (submit: () => boolean) => submit() },
+    { name: "Enter", trigger: (submit: () => boolean) => submit() },
+  ] as const;
+
+  for (const pathway of pathways) {
+    const latestInput = { current: "Potters Bar" };
+    const committed: Array<string | undefined> = [];
+    let searches = 0;
+    const onChange = (value: string) => {
+      latestInput.current = value;
+    };
+    const submit = () => submitPropertyLocation({
+      isLoading: false,
+      getLocationInput: () => latestInput.current,
+      flush: (commit) => commit(),
+      commitLocation: (location) => committed.push(location),
+      getLatestSearch: () => () => {
+        searches += 1;
+      },
+    });
+
+    onChange("Cuffley");
+    const submitted = pathway.trigger(submit);
+
+    assert.equal(submitted, true, `${pathway.name} should submit`);
+    assert.deepEqual(committed, ["Cuffley"], `${pathway.name} should commit latest input`);
+    assert.equal(searches, 1, `${pathway.name} should search once`);
+  }
 });
 
 test("searches once before closing mobile results", () => {

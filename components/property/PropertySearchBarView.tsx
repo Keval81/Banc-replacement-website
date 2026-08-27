@@ -52,21 +52,25 @@ export default function PropertySearchBar({ department, filters, onFilterChange,
   const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
   const [showAdvancedDesktop, setShowAdvancedDesktop] = React.useState(false);
   const [locationInput, setLocationInput] = React.useState(filters.location ?? "");
+  const locationInputRef = React.useRef(filters.location ?? "");
   const onSearchRef = React.useRef(onSearch);
   React.useLayoutEffect(() => {
     onSearchRef.current = onSearch;
   });
-  React.useEffect(() => setLocationInput(filters.location ?? ""), [filters.location]);
+  React.useEffect(() => {
+    locationInputRef.current = filters.location ?? "";
+    setLocationInput(locationInputRef.current);
+  }, [filters.location]);
 
   const commitLocationAndSearch = React.useCallback(() => {
     submitPropertyLocation({
       isLoading,
-      locationInput,
+      getLocationInput: () => locationInputRef.current,
       flush: flushSync,
       commitLocation: (location) => onFilterChange({ location }),
       getLatestSearch: () => onSearchRef.current,
     });
-  }, [isLoading, locationInput, onFilterChange]);
+  }, [isLoading, onFilterChange]);
 
   return (
     <>
@@ -77,8 +81,8 @@ export default function PropertySearchBar({ department, filters, onFilterChange,
               <div className="relative min-w-0 flex-1">
                 <label htmlFor="property-location" className="sr-only">Area, town or postcode</label>
                 <MapPin className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#5F5D57]" />
-                <Input id="property-location" type="text" placeholder="Search by area, town or postcode…" value={locationInput} onChange={(event) => setLocationInput(event.target.value)} className="h-12 bg-[#F4F3F1] pl-12 pr-12 text-base placeholder:text-[#5F5D57] focus:bg-white focus:border-[#0B6F89] focus:ring-[#0B6F89] focus-visible:ring-[#0B6F89]" />
-                {locationInput && <button type="button" onClick={() => { setLocationInput(""); onFilterChange({ location: undefined }); }} aria-label="Clear location" className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-colors duration-200 hover:bg-[#E0DFDC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"><X className="h-4 w-4 text-[#5F5D57]" /></button>}
+                <Input id="property-location" type="text" placeholder="Search by area, town or postcode…" value={locationInput} onChange={(event) => { locationInputRef.current = event.target.value; setLocationInput(event.target.value); }} className="h-12 bg-[#F4F3F1] pl-12 pr-12 text-base placeholder:text-[#5F5D57] focus:bg-white focus:border-[#0B6F89] focus:ring-[#0B6F89] focus-visible:ring-[#0B6F89]" />
+                {locationInput && <button type="button" onClick={() => { locationInputRef.current = ""; setLocationInput(""); onFilterChange({ location: undefined }); }} aria-label="Clear location" className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-colors duration-200 hover:bg-[#E0DFDC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"><X className="h-4 w-4 text-[#5F5D57]" /></button>}
               </div>
               <div className="flex min-w-0 flex-wrap items-center gap-3">
                 <MobileFilterButton onClick={() => setMobileFiltersOpen(true)} activeFilterCount={countFilters(filters)} className="lg:hidden" />

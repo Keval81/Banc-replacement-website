@@ -96,6 +96,12 @@ test("the search bar commits the visible location before explicit search", () =>
   assert.match(source, /department: PropertyDepartment/);
   assert.match(source, /onSearch: \(\) => void/);
   assert.match(source, /submitPropertyLocation\(\{/);
+  assert.match(source, /locationInputRef\.current = event\.target\.value/);
+  assert.match(source, /getLocationInput: \(\) => locationInputRef\.current/);
+  assert.match(source, /locationInputRef\.current = filters\.location \?\? ""/);
+  assert.match(source, /locationInputRef\.current = ""/);
+  assert.match(source, /<form onSubmit=/);
+  assert.match(source, /<Button type="submit"/);
   assert.match(source, /disabled=\{isLoading\}/);
   assert.match(source, /resultCount !== undefined/);
 });

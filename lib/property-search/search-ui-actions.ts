@@ -1,6 +1,6 @@
 interface SubmitPropertyLocationOptions {
   isLoading: boolean;
-  locationInput: string;
+  getLocationInput: () => string;
   flush: (commit: () => void) => void;
   commitLocation: (location: string | undefined) => void;
   getLatestSearch: () => () => void;
@@ -8,14 +8,14 @@ interface SubmitPropertyLocationOptions {
 
 export function submitPropertyLocation({
   isLoading,
-  locationInput,
+  getLocationInput,
   flush,
   commitLocation,
   getLatestSearch,
 }: SubmitPropertyLocationOptions): boolean {
   if (isLoading) return false;
 
-  const location = locationInput.trim() || undefined;
+  const location = getLocationInput().trim() || undefined;
   flush(() => commitLocation(location));
   getLatestSearch()();
   return true;
