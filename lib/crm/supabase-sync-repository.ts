@@ -2,74 +2,81 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type {
   PropertySyncRepository,
+  ReconciliationRequest,
   SyncRunRecord,
+  SyncSummary,
 } from "./property-sync.ts";
-import type {
-  CanonicalPropertyWriteRow,
-  CrmSourceSystem,
-} from "./property-source.ts";
+import type { CrmSourceSystem } from "./property-source.ts";
 
-const SOURCE_ID_BATCH_SIZE = 500;
+const SOURCE_ID_PAGE_SIZE = 1_000;
+
+interface ReconciliationRpcResult {
+  records_read: number;
+  records_written: number;
+  records_deactivated: number;
+  finished_at: string;
+}
 
 export class SupabaseSyncRepository implements PropertySyncRepository {
   constructor(private readonly client: SupabaseClient) {}
 
   async listActiveSourceIds(source: CrmSourceSystem): Promise<string[]> {
-    const { data, error } = await this.client
-      .from("properties")
-      .select("source_id")
-      .eq("source_system", source)
-      .eq("is_active", true);
+    const sourceIds: string[] = [];
+    let expectedCount: number | null = null;
 
-    if (error) {
-      throw new Error(`Supabase list active property source IDs: ${error.message}`);
-    }
-
-    return (data ?? [])
-      .map((row) => row.source_id)
-      .filter((sourceId): sourceId is string => typeof sourceId === "string");
-  }
-
-  async upsert(rows: CanonicalPropertyWriteRow[]): Promise<number> {
-    const { error } = await this.client
-      .from("properties")
-      .upsert(rows, { onConflict: "source_system,source_id" });
-
-    if (error) {
-      throw new Error(`Supabase upsert properties: ${error.message}`);
-    }
-
-    return rows.length;
-  }
-
-  async deactivate(
-    source: CrmSourceSystem,
-    sourceIds: string[],
-    at: string,
-  ): Promise<number> {
-    let recordsDeactivated = 0;
-
-    for (let index = 0; index < sourceIds.length; index += SOURCE_ID_BATCH_SIZE) {
-      const batch = sourceIds.slice(index, index + SOURCE_ID_BATCH_SIZE);
-      const { data, error } = await this.client
+    for (let from = 0; expectedCount === null || sourceIds.length < expectedCount;) {
+      const { data, error, count } = await this.client
         .from("properties")
-        .update({ is_active: false, last_synced_at: at })
+        .select("source_id", { count: "exact" })
         .eq("source_system", source)
         .eq("is_active", true)
-        .in("source_id", batch)
-        .select("source_id");
+        .range(from, from + SOURCE_ID_PAGE_SIZE - 1);
 
       if (error) {
-        throw new Error(`Supabase deactivate missing properties: ${error.message}`);
+        throw new Error(`Supabase list active property source IDs: ${error.message}`);
       }
+      if (expectedCount === null) expectedCount = count ?? 0;
 
-      recordsDeactivated += data?.length ?? 0;
+      const page = (data ?? [])
+        .map((row) => row.source_id)
+        .filter((sourceId): sourceId is string => typeof sourceId === "string");
+      sourceIds.push(...page);
+
+      if (page.length === 0 && sourceIds.length < expectedCount) {
+        throw new Error("Supabase list active property source IDs returned an incomplete page");
+      }
+      from += page.length;
     }
 
-    return recordsDeactivated;
+    return sourceIds;
   }
 
-  async recordRun(run: SyncRunRecord): Promise<void> {
+  async reconcile(request: ReconciliationRequest): Promise<SyncSummary> {
+    const { data, error } = await this.client.rpc("reconcile_property_source_feed", {
+      p_source_system: request.sourceSystem,
+      p_rows: request.rows,
+      p_source_ids: request.sourceIds,
+      p_started_at: request.startedAt,
+    });
+
+    if (error) {
+      throw new Error(`Supabase reconcile source feed: ${error.message}`);
+    }
+
+    const result = Array.isArray(data) ? data[0] : data;
+    if (!isReconciliationResult(result)) {
+      throw new Error("Supabase reconcile source feed returned an invalid result");
+    }
+
+    return {
+      recordsRead: result.records_read,
+      recordsWritten: result.records_written,
+      recordsDeactivated: result.records_deactivated,
+      finishedAt: result.finished_at,
+    };
+  }
+
+  async recordFailure(run: SyncRunRecord): Promise<void> {
     const { error } = await this.client.from("crm_sync_runs").insert({
       source_system: run.sourceSystem,
       started_at: run.startedAt,
@@ -82,7 +89,16 @@ export class SupabaseSyncRepository implements PropertySyncRepository {
     });
 
     if (error) {
-      throw new Error(`Supabase record sync run: ${error.message}`);
+      throw new Error(`Supabase record failed sync run: ${error.message}`);
     }
   }
+}
+
+function isReconciliationResult(value: unknown): value is ReconciliationRpcResult {
+  if (typeof value !== "object" || value === null) return false;
+  const result = value as Record<string, unknown>;
+  return Number.isInteger(result.records_read)
+    && Number.isInteger(result.records_written)
+    && Number.isInteger(result.records_deactivated)
+    && typeof result.finished_at === "string";
 }

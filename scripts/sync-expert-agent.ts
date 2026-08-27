@@ -15,6 +15,10 @@ import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expertAgentAdapter } from "../lib/crm/expert-agent-adapter.ts";
+import {
+  createFtpCurlInvocation,
+  sanitizeSyncError,
+} from "../lib/crm/ftp-credentials.ts";
 import { reconcileCompleteFeed } from "../lib/crm/property-sync.ts";
 import { SupabaseSyncRepository } from "../lib/crm/supabase-sync-repository.ts";
 import type { CanonicalPropertyWriteRow } from "../lib/crm/property-source.ts";
@@ -27,6 +31,18 @@ const DRY_RUN = process.argv.includes("--dry-run");
 
 function fail(msg: string): never {
   throw new Error(msg);
+}
+
+function safeErrorMessage(error: unknown): string {
+  return sanitizeSyncError(error, [FTP_URL, FTP_USER, FTP_PASS]);
+}
+
+function runFtpCurl(url: string, args: string[]): string {
+  const invocation = createFtpCurlInvocation(url, FTP_USER, FTP_PASS);
+  return execFileSync("curl", [...invocation.args, ...args], {
+    encoding: "utf8",
+    input: invocation.input,
+  });
 }
 
 function printDryRun(rows: CanonicalPropertyWriteRow[]): void {
@@ -60,11 +76,7 @@ async function main(): Promise<void> {
     }
 
     // 1. List the FTP directory, find the newest zip (or xml).
-    const listing = execFileSync(
-      "curl",
-      ["-s", "--user", `${FTP_USER}:${FTP_PASS}`, "-l", FTP_URL],
-      { encoding: "utf8" }
-    )
+    const listing = runFtpCurl(FTP_URL, ["-l"])
       .split("\n")
       .map((l) => l.trim())
       .filter(Boolean);
@@ -77,7 +89,7 @@ async function main(): Promise<void> {
 
     // 2. Download.
     const local = join(work, file);
-    execFileSync("curl", ["-s", "--user", `${FTP_USER}:${FTP_PASS}`, "-o", local, FTP_URL + file]);
+    runFtpCurl(FTP_URL + file, ["-o", local]);
 
     // 3. Unzip if needed, locate the XML.
     let xmlPath = local;
@@ -146,33 +158,28 @@ async function main(): Promise<void> {
     }
 
     if (!repository) throw new Error("Sync repository is unavailable");
-    const finishedAt = new Date().toISOString();
     const summary = await reconcileCompleteFeed(repository, {
       sourceSystem: "expert_agent",
       rows,
       startedAt,
-      finishedAt,
     });
-    await repository.recordRun({
-      sourceSystem: "expert_agent",
-      startedAt,
-      finishedAt,
-      status: "success",
-      ...summary,
-    });
-    console.log(`upserted ${summary.recordsWritten} properties`);
+    console.log(`upserted ${summary.recordsWritten} properties at ${summary.finishedAt}`);
   } catch (error) {
     if (repository) {
-      await repository.recordRun({
-        sourceSystem: "expert_agent",
-        startedAt,
-        finishedAt: new Date().toISOString(),
-        status: "failure",
-        recordsRead,
-        recordsWritten: 0,
-        recordsDeactivated: 0,
-        errorSummary: error instanceof Error ? error.message.slice(0, 500) : "Unknown sync failure",
-      });
+      try {
+        await repository.recordFailure({
+          sourceSystem: "expert_agent",
+          startedAt,
+          finishedAt: new Date().toISOString(),
+          status: "failure",
+          recordsRead,
+          recordsWritten: 0,
+          recordsDeactivated: 0,
+          errorSummary: safeErrorMessage(error).slice(0, 500),
+        });
+      } catch (auditError) {
+        console.error(`sync-expert-agent: failed to audit failure: ${safeErrorMessage(auditError)}`);
+      }
     }
     throw error;
   } finally {
@@ -184,7 +191,7 @@ try {
   await main();
 } catch (error) {
   console.error(
-    `sync-expert-agent: ${error instanceof Error ? error.message : "Unknown sync failure"}`,
+    `sync-expert-agent: ${safeErrorMessage(error)}`,
   );
   process.exitCode = 1;
 }

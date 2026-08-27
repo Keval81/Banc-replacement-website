@@ -19,6 +19,18 @@ test("migration creates neutral source fields and sync audit records", () => {
   assert.match(sql, /create table[\s\S]*crm_sync_runs/i);
 });
 
+test("migration exposes an atomic source-feed reconciliation RPC", () => {
+  assert.match(sql, /create or replace function public\.reconcile_property_source_feed/i);
+  assert.match(sql, /p_source_system text/i);
+  assert.match(sql, /p_rows jsonb/i);
+  assert.match(sql, /p_source_ids text\[\]/i);
+  assert.match(sql, /p_started_at timestamptz/i);
+  assert.match(sql, /on conflict \(source_system, source_id\)/i);
+  assert.match(sql, /update public\.properties[\s\S]*is_active = false/i);
+  assert.match(sql, /insert into public\.crm_sync_runs[\s\S]*'success'/i);
+  assert.match(sql, /clock_timestamp\(\)/i);
+});
+
 test("migration exposes a parameterized paginated search function", () => {
   assert.match(sql, /create or replace function public\.search_properties/i);
   assert.match(sql, /p_department text/i);

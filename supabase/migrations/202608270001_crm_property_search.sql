@@ -44,6 +44,134 @@ create table if not exists public.crm_sync_runs (
 );
 alter table public.crm_sync_runs enable row level security;
 
+create or replace function public.reconcile_property_source_feed(
+  p_source_system text,
+  p_rows jsonb,
+  p_source_ids text[],
+  p_started_at timestamptz
+)
+returns table(
+  records_read integer,
+  records_written integer,
+  records_deactivated integer,
+  finished_at timestamptz
+)
+language plpgsql
+security invoker
+as $function$
+declare
+  v_finished_at timestamptz := clock_timestamp();
+  v_records_read integer;
+  v_records_written integer;
+  v_records_deactivated integer;
+begin
+  if p_rows is null or jsonb_typeof(p_rows) <> 'array' then
+    raise exception 'source feed rows must be a non-empty array';
+  end if;
+
+  if jsonb_array_length(p_rows) = 0 then
+    raise exception 'source feed rows must be a non-empty array';
+  end if;
+
+  v_records_read := jsonb_array_length(p_rows);
+  if coalesce(cardinality(p_source_ids), 0) <> v_records_read
+     or cardinality(p_source_ids) <> (select count(distinct source_id) from unnest(p_source_ids) as source_id)
+     or (select count(distinct row_data->>'source_id') from jsonb_array_elements(p_rows) as row_data) <> v_records_read
+     or exists (
+       select 1
+       from jsonb_array_elements(p_rows) as row_data
+       where nullif(btrim(row_data->>'source_id'), '') is null
+          or row_data->>'source_system' is distinct from p_source_system
+          or not (row_data->>'source_id' = any(p_source_ids))
+     ) then
+    raise exception 'source feed rows and source IDs do not match';
+  end if;
+
+  insert into public.properties
+  select (
+    jsonb_populate_record(
+      null::public.properties,
+      row_data || jsonb_build_object(
+        'id', gen_random_uuid(),
+        'source_system', p_source_system,
+        'last_synced_at', v_finished_at,
+        'is_active', true,
+        'created_at', v_finished_at,
+        'updated_at', v_finished_at
+      )
+    )
+  ).*
+  from jsonb_array_elements(p_rows) as row_data
+  on conflict (source_system, source_id) do update set
+    expert_agent_id = excluded.expert_agent_id,
+    source_updated_at = excluded.source_updated_at,
+    last_synced_at = excluded.last_synced_at,
+    is_active = excluded.is_active,
+    search_property_type = excluded.search_property_type,
+    search_tenure = excluded.search_tenure,
+    search_features = excluded.search_features,
+    title = excluded.title,
+    address = excluded.address,
+    postcode = excluded.postcode,
+    price = excluded.price,
+    price_qualifier = excluded.price_qualifier,
+    status = excluded.status,
+    department = excluded.department,
+    property_type = excluded.property_type,
+    bedrooms = excluded.bedrooms,
+    bathrooms = excluded.bathrooms,
+    receptions = excluded.receptions,
+    sqft = excluded.sqft,
+    description = excluded.description,
+    features = excluded.features,
+    images = excluded.images,
+    epc_rating = excluded.epc_rating,
+    epc_image_url = excluded.epc_image_url,
+    tenure = excluded.tenure,
+    brochure_url = excluded.brochure_url,
+    virtual_tour_url = excluded.virtual_tour_url,
+    rooms = excluded.rooms,
+    floorplans = excluded.floorplans,
+    latitude = excluded.latitude,
+    longitude = excluded.longitude,
+    updated_at = excluded.updated_at;
+  get diagnostics v_records_written = row_count;
+
+  update public.properties
+  set is_active = false,
+      last_synced_at = v_finished_at,
+      updated_at = v_finished_at
+  where source_system = p_source_system
+    and is_active = true
+    and not (source_id = any(p_source_ids));
+  get diagnostics v_records_deactivated = row_count;
+
+  insert into public.crm_sync_runs (
+    source_system,
+    started_at,
+    finished_at,
+    status,
+    records_read,
+    records_written,
+    records_deactivated
+  ) values (
+    p_source_system,
+    p_started_at,
+    v_finished_at,
+    'success',
+    v_records_read,
+    v_records_written,
+    v_records_deactivated
+  );
+
+  return query select
+    v_records_read,
+    v_records_written,
+    v_records_deactivated,
+    v_finished_at;
+end;
+$function$;
+
 create or replace function public.search_properties(
   p_department text,
   p_location text default null,

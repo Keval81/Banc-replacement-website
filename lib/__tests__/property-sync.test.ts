@@ -29,26 +29,34 @@ function canonicalRow(sourceId: string): CanonicalPropertyWriteRow {
 }
 
 function createFakeSyncRepository(activeIds: string[]) {
-  const upsertCalls: CanonicalPropertyWriteRow[][] = [];
-  const deactivateCalls: string[][] = [];
+  const reconcileCalls: Array<{
+    sourceSystem: string;
+    rows: CanonicalPropertyWriteRow[];
+    sourceIds: string[];
+    startedAt: string;
+  }> = [];
   const repository: PropertySyncRepository & {
-    upsertCalls: CanonicalPropertyWriteRow[][];
-    deactivateCalls: string[][];
+    reconcileCalls: Array<{
+      sourceSystem: string;
+      rows: CanonicalPropertyWriteRow[];
+      sourceIds: string[];
+      startedAt: string;
+    }>;
   } = {
-    upsertCalls,
-    deactivateCalls,
+    reconcileCalls,
     async listActiveSourceIds() {
       return [...activeIds];
     },
-    async upsert(rows) {
-      upsertCalls.push(rows);
-      return rows.length;
+    async reconcile(request) {
+      reconcileCalls.push(request);
+      return {
+        recordsRead: request.rows.length,
+        recordsWritten: request.rows.length,
+        recordsDeactivated: activeIds.filter((id) => !request.sourceIds.includes(id)).length,
+        finishedAt: "2026-08-27T09:00:05.000Z",
+      };
     },
-    async deactivate(_source, ids) {
-      deactivateCalls.push(ids);
-      return ids.length;
-    },
-    async recordRun() {
+    async recordFailure() {
       return;
     },
   };
@@ -63,13 +71,42 @@ test("rejects an empty feed before writing or deactivating", async () => {
       sourceSystem: "expert_agent",
       rows: [],
       startedAt: "2026-08-27T09:00:00.000Z",
-      finishedAt: "2026-08-27T09:00:05.000Z",
     }),
     /empty or invalid/i,
   );
 
-  assert.equal(repository.upsertCalls.length, 0);
-  assert.equal(repository.deactivateCalls.length, 0);
+  assert.equal(repository.reconcileCalls.length, 0);
+});
+
+test("rejects an incomplete property row before writing or deactivating", async () => {
+  const repository = createFakeSyncRepository(["EA-OLD"]);
+  const invalidRow = { ...canonicalRow("EA-1"), title: "" };
+
+  await assert.rejects(
+    reconcileCompleteFeed(repository, {
+      sourceSystem: "expert_agent",
+      rows: [invalidRow],
+      startedAt: "2026-08-27T09:00:00.000Z",
+    }),
+    /invalid/i,
+  );
+
+  assert.equal(repository.reconcileCalls.length, 0);
+});
+
+test("rejects a feed that would remove more than half of active records", async () => {
+  const repository = createFakeSyncRepository(["EA-1", "EA-2", "EA-3"]);
+
+  await assert.rejects(
+    reconcileCompleteFeed(repository, {
+      sourceSystem: "expert_agent",
+      rows: [canonicalRow("EA-1")],
+      startedAt: "2026-08-27T09:00:00.000Z",
+    }),
+    /more than 50%/i,
+  );
+
+  assert.equal(repository.reconcileCalls.length, 0);
 });
 
 test("rejects duplicate source ids before writing or deactivating", async () => {
@@ -80,29 +117,29 @@ test("rejects duplicate source ids before writing or deactivating", async () => 
       sourceSystem: "expert_agent",
       rows: [canonicalRow("EA-1"), canonicalRow("EA-1")],
       startedAt: "2026-08-27T09:00:00.000Z",
-      finishedAt: "2026-08-27T09:00:05.000Z",
     }),
     /duplicate/i,
   );
 
-  assert.equal(repository.upsertCalls.length, 0);
-  assert.equal(repository.deactivateCalls.length, 0);
+  assert.equal(repository.reconcileCalls.length, 0);
 });
 
-test("upserts current rows and deactivates only missing source ids", async () => {
+test("delegates a complete feed to one atomic repository mutation", async () => {
   const repository = createFakeSyncRepository(["EA-1", "EA-OLD"]);
 
   const summary = await reconcileCompleteFeed(repository, {
     sourceSystem: "expert_agent",
     rows: [canonicalRow("EA-1"), canonicalRow("EA-2")],
     startedAt: "2026-08-27T09:00:00.000Z",
-    finishedAt: "2026-08-27T09:00:05.000Z",
   });
 
-  assert.deepEqual(repository.deactivateCalls, [["EA-OLD"]]);
+  assert.equal(repository.reconcileCalls.length, 1);
+  assert.deepEqual(repository.reconcileCalls[0]?.sourceSystem, "expert_agent");
+  assert.deepEqual(repository.reconcileCalls[0]?.sourceIds, ["EA-1", "EA-2"]);
   assert.deepEqual(summary, {
     recordsRead: 2,
     recordsWritten: 2,
     recordsDeactivated: 1,
+    finishedAt: "2026-08-27T09:00:05.000Z",
   });
 });
