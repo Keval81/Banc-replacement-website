@@ -2,9 +2,22 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  MODAL_FOCUSABLE_SELECTOR,
   startModalFocusLifecycle,
   type ModalFocusKeyEvent,
 } from "../property-search/modal-focus-lifecycle.ts";
+
+test("uses one selector that cannot re-include disabled or negative-tabindex controls", () => {
+  assert.equal(
+    MODAL_FOCUSABLE_SELECTOR,
+    "button:not([disabled]):not([tabindex='-1'])," +
+      "input:not([disabled]):not([tabindex='-1'])," +
+      "select:not([disabled]):not([tabindex='-1'])," +
+      "textarea:not([disabled]):not([tabindex='-1'])," +
+      "a[href]:not([disabled]):not([aria-disabled='true']):not([tabindex='-1'])," +
+      "[tabindex]:not([disabled]):not([aria-disabled='true']):not([tabindex='-1'])",
+  );
+});
 
 test("traps modal focus and restores the opener and environment on cleanup", () => {
   const focusEvents: string[] = [];
@@ -16,20 +29,21 @@ test("traps modal focus and restores the opener and environment on cleanup", () 
   let bodyOverflow = "auto";
   let keydownListener: ((event: ModalFocusKeyEvent) => void) | undefined;
   let frameCallback: (() => void) | undefined;
-  let cancelledFrame: unknown;
-  let removedListener: unknown;
+  const cancelledFrames: unknown[] = [];
+  const removedListeners: unknown[] = [];
+  const overflowWrites: string[] = [];
   let closes = 0;
 
   const cleanup = startModalFocusLifecycle({
     getActiveElement: () => activeElement,
     getBodyOverflow: () => bodyOverflow,
-    setBodyOverflow: (value) => { bodyOverflow = value; },
+    setBodyOverflow: (value) => { bodyOverflow = value; overflowWrites.push(value); },
     getFocusableElements: () => [first, last],
     containerContains: (element) => element === first || element === last,
     addKeydownListener: (listener) => { keydownListener = listener; },
-    removeKeydownListener: (listener) => { removedListener = listener; },
+    removeKeydownListener: (listener) => { removedListeners.push(listener); },
     requestFrame: (callback) => { frameCallback = callback; return 17; },
-    cancelFrame: (frame) => { cancelledFrame = frame; },
+    cancelFrame: (frame) => { cancelledFrames.push(frame); },
     onClose: () => { closes += 1; },
   });
 
@@ -46,15 +60,18 @@ test("traps modal focus and restores the opener and environment on cleanup", () 
   activeElement = outside;
   keydownListener?.({ key: "Tab", shiftKey: false, preventDefault: () => { prevented += 1; } });
   keydownListener?.({ key: "Escape", shiftKey: false, preventDefault: () => { prevented += 1; } });
+  keydownListener?.({ key: "Escape", shiftKey: false, preventDefault: () => { prevented += 1; } });
 
   assert.deepEqual(focusEvents, ["first", "first", "last", "first"]);
-  assert.equal(prevented, 4);
+  assert.equal(prevented, 5);
   assert.equal(closes, 1);
 
   cleanup();
+  cleanup();
   assert.equal(bodyOverflow, "auto");
-  assert.equal(cancelledFrame, 17);
-  assert.equal(removedListener, keydownListener);
+  assert.deepEqual(cancelledFrames, [17]);
+  assert.deepEqual(removedListeners, [keydownListener]);
+  assert.deepEqual(overflowWrites, ["hidden", "auto"]);
   assert.deepEqual(focusEvents, ["first", "first", "last", "first", "opener"]);
 });
 

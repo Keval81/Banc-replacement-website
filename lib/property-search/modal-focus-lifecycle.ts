@@ -2,6 +2,15 @@ export interface ModalFocusableElement {
   focus: () => void;
 }
 
+export const MODAL_FOCUSABLE_SELECTOR = [
+  "button:not([disabled]):not([tabindex='-1'])",
+  "input:not([disabled]):not([tabindex='-1'])",
+  "select:not([disabled]):not([tabindex='-1'])",
+  "textarea:not([disabled]):not([tabindex='-1'])",
+  "a[href]:not([disabled]):not([aria-disabled='true']):not([tabindex='-1'])",
+  "[tabindex]:not([disabled]):not([aria-disabled='true']):not([tabindex='-1'])",
+].join(",");
+
 export interface ModalFocusKeyEvent {
   key: string;
   shiftKey: boolean;
@@ -39,10 +48,13 @@ export function startModalFocusLifecycle(
   const frame = dependencies.requestFrame(() => {
     dependencies.getFocusableElements()[0]?.focus();
   });
+  let closeRequested = false;
 
   const handleKeydown = (event: ModalFocusKeyEvent) => {
     if (event.key === "Escape") {
       event.preventDefault();
+      if (closeRequested) return;
+      closeRequested = true;
       dependencies.onClose();
       return;
     }
@@ -70,7 +82,10 @@ export function startModalFocusLifecycle(
   };
 
   dependencies.addKeydownListener(handleKeydown);
+  let cleanedUp = false;
   return () => {
+    if (cleanedUp) return;
+    cleanedUp = true;
     dependencies.cancelFrame(frame);
     dependencies.removeKeydownListener(handleKeydown);
     dependencies.setBodyOverflow(previousBodyOverflow);

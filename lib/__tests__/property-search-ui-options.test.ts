@@ -157,7 +157,7 @@ test("mobile controls cannot submit accidentally and preserve modal keyboard beh
 
   assert.match(drawer, /export function MobileFilterButton[\s\S]*?<button[\s\S]*?type="button"/);
   assert.match(drawer, /startModalFocusLifecycle\(\{/);
-  assert.match(drawer, /button:not\(\[disabled\]\)/);
+  assert.match(drawer, /MODAL_FOCUSABLE_SELECTOR/);
   assert.match(drawer, /<motion\.div[\s\S]*?ref=\{drawerRef\}[\s\S]*?role="dialog"/);
   assert.match(advanced, /searchThenClose\(onSearch, onClose\)/);
 });
@@ -200,6 +200,7 @@ test("active Task 7 controls use the accessible neutral text color", () => {
 
 test("active Task 7 controls reserve cyan for decorative pale fills", () => {
   const componentDirectory = join(import.meta.dirname, "..", "..", "components", "property");
+  const sharedComponentDirectory = join(componentDirectory, "..");
   const source = [
     "AdvancedSearchView.tsx",
     "ActiveFiltersView.tsx",
@@ -217,4 +218,15 @@ test("active Task 7 controls reserve cyan for decorative pale fills", () => {
   assert.equal(buttonSnippets.every((button) => button.includes("focus-visible:ring-[#0B6F89]")), true);
   const checkboxSnippet = source.match(/<Checkbox[\s\S]*?\/>/)?.[0] ?? "";
   assert.equal(checkboxSnippet.includes("focus-visible:ring-[#0B6F89]"), true);
+  assert.equal(checkboxSnippet.includes("border-[#0B6F89]"), true);
+
+  const sharedCheckbox = readFileSync(join(sharedComponentDirectory, "ui", "checkbox.tsx"), "utf8");
+  const sharedButton = readFileSync(join(sharedComponentDirectory, "ui", "button.tsx"), "utf8");
+  assert.match(sharedCheckbox, /border-primary/);
+  assert.match(sharedButton, /hover:border-banc-sky/);
+
+  const outlineButton = buttonSnippets.find((button) => button.includes('variant="outline"')) ?? "";
+  assert.equal(outlineButton.includes("border-[#5F5D57]"), true);
+  assert.equal(outlineButton.includes("text-[#1A1917]"), true);
+  assert.equal(outlineButton.includes("hover:border-[#0B6F89]"), true);
 });

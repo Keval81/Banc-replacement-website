@@ -5,7 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { SlidersHorizontal } from "lucide-react";
 import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
-import { startModalFocusLifecycle } from "@/lib/property-search/modal-focus-lifecycle";
+import {
+  MODAL_FOCUSABLE_SELECTOR,
+  startModalFocusLifecycle,
+} from "@/lib/property-search/modal-focus-lifecycle";
 import AdvancedSearch from "./AdvancedSearchView";
 
 // ============================================
@@ -50,14 +53,10 @@ export default function MobileFilterDrawer({
   React.useEffect(() => {
     if (!isOpen) return;
 
-    const focusableSelector = [
-      "button:not([disabled])",
-      "input:not([disabled])",
-      "select:not([disabled])",
-      "[tabindex]:not([tabindex='-1'])",
-    ].join(",");
     const getFocusableElements = () =>
-      Array.from(drawerRef.current?.querySelectorAll<HTMLElement>(focusableSelector) ?? []);
+      Array.from(
+        drawerRef.current?.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR) ?? [],
+      );
     return startModalFocusLifecycle({
       getActiveElement: () => document.activeElement,
       getBodyOverflow: () => document.body.style.overflow,

@@ -37,7 +37,7 @@ function OptionList<TValue extends string>({ name, options, selected, canonicalO
     const id = `${name}-${option.value}`;
     return (
       <label key={option.value} htmlFor={id} className={cn("flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border p-3 transition-colors duration-200", checked ? "border-[#0B6F89]/30 bg-[#4AC8E8]/5 text-[#1A1917]" : "border-transparent text-[#5F5D57] hover:bg-[#F4F3F1]")}>
-        <Checkbox id={id} checked={checked} onCheckedChange={() => onChange(toggleCanonicalOption(selected, option.value, canonicalOrder))} className="focus-visible:ring-[#0B6F89] data-[state=checked]:border-[#0B6F89] data-[state=checked]:bg-[#0B6F89]" />
+        <Checkbox id={id} checked={checked} onCheckedChange={() => onChange(toggleCanonicalOption(selected, option.value, canonicalOrder))} className="border-[#0B6F89] focus-visible:ring-[#0B6F89] data-[state=checked]:border-[#0B6F89] data-[state=checked]:bg-[#0B6F89]" />
         <span className="text-sm font-medium">{option.label}</span>
       </label>
     );
@@ -102,7 +102,7 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
         <FilterSection title="Features & amenities" icon={TreePine}><OptionList<SearchFeature> name="feature" options={FEATURE_OPTIONS} selected={filters.features} canonicalOrder={SEARCH_FEATURES} onChange={(features) => onFilterChange({ features })} /></FilterSection>
       </div>
 
-      {isMobile && <footer className="sticky bottom-0 space-y-2 border-t border-[#E0DFDC] bg-white p-4"><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} disabled={isLoading} className="h-12 w-full bg-[#0B6F89] text-base font-semibold text-white hover:bg-[#075E75] focus-visible:ring-[#0B6F89]">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading…</> : `Show ${resultCount !== undefined ? resultCount : ""} results`}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full text-base focus-visible:ring-[#0B6F89]">Clear all filters</Button>}</footer>}
+      {isMobile && <footer className="sticky bottom-0 space-y-2 border-t border-[#E0DFDC] bg-white p-4"><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} disabled={isLoading} className="h-12 w-full bg-[#0B6F89] text-base font-semibold text-white hover:bg-[#075E75] focus-visible:ring-[#0B6F89]">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading…</> : `Show ${resultCount !== undefined ? resultCount : ""} results`}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full border-[#5F5D57] text-base text-[#1A1917] hover:border-[#0B6F89] focus-visible:ring-[#0B6F89]">Clear all filters</Button>}</footer>}
     </div>
   );
 }
