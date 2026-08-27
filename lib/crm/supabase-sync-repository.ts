@@ -18,7 +18,11 @@ interface ReconciliationRpcResult {
 }
 
 export class SupabaseSyncRepository implements PropertySyncRepository {
-  constructor(private readonly client: SupabaseClient) {}
+  private readonly client: SupabaseClient;
+
+  constructor(client: SupabaseClient) {
+    this.client = client;
+  }
 
   async listActiveSourceIds(source: CrmSourceSystem): Promise<string[]> {
     const sourceIds: string[] = [];
@@ -30,22 +34,32 @@ export class SupabaseSyncRepository implements PropertySyncRepository {
         .select("source_id", { count: "exact" })
         .eq("source_system", source)
         .eq("is_active", true)
+        .order("source_id", { ascending: true })
         .range(from, from + SOURCE_ID_PAGE_SIZE - 1);
 
       if (error) {
         throw new Error(`Supabase list active property source IDs: ${error.message}`);
       }
-      if (expectedCount === null) expectedCount = count ?? 0;
+      if (expectedCount === null) {
+        if (count === null) {
+          throw new Error("Supabase list active property source IDs did not return an exact count");
+        }
+        expectedCount = count;
+      }
 
-      const page = (data ?? [])
+      const rows = data ?? [];
+      const page = rows
         .map((row) => row.source_id)
         .filter((sourceId): sourceId is string => typeof sourceId === "string");
+      if (page.length !== rows.length) {
+        throw new Error("Supabase list active property source IDs returned an invalid source ID");
+      }
       sourceIds.push(...page);
 
       if (page.length === 0 && sourceIds.length < expectedCount) {
         throw new Error("Supabase list active property source IDs returned an incomplete page");
       }
-      from += page.length;
+      from += rows.length;
     }
 
     return sourceIds;

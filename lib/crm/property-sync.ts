@@ -43,6 +43,7 @@ export async function reconcileCompleteFeed(
     sourceSystem: CrmSourceSystem;
     rows: CanonicalPropertyWriteRow[];
     startedAt: string;
+    onBeforeReconcile?: () => void;
   },
 ): Promise<SyncSummary> {
   const sourceIds = validateRows(input.sourceSystem, input.rows);
@@ -53,6 +54,7 @@ export async function reconcileCompleteFeed(
     throw new Error("Cannot reconcile a feed that would remove more than 50% of active records");
   }
 
+  input.onBeforeReconcile?.();
   return repository.reconcile({
     sourceSystem: input.sourceSystem,
     rows: input.rows,

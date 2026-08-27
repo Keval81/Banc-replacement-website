@@ -22,6 +22,10 @@ import {
 import { reconcileCompleteFeed } from "../lib/crm/property-sync.ts";
 import { SupabaseSyncRepository } from "../lib/crm/supabase-sync-repository.ts";
 import type { CanonicalPropertyWriteRow } from "../lib/crm/property-source.ts";
+import {
+  bestEffortRecordPreRpcFailure,
+  type SyncFailurePhase,
+} from "../lib/crm/sync-failure-audit.ts";
 import { parseExpertAgentFeed } from "../lib/expert-agent-feed.ts";
 
 const FTP_URL = process.env.EXPERT_AGENT_FTP_URL ?? "";
@@ -67,6 +71,7 @@ async function main(): Promise<void> {
     : null;
   const work = mkdtempSync(join(tmpdir(), "ea-sync-"));
   let recordsRead = 0;
+  let failurePhase: SyncFailurePhase = "pre_rpc";
 
   try {
     if (!FTP_URL || !FTP_USER || !FTP_PASS) {
@@ -162,25 +167,24 @@ async function main(): Promise<void> {
       sourceSystem: "expert_agent",
       rows,
       startedAt,
+      onBeforeReconcile() {
+        failurePhase = "rpc_invoked";
+      },
     });
     console.log(`upserted ${summary.recordsWritten} properties at ${summary.finishedAt}`);
   } catch (error) {
-    if (repository) {
-      try {
-        await repository.recordFailure({
-          sourceSystem: "expert_agent",
-          startedAt,
-          finishedAt: new Date().toISOString(),
-          status: "failure",
-          recordsRead,
-          recordsWritten: 0,
-          recordsDeactivated: 0,
-          errorSummary: safeErrorMessage(error).slice(0, 500),
-        });
-      } catch (auditError) {
-        console.error(`sync-expert-agent: failed to audit failure: ${safeErrorMessage(auditError)}`);
-      }
-    }
+    await bestEffortRecordPreRpcFailure(failurePhase, repository, {
+      sourceSystem: "expert_agent",
+      startedAt,
+      finishedAt: new Date().toISOString(),
+      status: "failure",
+      recordsRead,
+      recordsWritten: 0,
+      recordsDeactivated: 0,
+      errorSummary: safeErrorMessage(error).slice(0, 500),
+    }, (auditError) => {
+      console.error(`sync-expert-agent: failed to audit failure: ${safeErrorMessage(auditError)}`);
+    });
     throw error;
   } finally {
     rmSync(work, { recursive: true, force: true });

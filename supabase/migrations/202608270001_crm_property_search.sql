@@ -60,11 +60,17 @@ language plpgsql
 security invoker
 as $function$
 declare
-  v_finished_at timestamptz := clock_timestamp();
+  v_synced_at timestamptz;
+  v_finished_at timestamptz;
+  v_current_active_records integer;
   v_records_read integer;
   v_records_written integer;
   v_records_deactivated integer;
 begin
+  if nullif(btrim(p_source_system), '') is null then
+    raise exception 'source system is required';
+  end if;
+
   if p_rows is null or jsonb_typeof(p_rows) <> 'array' then
     raise exception 'source feed rows must be a non-empty array';
   end if;
@@ -87,6 +93,28 @@ begin
     raise exception 'source feed rows and source IDs do not match';
   end if;
 
+  perform pg_advisory_xact_lock(hashtextextended(p_source_system, 0));
+
+  select count(*)
+  into v_current_active_records
+  from public.properties
+  where source_system = p_source_system
+    and is_active = true;
+
+  select count(*)
+  into v_records_deactivated
+  from public.properties
+  where source_system = p_source_system
+    and is_active = true
+    and not (source_id = any(p_source_ids));
+
+  if v_current_active_records > 0
+     and v_records_deactivated::numeric / v_current_active_records > 0.5 then
+    raise exception 'source feed would remove more than 50%% of active records';
+  end if;
+
+  v_synced_at := clock_timestamp();
+
   insert into public.properties
   select (
     jsonb_populate_record(
@@ -94,10 +122,10 @@ begin
       row_data || jsonb_build_object(
         'id', gen_random_uuid(),
         'source_system', p_source_system,
-        'last_synced_at', v_finished_at,
+        'last_synced_at', v_synced_at,
         'is_active', true,
-        'created_at', v_finished_at,
-        'updated_at', v_finished_at
+        'created_at', v_synced_at,
+        'updated_at', v_synced_at
       )
     )
   ).*
@@ -139,12 +167,14 @@ begin
 
   update public.properties
   set is_active = false,
-      last_synced_at = v_finished_at,
-      updated_at = v_finished_at
+      last_synced_at = v_synced_at,
+      updated_at = v_synced_at
   where source_system = p_source_system
     and is_active = true
     and not (source_id = any(p_source_ids));
   get diagnostics v_records_deactivated = row_count;
+
+  v_finished_at := clock_timestamp();
 
   insert into public.crm_sync_runs (
     source_system,
@@ -171,6 +201,13 @@ begin
     v_finished_at;
 end;
 $function$;
+
+revoke execute on function public.reconcile_property_source_feed(
+  text, jsonb, text[], timestamptz
+) from public, anon, authenticated;
+grant execute on function public.reconcile_property_source_feed(
+  text, jsonb, text[], timestamptz
+) to service_role;
 
 create or replace function public.search_properties(
   p_department text,

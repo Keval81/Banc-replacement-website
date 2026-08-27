@@ -28,7 +28,17 @@ test("migration exposes an atomic source-feed reconciliation RPC", () => {
   assert.match(sql, /on conflict \(source_system, source_id\)/i);
   assert.match(sql, /update public\.properties[\s\S]*is_active = false/i);
   assert.match(sql, /insert into public\.crm_sync_runs[\s\S]*'success'/i);
-  assert.match(sql, /clock_timestamp\(\)/i);
+  const rpcStart = sql.indexOf("create or replace function public.reconcile_property_source_feed");
+  const rpcEnd = sql.indexOf("$function$;", rpcStart);
+  const rpc = sql.slice(rpcStart, rpcEnd);
+
+  assert.match(rpc, /pg_advisory_xact_lock\(hashtextextended\(p_source_system/i);
+  assert.match(rpc, /select count\(\*\)[\s\S]*is_active = true/i);
+  assert.match(rpc, /v_records_deactivated::numeric \/ v_current_active_records > 0\.5/i);
+  assert.ok(rpc.indexOf("v_records_deactivated::numeric") < rpc.indexOf("insert into public.properties"));
+  assert.ok(rpc.indexOf("v_finished_at := clock_timestamp()") > rpc.indexOf("update public.properties"));
+  assert.match(sql, /revoke execute on function public\.reconcile_property_source_feed[\s\S]*from public, anon, authenticated/i);
+  assert.match(sql, /grant execute on function public\.reconcile_property_source_feed[\s\S]*to service_role/i);
 });
 
 test("migration exposes a parameterized paginated search function", () => {

@@ -28,7 +28,10 @@ function canonicalRow(sourceId: string): CanonicalPropertyWriteRow {
   };
 }
 
-function createFakeSyncRepository(activeIds: string[]) {
+function createFakeSyncRepository(
+  activeIds: string[],
+  onReconcile?: () => void,
+) {
   const reconcileCalls: Array<{
     sourceSystem: string;
     rows: CanonicalPropertyWriteRow[];
@@ -48,6 +51,7 @@ function createFakeSyncRepository(activeIds: string[]) {
       return [...activeIds];
     },
     async reconcile(request) {
+      onReconcile?.();
       reconcileCalls.push(request);
       return {
         recordsRead: request.rows.length,
@@ -142,4 +146,22 @@ test("delegates a complete feed to one atomic repository mutation", async () => 
     recordsDeactivated: 1,
     finishedAt: "2026-08-27T09:00:05.000Z",
   });
+});
+
+test("marks the RPC boundary only immediately before reconciliation", async () => {
+  let phase = "pre_rpc";
+  const repository = createFakeSyncRepository([], () => {
+    assert.equal(phase, "rpc_invoked");
+  });
+
+  await reconcileCompleteFeed(repository, {
+    sourceSystem: "expert_agent",
+    rows: [canonicalRow("EA-1")],
+    startedAt: "2026-08-27T09:00:00.000Z",
+    onBeforeReconcile() {
+      phase = "rpc_invoked";
+    },
+  });
+
+  assert.equal(phase, "rpc_invoked");
 });
