@@ -143,14 +143,9 @@ test("the search bar commits the visible location before explicit search", () =>
     join(import.meta.dirname, "..", "..", "components", "property", "PropertySearchBarView.tsx"),
     "utf8",
   );
-  const commitStart = source.indexOf("const commitLocationAndSearch");
-  const commit = source.slice(commitStart, source.indexOf("return (", commitStart));
-
   assert.match(source, /department: PropertyDepartment/);
   assert.match(source, /onSearch: \(\) => void/);
-  assert.match(source, /const onSearchRef = React\.useRef\(onSearch\)/);
-  assert.match(source, /onSearchRef\.current = onSearch/);
-  assert.ok(commit.indexOf("flushSync") < commit.indexOf("onSearchRef.current()"));
+  assert.match(source, /submitPropertyLocation\(\{/);
   assert.match(source, /disabled=\{isLoading\}/);
   assert.match(source, /resultCount !== undefined/);
 });
@@ -161,15 +156,10 @@ test("mobile controls cannot submit accidentally and preserve modal keyboard beh
   const advanced = readFileSync(join(componentDirectory, "AdvancedSearchView.tsx"), "utf8");
 
   assert.match(drawer, /export function MobileFilterButton[\s\S]*?<button[\s\S]*?type="button"/);
-  assert.match(drawer, /drawerRef/);
-  assert.match(drawer, /previouslyFocused/);
-  assert.match(drawer, /onCloseRef\.current\(\)/);
-  assert.match(drawer, /}, \[isOpen\]\);/);
-  assert.match(drawer, /event\.key !== "Tab"/);
+  assert.match(drawer, /startModalFocusLifecycle\(\{/);
+  assert.match(drawer, /button:not\(\[disabled\]\)/);
   assert.match(drawer, /<motion\.div[\s\S]*?ref=\{drawerRef\}[\s\S]*?role="dialog"/);
-  assert.match(drawer, /\.focus\(\)/);
-  assert.match(drawer, /previouslyFocused\.current\?\.focus\(\)/);
-  assert.match(advanced, /onSearch\?\.\(\)[\s\S]*?onClose\?\.\(\)/);
+  assert.match(advanced, /searchThenClose\(onSearch, onClose\)/);
 });
 
 test("the compatibility graph uses canonical filters without callback-shape guessing", () => {
@@ -206,4 +196,25 @@ test("active Task 7 controls use the accessible neutral text color", () => {
 
   assert.doesNotMatch(source, /#8A8880|#9CA3AF/);
   assert.match(source, /#5F5D57/);
+});
+
+test("active Task 7 controls reserve cyan for decorative pale fills", () => {
+  const componentDirectory = join(import.meta.dirname, "..", "..", "components", "property");
+  const source = [
+    "AdvancedSearchView.tsx",
+    "ActiveFiltersView.tsx",
+    "QuickFiltersView.tsx",
+    "MobileFilterDrawer.tsx",
+    "PropertySearchBarView.tsx",
+    "PropertySearchBarCompat.tsx",
+  ].map((file) => readFileSync(join(componentDirectory, file), "utf8")).join("\n");
+
+  assert.doesNotMatch(source, /text-\[#4AC8E8\]|border-\[#4AC8E8\]|ring-\[#4AC8E8\]|bg-\[#4AC8E8\](?!\/)/);
+  assert.match(source, /#0B6F89/);
+  assert.match(source, /hover:bg-\[#075E75\]/);
+  const buttonSnippets = [...source.matchAll(/<Button[\s\S]*?<\/Button>/g)].map((match) => match[0]);
+  assert.equal(buttonSnippets.length, 3);
+  assert.equal(buttonSnippets.every((button) => button.includes("focus-visible:ring-[#0B6F89]")), true);
+  const checkboxSnippet = source.match(/<Checkbox[\s\S]*?\/>/)?.[0] ?? "";
+  assert.equal(checkboxSnippet.includes("focus-visible:ring-[#0B6F89]"), true);
 });

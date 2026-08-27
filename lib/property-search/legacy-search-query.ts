@@ -1,4 +1,8 @@
 import type { LegacySearchFeatureFlags, LegacySearchFilters } from "./ui-options.ts";
+import {
+  SEARCH_PROPERTY_TYPES,
+  SEARCH_TENURES,
+} from "../crm/property-source.ts";
 
 const FEATURE_PARAMETERS = [
   "garden",
@@ -15,33 +19,57 @@ const FEATURE_PARAMETERS = [
 ] as const satisfies readonly (keyof LegacySearchFeatureFlags)[];
 
 const LEGACY_SORTS = ["default", "newest", "price_asc", "price_desc"] as const;
+const MAX_LOCATION_LENGTH = 120;
+const MAX_RPC_INTEGER = 2_147_483_647;
 
-function optionalInteger(value: string | null): number | undefined {
-  if (value === null || value.trim() === "") return undefined;
-  const parsed = Number(value);
-  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : undefined;
+function optionalInteger(value: string | null, maximum: number): number | undefined {
+  const normalized = value?.trim();
+  if (!normalized || !/^\d+$/.test(normalized)) return undefined;
+  const parsed = Number(normalized);
+  return Number.isSafeInteger(parsed) && parsed <= maximum ? parsed : undefined;
+}
+
+function validInteger(value: number | undefined, maximum: number): value is number {
+  return value !== undefined &&
+    Number.isSafeInteger(value) &&
+    value >= 0 &&
+    value <= maximum;
+}
+
+function canonicalValues<TValue extends string>(
+  rawValues: readonly string[],
+  canonicalOrder: readonly TValue[],
+): TValue[] {
+  const requested = new Set(rawValues.map((value) => value.trim()));
+  return canonicalOrder.filter((value) => requested.has(value));
 }
 
 export function parseLegacySearchParams(searchParams: URLSearchParams): LegacySearchFilters {
   const filters: LegacySearchFilters = {};
   const location = searchParams.get("location")?.trim();
-  if (location) filters.location = location;
+  if (location && location.length <= MAX_LOCATION_LENGTH) filters.location = location;
 
   const numericFields = [
-    ["minPrice", "minPrice"],
-    ["maxPrice", "maxPrice"],
-    ["minBeds", "minBeds"],
-    ["minBaths", "minBaths"],
+    ["minPrice", "minPrice", Number.MAX_SAFE_INTEGER],
+    ["maxPrice", "maxPrice", Number.MAX_SAFE_INTEGER],
+    ["minBeds", "minBeds", MAX_RPC_INTEGER],
+    ["minBaths", "minBaths", MAX_RPC_INTEGER],
   ] as const;
-  for (const [parameter, field] of numericFields) {
-    const value = optionalInteger(searchParams.get(parameter));
+  for (const [parameter, field, maximum] of numericFields) {
+    const value = optionalInteger(searchParams.get(parameter), maximum);
     if (value !== undefined) filters[field] = value;
   }
 
   const propertyType = searchParams.get("propertyType");
-  if (propertyType) filters.propertyType = propertyType.split(",").filter(Boolean);
+  if (propertyType) {
+    const values = canonicalValues(propertyType.split(","), SEARCH_PROPERTY_TYPES);
+    if (values.length > 0) filters.propertyType = values;
+  }
   const tenure = searchParams.get("tenure");
-  if (tenure) filters.tenure = tenure.split(",").filter(Boolean);
+  if (tenure) {
+    const values = canonicalValues(tenure.split(","), SEARCH_TENURES);
+    if (values.length > 0) filters.tenure = values;
+  }
 
   const features: LegacySearchFeatureFlags = {};
   for (const parameter of FEATURE_PARAMETERS) {
@@ -58,13 +86,16 @@ export function parseLegacySearchParams(searchParams: URLSearchParams): LegacySe
 
 export function filtersToLegacySearchParams(filters: LegacySearchFilters): URLSearchParams {
   const params = new URLSearchParams();
-  if (filters.location) params.set("location", filters.location);
-  if (filters.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
-  if (filters.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
-  if (filters.minBeds !== undefined) params.set("minBeds", String(filters.minBeds));
-  if (filters.minBaths !== undefined) params.set("minBaths", String(filters.minBaths));
-  if (filters.propertyType?.length) params.set("propertyType", filters.propertyType.join(","));
-  if (filters.tenure?.length) params.set("tenure", filters.tenure.join(","));
+  const location = filters.location?.trim();
+  if (location && location.length <= MAX_LOCATION_LENGTH) params.set("location", location);
+  if (validInteger(filters.minPrice, Number.MAX_SAFE_INTEGER)) params.set("minPrice", String(filters.minPrice));
+  if (validInteger(filters.maxPrice, Number.MAX_SAFE_INTEGER)) params.set("maxPrice", String(filters.maxPrice));
+  if (validInteger(filters.minBeds, MAX_RPC_INTEGER)) params.set("minBeds", String(filters.minBeds));
+  if (validInteger(filters.minBaths, MAX_RPC_INTEGER)) params.set("minBaths", String(filters.minBaths));
+  const propertyTypes = canonicalValues(filters.propertyType ?? [], SEARCH_PROPERTY_TYPES);
+  if (propertyTypes.length > 0) params.set("propertyType", propertyTypes.join(","));
+  const tenures = canonicalValues(filters.tenure ?? [], SEARCH_TENURES);
+  if (tenures.length > 0) params.set("tenure", tenures.join(","));
   for (const parameter of FEATURE_PARAMETERS) {
     if (filters.features?.[parameter]) params.set(parameter, "true");
   }
