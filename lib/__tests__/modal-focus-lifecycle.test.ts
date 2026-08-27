@@ -112,3 +112,31 @@ test("cleans up safely when the previous active element cannot be focused", () =
 
   assert.doesNotThrow(cleanup);
 });
+
+test("uses explicit initial and restored focus targets for a remounting dialog opener", () => {
+  const focusEvents: string[] = [];
+  const documentOpener = { focus: () => { focusEvents.push("removed opener"); } };
+  const input = { focus: () => { focusEvents.push("input"); } };
+  const close = { focus: () => { focusEvents.push("close"); } };
+  let frameCallback: (() => void) | undefined;
+
+  const cleanup = startModalFocusLifecycle({
+    getActiveElement: () => documentOpener,
+    getBodyOverflow: () => "",
+    setBodyOverflow: () => undefined,
+    getFocusableElements: () => [close, input],
+    getInitialFocusElement: () => input,
+    containerContains: () => true,
+    addKeydownListener: () => undefined,
+    removeKeydownListener: () => undefined,
+    requestFrame: (callback) => { frameCallback = callback; return 3; },
+    cancelFrame: () => undefined,
+    onClose: () => undefined,
+    restoreFocus: () => { focusEvents.push("remounted opener"); },
+  });
+
+  frameCallback?.();
+  cleanup();
+
+  assert.deepEqual(focusEvents, ["input", "remounted opener"]);
+});

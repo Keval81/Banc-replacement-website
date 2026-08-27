@@ -17,6 +17,7 @@ import type {
   PropertySearchQuery,
   PropertySearchResult,
 } from "./property-search/types.ts";
+import { getSafeExternalUrl } from "./property-detail-view.ts";
 import type { PropertyCardData } from "./property-view.ts";
 
 export interface ChatSearchContext {
@@ -64,6 +65,23 @@ const propertyChatRequestSchema = z
       .optional(),
   })
   .strict();
+
+const REQUIRED_PROPERTY_QUERY_KEYS = [
+  "department",
+  "propertyTypes",
+  "tenures",
+  "features",
+  "statuses",
+  "sort",
+  "page",
+  "pageSize",
+] as const;
+
+function hasCompletePropertySearchQuery(value: unknown): boolean {
+  return typeof value === "object" &&
+    value !== null &&
+    REQUIRED_PROPERTY_QUERY_KEYS.every((key) => Object.hasOwn(value, key));
+}
 
 const NUMBER_WORDS: Readonly<Record<string, number>> = {
   one: 1,
@@ -135,11 +153,15 @@ function parseCount(message: string, subject: "bed" | "bath"): number | undefine
   return Number.isSafeInteger(value) && value >= 0 ? value : undefined;
 }
 
-function parsePrice(message: string): number | undefined {
-  const match = message.match(
-    /\b(?:under|below|up to|max|maximum)\s*£?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\b/i,
-  );
-  if (!match?.[1]) return undefined;
+function parsePrice(message: string): { matched: boolean; value?: number } {
+  const patterns = [
+    /\b(?:under|below|up to|no more than|max(?:imum)?(?: of)?|budget(?: of)?)\s*£?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\b/i,
+    /£?\s*(\d[\d,]*(?:\.\d+)?)\s*(k|m)?\s*(?:max(?:imum)?|or less|budget)\b/i,
+  ];
+  const match = patterns
+    .map((pattern) => message.match(pattern))
+    .find((candidate) => candidate?.[1] !== undefined);
+  if (!match?.[1]) return { matched: false };
   const numeric = Number(match[1].replaceAll(",", ""));
   const multiplier = match[2]?.toLowerCase() === "m"
     ? 1_000_000
@@ -147,7 +169,10 @@ function parsePrice(message: string): number | undefined {
       ? 1_000
       : 1;
   const value = Math.round(numeric * multiplier);
-  return Number.isSafeInteger(value) && value >= 0 ? value : undefined;
+  if (!Number.isSafeInteger(value) || value < 0) {
+    throw new RangeError("Price is outside the supported search range");
+  }
+  return { matched: true, value };
 }
 
 function parseLocation(message: string): string | undefined {
@@ -176,8 +201,10 @@ export function parsePropertyChatPatch(message: string): PropertyChatPatch {
 
   const location = parseLocation(message);
   if (location !== undefined) patch.location = location;
-  const maxPrice = parsePrice(message);
-  if (maxPrice !== undefined) patch.maxPrice = maxPrice;
+  const parsedPrice = parsePrice(message);
+  if (parsedPrice.matched && parsedPrice.value !== undefined) {
+    patch.maxPrice = parsedPrice.value;
+  }
   const minBedrooms = parseCount(message, "bed");
   if (minBedrooms !== undefined) patch.minBedrooms = minBedrooms;
   const minBathrooms = parseCount(message, "bath");
@@ -208,18 +235,7 @@ export function parsePropertyChatRequest(value: unknown): PropertyChatRequest | 
         return null;
       }
       const query = (context as { query?: unknown }).query;
-      if (typeof query !== "object" || query === null) return null;
-      const requiredKeys = [
-        "department",
-        "propertyTypes",
-        "tenures",
-        "features",
-        "statuses",
-        "sort",
-        "page",
-        "pageSize",
-      ];
-      if (!requiredKeys.every((key) => Object.hasOwn(query, key))) return null;
+      if (!hasCompletePropertySearchQuery(query)) return null;
     }
   }
   const parsed = propertyChatRequestSchema.safeParse(value);
@@ -270,10 +286,16 @@ function isHumanContactRequest(message: string): boolean {
 
 function isMissingFactQuestion(message: string): boolean {
   return (
+    /\bis\s+there\s+(?:parking|(?:fibre\s+)?broadband|a\s+(?:garage|garden|balcony|fireplace|conservatory))\b/i.test(
+      message,
+    ) ||
+    /\bare\s+(?:there\s+)?(?:any\s+|good\s+|local\s+)?(?:schools?|stations?|transport links?|shops?)\b/i.test(
+      message,
+    ) ||
     /\b(?:does|do|has|have|is|are)\s+(?:this|that|it|the property|the listing)\b/i.test(
       message,
     ) ||
-    /\bwhat(?:'s| is)\s+(?:the\s+)?(?:tenure|council tax|epc|broadband)\b/i.test(
+    /\bwhat(?:'s| is)?\s+(?:the\s+)?(?:tenure|council tax|epc|broadband)\b/i.test(
       message,
     ) ||
     /\bhow\s+(?:old|large|fast)\b/i.test(message)
@@ -294,8 +316,7 @@ function createSearchQuery(
   historyPatch: PropertyChatPatch,
   messagePatch: PropertyChatPatch,
 ): PropertySearchQuery | null {
-  const department =
-    messagePatch.department ?? current?.department ?? historyPatch.department;
+  const department = messagePatch.department ?? current?.department;
   if (department === undefined) return null;
 
   const base = current === undefined
@@ -318,64 +339,126 @@ function createSearchQuery(
   });
 }
 
-function isSafePropertyCard(
-  property: PropertyCardData,
-  query: PropertySearchQuery,
-): boolean {
-  if (
-    typeof property.id !== "string" ||
-    typeof property.title !== "string" ||
-    typeof property.address !== "string" ||
-    typeof property.price !== "string" ||
-    typeof property.priceNum !== "number" ||
-    !Number.isFinite(property.priceNum) ||
-    property.priceNum < 0 ||
-    !Array.isArray(property.tags) ||
-    !property.tags.every((tag) => typeof tag === "string") ||
-    typeof property.stats?.beds !== "number" ||
-    !Number.isSafeInteger(property.stats.beds) ||
-    property.stats.beds < 0 ||
-    typeof property.stats?.baths !== "number" ||
-    !Number.isSafeInteger(property.stats.baths) ||
-    property.stats.baths < 0 ||
-    !Array.isArray(property.images) ||
-    !property.images.every((image) => typeof image === "string") ||
-    typeof property.summary !== "string" ||
-    !SEARCH_PROPERTY_TYPES.includes(property.propertyType as SearchPropertyType) ||
-    property.department !== query.department ||
-    !query.statuses.some((status) => status === property.status)
-  ) {
-    return false;
-  }
-  return true;
+const safePropertyCardSchema = z
+  .object({
+    id: z.string(),
+    title: z.string(),
+    address: z.string(),
+    price: z.string(),
+    priceNum: z.number().finite().nonnegative(),
+    tags: z.array(z.string()),
+    stats: z
+      .object({
+        beds: z.number().int().nonnegative(),
+        baths: z.number().int().nonnegative(),
+        sqft: z.number().finite().positive().optional(),
+        epc: z.string().optional(),
+      })
+      .strict(),
+    images: z.array(z.string()),
+    summary: z.string(),
+    propertyType: z.enum(SEARCH_PROPERTY_TYPES),
+    department: z.enum(["sales", "lettings"]),
+    status: z.enum(["for_sale", "under_offer", "to_let", "let_agreed"]),
+  })
+  .strict();
+
+const safeSearchResultSchema = z
+  .object({
+    query: propertySearchQuerySchema,
+    properties: z.array(safePropertyCardSchema),
+    total: z.number().int().nonnegative(),
+    page: z.number().int().positive(),
+    pageSize: z.number().int().positive(),
+    totalPages: z.number().int().nonnegative(),
+    lastSyncedAt: z.string().datetime({ offset: true }).nullable(),
+  })
+  .strict();
+
+function arraysEqual<T>(left: readonly T[], right: readonly T[]): boolean {
+  return left.length === right.length &&
+    left.every((value, index) => value === right[index]);
 }
 
-function isSafeSearchResult(
-  result: PropertySearchResult,
-  query: PropertySearchQuery,
+function searchQueriesEqual(
+  left: PropertySearchQuery,
+  right: PropertySearchQuery,
 ): boolean {
+  return left.department === right.department &&
+    left.location === right.location &&
+    left.minPrice === right.minPrice &&
+    left.maxPrice === right.maxPrice &&
+    left.minBedrooms === right.minBedrooms &&
+    left.minBathrooms === right.minBathrooms &&
+    arraysEqual(left.propertyTypes, right.propertyTypes) &&
+    arraysEqual(left.tenures, right.tenures) &&
+    arraysEqual(left.features, right.features) &&
+    arraysEqual(left.statuses, right.statuses) &&
+    left.sort === right.sort &&
+    left.page === right.page &&
+    left.pageSize === right.pageSize;
+}
+
+function parseSafeSearchResult(
+  value: unknown,
+  query: PropertySearchQuery,
+): PropertySearchResult | null {
   if (
-    result.query.department !== query.department ||
+    typeof value !== "object" ||
+    value === null ||
+    !("query" in value) ||
+    !hasCompletePropertySearchQuery(value.query)
+  ) {
+    return null;
+  }
+  const parsed = safeSearchResultSchema.safeParse(value);
+  if (!parsed.success) return null;
+  const result = parsed.data;
+  const expectedProperties = Math.min(3, result.total);
+  if (
+    !searchQueriesEqual(result.query, query) ||
     result.page !== 1 ||
     result.pageSize !== 3 ||
-    !Number.isSafeInteger(result.total) ||
-    result.total < 0 ||
-    !Number.isSafeInteger(result.totalPages) ||
     result.totalPages !== (result.total === 0 ? 0 : Math.ceil(result.total / 3)) ||
-    !Array.isArray(result.properties) ||
-    (result.total === 0 && result.properties.length !== 0) ||
-    (result.total > 0 && result.properties.length === 0) ||
-    result.properties.length > result.total
+    result.properties.length !== expectedProperties ||
+    result.properties.some(
+      (property) =>
+        property.department !== query.department ||
+        !query.statuses.some((status) => status === property.status),
+    )
   ) {
-    return false;
+    return null;
   }
-  return result.properties.every((property) => isSafePropertyCard(property, query));
+
+  return {
+    ...result,
+    properties: result.properties.map((property) => ({
+      ...property,
+      images: property.images
+        .map(getSafeExternalUrl)
+        .filter((image): image is string => image !== null),
+    })),
+  };
 }
 
-function lastUserPatch(request: PropertyChatRequest): PropertyChatPatch {
-  if (request.context !== undefined) return {};
-  const previous = request.history.findLast((message) => message.role === "user");
-  return previous === undefined ? {} : parsePropertyChatPatch(previous.content);
+function clarificationHistoryPatch(
+  request: PropertyChatRequest,
+  messagePatch: PropertyChatPatch,
+): PropertyChatPatch {
+  if (request.context !== undefined || messagePatch.department === undefined) return {};
+  const assistant = request.history.at(-1);
+  const user = request.history.at(-2);
+  if (
+    assistant?.role !== "assistant" ||
+    assistant.content !== CLARIFY_DEPARTMENT ||
+    user?.role !== "user"
+  ) {
+    return {};
+  }
+
+  const criteria = { ...parsePropertyChatPatch(user.content) };
+  delete criteria.department;
+  return criteria;
 }
 
 export function createPropertyChatHandler(search: PropertySearch) {
@@ -428,10 +511,11 @@ export function createPropertyChatHandler(search: PropertySearch) {
 
     let query: PropertySearchQuery | null;
     try {
+      const messagePatch = parsePropertyChatPatch(request.message);
       query = createSearchQuery(
         currentQuery,
-        lastUserPatch(request),
-        parsePropertyChatPatch(request.message),
+        clarificationHistoryPatch(request, messagePatch),
+        messagePatch,
       );
     } catch {
       return { response: SEARCH_UNAVAILABLE, action: "contact_team" };
@@ -442,9 +526,13 @@ export function createPropertyChatHandler(search: PropertySearch) {
 
     const context = { query };
     try {
-      const result = await search(query);
-      if (!isSafeSearchResult(result, query)) {
-        return { response: SEARCH_UNAVAILABLE, action: "contact_team" };
+      const result = parseSafeSearchResult(await search(query), query);
+      if (result === null) {
+        return {
+          response: SEARCH_UNAVAILABLE,
+          action: "contact_team",
+          context,
+        };
       }
       if (result.total === 0) {
         return { response: NO_RESULTS, action: "no_results", context };
@@ -458,7 +546,7 @@ export function createPropertyChatHandler(search: PropertySearch) {
         context,
       };
     } catch {
-      return { response: SEARCH_UNAVAILABLE, action: "contact_team" };
+      return { response: SEARCH_UNAVAILABLE, action: "contact_team", context };
     }
   };
 }

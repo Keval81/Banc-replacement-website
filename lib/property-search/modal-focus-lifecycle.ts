@@ -22,12 +22,14 @@ interface ModalFocusLifecycleDependencies {
   getBodyOverflow: () => string;
   setBodyOverflow: (value: string) => void;
   getFocusableElements: () => ModalFocusableElement[];
+  getInitialFocusElement?: () => ModalFocusableElement | null;
   containerContains: (element: unknown) => boolean;
   addKeydownListener: (listener: (event: ModalFocusKeyEvent) => void) => void;
   removeKeydownListener: (listener: (event: ModalFocusKeyEvent) => void) => void;
   requestFrame: (callback: () => void) => unknown;
   cancelFrame: (frame: unknown) => void;
   onClose: () => void;
+  restoreFocus?: () => void;
 }
 
 function isFocusableElement(value: unknown): value is ModalFocusableElement {
@@ -46,7 +48,8 @@ export function startModalFocusLifecycle(
   dependencies.setBodyOverflow("hidden");
 
   const frame = dependencies.requestFrame(() => {
-    dependencies.getFocusableElements()[0]?.focus();
+    const initialFocus = dependencies.getInitialFocusElement?.();
+    (initialFocus ?? dependencies.getFocusableElements()[0])?.focus();
   });
   let closeRequested = false;
 
@@ -89,6 +92,10 @@ export function startModalFocusLifecycle(
     dependencies.cancelFrame(frame);
     dependencies.removeKeydownListener(handleKeydown);
     dependencies.setBodyOverflow(previousBodyOverflow);
-    opener?.focus();
+    if (dependencies.restoreFocus) {
+      dependencies.restoreFocus();
+    } else {
+      opener?.focus();
+    }
   };
 }

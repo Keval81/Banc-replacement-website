@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Phone } from "lucide-react";
@@ -10,6 +10,11 @@ import type {
   PropertyChatResponse,
 } from "@/lib/property-chat";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
+import { getSafeExternalUrl } from "@/lib/property-detail-view";
+import {
+  MODAL_FOCUSABLE_SELECTOR,
+  startModalFocusLifecycle,
+} from "@/lib/property-search/modal-focus-lifecycle";
 import {
   getLandingUi,
   type MobileContactControlPlacement,
@@ -67,7 +72,9 @@ export default function PropertyChatbot({
   const inputRef = useRef<HTMLInputElement>(null);
   const firstHelpOptionRef = useRef<HTMLButtonElement>(null);
   const helpTriggerRef = useRef<HTMLButtonElement>(null);
+  const chatPanelRef = useRef<HTMLDivElement>(null);
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
+  const closeChat = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -75,12 +82,36 @@ export default function PropertyChatbot({
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 150);
       setIsHelpMenuOpen(false);
       setShowPrompt(false);
       setPromptDismissed(true);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    const panel = chatPanelRef.current;
+    if (!isOpen || panel === null) return;
+
+    return startModalFocusLifecycle({
+      getActiveElement: () => document.activeElement,
+      getBodyOverflow: () => document.body.style.overflow,
+      setBodyOverflow: (value) => { document.body.style.overflow = value; },
+      getFocusableElements: () => [
+        ...panel.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR),
+      ],
+      getInitialFocusElement: () => inputRef.current,
+      containerContains: (element) =>
+        element instanceof Node && panel.contains(element),
+      addKeydownListener: (listener) =>
+        document.addEventListener("keydown", listener),
+      removeKeydownListener: (listener) =>
+        document.removeEventListener("keydown", listener),
+      requestFrame: (callback) => window.requestAnimationFrame(callback),
+      cancelFrame: (frame) => window.cancelAnimationFrame(frame as number),
+      onClose: closeChat,
+      restoreFocus: () => helpTriggerRef.current?.focus(),
+    });
+  }, [closeChat, isOpen]);
 
   useEffect(() => {
     if (!usesUnifiedHelp || !isHelpMenuOpen) return;
@@ -309,6 +340,10 @@ export default function PropertyChatbot({
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={chatPanelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="property-chat-title"
             initial={{ opacity: 0, y: 16, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
@@ -329,12 +364,17 @@ export default function PropertyChatbot({
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">Banc Assistant</p>
+                    <p
+                      id="property-chat-title"
+                      className="text-sm font-semibold text-white"
+                    >
+                      Banc Assistant
+                    </p>
                     <p className="text-[10px] text-white/50">Property help, powered by AI</p>
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={closeChat}
                   className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
                   aria-label="Close chat"
                 >
@@ -343,7 +383,12 @@ export default function PropertyChatbot({
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50">
+              <div
+                role="log"
+                aria-live="polite"
+                aria-label="Conversation with Banc Assistant"
+                className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
+              >
                 {messages.map((message) => (
                   <motion.div
                     key={message.id}
@@ -364,33 +409,45 @@ export default function PropertyChatbot({
                       {/* Property cards */}
                       {message.properties && message.properties.length > 0 && (
                         <div className="mt-2.5 space-y-2">
-                          {message.properties.map((property) => (
-                            <a
-                              key={property.id}
-                              href={buildPropertyHref(property.department, property.id)}
-                              className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"
-                            >
-                              <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
-                                {property.images?.[0] && (
-                                  <Image
-                                    src={property.images[0]}
-                                    alt={`${property.title} thumbnail`}
-                                    width={56}
-                                    height={40}
-                                    unoptimized
-                                    className="h-full w-full object-cover"
-                                  />
+                          {message.properties.map((property) => {
+                            const imageUrl = getSafeExternalUrl(
+                              property.images?.[0] ?? "",
+                            );
+                            return (
+                              <a
+                                key={property.id}
+                                href={buildPropertyHref(
+                                  property.department,
+                                  property.id,
                                 )}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-xs font-medium text-banc-dark truncate">{property.title}</p>
-                                <p className="text-[10px] text-banc-grey">
-                                  {property.stats.beds} bed · {property.price}
-                                </p>
-                                <p className="truncate text-[10px] text-banc-grey">{property.address}</p>
-                              </div>
-                            </a>
-                          ))}
+                                className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"
+                              >
+                                <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
+                                  {imageUrl && (
+                                    <Image
+                                      src={imageUrl}
+                                      alt={`${property.title} thumbnail`}
+                                      width={56}
+                                      height={40}
+                                      unoptimized
+                                      className="h-full w-full object-cover"
+                                    />
+                                  )}
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate text-xs font-medium text-banc-dark">
+                                    {property.title}
+                                  </p>
+                                  <p className="text-[10px] text-banc-grey">
+                                    {property.stats.beds} bed · {property.price}
+                                  </p>
+                                  <p className="truncate text-[10px] text-banc-grey">
+                                    {property.address}
+                                  </p>
+                                </div>
+                              </a>
+                            );
+                          })}
                         </div>
                       )}
 
@@ -439,7 +496,11 @@ export default function PropertyChatbot({
 
               {/* Input */}
               <div className="flex items-center gap-2 border-t border-banc-grey/10 bg-white p-3 shrink-0">
+                <label htmlFor="property-chat-input" className="sr-only">
+                  Message Banc Assistant
+                </label>
                 <Input
+                  id="property-chat-input"
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
