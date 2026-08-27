@@ -21,12 +21,11 @@ Verified on 2026-08-27 against branch
   `no-img-element` warnings. The repository-wide lint debt must still be
   resolved or explicitly baselined before calling the release gate clean.
 
-No `.env.local` was present, so the FTP dry run was not attempted. The current
-`.env.example` also omits `EXPERT_AGENT_FTP_URL`, `EXPERT_AGENT_FTP_USER`, and
-`EXPERT_AGENT_FTP_PASS`; add those names before handing the dry-run setup to an
-operator. No migration, write-enabled sync, GitHub workflow dispatch, browser
-QA against live CRM data, or deployment was performed during local
-verification.
+No `.env.local` was present, so the FTP dry run was not attempted. The
+`.env.example` documents the Expert Agent FTP and Supabase variables required
+for an operator-provided local setup. No migration, write-enabled sync, GitHub
+workflow dispatch, browser QA against live CRM data, or deployment was
+performed during local verification.
 
 ## Canonical data flow
 

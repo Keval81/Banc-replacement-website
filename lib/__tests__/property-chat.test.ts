@@ -885,4 +885,6 @@ test("the chatbot UI wires safe images and an accessible modal lifecycle", () =>
   assert.match(source, /restoreFocus: \(\) => helpTriggerRef\.current\?\.focus\(\)/);
   assert.match(source, /createSingleFlightRunner/);
   assert.match(source, /submissionRunnerRef\.current/);
+  assert.match(source, /Ask about a home you(?:&apos;|')re buying or renting/);
+  assert.doesNotMatch(source, /Ask about any home we(?:&apos;|')re selling/);
 });

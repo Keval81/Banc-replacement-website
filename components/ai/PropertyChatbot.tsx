@@ -236,7 +236,7 @@ export default function PropertyChatbot({
                       Talk to our chatbot about any of our current properties
                     </p>
                     <p className="text-xs text-banc-grey mt-1">
-                      Ask about any home we&apos;re selling →
+                      Ask about a home you&apos;re buying or renting →
                     </p>
                   </button>
                   {/* Close button */}
