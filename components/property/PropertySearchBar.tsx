@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment -- inactive compatibility source retained until Task 8/9 cleanup. */
+// @ts-nocheck -- inactive compatibility source retained until Task 8/9 cleanup.
 "use client";
 
 import * as React from "react";

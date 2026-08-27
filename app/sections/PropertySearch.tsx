@@ -153,6 +153,7 @@ export default function PropertySearch() {
 
             {/* New Professional Search Bar */}
             <PropertySearchBar
+              department="sales"
               filters={filters}
               onFilterChange={handleFilterChangeWithSearch}
               onClearFilters={handleClearFilters}

@@ -6,36 +6,34 @@
  */
 
 // Main Components
-export { default as AdvancedSearch } from "./AdvancedSearch";
-export { default as ActiveFilters } from "./ActiveFilters";
-export { default as QuickFilters } from "./QuickFilters";
+export { default as AdvancedSearch } from "./AdvancedSearchView";
+export { default as ActiveFilters } from "./ActiveFiltersView";
+export { default as QuickFilters } from "./QuickFiltersView";
 export { default as MobileFilterDrawer, MobileFilterButton } from "./MobileFilterDrawer";
-export { default as PropertySearchBar } from "./PropertySearchBar";
+export { default as PropertySearchBar } from "./PropertySearchBarCompat";
 
 // Types
-export type { SearchFilters } from "./AdvancedSearch";
+export type { LegacySearchFilters as SearchFilters } from "@/lib/property-search/ui-options";
 export type { MobileFilterDrawerProps, MobileFilterButtonProps } from "./MobileFilterDrawer";
+export type { PropertySearchBarProps, ViewMode } from "./PropertySearchBarCompat";
+export type {
+  PropertyDepartment,
+  PropertySearchFilters,
+  PropertySort,
+} from "@/lib/property-search/types";
 
 // Constants
-export { 
-  RADIUS_OPTIONS,
-  PRICE_OPTIONS,
-  PROPERTY_TYPES,
-  SORT_OPTIONS,
-  FEATURE_OPTIONS,
-} from "./AdvancedSearch";
-
-export { QUICK_FILTERS } from "./QuickFilters";
-
-// Utilities
 export {
-  formatPrice,
-  formatRadius,
-  formatPropertyType,
-  formatTenure,
-  formatFeature,
-  formatSortBy,
-} from "./ActiveFilters";
+  BATHROOM_OPTIONS,
+  BEDROOM_OPTIONS,
+  FEATURE_OPTIONS,
+  PROPERTY_TYPE_OPTIONS,
+  SORT_OPTIONS,
+  TENURE_OPTIONS,
+  getPriceOptions,
+} from "@/lib/property-search/ui-options";
+
+export { QUICK_FILTERS } from "./QuickFiltersView";
 
 // Re-export hook for convenience
 export { useSearchFilters } from "@/hooks/useSearchFilters";

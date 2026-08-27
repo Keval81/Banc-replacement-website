@@ -201,6 +201,7 @@ function LettingsPropertiesPageContent() {
       <section className="relative z-10 -mt-8 px-6 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <PropertySearchBar
+            department="lettings"
             filters={filters}
             onFilterChange={setFilters}
             onClearFilters={clearFilters}

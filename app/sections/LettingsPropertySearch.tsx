@@ -151,6 +151,7 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
     return (
       <div className="w-full">
         <PropertySearchBar
+          department="lettings"
           filters={filters}
           onFilterChange={handleFilterChangeWithSearch}
           onClearFilters={handleClearFilters}
@@ -185,6 +186,7 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
 
             {/* Professional Search Bar */}
             <PropertySearchBar
+              department="lettings"
               filters={filters}
               onFilterChange={handleFilterChangeWithSearch}
               onClearFilters={handleClearFilters}

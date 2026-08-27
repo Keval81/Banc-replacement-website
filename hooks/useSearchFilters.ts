@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import type { SearchFilters } from "../components/property/AdvancedSearch";
+import type { LegacySearchFilters as SearchFilters } from "../lib/property-search/ui-options";
 
 // ============================================
 // Types

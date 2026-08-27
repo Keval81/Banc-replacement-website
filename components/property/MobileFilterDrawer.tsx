@@ -3,8 +3,9 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { X, SlidersHorizontal } from "lucide-react";
-import AdvancedSearch, { type SearchFilters } from "./AdvancedSearch";
+import { SlidersHorizontal } from "lucide-react";
+import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
+import AdvancedSearch from "./AdvancedSearchView";
 
 // ============================================
 // Types & Interfaces
@@ -13,8 +14,9 @@ import AdvancedSearch, { type SearchFilters } from "./AdvancedSearch";
 interface MobileFilterDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  filters: SearchFilters;
-  onFilterChange: (filters: Partial<SearchFilters>) => void;
+  department: PropertyDepartment;
+  filters: PropertySearchFilters;
+  onFilterChange: (filters: Partial<PropertySearchFilters>) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
   isLoading?: boolean;
@@ -28,6 +30,7 @@ interface MobileFilterDrawerProps {
 export default function MobileFilterDrawer({
   isOpen,
   onClose,
+  department,
   filters,
   onFilterChange,
   onClearFilters,
@@ -98,6 +101,7 @@ export default function MobileFilterDrawer({
           >
             {/* Advanced Search Component */}
             <AdvancedSearch
+              department={department}
               filters={filters}
               onFilterChange={onFilterChange}
               onClearFilters={onClearFilters}
@@ -133,12 +137,12 @@ export function MobileFilterButton({
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl",
+        "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-xl",
         "bg-white border border-[#E0DFDC]",
         "text-sm font-medium text-[#1A1917]",
         "hover:border-[#4AC8E8] hover:text-[#4AC8E8]",
-        "transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-[#4AC8E8] focus:ring-offset-2",
+        "transition-colors duration-200",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4AC8E8] focus-visible:ring-offset-2",
         className
       )}
       aria-label="Open filters"
