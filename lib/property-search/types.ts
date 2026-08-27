@@ -4,6 +4,7 @@ import type {
   SearchTenure,
 } from "../crm/property-source";
 import type { PropertyCardData } from "../property-view";
+import type { DbProperty } from "../supabase";
 
 export type PropertyDepartment = "sales" | "lettings";
 export type PublicPropertyStatus =
@@ -43,3 +44,17 @@ export interface PropertySearchResult {
   totalPages: number;
   lastSyncedAt: string | null;
 }
+
+export interface PropertySearchRepositoryResult {
+  rows: DbProperty[];
+  total: number;
+  lastSyncedAt: string | null;
+}
+
+export interface PropertySearchRepository {
+  search(query: PropertySearchQuery): Promise<PropertySearchRepositoryResult>;
+}
+
+export type PropertySearch = (
+  query: PropertySearchQuery,
+) => Promise<PropertySearchResult>;
