@@ -51,15 +51,15 @@ function emptyResult(query: PropertySearchQuery): PropertySearchResult {
 }
 
 test("builds department-specific result and API URLs from one query", () => {
-  const query = validSalesQuery({ location: "Cuffley", page: 2 });
+  const query = validSalesQuery({ location: "Cuffley", minBedrooms: 3, maxBedrooms: 3, page: 2 });
 
   assert.equal(
     buildPropertyResultsHref(query),
-    "/sales/properties?location=Cuffley&page=2",
+    "/sales/properties?location=Cuffley&minBedrooms=3&maxBedrooms=3&page=2",
   );
   assert.equal(
     buildPropertyApiHref(query),
-    "/api/properties?department=sales&location=Cuffley&page=2",
+    "/api/properties?department=sales&location=Cuffley&minBedrooms=3&maxBedrooms=3&page=2",
   );
 
   const lettings = {
@@ -73,7 +73,7 @@ test("builds department-specific result and API URLs from one query", () => {
 });
 
 test("fetches exactly the canonical paginated API URL and returns its result", async () => {
-  const query = validSalesQuery({ minBedrooms: 3, page: 3, pageSize: 12 });
+  const query = validSalesQuery({ minBedrooms: 3, maxBedrooms: 3, page: 3, pageSize: 12 });
   const expected = {
     ...emptyResult(query),
     properties: [
@@ -105,7 +105,7 @@ test("fetches exactly the canonical paginated API URL and returns its result", a
   assert.deepEqual(requests, [
     {
       input:
-        "/api/properties?department=sales&minBedrooms=3&page=3&pageSize=12",
+        "/api/properties?department=sales&minBedrooms=3&maxBedrooms=3&page=3&pageSize=12",
       signal: controller.signal,
     },
   ]);

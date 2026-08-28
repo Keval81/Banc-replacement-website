@@ -113,6 +113,7 @@ const commonQueryShape = {
   minPrice: optionalBoundedIntegerSchema(MAX_PROPERTY_SEARCH_PRICE),
   maxPrice: optionalBoundedIntegerSchema(MAX_PROPERTY_SEARCH_PRICE),
   minBedrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
+  maxBedrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
   minBathrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
   propertyTypes: propertyTypesSchema,
   tenures: tenuresSchema,
@@ -247,6 +248,10 @@ export function parsePropertySearchParams(
     selectedParam(params, "minBedrooms", ["minBeds"]),
     { min: 0, max: POSTGRES_SIGNED_INTEGER_MAX },
   );
+  const maxBedrooms = parseInteger(params.get("maxBedrooms"), {
+    min: 0,
+    max: POSTGRES_SIGNED_INTEGER_MAX,
+  });
   const minBathrooms = parseInteger(
     selectedParam(params, "minBathrooms", ["minBaths"]),
     { min: 0, max: POSTGRES_SIGNED_INTEGER_MAX },
@@ -266,6 +271,7 @@ export function parsePropertySearchParams(
     ...(minPrice !== undefined ? { minPrice } : {}),
     ...(maxPrice !== undefined ? { maxPrice } : {}),
     ...(minBedrooms !== undefined ? { minBedrooms } : {}),
+    ...(maxBedrooms !== undefined ? { maxBedrooms } : {}),
     ...(minBathrooms !== undefined ? { minBathrooms } : {}),
     propertyTypes: parseAllowedList(
       selectedParam(params, "propertyTypes", ["propertyType"]),
@@ -312,6 +318,9 @@ export function serializePropertySearchQuery(query: PropertySearchQuery): URLSea
   if (validated.minBedrooms !== undefined) {
     params.set("minBedrooms", String(validated.minBedrooms));
   }
+  if (validated.maxBedrooms !== undefined) {
+    params.set("maxBedrooms", String(validated.maxBedrooms));
+  }
   if (validated.minBathrooms !== undefined) {
     params.set("minBathrooms", String(validated.minBathrooms));
   }
@@ -340,6 +349,7 @@ export function switchSearchDepartment(
     ...defaults,
     ...(current.location !== undefined ? { location: current.location } : {}),
     ...(current.minBedrooms !== undefined ? { minBedrooms: current.minBedrooms } : {}),
+    ...(current.maxBedrooms !== undefined ? { maxBedrooms: current.maxBedrooms } : {}),
     ...(current.minBathrooms !== undefined ? { minBathrooms: current.minBathrooms } : {}),
     propertyTypes: current.propertyTypes,
     features: current.features,
@@ -355,6 +365,7 @@ export function hasActivePropertyFilters(query: PropertySearchQuery): boolean {
     validated.minPrice !== undefined ||
     validated.maxPrice !== undefined ||
     validated.minBedrooms !== undefined ||
+    validated.maxBedrooms !== undefined ||
     validated.minBathrooms !== undefined ||
     validated.propertyTypes.length > 0 ||
     validated.tenures.length > 0 ||

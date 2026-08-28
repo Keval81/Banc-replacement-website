@@ -7,6 +7,10 @@ const sql = readFileSync(
   join(process.cwd(), "supabase/migrations/202608270001_crm_property_search.sql"),
   "utf8",
 );
+const exactBedroomSql = readFileSync(
+  join(process.cwd(), "supabase/migrations/202608280001_exact_bedroom_search.sql"),
+  "utf8",
+);
 
 test("migration creates neutral source fields and sync audit records", () => {
   for (const field of [
@@ -66,4 +70,17 @@ test("migration escapes literal LIKE metacharacters in both location searches", 
 
   assert.equal(sql.match(escapedLocationPattern)?.length, 2);
   assert.match(sql, /like[\s\S]*escape '\\'/i);
+});
+
+test("exact bedroom migration adds the canonical upper-bedroom bound to search", () => {
+  assert.match(exactBedroomSql, /p_max_bedrooms integer default null/i);
+  assert.match(
+    exactBedroomSql,
+    /p_max_bedrooms is null or p\.bedrooms <= p_max_bedrooms/i,
+  );
+  assert.match(
+    exactBedroomSql,
+    /revoke execute on function public\.search_properties[\s\S]*from public/i,
+  );
+  assert.match(exactBedroomSql, /grant execute on function public\.search_properties/i);
 });

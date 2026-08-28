@@ -43,6 +43,7 @@ test("exposes only canonical editable filters from the full query", () => {
     minPrice: undefined,
     maxPrice: undefined,
     minBedrooms: 2,
+    maxBedrooms: undefined,
     minBathrooms: undefined,
     propertyTypes: [],
     tenures: [],

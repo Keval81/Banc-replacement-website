@@ -121,6 +121,7 @@ export class SupabasePropertySearchRepository
       p_min_price: query.minPrice ?? null,
       p_max_price: query.maxPrice ?? null,
       p_min_bedrooms: query.minBedrooms ?? null,
+      p_max_bedrooms: query.maxBedrooms ?? null,
       p_min_bathrooms: query.minBathrooms ?? null,
       p_property_types: query.propertyTypes,
       p_tenures: query.tenures,

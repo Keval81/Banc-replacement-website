@@ -71,6 +71,7 @@ export function getPropertySearchFilters(
     minPrice: query.minPrice,
     maxPrice: query.maxPrice,
     minBedrooms: query.minBedrooms,
+    maxBedrooms: query.maxBedrooms,
     minBathrooms: query.minBathrooms,
     propertyTypes: query.propertyTypes,
     tenures: query.tenures,

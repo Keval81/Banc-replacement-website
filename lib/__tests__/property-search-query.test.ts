@@ -30,7 +30,7 @@ test("round-trips every supported non-default shareable field in canonical order
   const query = parsePropertySearchParams(
     new URLSearchParams(
       "page=2&features=parking,garden&tenures=freehold&propertyTypes=bungalow,house" +
-        "&minBathrooms=2&minBedrooms=3&maxPrice=900000&minPrice=500000" +
+        "&minBathrooms=2&minBedrooms=3&maxBedrooms=3&maxPrice=900000&minPrice=500000" +
         "&location=%20EN6%204EF%20&statuses=under_offer&sort=price_asc&pageSize=12",
     ),
     "sales",
@@ -42,6 +42,7 @@ test("round-trips every supported non-default shareable field in canonical order
     minPrice: 500000,
     maxPrice: 900000,
     minBedrooms: 3,
+    maxBedrooms: 3,
     minBathrooms: 2,
     propertyTypes: ["house", "bungalow"],
     tenures: ["freehold"],
@@ -55,7 +56,7 @@ test("round-trips every supported non-default shareable field in canonical order
   const serialized = serializePropertySearchQuery(query);
   assert.equal(
     serialized.toString(),
-    "location=EN6+4EF&minPrice=500000&maxPrice=900000&minBedrooms=3&minBathrooms=2" +
+    "location=EN6+4EF&minPrice=500000&maxPrice=900000&minBedrooms=3&maxBedrooms=3&minBathrooms=2" +
       "&propertyTypes=house%2Cbungalow&tenures=freehold&features=garden%2Cparking" +
       "&statuses=under_offer&sort=price_asc&page=2&pageSize=12",
   );
@@ -105,7 +106,7 @@ test("ignores oversized URL integers and enforces a realistic page boundary", ()
   assert.doesNotThrow(() =>
     parsePropertySearchParams(
       new URLSearchParams(
-        "page=1e100&minBedrooms=2147483648&minBathrooms=2147483648" +
+        "page=1e100&minBedrooms=2147483648&maxBedrooms=2147483648&minBathrooms=2147483648" +
           "&minPrice=9007199254740992&maxPrice=1e100",
       ),
       "sales",
@@ -114,20 +115,21 @@ test("ignores oversized URL integers and enforces a realistic page boundary", ()
 
   const invalid = parsePropertySearchParams(
     new URLSearchParams(
-      "page=1001&minBedrooms=2147483648&minBathrooms=2147483648" +
+      "page=1001&minBedrooms=2147483648&maxBedrooms=2147483648&minBathrooms=2147483648" +
         "&minPrice=9007199254740992&maxPrice=1e100",
     ),
     "sales",
   );
   assert.equal(invalid.page, 1);
   assert.equal(invalid.minBedrooms, undefined);
+  assert.equal(invalid.maxBedrooms, undefined);
   assert.equal(invalid.minBathrooms, undefined);
   assert.equal(invalid.minPrice, undefined);
   assert.equal(invalid.maxPrice, undefined);
 
   const boundary = parsePropertySearchParams(
     new URLSearchParams(
-      "page=1000&pageSize=48&minBedrooms=2147483647&minBathrooms=2147483647" +
+      "page=1000&pageSize=48&minBedrooms=2147483647&maxBedrooms=2147483647&minBathrooms=2147483647" +
         "&minPrice=9007199254740991&maxPrice=9007199254740991",
     ),
     "sales",
@@ -136,9 +138,42 @@ test("ignores oversized URL integers and enforces a realistic page boundary", ()
   assert.equal(boundary.pageSize, 48);
   assert.equal((boundary.page - 1) * boundary.pageSize, 47_952);
   assert.equal(boundary.minBedrooms, 2_147_483_647);
+  assert.equal(boundary.maxBedrooms, 2_147_483_647);
   assert.equal(boundary.minBathrooms, 2_147_483_647);
   assert.equal(boundary.minPrice, Number.MAX_SAFE_INTEGER);
   assert.equal(boundary.maxPrice, Number.MAX_SAFE_INTEGER);
+});
+
+test("supports canonical exact bedroom bounds without changing minimum-bedroom semantics", () => {
+  const exact = propertySearchQuerySchema.parse({
+    ...createDefaultPropertySearchQuery("sales"),
+    minBedrooms: 3,
+    maxBedrooms: 3,
+  });
+
+  assert.equal(serializePropertySearchQuery(exact).get("maxBedrooms"), "3");
+  assert.equal(
+    parsePropertySearchParams(
+      new URLSearchParams("minBedrooms=3&maxBedrooms=3"),
+      "sales",
+    ).maxBedrooms,
+    3,
+  );
+  assert.equal(
+    parsePropertySearchParams(
+      new URLSearchParams("maxBedrooms=2147483648"),
+      "sales",
+    ).maxBedrooms,
+    undefined,
+  );
+  assert.equal(switchSearchDepartment(exact, "lettings").maxBedrooms, 3);
+  assert.equal(
+    hasActivePropertyFilters({
+      ...createDefaultPropertySearchQuery("sales"),
+      maxBedrooms: 3,
+    }),
+    true,
+  );
 });
 
 test("parses documented legacy aliases into canonical fields", () => {
@@ -203,9 +238,11 @@ test("the exported schema coerces safe numeric strings and rejects unknown field
     ...createDefaultPropertySearchQuery("sales"),
     minPrice: "500000",
     minBedrooms: "3",
+    maxBedrooms: "3",
   });
   assert.equal(parsed.minPrice, 500000);
   assert.equal(parsed.minBedrooms, 3);
+  assert.equal(parsed.maxBedrooms, 3);
   assert.throws(() =>
     propertySearchQuerySchema.parse({
       ...createDefaultPropertySearchQuery("sales"),
@@ -242,6 +279,7 @@ test("the exported schema rejects values outside RPC-safe integer bounds", () =>
   for (const oversized of [
     { page: 1_001 },
     { minBedrooms: 2_147_483_648 },
+    { maxBedrooms: 2_147_483_648 },
     { minBathrooms: 2_147_483_648 },
     { minPrice: 9_007_199_254_740_992 },
     { maxPrice: 1e100 },
@@ -258,6 +296,7 @@ test("the exported schema rejects values outside RPC-safe integer bounds", () =>
     propertySearchQuerySchema.parse({
       ...createDefaultPropertySearchQuery("sales"),
       page: 1_000,
+      maxBedrooms: 2_147_483_647,
       pageSize: 48,
       minBedrooms: 2_147_483_647,
       minBathrooms: 2_147_483_647,

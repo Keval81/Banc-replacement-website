@@ -20,6 +20,7 @@ export interface PropertySearchQuery {
   minPrice?: number;
   maxPrice?: number;
   minBedrooms?: number;
+  maxBedrooms?: number;
   minBathrooms?: number;
   propertyTypes: SearchPropertyType[];
   tenures: SearchTenure[];
