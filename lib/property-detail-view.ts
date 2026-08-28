@@ -13,6 +13,12 @@ export const PROPERTY_IMAGE_REMOTE_PATTERNS = [
   { protocol: "https", hostname: "**.expertagent.co.uk" },
 ] as const;
 
+function matchesRemoteHostname(hostname: string, pattern: string): boolean {
+  if (!pattern.startsWith("**.")) return hostname === pattern;
+  const suffix = pattern.slice(2);
+  return hostname.length > suffix.length && hostname.endsWith(suffix);
+}
+
 export type PropertyMediaNavigationKey = "ArrowLeft" | "ArrowRight" | "Home" | "End";
 
 export interface PropertyMediaStageAvailability extends PropertyMediaAvailability {
@@ -70,13 +76,14 @@ export function getSafeExternalUrl(value: string): string | null {
 export function getSafePropertyImageUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());
-    const isSupportedProtocol = url.protocol === "http:" || url.protocol === "https:";
-    const isExpertAgentSubdomain = url.hostname
-      .toLocaleLowerCase("en-GB")
-      .endsWith(".expertagent.co.uk");
+    const hostname = url.hostname.toLocaleLowerCase("en-GB");
+    const matchesConfiguredPattern = PROPERTY_IMAGE_REMOTE_PATTERNS.some(
+      (pattern) =>
+        url.protocol === `${pattern.protocol}:` &&
+        matchesRemoteHostname(hostname, pattern.hostname),
+    );
     if (
-      !isSupportedProtocol ||
-      !isExpertAgentSubdomain ||
+      !matchesConfiguredPattern ||
       url.port !== "" ||
       url.username !== "" ||
       url.password !== ""

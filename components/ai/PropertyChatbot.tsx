@@ -11,7 +11,7 @@ import type {
 } from "@/lib/property-chat";
 import { createSingleFlightRunner } from "@/lib/property-chat-submit";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
-import { getSafeExternalUrl } from "@/lib/property-detail-view";
+import { getSafePropertyImageUrl } from "@/lib/property-detail-view";
 import {
   MODAL_FOCUSABLE_SELECTOR,
   startModalFocusLifecycle,
@@ -418,7 +418,7 @@ export default function PropertyChatbot({
                       {message.properties && message.properties.length > 0 && (
                         <div className="mt-2.5 space-y-2">
                           {message.properties.map((property) => {
-                            const imageUrl = getSafeExternalUrl(
+                            const imageUrl = getSafePropertyImageUrl(
                               property.images?.[0] ?? "",
                             );
                             return (

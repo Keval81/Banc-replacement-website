@@ -19,7 +19,7 @@ import type {
   PropertySearchQuery,
   PropertySearchResult,
 } from "./property-search/types.ts";
-import { getSafeExternalUrl } from "./property-detail-view.ts";
+import { getSafePropertyImageUrl } from "./property-detail-view.ts";
 import type { PropertyCardData } from "./property-view.ts";
 
 export interface ChatSearchContext {
@@ -656,7 +656,7 @@ function parseSafeSearchResult(
     properties: result.properties.map((property) => ({
       ...property,
       images: property.images
-        .map(getSafeExternalUrl)
+        .map(getSafePropertyImageUrl)
         .filter((image): image is string => image !== null),
     })),
   };

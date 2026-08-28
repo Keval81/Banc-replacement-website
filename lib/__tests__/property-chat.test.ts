@@ -736,12 +736,12 @@ test("rejects raw service queries that only match after coercion or normalizatio
   }
 });
 
-test("removes unsafe image schemes before returning canonical cards", async () => {
+test("returns only Next-Image-configured property thumbnails", async () => {
   const handle = createPropertyChatHandler(async (query) => searchResult([
     card("EA-1", {
       images: [
         "https://images.example.test/one.jpg",
-        " http://images.example.test/two.jpg ",
+        " http://med05.expertagent.co.uk/two.jpg ",
         "javascript:alert(1)",
         "data:image/png;base64,abc",
         "file:///tmp/photo.jpg",
@@ -756,8 +756,7 @@ test("removes unsafe image schemes before returning canonical cards", async () =
   });
 
   assert.deepEqual(result.properties?.[0]?.images, [
-    "https://images.example.test/one.jpg",
-    "http://images.example.test/two.jpg",
+    "http://med05.expertagent.co.uk/two.jpg",
   ]);
 });
 
@@ -878,8 +877,9 @@ test("the chatbot UI wires safe images and an accessible modal lifecycle", () =>
   assert.match(source, /startModalFocusLifecycle/);
   assert.match(
     source,
-    /getSafeExternalUrl\(\s*property\.images\?\.\[0\] \?\? "",?\s*\)/,
+    /getSafePropertyImageUrl\(\s*property\.images\?\.\[0\] \?\? "",?\s*\)/,
   );
+  assert.doesNotMatch(source, /getSafeExternalUrl/);
   assert.match(source, /role="dialog"/);
   assert.match(source, /aria-modal="true"/);
   assert.match(source, /aria-labelledby="property-chat-title"/);

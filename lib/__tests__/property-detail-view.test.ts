@@ -11,6 +11,7 @@ import {
   getPropertyPhotoPresentation,
   getSafeExternalUrl,
   getSafePropertyImageUrl,
+  PROPERTY_IMAGE_REMOTE_PATTERNS,
   getWrappedGalleryIndex,
   isPropertyDetailPath,
 } from "../property-detail-view.ts";
@@ -123,6 +124,18 @@ test("accepts only property image hosts configured for Next Image", () => {
   assert.equal(getSafePropertyImageUrl("https://expertagent.co.uk/photo.jpg"), null);
   assert.equal(getSafePropertyImageUrl("FP1.gif"), null);
   assert.equal(getSafePropertyImageUrl("zip://archive/FP1.gif"), null);
+});
+
+test("derives property image validation from the configured remote patterns", () => {
+  for (const pattern of PROPERTY_IMAGE_REMOTE_PATTERNS) {
+    const hostname = pattern.hostname.startsWith("**.")
+      ? `media.${pattern.hostname.slice(3)}`
+      : pattern.hostname;
+    assert.equal(
+      getSafePropertyImageUrl(`${pattern.protocol}://${hostname}/configured.jpg`),
+      `${pattern.protocol}://${hostname}/configured.jpg`,
+    );
+  }
 });
 
 test("returns only floorplan and map tabs backed by live media data", () => {
