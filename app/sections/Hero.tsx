@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { getLandingUi } from "@/lib/landing-ui";
+import { startHeroVideoLifecycle } from "@/lib/hero-video-lifecycle";
 
 const landingUi = getLandingUi("aker");
 
@@ -112,6 +113,18 @@ export default function Hero() {
       video.removeEventListener("ended", handleVideoEnd);
     };
   }, [currentVideo, handleCanPlay, handleVideoEnd]);
+
+  useEffect(() => {
+    return startHeroVideoLifecycle({
+      documentTarget: document,
+      windowTarget: window,
+      getVisibilityState: () => document.visibilityState,
+      pause: () => videoRef.current?.pause(),
+      resume: () => {
+        void startPlayback();
+      },
+    });
+  }, [startPlayback]);
 
   // Auto-rotate reviews
   useEffect(() => {
