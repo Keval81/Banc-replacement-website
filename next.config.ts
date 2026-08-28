@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PROPERTY_IMAGE_REMOTE_PATTERNS } from "./lib/property-detail-view";
 
 const nextConfig: NextConfig = {
   // Allow development access from network IPs
@@ -10,15 +11,8 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
-      // Expert Agent media CDN (property photos come as http URLs in the feed)
-      {
-        protocol: "http",
-        hostname: "**.expertagent.co.uk",
-      },
-      {
-        protocol: "https",
-        hostname: "**.expertagent.co.uk",
-      },
+      // Shared with the feed-media render policy so unsupported CRM hosts fail closed.
+      ...PROPERTY_IMAGE_REMOTE_PATTERNS,
       {
         protocol: "https",
         hostname: "fonts.gstatic.com",

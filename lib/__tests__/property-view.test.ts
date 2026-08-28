@@ -88,17 +88,38 @@ test("omits unsafe feed image references from cards and detail galleries", () =>
       "zip://4StationRoad_01.jpg",
       "4StationRoad_02.jpg",
       "javascript:alert(1)",
-      "https://media.example/4StationRoad_03.jpg",
+      "https://future-streets.example/4StationRoad_03.jpg",
+      "https://media.expertagent.co.uk/4StationRoad_04.jpg",
     ],
   };
 
   assert.deepEqual(dbToCard(property).images, [
-    "https://media.example/4StationRoad_03.jpg",
+    "https://media.expertagent.co.uk/4StationRoad_04.jpg",
   ]);
   assert.deepEqual(
     dbToDetail(property).gallery.map((image) => image.url),
-    ["https://media.example/4StationRoad_03.jpg"],
+    ["https://media.expertagent.co.uk/4StationRoad_04.jpg"],
   );
+});
+
+test("omits floorplans that Next Image cannot render", () => {
+  const detail = dbToDetail({
+    ...base,
+    floorplans: [
+      "FP1.gif",
+      "zip://archive/FP2.gif",
+      "https://future-streets.example/FP3.gif",
+      "https://media.expertagent.co.uk/FP4.gif",
+    ],
+  });
+
+  assert.deepEqual(detail.floorplans, [
+    {
+      id: "BPGC1479-fp-0",
+      url: "https://media.expertagent.co.uk/FP4.gif",
+      title: "Floorplan",
+    },
+  ]);
 });
 
 test("categorises live feed property_type strings into filter ids", () => {

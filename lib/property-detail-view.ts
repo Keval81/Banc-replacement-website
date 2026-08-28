@@ -8,6 +8,11 @@ export interface PropertyMediaAvailability {
 
 export type PropertyMediaMode = "photos" | PropertyMediaTabId;
 
+export const PROPERTY_IMAGE_REMOTE_PATTERNS = [
+  { protocol: "http", hostname: "**.expertagent.co.uk" },
+  { protocol: "https", hostname: "**.expertagent.co.uk" },
+] as const;
+
 export type PropertyMediaNavigationKey = "ArrowLeft" | "ArrowRight" | "Home" | "End";
 
 export interface PropertyMediaStageAvailability extends PropertyMediaAvailability {
@@ -57,6 +62,28 @@ export function getSafeExternalUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());
     return url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+export function getSafePropertyImageUrl(value: string): string | null {
+  try {
+    const url = new URL(value.trim());
+    const isSupportedProtocol = url.protocol === "http:" || url.protocol === "https:";
+    const isExpertAgentSubdomain = url.hostname
+      .toLocaleLowerCase("en-GB")
+      .endsWith(".expertagent.co.uk");
+    if (
+      !isSupportedProtocol ||
+      !isExpertAgentSubdomain ||
+      url.port !== "" ||
+      url.username !== "" ||
+      url.password !== ""
+    ) {
+      return null;
+    }
+    return url.toString();
   } catch {
     return null;
   }

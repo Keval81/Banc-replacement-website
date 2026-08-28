@@ -10,6 +10,7 @@ import {
   getPropertyResultsBackLink,
   getPropertyPhotoPresentation,
   getSafeExternalUrl,
+  getSafePropertyImageUrl,
   getWrappedGalleryIndex,
   isPropertyDetailPath,
 } from "../property-detail-view.ts";
@@ -107,6 +108,21 @@ test("accepts only absolute http and https media URLs", () => {
   assert.equal(getSafeExternalUrl("javascript:alert(1)"), null);
   assert.equal(getSafeExternalUrl("/relative.pdf"), null);
   assert.equal(getSafeExternalUrl("not a url"), null);
+});
+
+test("accepts only property image hosts configured for Next Image", () => {
+  assert.equal(
+    getSafePropertyImageUrl(" http://med05.expertagent.co.uk/a/photo.jpg "),
+    "http://med05.expertagent.co.uk/a/photo.jpg"
+  );
+  assert.equal(
+    getSafePropertyImageUrl("https://media.expertagent.co.uk/a/floorplan.gif"),
+    "https://media.expertagent.co.uk/a/floorplan.gif"
+  );
+  assert.equal(getSafePropertyImageUrl("https://future-streets.example/photo.jpg"), null);
+  assert.equal(getSafePropertyImageUrl("https://expertagent.co.uk/photo.jpg"), null);
+  assert.equal(getSafePropertyImageUrl("FP1.gif"), null);
+  assert.equal(getSafePropertyImageUrl("zip://archive/FP1.gif"), null);
 });
 
 test("returns only floorplan and map tabs backed by live media data", () => {

@@ -7,7 +7,7 @@ import {
   normalizePropertyType,
   type SearchPropertyType,
 } from "./crm/property-source.ts";
-import { getSafeExternalUrl } from "./property-detail-view.ts";
+import { getSafePropertyImageUrl } from "./property-detail-view.ts";
 
 export function buildPropertyHref(
   department: DbProperty["department"],
@@ -160,7 +160,7 @@ export function dbToCard(p: DbProperty): PropertyCardData {
   const pounds = `£${Math.round(p.price).toLocaleString("en-GB")}`;
   const tag = TAG_BY_STATUS[p.status];
   const images = p.images
-    .map(getSafeExternalUrl)
+    .map(getSafePropertyImageUrl)
     .filter((url): url is string => url !== null);
   const hasValidCoordinates =
     typeof p.latitude === "number" &&
@@ -256,6 +256,9 @@ export interface LivePropertyDetail extends PropertyCardData {
 export function dbToDetail(p: DbProperty): LivePropertyDetail {
   const card = dbToCard(p);
   const ref = card.id;
+  const floorplanUrls = p.floorplans
+    .map(getSafePropertyImageUrl)
+    .filter((url): url is string => url !== null);
   return {
     ...card,
     postcode: p.postcode,
@@ -279,10 +282,10 @@ export function dbToDetail(p: DbProperty): LivePropertyDetail {
       alt: i === 0 ? `${p.title} — main photo` : `${p.title} — photo ${i + 1}`,
       isPrimary: i === 0,
     })),
-    floorplans: p.floorplans.map((url, i) => ({
+    floorplans: floorplanUrls.map((url, i) => ({
       id: `${ref}-fp-${i}`,
       url,
-      title: p.floorplans.length > 1 ? `Floorplan ${i + 1}` : "Floorplan",
+      title: floorplanUrls.length > 1 ? `Floorplan ${i + 1}` : "Floorplan",
     })),
   };
 }
