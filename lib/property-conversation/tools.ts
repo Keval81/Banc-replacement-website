@@ -1,9 +1,14 @@
+import { z } from "zod";
+
 import {
+  handoffCategorySchema,
   parseContactBancArguments,
   parseGetPropertyFactsArguments,
   parseResetPropertySearchArguments,
   parseSearchPropertiesArguments,
   propertyConversationContextSchema,
+  propertyFactsSchema,
+  safePropertyCardSchema,
   type HandoffCategory,
   type PropertyConversationContext,
   type PropertyFacts,
@@ -37,6 +42,13 @@ type PropertyConversationToolName =
   | "reset_property_search"
   | "contact_banc";
 
+export const propertyConversationToolNameSchema = z.enum([
+  "search_properties",
+  "get_property_facts",
+  "reset_property_search",
+  "contact_banc",
+]);
+
 interface PropertyConversationToolsOptions {
   search: PropertySearch;
   lookupFacts: PropertyFactLookup;
@@ -46,6 +58,15 @@ export interface PropertyConversationToolDefinition {
   name: PropertyConversationToolName;
   description: string;
 }
+
+export const propertyToolErrorCodeSchema = z.enum([
+  "invalid_tool",
+  "invalid_arguments",
+  "unauthorized_property_reference",
+  "search_failed",
+  "lookup_failed",
+  "tool_failed",
+]);
 
 export type PropertyToolResult =
   | {
@@ -82,8 +103,43 @@ export type PropertyToolResult =
         | "invalid_arguments"
         | "unauthorized_property_reference"
         | "search_failed"
-        | "lookup_failed";
+        | "lookup_failed"
+        | "tool_failed";
     };
+
+export const propertyToolResultSchema = z.union([
+  z.object({
+    ok: z.literal(true),
+    name: z.literal("search_properties"),
+    context: propertyConversationContextSchema,
+    query: propertySearchQuerySchema,
+    total: z.number().int().nonnegative(),
+    properties: z.array(safePropertyCardSchema).max(3).optional(),
+  }).strict(),
+  z.object({
+    ok: z.literal(true),
+    name: z.literal("get_property_facts"),
+    context: propertyConversationContextSchema,
+    facts: z.array(propertyFactsSchema).max(3),
+  }).strict(),
+  z.object({
+    ok: z.literal(true),
+    name: z.literal("reset_property_search"),
+    context: propertyConversationContextSchema,
+  }).strict(),
+  z.object({
+    ok: z.literal(true),
+    name: z.literal("contact_banc"),
+    context: propertyConversationContextSchema,
+    category: handoffCategorySchema,
+    message: z.string().trim().min(1).max(500),
+  }).strict(),
+  z.object({
+    ok: z.literal(false),
+    name: propertyConversationToolNameSchema,
+    code: propertyToolErrorCodeSchema,
+  }).strict(),
+]);
 
 const PROPERTY_CONVERSATION_TOOL_DEFINITIONS: readonly PropertyConversationToolDefinition[] = [
   {

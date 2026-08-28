@@ -2,9 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type {
+  ContactBancArguments,
+  GetPropertyFactsArguments,
   ModelDirective,
   PropertyConversationContext,
   PropertyConversationRequest,
+  ResetPropertySearchArguments,
+  SearchPropertiesArguments,
 } from "../property-conversation/contracts.ts";
 import { propertyConversationContextSchema } from "../property-conversation/contracts.ts";
 import {
@@ -23,6 +27,37 @@ import {
   createDefaultPropertySearchQuery,
 } from "../property-search/query.ts";
 
+type ClientToolArguments =
+  | SearchPropertiesArguments
+  | GetPropertyFactsArguments
+  | ResetPropertySearchArguments
+  | ContactBancArguments;
+
+type ClearableSearchField =
+  | "location"
+  | "minPrice"
+  | "maxPrice"
+  | "bedrooms"
+  | "minBathrooms"
+  | "propertyTypes"
+  | "tenures"
+  | "features"
+  | "sort";
+
+interface ModelFacingSearchPropertiesArguments {
+  department: "sales" | "lettings" | null;
+  location: string | null;
+  minPrice: number | null;
+  maxPrice: number | null;
+  bedrooms: { mode: "exact" | "minimum"; value: number } | null;
+  minBathrooms: number | null;
+  propertyTypes: readonly (typeof SEARCH_PROPERTY_TYPES)[number][] | null;
+  tenures: readonly (typeof SEARCH_TENURES)[number][] | null;
+  features: readonly (typeof SEARCH_FEATURES)[number][] | null;
+  sort: "default" | "price_asc" | "price_desc" | null;
+  clearFilters: readonly ClearableSearchField[];
+}
+
 interface CapturedFetchRequest {
   input: RequestInfo | URL;
   init?: RequestInit;
@@ -30,7 +65,7 @@ interface CapturedFetchRequest {
 
 interface StubToolCall {
   name: string;
-  rawArguments: unknown;
+  rawArguments: ClientToolArguments;
   context: PropertyConversationContext;
   currentMessage: string;
 }
@@ -39,7 +74,7 @@ interface ClientTools {
   definitions: readonly PropertyConversationToolDefinition[];
   executeTool: (
     name: string,
-    rawArguments: unknown,
+    rawArguments: ClientToolArguments,
     turn: {
       currentMessage: string;
       context: PropertyConversationContext;
@@ -47,88 +82,120 @@ interface ClientTools {
   ) => Promise<PropertyToolResult>;
 }
 
+const SEARCH_PROPERTIES_TOOL_PARAMETERS = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    department: {
+      type: ["string", "null"],
+      enum: ["sales", "lettings", null],
+    },
+    location: {
+      type: ["string", "null"],
+      minLength: 1,
+      maxLength: 120,
+    },
+    minPrice: {
+      type: ["integer", "null"],
+      minimum: 0,
+      maximum: Number.MAX_SAFE_INTEGER,
+    },
+    maxPrice: {
+      type: ["integer", "null"],
+      minimum: 0,
+      maximum: Number.MAX_SAFE_INTEGER,
+    },
+    bedrooms: {
+      anyOf: [
+        {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            mode: {
+              type: "string",
+              enum: ["exact", "minimum"],
+            },
+            value: {
+              type: "integer",
+              minimum: 0,
+              maximum: POSTGRES_SIGNED_INTEGER_MAX,
+            },
+          },
+          required: ["mode", "value"],
+        },
+        { type: "null" },
+      ],
+    },
+    minBathrooms: {
+      type: ["integer", "null"],
+      minimum: 0,
+      maximum: POSTGRES_SIGNED_INTEGER_MAX,
+    },
+    propertyTypes: {
+      type: ["array", "null"],
+      items: {
+        type: "string",
+        enum: SEARCH_PROPERTY_TYPES,
+      },
+    },
+    tenures: {
+      type: ["array", "null"],
+      items: {
+        type: "string",
+        enum: SEARCH_TENURES,
+      },
+    },
+    features: {
+      type: ["array", "null"],
+      items: {
+        type: "string",
+        enum: SEARCH_FEATURES,
+      },
+    },
+    sort: {
+      type: ["string", "null"],
+      enum: ["default", "price_asc", "price_desc", null],
+    },
+    clearFilters: {
+      type: "array",
+      items: {
+        type: "string",
+        enum: [
+          "location",
+          "minPrice",
+          "maxPrice",
+          "bedrooms",
+          "minBathrooms",
+          "propertyTypes",
+          "tenures",
+          "features",
+          "sort",
+        ],
+      },
+    },
+  },
+  required: [
+    "department",
+    "location",
+    "minPrice",
+    "maxPrice",
+    "bedrooms",
+    "minBathrooms",
+    "propertyTypes",
+    "tenures",
+    "features",
+    "sort",
+    "clearFilters",
+  ],
+} as const;
+
 const PROPERTY_CONVERSATION_TOOL_DEFINITIONS = [
   {
     type: "function",
     name: "search_properties",
     description: "Search live Banc properties with canonical filters.",
     strict: true,
-    parameters: {
-      type: "object",
-      additionalProperties: false,
-      properties: {
-        department: {
-          type: "string",
-          enum: ["sales", "lettings"],
-        },
-        location: {
-          type: ["string", "null"],
-          minLength: 1,
-          maxLength: 120,
-        },
-        minPrice: {
-          type: ["integer", "null"],
-          minimum: 0,
-          maximum: Number.MAX_SAFE_INTEGER,
-        },
-        maxPrice: {
-          type: ["integer", "null"],
-          minimum: 0,
-          maximum: Number.MAX_SAFE_INTEGER,
-        },
-        bedrooms: {
-          anyOf: [
-            {
-              type: "object",
-              additionalProperties: false,
-              properties: {
-                mode: {
-                  type: "string",
-                  enum: ["exact", "minimum"],
-                },
-                value: {
-                  type: "integer",
-                  minimum: 0,
-                  maximum: POSTGRES_SIGNED_INTEGER_MAX,
-                },
-              },
-              required: ["mode", "value"],
-            },
-            { type: "null" },
-          ],
-        },
-        minBathrooms: {
-          type: ["integer", "null"],
-          minimum: 0,
-          maximum: POSTGRES_SIGNED_INTEGER_MAX,
-        },
-        propertyTypes: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: SEARCH_PROPERTY_TYPES,
-          },
-        },
-        tenures: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: SEARCH_TENURES,
-          },
-        },
-        features: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: SEARCH_FEATURES,
-          },
-        },
-        sort: {
-          type: ["string", "null"],
-          enum: ["default", "price_asc", "price_desc", null],
-        },
-      },
-    },
+    parameters: SEARCH_PROPERTIES_TOOL_PARAMETERS,
   },
   {
     type: "function",
@@ -162,6 +229,7 @@ const PROPERTY_CONVERSATION_TOOL_DEFINITIONS = [
       type: "object",
       additionalProperties: false,
       properties: {},
+      required: [],
     },
   },
   {
@@ -254,12 +322,18 @@ function createRequest(
   };
 }
 
+function normalizedContext(
+  context: PropertyConversationContext | undefined,
+): PropertyConversationContext {
+  return propertyConversationContextSchema.parse(
+    context ?? { resultPropertyIds: [] },
+  );
+}
+
 function expectedConversationInput(
   request: PropertyConversationRequest,
 ): Array<Record<string, unknown>> {
-  const context = propertyConversationContextSchema.parse(
-    request.context ?? { resultPropertyIds: [] },
-  );
+  const context = normalizedContext(request.context);
 
   return [
     ...request.history.map((message) => ({
@@ -282,17 +356,41 @@ function expectedConversationInput(
   ];
 }
 
-function normalizedContext(
-  context: PropertyConversationContext | undefined,
-): PropertyConversationContext {
-  return propertyConversationContextSchema.parse(
-    context ?? { resultPropertyIds: [] },
-  );
+function createSearchFunctionArguments(
+  overrides: Partial<ModelFacingSearchPropertiesArguments> = {},
+): ModelFacingSearchPropertiesArguments {
+  return {
+    department: null,
+    location: null,
+    minPrice: null,
+    maxPrice: null,
+    bedrooms: null,
+    minBathrooms: null,
+    propertyTypes: null,
+    tenures: null,
+    features: null,
+    sort: null,
+    clearFilters: [],
+    ...overrides,
+  };
 }
 
 function createResponsePayload(output: unknown[]): Response {
   return Response.json({
     id: "resp_test",
+    status: "completed",
+    incomplete_details: null,
+    output,
+  });
+}
+
+function createIncompleteResponsePayload(output: unknown[]): Response {
+  return Response.json({
+    id: "resp_test",
+    status: "incomplete",
+    incomplete_details: {
+      reason: "max_output_tokens",
+    },
     output,
   });
 }
@@ -351,14 +449,17 @@ test("prompt includes the grounded Banc property rules and examples", () => {
     "Reset example",
     "Handoff example",
   ]) {
-    assert.match(BANC_PROPERTY_ASSISTANT_INSTRUCTIONS, new RegExp(snippet.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(
+      BANC_PROPERTY_ASSISTANT_INSTRUCTIONS,
+      new RegExp(snippet.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+    );
   }
 });
 
-test("client sends the expected first Responses API request and returns the validated directive with latest context", async () => {
+test("client sends the expected first Responses API request with API-valid strict required tool schemas", async () => {
   const captured: CapturedFetchRequest[] = [];
   const request = createRequest();
-  const { tools, toolCalls } = buildClientTools({
+  const { tools } = buildClientTools({
     executeTool: async () => ({
       ok: true,
       name: "search_properties",
@@ -373,6 +474,11 @@ test("client sends the expected first Responses API request and returns the vali
     }),
   });
 
+  const searchArguments = createSearchFunctionArguments({
+    department: "sales",
+    bedrooms: { mode: "exact", value: 3 },
+  });
+
   const fetcher: typeof fetch = async (input, init) => {
     captured.push({ input, init });
     if (captured.length === 1) {
@@ -380,12 +486,10 @@ test("client sends the expected first Responses API request and returns the vali
         {
           id: "fc_search",
           type: "function_call",
+          status: "completed",
           call_id: "call_search",
           name: "search_properties",
-          arguments: JSON.stringify({
-            department: "sales",
-            bedrooms: { mode: "exact", value: 3 },
-          }),
+          arguments: JSON.stringify(searchArguments),
         },
       ]);
     }
@@ -411,6 +515,7 @@ test("client sends the expected first Responses API request and returns the vali
     model: "test-property-model",
     instructions: BANC_PROPERTY_ASSISTANT_INSTRUCTIONS,
     input: expectedConversationInput(request),
+    include: ["reasoning.encrypted_content"],
     tools: PROPERTY_CONVERSATION_TOOL_DEFINITIONS,
     tool_choice: "auto",
     max_output_tokens: 500,
@@ -420,44 +525,6 @@ test("client sends the expected first Responses API request and returns the vali
     authorization: "Bearer test-key",
     "content-type": "application/json",
   });
-  assert.deepEqual(toolCalls, [{
-    name: "search_properties",
-    rawArguments: {
-      department: "sales",
-      bedrooms: { mode: "exact", value: 3 },
-    },
-    context: normalizedContext(request.context),
-    currentMessage: request.message,
-  }]);
-  assert.deepEqual(requestJson(captured[1]!).input, [
-    ...expectedConversationInput(request),
-    {
-      id: "fc_search",
-      type: "function_call",
-      call_id: "call_search",
-      name: "search_properties",
-      arguments: JSON.stringify({
-        department: "sales",
-        bedrooms: { mode: "exact", value: 3 },
-      }),
-    },
-    {
-      type: "function_call_output",
-      call_id: "call_search",
-      output: JSON.stringify({
-        ok: true,
-        name: "search_properties",
-        context: {
-          query: createDefaultPropertySearchQuery("sales"),
-          resultPropertyIds: ["EA-1"],
-          focusedPropertyId: "EA-1",
-          resultFingerprint: "sales:EA-1",
-        },
-        query: createDefaultPropertySearchQuery("sales"),
-        total: 1,
-      }),
-    },
-  ]);
   assert.deepEqual(result, {
     directive: {
       response: "Here is the first matching property.",
@@ -474,7 +541,83 @@ test("client sends the expected first Responses API request and returns the vali
   assert.equal(JSON.stringify(result).includes("test-key"), false);
 });
 
-test("client executes multiple function calls in order and appends each matching function_call_output", async () => {
+test("client translates model-facing search preserve and clear controls into internal search arguments before invoking the executor", async () => {
+  const request = createRequest({
+    message: "Keep the garden homes but drop the location filter",
+    context: {
+      query: {
+        ...createDefaultPropertySearchQuery("sales"),
+        location: "Cuffley",
+        propertyTypes: ["house"],
+      },
+      resultPropertyIds: ["EA-1"],
+      focusedPropertyId: "EA-1",
+      resultFingerprint: "sales:EA-1",
+    },
+  });
+  const { tools, toolCalls } = buildClientTools({
+    executeTool: async () => ({
+      ok: true,
+      name: "search_properties",
+      context: {
+        query: createDefaultPropertySearchQuery("sales"),
+        resultPropertyIds: ["EA-1"],
+        resultFingerprint: "sales:EA-1",
+      },
+      query: createDefaultPropertySearchQuery("sales"),
+      total: 1,
+    }),
+  });
+
+  let requestCount = 0;
+  const fetcher: typeof fetch = async () => {
+    requestCount += 1;
+    if (requestCount === 1) {
+      return createResponsePayload([
+        {
+          id: "fc_search",
+          type: "function_call",
+          status: "completed",
+          call_id: "call_search",
+          name: "search_properties",
+          arguments: JSON.stringify(createSearchFunctionArguments({
+            features: ["garden"],
+            clearFilters: ["location", "propertyTypes"],
+          })),
+        },
+      ]);
+    }
+
+    return createResponsePayload([
+      messageOutput(JSON.stringify({
+        response: "I refined the search and kept only garden homes.",
+        action: "search",
+      } satisfies ModelDirective)),
+    ]);
+  };
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher,
+  });
+
+  await client({ request, tools });
+
+  assert.equal(requestCount, 2);
+  assert.deepEqual(toolCalls, [{
+    name: "search_properties",
+    rawArguments: {
+      location: null,
+      propertyTypes: [],
+      features: ["garden"],
+    },
+    context: normalizedContext(request.context),
+    currentMessage: request.message,
+  }]);
+});
+
+test("client replays supported output items first, including reasoning, then appends matching function_call_output items in call order", async () => {
   const request = createRequest({
     message: "Compare the first two properties",
     context: {
@@ -484,7 +627,7 @@ test("client executes multiple function calls in order and appends each matching
     },
   });
   const { tools, toolCalls } = buildClientTools({
-    executeTool: async (name, rawArguments, turn) => {
+    executeTool: async (name, _rawArguments, turn) => {
       if (name === "get_property_facts") {
         return {
           ok: true,
@@ -547,8 +690,16 @@ test("client executes multiple function calls in order and appends each matching
     if (captured.length === 1) {
       return createResponsePayload([
         {
+          id: "rs_1",
+          type: "reasoning",
+          status: "completed",
+          summary: [],
+          encrypted_content: "enc_123",
+        },
+        {
           id: "fc_facts",
           type: "function_call",
+          status: "completed",
           call_id: "call_facts",
           name: "get_property_facts",
           arguments: JSON.stringify({ propertyIds: ["EA-1", "EA-2"] }),
@@ -556,6 +707,7 @@ test("client executes multiple function calls in order and appends each matching
         {
           id: "fc_handoff",
           type: "function_call",
+          status: "completed",
           call_id: "call_handoff",
           name: "contact_banc",
           arguments: JSON.stringify({ reason: "human" }),
@@ -586,11 +738,27 @@ test("client executes multiple function calls in order and appends each matching
   assert.deepEqual(requestJson(captured[1]!).input, [
     ...expectedConversationInput(request),
     {
+      id: "rs_1",
+      type: "reasoning",
+      status: "completed",
+      summary: [],
+      encrypted_content: "enc_123",
+    },
+    {
       id: "fc_facts",
       type: "function_call",
+      status: "completed",
       call_id: "call_facts",
       name: "get_property_facts",
       arguments: JSON.stringify({ propertyIds: ["EA-1", "EA-2"] }),
+    },
+    {
+      id: "fc_handoff",
+      type: "function_call",
+      status: "completed",
+      call_id: "call_handoff",
+      name: "contact_banc",
+      arguments: JSON.stringify({ reason: "human" }),
     },
     {
       type: "function_call_output",
@@ -640,13 +808,6 @@ test("client executes multiple function calls in order and appends each matching
       }),
     },
     {
-      id: "fc_handoff",
-      type: "function_call",
-      call_id: "call_handoff",
-      name: "contact_banc",
-      arguments: JSON.stringify({ reason: "human" }),
-    },
-    {
       type: "function_call_output",
       call_id: "call_handoff",
       output: JSON.stringify({
@@ -661,16 +822,14 @@ test("client executes multiple function calls in order and appends each matching
   assert.equal(result.context.resultFingerprint, "sales:EA-1|EA-2");
 });
 
-test("client passes sanitized tool failures back to the model without surfacing internal errors", async () => {
+test("client passes sanitized thrown executor failures back to the model without surfacing internal errors", async () => {
   const request = createRequest({
     message: "Book a viewing for the first one",
   });
   const { tools } = buildClientTools({
-    executeTool: async (_name, _rawArguments, turn) => ({
-      ok: false,
-      name: "contact_banc",
-      code: "invalid_arguments",
-    }),
+    executeTool: async () => {
+      throw new Error("raw executor detail");
+    },
   });
   const captured: CapturedFetchRequest[] = [];
 
@@ -681,6 +840,7 @@ test("client passes sanitized tool failures back to the model without surfacing 
         {
           id: "fc_contact",
           type: "function_call",
+          status: "completed",
           call_id: "call_contact",
           name: "contact_banc",
           arguments: JSON.stringify({ reason: "offer" }),
@@ -710,6 +870,7 @@ test("client passes sanitized tool failures back to the model without surfacing 
     {
       id: "fc_contact",
       type: "function_call",
+      status: "completed",
       call_id: "call_contact",
       name: "contact_banc",
       arguments: JSON.stringify({ reason: "offer" }),
@@ -720,10 +881,46 @@ test("client passes sanitized tool failures back to the model without surfacing 
       output: JSON.stringify({
         ok: false,
         name: "contact_banc",
-        code: "invalid_arguments",
+        code: "tool_failed",
       }),
     },
   ]);
+});
+
+test("client rejects per-tool invalid parsed arguments before invoking the executor", async () => {
+  let executed = false;
+  const { tools } = buildClientTools({
+    executeTool: async () => {
+      executed = true;
+      return {
+        ok: true,
+        name: "get_property_facts",
+        context: { resultPropertyIds: [] },
+        facts: [],
+      };
+    },
+  });
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher: async () => createResponsePayload([
+      {
+        id: "fc_bad_args",
+        type: "function_call",
+        status: "completed",
+        call_id: "call_bad_args",
+        name: "get_property_facts",
+        arguments: JSON.stringify({ propertyIds: [] }),
+      },
+    ]),
+  });
+
+  await expectRejectsWithMessage(
+    client({ request: createRequest(), tools }),
+    "OpenAI property conversation tool request was invalid.",
+  );
+  assert.equal(executed, false);
 });
 
 test("client fails closed for an unknown tool without executing it", async () => {
@@ -746,6 +943,7 @@ test("client fails closed for an unknown tool without executing it", async () =>
       {
         id: "fc_unknown",
         type: "function_call",
+        status: "completed",
         call_id: "call_unknown",
         name: "unknown_tool",
         arguments: "{}",
@@ -761,7 +959,13 @@ test("client fails closed for an unknown tool without executing it", async () =>
 });
 
 test("client fails closed for duplicate function call ids", async () => {
-  const { tools } = buildClientTools();
+  const { tools } = buildClientTools({
+    executeTool: async (_name, _rawArguments, turn) => ({
+      ok: true,
+      name: "reset_property_search",
+      context: turn.context,
+    }),
+  });
 
   const client = createOpenAIPropertyConversationClient({
     apiKey: "test-key",
@@ -770,6 +974,7 @@ test("client fails closed for duplicate function call ids", async () => {
       {
         id: "fc_one",
         type: "function_call",
+        status: "completed",
         call_id: "call_duplicate",
         name: "reset_property_search",
         arguments: "{}",
@@ -777,6 +982,7 @@ test("client fails closed for duplicate function call ids", async () => {
       {
         id: "fc_two",
         type: "function_call",
+        status: "completed",
         call_id: "call_duplicate",
         name: "reset_property_search",
         arguments: "{}",
@@ -810,6 +1016,7 @@ test("client fails closed for malformed function arguments JSON", async () => {
       {
         id: "fc_bad_json",
         type: "function_call",
+        status: "completed",
         call_id: "call_bad_json",
         name: "reset_property_search",
         arguments: "{not-json",
@@ -824,6 +1031,113 @@ test("client fails closed for malformed function arguments JSON", async () => {
   assert.equal(executed, false);
 });
 
+test("client rejects whitespace-mutated function identifiers instead of trimming them", async () => {
+  const { tools } = buildClientTools();
+
+  for (const payload of [
+    {
+      id: "fc_bad_call_id",
+      type: "function_call",
+      status: "completed",
+      call_id: " call_bad",
+      name: "reset_property_search",
+      arguments: "{}",
+    },
+    {
+      id: "fc_bad_name",
+      type: "function_call",
+      status: "completed",
+      call_id: "call_bad_name",
+      name: "reset_property_search ",
+      arguments: "{}",
+    },
+  ]) {
+    const client = createOpenAIPropertyConversationClient({
+      apiKey: "test-key",
+      model: "test-property-model",
+      fetcher: async () => createResponsePayload([payload]),
+    });
+
+    await expectRejectsWithMessage(
+      client({ request: createRequest(), tools }),
+      "OpenAI property conversation tool request was invalid.",
+    );
+  }
+});
+
+test("client rejects malformed, mismatched, or cyclic tool results before replay or context updates", async () => {
+  const request = createRequest();
+  const malformedCases: Array<{
+    label: string;
+    resultFactory: () => unknown;
+  }> = [
+    {
+      label: "null result",
+      resultFactory: () => null,
+    },
+    {
+      label: "mismatched tool name",
+      resultFactory: () => ({
+        ok: true,
+        name: "contact_banc",
+        context: { resultPropertyIds: [] },
+        category: "human",
+        message: "You can speak with the Banc team by calling 01707 877781 or using the contact page.",
+      }),
+    },
+    {
+      label: "detail-bearing malformed error",
+      resultFactory: () => ({
+        ok: false,
+        name: "reset_property_search",
+        code: "invalid_arguments",
+        detail: "raw detail",
+      }),
+    },
+    {
+      label: "cyclic result",
+      resultFactory: () => {
+        const result = {
+          ok: true,
+          name: "reset_property_search",
+          context: { resultPropertyIds: [] },
+        } as Record<string, unknown>;
+        result.self = result;
+        return result;
+      },
+    },
+  ];
+
+  for (const testCase of malformedCases) {
+    const { tools } = buildClientTools({
+      executeTool: async () => testCase.resultFactory() as PropertyToolResult,
+    });
+
+    const client = createOpenAIPropertyConversationClient({
+      apiKey: "test-key",
+      model: "test-property-model",
+      fetcher: async () => createResponsePayload([
+        {
+          id: "fc_reset",
+          type: "function_call",
+          status: "completed",
+          call_id: "call_reset",
+          name: "reset_property_search",
+          arguments: "{}",
+        },
+      ]),
+    });
+
+    await assert.rejects(
+      client({ request, tools }),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.message === "OpenAI property conversation response was invalid.",
+      testCase.label,
+    );
+  }
+});
+
 test("client fails closed when the final response has no message output text", async () => {
   const { tools } = buildClientTools();
 
@@ -836,6 +1150,32 @@ test("client fails closed when the final response has no message output text", a
         type: "message",
         role: "assistant",
         content: [],
+      },
+    ]),
+  });
+
+  await expectRejectsWithMessage(
+    client({ request: createRequest(), tools }),
+    "OpenAI property conversation response was invalid.",
+  );
+});
+
+test("client rejects incomplete Responses payloads before using tool calls or directives", async () => {
+  const { tools } = buildClientTools();
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher: async () => createIncompleteResponsePayload([
+      {
+        id: "fc_search",
+        type: "function_call",
+        status: "completed",
+        call_id: "call_search",
+        name: "search_properties",
+        arguments: JSON.stringify(createSearchFunctionArguments({
+          department: "sales",
+        })),
       },
     ]),
   });
@@ -934,6 +1274,7 @@ test("client stops after three tool rounds and fails before a fourth fetch", asy
       {
         id: `fc_${fetchCount}`,
         type: "function_call",
+        status: "completed",
         call_id: `call_${fetchCount}`,
         name: "reset_property_search",
         arguments: "{}",
@@ -953,4 +1294,24 @@ test("client stops after three tool rounds and fails before a fourth fetch", asy
     "OpenAI property conversation exceeded the tool round limit.",
   );
   assert.equal(fetchCount, 3);
+});
+
+test("client validates factory options and rejects invalid bounds without exposing values", () => {
+  for (const invalidOptions of [
+    { apiKey: "test-key", model: "test-property-model", maxToolRounds: 4 },
+    { apiKey: "test-key", model: "test-property-model", maxToolRounds: 1.5 },
+    { apiKey: "test-key", model: "test-property-model", maxToolRounds: Number.POSITIVE_INFINITY },
+    { apiKey: "test-key", model: "test-property-model", timeoutMs: 0 },
+    { apiKey: " test-key", model: "test-property-model" },
+    { apiKey: "test-key", model: " test-property-model" },
+  ]) {
+    assert.throws(
+      () => createOpenAIPropertyConversationClient(invalidOptions),
+      (error: unknown) =>
+        error instanceof Error &&
+        error.message === "OpenAI property conversation client options were invalid." &&
+        !error.message.includes("test-key") &&
+        !error.message.includes("test-property-model"),
+    );
+  }
 });

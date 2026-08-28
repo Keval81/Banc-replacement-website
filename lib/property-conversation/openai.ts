@@ -1,35 +1,44 @@
 import { z } from "zod";
 
 import {
-  contactBancArgumentsSchema,
-  getPropertyFactsArgumentsSchema,
-  modelDirectiveSchema,
+  parseContactBancArguments,
+  parseGetPropertyFactsArguments,
+  parseModelDirective,
+  parseResetPropertySearchArguments,
+  parseSearchPropertiesArguments,
   propertyConversationContextSchema,
+  type ContactBancArguments,
+  type GetPropertyFactsArguments,
   type ModelDirective,
   type PropertyConversationContext,
   type PropertyConversationRequest,
+  type ResetPropertySearchArguments,
+  type SearchPropertiesArguments,
 } from "./contracts.ts";
 import { BANC_PROPERTY_ASSISTANT_INSTRUCTIONS } from "./prompt.ts";
-import {
-  resetPropertySearchArgumentsSchema,
-  searchPropertiesArgumentsSchema,
-} from "./contracts.ts";
 import {
   SEARCH_FEATURES,
   SEARCH_PROPERTY_TYPES,
   SEARCH_TENURES,
 } from "../crm/property-source.ts";
 import { POSTGRES_SIGNED_INTEGER_MAX } from "../property-search/query.ts";
-import type {
-  PropertyConversationToolDefinition,
-  PropertyToolResult,
+import type { PropertyConversationToolDefinition } from "./tools.ts";
+import {
+  propertyConversationToolNameSchema,
+  propertyToolResultSchema,
+  type PropertyToolResult,
 } from "./tools.ts";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 const DEFAULT_MAX_OUTPUT_TOKENS = 500;
 const DEFAULT_TIMEOUT_MS = 10_000;
 const DEFAULT_MAX_TOOL_ROUNDS = 3;
+const MAX_TIMEOUT_MS = 120_000;
+const MAX_API_KEY_LENGTH = 512;
+const MAX_MODEL_LENGTH = 200;
 
+const INVALID_OPTIONS_MESSAGE =
+  "OpenAI property conversation client options were invalid.";
 const INVALID_TOOL_REQUEST_MESSAGE =
   "OpenAI property conversation tool request was invalid.";
 const INVALID_RESPONSE_MESSAGE =
@@ -41,14 +50,28 @@ const REQUEST_TIMED_OUT_MESSAGE =
 const TOOL_ROUND_LIMIT_MESSAGE =
   "OpenAI property conversation exceeded the tool round limit.";
 
+const CLEARABLE_SEARCH_FIELDS = [
+  "location",
+  "minPrice",
+  "maxPrice",
+  "bedrooms",
+  "minBathrooms",
+  "propertyTypes",
+  "tenures",
+  "features",
+  "sort",
+] as const;
+
+const exactIdentifierSchema = z.string().min(1).max(256);
+
 const functionToolParametersByName = {
   search_properties: {
     type: "object",
     additionalProperties: false,
     properties: {
       department: {
-        type: "string",
-        enum: ["sales", "lettings"],
+        type: ["string", "null"],
+        enum: ["sales", "lettings", null],
       },
       location: {
         type: ["string", "null"],
@@ -92,21 +115,21 @@ const functionToolParametersByName = {
         maximum: POSTGRES_SIGNED_INTEGER_MAX,
       },
       propertyTypes: {
-        type: "array",
+        type: ["array", "null"],
         items: {
           type: "string",
           enum: SEARCH_PROPERTY_TYPES,
         },
       },
       tenures: {
-        type: "array",
+        type: ["array", "null"],
         items: {
           type: "string",
           enum: SEARCH_TENURES,
         },
       },
       features: {
-        type: "array",
+        type: ["array", "null"],
         items: {
           type: "string",
           enum: SEARCH_FEATURES,
@@ -116,7 +139,27 @@ const functionToolParametersByName = {
         type: ["string", "null"],
         enum: ["default", "price_asc", "price_desc", null],
       },
+      clearFilters: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: CLEARABLE_SEARCH_FIELDS,
+        },
+      },
     },
+    required: [
+      "department",
+      "location",
+      "minPrice",
+      "maxPrice",
+      "bedrooms",
+      "minBathrooms",
+      "propertyTypes",
+      "tenures",
+      "features",
+      "sort",
+      "clearFilters",
+    ],
   },
   get_property_facts: {
     type: "object",
@@ -139,6 +182,7 @@ const functionToolParametersByName = {
     type: "object",
     additionalProperties: false,
     properties: {},
+    required: [],
   },
   contact_banc: {
     type: "object",
@@ -155,32 +199,89 @@ const functionToolParametersByName = {
 
 const knownToolNames = new Set(Object.keys(functionToolParametersByName));
 
+const modelFacingSearchPropertiesArgumentsSchema = z
+  .object({
+    department: z.enum(["sales", "lettings"]).nullable(),
+    location: z.string().trim().min(1).max(120).nullable(),
+    minPrice: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER).nullable(),
+    maxPrice: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER).nullable(),
+    bedrooms: z
+      .object({
+        mode: z.enum(["exact", "minimum"]),
+        value: z.number().int().min(0).max(POSTGRES_SIGNED_INTEGER_MAX),
+      })
+      .strict()
+      .nullable(),
+    minBathrooms: z.number().int().min(0).max(POSTGRES_SIGNED_INTEGER_MAX).nullable(),
+    propertyTypes: z.array(z.enum(SEARCH_PROPERTY_TYPES)).nullable(),
+    tenures: z.array(z.enum(SEARCH_TENURES)).nullable(),
+    features: z.array(z.enum(SEARCH_FEATURES)).nullable(),
+    sort: z.enum(["default", "price_asc", "price_desc"]).nullable(),
+    clearFilters: z
+      .array(z.enum(CLEARABLE_SEARCH_FIELDS))
+      .transform((fields) => [...new Set(fields)] as Array<(typeof CLEARABLE_SEARCH_FIELDS)[number]>),
+  })
+  .strict()
+  .superRefine((value, context) => {
+    for (const field of value.clearFilters) {
+      if (value[field] !== null) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [field],
+          message: "Clear filters must pair with null values",
+        });
+      }
+    }
+  });
+
 const functionCallItemSchema = z
   .object({
+    id: exactIdentifierSchema,
     type: z.literal("function_call"),
-    call_id: z.string().trim().min(1),
-    name: z.string().trim().min(1),
+    status: z.literal("completed"),
+    call_id: exactIdentifierSchema,
+    name: exactIdentifierSchema,
     arguments: z.string(),
   })
   .passthrough();
 
-const messageContentItemSchema = z
+const reasoningItemSchema = z
   .object({
-    type: z.string(),
-    text: z.string().optional(),
+    id: exactIdentifierSchema,
+    type: z.literal("reasoning"),
+    status: z.literal("completed"),
+    summary: z.array(z.unknown()),
+    encrypted_content: z.string().min(1).nullable().optional(),
+  })
+  .passthrough();
+
+const outputTextContentItemSchema = z
+  .object({
+    type: z.literal("output_text"),
+    text: z.string(),
   })
   .passthrough();
 
 const messageItemSchema = z
   .object({
+    id: exactIdentifierSchema,
     type: z.literal("message"),
-    content: z.array(messageContentItemSchema),
+    role: z.literal("assistant"),
+    content: z.array(outputTextContentItemSchema),
   })
   .passthrough();
 
+const responseOutputItemSchema = z.union([
+  reasoningItemSchema,
+  functionCallItemSchema,
+  messageItemSchema,
+]);
+
 const responsesPayloadSchema = z
   .object({
-    output: z.array(z.union([functionCallItemSchema, messageItemSchema])),
+    status: z.literal("completed"),
+    incomplete_details: z.null().optional(),
+    output: z.array(responseOutputItemSchema),
   })
   .passthrough();
 
@@ -193,7 +294,11 @@ interface OpenAIPropertyConversationTools {
   definitions: readonly PropertyConversationToolDefinition[];
   executeTool: (
     name: string,
-    rawArguments: unknown,
+    rawArguments:
+      | SearchPropertiesArguments
+      | GetPropertyFactsArguments
+      | ResetPropertySearchArguments
+      | ContactBancArguments,
     turn: OpenAIPropertyConversationToolTurn,
   ) => Promise<PropertyToolResult>;
 }
@@ -217,6 +322,8 @@ export interface OpenAIPropertyConversationResult {
 }
 
 type FunctionCallItem = z.infer<typeof functionCallItemSchema>;
+type ResponsesPayload = z.infer<typeof responsesPayloadSchema>;
+type ResponseOutputItem = z.infer<typeof responseOutputItemSchema>;
 
 interface FunctionCallOutputItem {
   type: "function_call_output";
@@ -224,15 +331,55 @@ interface FunctionCallOutputItem {
   output: string;
 }
 
-type ConversationInputItem =
-  | Record<string, unknown>
-  | FunctionCallItem
-  | FunctionCallOutputItem;
+type ConversationInputItem = Record<string, unknown>;
 
-interface SanitizedThrownToolResult {
-  ok: false;
-  name: string;
-  code: "tool_failed";
+interface ValidatedOpenAIPropertyConversationOptions {
+  apiKey: string;
+  model: string;
+  fetcher: typeof fetch;
+  timeoutMs: number;
+  maxToolRounds: number;
+}
+
+function validateOptions(
+  options: OpenAIPropertyConversationOptions,
+): ValidatedOpenAIPropertyConversationOptions {
+  const fetcher = options.fetcher ?? fetch;
+
+  if (
+    typeof options.apiKey !== "string" ||
+    options.apiKey.length === 0 ||
+    options.apiKey.length > MAX_API_KEY_LENGTH ||
+    options.apiKey.trim() !== options.apiKey ||
+    typeof options.model !== "string" ||
+    options.model.length === 0 ||
+    options.model.length > MAX_MODEL_LENGTH ||
+    options.model.trim() !== options.model ||
+    typeof fetcher !== "function"
+  ) {
+    throw new Error(INVALID_OPTIONS_MESSAGE);
+  }
+
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  const maxToolRounds = options.maxToolRounds ?? DEFAULT_MAX_TOOL_ROUNDS;
+  if (
+    !Number.isSafeInteger(timeoutMs) ||
+    timeoutMs < 1 ||
+    timeoutMs > MAX_TIMEOUT_MS ||
+    !Number.isSafeInteger(maxToolRounds) ||
+    maxToolRounds < 1 ||
+    maxToolRounds > DEFAULT_MAX_TOOL_ROUNDS
+  ) {
+    throw new Error(INVALID_OPTIONS_MESSAGE);
+  }
+
+  return {
+    apiKey: options.apiKey,
+    model: options.model,
+    fetcher,
+    timeoutMs,
+    maxToolRounds,
+  };
 }
 
 function buildConversationInput(
@@ -284,20 +431,19 @@ function buildResponsesTools(
   });
 }
 
-function extractDirective(payload: unknown): ModelDirective {
-  const parsedResponse = responsesPayloadSchema.safeParse(payload);
-  if (!parsedResponse.success) {
+function parseCompletedResponsePayload(payload: unknown): ResponsesPayload {
+  const parsed = responsesPayloadSchema.safeParse(payload);
+  if (!parsed.success) {
     throw new Error(INVALID_RESPONSE_MESSAGE);
   }
+  return parsed.data;
+}
 
-  const outputTexts = parsedResponse.data.output.flatMap((item) =>
+function extractDirective(output: readonly ResponseOutputItem[]): ModelDirective {
+  const outputTexts = output.flatMap((item) =>
     item.type !== "message"
       ? []
-      : item.content.flatMap((contentItem) =>
-        contentItem.type === "output_text" && typeof contentItem.text === "string"
-          ? [contentItem.text]
-          : []
-      )
+      : item.content.map((contentItem) => contentItem.text)
   );
 
   if (outputTexts.length !== 1) {
@@ -311,12 +457,12 @@ function extractDirective(payload: unknown): ModelDirective {
     throw new Error(INVALID_RESPONSE_MESSAGE);
   }
 
-  const directive = modelDirectiveSchema.safeParse(directiveValue);
-  if (!directive.success) {
+  const directive = parseModelDirective(directiveValue);
+  if (directive === null) {
     throw new Error(INVALID_RESPONSE_MESSAGE);
   }
 
-  return directive.data;
+  return directive;
 }
 
 async function parseJsonResponse(response: Response): Promise<unknown> {
@@ -329,12 +475,11 @@ async function parseJsonResponse(response: Response): Promise<unknown> {
 
 async function postResponsesRequest(
   fetcher: typeof fetch,
-  options: OpenAIPropertyConversationOptions,
+  options: ReturnType<typeof validateOptions>,
   body: Record<string, unknown>,
-): Promise<unknown> {
+): Promise<ResponsesPayload> {
   const abortController = new AbortController();
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const timeoutId = setTimeout(() => abortController.abort(), timeoutMs);
+  const timeoutId = setTimeout(() => abortController.abort(), options.timeoutMs);
 
   try {
     const response = await fetcher(OPENAI_RESPONSES_URL, {
@@ -351,7 +496,7 @@ async function postResponsesRequest(
       throw new Error(REQUEST_FAILED_MESSAGE);
     }
 
-    return await parseJsonResponse(response);
+    return parseCompletedResponsePayload(await parseJsonResponse(response));
   } catch (error) {
     if (abortController.signal.aborted) {
       throw new Error(REQUEST_TIMED_OUT_MESSAGE);
@@ -370,76 +515,196 @@ function assertValidFunctionCall(
   seenCallIds: Set<string>,
   approvedToolNames: Set<string>,
 ): void {
-  if (seenCallIds.has(functionCall.call_id) || !approvedToolNames.has(functionCall.name)) {
+  if (
+    functionCall.call_id.trim() !== functionCall.call_id ||
+    functionCall.name.trim() !== functionCall.name ||
+    seenCallIds.has(functionCall.call_id) ||
+    !approvedToolNames.has(functionCall.name)
+  ) {
     throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
   }
+
   seenCallIds.add(functionCall.call_id);
 }
 
-function parseFunctionArguments(functionCall: FunctionCallItem): unknown {
+function translateModelFacingSearchArguments(
+  rawArguments: unknown,
+): SearchPropertiesArguments {
+  const parsed = modelFacingSearchPropertiesArgumentsSchema.safeParse(rawArguments);
+  if (!parsed.success) {
+    throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
+  }
+
+  const clearFilters = new Set(parsed.data.clearFilters);
+  const translated = {
+    ...(parsed.data.department === null ? {} : { department: parsed.data.department }),
+    ...(clearFilters.has("location")
+      ? { location: null }
+      : parsed.data.location === null
+        ? {}
+        : { location: parsed.data.location }),
+    ...(clearFilters.has("minPrice")
+      ? { minPrice: null }
+      : parsed.data.minPrice === null
+        ? {}
+        : { minPrice: parsed.data.minPrice }),
+    ...(clearFilters.has("maxPrice")
+      ? { maxPrice: null }
+      : parsed.data.maxPrice === null
+        ? {}
+        : { maxPrice: parsed.data.maxPrice }),
+    ...(clearFilters.has("bedrooms")
+      ? { bedrooms: null }
+      : parsed.data.bedrooms === null
+        ? {}
+        : { bedrooms: parsed.data.bedrooms }),
+    ...(clearFilters.has("minBathrooms")
+      ? { minBathrooms: null }
+      : parsed.data.minBathrooms === null
+        ? {}
+        : { minBathrooms: parsed.data.minBathrooms }),
+    ...(clearFilters.has("propertyTypes")
+      ? { propertyTypes: [] }
+      : parsed.data.propertyTypes === null
+        ? {}
+        : { propertyTypes: parsed.data.propertyTypes }),
+    ...(clearFilters.has("tenures")
+      ? { tenures: [] }
+      : parsed.data.tenures === null
+        ? {}
+        : { tenures: parsed.data.tenures }),
+    ...(clearFilters.has("features")
+      ? { features: [] }
+      : parsed.data.features === null
+        ? {}
+        : { features: parsed.data.features }),
+    ...(clearFilters.has("sort")
+      ? { sort: null }
+      : parsed.data.sort === null
+        ? {}
+        : { sort: parsed.data.sort }),
+  };
+
+  const internalArguments = parseSearchPropertiesArguments(translated);
+  if (internalArguments === null) {
+    throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
+  }
+
+  return internalArguments;
+}
+
+function parseToolArguments(
+  functionCall: FunctionCallItem,
+):
+  | SearchPropertiesArguments
+  | GetPropertyFactsArguments
+  | ResetPropertySearchArguments
+  | ContactBancArguments {
+  let decodedArguments: unknown;
   try {
-    return JSON.parse(functionCall.arguments);
+    decodedArguments = JSON.parse(functionCall.arguments);
   } catch {
     throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
   }
+
+  if (functionCall.name === "search_properties") {
+    return translateModelFacingSearchArguments(decodedArguments);
+  }
+  if (functionCall.name === "get_property_facts") {
+    const parsed = parseGetPropertyFactsArguments(decodedArguments);
+    if (parsed === null) throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
+    return parsed;
+  }
+  if (functionCall.name === "reset_property_search") {
+    const parsed = parseResetPropertySearchArguments(decodedArguments);
+    if (parsed === null) throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
+    return parsed;
+  }
+  if (functionCall.name === "contact_banc") {
+    const parsed = parseContactBancArguments(decodedArguments);
+    if (parsed === null) throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
+    return parsed;
+  }
+
+  throw new Error(INVALID_TOOL_REQUEST_MESSAGE);
 }
 
-async function executeToolSafely(
+function validateToolResult(
+  result: unknown,
+  invokedToolName: string,
+): PropertyToolResult {
+  const parsed = propertyToolResultSchema.safeParse(result);
+  if (!parsed.success || parsed.data.name !== invokedToolName) {
+    throw new Error(INVALID_RESPONSE_MESSAGE);
+  }
+
+  return parsed.data as PropertyToolResult;
+}
+
+async function executeValidatedTool(
   tools: OpenAIPropertyConversationTools,
   functionCall: FunctionCallItem,
-  rawArguments: unknown,
+  rawArguments:
+    | SearchPropertiesArguments
+    | GetPropertyFactsArguments
+    | ResetPropertySearchArguments
+    | ContactBancArguments,
   currentMessage: string,
   context: PropertyConversationContext,
-): Promise<PropertyToolResult | SanitizedThrownToolResult> {
+): Promise<{ result: PropertyToolResult; serializedResult: string }> {
+  let rawResult: unknown;
+
   try {
-    return await tools.executeTool(functionCall.name, rawArguments, {
+    rawResult = await tools.executeTool(functionCall.name, rawArguments, {
       currentMessage,
       context,
     });
   } catch {
-    return {
+    rawResult = {
       ok: false,
       name: functionCall.name,
       code: "tool_failed",
     };
   }
-}
 
-function normalizeNextContext(
-  toolResult: PropertyToolResult | SanitizedThrownToolResult,
-  currentContext: PropertyConversationContext,
-): PropertyConversationContext {
-  if (toolResult.ok !== true || !("context" in toolResult)) {
-    return currentContext;
-  }
-
-  const parsedContext = propertyConversationContextSchema.safeParse(toolResult.context);
-  if (!parsedContext.success) {
+  const result = validateToolResult(rawResult, functionCall.name);
+  let serializedResult: string;
+  try {
+    serializedResult = JSON.stringify(result);
+  } catch {
     throw new Error(INVALID_RESPONSE_MESSAGE);
   }
 
-  return parsedContext.data;
+  return { result, serializedResult };
+}
+
+function normalizeNextContext(
+  toolResult: PropertyToolResult,
+  currentContext: PropertyConversationContext,
+): PropertyConversationContext {
+  if (toolResult.ok !== true) {
+    return currentContext;
+  }
+
+  return propertyConversationContextSchema.parse(toolResult.context);
 }
 
 function appendToolExchange(
   input: ConversationInputItem[],
-  functionCall: FunctionCallItem,
-  toolResult: PropertyToolResult | SanitizedThrownToolResult,
+  modelOutputItems: readonly ResponseOutputItem[],
+  toolOutputs: readonly FunctionCallOutputItem[],
 ): ConversationInputItem[] {
-  const outputItem: FunctionCallOutputItem = {
-    type: "function_call_output",
-    call_id: functionCall.call_id,
-    output: JSON.stringify(toolResult),
-  };
-
-  return [...input, functionCall, outputItem];
+  return [
+    ...input,
+    ...modelOutputItems.map((item) => ({ ...item })),
+    ...toolOutputs.map((item) => ({ ...item })),
+  ];
 }
 
 export function createOpenAIPropertyConversationClient(
   options: OpenAIPropertyConversationOptions,
 ) {
-  const fetcher = options.fetcher ?? fetch;
-  const maxToolRounds = options.maxToolRounds ?? DEFAULT_MAX_TOOL_ROUNDS;
+  const validatedOptions = validateOptions(options);
 
   return async function runOpenAIPropertyConversation(
     input: OpenAIPropertyConversationRunInput,
@@ -452,52 +717,55 @@ export function createOpenAIPropertyConversationClient(
     );
     let conversationInput = buildConversationInput(input.request);
 
-    for (let round = 0; round < maxToolRounds; round += 1) {
-      const payload = await postResponsesRequest(fetcher, options, {
-        model: options.model,
+    for (let round = 0; round < validatedOptions.maxToolRounds; round += 1) {
+      const payload = await postResponsesRequest(validatedOptions.fetcher, validatedOptions, {
+        model: validatedOptions.model,
         instructions: BANC_PROPERTY_ASSISTANT_INSTRUCTIONS,
         input: conversationInput,
+        include: ["reasoning.encrypted_content"],
         tools: responsesTools,
         tool_choice: "auto",
         max_output_tokens: DEFAULT_MAX_OUTPUT_TOKENS,
         store: false,
       });
 
-      const parsedResponse = responsesPayloadSchema.safeParse(payload);
-      if (!parsedResponse.success) {
-        throw new Error(INVALID_RESPONSE_MESSAGE);
-      }
-
-      const functionCalls = parsedResponse.data.output.filter(
+      const functionCalls = payload.output.filter(
         (item): item is FunctionCallItem => item.type === "function_call",
       );
 
       if (functionCalls.length === 0) {
         return {
-          directive: extractDirective(payload),
+          directive: extractDirective(payload.output),
           context,
         };
       }
 
+      const toolOutputs: FunctionCallOutputItem[] = [];
       for (const functionCall of functionCalls) {
         assertValidFunctionCall(functionCall, seenCallIds, approvedToolNames);
-        const rawArguments = parseFunctionArguments(functionCall);
-        const toolResult = await executeToolSafely(
+        const parsedArguments = parseToolArguments(functionCall);
+        const execution = await executeValidatedTool(
           input.tools,
           functionCall,
-          rawArguments,
+          parsedArguments,
           input.request.message,
           context,
         );
-        context = normalizeNextContext(toolResult, context);
-        conversationInput = appendToolExchange(
-          conversationInput,
-          functionCall,
-          toolResult,
-        );
+        context = normalizeNextContext(execution.result, context);
+        toolOutputs.push({
+          type: "function_call_output",
+          call_id: functionCall.call_id,
+          output: execution.serializedResult,
+        });
       }
 
-      if (round === maxToolRounds - 1) {
+      conversationInput = appendToolExchange(
+        conversationInput,
+        payload.output,
+        toolOutputs,
+      );
+
+      if (round === validatedOptions.maxToolRounds - 1) {
         throw new Error(TOOL_ROUND_LIMIT_MESSAGE);
       }
     }

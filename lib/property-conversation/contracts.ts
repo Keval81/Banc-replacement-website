@@ -118,7 +118,7 @@ const historyMessageSchema = z
     }
   });
 
-const safePropertyCardSchema = z
+export const safePropertyCardSchema = z
   .object({
     id: propertyIdSchema,
     title: z.string().trim().min(1).max(240),
