@@ -395,10 +395,14 @@ function createIncompleteResponsePayload(output: unknown[]): Response {
   });
 }
 
-function messageOutput(text: string): Record<string, unknown> {
+function messageOutput(
+  text: string,
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
   return {
     id: "msg_test",
     type: "message",
+    status: "completed",
     role: "assistant",
     content: [
       {
@@ -406,6 +410,7 @@ function messageOutput(text: string): Record<string, unknown> {
         text,
       },
     ],
+    ...overrides,
   };
 }
 
@@ -1151,6 +1156,28 @@ test("client fails closed when the final response has no message output text", a
         role: "assistant",
         content: [],
       },
+    ]),
+  });
+
+  await expectRejectsWithMessage(
+    client({ request: createRequest(), tools }),
+    "OpenAI property conversation response was invalid.",
+  );
+});
+
+test("client rejects completed responses whose final message item is still in progress", async () => {
+  const { tools } = buildClientTools();
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher: async () => createResponsePayload([
+      messageOutput(JSON.stringify({
+        response: "Here is the first matching property.",
+        action: "answer",
+      } satisfies ModelDirective), {
+        status: "in_progress",
+      }),
     ]),
   });
 

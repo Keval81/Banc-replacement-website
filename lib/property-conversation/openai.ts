@@ -266,6 +266,7 @@ const messageItemSchema = z
   .object({
     id: exactIdentifierSchema,
     type: z.literal("message"),
+    status: z.literal("completed"),
     role: z.literal("assistant"),
     content: z.array(outputTextContentItemSchema),
   })
