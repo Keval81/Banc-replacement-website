@@ -4,6 +4,7 @@ import { test } from "node:test";
 import {
   getGoogleMapLoadState,
   getOpenStreetMapEmbedUrl,
+  getPropertyMapPoints,
   getPropertyMapPresentation,
 } from "../property-map-view.ts";
 
@@ -57,4 +58,26 @@ test("keeps Google mounted while awaiting initialization and uses OpenStreetMap 
   assert.equal(getGoogleMapLoadState(true, false, false), "initializing");
   assert.equal(getGoogleMapLoadState(true, true, false), "ready");
   assert.equal(getGoogleMapLoadState(true, false, true), "fallback");
+});
+
+test("plots only exact CRM-provided coordinates without offsets", () => {
+  const points = getPropertyMapPoints([
+    {
+      id: "mapped",
+      coordinates: { latitude: 51.7101, longitude: -0.1124 },
+    },
+    { id: "missing" },
+    {
+      id: "invalid",
+      coordinates: { latitude: Number.NaN, longitude: -0.2 },
+    },
+  ]);
+
+  assert.deepEqual(points, [
+    {
+      id: "mapped",
+      coordinates: { latitude: 51.7101, longitude: -0.1124 },
+      position: { lat: 51.7101, lng: -0.1124 },
+    },
+  ]);
 });

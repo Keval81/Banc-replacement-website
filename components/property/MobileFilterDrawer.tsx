@@ -85,7 +85,7 @@ export default function MobileFilterDrawer({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-[#1A1917]/60 backdrop-blur-sm z-40 md:hidden"
+            className="fixed inset-0 bg-[#1A1917]/60 backdrop-blur-sm z-40 lg:hidden"
             aria-hidden="true"
           />
 
@@ -104,7 +104,7 @@ export default function MobileFilterDrawer({
             className={cn(
               "fixed top-0 right-0 bottom-0 z-50 w-full max-w-md",
               "bg-white shadow-2xl",
-              "md:hidden",
+              "lg:hidden",
               "flex flex-col"
             )}
             role="dialog"

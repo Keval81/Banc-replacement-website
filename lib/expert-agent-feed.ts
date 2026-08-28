@@ -153,11 +153,19 @@ export function parseExpertAgentFeed(xml: string): ExpertAgentFeed {
   return { agencyName: text(agency["@_name"]), properties };
 }
 
-const STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
+const SALES_STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
   "on market": "for_sale",
   "under offer": "under_offer",
   "sold": "sold",
   "sold stc": "under_offer",
+  "withdrawn": "withdrawn",
+};
+
+const LETTINGS_STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
+  "on market": "to_let",
+  "under offer": "let_agreed",
+  "sold": "let",
+  "sold stc": "let_agreed",
   "withdrawn": "withdrawn",
   "available to let": "to_let",
   "let stc": "let_agreed",
@@ -203,6 +211,9 @@ export function toDbProperty(
   const description = [p.mainAdvert, ...p.adverts].filter(Boolean).join("\n\n");
   const lettings = /lettings/i.test(p.department);
   const fallback: DbProperty["status"] = lettings ? "to_let" : "for_sale";
+  const statusByPriority = lettings
+    ? LETTINGS_STATUS_BY_PRIORITY
+    : SALES_STATUS_BY_PRIORITY;
   return {
     department: lettings ? "lettings" : "sales",
     expert_agent_id: p.reference,
@@ -211,7 +222,7 @@ export function toDbProperty(
     postcode: p.postcode,
     price: p.numericPrice,
     price_qualifier: p.priceText || undefined,
-    status: STATUS_BY_PRIORITY[p.priority.toLowerCase()] ?? fallback,
+    status: statusByPriority[p.priority.toLowerCase()] ?? fallback,
     property_type: [p.propertyStyle, p.propertyType].filter(Boolean).join(" "),
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

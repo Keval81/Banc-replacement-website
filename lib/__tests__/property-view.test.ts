@@ -81,6 +81,26 @@ test("keys the card on expert_agent_id and passes images through", () => {
   assert.equal(c.images.length, 2);
 });
 
+test("omits unsafe feed image references from cards and detail galleries", () => {
+  const property = {
+    ...base,
+    images: [
+      "zip://4StationRoad_01.jpg",
+      "4StationRoad_02.jpg",
+      "javascript:alert(1)",
+      "https://media.example/4StationRoad_03.jpg",
+    ],
+  };
+
+  assert.deepEqual(dbToCard(property).images, [
+    "https://media.example/4StationRoad_03.jpg",
+  ]);
+  assert.deepEqual(
+    dbToDetail(property).gallery.map((image) => image.url),
+    ["https://media.example/4StationRoad_03.jpg"],
+  );
+});
+
 test("categorises live feed property_type strings into filter ids", () => {
   const cases: Array<[string, string]> = [
     ["Detached House", "house"],
@@ -164,6 +184,18 @@ test("dbToDetail passes coordinates and epc through", () => {
   const bare = dbToDetail(base);
   assert.equal(bare.latitude, undefined);
   assert.equal(bare.epcRating, undefined);
+});
+
+test("cards expose only complete, valid property coordinates", () => {
+  assert.deepEqual(
+    dbToCard({ ...base, latitude: 51.7101, longitude: -0.1124 }).coordinates,
+    { latitude: 51.7101, longitude: -0.1124 },
+  );
+  assert.equal(dbToCard({ ...base, latitude: 51.7101 }).coordinates, undefined);
+  assert.equal(
+    dbToCard({ ...base, latitude: 95, longitude: -0.1124 }).coordinates,
+    undefined,
+  );
 });
 
 test("builds department-aware property detail links", () => {

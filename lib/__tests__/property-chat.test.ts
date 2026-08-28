@@ -80,7 +80,9 @@ test("searches the shared service and returns at most three real cards", async (
   const handle = createPropertyChatHandler(async (query) => {
     seen.push(query);
     return searchResult([
-      card("EA-1"),
+      card("EA-1", {
+        coordinates: { latitude: 51.7101, longitude: -0.1124 },
+      }),
       card("EA-2"),
       card("EA-3"),
     ], { query, total: 4, totalPages: 2 });
@@ -100,6 +102,10 @@ test("searches the shared service and returns at most three real cards", async (
   assert.equal(result.response, "I found 4 matching properties. Here are the first results.");
   assert.equal(result.properties?.length, 3);
   assert.equal(result.properties?.[0]?.id, "EA-1");
+  assert.deepEqual(result.properties?.[0]?.coordinates, {
+    latitude: 51.7101,
+    longitude: -0.1124,
+  });
 });
 
 test("keeps structured context and merges only explicit follow-up refinements", async () => {

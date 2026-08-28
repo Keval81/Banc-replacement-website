@@ -7,6 +7,7 @@ import {
   normalizePropertyType,
   type SearchPropertyType,
 } from "./crm/property-source.ts";
+import { getSafeExternalUrl } from "./property-detail-view.ts";
 
 export function buildPropertyHref(
   department: DbProperty["department"],
@@ -135,6 +136,10 @@ export interface PropertyCardData {
   propertyType: string;
   department: DbProperty["department"];
   status: DbProperty["status"];
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 const TAG_BY_STATUS: Partial<Record<DbProperty["status"], string>> = {
@@ -154,6 +159,18 @@ export function categorisePropertyType(raw: string): SearchPropertyType {
 export function dbToCard(p: DbProperty): PropertyCardData {
   const pounds = `£${Math.round(p.price).toLocaleString("en-GB")}`;
   const tag = TAG_BY_STATUS[p.status];
+  const images = p.images
+    .map(getSafeExternalUrl)
+    .filter((url): url is string => url !== null);
+  const hasValidCoordinates =
+    typeof p.latitude === "number" &&
+    Number.isFinite(p.latitude) &&
+    p.latitude >= -90 &&
+    p.latitude <= 90 &&
+    typeof p.longitude === "number" &&
+    Number.isFinite(p.longitude) &&
+    p.longitude >= -180 &&
+    p.longitude <= 180;
   return {
     id: p.expert_agent_id ?? p.id,
     title: p.title,
@@ -167,11 +184,19 @@ export function dbToCard(p: DbProperty): PropertyCardData {
       ...(p.sqft ? { sqft: p.sqft } : {}),
       ...(p.epc_rating ? { epc: p.epc_rating } : {}),
     },
-    images: p.images,
+    images,
     summary: (p.description.split("\n\n")[0] ?? "").trim(),
     propertyType: categorisePropertyType(p.property_type),
     department: p.department,
     status: p.status,
+    ...(hasValidCoordinates
+      ? {
+          coordinates: {
+            latitude: p.latitude as number,
+            longitude: p.longitude as number,
+          },
+        }
+      : {}),
   };
 }
 
@@ -248,7 +273,7 @@ export function dbToDetail(p: DbProperty): LivePropertyDetail {
     longitude: p.longitude,
     epcRating: p.epc_rating,
     epcImageUrl: p.epc_image_url,
-    gallery: p.images.map((url, i) => ({
+    gallery: card.images.map((url, i) => ({
       id: `${ref}-${i}`,
       url,
       alt: i === 0 ? `${p.title} — main photo` : `${p.title} — photo ${i + 1}`,

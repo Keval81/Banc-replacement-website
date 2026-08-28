@@ -84,9 +84,9 @@ test("toDbProperty maps a sales property to the supabase row shape", () => {
   assert.match(row.images[0], /DSCF0011\.JPG$/);
 });
 
-test("toDbProperty maps priority to status", () => {
+test("maps a lettings Under Offer record to Let Agreed", () => {
   const b = parseExpertAgentFeed(xml).properties[1];
-  assert.equal(toDbProperty(b).status, "under_offer");
+  assert.equal(toDbProperty(b).status, "let_agreed");
 });
 
 test("deduplicates consecutive address parts (district repeated as town)", () => {
@@ -109,6 +109,31 @@ test("maps Let STC to let_agreed and Sold STC to under_offer", () => {
   assert.equal(toDbProperty(parseExpertAgentFeed(a).properties[0]).status, "under_offer");
   const b = xml.replace("<priority>Under Offer</priority>", "<priority>Let STC</priority>");
   assert.equal(toDbProperty(parseExpertAgentFeed(b).properties[1]).status, "let_agreed");
+});
+
+test("keeps every supported priority inside its department status vocabulary", () => {
+  const [sales, lettings] = parseExpertAgentFeed(xml).properties;
+  const cases = [
+    { property: sales, priority: "On Market", expected: "for_sale" },
+    { property: sales, priority: "Under Offer", expected: "under_offer" },
+    { property: sales, priority: "Sold", expected: "sold" },
+    { property: sales, priority: "Sold STC", expected: "under_offer" },
+    { property: sales, priority: "Withdrawn", expected: "withdrawn" },
+    { property: lettings, priority: "Available to Let", expected: "to_let" },
+    { property: lettings, priority: "On Market", expected: "to_let" },
+    { property: lettings, priority: "Under Offer", expected: "let_agreed" },
+    { property: lettings, priority: "Let STC", expected: "let_agreed" },
+    { property: lettings, priority: "Let", expected: "let" },
+    { property: lettings, priority: "Withdrawn", expected: "withdrawn" },
+  ] as const;
+
+  for (const { property, priority, expected } of cases) {
+    assert.equal(
+      toDbProperty({ ...property, priority }).status,
+      expected,
+      `${property.department}: ${priority}`,
+    );
+  }
 });
 
 test("sales rows carry department sales", () => {

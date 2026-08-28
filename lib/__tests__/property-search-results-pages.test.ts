@@ -39,7 +39,18 @@ test("map cards keep each canonical result's department in its detail link", () 
     "utf8",
   );
 
-  assert.match(source, /department: "sales" \| "lettings"/);
+  assert.match(source, /"department"/);
   assert.match(source, /buildPropertyHref\(p\.department, p\.id\)/);
   assert.doesNotMatch(source, /href=\{`\/sales\/properties/);
+});
+
+test("results maps use only canonical coordinates and label them approximate", () => {
+  const source = readFileSync(
+    new URL("../../components/PropertyMap.tsx", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(source, /getPropertyMapPoints\(properties\)/);
+  assert.match(source, /Map locations are approximate/);
+  assert.doesNotMatch(source, /TOWN_COORDS|coordsFor|Deterministic small offset/);
 });

@@ -542,6 +542,13 @@ const safePropertyCardSchema = z
     propertyType: z.enum(SEARCH_PROPERTY_TYPES),
     department: z.enum(["sales", "lettings"]),
     status: z.enum(["for_sale", "under_offer", "to_let", "let_agreed"]),
+    coordinates: z
+      .object({
+        latitude: z.number().finite().min(-90).max(90),
+        longitude: z.number().finite().min(-180).max(180),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 

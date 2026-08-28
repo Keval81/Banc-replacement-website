@@ -115,6 +115,8 @@ test("mobile controls cannot submit accidentally and preserve modal keyboard beh
   assert.match(drawer, /startModalFocusLifecycle\(\{/);
   assert.match(drawer, /MODAL_FOCUSABLE_SELECTOR/);
   assert.match(drawer, /<motion\.div[\s\S]*?ref=\{drawerRef\}[\s\S]*?role="dialog"/);
+  assert.equal((drawer.match(/lg:hidden/g) ?? []).length, 2);
+  assert.doesNotMatch(drawer, /md:hidden/);
   assert.match(advanced, /searchThenClose\(onSearch, onClose\)/);
 });
 

@@ -76,7 +76,12 @@ test("fetches exactly the canonical paginated API URL and returns its result", a
   const query = validSalesQuery({ minBedrooms: 3, page: 3, pageSize: 12 });
   const expected = {
     ...emptyResult(query),
-    properties: [propertyCard("sales")],
+    properties: [
+      {
+        ...propertyCard("sales"),
+        coordinates: { latitude: 51.7101, longitude: -0.1124 },
+      },
+    ],
     total: 25,
     totalPages: 3,
     lastSyncedAt: "2026-08-27T09:00:00+00:00",

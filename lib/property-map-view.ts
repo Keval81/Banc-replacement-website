@@ -72,3 +72,33 @@ export function getOpenStreetMapEmbedUrl(
 
   return `https://www.openstreetmap.org/export/embed.html?${params.toString()}`;
 }
+
+interface PropertyWithCoordinates {
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
+}
+
+export function getPropertyMapPoints<T extends PropertyWithCoordinates>(
+  properties: ReadonlyArray<T>,
+): Array<T & { position: { lat: number; lng: number } }> {
+  return properties.flatMap((property) => {
+    const latitude = property.coordinates?.latitude;
+    const longitude = property.coordinates?.longitude;
+    if (
+      typeof latitude !== "number" ||
+      !Number.isFinite(latitude) ||
+      latitude < -90 ||
+      latitude > 90 ||
+      typeof longitude !== "number" ||
+      !Number.isFinite(longitude) ||
+      longitude < -180 ||
+      longitude > 180
+    ) {
+      return [];
+    }
+
+    return [{ ...property, position: { lat: latitude, lng: longitude } }];
+  });
+}

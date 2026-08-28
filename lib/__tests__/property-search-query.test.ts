@@ -101,7 +101,7 @@ test("defaults empty, non-finite, fractional, negative and out-of-range numeric 
   assert.equal(query.pageSize, 24);
 });
 
-test("ignores oversized URL integers without throwing and accepts RPC-safe boundaries", () => {
+test("ignores oversized URL integers and enforces a realistic page boundary", () => {
   assert.doesNotThrow(() =>
     parsePropertySearchParams(
       new URLSearchParams(
@@ -114,7 +114,7 @@ test("ignores oversized URL integers without throwing and accepts RPC-safe bound
 
   const invalid = parsePropertySearchParams(
     new URLSearchParams(
-      "page=44739244&minBedrooms=2147483648&minBathrooms=2147483648" +
+      "page=1001&minBedrooms=2147483648&minBathrooms=2147483648" +
         "&minPrice=9007199254740992&maxPrice=1e100",
     ),
     "sales",
@@ -127,14 +127,14 @@ test("ignores oversized URL integers without throwing and accepts RPC-safe bound
 
   const boundary = parsePropertySearchParams(
     new URLSearchParams(
-      "page=44739243&pageSize=48&minBedrooms=2147483647&minBathrooms=2147483647" +
+      "page=1000&pageSize=48&minBedrooms=2147483647&minBathrooms=2147483647" +
         "&minPrice=9007199254740991&maxPrice=9007199254740991",
     ),
     "sales",
   );
-  assert.equal(boundary.page, 44_739_243);
+  assert.equal(boundary.page, 1_000);
   assert.equal(boundary.pageSize, 48);
-  assert.equal((boundary.page - 1) * boundary.pageSize <= 2_147_483_647, true);
+  assert.equal((boundary.page - 1) * boundary.pageSize, 47_952);
   assert.equal(boundary.minBedrooms, 2_147_483_647);
   assert.equal(boundary.minBathrooms, 2_147_483_647);
   assert.equal(boundary.minPrice, Number.MAX_SAFE_INTEGER);
@@ -240,7 +240,7 @@ test("the exported schema canonicalizes enum arrays and requires a public status
 
 test("the exported schema rejects values outside RPC-safe integer bounds", () => {
   for (const oversized of [
-    { page: 44_739_244 },
+    { page: 1_001 },
     { minBedrooms: 2_147_483_648 },
     { minBathrooms: 2_147_483_648 },
     { minPrice: 9_007_199_254_740_992 },
@@ -257,7 +257,7 @@ test("the exported schema rejects values outside RPC-safe integer bounds", () =>
   assert.doesNotThrow(() =>
     propertySearchQuerySchema.parse({
       ...createDefaultPropertySearchQuery("sales"),
-      page: 44_739_243,
+      page: 1_000,
       pageSize: 48,
       minBedrooms: 2_147_483_647,
       minBathrooms: 2_147_483_647,

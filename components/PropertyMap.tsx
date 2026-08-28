@@ -3,43 +3,14 @@
 import * as React from "react";
 import Link from "next/link";
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from "@react-google-maps/api";
-import { buildPropertyHref } from "@/lib/property-view";
+import { getPropertyMapPoints } from "@/lib/property-map-view";
+import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 
-interface MapProperty {
-  id: string;
-  title: string;
-  address: string;
-  price: string;
-  images: string[];
-  department: "sales" | "lettings";
-}
-
-// Approximate town-centre coordinates for the agency's coverage area.
-// Replace with real per-property coordinates once listings come from the CRM.
-const TOWN_COORDS: Record<string, { lat: number; lng: number }> = {
-  cuffley: { lat: 51.7102, lng: -0.1131 },
-  "hadley wood": { lat: 51.6603, lng: -0.1703 },
-  "brookmans park": { lat: 51.7252, lng: -0.2049 },
-  "potters bar": { lat: 51.6939, lng: -0.1916 },
-  enfield: { lat: 51.6521, lng: -0.0807 },
-  "mount street": { lat: 51.5106, lng: -0.1486 },
-  mayfair: { lat: 51.5101, lng: -0.149 },
-  w1: { lat: 51.5101, lng: -0.149 },
-};
-
-const DEFAULT_CENTER = { lat: 51.7102, lng: -0.1131 }; // Cuffley
+type MapProperty = Pick<
+  PropertyCardData,
+  "id" | "title" | "address" | "price" | "images" | "department" | "coordinates"
+>;
 const containerStyle = { width: "100%", height: "100%" };
-
-function coordsFor(address: string, index: number) {
-  const lower = address.toLowerCase();
-  const key = Object.keys(TOWN_COORDS).find((town) => lower.includes(town));
-  const base = key ? TOWN_COORDS[key] : DEFAULT_CENTER;
-  // Deterministic small offset so multiple listings in one town don't overlap.
-  return {
-    lat: base.lat + ((index % 5) - 2) * 0.004,
-    lng: base.lng + ((index % 3) - 1) * 0.004,
-  };
-}
 
 export default function PropertyMap({ properties }: { properties: MapProperty[] }) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -50,7 +21,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
   const points = React.useMemo(
-    () => properties.map((p, i) => ({ ...p, position: coordsFor(p.address, i) })),
+    () => getPropertyMapPoints(properties),
     [properties]
   );
 
@@ -68,6 +39,16 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
     },
     [points]
   );
+
+  if (points.length === 0) {
+    return (
+      <div className="flex h-full items-center justify-center px-6 text-center">
+        <p className="text-[#5F5D57]">
+          Map locations are unavailable for these properties.
+        </p>
+      </div>
+    );
+  }
 
   if (!apiKey) {
     return (
@@ -88,43 +69,48 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   }
 
   return (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={DEFAULT_CENTER}
-      zoom={11}
-      onLoad={onLoad}
-      options={{
-        streetViewControl: false,
-        mapTypeControl: false,
-        fullscreenControl: false,
-      }}
-    >
-      {points.map((p) => (
-        <MarkerF key={p.id} position={p.position} onClick={() => setActiveId(p.id)} />
-      ))}
-      {points.map((p) =>
-        activeId === p.id ? (
-          <InfoWindowF
-            key={`iw-${p.id}`}
-            position={p.position}
-            onCloseClick={() => setActiveId(null)}
-          >
-            <Link href={buildPropertyHref(p.department, p.id)} className="block w-44">
-              {p.images?.[0] ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={p.images[0]}
-                  alt={p.title}
-                  className="w-full h-24 object-cover rounded mb-2"
-                />
-              ) : null}
-              <p className="text-sm font-semibold text-[#1A1917]">{p.title}</p>
-              <p className="text-xs text-[#8A8880]">{p.address}</p>
-              <p className="mt-1 text-sm font-bold text-[#1A9BBF]">{p.price}</p>
-            </Link>
-          </InfoWindowF>
-        ) : null
-      )}
-    </GoogleMap>
+    <div className="relative h-full">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={points[0].position}
+        zoom={11}
+        onLoad={onLoad}
+        options={{
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
+        }}
+      >
+        {points.map((p) => (
+          <MarkerF key={p.id} position={p.position} onClick={() => setActiveId(p.id)} />
+        ))}
+        {points.map((p) =>
+          activeId === p.id ? (
+            <InfoWindowF
+              key={`iw-${p.id}`}
+              position={p.position}
+              onCloseClick={() => setActiveId(null)}
+            >
+              <Link href={buildPropertyHref(p.department, p.id)} className="block w-44">
+                {p.images?.[0] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={p.images[0]}
+                    alt={p.title}
+                    className="w-full h-24 object-cover rounded mb-2"
+                  />
+                ) : null}
+                <p className="text-sm font-semibold text-[#1A1917]">{p.title}</p>
+                <p className="text-xs text-[#5F5D57]">{p.address}</p>
+                <p className="mt-1 text-sm font-bold text-[#0B6F89]">{p.price}</p>
+              </Link>
+            </InfoWindowF>
+          ) : null
+        )}
+      </GoogleMap>
+      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium text-[#5F5D57] shadow-sm">
+        Map locations are approximate postcode areas
+      </p>
+    </div>
   );
 }

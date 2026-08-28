@@ -19,8 +19,7 @@ const PROPERTY_SORTS = ["default", "price_asc", "price_desc"] as const;
 export const POSTGRES_SIGNED_INTEGER_MAX = 2_147_483_647;
 export const MAX_PROPERTY_SEARCH_PRICE = Number.MAX_SAFE_INTEGER;
 export const MAX_PROPERTY_SEARCH_PAGE_SIZE = 48;
-export const MAX_PROPERTY_SEARCH_PAGE =
-  Math.floor(POSTGRES_SIGNED_INTEGER_MAX / MAX_PROPERTY_SEARCH_PAGE_SIZE) + 1;
+export const MAX_PROPERTY_SEARCH_PAGE = 1_000;
 
 const LEGACY_FEATURE_FLAGS: ReadonlyArray<readonly [string, SearchFeature]> = [
   ["garden", "garden"],
