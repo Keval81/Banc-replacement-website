@@ -20,6 +20,14 @@ function optionLabel<T extends string>(options: readonly { value: T; label: stri
   return options.find((option) => option.value === value)?.label ?? value;
 }
 
+function getBedroomChipLabel(filters: Pick<PropertySearchFilters, "minBedrooms" | "maxBedrooms">): string | null {
+  if (filters.minBedrooms === undefined) return null;
+  if (filters.minBedrooms === filters.maxBedrooms) {
+    return filters.minBedrooms === 0 ? "Studio" : `${filters.minBedrooms} beds`;
+  }
+  return filters.minBedrooms === 0 ? "Studio+" : `${filters.minBedrooms}+ beds`;
+}
+
 export default function ActiveFilters({ department, filters, onFilterChange, onClearAll, resultCount, isLoading = false, className }: ActiveFiltersProps) {
   const chips = React.useMemo(() => {
     const result: Array<{ id: string; label: string; remove: () => void }> = [];
@@ -29,7 +37,8 @@ export default function ActiveFilters({ department, filters, onFilterChange, onC
       const maximum = filters.maxPrice !== undefined ? formatSearchPrice(filters.maxPrice, department) : "Any";
       result.push({ id: "price", label: `${minimum} – ${maximum}`, remove: () => onFilterChange({ minPrice: undefined, maxPrice: undefined }) });
     }
-    if (filters.minBedrooms !== undefined) result.push({ id: "bedrooms", label: filters.minBedrooms === 0 ? "Studio+" : `${filters.minBedrooms}+ beds`, remove: () => onFilterChange({ minBedrooms: undefined }) });
+    const bedroomChipLabel = getBedroomChipLabel(filters);
+    if (bedroomChipLabel !== null) result.push({ id: "bedrooms", label: bedroomChipLabel, remove: () => onFilterChange({ minBedrooms: undefined, maxBedrooms: undefined }) });
     if (filters.minBathrooms !== undefined) result.push({ id: "bathrooms", label: `${filters.minBathrooms}+ baths`, remove: () => onFilterChange({ minBathrooms: undefined }) });
     for (const value of filters.propertyTypes) result.push({ id: `type-${value}`, label: optionLabel(PROPERTY_TYPE_OPTIONS, value), remove: () => onFilterChange({ propertyTypes: filters.propertyTypes.filter((item) => item !== value) }) });
     for (const value of filters.tenures) result.push({ id: `tenure-${value}`, label: optionLabel(TENURE_OPTIONS, value), remove: () => onFilterChange({ tenures: filters.tenures.filter((item) => item !== value) }) });

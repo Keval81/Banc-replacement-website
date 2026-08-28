@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEARCH_FEATURES, SEARCH_PROPERTY_TYPES, SEARCH_TENURES, type SearchFeature, type SearchPropertyType, type SearchTenure } from "@/lib/crm/property-source";
+import { getMinimumOnlyBedroomPatch } from "@/lib/property-search/navigation";
 import { BATHROOM_OPTIONS, BEDROOM_OPTIONS, FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice, getPriceOptions, toggleCanonicalOption } from "@/lib/property-search/ui-options";
 import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
 import { searchThenClose } from "@/lib/property-search/search-ui-actions";
@@ -95,7 +96,7 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
           {(filters.minPrice !== undefined || filters.maxPrice !== undefined) && <p className="mt-3 text-sm text-[#5F5D57]">{filters.minPrice !== undefined ? formatSearchPrice(filters.minPrice, department) : "Any price"} — {filters.maxPrice !== undefined ? formatSearchPrice(filters.maxPrice, department) : "No maximum"}</p>}
         </FilterSection>
 
-        <FilterSection title="Bedrooms" icon={Home}><NumberChips label="Minimum bedrooms" options={BEDROOM_OPTIONS} value={filters.minBedrooms} onChange={(minBedrooms) => onFilterChange({ minBedrooms })} /></FilterSection>
+        <FilterSection title="Bedrooms" icon={Home}><NumberChips label="Minimum bedrooms" options={BEDROOM_OPTIONS} value={filters.minBedrooms} onChange={(minBedrooms) => onFilterChange(getMinimumOnlyBedroomPatch(filters, minBedrooms))} /></FilterSection>
         <FilterSection title="Bathrooms" icon={Building2}><NumberChips label="Minimum bathrooms" options={BATHROOM_OPTIONS} value={filters.minBathrooms} onChange={(minBathrooms) => onFilterChange({ minBathrooms })} /></FilterSection>
         <FilterSection title="Property type" icon={Home}><OptionList<SearchPropertyType> name="property-type" options={PROPERTY_TYPE_OPTIONS} selected={filters.propertyTypes} canonicalOrder={SEARCH_PROPERTY_TYPES} onChange={(propertyTypes) => onFilterChange({ propertyTypes })} /></FilterSection>
         <FilterSection title="Tenure" icon={Building2}><OptionList<SearchTenure> name="tenure" options={TENURE_OPTIONS} selected={filters.tenures} canonicalOrder={SEARCH_TENURES} onChange={(tenures) => onFilterChange({ tenures })} /></FilterSection>

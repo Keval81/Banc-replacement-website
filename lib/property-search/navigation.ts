@@ -80,13 +80,48 @@ export function getPropertySearchFilters(
   };
 }
 
+export function getMinimumOnlyBedroomPatch(
+  current: Pick<PropertySearchFilters, "minBedrooms" | "maxBedrooms">,
+  minBedrooms: number | undefined,
+): Pick<PropertySearchFilters, "minBedrooms" | "maxBedrooms"> {
+  if (minBedrooms === undefined) {
+    return {
+      minBedrooms: undefined,
+      maxBedrooms: undefined,
+    };
+  }
+
+  if (
+    current.minBedrooms === minBedrooms &&
+    current.maxBedrooms === minBedrooms
+  ) {
+    return {
+      minBedrooms,
+      maxBedrooms: minBedrooms,
+    };
+  }
+
+  return {
+    minBedrooms,
+    maxBedrooms: undefined,
+  };
+}
+
 export function applyPropertySearchFilterPatch(
   query: PropertySearchQuery,
   patch: Partial<PropertySearchFilters>,
 ): PropertySearchQuery {
+  const nextPatch =
+    "minBedrooms" in patch && !("maxBedrooms" in patch)
+      ? {
+          ...patch,
+          ...getMinimumOnlyBedroomPatch(query, patch.minBedrooms),
+        }
+      : patch;
+
   return propertySearchQuerySchema.parse({
     ...query,
-    ...patch,
+    ...nextPatch,
     page: 1,
   });
 }
