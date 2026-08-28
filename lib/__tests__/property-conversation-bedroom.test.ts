@@ -11,6 +11,10 @@ for (const [message, expected] of [
   ["Show 3+ beds", { kind: "minimum", value: 3 }],
   ["At least three bedrooms", { kind: "minimum", value: 3 }],
   ["Minimum 3 bedrooms", { kind: "minimum", value: 3 }],
+  ["Show 3 or more bedrooms", { kind: "minimum", value: 3 }],
+  ["Show three or more bedrooms", { kind: "minimum", value: 3 }],
+  ["Show 3-or-more-bedroom homes", { kind: "minimum", value: 3 }],
+  ["Show three-or-more-bedroom homes", { kind: "minimum", value: 3 }],
   ["3 bedrooms or more", { kind: "minimum", value: 3 }],
 ] as const) {
   test(`parses ${message}`, () => {

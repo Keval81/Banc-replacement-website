@@ -30,6 +30,10 @@ const minimumPatterns = [
   ),
   new RegExp(`(?:^|[^\\w,.])${countCapture}\\+\\s*${bedroomUnitPattern}\\b`, "i"),
   new RegExp(
+    `(?:^|[^\\w,.])${countCapture}(?:-\\s*|\\s+)or(?:-\\s*|\\s+)more[-\\s]+${bedroomUnitPattern}\\b`,
+    "i",
+  ),
+  new RegExp(
     `(?:^|[^\\w,.])${countCapture}[-\\s]+${bedroomUnitPattern}\\s+or\\s+more\\b`,
     "i",
   ),
