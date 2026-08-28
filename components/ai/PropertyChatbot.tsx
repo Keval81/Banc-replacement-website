@@ -8,7 +8,7 @@ import Image from "next/image";
 import type {
   ChatSearchContext,
   PropertyChatResponse,
-} from "@/lib/property-chat";
+} from "@/lib/property-conversation";
 import { createSingleFlightRunner } from "@/lib/property-chat-submit";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 import { getSafePropertyImageUrl } from "@/lib/property-detail-view";

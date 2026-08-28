@@ -160,7 +160,7 @@ const PROPERTY_CONVERSATION_TOOL_DEFINITIONS: readonly PropertyConversationToolD
   },
 ];
 
-const CONTACT_BANC_COPY: Readonly<Record<HandoffCategory, string>> = {
+export const CONTACT_BANC_COPY: Readonly<Record<HandoffCategory, string>> = {
   viewing:
     "The chatbot can't book viewings or check availability. Please contact the Banc team or call Banc on 01707 877781.",
   valuation:

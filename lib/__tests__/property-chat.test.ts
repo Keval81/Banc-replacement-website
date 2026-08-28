@@ -7,6 +7,10 @@ import {
   parsePropertyChatPatch,
   parsePropertyChatRequest,
 } from "../property-chat.ts";
+import {
+  parsePropertyConversationRequest,
+  type PropertyConversationResponse,
+} from "../property-conversation/index.ts";
 import { createSingleFlightRunner } from "../property-chat-submit.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
 import type {
@@ -20,6 +24,35 @@ function validSalesQuery(
 ): PropertySearchQuery {
   return { ...createDefaultPropertySearchQuery("sales"), ...overrides };
 }
+
+test("the conversational public entrypoint strictly parses structured route requests", () => {
+  const valid = {
+    message: "Tell me about the first one",
+    history: [{ role: "user" as const, content: "Find homes in Cuffley" }],
+    context: {
+      query: createDefaultPropertySearchQuery("sales"),
+      resultPropertyIds: ["EA-1"],
+      focusedPropertyId: "EA-1",
+      resultFingerprint: "sales:EA-1",
+    },
+  };
+
+  assert.deepEqual(parsePropertyConversationRequest(valid), valid);
+  assert.equal(parsePropertyConversationRequest({
+    ...valid,
+    context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-2" },
+  }), null);
+});
+
+test("the conversational response contract supports answer-only replies", () => {
+  const response: PropertyConversationResponse = {
+    response: "The first home has three bedrooms.",
+    action: "answer",
+    context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1" },
+  };
+
+  assert.equal("properties" in response, false);
+});
 
 function card(
   id: string,
