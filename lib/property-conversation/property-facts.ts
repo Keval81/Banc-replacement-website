@@ -103,6 +103,7 @@ export function createPropertyFactLookup(
     }
 
     const rowsById = new Map<string, DbProperty>();
+    const ambiguousIds = new Set<string>();
     for (const row of data) {
       if (
         typeof row !== "object" ||
@@ -112,7 +113,16 @@ export function createPropertyFactLookup(
       ) {
         continue;
       }
-      rowsById.set(row.expert_agent_id, row as DbProperty);
+      const publicId = row.expert_agent_id;
+      if (ambiguousIds.has(publicId)) {
+        continue;
+      }
+      if (rowsById.has(publicId)) {
+        rowsById.delete(publicId);
+        ambiguousIds.add(publicId);
+        continue;
+      }
+      rowsById.set(publicId, row as DbProperty);
     }
 
     return ids.flatMap((id) => {

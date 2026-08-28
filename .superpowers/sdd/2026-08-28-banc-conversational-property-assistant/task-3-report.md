@@ -89,3 +89,55 @@ Both completed successfully after implementation.
   cannot import that module directly in this repo, so the pure lookup factory
   lives in `property-facts.ts` and `server.ts` remains a thin server-only
   wrapper.
+
+## Fix Round 1
+
+### Finding Addressed
+
+`createPropertyFactLookup()` previously collapsed duplicate active marketable
+rows that shared the same public `expert_agent_id` and let the last row win.
+That could return facts from an ambiguous canonical identity.
+
+### Covering Files
+
+- `lib/__tests__/property-conversation-facts.test.ts`
+- `lib/property-conversation/property-facts.ts`
+
+### RED Command
+
+```bash
+node --experimental-strip-types --test \
+  lib/__tests__/property-conversation-facts.test.ts \
+  lib/__tests__/property-conversation-tools.test.ts
+```
+
+Observed output:
+
+```text
+✖ server lookup fails closed for duplicate active marketable public ids while preserving unique id order
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+actual: [ 'EA-2', 'EA-1' ]
+expected: [ 'EA-2' ]
+```
+
+### Minimal Fix
+
+Updated `createPropertyFactLookup()` to treat duplicate active marketable public
+IDs as ambiguous by removing the first seen row and marking the public ID
+ambiguous, so no row for that ID is returned as authoritative.
+
+### GREEN Commands
+
+```bash
+node --experimental-strip-types --test \
+  lib/__tests__/property-conversation-facts.test.ts \
+  lib/__tests__/property-conversation-tools.test.ts
+npx tsc --noEmit
+```
+
+Observed output:
+
+```text
+14 tests passed, 0 failed
+tsc exited 0
+```

@@ -215,3 +215,38 @@ test("server lookup returns only active marketable rows in requested id order", 
     ]],
   ]);
 });
+
+test("server lookup fails closed for duplicate active marketable public ids while preserving unique id order", async () => {
+  const duplicateA = dbProperty({
+    id: "uuid-dup-a",
+    expert_agent_id: "EA-1",
+    source_system: "expert_agent",
+    source_id: "source-a",
+    title: "Authoritative Looking House",
+    price: 725000,
+  });
+  const duplicateB = dbProperty({
+    id: "uuid-dup-b",
+    expert_agent_id: "EA-1",
+    source_system: "streets",
+    source_id: "source-b",
+    title: "Conflicting House",
+    price: 910000,
+  } as Partial<DbProperty>);
+  const unique = dbProperty({
+    id: "uuid-2",
+    expert_agent_id: "EA-2",
+    source_id: "source-2",
+    title: "Unique House",
+  });
+  const fake = createFakeLookupClient([duplicateA, unique, duplicateB]);
+  const lookupFacts = createPropertyFactLookup(fake.client as never);
+
+  const facts = await lookupFacts(["EA-2", "EA-1"]);
+
+  assert.deepEqual(
+    facts.map((fact) => fact.id),
+    ["EA-2"],
+  );
+  assert.equal(facts.some((fact) => fact.id === "EA-1"), false);
+});
