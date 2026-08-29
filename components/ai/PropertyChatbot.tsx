@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
-import type {
-  ChatSearchContext,
-  PropertyChatResponse,
+import {
+  parsePropertyConversationResponse,
+  type PropertyConversationContext,
+  type PropertyConversationResponse,
 } from "@/lib/property-conversation";
 import { createSingleFlightRunner } from "@/lib/property-chat-submit";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
@@ -26,15 +27,17 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   properties?: PropertyCardData[];
-  action?: PropertyChatResponse["action"];
+  action?: PropertyConversationResponse["action"];
   timestamp: Date;
 }
 
-const quickReplies = [
+const initialQuickReplies = [
   "I want to buy a 3-bed in Cuffley",
   "I'm looking to rent",
   "I need to speak to the Banc team",
 ];
+
+const resultQuickReplies = ["Tell me about the first property"];
 
 const transition = {
   type: "spring" as const,
@@ -60,12 +63,13 @@ export default function PropertyChatbot({
       id: "welcome",
       role: "assistant",
       content:
-        "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, or help you contact the team. What are you looking for?",
+        "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState("");
-  const [searchContext, setSearchContext] = useState<ChatSearchContext>();
+  const [conversationContext, setConversationContext] =
+    useState<PropertyConversationContext>({ resultPropertyIds: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
@@ -77,6 +81,10 @@ export default function PropertyChatbot({
   const submissionRunnerRef = useRef(createSingleFlightRunner());
   const messageIdRef = useRef(0);
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
+  const quickReplies =
+    conversationContext.resultPropertyIds.length > 0
+      ? resultQuickReplies
+      : initialQuickReplies;
   const closeChat = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
@@ -167,13 +175,14 @@ export default function PropertyChatbot({
             history: messages
               .slice(-20)
               .map((message) => ({ role: message.role, content: message.content })),
-            ...(searchContext === undefined ? {} : { context: searchContext }),
+            context: conversationContext,
           }),
         });
 
         if (!response.ok) throw new Error("Chat request failed");
-        const data = (await response.json()) as PropertyChatResponse;
-        if (data.context !== undefined) setSearchContext(data.context);
+        const data = parsePropertyConversationResponse(await response.json());
+        if (data === null) throw new Error("Invalid chat response");
+        setConversationContext(data.context);
 
         setMessages((prev) => [
           ...prev,
@@ -394,6 +403,7 @@ export default function PropertyChatbot({
               <div
                 role="log"
                 aria-live="polite"
+                aria-busy={isLoading}
                 aria-label="Conversation with Banc Assistant"
                 className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
               >
@@ -485,22 +495,20 @@ export default function PropertyChatbot({
               </div>
 
               {/* Quick Replies */}
-              {messages.length < 3 && (
-                <div className="flex gap-2 overflow-x-auto px-4 py-2.5 border-t border-banc-grey/10 bg-white shrink-0 scrollbar-hide">
-                  {quickReplies.map((reply) => (
-                    <button
-                      key={reply}
-                      onClick={() => {
-                        setInput(reply);
-                        inputRef.current?.focus();
-                      }}
-                      className="flex-shrink-0 rounded-full border border-banc-grey/20 bg-banc-grey-pale px-3 py-1.5 text-xs text-banc-dark hover:border-banc-sky hover:text-banc-sky transition-colors duration-200 cursor-pointer whitespace-nowrap"
-                    >
-                      {reply}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="flex gap-2 overflow-x-auto px-4 py-2.5 border-t border-banc-grey/10 bg-white shrink-0 scrollbar-hide">
+                {quickReplies.map((reply) => (
+                  <button
+                    key={reply}
+                    onClick={() => {
+                      setInput(reply);
+                      inputRef.current?.focus();
+                    }}
+                    className="flex-shrink-0 rounded-full border border-banc-grey/20 bg-banc-grey-pale px-3 py-1.5 text-xs text-banc-dark hover:border-banc-sky hover:text-banc-sky transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                  >
+                    {reply}
+                  </button>
+                ))}
+              </div>
 
               {/* Input */}
               <div className="flex items-center gap-2 border-t border-banc-grey/10 bg-white p-3 shrink-0">
