@@ -259,6 +259,47 @@ staging runbook must proceed in this order:
 5. After the approved staging-only mutation, run and record the direct
    exact-bedroom and minimum-bedroom RPC checks before continuing.
 
+### Read-only remote preflight attempt
+
+On 2026-08-29, Supabase CLI `2.75.0` was available, but the authenticated
+read-only preflight could not start. A project-list request was filtered to
+emit only the target ref, project name, and organisation ID; it exited 1 before
+returning project data with: `Access token not provided. Supply an access token
+by running supabase login or setting the SUPABASE_ACCESS_TOKEN environment
+variable.` No token was searched for, requested, printed, or configured.
+
+Consequently, the remote ref, human-readable project name, human-readable
+organisation identity, remote migration history, and complete pending set all
+remain unverified. No database connection or query was made, and Production
+was not queried or changed.
+
+After an approved authenticated read-only session is available, repeat the
+project and organisation identity checks and inspect `supabase migration list`
+against the verified staging project. Record the complete local/remote table
+and derive the pending set before requesting any mutation.
+
+The safe later application method is an isolated temporary Supabase workdir:
+
+1. Populate its `supabase/migrations` directory with only the migrations that
+   the verified remote history already records as applied, plus the reviewed
+   `202608280001_exact_bedroom_search.sql` artifact. Do not copy any other
+   pending migration into that workdir.
+2. Link only that temporary workdir to the identity-verified staging ref using
+   approved authenticated tooling, without exposing connection material.
+3. Recheck the target checksum, then run
+   `supabase db push --dry-run --linked --workdir "$STAGING_MIGRATION_WORKDIR"`
+   without `--include-all`, `--include-roles`, or `--include-seed`. Stop unless
+   the dry run lists exactly `202608280001_exact_bedroom_search.sql` and no
+   other migration.
+4. Keep the temporary workdir unchanged. A separate mutation approval may then
+   authorize the same command without `--dry-run`. The reviewed SQL file owns
+   its `begin;`/`commit;` transaction, and the CLI records the applied migration
+   in remote migration history.
+
+This method constrains the later push to the single verified artifact and
+preserves migration bookkeeping. A normal repository-wide migration push, or
+any dry run that lists another pending file, is not approved.
+
 Preview configuration and acceptance must then proceed separately. A valid
 `OPENAI_API_KEY` must be entered through an approved secret channel and needs
 approval to configure it in Preview only. Next, verify a current tool-capable
