@@ -212,9 +212,10 @@ client.
 The initial preparation found no Preview OpenAI variables. A later authorized
 names-only check now confirms that both required names exist in Preview, but
 their values and validity were not inspected. The conversational preview is
-still not deployed and must not be described as working. Production was not
-changed during this preparation; its later inspection was limited to approved
-variable names and scopes.
+not yet proven working. At that preparation stage it had not been deployed;
+the later deployment and access blocker are recorded below. Production was
+not changed during this preparation; its later inspection was limited to
+approved variable names and scopes.
 
 The complete local preview gate was run on 2026-08-29:
 
@@ -360,9 +361,9 @@ verification.
 
 No Production query or change, Vercel change, deployment, live OpenAI call,
 push, or merge occurred during the staging operation. Remaining external work
-is the approval-gated Preview deployment and live API/browser acceptance,
-including the separately approval-gated isolated no-key Preview required for
-missing-key acceptance.
+after that staging operation was Preview deployment and live API/browser
+acceptance, including the separately approval-gated isolated no-key Preview
+required for missing-key acceptance.
 
 Preview configuration and acceptance must proceed separately. A read-only
 Vercel check on 2026-08-29 confirmed that Preview contains variable names
@@ -396,6 +397,37 @@ no-key Preview/environment created for that check. It must not remove, replace,
 or change the configured conversational Preview key, and it must not affect
 any other Preview deployment or environment. Creating and deploying that
 isolated no-key target requires its own explicit environment/deployment
-mutation approval. The normal Preview deployment, live API checks, and browser
-checks also require their stated approvals. Production must remain unchanged
-unless it receives separate approval.
+mutation approval. Production must remain unchanged unless it receives
+separate approval.
+
+### Preview deployment and live acceptance blocker
+
+The controller completed the approved Preview-only deployment on 2026-08-29:
+
+- Immutable URL:
+  `https://banc-website-7e5kfdn3i-digital-inroads.vercel.app`
+- Deployment ID: `dpl_4SfQ37v5cPfwShSBRihriC1gDfuH`
+- Vercel state: `READY`
+- Target: Preview, with no Production flag
+
+No environment variable, domain, staging database, or Production setting was
+changed as part of the acceptance continuation.
+
+The approved six-turn live `/api/chat` sequence used the repository's strict
+public response schema and was configured to preserve conversation history and
+structured context. The first prompt, `I want to buy a 3 bed in Cuffley`,
+returned HTTP 401 before a valid public chat response was available. Only the
+sanitized public error `Preview chat request failed.` was recorded; the body,
+headers, credentials, and any upstream material were not printed.
+
+Because the first prompt is load-bearing, the sequence stopped immediately.
+The cheapest, first-result detail, garden, widened search, and viewing prompts
+were not sent. No OpenAI/model/account behavior can be inferred from a request
+blocked before the public application contract. Browser QA was not run and
+must not be claimed complete.
+
+The immutable Preview exists and is ready, but chatbot acceptance is blocked
+on authorized access to the protected endpoint. A later approved run must use
+an authenticated or explicitly approved Deployment Protection bypass method,
+then restart the same six-turn sequence from prompt one. The separately scoped
+isolated no-key deployment/test remains unapproved and was not performed.
