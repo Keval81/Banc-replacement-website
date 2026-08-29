@@ -249,7 +249,7 @@ const reasoningItemSchema = z
   .object({
     id: exactIdentifierSchema,
     type: z.literal("reasoning"),
-    status: z.literal("completed"),
+    status: z.literal("completed").optional(),
     summary: z.array(z.unknown()),
     encrypted_content: z.string().min(1).nullable().optional(),
   })
@@ -393,7 +393,10 @@ function buildConversationInput(
   return [
     ...request.history.map((message) => ({
       role: message.role,
-      content: [{ type: "input_text", text: message.content }],
+      content: [{
+        type: message.role === "assistant" ? "output_text" : "input_text",
+        text: message.content,
+      }],
     })),
     {
       role: "user",

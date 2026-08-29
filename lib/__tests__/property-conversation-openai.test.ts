@@ -338,7 +338,10 @@ function expectedConversationInput(
   return [
     ...request.history.map((message) => ({
       role: message.role,
-      content: [{ type: "input_text", text: message.content }],
+      content: [{
+        type: message.role === "assistant" ? "output_text" : "input_text",
+        text: message.content,
+      }],
     })),
     {
       role: "user",
@@ -544,6 +547,102 @@ test("client sends the expected first Responses API request with API-valid stric
     },
   });
   assert.equal(JSON.stringify(result).includes("test-key"), false);
+});
+
+test("client accepts completed reasoning output when the item-level status is omitted", async () => {
+  const captured: CapturedFetchRequest[] = [];
+  const request = createRequest({
+    message: "I want to buy a 3 bed in Cuffley",
+    history: [],
+    context: { resultPropertyIds: [] },
+  });
+  const { tools } = buildClientTools();
+
+  const fetcher: typeof fetch = async (input, init) => {
+    captured.push({ input, init });
+    if (captured.length === 1) {
+      return createResponsePayload([
+        {
+          id: "rs_without_status",
+          type: "reasoning",
+          summary: [],
+          encrypted_content: "enc_without_status",
+        },
+        {
+          id: "fc_search",
+          type: "function_call",
+          status: "completed",
+          call_id: "call_search",
+          name: "search_properties",
+          arguments: JSON.stringify(createSearchFunctionArguments({
+            department: "sales",
+            location: "Cuffley",
+            bedrooms: { mode: "exact", value: 3 },
+          })),
+        },
+      ]);
+    }
+
+    return createResponsePayload([
+      messageOutput(JSON.stringify({
+        response: "I found matching three-bedroom homes in Cuffley.",
+        action: "search",
+      } satisfies ModelDirective)),
+    ]);
+  };
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher,
+  });
+
+  const result = await client({ request, tools });
+
+  assert.equal(result.directive.action, "search");
+  assert.equal(captured.length, 2);
+});
+
+test("client serializes prior assistant history as Responses API output text", async () => {
+  const captured: CapturedFetchRequest[] = [];
+  const request = createRequest({
+    message: "Which is cheapest?",
+    history: [
+      { role: "user", content: "I want to buy a 3 bed in Cuffley" },
+      { role: "assistant", content: "I found three matching homes." },
+    ],
+  });
+  const { tools } = buildClientTools();
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher: async (input, init) => {
+      captured.push({ input, init });
+      return createResponsePayload([
+        messageOutput(JSON.stringify({
+          response: "The second property is cheapest.",
+          action: "answer",
+        } satisfies ModelDirective)),
+      ]);
+    },
+  });
+
+  await client({ request, tools });
+
+  const input = requestJson(captured[0]!).input;
+  assert.equal(Array.isArray(input), true);
+  if (!Array.isArray(input)) throw new TypeError("Expected Responses input items.");
+  assert.deepEqual(input.slice(0, 2), [
+    {
+      role: "user",
+      content: [{ type: "input_text", text: "I want to buy a 3 bed in Cuffley" }],
+    },
+    {
+      role: "assistant",
+      content: [{ type: "output_text", text: "I found three matching homes." }],
+    },
+  ]);
 });
 
 test("client translates model-facing search preserve and clear controls into internal search arguments before invoking the executor", async () => {
