@@ -209,10 +209,12 @@ requires explicit approval, an approved API spend budget, and rate-limit
 controls. Secret values must never be committed, logged, or returned to a
 client.
 
-No Preview `OPENAI_API_KEY` is currently available, and no model identifier
-has been selected or configured. Therefore, the conversational preview is not
-deployed and must not be described as working. Production was not inspected or
-changed during this local preparation.
+The initial preparation found no Preview OpenAI variables. A later authorized
+names-only check now confirms that both required names exist in Preview, but
+their values and validity were not inspected. The conversational preview is
+still not deployed and must not be described as working. Production was not
+changed during this preparation; its later inspection was limited to approved
+variable names and scopes.
 
 The complete local preview gate was run on 2026-08-29:
 
@@ -259,50 +261,64 @@ staging runbook must proceed in this order:
 5. After the approved staging-only mutation, run and record the direct
    exact-bedroom and minimum-bedroom RPC checks before continuing.
 
-### Read-only remote preflight attempt
+### Read-only remote preflight
 
-On 2026-08-29, Supabase CLI `2.75.0` was available, but the authenticated
-read-only preflight could not start. A project-list request was filtered to
-emit only the target ref, project name, and organisation ID; it exited 1 before
-returning project data with: `Access token not provided. Supply an access token
-by running supabase login or setting the SUPABASE_ACCESS_TOKEN environment
-variable.` No token was searched for, requested, printed, or configured.
+On 2026-08-29, authenticated Supabase CLI `2.75.0` returned the following
+non-secret staging identity:
 
-Consequently, the remote ref, human-readable project name, human-readable
-organisation identity, remote migration history, and complete pending set all
-remain unverified. No database connection or query was made, and Production
-was not queried or changed.
+- Project ref: `gaomvwleaonccrmaicxb`
+- Project name: `Test Banc Virtual Agent` (the API value includes a trailing
+  space)
+- Organisation: `Digital Inroads`
+- Organisation ID: `gugvgdsofsdqbvekesxw`
 
-After an approved authenticated read-only session is available, repeat the
-project and organisation identity checks and inspect `supabase migration list`
-against the verified staging project. Record the complete local/remote table
-and derive the pending set before requesting any mutation.
+An isolated temporary workdir was linked to that verified ref for read-only
+migration inspection. `supabase migration list --linked` returned the complete
+local/remote table:
 
-The safe later application method is an isolated temporary Supabase workdir:
+| Local version | Remote version | State |
+| --- | --- | --- |
+| `202608270001` | absent | pending |
+| `202608280001` | absent | pending |
 
-1. Populate its `supabase/migrations` directory with only the migrations that
-   the verified remote history already records as applied, plus the reviewed
-   `202608280001_exact_bedroom_search.sql` artifact. Do not copy any other
-   pending migration into that workdir.
-2. Link only that temporary workdir to the identity-verified staging ref using
-   approved authenticated tooling, without exposing connection material.
-3. Recheck the target checksum, then run
-   `supabase db push --dry-run --linked --workdir "$STAGING_MIGRATION_WORKDIR"`
-   without `--include-all`, `--include-roles`, or `--include-seed`. Stop unless
-   the dry run lists exactly `202608280001_exact_bedroom_search.sql` and no
-   other migration.
-4. Keep the temporary workdir unchanged. A separate mutation approval may then
-   authorize the same command without `--dry-run`. The reviewed SQL file owns
-   its `begin;`/`commit;` transaction, and the CLI records the applied migration
-   in remote migration history.
+Remote migration history therefore records neither repository migration. A
+normal repository-wide push is unsafe because it would include both files.
+This history result also does not prove whether equivalent schema was applied
+outside Supabase migration bookkeeping.
 
-This method constrains the later push to the single verified artifact and
-preserves migration bookkeeping. A normal repository-wide migration push, or
-any dry run that lists another pending file, is not approved.
+The exact-bedroom artifact was copied into an isolated workdir without the
+other pending migration and reverified as SHA-256
+`4a447a3ab9943e567b6b05586a1ad9427f0a9bf461ecab2010c09036a2d2ca88`.
+The read-only command
 
-Preview configuration and acceptance must then proceed separately. A valid
-`OPENAI_API_KEY` must be entered through an approved secret channel and needs
-approval to configure it in Preview only.
+```bash
+supabase db push --dry-run --linked --workdir "$STAGING_MIGRATION_WORKDIR"
+```
+
+explicitly reported that migrations would not be pushed and listed exactly
+`202608280001_exact_bedroom_search.sql`. The temporary workdir was then
+deleted. No migration or SQL was applied.
+
+A later mutation request may authorize only an unchanged, recreated isolated
+workdir that contains the checksum-verified target and no other pending file.
+Immediately repeat the dry run and stop unless it again lists only the target.
+The exact mutation command is then:
+
+```bash
+supabase db push --linked --workdir "$STAGING_MIGRATION_WORKDIR"
+```
+
+Do not add `--include-all`, `--include-roles`, or `--include-seed`. The target
+SQL owns its `begin;`/`commit;` transaction. Approval must acknowledge that
+`202608270001` remains absent from remote migration history and that this
+target-only operation does not repair or apply it. Stop on any SQL or history
+error; Production is never an allowed target.
+
+Preview configuration and acceptance must proceed separately. A read-only
+Vercel check on 2026-08-29 confirmed that Preview contains variable names
+`OPENAI_API_KEY` and `OPENAI_CHAT_MODEL`. Values were not inspected, so this
+does not prove that the key is valid, which model identifier is stored, account
+access, or runtime compatibility.
 
 On 2026-08-29, the controller verified the official OpenAI model documentation
 at `https://developers.openai.com/api/docs/models`. It states that the latest
@@ -311,14 +327,17 @@ models are available through the Responses API and describes exact model ID
 among its supported tools. `gpt-5.6-terra` is therefore the recommended
 Preview candidate.
 
-This documentation check does not establish that a valid API account or key is
-available, that the account can access the model, or that the deployed
-application is live-compatible with it. The model is not configured. Setting
-exactly `gpt-5.6-terra` as `OPENAI_CHAT_MODEL` still requires explicit
-Preview-only approval and a valid Preview API account/key entered through an
-approved secret channel. The first approved Preview call remains the runtime
-Responses API and function-tool acceptance check; until it succeeds, live
-compatibility must not be claimed.
+This documentation check does not establish that the saved Preview account/key
+is valid, that the account can access the model, that the saved model value is
+`gpt-5.6-terra`, or that the deployed application is live-compatible with it.
+No value was read or changed. The first approved Preview call remains the
+runtime Responses API and function-tool acceptance check; until it succeeds,
+live compatibility must not be claimed.
+
+The same authorized names-only check found `OPENAI_API_KEY` in Production but
+did not find `OPENAI_CHAT_MODEL` there. No Production value was inspected and
+no Production variable was changed or removed. Any Production cleanup,
+configuration, or deployment requires separate explicit approval.
 
 The deployed missing-key acceptance check must use a separate immutable
 no-key Preview/environment created for that check. It must not remove, replace,
