@@ -10,6 +10,8 @@ for (const [message, expected] of [
   ["Make it 3 bedrooms", { kind: "exact", value: 3 }],
   ["Show 3+ beds", { kind: "minimum", value: 3 }],
   ["At least three bedrooms", { kind: "minimum", value: 3 }],
+  ["At least a 3 bed", { kind: "minimum", value: 3 }],
+  ["At least a three-bedroom home", { kind: "minimum", value: 3 }],
   ["Minimum 3 bedrooms", { kind: "minimum", value: 3 }],
   ["Show 3 or more bedrooms", { kind: "minimum", value: 3 }],
   ["Show three or more bedrooms", { kind: "minimum", value: 3 }],

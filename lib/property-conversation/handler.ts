@@ -54,6 +54,8 @@ type SuccessfulContactResult = Extract<
   { ok: true; name: "contact_banc" }
 >;
 
+type SuccessfulToolName = Extract<PropertyToolResult, { ok: true }>["name"];
+
 const modelRunResultSchema = z
   .object({
     directive: modelDirectiveSchema,
@@ -90,6 +92,15 @@ function contextsMatch(
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+function hasActivePropertyState(
+  context: PropertyConversationResponse["context"],
+): boolean {
+  return context.query !== undefined ||
+    context.resultPropertyIds.length > 0 ||
+    context.focusedPropertyId !== undefined ||
+    context.resultFingerprint !== undefined;
+}
+
 export function createPropertyConversationHandler(
   dependencies: PropertyConversationHandlerDependencies,
 ) {
@@ -115,6 +126,7 @@ export function createPropertyConversationHandler(
     let trustedContext: PropertyConversationResponse["context"] = originalContext;
     let lastSearchResult: SuccessfulSearchResult | undefined;
     let lastContactResult: SuccessfulContactResult | undefined;
+    let lastSuccessfulToolName: SuccessfulToolName | undefined;
     let toolFailed = false;
     const authorizedFactIds = new Set<string>();
 
@@ -132,6 +144,7 @@ export function createPropertyConversationHandler(
         }
 
         trustedContext = result.context;
+        lastSuccessfulToolName = result.name;
         if (result.name === "search_properties") {
           lastSearchResult = result;
         } else if (result.name === "get_property_facts") {
@@ -181,11 +194,40 @@ export function createPropertyConversationHandler(
         return unavailableResponse(originalContext);
       }
 
+      if (directive.action === "search" || directive.action === "no_results") {
+        const searchSupportsDirective =
+          lastSuccessfulToolName === "search_properties" &&
+          lastSearchResult !== undefined &&
+          contextsMatch(lastSearchResult.context, trustedContext) &&
+          (directive.action === "search"
+            ? lastSearchResult.total > 0
+            : lastSearchResult.total === 0);
+        if (!searchSupportsDirective) {
+          return unavailableResponse(originalContext);
+        }
+      } else if (directive.action === "answer") {
+        const answerHasTrustedProvenance =
+          lastSuccessfulToolName === "get_property_facts" ||
+          lastSuccessfulToolName === "reset_property_search" ||
+          (lastSuccessfulToolName === undefined &&
+            !hasActivePropertyState(trustedContext));
+        if (!answerHasTrustedProvenance) {
+          return unavailableResponse(originalContext);
+        }
+      } else if (
+        directive.action === "clarify_department" &&
+        lastSuccessfulToolName !== undefined
+      ) {
+        return unavailableResponse(originalContext);
+      }
+
       const publicResponse = {
         response: directive.response,
         action: directive.action,
         context: trustedContext,
-        ...(lastSearchResult?.properties === undefined
+        ...(directive.action !== "search" ||
+        lastSuccessfulToolName !== "search_properties" ||
+        lastSearchResult?.properties === undefined
           ? {}
           : { properties: lastSearchResult.properties }),
       };

@@ -25,7 +25,7 @@ const countCapture =
 const bedroomUnitPattern = "(?:bed|bedroom)s?";
 const minimumPatterns = [
   new RegExp(
-    `\\b(?:at\\s+least|min(?:imum)?)\\s+${countCapture}[-\\s]+${bedroomUnitPattern}\\b`,
+    `\\b(?:at\\s+least|min(?:imum)?(?:\\s+of)?)\\s+(?:an?\\s+)?${countCapture}[-\\s]+${bedroomUnitPattern}\\b`,
     "i",
   ),
   new RegExp(`(?:^|[^\\w,.])${countCapture}\\+\\s*${bedroomUnitPattern}\\b`, "i"),

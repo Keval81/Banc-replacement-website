@@ -153,11 +153,74 @@ test("at-least bedroom intent searches with a minimum and no maximum", async () 
     },
   });
 
-  const response = await handle(request("I want to buy at least 3 beds"));
+  const response = await handle(request("I want to buy at least a 3 bed"));
 
   assert.equal(seenQuery?.minBedrooms, 3);
   assert.equal(seenQuery?.maxBedrooms, undefined);
   assert.equal(response.properties?.[0]?.stats.beds, 4);
+});
+
+test("property answers require a successful canonical fact lookup", async () => {
+  const originalContext: PropertyConversationContext = {
+    resultPropertyIds: ["EA-1"],
+    resultFingerprint: "sales:EA-1",
+  };
+  const handle = createHandler({
+    runModel: async (input) => ({
+      directive: {
+        response: "The home has a south-facing garden and a new roof.",
+        action: "answer",
+      },
+      context: resultContext(input),
+    }),
+  });
+
+  const response = await handle(request("Does it have a garden?", originalContext));
+
+  assert.deepEqual(response, {
+    response: PROPERTY_ASSISTANT_UNAVAILABLE,
+    action: "unavailable",
+    context: originalContext,
+  });
+});
+
+test("search and no-results directives require a supporting successful search", async () => {
+  for (const action of ["search", "no_results"] as const) {
+    const handle = createHandler({
+      runModel: async (input) => ({
+        directive: { response: "I found some properties.", action },
+        context: resultContext(input),
+      }),
+    });
+
+    const response = await handle(request("Find me a home"));
+
+    assert.deepEqual(response, {
+      response: PROPERTY_ASSISTANT_UNAVAILABLE,
+      action: "unavailable",
+      context: { resultPropertyIds: [] },
+    }, action);
+  }
+});
+
+test("general conversation without active property state remains available without tools", async () => {
+  const handle = createHandler({
+    runModel: async (input) => ({
+      directive: {
+        response: "I can help you search Banc's current homes or answer questions about results.",
+        action: "answer",
+      },
+      context: resultContext(input),
+    }),
+  });
+
+  const response = await handle(request("What can you help with?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(
+    response.response,
+    "I can help you search Banc's current homes or answer questions about results.",
+  );
 });
 
 test("an unclear first request returns a natural department clarification without cards", async () => {
@@ -173,6 +236,32 @@ test("an unclear first request returns a natural department clarification withou
   assert.equal(response.action, "clarify_department");
   assert.equal(response.response, "Would you like to buy or rent your next home?");
   assert.equal("properties" in response, false);
+});
+
+test("a department clarification remains available without tools when prior context exists", async () => {
+  const originalContext: PropertyConversationContext = {
+    query: createDefaultPropertySearchQuery("sales"),
+    resultPropertyIds: ["EA-1"],
+    resultFingerprint: "sales:EA-1",
+  };
+  const handle = createHandler({
+    runModel: async (input) => ({
+      directive: {
+        response: "Would you like the new search to be for buying or renting?",
+        action: "clarify_department",
+      },
+      context: resultContext(input),
+    }),
+  });
+
+  const response = await handle(request("Start a new search in Cuffley", originalContext));
+
+  assert.equal(response.action, "clarify_department");
+  assert.equal(
+    response.response,
+    "Would you like the new search to be for buying or renting?",
+  );
+  assert.deepEqual(response.context, originalContext);
 });
 
 test("a first-result detail question re-resolves the canonical id and does not repeat cards", async () => {
@@ -329,6 +418,73 @@ test("reset clears the complete structured property context", async () => {
   const response = await handle(request("Start again", context));
 
   assert.deepEqual(response.context, { resultPropertyIds: [] });
+});
+
+test("a later reset removes cards from an earlier successful search in the same turn", async () => {
+  const handle = createHandler({
+    search: async (query) => searchResult(query, [card("EA-1")]),
+    runModel: async (input) => {
+      const search = await input.tools.executeTool(
+        "search_properties",
+        { department: "sales", location: "Cuffley" },
+        { currentMessage: input.request.message, context: resultContext(input) },
+      );
+      assert.equal(search.ok, true);
+      const reset = await input.tools.executeTool(
+        "reset_property_search",
+        {},
+        {
+          currentMessage: input.request.message,
+          context: search.ok ? search.context : resultContext(input),
+        },
+      );
+      assert.equal(reset.ok, true);
+      return {
+        directive: { response: "I've cleared the property search.", action: "answer" },
+        context: reset.ok ? reset.context : resultContext(input),
+      };
+    },
+  });
+
+  const response = await handle(request("Find in Cuffley, then start again"));
+
+  assert.equal(response.action, "answer");
+  assert.deepEqual(response.context, { resultPropertyIds: [] });
+  assert.equal("properties" in response, false);
+});
+
+test("a fact answer after a search does not carry the earlier search cards", async () => {
+  const handle = createHandler({
+    search: async (query) => searchResult(query, [card("EA-1")]),
+    lookupFacts: async () => [facts("EA-1")],
+    runModel: async (input) => {
+      const search = await input.tools.executeTool(
+        "search_properties",
+        { department: "sales", location: "Cuffley" },
+        { currentMessage: input.request.message, context: resultContext(input) },
+      );
+      assert.equal(search.ok, true);
+      const propertyFacts = await input.tools.executeTool(
+        "get_property_facts",
+        { propertyIds: ["EA-1"] },
+        {
+          currentMessage: input.request.message,
+          context: search.ok ? search.context : resultContext(input),
+        },
+      );
+      assert.equal(propertyFacts.ok, true);
+      return {
+        directive: { response: "The home has three bedrooms.", action: "answer" },
+        context: propertyFacts.ok ? propertyFacts.context : resultContext(input),
+      };
+    },
+  });
+
+  const response = await handle(request("Find a home and tell me about it"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(response.response, "The home has three bedrooms.");
+  assert.equal("properties" in response, false);
 });
 
 test("handoff actions always use the exact server-authored copy", async () => {
