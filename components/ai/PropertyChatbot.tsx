@@ -5,13 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
+import type { PropertyConversationContext } from "@/lib/property-conversation";
 import {
-  parsePropertyConversationResponse,
-  type PropertyConversationContext,
-  type PropertyConversationResponse,
-} from "@/lib/property-conversation";
-import { createSingleFlightRunner } from "@/lib/property-chat-submit";
-import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
+  createSingleFlightRunner,
+  getPropertyChatMessageView,
+  getPropertyChatQuickReplies,
+  runPropertyChatTurn,
+  type PropertyChatMessage,
+} from "@/lib/property-chat-submit";
+import { buildPropertyHref } from "@/lib/property-view";
 import { getSafePropertyImageUrl } from "@/lib/property-detail-view";
 import {
   MODAL_FOCUSABLE_SELECTOR,
@@ -21,23 +23,6 @@ import {
   getLandingUi,
   type MobileContactControlPlacement,
 } from "@/lib/landing-ui";
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  properties?: PropertyCardData[];
-  action?: PropertyConversationResponse["action"];
-  timestamp: Date;
-}
-
-const initialQuickReplies = [
-  "I want to buy a 3-bed in Cuffley",
-  "I'm looking to rent",
-  "I need to speak to the Banc team",
-];
-
-const resultQuickReplies = ["Tell me about the first property"];
 
 const transition = {
   type: "spring" as const,
@@ -58,7 +43,7 @@ export default function PropertyChatbot({
 }: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState<PropertyChatMessage[]>([
     {
       id: "welcome",
       role: "assistant",
@@ -81,23 +66,18 @@ export default function PropertyChatbot({
   const submissionRunnerRef = useRef(createSingleFlightRunner());
   const messageIdRef = useRef(0);
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
-  const quickReplies =
-    conversationContext.resultPropertyIds.length > 0
-      ? resultQuickReplies
-      : initialQuickReplies;
+  const quickReplies = getPropertyChatQuickReplies(conversationContext);
+  const openChat = useCallback(() => {
+    setIsHelpMenuOpen(false);
+    setShowPrompt(false);
+    setPromptDismissed(true);
+    setIsOpen(true);
+  }, []);
   const closeChat = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  useEffect(() => {
-    if (isOpen) {
-      setIsHelpMenuOpen(false);
-      setShowPrompt(false);
-      setPromptDismissed(true);
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     const panel = chatPanelRef.current;
@@ -155,59 +135,30 @@ export default function PropertyChatbot({
         messageIdRef.current += 1;
         return `property-chat-${messageIdRef.current}`;
       };
-      const userMessage: Message = {
-        id: nextMessageId(),
-        role: "user",
-        content: input.trim(),
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, userMessage]);
       setInput("");
-      setIsLoading(true);
-
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: userMessage.content,
-            history: messages
-              .slice(-20)
-              .map((message) => ({ role: message.role, content: message.content })),
-            context: conversationContext,
-          }),
-        });
-
-        if (!response.ok) throw new Error("Chat request failed");
-        const data = parsePropertyConversationResponse(await response.json());
-        if (data === null) throw new Error("Invalid chat response");
-        setConversationContext(data.context);
-
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: nextMessageId(),
-            role: "assistant",
-            content: data.response || "I'm sorry, could you rephrase that?",
-            properties: data.properties,
-            action: data.action,
-            timestamp: new Date(),
-          },
-        ]);
-      } catch {
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: nextMessageId(),
-            role: "assistant",
-            content: "I'm having trouble connecting. Please try again or call us at 01707 877781.",
-            timestamp: new Date(),
-          },
-        ]);
-      } finally {
-        setIsLoading(false);
-      }
+      await runPropertyChatTurn({
+        content: input,
+        messages,
+        context: conversationContext,
+        nextMessageId,
+        request: async (requestBody) => {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody),
+          });
+          if (!response.ok) throw new Error("Chat request failed");
+          return response.json();
+        },
+        onUserMessage: (message) => {
+          setMessages((previous) => [...previous, message]);
+        },
+        onAssistantMessage: (message) => {
+          setMessages((previous) => [...previous, message]);
+        },
+        onContextChange: setConversationContext,
+        onLoadingChange: setIsLoading,
+      });
     });
   };
 
@@ -234,11 +185,7 @@ export default function PropertyChatbot({
                   className="relative mb-1"
                 >
                   <button
-                    onClick={() => {
-                      setShowPrompt(false);
-                      setPromptDismissed(true);
-                      setIsOpen(true);
-                    }}
+                    onClick={openChat}
                     className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
                     <p className="text-sm font-medium text-banc-dark leading-snug">
@@ -286,7 +233,7 @@ export default function PropertyChatbot({
                   <button
                     ref={firstHelpOptionRef}
                     type="button"
-                    onClick={() => setIsOpen(true)}
+                    onClick={openChat}
                     className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-left text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
                   >
                     <span className="flex h-8 w-8 items-center justify-center rounded-full bg-banc-dark-deep text-white">
@@ -319,7 +266,7 @@ export default function PropertyChatbot({
               onClick={() =>
                 usesUnifiedHelp
                   ? setIsHelpMenuOpen((current) => !current)
-                  : setIsOpen(true)
+                  : openChat()
               }
               className={
                 usesUnifiedHelp
@@ -407,8 +354,10 @@ export default function PropertyChatbot({
                 aria-label="Conversation with Banc Assistant"
                 className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
               >
-                {messages.map((message) => (
-                  <motion.div
+                {messages.map((message) => {
+                  const messageView = getPropertyChatMessageView(message);
+                  return (
+                    <motion.div
                     key={message.id}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -425,9 +374,9 @@ export default function PropertyChatbot({
                       {message.content}
 
                       {/* Property cards */}
-                      {message.properties && message.properties.length > 0 && (
+                      {messageView.properties.length > 0 && (
                         <div className="mt-2.5 space-y-2">
-                          {message.properties.map((property) => {
+                          {messageView.properties.map((property) => {
                             const imageUrl = getSafePropertyImageUrl(
                               property.images?.[0] ?? "",
                             );
@@ -470,15 +419,16 @@ export default function PropertyChatbot({
                       )}
 
                       {/* Action buttons */}
-                      {message.action === "contact_team" && (
+                      {messageView.showContactAction && (
                         <a href="/contact" className="mt-2.5 flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#0B6F89] px-3 py-2 text-xs font-medium text-white transition-colors duration-200 hover:bg-[#075E75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2">
                           <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                           Contact the Banc team
                         </a>
                       )}
                     </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
 
                 {isLoading && (
                   <div className="flex justify-start">
