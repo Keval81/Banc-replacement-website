@@ -113,7 +113,7 @@ const FEATURE_PATTERNS: Readonly<Record<SearchFeature, RegExp>> = {
   garden: /\b(?:garden|outside space|patio|terrace)\b/i,
   parking: /\b(?:parking|driveway|off[- ]street parking)\b/i,
   garage: /\bgarage\b/i,
-  swimming_pool: /\b(?:swimming pool|indoor pool|outdoor pool|private pool)\b/i,
+  swimming_pool: /\b(?:swimming|indoor|outdoor|private) pools?\b/i,
   balcony: /\bbalcony\b/i,
   conservatory: /\bconservator(?:y|ies)\b/i,
   fireplace: /\b(?:fireplace|log burner|wood burner)\b/i,
@@ -356,7 +356,7 @@ function parseLocation(message: string): string | undefined {
 
 function isGenericLocationCandidate(candidate: string): boolean {
   const normalized = candidate.toLowerCase().trim().replace(/\s+/g, " ");
-  if (/^(?:this|that|it|here|there)$/.test(normalized)) return true;
+  if (/^(?:this|that|it|here|there|general)$/.test(normalized)) return true;
 
   const tokens = normalized.split(" ");
   const finalToken = tokens.at(-1);

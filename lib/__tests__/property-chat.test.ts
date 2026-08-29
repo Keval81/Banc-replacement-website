@@ -13,6 +13,7 @@ import {
   type PropertyChatMessage,
 } from "../property-chat-submit.ts";
 import { buildPropertyHref, type PropertyCardData } from "../property-view.ts";
+import { parsePropertyChatPatch } from "../property-chat.ts";
 import type {
   PropertyConversationContext,
   PropertyConversationRequest,
@@ -22,6 +23,13 @@ const chatbotSource = readFileSync(
   new URL("../../components/ai/PropertyChatbot.tsx", import.meta.url),
   "utf8",
 );
+
+test("legacy parser treats the exact pool question as a feature without a fake location", () => {
+  assert.deepEqual(
+    parsePropertyChatPatch("Any properties with swimming pools in general?"),
+    { features: ["swimming_pool"] },
+  );
+});
 
 function card(id: string): PropertyCardData {
   return {
