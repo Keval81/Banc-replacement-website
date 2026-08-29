@@ -231,9 +231,47 @@ A read-only Vercel Preview listing returned these variable names only:
 `GOOGLE_PLACES_API_KEY`. Neither required OpenAI variable is present in
 Preview. Production was not queried.
 
-Before a conversational preview can be claimed working, an operator needs
-explicit approval to apply the exact-bedroom migration to the named staging
-project, provide the Preview API key through an approved secret channel,
-verify and configure a tool-capable Preview model identifier, deploy a Preview
-build, and run the live API and browser acceptance checks. Production must
-remain unchanged unless it receives separate approval.
+Remote staging identity and migration history have not yet been verified. The
+staging runbook must proceed in this order:
+
+1. With read-only access, confirm that the remote project ref is exactly
+   `gaomvwleaonccrmaicxb` and record its human-readable Supabase project and
+   organisation names. A matching ref without matching project and
+   organisation identity is insufficient.
+2. Still read-only, inspect and record the remote migration history and the
+   complete pending migration set. Stop if the target identity is ambiguous or
+   the history is inconsistent with this repository.
+3. Reverify the exact local artifact before requesting mutation approval:
+
+   ```bash
+   /usr/bin/shasum -a 256 supabase/migrations/202608280001_exact_bedroom_search.sql
+   git log -1 --format='%H %s' -- supabase/migrations/202608280001_exact_bedroom_search.sql
+   ```
+
+   The checksum must be
+   `4a447a3ab9943e567b6b05586a1ad9427f0a9bf461ecab2010c09036a2d2ca88`,
+   and the git-log result must identify the reviewed migration commit.
+4. Only after steps 1–3 are recorded, obtain separate mutation approval for a
+   method guaranteed to apply only
+   `supabase/migrations/202608280001_exact_bedroom_search.sql` inside a
+   transaction. A generic migration push is forbidden if any other migration
+   file is pending. Production is never an allowed target for this approval.
+5. After the approved staging-only mutation, run and record the direct
+   exact-bedroom and minimum-bedroom RPC checks before continuing.
+
+Preview configuration and acceptance must then proceed separately. A valid
+`OPENAI_API_KEY` must be entered through an approved secret channel and needs
+approval to configure it in Preview only. Next, verify a current tool-capable
+model identifier from authoritative provider documentation; only after the
+exact identifier is recorded may an operator request approval to configure
+that exact `OPENAI_CHAT_MODEL` identifier in Preview only. No identifier has
+yet been verified or approved.
+
+The deployed missing-key acceptance check must use a separate immutable
+no-key Preview/environment created for that check. It must not remove, replace,
+or change the configured conversational Preview key, and it must not affect
+any other Preview deployment or environment. Creating and deploying that
+isolated no-key target requires its own explicit environment/deployment
+mutation approval. The normal Preview deployment, live API checks, and browser
+checks also require their stated approvals. Production must remain unchanged
+unless it receives separate approval.
