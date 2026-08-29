@@ -302,11 +302,23 @@ any dry run that lists another pending file, is not approved.
 
 Preview configuration and acceptance must then proceed separately. A valid
 `OPENAI_API_KEY` must be entered through an approved secret channel and needs
-approval to configure it in Preview only. Next, verify a current tool-capable
-model identifier from authoritative provider documentation; only after the
-exact identifier is recorded may an operator request approval to configure
-that exact `OPENAI_CHAT_MODEL` identifier in Preview only. No identifier has
-yet been verified or approved.
+approval to configure it in Preview only.
+
+On 2026-08-29, the controller verified the official OpenAI model documentation
+at `https://developers.openai.com/api/docs/models`. It states that the latest
+models are available through the Responses API and describes exact model ID
+`gpt-5.6-terra` as balancing intelligence and cost, with Functions listed
+among its supported tools. `gpt-5.6-terra` is therefore the recommended
+Preview candidate.
+
+This documentation check does not establish that a valid API account or key is
+available, that the account can access the model, or that the deployed
+application is live-compatible with it. The model is not configured. Setting
+exactly `gpt-5.6-terra` as `OPENAI_CHAT_MODEL` still requires explicit
+Preview-only approval and a valid Preview API account/key entered through an
+approved secret channel. The first approved Preview call remains the runtime
+Responses API and function-tool acceptance check; until it succeeds, live
+compatibility must not be claimed.
 
 The deployed missing-key acceptance check must use a separate immutable
 no-key Preview/environment created for that check. It must not remove, replace,
