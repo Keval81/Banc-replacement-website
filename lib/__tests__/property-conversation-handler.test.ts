@@ -74,6 +74,10 @@ function facts(id: string, overrides: Partial<PropertyFacts> = {}): PropertyFact
 }
 
 const emptyLookup = async (): Promise<PropertyFacts[]> => [];
+const PROPERTY_ASSISTANT_HELP =
+  "I can help you search Banc's current homes, answer questions about your results, or connect you with the Banc team.";
+const PROPERTY_ASSISTANT_RESET =
+  "I've cleared the property search. What would you like to look for next?";
 
 function createHandler(options: {
   runModel: PropertyConversationModelRunner;
@@ -178,8 +182,8 @@ test("property answers require a successful canonical fact lookup", async () => 
   const response = await handle(request("Does it have a garden?", originalContext));
 
   assert.deepEqual(response, {
-    response: PROPERTY_ASSISTANT_UNAVAILABLE,
-    action: "unavailable",
+    response: PROPERTY_ASSISTANT_HELP,
+    action: "answer",
     context: originalContext,
   });
 });
@@ -203,11 +207,11 @@ test("search and no-results directives require a supporting successful search", 
   }
 });
 
-test("general conversation without active property state remains available without tools", async () => {
+test("a fabricated first-turn answer is replaced with fixed server-owned help copy", async () => {
   const handle = createHandler({
     runModel: async (input) => ({
       directive: {
-        response: "I can help you search Banc's current homes or answer questions about results.",
+        response: "Banc has a four-bedroom castle for £1 with a helipad.",
         action: "answer",
       },
       context: resultContext(input),
@@ -217,10 +221,33 @@ test("general conversation without active property state remains available witho
   const response = await handle(request("What can you help with?"));
 
   assert.equal(response.action, "answer");
-  assert.equal(
-    response.response,
-    "I can help you search Banc's current homes or answer questions about results.",
-  );
+  assert.equal(response.response, PROPERTY_ASSISTANT_HELP);
+  assert.doesNotMatch(response.response, /castle|helipad|£1/i);
+});
+
+test("a general capability question after a search uses fixed help and preserves context", async () => {
+  const originalContext: PropertyConversationContext = {
+    query: createDefaultPropertySearchQuery("sales"),
+    resultPropertyIds: ["EA-1"],
+    resultFingerprint: "sales:EA-1",
+  };
+  const handle = createHandler({
+    runModel: async (input) => ({
+      directive: {
+        response: "The current home definitely includes a private cinema.",
+        action: "answer",
+      },
+      context: resultContext(input),
+    }),
+  });
+
+  const response = await handle(request("What else can you help with?", originalContext));
+
+  assert.deepEqual(response, {
+    response: PROPERTY_ASSISTANT_HELP,
+    action: "answer",
+    context: originalContext,
+  });
 });
 
 test("an unclear first request returns a natural department clarification without cards", async () => {
@@ -409,7 +436,10 @@ test("reset clears the complete structured property context", async () => {
       );
       assert.equal(toolResult.ok, true);
       return {
-        directive: { response: "I've cleared the property search.", action: "answer" },
+        directive: {
+          response: "The reset revealed a secret penthouse listing.",
+          action: "answer",
+        },
         context: toolResult.ok ? toolResult.context : resultContext(input),
       };
     },
@@ -417,7 +447,11 @@ test("reset clears the complete structured property context", async () => {
 
   const response = await handle(request("Start again", context));
 
-  assert.deepEqual(response.context, { resultPropertyIds: [] });
+  assert.deepEqual(response, {
+    response: PROPERTY_ASSISTANT_RESET,
+    action: "answer",
+    context: { resultPropertyIds: [] },
+  });
 });
 
 test("a later reset removes cards from an earlier successful search in the same turn", async () => {
@@ -440,7 +474,7 @@ test("a later reset removes cards from an earlier successful search in the same 
       );
       assert.equal(reset.ok, true);
       return {
-        directive: { response: "I've cleared the property search.", action: "answer" },
+        directive: { response: "A fabricated home survived the reset.", action: "answer" },
         context: reset.ok ? reset.context : resultContext(input),
       };
     },
@@ -449,8 +483,40 @@ test("a later reset removes cards from an earlier successful search in the same 
   const response = await handle(request("Find in Cuffley, then start again"));
 
   assert.equal(response.action, "answer");
+  assert.equal(response.response, PROPERTY_ASSISTANT_RESET);
   assert.deepEqual(response.context, { resultPropertyIds: [] });
   assert.equal("properties" in response, false);
+});
+
+test("a successful mutating tool with a mismatched final context rolls back to the original context", async () => {
+  const originalContext: PropertyConversationContext = {
+    query: createDefaultPropertySearchQuery("sales"),
+    resultPropertyIds: ["EA-1"],
+    focusedPropertyId: "EA-1",
+    resultFingerprint: "sales:EA-1",
+  };
+  const handle = createHandler({
+    runModel: async (input) => {
+      const reset = await input.tools.executeTool(
+        "reset_property_search",
+        {},
+        { currentMessage: input.request.message, context: resultContext(input) },
+      );
+      assert.equal(reset.ok, true);
+      return {
+        directive: { response: "Reset complete.", action: "answer" },
+        context: originalContext,
+      };
+    },
+  });
+
+  const response = await handle(request("Start again", originalContext));
+
+  assert.deepEqual(response, {
+    response: PROPERTY_ASSISTANT_UNAVAILABLE,
+    action: "unavailable",
+    context: originalContext,
+  });
 });
 
 test("a fact answer after a search does not carry the earlier search cards", async () => {
@@ -508,6 +574,39 @@ test("handoff actions always use the exact server-authored copy", async () => {
     assert.equal(response.response, CONTACT_BANC_COPY[reason]);
     assert.equal(response.action, "contact_team");
   }
+});
+
+test("a contact handoff after a search uses fixed copy without stale search cards", async () => {
+  const handle = createHandler({
+    search: async (query) => searchResult(query, [card("EA-1")]),
+    runModel: async (input) => {
+      const search = await input.tools.executeTool(
+        "search_properties",
+        { department: "sales", location: "Cuffley" },
+        { currentMessage: input.request.message, context: resultContext(input) },
+      );
+      assert.equal(search.ok, true);
+      const contact = await input.tools.executeTool(
+        "contact_banc",
+        { reason: "viewing" },
+        {
+          currentMessage: input.request.message,
+          context: search.ok ? search.context : resultContext(input),
+        },
+      );
+      assert.equal(contact.ok, true);
+      return {
+        directive: { response: "Your viewing is booked.", action: "contact_team" },
+        context: contact.ok ? contact.context : resultContext(input),
+      };
+    },
+  });
+
+  const response = await handle(request("Find one and book a viewing"));
+
+  assert.equal(response.response, CONTACT_BANC_COPY.viewing);
+  assert.equal(response.action, "contact_team");
+  assert.equal("properties" in response, false);
 });
 
 test("model, directive, fact authorization, and search failures preserve original context", async () => {

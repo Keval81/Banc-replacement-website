@@ -24,6 +24,10 @@ export { CONTACT_BANC_COPY } from "./tools.ts";
 
 export const PROPERTY_ASSISTANT_UNAVAILABLE =
   "I'm having trouble with the property assistant right now. Please try again shortly or call Banc on 01707 877781.";
+export const PROPERTY_ASSISTANT_HELP =
+  "I can help you search Banc's current homes, answer questions about your results, or connect you with the Banc team.";
+export const PROPERTY_ASSISTANT_RESET =
+  "I've cleared the property search. What would you like to look for next?";
 
 export type PropertyConversationModelRunner = (
   input: OpenAIPropertyConversationRunInput,
@@ -92,13 +96,15 @@ function contextsMatch(
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
-function hasActivePropertyState(
+function fixedAnswerResponse(
+  response: string,
   context: PropertyConversationResponse["context"],
-): boolean {
-  return context.query !== undefined ||
-    context.resultPropertyIds.length > 0 ||
-    context.focusedPropertyId !== undefined ||
-    context.resultFingerprint !== undefined;
+): PropertyConversationResponse {
+  return propertyConversationResponseSchema.parse({
+    response,
+    action: "answer",
+    context,
+  });
 }
 
 export function createPropertyConversationHandler(
@@ -175,13 +181,6 @@ export function createPropertyConversationHandler(
       }
 
       const { directive } = modelResult.data as OpenAIPropertyConversationResult;
-      if (
-        directive.focusedPropertyId !== undefined &&
-        !authorizedFactIds.has(directive.focusedPropertyId)
-      ) {
-        return unavailableResponse(originalContext);
-      }
-
       if (lastContactResult !== undefined) {
         return propertyConversationResponseSchema.parse({
           response: CONTACT_BANC_COPY[lastContactResult.category],
@@ -191,6 +190,24 @@ export function createPropertyConversationHandler(
       }
 
       if (directive.action === "contact_team" || directive.action === "unavailable") {
+        return unavailableResponse(originalContext);
+      }
+
+      if (directive.action === "answer" && lastSuccessfulToolName === undefined) {
+        return fixedAnswerResponse(PROPERTY_ASSISTANT_HELP, trustedContext);
+      }
+
+      if (
+        directive.action === "answer" &&
+        lastSuccessfulToolName === "reset_property_search"
+      ) {
+        return fixedAnswerResponse(PROPERTY_ASSISTANT_RESET, trustedContext);
+      }
+
+      if (
+        directive.focusedPropertyId !== undefined &&
+        !authorizedFactIds.has(directive.focusedPropertyId)
+      ) {
         return unavailableResponse(originalContext);
       }
 
@@ -206,12 +223,7 @@ export function createPropertyConversationHandler(
           return unavailableResponse(originalContext);
         }
       } else if (directive.action === "answer") {
-        const answerHasTrustedProvenance =
-          lastSuccessfulToolName === "get_property_facts" ||
-          lastSuccessfulToolName === "reset_property_search" ||
-          (lastSuccessfulToolName === undefined &&
-            !hasActivePropertyState(trustedContext));
-        if (!answerHasTrustedProvenance) {
+        if (lastSuccessfulToolName !== "get_property_facts") {
           return unavailableResponse(originalContext);
         }
       } else if (
