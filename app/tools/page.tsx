@@ -77,7 +77,7 @@ export default function ToolsPage() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />

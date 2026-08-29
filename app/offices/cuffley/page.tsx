@@ -95,7 +95,7 @@ export default function CuffleyOfficePage() {
         {/* Background */}
         <div className="absolute inset-0">
           <Image 
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
             alt="Cuffley Office"
             fill
             className="object-cover opacity-20"

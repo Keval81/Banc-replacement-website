@@ -127,7 +127,7 @@ export default function ReviewsPage() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1713656275767-e8140c59acca?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />

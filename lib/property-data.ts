@@ -58,7 +58,7 @@ The property is offered chain free and early viewing is highly recommended to ap
     },
     {
       id: "img-3",
-      url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1784704161960-26770b684595?auto=format&fit=crop&w=1600&q=80",
       alt: "Swimming pool",
       isPrimary: false,
       caption: "Swimming pool",
@@ -93,14 +93,14 @@ The property is offered chain free and early viewing is highly recommended to ap
     },
     {
       id: "img-8",
-      url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1698414633845-5b8d1c72ade0?auto=format&fit=crop&w=1600&q=80",
       alt: "Garden terrace",
       isPrimary: false,
       caption: "Garden terrace",
     },
     {
       id: "img-9",
-      url: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1758448721161-7b3df5ec04b3?auto=format&fit=crop&w=1600&q=80",
       alt: "Underground garage",
       isPrimary: false,
       caption: "Garage",
@@ -135,7 +135,7 @@ The property is offered chain free and early viewing is highly recommended to ap
   floorplans: [
     {
       id: "fp-1",
-      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1721244654195-943615c56ac4?auto=format&fit=crop&w=1600&q=80",
       title: "Ground Floor",
       dimensions: { width: 45, height: 32, unit: "ft" },
       rooms: [
@@ -147,7 +147,7 @@ The property is offered chain free and early viewing is highly recommended to ap
     },
     {
       id: "fp-2",
-      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1721244654195-943615c56ac4?auto=format&fit=crop&w=1600&q=80",
       title: "First Floor",
       dimensions: { width: 45, height: 32, unit: "ft" },
       rooms: [
@@ -158,7 +158,7 @@ The property is offered chain free and early viewing is highly recommended to ap
     },
     {
       id: "fp-3",
-      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1721244654195-943615c56ac4?auto=format&fit=crop&w=1600&q=80",
       title: "Second Floor (Master Suite)",
       dimensions: { width: 45, height: 32, unit: "ft" },
       rooms: [
@@ -169,7 +169,7 @@ The property is offered chain free and early viewing is highly recommended to ap
     },
     {
       id: "fp-4",
-      url: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
+      url: "https://images.unsplash.com/photo-1721244654195-943615c56ac4?auto=format&fit=crop&w=1600&q=80",
       title: "Lower Ground Floor",
       dimensions: { width: 45, height: 32, unit: "ft" },
       rooms: [
@@ -409,10 +409,10 @@ The property is offered chain free and early viewing is highly recommended to ap
 // Lookup map for search page properties → detail page format
 const searchProperties: Record<string, { title: string; address: string; price: string; priceValue: number; beds: number; baths: number; sqft: number; epc: string; images: string[]; summary: string; type?: string }> = {
   "the-laurels-hadley-wood": { title: "The Laurels", address: "Hadley Wood, EN4", price: "£2,450,000", priceValue: 2450000, beds: 5, baths: 4, sqft: 3820, epc: "B", images: ["https://images.unsplash.com/photo-1502005097973-6a7082348e28?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80"], summary: "Elegant modern residence with landscaped gardens and seamless indoor-outdoor living.", type: "Detached House" },
-  "mayfair-penthouse-mount-street": { title: "Mayfair Penthouse", address: "Mount Street, W1", price: "£3,900,000", priceValue: 3900000, beds: 3, baths: 3, sqft: 2100, epc: "C", images: ["https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80"], summary: "Light-filled penthouse with panoramic views, concierge service, and private terrace.", type: "Penthouse" },
-  "cuffley-house-hertfordshire": { title: "Cuffley House", address: "Cuffley, Hertfordshire", price: "£1,350,000", priceValue: 1350000, beds: 4, baths: 3, sqft: 2600, epc: "B", images: ["https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80"], summary: "Characterful family home with open-plan living, media room, and expansive gardens.", type: "Detached House" },
-  "woodland-manor-brookmans-park": { title: "Woodland Manor", address: "Brookmans Park, AL9", price: "£1,850,000", priceValue: 1850000, beds: 5, baths: 4, sqft: 3200, epc: "B", images: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1600&q=80"], summary: "Stunning detached residence set within mature grounds with woodland views and triple garage.", type: "Detached House" },
-  "the-old-rectory-potters-bar": { title: "The Old Rectory", address: "Potters Bar, EN6", price: "£2,100,000", priceValue: 2100000, beds: 6, baths: 3, sqft: 4100, epc: "D", images: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80"], summary: "Impressive Grade II listed former rectory with period features, modernised throughout.", type: "Detached House" },
+  "mayfair-penthouse-mount-street": { title: "Mayfair Penthouse", address: "Mount Street, W1", price: "£3,900,000", priceValue: 3900000, beds: 3, baths: 3, sqft: 2100, epc: "C", images: ["https://images.unsplash.com/photo-1622374634302-b15fb01fcfde?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80"], summary: "Light-filled penthouse with panoramic views, concierge service, and private terrace.", type: "Penthouse" },
+  "cuffley-house-hertfordshire": { title: "Cuffley House", address: "Cuffley, Hertfordshire", price: "£1,350,000", priceValue: 1350000, beds: 4, baths: 3, sqft: 2600, epc: "B", images: ["https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1694556586916-7b5912ba8e62?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80"], summary: "Characterful family home with open-plan living, media room, and expansive gardens.", type: "Detached House" },
+  "woodland-manor-brookmans-park": { title: "Woodland Manor", address: "Brookmans Park, AL9", price: "£1,850,000", priceValue: 1850000, beds: 5, baths: 4, sqft: 3200, epc: "B", images: ["https://images.unsplash.com/photo-1640808653955-568dd65debb3?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1698414633845-5b8d1c72ade0?auto=format&fit=crop&w=1600&q=80"], summary: "Stunning detached residence set within mature grounds with woodland views and triple garage.", type: "Detached House" },
+  "the-old-rectory-potters-bar": { title: "The Old Rectory", address: "Potters Bar, EN6", price: "£2,100,000", priceValue: 2100000, beds: 6, baths: 3, sqft: 4100, epc: "D", images: ["https://images.unsplash.com/photo-1732721176814-c0bc82db3971?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80"], summary: "Impressive Grade II listed former rectory with period features, modernised throughout.", type: "Detached House" },
   "parkside-apartment-mayfair": { title: "Parkside Apartment", address: "Mayfair, W1K", price: "£1,650,000", priceValue: 1650000, beds: 2, baths: 2, sqft: 1100, epc: "C", images: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1600&q=80", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1600&q=80"], summary: "Elegant two-bedroom apartment overlooking Hyde Park with concierge and underground parking.", type: "Apartment" },
 };
 
@@ -456,7 +456,7 @@ export const similarProperties: SimilarProperty[] = [
     beds: 5,
     baths: 4,
     sqft: 3200,
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
+    image: "https://images.unsplash.com/photo-1640808653955-568dd65debb3?auto=format&fit=crop&w=1600&q=80",
   },
   {
     id: "the-old-rectory-potters-bar",
@@ -466,7 +466,7 @@ export const similarProperties: SimilarProperty[] = [
     beds: 6,
     baths: 3,
     sqft: 4100,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    image: "https://images.unsplash.com/photo-1732721176814-c0bc82db3971?auto=format&fit=crop&w=1600&q=80",
   },
   {
     id: "parkside-apartment-mayfair",

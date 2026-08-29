@@ -133,7 +133,7 @@ export default function SalesPageClient() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />

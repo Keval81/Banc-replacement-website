@@ -82,7 +82,7 @@ export default function MayfairOfficePage() {
         {/* Background */}
         <div className="absolute inset-0">
           <Image 
-            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1617606796212-4c99a14a116e?auto=format&fit=crop&w=1920&q=80"
             alt="Mayfair Office"
             fill
             className="object-cover opacity-20"

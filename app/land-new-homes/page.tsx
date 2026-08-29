@@ -39,7 +39,7 @@ export default function LandNewHomesPage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80"
+            src="https://images.unsplash.com/photo-1783858828529-6f5354095c60?w=1920&q=80"
             alt="Modern architectural development"
             className="w-full h-full object-cover"
           />

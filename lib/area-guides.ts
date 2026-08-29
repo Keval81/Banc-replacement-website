@@ -14,7 +14,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Cuffley",
     slug: "cuffley",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1694556586916-7b5912ba8e62?w=1200&q=85",
     teaser: "Picturesque village living",
     paragraphs: [
       "Cuffley is very much in the London commuter belt and the village offers rail access into London Moorgate and there are evening and weekend services to Kings Cross. Ideally positioned just outside the M25, it has always been a migration point for a lot of North London residents and other areas to settle here with the links to the financial centre of London.",
@@ -24,7 +24,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Potters Bar",
     slug: "potters-bar",
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1746283209286-3a3d13a4279b?w=1200&q=85",
     teaser: "Commuter haven with charm",
     paragraphs: [
       "Potters Bar is a town in Hertfordshire, with two main streets — Darkes Lane and the High Street — both offering an amazing number of shops, restaurants and amenities.",
@@ -34,7 +34,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Cheshunt",
     slug: "cheshunt",
-    image: "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1604775567578-712a3acce497?w=1200&q=85",
     teaser: "Vibrant commuter town",
     paragraphs: [
       "Cheshunt is a Hertfordshire town that is considered to be in the Greater London region, due to its proximity to the northern parishes of the city and its situation just outside of the M25 boundary. The town is divided into two halves by the A10, which has two junctions at either end of the town.",
@@ -45,7 +45,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Northaw",
     slug: "northaw",
-    image: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1761474909776-32abcf1322c3?w=1200&q=85",
     teaser: "Rural retreat",
     paragraphs: [
       "Northaw is a small village between Potters Bar and Cuffley and has remained relatively unchanged for many years. There is a variety of houses, from small cottages to country estates surrounded by serene countryside, with a C of E Primary School, St. Thomas A Becket Church and restaurant and country pubs.",
@@ -54,7 +54,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Brookmans Park",
     slug: "brookmans-park",
-    image: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1596292748295-1ab106b1f5a2?w=1200&q=85",
     teaser: "Affluent suburban elegance",
     paragraphs: [
       "The village of Brookmans Park offers much to many. Whilst still retaining a village feel, the train station provides direct access into London with Kings Cross 34 minutes away and Moorgate 39 minutes.",
@@ -64,7 +64,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Goffs Oak",
     slug: "goffs-oak",
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1633354991957-2368ef603ec2?w=1200&q=85",
     teaser: "Village community spirit",
     paragraphs: [
       "Goffs Oak is a large village positioned between Cuffley and Cheshunt. Goffs Oak offers more rurality than neighbouring Cheshunt and is comprised of mainly private, residential homes. The housing demographic in Goffs Oak lends to four and five-bedroom detached homes with private parking, though there are a handful of three-bedroom semi-detached residences.",
@@ -74,7 +74,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Newgate Street Village",
     slug: "newgate-street-village",
-    image: "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1759330014698-a6835e445c09?w=1200&q=85",
     teaser: "Historic rural setting",
     paragraphs: [
       "Newgate Street is a highly regarded and sought after village that enjoys a convenient position close to Cuffley, Cheshunt, Broxbourne and Hertford yet surrounded by countryside. It has two lovely pubs (The Crown and The Coach & Horses) and an upmarket Mediterranean, Thai and an Indian restaurant.",
@@ -84,7 +84,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Enfield",
     slug: "enfield",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1676802584541-dc901dcaa815?w=1200&q=85",
     teaser: "Urban convenience meets green space",
     paragraphs: [
       "Enfield straddles the border between North London and Hertfordshire. There are still some 14th-century remnants of Enfield's past as a small town, but today it is a thriving suburb offering the best of both London life and country living.",
@@ -94,7 +94,7 @@ export const areaGuides: AreaGuide[] = [
   {
     name: "Essendon",
     slug: "essendon",
-    image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&q=85",
+    image: "https://images.unsplash.com/photo-1760299477450-1730f8f7d61e?w=1200&q=85",
     teaser: "Countryside tranquillity",
     paragraphs: [
       "Essendon is a small village between Brookmans Park, Hertford and Hatfield with a variety of character properties and private estates. It is also home to Essendon Country Club with two golf courses, a golf academy, restaurant and function facilities. There is a C of E Primary School in the village, too.",

@@ -34,7 +34,7 @@ const offices = [
     hours: "Mon-Sat: 9am-6pm",
     description: "Our flagship office in the heart of Cuffley village, serving the local community and surrounding Hertfordshire areas.",
     features: ["Free Parking", "Near Station", "4 Team Members"],
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=800&q=80",
     link: "/offices/cuffley",
     icon: Building2
   },
@@ -48,7 +48,7 @@ const offices = [
     hours: "Mon-Sat: 9am-6pm",
     description: "Specialising in prime central London properties, discreet marketing for high-value homes.",
     features: ["Prime Location", "Private Consultations", "Global Network"],
-    image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1739545886530-bc03557aca61?auto=format&fit=crop&w=800&q=80",
     link: "/offices/mayfair",
     icon: Crown
   }

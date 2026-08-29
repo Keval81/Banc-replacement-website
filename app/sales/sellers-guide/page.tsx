@@ -203,7 +203,7 @@ const guideSteps: GuideStep[] = [
       },
     ],
     imageUrl:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Professional property photography and staging",
     topTips: [
       "Make sure your property is tidy, clutter-free and filled with natural light before the photographer and viewers arrive.",
@@ -310,7 +310,7 @@ const guideSteps: GuideStep[] = [
       },
     ],
     imageUrl:
-      "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Offer negotiation and agreement",
   },
   {
