@@ -431,3 +431,48 @@ on authorized access to the protected endpoint. A later approved run must use
 an authenticated or explicitly approved Deployment Protection bypass method,
 then restart the same six-turn sequence from prompt one. The separately scoped
 isolated no-key deployment/test remains unapproved and was not performed.
+
+### Authenticated CLI acceptance continuation
+
+The approved authenticated continuation used Vercel CLI `56.4.0` against the
+same immutable Preview and did not alter environment variables, deployment,
+domain, staging, or Production configuration. `vercel curl --help` was
+inspected before the request. The request shape was:
+
+```bash
+vercel curl /api/chat \
+  --deployment https://banc-website-7e5kfdn3i-digital-inroads.vercel.app \
+  -- --request POST --header 'Content-Type: application/json' \
+  --data '<same-context request JSON>'
+```
+
+The first local invocations exited 2 before HTTP because global flag
+`--no-color` was placed after the `curl` subcommand and this CLI forwarded it
+to system `curl` as an invalid option. Installed-source inspection confirmed
+that parsing behavior. Removing only that invalid flag allowed the CLI process
+to exit 0 for prompt 1, but its stdout combined or suppressed wrapper and
+response output: the strict checker received neither an isolatable public JSON
+document nor a reliable HTTP status. A single prompt-1 replay added system
+`curl`'s `%{http_code}` write-out marker; the CLI again exited 0 but did not
+surface the marker or parseable response JSON to the checker.
+
+Consequently, authenticated HTTP status, application status, OpenAI/model
+behavior, exact-bedroom card results, and public-contract validity remain
+unverified. Prompt 1 was attempted twice during the capture correction;
+prompts 2–6 were not sent. No response body, header, credential, secret,
+upstream error, tool material, or property data was printed.
+
+Installed Vercel CLI source also shows that `vercel curl` may issue a `PATCH`
+to create an automation bypass token when the project has none. No explicit
+bypass token, header, or protection-setting command was supplied, and a
+read-only `vercel project inspect --no-color` exited 0 without reporting
+protection or bypass state. That output cannot prove whether the CLI reused a
+pre-existing token. Further CLI requests stopped so the no-bypass-creation
+boundary would not be put at additional risk.
+
+The six-turn API gate is still blocked. Authenticated browser QA may proceed
+through an existing signed-in browser session, but neither browser acceptance
+nor chatbot acceptance may be claimed until that check actually passes. A
+future CLI/API attempt requires a read-only guarantee that it will reuse an
+existing authorized session and cannot create or alter Deployment Protection.
+The isolated no-key Preview remains separately approval-gated.
