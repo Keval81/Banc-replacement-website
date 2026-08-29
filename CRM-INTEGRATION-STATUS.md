@@ -334,10 +334,12 @@ No value was read or changed. The first approved Preview call remains the
 runtime Responses API and function-tool acceptance check; until it succeeds,
 live compatibility must not be claimed.
 
-The same authorized names-only check found `OPENAI_API_KEY` in Production but
-did not find `OPENAI_CHAT_MODEL` there. No Production value was inspected and
-no Production variable was changed or removed. Any Production cleanup,
-configuration, or deployment requires separate explicit approval.
+A later authorized names-only check on 2026-08-29 confirmed that Production
+contains neither `OPENAI_API_KEY` nor `OPENAI_CHAT_MODEL`, while Preview still
+contains both names. No value was inspected, and no variable was changed or
+removed during verification. The reported Production key removal was not
+followed by a redeploy. Any Production configuration or deployment requires
+separate explicit approval.
 
 The deployed missing-key acceptance check must use a separate immutable
 no-key Preview/environment created for that check. It must not remove, replace,
