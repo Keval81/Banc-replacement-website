@@ -1,6 +1,6 @@
 # CRM integration and sync operations
 
-**Updated:** 2026-08-27
+**Updated:** 2026-08-29
 
 **Implementation state:** the failure-safe Expert Agent sync and its GitHub
 Actions definition exist on this branch. The database migration, repository
@@ -185,3 +185,55 @@ credentials, permissions, and truthful source data are available. The UI and
 chatbot must test for a capability before offering it; no Streets-only action
 is simulated against Expert Agent, and future Streets functionality is not
 restricted to what the current FTP feed can do.
+
+## Conversational assistant preview preparation
+
+Local configuration documentation and verification were prepared on
+2026-08-29 from base commit
+`2b687dde69ba73881d62f97dfb2445893e3614fb`. The intended staging target from
+the approved task brief is `gaomvwleaonccrmaicxb`, and the only migration in
+scope is the tracked artifact
+`supabase/migrations/202608280001_exact_bedroom_search.sql`. This worktree has
+no `supabase/.temp/project-ref`, so no live project association was inferred.
+The migration was inspected locally but was not applied to staging or
+production.
+
+The environment variable names required for a future preview are:
+
+- `OPENAI_API_KEY`
+- `OPENAI_CHAT_MODEL`
+
+A ChatGPT subscription does not include OpenAI API usage. Preview and
+production credentials must be independently scoped. Production enablement
+requires explicit approval, an approved API spend budget, and rate-limit
+controls. Secret values must never be committed, logged, or returned to a
+client.
+
+No Preview `OPENAI_API_KEY` is currently available, and no model identifier
+has been selected or configured. Therefore, the conversational preview is not
+deployed and must not be described as working. Production was not inspected or
+changed during this local preparation.
+
+The complete local preview gate was run on 2026-08-29:
+
+- `node --experimental-strip-types --test lib/__tests__/*.test.ts` exited 0:
+  297 tests passed, with 0 failures, 0 cancelled, and 0 skipped.
+- `npx tsc --noEmit` exited 0.
+- Scoped ESLint for the chat route, chatbot component, property conversation,
+  and property search exited 0 with 0 errors and 6 warnings.
+- `npm run build` exited 0, compiled successfully, and generated 88 static
+  pages. Its existing deprecation, edge-runtime, and metadata warnings remain.
+- `git diff --check` exited 0 with no output.
+
+A read-only Vercel Preview listing returned these variable names only:
+`SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`,
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, and
+`GOOGLE_PLACES_API_KEY`. Neither required OpenAI variable is present in
+Preview. Production was not queried.
+
+Before a conversational preview can be claimed working, an operator needs
+explicit approval to apply the exact-bedroom migration to the named staging
+project, provide the Preview API key through an approved secret channel,
+verify and configure a tool-capable Preview model identifier, deploy a Preview
+build, and run the live API and browser acceptance checks. Production must
+remain unchanged unless it receives separate approval.
