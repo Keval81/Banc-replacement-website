@@ -297,7 +297,7 @@ supabase db push --dry-run --linked --workdir "$STAGING_MIGRATION_WORKDIR"
 
 explicitly reported that migrations would not be pushed and listed exactly
 `202608280001_exact_bedroom_search.sql`. The temporary workdir was then
-deleted. No migration or SQL was applied.
+deleted. No migration or SQL was applied during that preflight.
 
 A later mutation request may authorize only an unchanged, recreated isolated
 workdir that contains the checksum-verified target and no other pending file.
@@ -313,6 +313,56 @@ SQL owns its `begin;`/`commit;` transaction. Approval must acknowledge that
 `202608270001` remains absent from remote migration history and that this
 target-only operation does not repair or apply it. Stop on any SQL or history
 error; Production is never an allowed target.
+
+### Staging migration application and RPC verification
+
+On 2026-08-29, the user explicitly approved the staging-only migration. The
+project identity was reverified as ref `gaomvwleaonccrmaicxb`, project
+`Test Banc Virtual Agent`, organisation `Digital Inroads`, before mutation.
+An isolated workdir was recreated with only
+`202608280001_exact_bedroom_search.sql`; its SHA-256 matched
+`4a447a3ab9943e567b6b05586a1ad9427f0a9bf461ecab2010c09036a2d2ca88`.
+
+Immediately before mutation,
+`supabase db push --dry-run --linked --workdir "$STAGING_MIGRATION_WORKDIR"`
+exited 0, explicitly stated that migrations would not be pushed, and listed
+only `202608280001_exact_bedroom_search.sql`. The approved command was then run
+without any include flags:
+
+```bash
+supabase db push --linked --workdir "$STAGING_MIGRATION_WORKDIR"
+```
+
+It exited 0, reported `Applying migration
+202608280001_exact_bedroom_search.sql`, and finished successfully. A read-only
+post-application migration listing returned:
+
+| Local version | Remote version | State |
+| --- | --- | --- |
+| `202608270001` | absent | pending and untouched |
+| `202608280001` | `202608280001` | applied |
+
+Direct read-only staging RPC checks paginated the complete bounded result sets
+and emitted only bedroom-count aggregates:
+
+| Query | Department | Returned | Bedroom counts |
+| --- | --- | ---: | --- |
+| min 3 / max 3 | sales | 80 | 3: 80 |
+| min 3 / max 3 | lettings | 16 | 3: 16 |
+| min 3 / max null | sales | 250 | 3: 80, 4: 109, 5: 52, 6: 9 |
+| min 3 / max null | lettings | 30 | 3: 16, 4: 13, 5: 1 |
+
+All 96 exact-query rows had exactly 3 bedrooms. All 280 minimum-only rows had
+at least 3 bedrooms, and both departments returned larger homes. No credential,
+connection string, header, property row, or other sensitive value was printed.
+The temporary linked workdir and generated CLI cache were deleted after
+verification.
+
+No Production query or change, Vercel change, deployment, live OpenAI call,
+push, or merge occurred during the staging operation. Remaining external work
+is the approval-gated Preview deployment and live API/browser acceptance,
+including the separately approval-gated isolated no-key Preview required for
+missing-key acceptance.
 
 Preview configuration and acceptance must proceed separately. A read-only
 Vercel check on 2026-08-29 confirmed that Preview contains variable names
