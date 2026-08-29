@@ -721,6 +721,57 @@ test("client translates model-facing search preserve and clear controls into int
   }]);
 });
 
+test("client accepts swimming-pool searches through the trusted feature filter", async () => {
+  const request = createRequest({
+    message: "Any properties with swimming pools in general?",
+  });
+  const { tools, toolCalls } = buildClientTools();
+
+  let requestCount = 0;
+  const fetcher: typeof fetch = async () => {
+    requestCount += 1;
+    if (requestCount === 1) {
+      return createResponsePayload([
+        {
+          id: "fc_search",
+          type: "function_call",
+          status: "completed",
+          call_id: "call_search",
+          name: "search_properties",
+          arguments: JSON.stringify(createSearchFunctionArguments({
+            department: "sales",
+            features: ["swimming_pool"],
+            clearFilters: ["location", "bedrooms"],
+          })),
+        },
+      ]);
+    }
+
+    return createResponsePayload([
+      messageOutput(JSON.stringify({
+        response: "I found the current pool properties.",
+        action: "search",
+      } satisfies ModelDirective)),
+    ]);
+  };
+
+  const client = createOpenAIPropertyConversationClient({
+    apiKey: "test-key",
+    model: "test-property-model",
+    fetcher,
+  });
+
+  await client({ request, tools });
+
+  assert.equal(requestCount, 2);
+  assert.deepEqual(toolCalls[0]?.rawArguments, {
+    department: "sales",
+    location: null,
+    bedrooms: null,
+    features: ["swimming_pool"],
+  });
+});
+
 test("client replays supported output items first, including reasoning, then appends matching function_call_output items in call order", async () => {
   const request = createRequest({
     message: "Compare the first two properties",

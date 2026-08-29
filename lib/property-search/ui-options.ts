@@ -68,6 +68,7 @@ export const FEATURE_OPTIONS: readonly SearchOption<SearchFeature>[] = [
   { value: "garden", label: "Garden / outside space" },
   { value: "parking", label: "Parking" },
   { value: "garage", label: "Garage" },
+  { value: "swimming_pool", label: "Swimming pool" },
   { value: "balcony", label: "Balcony" },
   { value: "conservatory", label: "Conservatory" },
   { value: "fireplace", label: "Fireplace" },

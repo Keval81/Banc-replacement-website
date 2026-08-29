@@ -34,6 +34,17 @@ test("derives only supported features from explicit source wording", () => {
   assert.deepEqual(deriveSearchFeatures(["Spacious family home"], ""), []);
 });
 
+test("derives a swimming-pool search feature from explicit listing wording", () => {
+  assert.deepEqual(
+    deriveSearchFeatures(["Heated outdoor swimming pool"], ""),
+    ["swimming_pool"],
+  );
+  assert.deepEqual(
+    deriveSearchFeatures(["Private indoor pool complex"], ""),
+    ["swimming_pool"],
+  );
+});
+
 test("maps Expert Agent data to CRM-neutral source metadata", () => {
   const record = parseExpertAgentFeed(xml).properties[0];
   const row = expertAgentAdapter.map(record, {

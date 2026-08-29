@@ -14,7 +14,7 @@ export const SEARCH_TENURES = [
 export type SearchTenure = (typeof SEARCH_TENURES)[number];
 
 export const SEARCH_FEATURES = [
-  "garden", "parking", "garage", "balcony", "conservatory", "fireplace",
+  "garden", "parking", "garage", "swimming_pool", "balcony", "conservatory", "fireplace",
   "period_features", "new_home", "chain_free", "virtual_tour", "video_tour",
 ] as const;
 export type SearchFeature = (typeof SEARCH_FEATURES)[number];
@@ -59,6 +59,7 @@ export function deriveSearchFeatures(
     garden: /garden|outside space|patio|terrace/.test(text),
     parking: /parking|driveway|off street|off-street/.test(text),
     garage: /garage/.test(text),
+    swimming_pool: /swimming pool|indoor pool|outdoor pool|private pool/.test(text),
     balcony: /balcony/.test(text),
     conservatory: /conservator/.test(text),
     fireplace: /fireplace|log burner|wood burner/.test(text),

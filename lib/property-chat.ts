@@ -113,6 +113,7 @@ const FEATURE_PATTERNS: Readonly<Record<SearchFeature, RegExp>> = {
   garden: /\b(?:garden|outside space|patio|terrace)\b/i,
   parking: /\b(?:parking|driveway|off[- ]street parking)\b/i,
   garage: /\bgarage\b/i,
+  swimming_pool: /\b(?:swimming pool|indoor pool|outdoor pool|private pool)\b/i,
   balcony: /\bbalcony\b/i,
   conservatory: /\bconservator(?:y|ies)\b/i,
   fireplace: /\b(?:fireplace|log burner|wood burner)\b/i,
