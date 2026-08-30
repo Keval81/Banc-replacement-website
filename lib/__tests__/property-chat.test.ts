@@ -333,6 +333,11 @@ test("the React component wires the executable UI logic and accessible dialog pr
   assert.match(chatbotSource, /Ask our AI assistant/);
   assert.match(chatbotSource, /assistantAvatar\.src/);
   assert.match(chatbotSource, /alt=\{landingContactLauncher\.assistantAvatar\.alt\}/);
+  assert.match(chatbotSource, /CircleHelp/);
+  assert.match(
+    chatbotSource,
+    /usesUnifiedHelp[\s\S]*?<CircleHelp[\s\S]*?: \([\s\S]*?assistantAvatar\.src/,
+  );
   assert.match(chatbotSource, /role="dialog"/);
   assert.match(chatbotSource, /aria-modal="true"/);
   assert.match(chatbotSource, /aria-labelledby="property-chat-title"/);

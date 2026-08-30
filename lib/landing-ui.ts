@@ -46,7 +46,7 @@ interface HeroVideo {
 
 export interface LandingUi {
   heroActions: readonly HeroAction[];
-  heroActionPresentation: "premium-split-selector";
+  heroActionPresentation: "editorial-paired-actions";
   heroVideo: HeroVideo;
   valuationAction: LandingAction;
   phoneAction: LandingAction;
@@ -96,7 +96,7 @@ const sharedActions = {
       tone: "secondary",
     },
   ],
-  heroActionPresentation: "premium-split-selector",
+  heroActionPresentation: "editorial-paired-actions",
   heroVideo: {
     desktop: {
       src: "/videos/hero-first-day.mp4",

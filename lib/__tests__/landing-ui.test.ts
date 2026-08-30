@@ -23,7 +23,7 @@ test("keeps both landing variants focused on sales and lettings", () => {
         tone: "secondary",
       },
     ]);
-    assert.equal(ui.heroActionPresentation, "premium-split-selector");
+    assert.equal(ui.heroActionPresentation, "editorial-paired-actions");
   }
 });
 
@@ -167,7 +167,7 @@ test("offers assistant and WhatsApp choices from the landing-page help launcher"
   });
 });
 
-test("renders one shared premium property selector at both hero breakpoints", () => {
+test("renders the shared editorial property actions at both hero breakpoints", () => {
   const heroSource = readFileSync(
     join(import.meta.dirname, "..", "..", "app", "sections", "Hero.tsx"),
     "utf8",
@@ -185,7 +185,8 @@ test("renders one shared premium property selector at both hero breakpoints", ()
 
   assert.equal((heroSource.match(/<PropertyJourneySelector/g) ?? []).length, 2);
   assert.match(selectorSource, /aria-label="Browse Banc properties"/);
-  assert.match(selectorSource, /min-h-14/);
+  assert.match(selectorSource, /min-h-16/);
+  assert.match(selectorSource, /gap-2/);
   assert.match(selectorSource, /text-banc-dark-deep\/70/);
   assert.doesNotMatch(selectorSource, /text-banc-dark-deep\/55/);
   assert.match(

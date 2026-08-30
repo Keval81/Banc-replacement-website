@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { MessageCircle, X, Send, Phone } from "lucide-react";
+import { CircleHelp, MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { PropertyConversationContext } from "@/lib/property-conversation";
@@ -289,11 +289,15 @@ export default function PropertyChatbot({
               }
               aria-expanded={usesUnifiedHelp ? isHelpMenuOpen : undefined}
             >
-              {usesUnifiedHelp && isHelpMenuOpen ? (
-                <X className="h-4 w-4" aria-hidden="true" />
+              {usesUnifiedHelp ? (
+                isHelpMenuOpen ? (
+                  <X className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <CircleHelp className="h-5 w-5" aria-hidden="true" />
+                )
               ) : (
                 <span
-                  className={`${usesUnifiedHelp ? "h-7 w-7" : "h-12 w-12"} overflow-hidden rounded-full bg-[#F6F2EA]`}
+                  className="h-12 w-12 overflow-hidden rounded-full bg-[#F6F2EA]"
                   aria-hidden="true"
                 >
                   <Image
