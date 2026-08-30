@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import type { PropertyConversationContext } from "@/lib/property-conversation";
 import {
   createSingleFlightRunner,
@@ -189,7 +190,7 @@ export default function PropertyChatbot({
                     className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
                     <p className="text-sm font-medium text-banc-dark leading-snug">
-                      Talk to our chatbot about any of our current properties
+                      Talk to our AI assistant about any current property
                     </p>
                     <p className="text-xs text-banc-grey mt-1">
                       Ask about a home you&apos;re buying or renting →
@@ -236,8 +237,14 @@ export default function PropertyChatbot({
                     onClick={openChat}
                     className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-left text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
                   >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-banc-dark-deep text-white">
-                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F6F2EA] ring-1 ring-banc-dark-deep/10">
+                      <Image
+                        src={landingContactLauncher.assistantAvatar.src}
+                        alt={landingContactLauncher.assistantAvatar.alt}
+                        width={32}
+                        height={32}
+                        className="h-full w-full object-cover"
+                      />
                     </span>
                     {landingContactLauncher.assistantLabel}
                   </button>
@@ -278,17 +285,25 @@ export default function PropertyChatbot({
                   ? isHelpMenuOpen
                     ? "Close help options"
                     : "Open help options"
-                  : "Open chat"
+                  : "Open our AI assistant"
               }
               aria-expanded={usesUnifiedHelp ? isHelpMenuOpen : undefined}
             >
               {usesUnifiedHelp && isHelpMenuOpen ? (
                 <X className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <MessageCircle
-                  className={usesUnifiedHelp ? "h-4 w-4" : "h-6 w-6"}
+                <span
+                  className={`${usesUnifiedHelp ? "h-7 w-7" : "h-12 w-12"} overflow-hidden rounded-full bg-[#F6F2EA]`}
                   aria-hidden="true"
-                />
+                >
+                  <Image
+                    src={landingContactLauncher.assistantAvatar.src}
+                    alt={landingContactLauncher.assistantAvatar.alt}
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover"
+                  />
+                </span>
               )}
               {usesUnifiedHelp ? (
                 <span>{landingContactLauncher.label}</span>
@@ -318,13 +333,13 @@ export default function PropertyChatbot({
               {/* Header */}
               <div className="flex items-center justify-between bg-banc-dark-deep px-4 py-3 shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-banc-sky/20">
+                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#F6F2EA] ring-1 ring-white/20">
                     <Image
-                      src="/banc-logo-blue.png"
-                      alt="Banc"
-                      width={20}
-                      height={20}
-                      className="h-5 w-auto brightness-0 invert"
+                      src={landingContactLauncher.assistantAvatar.src}
+                      alt={landingContactLauncher.assistantAvatar.alt}
+                      width={36}
+                      height={36}
+                      className="h-full w-full object-cover"
                     />
                   </div>
                   <div>
@@ -332,7 +347,7 @@ export default function PropertyChatbot({
                       id="property-chat-title"
                       className="text-sm font-semibold text-white"
                     >
-                      Banc Assistant
+                      Ask our AI assistant
                     </p>
                     <p className="text-[10px] text-white/50">Property help, powered by AI</p>
                   </div>
@@ -351,7 +366,7 @@ export default function PropertyChatbot({
                 role="log"
                 aria-live="polite"
                 aria-busy={isLoading}
-                aria-label="Conversation with Banc Assistant"
+                aria-label="Conversation with our AI assistant"
                 className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
               >
                 {messages.map((message) => {
@@ -381,12 +396,13 @@ export default function PropertyChatbot({
                               property.images?.[0] ?? "",
                             );
                             return (
-                              <a
+                              <Link
                                 key={property.id}
                                 href={buildPropertyHref(
                                   property.department,
                                   property.id,
                                 )}
+                                onClick={closeChat}
                                 className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"
                               >
                                 <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
@@ -412,7 +428,7 @@ export default function PropertyChatbot({
                                     {property.address}
                                   </p>
                                 </div>
-                              </a>
+                              </Link>
                             );
                           })}
                         </div>
@@ -463,7 +479,7 @@ export default function PropertyChatbot({
               {/* Input */}
               <div className="flex items-center gap-2 border-t border-banc-grey/10 bg-white p-3 shrink-0">
                 <label htmlFor="property-chat-input" className="sr-only">
-                  Message Banc Assistant
+                  Message our AI assistant
                 </label>
                 <Input
                   id="property-chat-input"

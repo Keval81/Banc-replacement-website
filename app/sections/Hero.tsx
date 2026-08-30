@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
+import { PropertyJourneySelector } from "@/components/PropertyJourneySelector";
 import { getLandingUi } from "@/lib/landing-ui";
 import { startHeroVideoLifecycle } from "@/lib/hero-video-lifecycle";
 
@@ -198,20 +198,7 @@ export default function Hero() {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="hidden w-full max-w-sm flex-col gap-3 sm:flex lg:items-end"
           >
-            <div className="hidden w-full gap-3 sm:flex">
-              <Link
-                href="/sales/properties"
-                className="flex-1 rounded-full bg-banc-sky px-5 py-3 text-center text-sm font-semibold text-banc-dark-deep shadow-[0_8px_24px_rgba(74,200,232,0.22)] transition-colors hover:bg-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                Sales
-              </Link>
-              <Link
-                href="/lettings/properties"
-                className="flex-1 rounded-full border border-white/40 bg-white/5 px-5 py-3 text-center text-sm font-semibold text-white transition-colors hover:border-white/70 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-              >
-                Lettings
-              </Link>
-            </div>
+            <PropertyJourneySelector className="hidden w-full sm:grid" />
 
             <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-5 sm:block">
               <AnimatePresence mode="wait">
@@ -273,30 +260,10 @@ export default function Hero() {
             />
           </h1>
 
-          <nav
-            aria-label="Browse Banc properties"
+          <PropertyJourneySelector
             data-placement={landingUi.mobileHeroActionPlacement}
-            className="mx-auto grid w-full max-w-md grid-cols-2 gap-2 sm:hidden"
-          >
-            {landingUi.heroActions.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className={
-                  action.tone === "primary"
-                    ? "flex min-h-14 cursor-pointer flex-col justify-center rounded-[14px] border border-white/35 bg-banc-sky px-4 text-banc-dark-deep shadow-[0_10px_28px_rgba(20,34,43,0.28)] transition-colors duration-200 hover:bg-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
-                    : "flex min-h-14 cursor-pointer flex-col justify-center rounded-[14px] border border-white/35 bg-banc-dark-deep/72 px-4 text-white shadow-[0_10px_28px_rgba(0,0,0,0.24)] backdrop-blur-xl transition-colors duration-200 hover:bg-banc-dark-deep/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white motion-reduce:transition-none"
-                }
-              >
-                <span className="text-[9px] font-semibold uppercase tracking-[0.18em] opacity-65">
-                  {action.eyebrow}
-                </span>
-                <span className="mt-1 font-serif text-lg leading-none">
-                  {action.label}
-                </span>
-              </Link>
-            ))}
-          </nav>
+            className="mx-auto w-full max-w-md sm:hidden"
+          />
         </motion.div>
       </div>
     </section>

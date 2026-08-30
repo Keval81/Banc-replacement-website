@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { supabase, type DbProperty } from "@/lib/supabase";
+import { findPropertyDetailRow } from "@/lib/property-detail-identity";
 import { dbToDetail, dbToCard } from "@/lib/property-view";
 
 // Single property by Expert Agent reference, plus similar listings
@@ -9,13 +10,23 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  if (!supabase) return NextResponse.json({ property: null }, { status: 503 });
+  const client = supabase;
+  if (!client) return NextResponse.json({ property: null }, { status: 503 });
 
-  const { data, error } = await supabase
-    .from("properties")
-    .select("*")
-    .eq("expert_agent_id", id)
-    .maybeSingle();
+  const { data, error } = await findPropertyDetailRow(
+    id,
+    async (column, propertyId) => {
+      const result = await client
+        .from("properties")
+        .select("*")
+        .eq(column, propertyId)
+        .maybeSingle();
+      return {
+        data: result.data as DbProperty | null,
+        error: result.error,
+      };
+    },
+  );
 
   if (error) {
     console.error("property api:", error.message);
@@ -25,7 +36,7 @@ export async function GET(
 
   const marketable =
     data.department === "lettings" ? ["to_let", "let_agreed"] : ["for_sale", "under_offer"];
-  const { data: similarRows } = await supabase
+  const { data: similarRows } = await client
     .from("properties")
     .select("*")
     .eq("department", data.department)

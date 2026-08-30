@@ -324,7 +324,15 @@ test("the React component wires the executable UI logic and accessible dialog pr
   assert.match(chatbotSource, /createSingleFlightRunner/);
   assert.match(chatbotSource, /startModalFocusLifecycle/);
   assert.match(chatbotSource, /buildPropertyHref/);
+  assert.match(chatbotSource, /import Link from "next\/link"/);
+  assert.match(
+    chatbotSource,
+    /<Link[\s\S]*?href=\{buildPropertyHref[\s\S]*?onClick=\{closeChat\}/,
+  );
   assert.match(chatbotSource, /getSafePropertyImageUrl/);
+  assert.match(chatbotSource, /Ask our AI assistant/);
+  assert.match(chatbotSource, /assistantAvatar\.src/);
+  assert.match(chatbotSource, /alt=\{landingContactLauncher\.assistantAvatar\.alt\}/);
   assert.match(chatbotSource, /role="dialog"/);
   assert.match(chatbotSource, /aria-modal="true"/);
   assert.match(chatbotSource, /aria-labelledby="property-chat-title"/);

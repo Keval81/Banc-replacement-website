@@ -23,6 +23,7 @@ test("keeps both landing variants focused on sales and lettings", () => {
         tone: "secondary",
       },
     ]);
+    assert.equal(ui.heroActionPresentation, "premium-split-selector");
   }
 });
 
@@ -155,11 +156,42 @@ test("uses one help launcher instead of competing contact controls on the landin
 test("offers assistant and WhatsApp choices from the landing-page help launcher", () => {
   assert.deepEqual(getLandingUi("aker").mobileContactLauncher, {
     label: "Help",
-    assistantLabel: "Ask Banc Assistant",
+    assistantLabel: "Ask our AI assistant",
+    assistantAvatar: {
+      src: "/images/ai/banc-ai-assistant.png",
+      alt: "",
+    },
     whatsappLabel: "Chat on WhatsApp",
     whatsappHref:
       "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
   });
+});
+
+test("renders one shared premium property selector at both hero breakpoints", () => {
+  const heroSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "Hero.tsx"),
+    "utf8",
+  );
+  const selectorSource = readFileSync(
+    join(
+      import.meta.dirname,
+      "..",
+      "..",
+      "components",
+      "PropertyJourneySelector.tsx",
+    ),
+    "utf8",
+  );
+
+  assert.equal((heroSource.match(/<PropertyJourneySelector/g) ?? []).length, 2);
+  assert.match(selectorSource, /aria-label="Browse Banc properties"/);
+  assert.match(selectorSource, /min-h-14/);
+  assert.match(selectorSource, /text-banc-dark-deep\/70/);
+  assert.doesNotMatch(selectorSource, /text-banc-dark-deep\/55/);
+  assert.match(
+    selectorSource,
+    /data-presentation=\{landingUi\.heroActionPresentation\}/,
+  );
 });
 
 test("keeps mobile navigation and proactive chat available on regular pages", () => {

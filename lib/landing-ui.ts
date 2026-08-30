@@ -46,6 +46,7 @@ interface HeroVideo {
 
 export interface LandingUi {
   heroActions: readonly HeroAction[];
+  heroActionPresentation: "premium-split-selector";
   heroVideo: HeroVideo;
   valuationAction: LandingAction;
   phoneAction: LandingAction;
@@ -55,7 +56,11 @@ export interface LandingUi {
   mobileSocialPresentation: MobileSocialPresentation;
   mobileContactLauncher: {
     label: "Help";
-    assistantLabel: "Ask Banc Assistant";
+    assistantLabel: "Ask our AI assistant";
+    assistantAvatar: {
+      src: "/images/ai/banc-ai-assistant.png";
+      alt: "";
+    };
     whatsappLabel: "Chat on WhatsApp";
     whatsappHref: string;
   };
@@ -91,6 +96,7 @@ const sharedActions = {
       tone: "secondary",
     },
   ],
+  heroActionPresentation: "premium-split-selector",
   heroVideo: {
     desktop: {
       src: "/videos/hero-first-day.mp4",
@@ -119,7 +125,11 @@ const sharedActions = {
   },
   mobileContactLauncher: {
     label: "Help",
-    assistantLabel: "Ask Banc Assistant",
+    assistantLabel: "Ask our AI assistant",
+    assistantAvatar: {
+      src: "/images/ai/banc-ai-assistant.png",
+      alt: "",
+    },
     whatsappLabel: "Chat on WhatsApp",
     whatsappHref:
       "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
