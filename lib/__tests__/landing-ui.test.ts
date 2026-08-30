@@ -62,9 +62,15 @@ test("keeps valuation in the menu without duplicating it as a homepage hero tile
     "utf8",
   );
 
-  assert.doesNotMatch(heroSource, /Thinking of selling\?/);
-  assert.match(headerSource, /landingUi\.valuationAction\.href/);
-  assert.match(headerSource, /landingUi\.valuationAction\.label/);
+  assert.equal((heroSource.match(/href="\/valuation"/g) ?? []).length, 0);
+  assert.equal(
+    (headerSource.match(/landingUi\.valuationAction\.href/g) ?? []).length,
+    2,
+  );
+  assert.equal(
+    (headerSource.match(/landingUi\.valuationAction\.label/g) ?? []).length,
+    2,
+  );
 });
 
 test("uses social actions instead of a duplicate logo in the Aker mobile header", () => {

@@ -53,13 +53,13 @@ export default function BuyersGuidePage() {
   return (
     <div className="bg-white text-[#2C2A27]">
       <Header />
-      
+
       {/* Hero */}
       <section className="relative bg-[#1A1917] py-24 lg:py-32">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917] via-[#1A1917]/95 to-transparent z-10" />
-          <img 
-            src="https://images.unsplash.com/photo-1783934108429-284d1f160ae1?auto=format&fit=crop&w=2000&q=80" 
+          <img
+            src="https://images.unsplash.com/photo-1783934108429-284d1f160ae1?auto=format&fit=crop&w=2000&q=80"
             alt="Luxury home interior"
             className="w-full h-full object-cover opacity-40"
           />
