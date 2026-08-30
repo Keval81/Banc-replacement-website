@@ -198,22 +198,6 @@ export default function Hero() {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="hidden w-full max-w-sm flex-col gap-3 sm:flex lg:items-end"
           >
-            <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-4 sm:block lg:p-5">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-white/60">
-                Thinking of selling?
-              </p>
-              <p className="mt-2 font-serif text-lg font-light text-white lg:text-xl">
-                Know what your home is worth.
-              </p>
-              <Link
-                href="/valuation"
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-banc-sky px-6 py-3 text-sm font-medium text-banc-dark-deep transition-colors hover:bg-banc-sky-mid"
-              >
-                Request a valuation
-                <span aria-hidden>&rarr;</span>
-              </Link>
-            </div>
-
             <div className="hidden w-full gap-3 sm:flex">
               <Link
                 href="/sales/properties"

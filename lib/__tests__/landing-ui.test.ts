@@ -52,6 +52,21 @@ test("keeps the valuation and labelled phone actions available outside the hero"
   });
 });
 
+test("keeps valuation in the menu without duplicating it as a homepage hero tile", () => {
+  const heroSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "Hero.tsx"),
+    "utf8",
+  );
+  const headerSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "Header.tsx"),
+    "utf8",
+  );
+
+  assert.doesNotMatch(heroSource, /Thinking of selling\?/);
+  assert.match(headerSource, /landingUi\.valuationAction\.href/);
+  assert.match(headerSource, /landingUi\.valuationAction\.label/);
+});
+
 test("uses social actions instead of a duplicate logo in the Aker mobile header", () => {
   const ui = getLandingUi("aker");
 
