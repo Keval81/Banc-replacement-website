@@ -10,55 +10,43 @@ interface Review {
   location: string;
   rating: number;
   text: string;
-  date: string;
-  propertyType: string;
 }
 
 const mockReviews: Review[] = [
   {
     id: '1',
-    name: 'Sarah Mitchell',
-    location: 'Cuffley',
+    name: 'Dawn',
+    location: 'Leefe Way, Cuffley',
     rating: 5,
-    text: 'Exceptional service from start to finish. Banc made selling our home stress-free.',
-    date: '2 hours ago',
-    propertyType: 'Detached House',
+    text: 'We have just sold our house through Banc Property Group and it was such a positive experience. We achieved the asking price very quickly.',
   },
   {
     id: '2',
-    name: 'James Thompson',
-    location: 'Brookmans Park',
+    name: 'Pembe',
+    location: 'Goffs Crescent, Goffs Oak',
     rating: 5,
-    text: 'Professional, knowledgeable, and always available. Highly recommend!',
-    date: '4 hours ago',
-    propertyType: 'Semi-Detached',
+    text: 'Highly recommend Banc estate agent. They really have exceeded expectations and provide a professional service.',
   },
   {
     id: '3',
-    name: 'Emma Wilson',
-    location: 'Potters Bar',
+    name: 'Tammy',
+    location: 'Hollybush Way, Cheshunt',
     rating: 5,
-    text: 'Found our dream home within weeks. The team really listened to our needs.',
-    date: '6 hours ago',
-    propertyType: 'Apartment',
+    text: 'Banc have been fantastic in the one year we have worked with them as tenants. All staff are lovely, work very hard to resolve issues and respond very quickly to all queries.',
   },
   {
     id: '4',
-    name: 'Michael Brown',
-    location: 'Welham Green',
+    name: 'George & Soulla',
+    location: 'Tolmers Road, Cuffley',
     rating: 5,
-    text: 'Outstanding marketing and negotiation skills. Got well above asking price!',
-    date: '1 day ago',
-    propertyType: 'Cottage',
+    text: 'We sold our property with Banc and found our dream home with Banc, double win! We were so grateful for all the support from the team.',
   },
   {
     id: '5',
-    name: 'Lisa Chen',
-    location: 'Northaw',
+    name: 'Hazel',
+    location: 'Pollards Close, Goffs Oak',
     rating: 5,
-    text: 'First-time buyers and they guided us through every step. Amazing experience.',
-    date: '1 day ago',
-    propertyType: 'Terraced House',
+    text: 'Love the whole team, kept in touch the whole-time during viewing, sale and completion. Can highly recommend them.',
   },
 ];
 
@@ -86,11 +74,8 @@ export default function LiveReviewFeed() {
         <div className="flex items-center justify-center gap-4">
           {/* Live Indicator */}
           <div className="flex items-center gap-2 shrink-0">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-            </span>
-            <span className="text-xs font-medium uppercase tracking-wider text-white/70">Live</span>
+            <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+            <span className="text-xs font-medium uppercase tracking-wider text-white/70">Reviews</span>
           </div>
 
           {/* Review Content */}
@@ -102,7 +87,7 @@ export default function LiveReviewFeed() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="flex items-center gap-4 flex-1 justify-center"
+                className="flex min-w-0 items-center gap-4 flex-1 justify-center"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center shrink-0">
@@ -121,21 +106,18 @@ export default function LiveReviewFeed() {
                   </div>
                 </div>
 
-                <div className="hidden md:flex items-center gap-2 text-sm text-white/90 max-w-lg">
+                <div className="hidden md:flex min-w-0 items-center gap-2 text-sm text-white/90 max-w-lg">
                   <Quote className="w-4 h-4 text-white/40 shrink-0" />
                   <span className="truncate">{review.text}</span>
                 </div>
 
-                <span className="text-xs text-white/50 shrink-0 hidden lg:block">{review.date}</span>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* Google Reviews Link */}
           <a
-            href="https://google.com/reviews"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/reviews"
             className="text-xs text-white/70 hover:text-white transition-colors shrink-0 hidden sm:block"
           >
             View all reviews

@@ -54,14 +54,15 @@ export default function StampDutyPage() {
             <div className="space-y-4 text-sm leading-relaxed text-white/70">
               <p>
                 <strong className="text-white">First-time buyer relief:</strong> In England, first-time
-                buyers pay no stamp duty on the first £425,000 of a property purchase (up to a maximum
-                purchase price of £625,000). In Scotland, the threshold is £175,000.
+                buyers pay no stamp duty on the first £300,000 of a property purchase, and 5% on the
+                portion from £300,001 to £500,000; the relief is not available above £500,000. In
+                Scotland, the first-time buyer nil rate band is £175,000.
               </p>
               <p>
                 <strong className="text-white">Additional property surcharge:</strong> If you&apos;re buying
                 an additional residential property (such as a buy-to-let or second home), you&apos;ll
-                pay an extra 3% on top of the standard rates in England, 6% in Scotland (ADS), and 4%
-                in Wales.
+                usually pay an extra 5% on top of the standard rates in England, an 8% Additional
+                Dwelling Supplement in Scotland, and Wales applies its own higher-rate bands.
               </p>
               <p>
                 <strong className="text-white">Non-residential rates:</strong> Different rates apply for
@@ -69,8 +70,9 @@ export default function StampDutyPage() {
                 only.
               </p>
               <p className="text-xs text-white/50">
-                Rates shown are for 2024/2025 tax year and may be subject to change. Always consult a
-                solicitor or tax advisor for the most current information.
+                Rates verified against gov.uk, revenue.scot and gov.wales in August 2026 and may be
+                subject to change. Always consult a solicitor or tax advisor for the most current
+                information.
               </p>
             </div>
           </div>

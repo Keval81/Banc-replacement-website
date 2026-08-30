@@ -12,7 +12,7 @@ const services = [
     description:
       "Accurate valuations, premium marketing, and one team from instruction to completion.",
     image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1694556586916-7b5912ba8e62?auto=format&fit=crop&w=1200&q=80",
     href: "/sales",
   },
   {

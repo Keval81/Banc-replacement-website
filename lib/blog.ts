@@ -35,40 +35,17 @@ export interface BlogAuthor {
 
 const postsDirectory = path.join(process.cwd(), "content/blog");
 
-// Sample authors
+// House author — posts are published under the agency byline until
+// individual team members are confirmed as blog authors by the client.
 export const authors: BlogAuthor[] = [
   {
-    name: "James Harrington",
-    slug: "james-harrington",
+    name: "Banc Property Group",
+    slug: "banc-property-group",
     image: "/banc-logo.png",
-    bio: "Senior Property Consultant with over 15 years experience in the Hertfordshire property market. Specialising in premium residential sales and valuations.",
-    role: "Senior Property Consultant",
+    bio: "News and guidance from the team at Banc Property Group, independent estate agents in Cuffley and Mayfair.",
+    role: "Estate Agents",
     social: {
-      linkedin: "https://linkedin.com/in/jamesharrington",
-      email: "james.harrington@banc.co.uk",
-    },
-  },
-  {
-    name: "Sarah Mitchell",
-    slug: "sarah-mitchell",
-    image: "/banc-logo.png",
-    bio: "Marketing Director with expertise in property marketing strategy and digital innovation in real estate.",
-    role: "Marketing Director",
-    social: {
-      twitter: "https://twitter.com/sarahmitchell",
-      linkedin: "https://linkedin.com/in/sarahmitchell",
-      email: "sarah.mitchell@banc.co.uk",
-    },
-  },
-  {
-    name: "David Chen",
-    slug: "david-chen",
-    image: "/banc-logo.png",
-    bio: "Area Specialist for Cuffley and surrounding villages. Expert in family homes and countryside properties.",
-    role: "Area Specialist",
-    social: {
-      linkedin: "https://linkedin.com/in/davidchen",
-      email: "david.chen@banc.co.uk",
+      email: "info@bancproperty.com",
     },
   },
 ];
@@ -199,7 +176,7 @@ function getSamplePosts(): BlogPost[] {
       title: "Top 10 Tips for Selling Your Home in 2024",
       description: "Expert advice on preparing your property for sale, from staging to pricing strategy.",
       date: "2024-01-15",
-      author: "James Harrington",
+      author: "Banc Property Group",
       category: "selling-tips",
       tags: ["selling", "tips", "home improvement", "staging"],
       featuredImage: "/hertfordshire-home-1.png",
@@ -214,7 +191,7 @@ function getSamplePosts(): BlogPost[] {
       title: "Area Guide: Why Cuffley is Perfect for Families",
       description: "Discover why Cuffley is one of Hertfordshire's most sought-after villages for family living.",
       date: "2024-01-10",
-      author: "David Chen",
+      author: "Banc Property Group",
       category: "area-guides",
       tags: ["cuffley", "family", "hertfordshire", "schools"],
       featuredImage: "/hertfordshire-home-4.png",
@@ -229,7 +206,7 @@ function getSamplePosts(): BlogPost[] {
       title: "Understanding the Property Market in Hertfordshire",
       description: "A comprehensive analysis of current trends and future predictions for Hertfordshire property.",
       date: "2024-01-05",
-      author: "Sarah Mitchell",
+      author: "Banc Property Group",
       category: "market-news",
       tags: ["market analysis", "hertfordshire", "trends", "investment"],
       featuredImage: "/banc-logo.png",

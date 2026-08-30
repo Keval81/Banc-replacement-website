@@ -25,7 +25,7 @@ const benefits = [
   {
     icon: Globe,
     title: "National Reach",
-    description: "Access to over 800 independent estate agents across the UK means your property gains exposure to a nationwide audience of qualified buyers.",
+    description: "Ties with over 750 member offices all over the UK mean your property gains exposure to a nationwide audience of buyers.",
   },
   {
     icon: Award,
@@ -55,10 +55,10 @@ const benefits = [
 ];
 
 const stats = [
-  { value: "800+", label: "Member Offices" },
-  { value: "£12bn", label: "Property Sold Annually" },
+  { value: "750+", label: "Member Offices" },
   { value: "UK-Wide", label: "Coverage" },
-  { value: "1994", label: "Established" },
+  { value: "Park Lane", label: "Mayfair Associate Office" },
+  { value: "30+", label: "Years of The Guild" },
 ];
 
 export default function TheGuildPage() {
@@ -397,18 +397,17 @@ export default function TheGuildPage() {
             {/* Right Column */}
             <div className="lg:col-span-7 space-y-6">
               <p className="text-lg text-banc-grey leading-relaxed">
-                Founded in 1994, The Guild of Property Professionals has established itself as 
-                one of the UK's most respected networks of independent estate agents. Unlike 
-                corporate chains, The Guild champions the independent agency model, recognising 
-                that local expertise, community connections, and personalised service are 
+                The Guild has been working alongside independent estate agents for over 30 years,
+                establishing itself as one of the UK&apos;s most respected networks. Unlike
+                corporate chains, The Guild champions the independent agency model, recognising
+                that local expertise, community connections, and personalised service are
                 irreplaceable assets in the property market.
               </p>
               <p className="text-banc-grey leading-relaxed">
-                Membership is by invitation only, with each member agency undergoing a rigorous 
-                selection process to ensure they meet The Guild's exacting standards for customer 
-                service, professional conduct, and market knowledge. This selective approach means 
-                that when you work with a Guild member like Banc, you can be confident you're 
-                working with one of the best agents in your area.
+                Each member is exclusively chosen as The Guild representative in their area based
+                on their dedication and expertise in the local property market. This selective
+                approach means that when you work with a Guild member like Banc, you can be
+                confident you&apos;re working with a trusted agent in your area.
               </p>
               <p className="text-banc-grey leading-relaxed">
                 The Guild's collaborative culture means members share best practices, market insights, 
@@ -417,12 +416,13 @@ export default function TheGuildPage() {
                 that makes Guild membership so valuable to both agents and clients.
               </p>
               
-              {/* Quote */}
+              {/* Quote — Banc's own published words (bancproperty.com/why-us) */}
               <div className="mt-10 bg-[#fafafa] rounded-2xl p-8 border-l-4 border-[#4AC8E8]">
                 <p className="text-lg text-[#1a1a1a] italic leading-relaxed">
-                  &ldquo;The Guild represents the very best of independent estate agency in the UK. 
-                  Being a member allows us to offer our clients the perfect combination of 
-                  personal service and national reach.&rdquo;
+                  &ldquo;As a member of the Guild our associate office in Park Lane, Mayfair is
+                  amongst the very best placed in Europe. The exposure your property receives is
+                  further enhanced by over 750 membered offices all over the UK who we have ties
+                  with.&rdquo;
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">

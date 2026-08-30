@@ -11,9 +11,9 @@ interface SoldProperty {
 }
 
 const soldProperties: SoldProperty[] = [
-  { address: "12 Station Road", location: "Cuffley", price: "£850,000", daysOnMarket: 14, image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=400&q=80" },
-  { address: "24 The Avenue", location: "Potters Bar", price: "£720,000", daysOnMarket: 9, image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80" },
-  { address: "5 Brookmans Avenue", location: "Brookmans Park", price: "£985,000", daysOnMarket: 11, image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80" },
+  { address: "12 Station Road", location: "Cuffley", price: "£850,000", daysOnMarket: 14, image: "https://images.unsplash.com/photo-1598307754921-da47ead0ad5f?auto=format&fit=crop&w=400&q=80" },
+  { address: "24 The Avenue", location: "Potters Bar", price: "£720,000", daysOnMarket: 9, image: "https://images.unsplash.com/photo-1732721176408-5444b1641550?auto=format&fit=crop&w=400&q=80" },
+  { address: "5 Brookmans Avenue", location: "Brookmans Park", price: "£985,000", daysOnMarket: 11, image: "https://images.unsplash.com/photo-1596292748295-1ab106b1f5a2?auto=format&fit=crop&w=400&q=80" },
   { address: "18 Bulls Lane", location: "Welham Green", price: "£575,000", daysOnMarket: 18, image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=400&q=80" },
   { address: "7 Cuffley Hill", location: "Cuffley", price: "£445,000", daysOnMarket: 16, image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=400&q=80" },
   { address: "3 Warrengate Road", location: "North Mymms", price: "£1,250,000", daysOnMarket: 8, image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=400&q=80" },

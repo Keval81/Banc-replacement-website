@@ -82,8 +82,6 @@ const weHandle = [
   "Appointment bookings",
   "Sales progression",
   "Marketing & advertising costs",
-  "Technology & CRM support",
-  "Brand & compliance guidance",
 ];
 
 export default function BecomePartnerPage() {

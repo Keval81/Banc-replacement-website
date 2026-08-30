@@ -39,7 +39,7 @@ export default function LandNewHomesPage() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80"
+            src="https://images.unsplash.com/photo-1783858828529-6f5354095c60?w=1920&q=80"
             alt="Modern architectural development"
             className="w-full h-full object-cover"
           />
@@ -146,23 +146,23 @@ export default function LandNewHomesPage() {
                 {/* Overlay Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1A1917]/60 via-transparent to-transparent" />
                 
-                {/* Stats Overlay */}
+                {/* Services Overlay */}
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
                       <Building2 className="w-6 h-6 text-[#4AC8E8] mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-[#1A1917]">200+</p>
-                      <p className="text-xs text-[#8A8880]">Projects</p>
+                      <p className="text-sm font-bold text-[#1A1917]">New Homes</p>
+                      <p className="text-xs text-[#8A8880]">Marketing</p>
                     </div>
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
                       <TrendingUp className="w-6 h-6 text-[#4AC8E8] mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-[#1A1917]">98%</p>
-                      <p className="text-xs text-[#8A8880]">Success</p>
+                      <p className="text-sm font-bold text-[#1A1917]">Land</p>
+                      <p className="text-xs text-[#8A8880]">Acquisition</p>
                     </div>
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
                       <Users className="w-6 h-6 text-[#4AC8E8] mx-auto mb-2" />
-                      <p className="text-2xl font-bold text-[#1A1917]">15+</p>
-                      <p className="text-xs text-[#8A8880]">Years</p>
+                      <p className="text-sm font-bold text-[#1A1917]">Director</p>
+                      <p className="text-xs text-[#8A8880]">Led Service</p>
                     </div>
                   </div>
                 </div>

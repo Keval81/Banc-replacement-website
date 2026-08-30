@@ -128,6 +128,62 @@ const nextConfig: NextConfig = {
         destination: "/lettings/tenants-guide",
         permanent: true,
       },
+      // Legacy URL paths from the previous bancproperty.com site
+      {
+        source: "/privacy-policy",
+        destination: "/privacy",
+        permanent: true,
+      },
+      {
+        source: "/property-valuation",
+        destination: "/valuation",
+        permanent: true,
+      },
+      {
+        source: "/instant-valuation",
+        destination: "/tools/valuation",
+        permanent: true,
+      },
+      {
+        source: "/area-guide",
+        destination: "/area-guides",
+        permanent: true,
+      },
+      {
+        source: "/area-guide/:slug",
+        destination: "/area-guides/:slug",
+        permanent: true,
+      },
+      {
+        source: "/land-and-new-homes",
+        destination: "/land-new-homes",
+        permanent: true,
+      },
+      {
+        source: "/become-a-partner",
+        destination: "/become-partner",
+        permanent: true,
+      },
+      {
+        source: "/offices/estate-agents/cuffley",
+        destination: "/offices/cuffley",
+        permanent: true,
+      },
+      {
+        source: "/offices/estate-agents/mayfair",
+        destination: "/offices/mayfair",
+        permanent: true,
+      },
+      {
+        source: "/lettings/yield-calculator",
+        destination: "/tools/yield-calculator",
+        permanent: true,
+      },
+      {
+        source: "/sales/stamp-duty",
+        destination: "/tools/stamp-duty",
+        permanent: true,
+      },
     ];
   },
   turbopack: {},

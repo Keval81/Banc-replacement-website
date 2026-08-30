@@ -54,7 +54,7 @@ const openingHours = [
   { day: "Wednesday", hours: "9:00 AM - 6:00 PM" },
   { day: "Thursday", hours: "9:00 AM - 6:00 PM" },
   { day: "Friday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Saturday", hours: "By Appointment" },
+  { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
   { day: "Sunday", hours: "Closed" },
 ];
 
@@ -82,7 +82,7 @@ export default function MayfairOfficePage() {
         {/* Background */}
         <div className="absolute inset-0">
           <Image 
-            src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1617606796212-4c99a14a116e?auto=format&fit=crop&w=1920&q=80"
             alt="Mayfair Office"
             fill
             className="object-cover opacity-20"
@@ -113,33 +113,33 @@ export default function MayfairOfficePage() {
               
               {/* Quick contact info */}
               <div className="mt-8 space-y-4">
-                <a href="tel:01707877781" className="flex items-center gap-4 group">
+                <a href="tel:02033688972" className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center group-hover:bg-[#4AC8E8]/30 transition-colors">
                     <Phone className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Call us</p>
-                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">01707 877781</p>
+                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">0203 368 8972</p>
                   </div>
                 </a>
-                
-                <a href="mailto:premier@bancproperty.com" className="flex items-center gap-4 group">
+
+                <a href="mailto:info@bancproperty.com" className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center group-hover:bg-[#4AC8E8]/30 transition-colors">
                     <Mail className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Email us</p>
-                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">premier@bancproperty.com</p>
+                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">info@bancproperty.com</p>
                   </div>
                 </a>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
                     <MapPin className="h-5 w-5 text-[#4AC8E8]" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Visit us by appointment</p>
-                    <p className="text-lg font-semibold text-white">Mayfair, London W1</p>
+                    <p className="text-lg font-semibold text-white">121 Park Lane, Mayfair, W1K 7AG</p>
                   </div>
                 </div>
               </div>
@@ -164,7 +164,7 @@ export default function MayfairOfficePage() {
             {/* Map placeholder - using static image for now */}
             <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.489123456789!2d-0.1477!3d51.5073!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4876053281200dfb%3A0x5f5f5f5f5f5f5f5f!2sMayfair%2C%20London%20W1J!5e0!3m2!1sen!2suk!4v1234567890"
+                src="https://www.google.com/maps?q=121+Park+Lane,+Mayfair,+London+W1K+7AG&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

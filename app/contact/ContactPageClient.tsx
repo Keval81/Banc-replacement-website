@@ -133,7 +133,7 @@ export default function ContactPageClient() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
@@ -273,6 +273,29 @@ export default function ContactPageClient() {
                   Call Us Now
                 </a>
               </motion.div>
+
+              {/* Mayfair office */}
+              <div className="mt-10 border-t border-[#F4F3F1] pt-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#8A8880]">
+                  Mayfair Office
+                </p>
+                <div className="mt-3 space-y-2 text-[#1A1917]">
+                  <p className="font-medium">121 Park Lane, Mayfair, W1K 7AG</p>
+                  <a
+                    href="tel:02033688972"
+                    className="block transition-colors hover:text-[#4AC8E8]"
+                    onClick={() => trackCallClick("contact_page_mayfair")}
+                  >
+                    0203 368 8972
+                  </a>
+                  <a
+                    href="mailto:info@bancproperty.com"
+                    className="block transition-colors hover:text-[#4AC8E8]"
+                  >
+                    info@bancproperty.com
+                  </a>
+                </div>
+              </div>
             </motion.div>
 
             {/* Google Maps Embed */}

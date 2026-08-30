@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Home, Users, FileText } from "lucide-react";
+import { ArrowRight, Home, Users, FileText, Calculator, MapPin } from "lucide-react";
 import Link from "next/link";
 import { PropertySearchBarView } from "@/components/property";
 import {
@@ -54,7 +54,7 @@ export default function SalesPageClient() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
@@ -71,7 +71,7 @@ export default function SalesPageClient() {
               expert valuations, and dedicated sales team.
             </p>
             <div className="mt-5 flex flex-wrap gap-3 lg:mt-6">
-              <Link href="/contact">
+              <Link href="/valuation">
                 <Button className="bg-[#4AC8E8] px-5 py-5 text-sm text-white hover:bg-[#1A9BBF] active:bg-[#1A9BBF] lg:px-6 lg:py-6 lg:text-base">
                   Request Valuation
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -133,7 +133,7 @@ export default function SalesPageClient() {
               </div>
             </Link>
 
-            <Link href="/sales/sellers-guide" className="group sm:col-span-2 lg:col-span-1">
+            <Link href="/sales/sellers-guide" className="group">
               <div className="rounded-2xl border border-[#E0DFDC] p-5 transition-all active:bg-[#F4F3F1] lg:p-8 lg:hover:border-[#4AC8E8] lg:hover:shadow-lg">
                 <FileText className="h-7 w-7 text-[#4AC8E8] lg:h-10 lg:w-10" />
                 <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Sellers Guide</h3>
@@ -142,6 +142,32 @@ export default function SalesPageClient() {
                 </p>
                 <span className="mt-3 inline-flex items-center text-sm text-[#4AC8E8] lg:mt-4">
                   Read Guide <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+
+            <Link href="/tools/stamp-duty" className="group">
+              <div className="rounded-2xl border border-[#E0DFDC] p-5 transition-all active:bg-[#F4F3F1] lg:p-8 lg:hover:border-[#4AC8E8] lg:hover:shadow-lg">
+                <Calculator className="h-7 w-7 text-[#4AC8E8] lg:h-10 lg:w-10" />
+                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Stamp Duty</h3>
+                <p className="mt-1 text-sm text-[#8A8880] lg:mt-2">
+                  Work out the stamp duty on your next purchase.
+                </p>
+                <span className="mt-3 inline-flex items-center text-sm text-[#4AC8E8] lg:mt-4">
+                  Calculate <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+
+            <Link href="/area-guides" className="group sm:col-span-2 lg:col-span-1">
+              <div className="rounded-2xl border border-[#E0DFDC] p-5 transition-all active:bg-[#F4F3F1] lg:p-8 lg:hover:border-[#4AC8E8] lg:hover:shadow-lg">
+                <MapPin className="h-7 w-7 text-[#4AC8E8] lg:h-10 lg:w-10" />
+                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Area Guides</h3>
+                <p className="mt-1 text-sm text-[#8A8880] lg:mt-2">
+                  Learn more about the local areas where we operate.
+                </p>
+                <span className="mt-3 inline-flex items-center text-sm text-[#4AC8E8] lg:mt-4">
+                  Explore Areas <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
                 </span>
               </div>
             </Link>

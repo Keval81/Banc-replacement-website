@@ -37,6 +37,8 @@ const dropdowns = {
     { title: "Track Record", href: "/track-record" },
     { title: "The Guild", href: "/the-guild" },
     { title: "Area Guides", href: "/area-guides" },
+    { title: "Community", href: "/community" },
+    { title: "Blog", href: "/blog" },
   ],
 } as const;
 

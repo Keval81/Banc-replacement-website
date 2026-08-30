@@ -26,7 +26,7 @@ const serviceCards = [
   {
     title: "Property Valuation",
     description: "Find out how much your property could be worth.",
-    href: "/contact",
+    href: "/valuation",
     icon: Calculator,
   },
   {
@@ -108,19 +108,19 @@ export default function LettingsPage() {
             tailored to your needs.
           </p>
           
-          {/* Quick stats */}
+          {/* Quick facts — memberships evidenced on our fee schedule */}
           <div className="mt-5 flex flex-wrap gap-5 lg:mt-8 lg:gap-8">
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">500+</span>
-              <span className="text-xs text-white/50 lg:text-sm">Properties Managed</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">CMP</span>
+              <span className="text-xs text-white/50 lg:text-sm">Client Money Protected</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">98%</span>
-              <span className="text-xs text-white/50 lg:text-sm">Tenant Satisfaction</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">TPO</span>
+              <span className="text-xs text-white/50 lg:text-sm">Property Ombudsman Member</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">15+</span>
-              <span className="text-xs text-white/50 lg:text-sm">Years Experience</span>
+              <span className="text-xl font-semibold text-[#4AC8E8] lg:text-3xl">Guild</span>
+              <span className="text-xs text-white/50 lg:text-sm">Approved Agent</span>
             </div>
           </div>
         </div>

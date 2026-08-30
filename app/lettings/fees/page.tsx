@@ -29,15 +29,14 @@ const tenantFees = {
   permitted: [
     {
       name: "Holding Deposit",
-      amount: "Maximum 1 week's rent",
-      description: "Required to reserve a property. This will be offset against your first month's rent.",
+      amount: "1 week's rent",
+      description: "Equivalent to one week's rent, which holds the property for 14 days.",
       refundable: true,
       conditions: [
-        "Refunded if landlord withdraws",
-        "Refunded if tenancy doesn't proceed due to landlord",
-        "Forfeited if tenant provides false information",
-        "Forfeited if tenant withdraws",
-        "Forfeited if tenant fails Right to Rent checks"
+        "Withheld if any relevant person (including any guarantor) withdraws from the tenancy",
+        "Withheld if any relevant person fails a Right to Rent check",
+        "Withheld if materially significant false or misleading information is provided",
+        "Withheld if you fail to sign your tenancy agreement within the deadline for agreement"
       ]
     },
     {
@@ -89,67 +88,57 @@ const tenantFees = {
   ]
 };
 
-// Landlord fees
+// Landlord fees — per the published Banc Property Group landlord fee schedule
 const landlordFees = [
   {
-    name: "Tenant Find Only",
+    name: "Tenant Find",
     description: "We find and reference tenants, you manage the property",
-    pricing: "£500 + VAT",
+    pricing: "8% (inc VAT)",
     features: [
       "Professional property marketing",
       "Accompanied viewings",
-      "Comprehensive tenant referencing",
-      "AST preparation",
-      "Deposit registration",
-      "Move-in documentation"
+      "Tenant referencing (up to two tenants included)",
+      "Collect and remit initial month's rent",
+      "Agree collection of any shortfall and payment method",
+      "Deduct any pre-tenancy invoices"
     ]
   },
   {
     name: "Rent Collection",
     description: "We find tenants and collect rent, you handle maintenance",
-    pricing: "8% + VAT (of monthly rent)",
+    pricing: "10% (inc VAT)",
     features: [
       "All Tenant Find services",
-      "Monthly rent collection",
-      "Rent statements",
-      "Chasing arrears",
-      "Annual tenancy renewals",
-      "Basic dispute resolution"
+      "Monthly rent collection and statements",
+      "Security deposit submitted to a government-authorised scheme",
+      "Chasing arrears"
     ]
   },
   {
-    name: "Full Management",
-    description: "Complete hands-off service - we handle everything",
-    pricing: "12% + VAT (of monthly rent)",
+    name: "Fully Managed",
+    description: "Complete hands-off service — we handle everything",
+    pricing: "13% (inc VAT)",
     popular: true,
     features: [
       "All Rent Collection services",
-      "24/7 maintenance helpline",
-      "Property inspections",
-      "Contractor management",
-      "Legal compliance checks",
-      "Rent protection insurance",
-      "Annual gas safety checks",
-      "EPC management",
-      "Deposit dispute handling"
+      "Pursue non-payment of rent and advise on rent arrears actions",
+      "Two inspection visits per annum",
+      "Arrange routine repairs and instruct approved contractors (two quotes)",
+      "Hold keys throughout the tenancy term"
     ]
   }
 ];
 
-// Additional landlord fees
+// Additional landlord fees — per the published landlord fee schedule
 const additionalFees = [
-  { service: "Tenancy Agreement Preparation", fee: "Included in service" },
-  { service: "Inventory & Schedule of Condition", fee: "From £150 + VAT" },
-  { service: "Annual Gas Safety Certificate", fee: "£90 + VAT" },
-  { service: "EPC (Energy Performance Certificate)", fee: "£90 + VAT" },
-  { service: "EICR (Electrical Safety Check)", fee: "From £180 + VAT" },
-  { service: "Smoke/CO Alarm Installation", fee: "£75 + VAT per alarm" },
-  { service: "Pat Testing", fee: "From £100 + VAT" },
-  { service: "Professional Photography", fee: "Included in service" },
-  { service: "Floor Plan", fee: "Included in service" },
-  { service: "Right to Rent Checks", fee: "Included in service" },
-  { service: "Deposit Registration", fee: "Included in service" },
-  { service: "Checkout Report", fee: "From £150 + VAT" }
+  { service: "Setup Fee (landlord's share)", fee: "One week's rent (inc VAT)" },
+  { service: "Amendment Fee", fee: "£50 (inc VAT)" },
+  { service: "Renewal Fee", fee: "£180 (inc VAT)" },
+  { service: "Check-out Fee", fee: "£0" },
+  { service: "Future Landlord Reference Fee", fee: "£0" },
+  { service: "Referencing (up to two tenants)", fee: "£0" },
+  { service: "Additional tenant, guarantor or permitted occupier referencing", fee: "£0" },
+  { service: "Inventory", fee: "From £100 (inc VAT), dependent on property size" }
 ];
 
 export default function LettingsFeesPage() {
@@ -162,7 +151,7 @@ export default function LettingsFeesPage() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
@@ -298,7 +287,7 @@ export default function LettingsFeesPage() {
                 <ul className="space-y-2 text-sm text-[#8A8880]">
                   <li className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-green-500" />
-                    MyDeposits
+                    Government-authorised tenancy deposit scheme
                   </li>
                 </ul>
                 <p className="text-sm text-[#8A8880] mt-4">
@@ -406,7 +395,7 @@ export default function LettingsFeesPage() {
               </table>
             </div>
             <p className="text-sm text-white/50 mt-6">
-              * All prices exclude VAT at the current rate. Prices subject to change. 
+              * Fees are shown inclusive of VAT as published in our landlord fee schedule.
               Please contact us for a full written quotation tailored to your property.
             </p>
           </div>
@@ -428,11 +417,11 @@ export default function LettingsFeesPage() {
               
               <ul className="space-y-4">
                 {[
-                  "All fees are quoted excluding VAT unless otherwise stated",
+                  "Landlord fees are shown inclusive of VAT",
                   "We will provide a written quotation before any work begins",
                   "No hidden charges - all costs explained upfront",
                   "Landlord fees are deducted from rent collected",
-                  "Setup fees are payable upon instruction"
+                  "Setup fee (landlord's share): one week's rent (inc VAT), payable upon instruction"
                 ].map((item, index) => (
                   <li key={index} className="flex items-start gap-3 text-[#8A8880]">
                     <Check className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
@@ -453,19 +442,21 @@ export default function LettingsFeesPage() {
               
               <div className="space-y-4 text-[#8A8880]">
                 <p>
-                  <strong className="text-[#1A1917]">Landlords:</strong> Management agreements 
-                  run for a minimum period of 6 months. Notice to terminate must be given 
-                  in writing, with a notice period of 2 months.
-                </p>
-                <p>
-                  <strong className="text-[#1A1917]">Tenants:</strong> Once a holding deposit 
-                  is paid, it becomes non-refundable if you withdraw from the tenancy 
+                  <strong className="text-[#1A1917]">Tenants:</strong> Once a holding deposit
+                  is paid, it becomes non-refundable if you withdraw from the tenancy
                   (subject to the conditions outlined above).
                 </p>
                 <p>
-                  <strong className="text-[#1A1917]">Tenancy Renewals:</strong> No fees are 
-                  charged to tenants for tenancy renewals. Landlords may be charged a 
-                  renewal fee depending on their service level.
+                  <strong className="text-[#1A1917]">Tenancy Renewals:</strong> No fees are
+                  charged to tenants for tenancy renewals. The landlord renewal fee is £180
+                  (inc VAT).
+                </p>
+                <p>
+                  <strong className="text-[#1A1917]">Questions:</strong> Contact Andrew Crump
+                  or Nitesh Bheda on{" "}
+                  <a href="tel:01707877781" className="text-[#4AC8E8] hover:underline">01707 877781</a>, or email{" "}
+                  <a href="mailto:andrew@bancproperty.com" className="text-[#4AC8E8] hover:underline">andrew@bancproperty.com</a> /{" "}
+                  <a href="mailto:nitesh@bancproperty.com" className="text-[#4AC8E8] hover:underline">nitesh@bancproperty.com</a>.
                 </p>
               </div>
             </div>
@@ -507,8 +498,8 @@ export default function LettingsFeesPage() {
                       <Check className="h-5 w-5 text-[#4AC8E8]" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#1A1917]">Propertymark Member</h3>
-                      <p className="text-sm text-[#8A8880]">Regulated by a professional body</p>
+                      <h3 className="font-semibold text-[#1A1917]">Client Money Protect Member</h3>
+                      <p className="text-sm text-[#8A8880]">Client money protection for landlords and tenants</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -532,7 +523,7 @@ export default function LettingsFeesPage() {
                 <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
                   <Building2 className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
                   <p className="font-semibold text-[#1A1917]">Professional Membership</p>
-                  <p className="text-sm text-[#8A8880]">Propertymark</p>
+                  <p className="text-sm text-[#8A8880]">The Guild of Professional Estate Agents</p>
                 </div>
                 <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
                   <FileText className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
@@ -542,7 +533,7 @@ export default function LettingsFeesPage() {
                 <div className="bg-[#F4F3F1] rounded-2xl p-6 text-center">
                   <Key className="h-10 w-10 text-[#4AC8E8] mx-auto mb-3" />
                   <p className="font-semibold text-[#1A1917]">Deposit Protection</p>
-                  <p className="text-sm text-[#8A8880]">MyDeposits</p>
+                  <p className="text-sm text-[#8A8880]">Government-authorised scheme</p>
                 </div>
               </div>
             </div>

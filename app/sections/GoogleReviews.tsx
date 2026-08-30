@@ -42,20 +42,6 @@ const fallbackReviews: Review[] = [
     relativeTime: "1 month ago",
     time: Date.now() - 2592000000,
   },
-  {
-    authorName: "Sarah L.",
-    rating: 5,
-    text: "Banc Property Group provided exceptional service from start to finish. Their attention to detail and professionalism made selling our home stress-free.",
-    relativeTime: "3 weeks ago",
-    time: Date.now() - 1814400000,
-  },
-  {
-    authorName: "Michael T.",
-    rating: 5,
-    text: "I've used many estate agents over the years, but Banc stands out for their dedication and results. Highly recommend for anyone selling in the area.",
-    relativeTime: "1 month ago",
-    time: Date.now() - 2592000000,
-  },
 ];
 
 export default function GoogleReviews() {

@@ -2,16 +2,15 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { 
-  ArrowRight, 
-  Award, 
-  Users, 
-  MapPin, 
-  TrendingUp, 
-  Shield, 
-  Camera, 
-  Clock, 
-  Home, 
+import {
+  ArrowRight,
+  Award,
+  Users,
+  TrendingUp,
+  Shield,
+  Camera,
+  Clock,
+  Home,
   Star,
   Phone,
   CheckCircle2,
@@ -21,7 +20,6 @@ import {
   BarChart3
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Why Choose Us | Banc Property Group",
@@ -29,155 +27,131 @@ export const metadata: Metadata = {
   keywords: "estate agent cuffley, property sales hertfordshire, why choose banc, best estate agent, property experts",
 };
 
-// 8 Differentiators with compelling content
+// Differentiators — condensed from the live site's own Why Us copy (bancproperty.com/why-us)
 const differentiators = [
   {
-    icon: MapPin,
-    title: "Local Expertise",
-    description: "45+ years combined experience in Cuffley, Goffs Oak and surrounding areas. Our directors have lived and worked locally for decades.",
-    stat: "45+",
-    statLabel: "Years Combined Experience"
-  },
-  {
-    icon: Heart,
-    title: "Personalised Service",
-    description: "No call centres or junior staff. You'll work directly with experienced directors and senior negotiators from start to finish.",
-    stat: "100%",
-    statLabel: "Director-Led Service"
+    icon: Home,
+    title: "Bespoke Property Details",
+    description: "Beautifully designed brochures with professional-grade photography, EPCs and floorplans — plus our unique 'Sellers Secrets', your own take on your home, to really bring it to life."
   },
   {
     icon: Camera,
-    title: "Premium Marketing",
-    description: "Professional photography, video tours, drone footage, and targeted social media campaigns to showcase your property.",
-    stat: "4K",
-    statLabel: "Drone & Video Tours"
+    title: "Marketing",
+    description: "The biggest property portals, proactive call-outs to our database, eye-catching for sale boards as your 24/7 salesman, and every property delivered through our Facebook and Instagram feeds."
   },
   {
-    icon: Award,
-    title: "Guild Membership",
-    description: "Access to 800+ independent agents nationwide. Local expertise with national reach through The Guild network.",
-    stat: "800+",
-    statLabel: "Network Partners"
+    icon: Clock,
+    title: "Open All Hours",
+    description: "On the phone or email 24/7, and the office is open 9am to 6pm Monday to Saturday. Viewings and valuations arranged at your convenience — we don't miss an opportunity to get you moved."
   },
   {
-    icon: TrendingUp,
-    title: "Track Record",
-    description: "Consistently achieving above-asking-price sales. Our results speak for themselves with hundreds of successful transactions.",
-    stat: "97%",
-    statLabel: "Asking Price Achieved"
+    icon: Shield,
+    title: "Transparent & Straightforward",
+    description: "Honest, evidence-backed valuations with comparable properties. No long tie-in contracts — instruct and stay with us on the merits of the job we are doing."
   },
   {
-    icon: Building2,
-    title: "Comprehensive Services",
-    description: "From sales and lettings to premier homes and property management. Everything you need under one roof.",
-    stat: "5",
-    statLabel: "Service Categories"
+    icon: Star,
+    title: "Showtime",
+    description: "Staging advice before the cameras arrive, block viewings or open houses where they suit, and experienced consultants or directors accompanying viewings — never part-time staff."
   },
   {
-    icon: Users,
-    title: "Community Involvement",
-    description: "Active supporters of local sports clubs, schools, and charities. We're not just agents, we're your neighbours.",
-    stat: "15+",
-    statLabel: "Community Partnerships"
+    icon: Heart,
+    title: "Communication",
+    description: "To us silence is never golden. Viewing feedback within a day, and bi-monthly face-to-face consultation reviews with every vendor and landlord to keep the campaign on track."
   },
   {
     icon: Target,
-    title: "Technology-Driven",
-    description: "Cutting-edge property technology for seamless transactions, virtual viewings, and real-time updates on your sale.",
-    stat: "24/7",
-    statLabel: "Online Property Tracking"
+    title: "Discreet Marketing",
+    description: "A private-sale service for sellers who prefer to keep their business matters off the portals — giving committed buyers access without publicly exposing your home to the market."
+  },
+  {
+    icon: Users,
+    title: "Director Led",
+    description: "Nitesh and Andrew — with over 45 years combined experience — personally handle your market appraisal, viewings, negotiation and sales progression through to key handover."
+  },
+  {
+    icon: Building2,
+    title: "London Market",
+    description: "As a Guild member, our associate office on Park Lane, Mayfair — 2000 sq ft of office and showroom — showcases properties via touchscreen displays 24/7 to London and international buyers."
+  },
+  {
+    icon: TrendingUp,
+    title: "The Extra Mile",
+    description: "Glossy lifestyle and property magazines distributed locally and through the Guild network, plus video tours, drone photography and dedicated websites for individual homes."
   }
 ];
 
-// Process timeline
+// Process timeline — mirrors the 10-step sellers guide
 const processSteps = [
   {
     step: "01",
-    title: "Free Valuation",
-    description: "Expert market appraisal by one of our directors. We provide honest, evidence-based valuations based on current market conditions.",
-    duration: "60 minutes",
+    title: "Market Appraisal",
+    description: "Expert market appraisal by one of our directors. We provide honest, evidence-based valuations backed up with comparable properties.",
     icon: Home
   },
   {
     step: "02",
     title: "Marketing Preparation",
     description: "Professional photography, floor plans, and compelling property descriptions. We ensure your home looks its absolute best.",
-    duration: "1-2 days",
     icon: Camera
   },
   {
     step: "03",
     title: "Listing & Promotion",
-    description: "Your property goes live on Rightmove, Zoopla, OnTheMarket, our website, and social media channels to thousands of buyers.",
-    duration: "Day 1",
+    description: "Your property goes live on the major portals, our website, and social media channels — backed by proactive call-outs to our buyer database.",
     icon: Target
   },
   {
     step: "04",
     title: "Viewings Management",
-    description: "Accompanied viewings by experienced negotiators who know your property inside out. Flexible times including evenings and weekends.",
-    duration: "Ongoing",
+    description: "Accompanied viewings by experienced consultants or directors who know your property inside out. Flexible times to suit you.",
     icon: Users
   },
   {
     step: "05",
     title: "Offer Negotiation",
     description: "We negotiate the best possible price on your behalf, vetting all buyers for their position and ability to proceed.",
-    duration: "Immediate",
     icon: BarChart3
   },
   {
     step: "06",
     title: "Sales Progression",
-    description: "Dedicated sales progressor keeps everything moving smoothly, liaising with solicitors, surveyors, and all parties until completion.",
-    duration: "8-12 weeks",
+    description: "We keep everything moving smoothly, liaising with solicitors, surveyors, and all parties until completion.",
     icon: Clock
   },
   {
     step: "07",
     title: "Completion",
-    description: "Congratulations! Keys are handed over and your successful sale is complete. We celebrate your success with you.",
-    duration: "Moving Day",
+    description: "Keys are handed over and your successful sale is complete — we even aim to be there on that special completion date.",
     icon: CheckCircle2
   }
 ];
 
-// Key stats
-const keyStats = [
-  { value: "£400M+", label: "Property Sales Value" },
-  { value: "97%", label: "Asking Price Achieved" },
-  { value: "98%", label: "Client Satisfaction" },
-  { value: "15+", label: "Years Established" },
-  { value: "500+", label: "Happy Clients" },
-  { value: "45+", label: "Years Experience" }
-];
-
-// Awards/Recognition
+// Accreditations — as evidenced on bancproperty.com and its published certificates
 const awards = [
-  { name: "The Guild of Property Professionals", description: "Proud Member" },
-  { name: "Propertymark", description: "Regulated & Protected" },
-  { name: "Rightmove Premium", description: "Featured Agent" },
-  { name: "AllAgents", description: "5-Star Rated" }
+  { name: "The Property Ombudsman", description: "Accredited" },
+  { name: "The Guild of Professional Estate Agents", description: "Member" },
+  { name: "Client Money Protect", description: "Client Money Protection" }
 ];
 
-// Featured testimonials
+// Real client reviews — verbatim from bancproperty.com/reviews
 const testimonials = [
   {
-    quote: "Banc achieved £15,000 more than another agent had valued our property at. Their marketing was exceptional and they found us the perfect buyer within 2 weeks.",
-    author: "Sarah & James Mitchell",
-    location: "Cuffley",
+    quote: "You guys are brilliant, when you valued our property at a much higher price than other agents we were sceptical we could achieve that but it sold for exactly that. You really know what you're talking about and because of your expert knowledge we were able to move to a location we thought we couldn't afford.",
+    author: "Lesley & James",
+    location: "Beverley Gardens, Cheshunt",
     rating: 5
   },
   {
-    quote: "As a landlord with multiple properties, I need an agent I can trust. Banc's management service gives me complete peace of mind.",
-    author: "Robert Chen",
-    location: "Goffs Oak",
+    quote: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful. We achieved the asking price very quickly. If I am selling again I would go straight to Banc. Thank you to the whole team.",
+    author: "Dawn",
+    location: "Leefe Way, Cuffley",
     rating: 5
   },
   {
-    quote: "Andrew and Nitesh went above and beyond during our purchase. Their communication was excellent and they made the whole process stress-free.",
-    author: "Emma Thompson",
-    location: "Brookmans Park",
+    quote: "Banc are a very professional company. They have been letting 4 of my properties over the last 7 years with no issues. There always fully occupied with good tenants. I am really impressed with the speed that they find new tenants when the old tenant's leave. I will only use Banc from now on.",
+    author: "Stuart Heath",
+    location: "Churchgate, Cheshunt",
     rating: 5
   }
 ];
@@ -192,7 +166,7 @@ export default function WhyUsPage() {
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1771011890148-fbddda692217?auto=format&fit=crop&w=1920&q=80"
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
@@ -217,20 +191,21 @@ export default function WhyUsPage() {
           {/* Trust badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
             <Star className="h-4 w-4 text-[#4AC8E8]" />
-            <span className="text-sm font-medium text-white/80">5-Star Rated Estate Agent</span>
+            <span className="text-sm font-medium text-white/80">Hard Work · Enthusiasm · Honesty · Integrity</span>
           </div>
-          
+
           <div className="max-w-4xl">
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
               Why Choose{" "}
               <span className="text-[#4AC8E8]">Banc Property Group</span>
             </h1>
             <p className="mt-6 text-xl text-white/70 leading-relaxed max-w-3xl">
-              Born from a desire to provide a truly tailored and bespoke service. 
-              We combine <span className="text-white font-medium">45+ years of local expertise</span> with 
-              modern marketing and technology to deliver results that exceed expectations.
+              With a combined <span className="text-white font-medium">60 years experience</span> in the local
+              property market, we are confident that we can offer an unrivalled knowledge and an exceptional
+              service in a bespoke and tailored fashion. The foundations of Banc are based on the simple
+              fundamentals of hard work, enthusiasm, honesty and integrity.
             </p>
-            
+
             {/* Quick stats row */}
             <div className="mt-10 flex flex-wrap gap-8">
               <div className="flex items-center gap-3">
@@ -238,8 +213,8 @@ export default function WhyUsPage() {
                   <Award className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-white">97%</p>
-                  <p className="text-sm text-white/60">Asking Price Achieved</p>
+                  <p className="text-2xl font-bold text-white">60 yrs</p>
+                  <p className="text-sm text-white/60">Combined Experience</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -247,17 +222,17 @@ export default function WhyUsPage() {
                   <Users className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-white">500+</p>
-                  <p className="text-sm text-white/60">Happy Clients</p>
+                  <p className="text-2xl font-bold text-white">2</p>
+                  <p className="text-sm text-white/60">Local Owner Directors</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
-                  <Star className="h-6 w-6 text-[#4AC8E8]" />
+                  <Building2 className="h-6 w-6 text-[#4AC8E8]" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-white">4.9/5</p>
-                  <p className="text-sm text-white/60">Google Reviews</p>
+                  <p className="text-2xl font-bold text-white">750+</p>
+                  <p className="text-sm text-white/60">Guild Offices Nationwide</p>
                 </div>
               </div>
             </div>
@@ -271,6 +246,25 @@ export default function WhyUsPage() {
         </div>
       </section>
 
+      {/* Company pitch — verbatim from the live homepage */}
+      <section className="py-16 lg:py-20">
+        <div className="mx-auto max-w-3xl px-6 lg:px-10 text-center">
+          <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
+            Welcome to Banc Property Group
+          </h2>
+          <p className="mt-6 text-lg text-[#3D3B37] leading-relaxed">
+            Born from a desire to provide a more tailored and bespoke service, we take pride in listening
+            to your needs and requirements, to deliver a service which exceeds client expectations. We offer
+            a bespoke approach to selling and letting properties, combining local expertise and a powerful
+            national network with unique property marketing campaigns, always providing outstanding customer care.
+          </p>
+          <p className="mt-4 text-lg text-[#3D3B37] leading-relaxed">
+            Our experience comes from over 45 years of selling and renting homes in the local areas combined,
+            and the expertise of our two local owners.
+          </p>
+        </div>
+      </section>
+
       {/* Differentiators Section */}
       <section className="py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
@@ -281,26 +275,20 @@ export default function WhyUsPage() {
               <span className="text-sm font-medium text-[#1A9BBF]">What Sets Us Apart</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
-              8 Reasons to Choose Banc
+              What We Do Differently
             </h2>
             <p className="mt-4 text-lg text-[#8A8880]">
-              We don't just sell properties – we build relationships and deliver results that matter.
+              We don&apos;t say we do things — we actually do them.
             </p>
           </div>
-          
+
           {/* Differentiators grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {differentiators.map((item, index) => (
-              <div 
+              <div
                 key={item.title}
                 className="group relative bg-white rounded-2xl p-6 border border-[#E0DFDC]/30 hover:border-[#4AC8E8]/50 hover:shadow-xl hover:shadow-[#4AC8E8]/5 transition-all duration-300"
               >
-                {/* Stat badge */}
-                <div className="absolute -top-3 -right-3 w-16 h-16 rounded-xl bg-[#4AC8E8] flex flex-col items-center justify-center shadow-lg">
-                  <span className="text-lg font-bold text-white">{item.stat}</span>
-                  <span className="text-[10px] text-white/80 uppercase tracking-wide">{item.statLabel}</span>
-                </div>
-                
                 {/* Icon */}
                 <div className="w-14 h-14 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center mb-4 group-hover:bg-[#4AC8E8]/20 transition-colors">
                   <item.icon className="h-7 w-7 text-[#4AC8E8]" />
@@ -360,14 +348,11 @@ export default function WhyUsPage() {
                   {/* Content side */}
                   <div className={`${index % 2 === 0 ? 'lg:pr-16 lg:text-right' : 'lg:col-start-2 lg:pl-16'}`}>
                     <div className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-[#4AC8E8]/50 transition-colors ${index % 2 === 0 ? '' : 'lg:ml-0'}`}>
-                      {/* Step number and duration */}
+                      {/* Step number */}
                       <div className={`flex items-center gap-3 mb-4 ${index % 2 === 0 ? 'lg:justify-end' : ''}`}>
                         <span className="text-3xl font-bold text-[#4AC8E8]">{step.step}</span>
-                        <span className="px-3 py-1 rounded-full bg-[#4AC8E8]/20 text-[#4AC8E8] text-xs font-medium">
-                          {step.duration}
-                        </span>
                       </div>
-                      
+
                       {/* Icon and title */}
                       <div className={`flex items-center gap-3 mb-3 ${index % 2 === 0 ? 'lg:justify-end' : ''}`}>
                         <step.icon className="h-5 w-5 text-[#4AC8E8]" />
@@ -391,27 +376,17 @@ export default function WhyUsPage() {
         </div>
       </section>
 
-      {/* Stats & Awards Section */}
+      {/* Awards Section */}
       <section className="py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          {/* Stats grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-16">
-            {keyStats.map((stat) => (
-              <div key={stat.label} className="text-center p-6 bg-white rounded-2xl border border-[#E0DFDC]/30 shadow-sm">
-                <p className="text-3xl lg:text-4xl font-bold text-[#4AC8E8]">{stat.value}</p>
-                <p className="mt-2 text-sm text-[#8A8880]">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-          
           {/* Awards section */}
           <div className="bg-gradient-to-br from-[#1A1917] to-[#3D3B37] rounded-3xl p-8 lg:p-12">
             <div className="text-center mb-10">
               <h3 className="text-2xl font-semibold text-white">Accreditations & Memberships</h3>
-              <p className="mt-2 text-white/60">Trusted by industry leaders and regulated by professional bodies</p>
+              <p className="mt-2 text-white/60">Giving you peace of mind that you are truly in professional hands</p>
             </div>
-            
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {awards.map((award) => (
                 <div key={award.name} className="bg-white/5 border border-white/10 rounded-xl p-6 text-center hover:bg-white/10 transition-colors">
                   <Award className="h-8 w-8 text-[#4AC8E8] mx-auto mb-3" />

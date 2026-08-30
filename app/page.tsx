@@ -10,8 +10,8 @@ import Testimonials from "@/app/sections/Testimonials";
 // Partner logos moved to Footer
 
 export const metadata: Metadata = {
-  title: "Banc Property Group | Award-Winning Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire. Award-winning team, premium marketing, and expert valuations. Your property journey starts here.",
+  title: "Banc Property Group | Independent Estate Agents",
+  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire. Director-led team, premium marketing, and expert valuations. Your property journey starts here.",
   keywords: [
     "estate agents cuffley",
     "property for sale hertfordshire",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "banc property group",
   ],
   openGraph: {
-    title: "Banc Property Group | Award-Winning Estate Agents",
+    title: "Banc Property Group | Independent Estate Agents",
     description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
     type: "website",
     url: "https://bancproperty.com",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Banc Property Group | Award-Winning Estate Agents",
+    title: "Banc Property Group | Independent Estate Agents",
     description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
   },
   alternates: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 const homepageStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Banc Property Group | Award-Winning Estate Agents",
+  name: "Banc Property Group | Independent Estate Agents",
   description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire",
   url: "https://bancproperty.com",
   mainEntity: {

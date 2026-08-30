@@ -449,7 +449,7 @@ export default function TenantsGuideClient() {
             <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
               <BadgeCheck className="h-4 w-4 text-[#4AC8E8]" />
               <span className="text-sm text-white/70">
-                Tenant Fees Act 2019 — New Assured Shorthold Tenancies
+                Tenant Fees Act 2019 — Assured Shorthold Tenancies signed on or after 1 June 2019
               </span>
             </div>
           </motion.div>

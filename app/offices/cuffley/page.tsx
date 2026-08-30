@@ -67,7 +67,7 @@ const openingHours = [
   { day: "Wednesday", hours: "9:00 AM - 6:00 PM" },
   { day: "Thursday", hours: "9:00 AM - 6:00 PM" },
   { day: "Friday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Saturday", hours: "9:00 AM - 4:00 PM" },
+  { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
   { day: "Sunday", hours: "Closed" },
 ];
 
@@ -95,7 +95,7 @@ export default function CuffleyOfficePage() {
         {/* Background */}
         <div className="absolute inset-0">
           <Image 
-            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920&q=80"
+            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
             alt="Cuffley Office"
             fill
             className="object-cover opacity-20"

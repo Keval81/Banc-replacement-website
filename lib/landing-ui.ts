@@ -144,7 +144,7 @@ const landingUiByVariant: Record<LandingVariant, LandingUi> = {
       {
         brand: "facebook",
         label: "Banc Property Group on Facebook",
-        href: "https://www.facebook.com/bancproperty",
+        href: "https://www.facebook.com/BANCpropertygroup",
         iconSrc: "/icons/social/facebook.svg",
         imageLoading: "eager",
       },

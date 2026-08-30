@@ -52,7 +52,7 @@ const properties = [
     tags: ["Premium", "Video Tour"],
     stats: { beds: 3, baths: 3, sqft: 2100, epc: "C" },
     images: [
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1622374634302-b15fb01fcfde?auto=format&fit=crop&w=1600&q=80",
     ],
     summary: "Light-filled penthouse with panoramic views, concierge service, and private terrace.",
     type: "penthouse",
@@ -86,7 +86,7 @@ const properties = [
     tags: ["Premium", "Gardens"],
     stats: { beds: 5, baths: 4, sqft: 3200, epc: "B" },
     images: [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1640808653955-568dd65debb3?auto=format&fit=crop&w=1600&q=80",
     ],
     summary: "Stunning detached residence set within mature grounds with woodland views and triple garage.",
     type: "mansion",
@@ -103,7 +103,7 @@ const properties = [
     tags: ["Period Property", "Grade II"],
     stats: { beds: 6, baths: 3, sqft: 4100, epc: "D" },
     images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1732721176814-c0bc82db3971?auto=format&fit=crop&w=1600&q=80",
     ],
     summary: "Impressive Grade II listed former rectory with period features, modernised throughout.",
     type: "house",
@@ -137,7 +137,7 @@ const properties = [
     tags: ["Cottage", "Character"],
     stats: { beds: 3, baths: 2, sqft: 1450, epc: "C" },
     images: [
-      "https://images.unsplash.com/photo-1600596542815-78b9dba3b914?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1769096575502-b8cf9d03d596?auto=format&fit=crop&w=1600&q=80",
     ],
     summary: "Charming period cottage with inglenook fireplace, mature garden, and rural views.",
     type: "cottage",
@@ -154,7 +154,7 @@ const properties = [
     tags: ["Barn Conversion", "Waterfront"],
     stats: { beds: 4, baths: 2, sqft: 2100, epc: "B" },
     images: [
-      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1600&q=80",
+      "https://images.unsplash.com/photo-1618157275668-32b083a0fb66?auto=format&fit=crop&w=1600&q=80",
     ],
     summary: "Stunning barn conversion with river frontage, vaulted ceilings, and contemporary design.",
     type: "barn",
