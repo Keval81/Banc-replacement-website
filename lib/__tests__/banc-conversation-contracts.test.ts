@@ -22,6 +22,23 @@ function validResponse(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function propertyCard(images: string[]) {
+  return {
+    id: "EA-1",
+    title: "Oak House",
+    address: "Cuffley",
+    price: "£1,000,000",
+    priceNum: 1_000_000,
+    tags: [],
+    stats: { beds: 4, baths: 2 },
+    images,
+    summary: "A family home.",
+    propertyType: "house",
+    department: "sales",
+    status: "for_sale",
+  };
+}
+
 test("creates a fresh initial property-search conversation state", () => {
   const first = createInitialConversationState();
   const second = createInitialConversationState();
@@ -258,6 +275,28 @@ test("accepts only the fixed Banc handoff destinations", () => {
   })), null);
 });
 
+test("property card images follow the configured image allowlist", () => {
+  const approved = parseConversationResponse(validResponse({
+    properties: [propertyCard([
+      " http://med05.expertagent.co.uk/a/photo.jpg ",
+    ])],
+  }));
+  assert.deepEqual(approved?.properties?.[0]?.images, [
+    "http://med05.expertagent.co.uk/a/photo.jpg",
+  ]);
+
+  for (const image of [
+    "javascript:alert(1)",
+    "data:image/png;base64,AA==",
+    "ftp://media.expertagent.co.uk/photo.jpg",
+    "https://unapproved.example/photo.jpg",
+  ]) {
+    assert.equal(parseConversationResponse(validResponse({
+      properties: [propertyCard([image])],
+    })), null, image);
+  }
+});
+
 test("response parsing rejects raw links, unknown keys, and more than three cards", () => {
   assert.equal(parseConversationResponse(validResponse({
     response: "See https://example.com for details",
@@ -265,20 +304,9 @@ test("response parsing rejects raw links, unknown keys, and more than three card
 
   assert.equal(parseConversationResponse(validResponse({ extra: true })), null);
 
-  const property = {
-    id: "EA-1",
-    title: "Oak House",
-    address: "Cuffley",
-    price: "£1,000,000",
-    priceNum: 1_000_000,
-    tags: [],
-    stats: { beds: 4, baths: 2 },
-    images: ["https://images.example.test/oak-house.jpg"],
-    summary: "A family home.",
-    propertyType: "house",
-    department: "sales",
-    status: "for_sale",
-  };
+  const property = propertyCard([
+    "https://media.expertagent.co.uk/oak-house.jpg",
+  ]);
   assert.equal(parseConversationResponse(validResponse({
     properties: [property, { ...property, id: "EA-2" }, { ...property, id: "EA-3" }, {
       ...property,

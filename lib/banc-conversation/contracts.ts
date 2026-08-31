@@ -18,6 +18,7 @@ import type {
   PropertySearchQuery,
   PropertySort,
 } from "../property-search/types.ts";
+import { getSafePropertyImageUrl } from "../property-detail-view.ts";
 import type { PropertyCardData } from "../property-view.ts";
 
 export type FieldMutation<T> =
@@ -334,6 +335,18 @@ export const conversationPlanSchema = z
     }
   });
 
+const safePropertyImageSchema = z.string().transform((value, context) => {
+  const imageUrl = getSafePropertyImageUrl(value);
+  if (imageUrl === null) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Property image URL is not allowed",
+    });
+    return z.NEVER;
+  }
+  return imageUrl;
+});
+
 export const safePropertyCardSchema = z
   .object({
     id: propertyIdSchema,
@@ -352,7 +365,7 @@ export const safePropertyCardSchema = z
         epc: z.string().trim().min(1).max(16).optional(),
       })
       .strict(),
-    images: z.array(z.string().url()).transform((images) => [...images]),
+    images: z.array(safePropertyImageSchema).transform((images) => [...images]),
     summary: z.string().trim().min(1).max(2_000),
     propertyType: z.enum(SEARCH_PROPERTY_TYPES),
     department: z.enum(["sales", "lettings"]),
