@@ -6,9 +6,9 @@ import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, Loader2, ChevronDo
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/Toast";
 import { trackCallClick } from "@/lib/callTracking";
-import { BANC_CONTACT } from "@/lib/banc-contact";
 import {
   BANC_CONTACT_DETAILS,
+  BANC_OFFICES,
   BANC_TESTIMONIALS,
 } from "@/lib/banc-content/contact";
 
@@ -18,6 +18,9 @@ const contactDetails = BANC_CONTACT_DETAILS.map((detail, index) => ({
   ...detail,
   icon: [MapPin, Phone, Mail, Clock][index],
 }));
+
+const cuffleyOffice = BANC_OFFICES.cuffley;
+const mayfairOffice = BANC_OFFICES.mayfair;
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -143,7 +146,7 @@ export default function ContactPageClient() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              Cuffley Estate Agents
+              {cuffleyOffice.title}
             </motion.h1>
             
             <motion.p 
@@ -234,7 +237,7 @@ export default function ContactPageClient() {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <a
-                  href={BANC_CONTACT.callHref}
+                  href={cuffleyOffice.phone.callHref}
                   onClick={() => trackCallClick("contact_page_cta")}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#1A1917] px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#4AC8E8] hover:shadow-lg hover:shadow-[#4AC8E8]/25"
                 >
@@ -246,22 +249,22 @@ export default function ContactPageClient() {
               {/* Mayfair office */}
               <div className="mt-10 border-t border-[#F4F3F1] pt-8">
                 <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#8A8880]">
-                  Mayfair Office
+                  {mayfairOffice.title}
                 </p>
                 <div className="mt-3 space-y-2 text-[#1A1917]">
-                  <p className="font-medium">121 Park Lane, Mayfair, W1K 7AG</p>
+                  <p className="font-medium">{mayfairOffice.addressLines[0]}</p>
                   <a
-                    href="tel:02033688972"
+                    href={mayfairOffice.phone.callHref}
                     className="block transition-colors hover:text-[#4AC8E8]"
                     onClick={() => trackCallClick("contact_page_mayfair")}
                   >
-                    0203 368 8972
+                    {mayfairOffice.phone.displayPhone}
                   </a>
                   <a
-                    href="mailto:info@bancproperty.com"
+                    href={mayfairOffice.email.mailtoHref}
                     className="block transition-colors hover:text-[#4AC8E8]"
                   >
-                    info@bancproperty.com
+                    {mayfairOffice.email.displayEmail}
                   </a>
                 </div>
               </div>
@@ -308,7 +311,9 @@ export default function ContactPageClient() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#1A1917]">Banc Property Group</p>
-                    <p className="text-sm text-[#8A8880]">1 Station Road, Cuffley</p>
+                    <p className="text-sm text-[#8A8880]">
+                      {cuffleyOffice.addressLines.slice(0, 2).join(", ")}
+                    </p>
                   </div>
                 </div>
               </motion.div>

@@ -31,6 +31,17 @@ test("grounds buying, selling, tenant, landlord, and contact questions", async (
   }
 });
 
+test("finds the approved Mayfair office contact details", async () => {
+  const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
+  const results = await knowledge.search(
+    "What is the phone number for the Mayfair office?",
+  );
+
+  assert.equal(results[0]?.documentId, "contact:mayfair-office");
+  assert.equal(results[0]?.href, "/contact");
+  assert.match(results[0]?.excerpt ?? "", /0203 368 8972/);
+});
+
 test("ranks exact titles and aliases above body-only token matches", async () => {
   const documents = [
     {
