@@ -1,3 +1,5 @@
+import { BANC_CONTACT } from "./banc-contact.ts";
+
 export type LandingVariant = "classic" | "aker";
 
 interface LandingAction {
@@ -116,7 +118,7 @@ const sharedActions = {
   },
   phoneAction: {
     label: "Call Banc Property Group",
-    href: "tel:01707877781",
+    href: BANC_CONTACT.callHref,
   },
   mobileSocialPresentation: {
     surface: "transparent",
@@ -131,8 +133,7 @@ const sharedActions = {
       alt: "",
     },
     whatsappLabel: "Chat on WhatsApp",
-    whatsappHref:
-      "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
+    whatsappHref: BANC_CONTACT.whatsappHref,
   },
   mobileHeroActionPlacement: "centered-action-row",
 } as const;
