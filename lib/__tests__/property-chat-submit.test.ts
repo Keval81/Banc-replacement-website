@@ -8,6 +8,7 @@ import {
   type PropertyConversationState,
 } from "../banc-conversation/index.ts";
 import {
+  createSingleFlightRunner,
   createPropertyChatRequest,
   getPropertyChatMessageView,
   runPropertyChatTurn,
@@ -117,6 +118,35 @@ test("serializes the latest 20 prose messages with the current in-memory context
   assert.deepEqual(request.history[0], { role: "assistant", content: "Message 6" });
   assert.deepEqual(request.history[19], { role: "user", content: "Message 25" });
   assert.deepEqual(request.context, context);
+});
+
+test("same-tick submissions run one chat turn while a request is in flight", async () => {
+  const runSingleFlight = createSingleFlightRunner();
+  let release: (() => void) | undefined;
+  let turns = 0;
+
+  const first = runSingleFlight(async () => {
+    turns += 1;
+    await new Promise<void>((resolve) => { release = resolve; });
+  });
+  const second = await runSingleFlight(async () => { turns += 1; });
+
+  assert.equal(second, false);
+  assert.equal(turns, 1);
+  release?.();
+  assert.equal(await first, true);
+});
+
+test("the single-flight runner releases its lock after a rejected chat turn", async () => {
+  const runSingleFlight = createSingleFlightRunner();
+  let retriedTurns = 0;
+
+  await assert.rejects(
+    runSingleFlight(async () => { throw new Error("request failed"); }),
+    /request failed/,
+  );
+  assert.equal(await runSingleFlight(async () => { retriedTurns += 1; }), true);
+  assert.equal(retriedTurns, 1);
 });
 
 test("returns cloned trusted view fields without deriving a generic contact action", () => {
