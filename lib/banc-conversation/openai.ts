@@ -1,5 +1,6 @@
 import {
-  parseConversationPlan,
+  conversationPlanSchema,
+  propertyConversationStateSchema,
   type ConversationMessage,
   type ConversationPlan,
   type PropertyConversationState,
@@ -26,6 +27,9 @@ const MAX_INPUT_CHARACTERS = 12_000;
 const MAX_MESSAGE_CHARACTERS = 2_000;
 const MAX_HISTORY_MESSAGES = 12;
 const MAX_HISTORY_MESSAGE_CHARACTERS = 700;
+const MAX_OPERATION_RESULTS = 2;
+const MAX_RESULT_ITEMS = 3;
+const MAX_RESULT_SUMMARY_CHARACTERS = 800;
 const INTENT_MAX_OUTPUT_TOKENS = 700;
 const RESPONSE_MAX_OUTPUT_TOKENS = 400;
 
@@ -416,14 +420,19 @@ const planJsonSchema = {
   },
 } as const;
 
-const responseJsonSchema = {
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    response: { type: "string", minLength: 1, maxLength: 2_000 },
-  },
-  required: ["response"],
-} as const;
+function createResponseJsonSchema(groundedResponse: string) {
+  return {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      response: {
+        type: "string",
+        enum: [groundedResponse],
+      },
+    },
+    required: ["response"],
+  } as const;
+}
 
 export interface IntentSelectionInput {
   message: string;
@@ -490,68 +499,82 @@ function sanitizeHistory(
   });
 }
 
-function sanitizeState(state: PropertyConversationState): Record<string, unknown> {
-  const rawQuery = state.query;
-  const query = rawQuery === undefined
-    ? undefined
-    : propertySearchQuerySchema.safeParse({
-        department: rawQuery.department,
-        location: rawQuery.location,
-        minPrice: rawQuery.minPrice,
-        maxPrice: rawQuery.maxPrice,
-        minBedrooms: rawQuery.minBedrooms,
-        maxBedrooms: rawQuery.maxBedrooms,
-        minBathrooms: rawQuery.minBathrooms,
-        propertyTypes: rawQuery.propertyTypes,
-        tenures: rawQuery.tenures,
-        features: rawQuery.features,
-        statuses: rawQuery.statuses,
-        sort: rawQuery.sort,
-        page: rawQuery.page,
-        pageSize: rawQuery.pageSize,
-      });
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
 
-  return {
+function sanitizeState(state: unknown): Record<string, unknown> | null {
+  if (!isRecord(state)) return null;
+  const rawResultPropertyIds = state.resultPropertyIds;
+  if (!Array.isArray(rawResultPropertyIds) || rawResultPropertyIds.length > 3) {
+    return null;
+  }
+
+  const rawQuery = state.query;
+  let query: unknown;
+  if (rawQuery !== undefined) {
+    if (!isRecord(rawQuery)) return null;
+    const parsedQuery = propertySearchQuerySchema.safeParse({
+      department: rawQuery.department,
+      location: rawQuery.location,
+      minPrice: rawQuery.minPrice,
+      maxPrice: rawQuery.maxPrice,
+      minBedrooms: rawQuery.minBedrooms,
+      maxBedrooms: rawQuery.maxBedrooms,
+      minBathrooms: rawQuery.minBathrooms,
+      propertyTypes: rawQuery.propertyTypes,
+      tenures: rawQuery.tenures,
+      features: rawQuery.features,
+      statuses: rawQuery.statuses,
+      sort: rawQuery.sort,
+      page: rawQuery.page,
+      pageSize: rawQuery.pageSize,
+    });
+    if (!parsedQuery.success) return null;
+    query = parsedQuery.data;
+  }
+
+  const parsedState = propertyConversationStateSchema.safeParse({
     topic: state.topic,
-    resultPropertyIds: state.resultPropertyIds
-      .filter((id): id is string => typeof id === "string")
-      .slice(0, 3)
-      .map((id) => id.slice(0, 64)),
-    ...(typeof state.focusedPropertyId === "string"
-      ? { focusedPropertyId: state.focusedPropertyId.slice(0, 64) }
-      : {}),
-    ...(typeof state.resultFingerprint === "string"
-      ? { resultFingerprint: state.resultFingerprint.slice(0, 240) }
-      : {}),
-    ...(query?.success === true ? { query: query.data } : {}),
-  };
+    resultPropertyIds: rawResultPropertyIds,
+    ...(state.focusedPropertyId === undefined
+      ? {}
+      : { focusedPropertyId: state.focusedPropertyId }),
+    ...(state.resultFingerprint === undefined
+      ? {}
+      : { resultFingerprint: state.resultFingerprint }),
+    ...(query === undefined ? {} : { query }),
+  });
+  return parsedState.success ? parsedState.data : null;
 }
 
 function sanitizeFacts(facts: readonly PropertyFacts[]): PropertyFacts[] {
-  return facts.map((fact) => ({
-    id: fact.id,
-    title: fact.title,
-    address: fact.address,
+  return facts.slice(0, MAX_RESULT_ITEMS).map((fact) => ({
+    id: boundedText(fact.id, 64),
+    title: boundedText(fact.title, 240),
+    address: boundedText(fact.address, 240),
     department: fact.department,
     status: fact.status,
     price: fact.price,
-    priceDisplay: fact.priceDisplay,
+    priceDisplay: boundedText(fact.priceDisplay, 120),
     bedrooms: fact.bedrooms,
     bathrooms: fact.bathrooms,
     receptions: fact.receptions,
-    propertyType: fact.propertyType,
-    tenure: fact.tenure,
-    epc: fact.epc,
+    propertyType: boundedText(fact.propertyType, 80),
+    tenure: fact.tenure === null ? null : boundedText(fact.tenure, 80),
+    epc: fact.epc === null ? null : boundedText(fact.epc, 16),
     sqft: fact.sqft,
-    features: [...fact.features],
-    summary: fact.summary,
+    features: fact.features
+      .slice(0, 16)
+      .map((feature) => boundedText(feature, 64)),
+    summary: boundedText(fact.summary, MAX_RESULT_SUMMARY_CHARACTERS),
   }));
 }
 
 function sanitizeResults(
   results: readonly SanitizedOperationResult[],
 ): SanitizedOperationResult[] {
-  return results.map((result) => {
+  return results.slice(0, MAX_OPERATION_RESULTS).map((result) => {
     switch (result.status) {
       case "search_results":
       case "no_results": {
@@ -575,15 +598,20 @@ function sanitizeResults(
           status: result.status,
           total: result.total,
           requirements,
-          properties: result.properties.map((property) => ({
-            id: property.id,
-            title: property.title,
-            address: property.address,
-            price: property.price,
-            bedrooms: property.bedrooms,
-            bathrooms: property.bathrooms,
-            summary: property.summary,
-          })),
+          properties: result.properties
+            .slice(0, MAX_RESULT_ITEMS)
+            .map((property) => ({
+              id: boundedText(property.id, 64),
+              title: boundedText(property.title, 240),
+              address: boundedText(property.address, 240),
+              price: boundedText(property.price, 120),
+              bedrooms: property.bedrooms,
+              bathrooms: property.bathrooms,
+              summary: boundedText(
+                property.summary,
+                MAX_RESULT_SUMMARY_CHARACTERS,
+              ),
+            })),
         };
       }
       case "property_facts":
@@ -591,11 +619,13 @@ function sanitizeResults(
       case "knowledge":
         return {
           status: "knowledge",
-          sources: result.sources.map((source) => ({
-            documentId: source.documentId,
-            title: source.title,
-            excerpt: source.excerpt,
-          })),
+          sources: result.sources
+            .slice(0, MAX_RESULT_ITEMS)
+            .map((source) => ({
+              documentId: boundedText(source.documentId, 120),
+              title: boundedText(source.title, 240),
+              excerpt: boundedText(source.excerpt, 480),
+            })),
         };
       case "reset":
         return { status: "reset" };
@@ -604,30 +634,123 @@ function sanitizeResults(
       case "clarification_required":
         return {
           status: "clarification_required",
-          question: result.question,
+          question: boundedText(result.question, MAX_MESSAGE_CHARACTERS),
         };
     }
   });
 }
 
-function boundedInput(value: Record<string, unknown>): string {
-  return JSON.stringify(value).slice(0, MAX_INPUT_CHARACTERS);
+function boundedInput(value: Record<string, unknown>): string | null {
+  const recentHistory = Array.isArray(value.recentHistory)
+    ? [...value.recentHistory]
+    : null;
+  const payload = recentHistory === null
+    ? { ...value }
+    : { ...value, recentHistory };
+
+  try {
+    let serialized = JSON.stringify(payload);
+    while (
+      serialized.length > MAX_INPUT_CHARACTERS &&
+      recentHistory !== null &&
+      recentHistory.length > 0
+    ) {
+      recentHistory.shift();
+      serialized = JSON.stringify(payload);
+    }
+    return serialized.length <= MAX_INPUT_CHARACTERS ? serialized : null;
+  } catch {
+    return null;
+  }
 }
 
-function buildIntentInput(input: IntentSelectionInput): string {
+function buildIntentInput(input: IntentSelectionInput): string | null {
+  const currentState = sanitizeState(input.state);
+  if (currentState === null) return null;
   return boundedInput({
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
-    currentState: sanitizeState(input.state),
+    currentState,
   });
 }
 
-function buildResponseInput(input: ResponseWritingInput): string {
+function validatePlan(value: unknown): {
+  plan: ConversationPlan | null;
+  issuePaths: string[];
+} {
+  const parsed = conversationPlanSchema.safeParse(normalizedPlanValue(value));
+  if (parsed.success) return { plan: parsed.data, issuePaths: [] };
+
+  const issuePaths = [...new Set(
+    parsed.error.issues
+      .map((issue) => issue.path.map(String).join("."))
+      .filter((path) => path.length > 0),
+  )].slice(0, 12);
+  return {
+    plan: null,
+    issuePaths: issuePaths.length > 0 ? issuePaths : ["plan"],
+  };
+}
+
+function buildRepairInput(
+  input: IntentSelectionInput,
+  validationIssuePaths: readonly string[],
+): string | null {
+  const currentState = sanitizeState(input.state);
+  if (currentState === null) return null;
+  return boundedInput({
+    currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
+    currentState,
+    validationIssuePaths: validationIssuePaths
+      .slice(0, 12)
+      .map((path) => boundedText(path, 160)),
+  });
+}
+
+function groundedResponseForResult(result: SanitizedOperationResult): string {
+  switch (result.status) {
+    case "search_results":
+      return `I found ${result.total} ${result.total === 1 ? "property" : "properties"} matching your current requirements.`;
+    case "no_results":
+      return "I couldn't find any properties matching your current requirements. Would you like to relax one filter?";
+    case "property_facts":
+      return `I found verified details for ${result.facts.length} ${result.facts.length === 1 ? "property" : "properties"}.`;
+    case "knowledge":
+      return `I found ${result.sources.length} approved Banc ${result.sources.length === 1 ? "source" : "sources"} for your question.`;
+    case "reset":
+      return "I've reset your property search. What would you like to look for?";
+    case "contact":
+      return "The Banc team can help with your enquiry. Would you like their contact options?";
+    case "clarification_required":
+      return result.question;
+  }
+}
+
+function buildGroundedResponse(
+  results: readonly SanitizedOperationResult[],
+): string {
+  const response = results
+    .slice(0, 2)
+    .map(groundedResponseForResult)
+    .join(" ");
+  return response.length > 0
+    ? response
+    : "I can help with your Banc property search. What would you like to know?";
+}
+
+function buildResponseInput(
+  input: ResponseWritingInput,
+  groundedResponse: string,
+  sanitizedResults: readonly SanitizedOperationResult[],
+): string | null {
+  const currentState = sanitizeState(input.state);
+  if (currentState === null) return null;
   return boundedInput({
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
-    currentState: sanitizeState(input.state),
-    trustedResults: sanitizeResults(input.results),
+    currentState,
+    trustedResults: sanitizedResults,
+    requiredResponse: groundedResponse,
   });
 }
 
@@ -750,7 +873,10 @@ function normalizedPlanValue(value: unknown): unknown {
   return plan;
 }
 
-function parseResponseText(value: unknown): string | null {
+function parseResponseText(
+  value: unknown,
+  groundedResponse: string,
+): string | null {
   if (
     typeof value !== "object" ||
     value === null ||
@@ -767,7 +893,7 @@ function parseResponseText(value: unknown): string | null {
     return null;
   }
   if (/(?:\+?\d[\d\s().-]{7,}\d)/.test(trimmed)) return null;
-  return trimmed;
+  return trimmed === groundedResponse ? trimmed : null;
 }
 
 function hasConfiguration(options: OpenAIConversationModelOptions): options is {
@@ -790,13 +916,17 @@ export function createOpenAIConversationModel(
       if (!hasConfiguration(options) || typeof fetcher !== "function") {
         return { status: "configuration_missing", providerCalls: 0 };
       }
+      const intentInput = buildIntentInput(input);
+      if (intentInput === null) {
+        return { status: "interpretation_invalid", providerCalls: 0 };
+      }
 
       const first = await requestStructuredOutput({
         apiKey: options.apiKey,
         model: options.model,
         fetcher,
         instructions: BANC_INTENT_INSTRUCTIONS,
-        input: buildIntentInput(input),
+        input: intentInput,
         formatName: "banc_conversation_plan",
         schema: planJsonSchema,
         maxOutputTokens: INTENT_MAX_OUTPUT_TOKENS,
@@ -806,18 +936,22 @@ export function createOpenAIConversationModel(
         return { status: first.status, providerCalls: 1 };
       }
 
-      const firstPlan = parseConversationPlan(normalizedPlanValue(first.value));
-      if (firstPlan !== null) {
-        return { status: "ok", plan: firstPlan, providerCalls: 1 };
+      const firstValidation = validatePlan(first.value);
+      if (firstValidation.plan !== null) {
+        return { status: "ok", plan: firstValidation.plan, providerCalls: 1 };
       }
       if (signal.aborted) return { status: "model_timeout", providerCalls: 1 };
+      const repairInput = buildRepairInput(input, firstValidation.issuePaths);
+      if (repairInput === null) {
+        return { status: "interpretation_invalid", providerCalls: 1 };
+      }
 
       const repair = await requestStructuredOutput({
         apiKey: options.apiKey,
         model: options.model,
         fetcher,
         instructions: BANC_INTENT_INSTRUCTIONS,
-        input: "Validation failed. Return a corrected plan that exactly matches the supplied JSON schema. Do not repeat conversation text.",
+        input: repairInput,
         formatName: "banc_conversation_plan",
         schema: planJsonSchema,
         maxOutputTokens: INTENT_MAX_OUTPUT_TOKENS,
@@ -827,7 +961,7 @@ export function createOpenAIConversationModel(
         return { status: repair.status, providerCalls: 2 };
       }
 
-      const repairedPlan = parseConversationPlan(normalizedPlanValue(repair.value));
+      const repairedPlan = validatePlan(repair.value).plan;
       return repairedPlan === null
         ? { status: "interpretation_invalid", providerCalls: 2 }
         : { status: "ok", plan: repairedPlan, providerCalls: 2 };
@@ -840,8 +974,19 @@ export function createOpenAIConversationModel(
       }
 
       let responseInput: string;
+      let groundedResponse: string;
       try {
-        responseInput = buildResponseInput(input);
+        const sanitizedResults = sanitizeResults(input.results);
+        groundedResponse = buildGroundedResponse(sanitizedResults);
+        const boundedResponseInput = buildResponseInput(
+          input,
+          groundedResponse,
+          sanitizedResults,
+        );
+        if (boundedResponseInput === null) {
+          return { status: "model_unavailable", providerCalls: 0 };
+        }
+        responseInput = boundedResponseInput;
       } catch {
         return { status: "model_unavailable", providerCalls: 0 };
       }
@@ -853,7 +998,7 @@ export function createOpenAIConversationModel(
         instructions: BANC_RESPONSE_INSTRUCTIONS,
         input: responseInput,
         formatName: "banc_conversation_response",
-        schema: responseJsonSchema,
+        schema: createResponseJsonSchema(groundedResponse),
         maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
         signal,
       });
@@ -861,7 +1006,7 @@ export function createOpenAIConversationModel(
         return { status: result.status, providerCalls: 1 };
       }
 
-      const response = parseResponseText(result.value);
+      const response = parseResponseText(result.value, groundedResponse);
       return response === null
         ? { status: "model_unavailable", providerCalls: 1 }
         : { status: "ok", response, providerCalls: 1 };
