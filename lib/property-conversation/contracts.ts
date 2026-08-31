@@ -12,6 +12,8 @@ import {
 import type { PropertySearchQuery } from "../property-search/types.ts";
 import type { PropertyCardData } from "../property-view.ts";
 
+export { propertyFactsSchema, type PropertyFacts } from "../property-facts.ts";
+
 export interface PropertyConversationContext {
   query?: PropertySearchQuery;
   resultPropertyIds: string[];
@@ -43,25 +45,6 @@ export interface PropertyConversationResponse {
   action: PropertyConversationAction;
   properties?: PropertyCardData[];
   context: PropertyConversationContext;
-}
-
-export interface PropertyFacts {
-  id: string;
-  title: string;
-  address: string;
-  department: "sales" | "lettings";
-  status: "for_sale" | "under_offer" | "to_let" | "let_agreed";
-  price: number;
-  priceDisplay: string;
-  bedrooms: number;
-  bathrooms: number;
-  receptions: number;
-  propertyType: string;
-  tenure: string | null;
-  epc: string | null;
-  sqft: number | null;
-  features: string[];
-  summary: string;
 }
 
 export type HandoffCategory =
@@ -146,27 +129,6 @@ export const safePropertyCardSchema = z
       })
       .strict()
       .optional(),
-  })
-  .strict();
-
-export const propertyFactsSchema = z
-  .object({
-    id: propertyIdSchema,
-    title: z.string().trim().min(1).max(240),
-    address: z.string().trim().min(1).max(240),
-    department: z.enum(["sales", "lettings"]),
-    status: z.enum(["for_sale", "under_offer", "to_let", "let_agreed"]),
-    price: z.number().finite().nonnegative(),
-    priceDisplay: z.string().trim().min(1).max(120),
-    bedrooms: z.number().int().min(0).max(POSTGRES_SIGNED_INTEGER_MAX),
-    bathrooms: z.number().int().min(0).max(POSTGRES_SIGNED_INTEGER_MAX),
-    receptions: z.number().int().min(0).max(POSTGRES_SIGNED_INTEGER_MAX),
-    propertyType: z.string().trim().min(1).max(80),
-    tenure: z.string().trim().min(1).max(80).nullable(),
-    epc: z.string().trim().min(1).max(16).nullable(),
-    sqft: z.number().finite().positive().nullable(),
-    features: z.array(z.string().trim().min(1).max(64)).transform((features) => [...features]),
-    summary: z.string().trim().min(1).max(2_000),
   })
   .strict();
 

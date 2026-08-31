@@ -1,8 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { parseBedroomIntent } from "../property-conversation/bedroom-intent.ts";
+import { parseBedroomIntent } from "../property-search/bedroom-intent.ts";
 import { POSTGRES_SIGNED_INTEGER_MAX } from "../property-search/query.ts";
+
+test("parses an explicit exact bedroom requirement independently of chat orchestration", () => {
+  assert.deepEqual(parseBedroomIntent("I need exactly five bedrooms"), {
+    kind: "exact",
+    value: 5,
+  });
+});
 
 for (const [message, expected] of [
   ["Find me a 3 bed in Cuffley", { kind: "exact", value: 3 }],

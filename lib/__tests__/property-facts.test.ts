@@ -3,9 +3,10 @@ import test from "node:test";
 
 import {
   createPropertyFactLookup,
+  isMarketableProperty,
   mapPropertyFacts,
   resolveActivePropertyReferences,
-} from "../property-conversation/property-facts.ts";
+} from "../property-facts.ts";
 import type { DbProperty } from "../supabase.ts";
 
 function dbProperty(
@@ -92,6 +93,10 @@ test("maps a canonical property row to sanitized property facts only", () => {
   ]) {
     assert.equal(internalField in facts, false, internalField);
   }
+});
+
+test("rejects a non-marketable property before exposing facts", () => {
+  assert.equal(isMarketableProperty({ status: "withdrawn" } as never), false);
 });
 
 test("authorizes only the requested active result ids and preserves requested order", () => {
