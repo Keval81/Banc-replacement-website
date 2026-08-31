@@ -1,54 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, CheckCircle, AlertCircle, Loader2, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, Loader2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NativeSelect } from "@/components/ui/select";
 import { useToast } from "@/components/ui/Toast";
 import { trackCallClick } from "@/lib/callTracking";
+import { BANC_CONTACT } from "@/lib/banc-contact";
+import {
+  BANC_CONTACT_DETAILS,
+  BANC_TESTIMONIALS,
+} from "@/lib/banc-content/contact";
 
-const testimonials = [
-  {
-    text: "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process. I am a happy, satisfied customer and can highly recommend Banc estate agents.",
-    author: "Iwona K.",
-  },
-  {
-    text: "Highly recommend Banc. Nitesh, Andrew and Vicki were extremely helpful and responsive throughout. The sale of our property was managed very professionally and we were delighted with the overall service.",
-    author: "H M.",
-  },
-  {
-    text: "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful. We achieved the asking price very quickly. If I am selling again I would go straight to Banc. Thank you to the whole team",
-    author: "Dawn P.",
-  },
-];
+const testimonials = BANC_TESTIMONIALS;
 
-const contactDetails = [
-  {
-    icon: MapPin,
-    label: "Address",
-    lines: ["1 Station Road", "Cuffley", "EN6 4HU"],
-    href: null,
-  },
-  {
-    icon: Phone,
-    label: "Phone",
-    lines: ["01707 877781"],
-    href: "tel:01707877781",
-  },
-  {
-    icon: Mail,
-    label: "Email",
-    lines: ["info@bancproperty.com"],
-    href: "mailto:info@bancproperty.com",
-  },
-  {
-    icon: Clock,
-    label: "Opening Hours",
-    lines: ["Monday to Saturday: 9am to 6pm", "Sunday: Closed"],
-    href: null,
-  },
-];
+const contactDetails = BANC_CONTACT_DETAILS.map((detail, index) => ({
+  ...detail,
+  icon: [MapPin, Phone, Mail, Clock][index],
+}));
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -119,7 +88,7 @@ export default function ContactPageClient() {
       } else {
         error(data.error || "Something went wrong. Please try again.");
       }
-    } catch (err) {
+    } catch {
       error("Failed to send message. Please try again later.");
     } finally {
       setIsSubmitting(false);
@@ -265,7 +234,7 @@ export default function ContactPageClient() {
                 transition={{ duration: 0.5, delay: 0.4 }}
               >
                 <a
-                  href="tel:01707877781"
+                  href={BANC_CONTACT.callHref}
                   onClick={() => trackCallClick("contact_page_cta")}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#1A1917] px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#4AC8E8] hover:shadow-lg hover:shadow-[#4AC8E8]/25"
                 >

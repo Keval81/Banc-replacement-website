@@ -11,7 +11,6 @@ import {
   Users,
   Globe,
   Wrench,
-  Umbrella,
   BadgeCheck,
   Award,
   Building2,
@@ -24,103 +23,49 @@ import {
   Zap,
   Scale,
 } from "lucide-react";
-import Link from "next/link";
+import {
+  LANDLORD_BENEFITS,
+  LANDLORD_INSURANCE_PRODUCTS,
+  LANDLORD_MANAGEMENT_FEATURES,
+  LANDLORD_TENANT_PASS_RATE,
+  LANDLORDS_GUIDE,
+} from "@/lib/banc-content/landlords-guide";
 
 export const metadata: Metadata = {
   title: "Landlords Guide | Banc Property Services",
   description: "Bespoke letting solutions for landlords. Expert property management services in Cuffley, Goffs Oak, Cheshunt, Potters Bar and surrounding areas. Property Guild approved agent.",
 };
 
-const whyChooseBanc = [
-  {
-    icon: Users,
-    title: "Experienced Staff",
-    desc: "Experienced, attentive and very knowledgeable staff",
-  },
-  {
-    icon: Sparkles,
-    title: "Flexible Service",
-    desc: "Flexible service options, competitively priced",
-  },
-  {
-    icon: BadgeCheck,
-    title: "Transparent Fees",
-    desc: "Open and transparent fees with no hidden charges",
-  },
-  {
-    icon: FileText,
-    title: "Legal Documents",
-    desc: "Up to date legal documents and advice on property rental matters",
-  },
-  {
-    icon: TrendingUp,
-    title: "Property Appraisals",
-    desc: "Property appraisals from experienced letting consultants",
-  },
-  {
-    icon: Globe,
-    title: "Internet Advertising",
-    desc: "Extensive internet advertising on the UK's top property websites",
-  },
-  {
-    icon: Users,
-    title: "Pre-qualified Tenants",
-    desc: "A pre-qualified database of waiting tenants",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Tenant Referencing",
-    desc: "Comprehensive tenant referencing service with full credit check",
-  },
-  {
-    icon: FileText,
-    title: "Inventories",
-    desc: "Professionally produced inventories, if required",
-  },
-  {
-    icon: Shield,
-    title: "Money Protection",
-    desc: "Full client money protection",
-  },
-  {
-    icon: Building2,
-    title: "Tenancy Deposit",
-    desc: "Registered with the government-backed Tenancy Deposit Scheme",
-  },
-  {
-    icon: Hammer,
-    title: "Expert Tradespeople",
-    desc: "Database of expert and reliable tradespeople on call",
-  },
-];
+const whyChooseBanc = LANDLORD_BENEFITS.map((feature, index) => ({
+  ...feature,
+  icon: [
+    Users,
+    Sparkles,
+    BadgeCheck,
+    FileText,
+    TrendingUp,
+    Globe,
+    Users,
+    ClipboardCheck,
+    FileText,
+    Shield,
+    Building2,
+    Hammer,
+  ][index],
+}));
 
-const insuranceProducts = [
-  {
-    icon: Building2,
-    title: "Landlord Comprehensive Buildings Insurance",
-    desc: "Complete protection for your property investment",
-  },
-  {
-    icon: Shield,
-    title: "Landlord Low Cost Building Insurance",
-    desc: "Affordable coverage without compromising quality",
-  },
-  {
-    icon: Home,
-    title: "Landlord Full and Limited Contents Insurance",
-    desc: "Flexible options for furnished and unfurnished properties",
-  },
-  {
-    icon: Zap,
-    title: "Landlords Emergency Assistance",
-    desc: "24/7 emergency support for urgent repairs",
-  },
-  {
-    icon: Scale,
-    title: "Landlords Legal Expenses",
-    desc: "Protection against legal costs and disputes",
-  },
-];
+const insuranceProducts = LANDLORD_INSURANCE_PRODUCTS.map((product, index) => ({
+  ...product,
+  icon: [Building2, Shield, Home, Zap, Scale][index],
+}));
+
+const managementFeatures = LANDLORD_MANAGEMENT_FEATURES.map((feature, index) => ({
+  ...feature,
+  icon: [Home, Wrench, Shield][index],
+}));
+
+const lettingServices = LANDLORDS_GUIDE.sections[0];
+const qualityTenants = LANDLORDS_GUIDE.sections[1];
 
 export default function LandlordsGuidePage() {
   return (
@@ -162,13 +107,11 @@ export default function LandlordsGuidePage() {
             </div>
 
             <h1 className="text-5xl font-semibold text-white sm:text-6xl lg:text-7xl tracking-tight leading-[1.1]">
-              Landlords Guide
+              {LANDLORDS_GUIDE.title}
             </h1>
 
             <p className="mt-8 text-xl text-white/70 leading-relaxed max-w-2xl">
-              Whether you are looking to let your home while away on business,
-              or you need a long-term tenancy solution for your investment
-              property, our lettings team offers the correct service to suit.
+              {lettingServices.body[0]}
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
@@ -204,18 +147,8 @@ export default function LandlordsGuidePage() {
               </h2>
 
               <div className="mt-8 space-y-6 text-[#8A8880] text-lg leading-relaxed">
-                <p>
-                  We understand that becoming a landlord can be a daunting
-                  experience. It is easy to see why, when you consider there are
-                  hundreds of separate laws and regulations that landlords must
-                  abide by when letting a property!
-                </p>
-                <p>
-                  Our in-house property teams are experts in their field,
-                  on-hand to help throughout the entire process. We offer a
-                  comprehensive range of residential lettings services,
-                  including full property management.
-                </p>
+                <p>{lettingServices.body[1]}</p>
+                <p>{lettingServices.body[2]}</p>
               </div>
 
               {/* Accreditation Badges */}
@@ -382,28 +315,15 @@ export default function LandlordsGuidePage() {
               </h2>
 
               <div className="mt-8 space-y-6 text-[#8A8880] text-lg leading-relaxed">
+                <p>{qualityTenants.body[0]}</p>
                 <p>
-                  Our number 1 priority is quality tenants. We&apos;re
-                  particularly fussy when it comes to finding quality tenants
-                  for your property.
-                </p>
-                <p>
-                  In fact only about{" "}
+                  {qualityTenants.body[1].split(LANDLORD_TENANT_PASS_RATE)[0]}
                   <span className="text-[#4AC8E8] font-bold">
-                    30% of our applicants
-                  </span>{" "}
-                  actually make it through our strict referencing procedure
-                  which includes checking the applicants&apos; credit and work
-                  history, salary and any references from any previous landlords
-                  before being approved.
+                    {LANDLORD_TENANT_PASS_RATE}
+                  </span>
+                  {qualityTenants.body[1].split(LANDLORD_TENANT_PASS_RATE)[1]}
                 </p>
-                <p>
-                  We also encourage you to meet the tenants, so you can verify
-                  you&apos;re happy with the people we&apos;ve found. If, for
-                  any reason, you would prefer us to keep looking, we will
-                  politely decline the tenants and continue marketing your
-                  property.
-                </p>
+                <p>{qualityTenants.body[2]}</p>
               </div>
             </div>
           </div>
@@ -506,23 +426,7 @@ export default function LandlordsGuidePage() {
 
           {/* Feature Cards */}
           <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: Home,
-                title: "Well-Maintained Homes",
-                desc: "The best quality tenants demand the best-maintained homes, expecting maximum value for their rent. Whether it is fridge failure or a leaking shower, you can be sure any tenant will want a swift repair.",
-              },
-              {
-                icon: Wrench,
-                title: "Prompt Repairs",
-                desc: "Hundreds of clients trust our award-winning property management team. We look after any repairs and tenancy issues for you promptly and professionally.",
-              },
-              {
-                icon: Shield,
-                title: "Compliance Checks",
-                desc: "We visit the property and organise any maintenance and safety compliance checks, assuring you that your property remains in sound condition and your legal obligations are met.",
-              },
-            ].map((item, index) => (
+            {managementFeatures.map((item, index) => (
               <div
                 key={index}
                 className="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-[#4AC8E8]/50 transition-all duration-300 hover:bg-white/10"
@@ -533,7 +437,7 @@ export default function LandlordsGuidePage() {
                 <h3 className="text-xl font-semibold text-white mb-3">
                   {item.title}
                 </h3>
-                <p className="text-white/60 leading-relaxed">{item.desc}</p>
+                <p className="text-white/60 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
@@ -602,7 +506,7 @@ export default function LandlordsGuidePage() {
                     <h3 className="font-semibold text-[#1A1917] text-lg">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-[#8A8880]">{item.desc}</p>
+                    <p className="mt-1 text-[#8A8880]">{item.description}</p>
                   </div>
                 </div>
               </div>
@@ -669,7 +573,7 @@ export default function LandlordsGuidePage() {
                       {product.title}
                     </h3>
                     <p className="text-[#8A8880] text-sm mt-0.5">
-                      {product.desc}
+                      {product.description}
                     </p>
                   </div>
                 </div>

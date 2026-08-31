@@ -2,52 +2,17 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Monitor, MessageCircle, Calendar, FileText, CheckCircle, Key, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { BUYERS_GUIDE } from "@/lib/banc-content/buyers-guide";
 
 export const metadata: Metadata = {
   title: "Buyers Guide | Banc Property Group",
   description: "We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. Our local knowledge will help you source the right home for your needs.",
 };
 
-const guideSteps = [
-  {
-    icon: Monitor,
-    title: "Our Website",
-    description: "The first port of call is the Banc website, where every property is detailed with exceptional photos and floor plans, location and amenity maps. We make it our business and our pleasure to know the areas and properties intimately so we can extend our knowledge to you.",
-    tip: "Speak with your financial adviser to determine an appropriate budget before starting your search. Having a mortgage 'agreement in principle' at this point is advantageous when you do actually make an offer. Speak with us and we can point you in the right direction."
-  },
-  {
-    icon: MessageCircle,
-    title: "Let's Talk",
-    description: "Give us a call or pop into our prominently positioned office on the high street for a coffee and a chat. We will be able to answer all of your questions about property types and styles in the area, buying costs and we can recommend local financial and conveyancing services, and more importantly arrange viewings for you. We can also discuss our 'discrete marketed' properties which are not available online, but exclusively to our registered clients.",
-    tip: "Make sure you are aware of all relevant costs such as mortgage fees, survey fees, conveyancing, stamp duty charges and removals. Let us know if you need a refresher on any of them."
-  },
-  {
-    icon: Calendar,
-    title: "Arranging Views",
-    description: "Once you have identified some potential properties, we will take you to view them. We do offer a pickup service from the station if you are popping out to view after work. Let us guide you round the beautiful houses and local area.",
-    tip: "It's easy to let your heart rule your head so be prepared with a checklist and questions before you visit the properties."
-  },
-  {
-    icon: FileText,
-    title: "Make An Offer",
-    description: "Seen a property you like? Make an offer! All offers from qualified buyers will be presented to the seller without delay. We do our very best to get a price that satisfies both you and the vendor.",
-    tip: "It can be hard when deciding how much to offer, but always make sure the offer you are making is viable, and that you are able to support it."
-  },
-  {
-    icon: CheckCircle,
-    title: "Offer Agreed",
-    description: "Congratulations! It's almost time to bring out the champagne, but not quite yet. Communication is the key to a successful purchase. We stay in touch with you, the sellers, solicitors, surveyors and mortgage advisers to ensure your purchase proceeds as quickly as possible. Don't worry – we are there the whole way through to guide you and assist in all aspects of the process.",
-    tip: "When an offer is agreed you will need to instruct your solicitor and mortgage lender in order to progress your case."
-  },
-  {
-    icon: Key,
-    title: "Exchange",
-    description: "This is when signed contracts are exchanged between your solicitor and the seller's solicitor. This is also the point when your deposit, normally 10%, is transferred to the seller's solicitor and a moving day is set. At this point, the transaction becomes legally binding.",
-    tip: "Make sure you take this time to confirm removals, redirect post, call the cable man and organise utilities."
-  }
-];
+const guideSteps = BUYERS_GUIDE.sections.slice(0, 6);
+const completion = BUYERS_GUIDE.sections[6];
 
 export default function BuyersGuidePage() {
   return (
@@ -68,7 +33,7 @@ export default function BuyersGuidePage() {
           <div className="max-w-3xl">
             <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8] mb-4">Guide</p>
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
-              Buyers Guide
+              {BUYERS_GUIDE.title}
             </h1>
             <p className="mt-6 text-lg text-white/80 leading-relaxed">
               We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. 
@@ -86,8 +51,8 @@ export default function BuyersGuidePage() {
       <section className="py-16 bg-[#F4F3F1]">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
           <p className="text-lg text-[#8A8880] leading-relaxed">
-            Below is a brief guide to the buying process. Whether you're a first-time buyer or seasoned property investor, 
-            we're here to make your journey as smooth as possible.
+            Below is a brief guide to the buying process. Whether you&apos;re a first-time buyer or seasoned property investor,
+            we&apos;re here to make your journey as smooth as possible.
           </p>
         </div>
       </section>
@@ -108,7 +73,7 @@ export default function BuyersGuidePage() {
                     </div>
                     
                     <h2 className="text-2xl lg:text-3xl font-semibold text-[#2C2A27] mb-4">{step.title}</h2>
-                    <p className="text-[#8A8880] leading-relaxed mb-6">{step.description}</p>
+                    <p className="text-[#8A8880] leading-relaxed mb-6">{step.body[0]}</p>
                     
                     {/* Top Tip Box - Consistent styling with Sellers Guide */}
                     <div className="bg-[#4AC8E8]/5 border-l-4 border-[#4AC8E8] p-5 rounded-r-xl">
@@ -118,7 +83,7 @@ export default function BuyersGuidePage() {
                         </div>
                         <div>
                           <p className="font-semibold text-[#4AC8E8] text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
-                          <p className="text-[#3D3B37] leading-relaxed">{step.tip}</p>
+                          <p className="text-[#3D3B37] leading-relaxed">{step.body[1]}</p>
                         </div>
                       </div>
                     </div>
@@ -156,17 +121,16 @@ export default function BuyersGuidePage() {
           <div className="w-16 h-16 mx-auto rounded-full bg-[#4AC8E8] flex items-center justify-center mb-6">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-3xl font-semibold text-[#2C2A27] mb-4">Completion</h2>
+          <h2 className="text-3xl font-semibold text-[#2C2A27] mb-4">{completion.title}</h2>
           <p className="text-lg text-[#8A8880] leading-relaxed mb-6">
-            Now the bubbly can be taken off ice and enjoyed on moving day in your new home. 
-            To make it easier for you, we aim to be there at your new home with the keys instead of you having to detour to our office to collect them.
+            {completion.body[0]}
           </p>
           <div className="bg-[#4AC8E8]/5 border-l-4 border-[#4AC8E8] p-4 rounded-r-lg inline-block text-left max-w-xl">
             <div className="flex items-start gap-3">
               <Sparkles className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-[#4AC8E8] text-sm uppercase tracking-wider mb-1">Top Tip</p>
-                <p className="text-sm text-[#8A8880]">Look out for our moving in surprise soon after completion.</p>
+                <p className="text-sm text-[#8A8880]">{completion.body[1]}</p>
               </div>
             </div>
           </div>

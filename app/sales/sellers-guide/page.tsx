@@ -16,10 +16,10 @@ import {
   Handshake,
   FileText,
   KeyRound,
-  Truck,
   ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
+import { SELLERS_GUIDE_SECTIONS } from "@/lib/banc-content/sellers-guide";
 
 export const metadata: Metadata = {
   title: "Sellers Guide | Banc Property Group",
@@ -32,15 +32,14 @@ export const metadata: Metadata = {
 interface TopTipProps {
   children: React.ReactNode;
 }
-
 interface GuideStep {
   number: number;
   title: string;
   description?: string;
-  items: { icon: React.ElementType; text: string; highlight?: string }[];
+  items: readonly { icon: React.ElementType; text: string; highlight?: string }[];
   imageUrl: string;
   imageAlt: string;
-  topTips?: string[];
+  topTips?: readonly string[];
   quote?: string;
 }
 
@@ -119,265 +118,84 @@ function CheckItem({
 
 // --- Data ---
 
-const guideSteps: GuideStep[] = [
+interface GuideStepVisual {
+  itemIcons: readonly React.ElementType[];
+  imageUrl: string;
+  imageAlt: string;
+}
+
+const guideStepVisuals = [
   {
-    number: 1,
-    title: "Book a Market Appraisal",
-    description:
-      "The first step in your selling journey begins with understanding your property's true market value.",
-    items: [
-      {
-        icon: CheckCircle2,
-        text: "Complimentary, no obligation valuation conducted by our experts",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Comprehensive market analysis using resources, data and recent comparable sales",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Flexible appointment times including evenings and weekends to suit your schedule",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Strategic marketing advice tailored to maximise your property's appeal",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [CheckCircle2, CheckCircle2, CheckCircle2, CheckCircle2],
+    imageUrl: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Professional property market appraisal and valuation",
-    topTips: [
-      "Instruct a solicitor as soon as you place your property on the market to save valuable time once a buyer is found.",
-    ],
   },
   {
-    number: 2,
-    title: "The Sellers Checklist",
-    description:
-      "Preparation is key. Ensure you have all necessary documentation ready before marketing begins.",
-    items: [
-      {
-        icon: ClipboardCheck,
-        text: "Energy Performance Certificate (EPC) required by legislation – we can arrange an independent assessment",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Professional floorplans are essential and can be completed alongside your EPC",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Valid photo ID required for compliance with money laundering legislation",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [ClipboardCheck, ClipboardCheck, ClipboardCheck],
+    imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Property documentation and legal checklist",
   },
   {
-    number: 3,
-    title: "Getting Ready For Marketing",
-    description:
-      "First impressions are everything. We'll help showcase your property at its absolute best.",
-    items: [
-      {
-        icon: Camera,
-        text: "Expert professional photography and copywriting that brings your home to life",
-      },
-      {
-        icon: Sparkles,
-        text: "Seller's Secret: A personal testimonial about why you loved living here",
-        highlight: "Seller's Secret:",
-      },
-      {
-        icon: FileText,
-        text: "Beautifully designed marketing materials that bring your property to life",
-      },
-      {
-        icon: Users,
-        text: "Full team briefing – every consultant visits your property before viewings begin",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Detailed brief sheet ensures all staff are informed on every unique feature",
-        highlight: "Brief sheet",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [Camera, Sparkles, FileText, Users, ClipboardCheck],
+    imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Professional property photography and staging",
-    topTips: [
-      "Make sure your property is tidy, clutter-free and filled with natural light before the photographer and viewers arrive.",
-    ],
   },
   {
-    number: 4,
-    title: "Reaching Potential Buyers",
-    description:
-      "We employ a comprehensive, multi-channel marketing strategy to ensure maximum exposure.",
-    items: [
-      {
-        icon: Users,
-        text: "Multi-channel approach: major property portals, website, database mailshots, targeted email campaigns, local letter drops, and strategic social media promotion",
-      },
-      {
-        icon: Home,
-        text: "Premium 'For Sale' boards positioned for maximum visibility",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Access to our extensive register of motivated, ready-to-move buyers",
-      },
-      {
-        icon: Sparkles,
-        text: "Exclusive sneak previews for registered clients before public launch",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [Users, Home, ClipboardCheck, Sparkles],
+    imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Property marketing and buyer outreach",
   },
   {
-    number: 5,
-    title: "The Viewings",
-    description:
-      "Your home takes centre stage. We ensure every viewing is conducted professionally and securely.",
-    items: [
-      {
-        icon: DoorOpen,
-        text: "First impressions are paramount – we guide you on presentation",
-      },
-      {
-        icon: Users,
-        text: "Fully accompanied viewings for security and to highlight every benefit",
-      },
-      {
-        icon: Home,
-        text: "Open house events when appropriate – professionally supervised 2-3 hour sessions",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [DoorOpen, Users, Home],
+    imageUrl: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Property viewing experience",
-    quote: "Your home steals the show!!",
-    topTips: [
-      "If you receive letters from other agents claiming to have interested buyers, simply redirect them to us – we handle everything.",
-      "Provide us with secure keys and keep us briefed on alarm codes and any pets on the premises.",
-    ],
   },
   {
-    number: 6,
-    title: "Viewing Verdict",
-    description:
-      "Communication is crucial. We believe in transparent, honest feedback after every viewing.",
-    items: [
-      {
-        icon: MessageSquare,
-        text: "Prompt follow-up calls to applicants immediately after viewings",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Bi-monthly consultation reviews to assess progress on all properties",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Comprehensive feedback delivered via email or phone by the next working day",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [MessageSquare, ClipboardCheck, CheckCircle2],
+    imageUrl: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Client feedback and communication",
-    topTips: [
-      "Feedback, whether positive or constructive, is invaluable. Some agents only share good news, but we believe all feedback should be given. Silence is never golden!!",
-    ],
   },
   {
-    number: 7,
-    title: "When An Offer Is Made",
-    description:
-      "Our skilled negotiators work tirelessly to secure the best possible outcome for you.",
-    items: [
-      {
-        icon: Handshake,
-        text: "Highly skilled negotiators personally contact you with every offer detail",
-      },
-      {
-        icon: ClipboardCheck,
-        text: "Full transparency: applicant's timescales, financial position, and chain details provided",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Dedicated effort to negotiate the optimum price on your behalf",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [Handshake, ClipboardCheck, CheckCircle2],
+    imageUrl: "https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Offer negotiation and agreement",
   },
   {
-    number: 8,
-    title: "Offers Agreed",
-    description:
-      "Once an offer is accepted, we coordinate all parties to ensure a smooth progression.",
-    items: [
-      {
-        icon: FileText,
-        text: "Sales memorandum promptly dispatched to both parties' solicitors",
-      },
-      {
-        icon: MessageSquare,
-        text: "Constant communication with all parties is paramount to success",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [FileText, MessageSquare],
+    imageUrl: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Sales progression documentation",
-    topTips: [
-      "Maintain regular contact with your solicitor. As a general rule: aim to exchange contracts within 6 weeks, with completion typically following a couple of weeks later.",
-    ],
   },
   {
-    number: 9,
-    title: "Exchange",
-    description:
-      "The legally binding milestone. Contracts are signed and completion dates are set.",
-    items: [
-      {
-        icon: FileText,
-        text: "Contracts signed by all parties with 10% deposit secured",
-      },
-      {
-        icon: Handshake,
-        text: "Contracts officially exchanged – the transaction is now legally binding",
-      },
-      {
-        icon: CheckCircle2,
-        text: "Completion date formally agreed and confirmed",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [FileText, Handshake, CheckCircle2],
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Contract exchange celebration",
   },
   {
-    number: 10,
-    title: "Completion",
-    description:
-      "The exciting finale – moving day has arrived. Time to begin your next chapter.",
-    items: [
-      {
-        icon: KeyRound,
-        text: "Moving day! Your solicitor confirms funds have cleared successfully",
-      },
-      {
-        icon: Home,
-        text: "We release keys to the new owners, marking a successful sale",
-      },
-    ],
-    imageUrl:
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
+    itemIcons: [KeyRound, Home],
+    imageUrl: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Moving day completion",
   },
-];
+] as const satisfies readonly GuideStepVisual[];
+
+const guideSteps: readonly GuideStep[] = SELLERS_GUIDE_SECTIONS.map(
+  (section, index) => {
+    const visual = guideStepVisuals[index];
+
+    return {
+      number: index + 1,
+      title: section.title,
+      description: section.description,
+      items: section.items.map((item, itemIndex) => ({
+        icon: visual.itemIcons[itemIndex],
+        ...item,
+      })),
+      imageUrl: visual.imageUrl,
+      imageAlt: visual.imageAlt,
+      topTips: section.topTips,
+      quote: section.quote,
+    };
+  },
+);
 
 // --- Main Page Component ---
 
