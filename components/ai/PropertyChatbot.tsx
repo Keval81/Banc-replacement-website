@@ -6,7 +6,10 @@ import { Input } from "@/components/ui/input";
 import { CircleHelp, MessageCircle, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { PropertyConversationContext } from "@/lib/property-conversation";
+import {
+  createInitialConversationState,
+  type PropertyConversationState,
+} from "@/lib/banc-conversation/contracts";
 import {
   createSingleFlightRunner,
   getPropertyChatMessageView,
@@ -55,7 +58,7 @@ export default function PropertyChatbot({
   ]);
   const [input, setInput] = useState("");
   const [conversationContext, setConversationContext] =
-    useState<PropertyConversationContext>({ resultPropertyIds: [] });
+    useState<PropertyConversationState>(createInitialConversationState);
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
@@ -438,12 +441,43 @@ export default function PropertyChatbot({
                         </div>
                       )}
 
-                      {/* Action buttons */}
-                      {messageView.showContactAction && (
-                        <a href="/contact" className="mt-2.5 flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#0B6F89] px-3 py-2 text-xs font-medium text-white transition-colors duration-200 hover:bg-[#075E75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2">
-                          <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-                          Contact the Banc team
-                        </a>
+                      {messageView.sources.length > 0 && (
+                        <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-banc-grey">
+                            Sources
+                          </p>
+                          {messageView.sources.map((source) => (
+                            <Link
+                              key={source.href}
+                              href={source.href}
+                              onClick={closeChat}
+                              className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-[#0B6F89] underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-[#075E75] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2"
+                            >
+                              {source.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
+                      {messageView.handoff && (
+                        <div className="mt-2.5 flex flex-col gap-2 sm:flex-row">
+                          <a
+                            href={messageView.handoff.callHref}
+                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0B6F89] px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#075E75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2"
+                          >
+                            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                            Call Banc
+                          </a>
+                          <a
+                            href={messageView.handoff.whatsappHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#25D366] px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#1EAD54] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+                          >
+                            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                            WhatsApp Banc
+                          </a>
+                        </div>
                       )}
                     </div>
                     </motion.div>

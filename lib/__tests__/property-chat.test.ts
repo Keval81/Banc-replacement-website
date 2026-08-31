@@ -5,6 +5,12 @@ import test from "node:test";
 import { getSafePropertyImageUrl } from "../property-detail-view.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
 import {
+  createInitialConversationState,
+  type ConversationRequest,
+  type PropertyConversationState,
+} from "../banc-conversation/index.ts";
+import { BANC_CONTACT } from "../banc-contact.ts";
+import {
   createPropertyChatRequest,
   createSingleFlightRunner,
   getPropertyChatMessageView,
@@ -14,10 +20,6 @@ import {
 } from "../property-chat-submit.ts";
 import { buildPropertyHref, type PropertyCardData } from "../property-view.ts";
 import { parsePropertyChatPatch } from "../property-chat.ts";
-import type {
-  PropertyConversationContext,
-  PropertyConversationRequest,
-} from "../property-conversation/index.ts";
 
 const chatbotSource = readFileSync(
   new URL("../../components/ai/PropertyChatbot.tsx", import.meta.url),
@@ -53,19 +55,19 @@ function response(
 ): Record<string, unknown> {
   return {
     response: "I found a matching property.",
-    action: "search",
+    action: "search_results",
     properties: [card("EA-1")],
-    context: { resultPropertyIds: ["EA-1"] },
+    context: { ...createInitialConversationState(), resultPropertyIds: ["EA-1"] },
     ...overrides,
   };
 }
 
 function createTurnHarness(
   queuedResponses: Array<unknown | Error>,
-  initialContext: PropertyConversationContext = { resultPropertyIds: [] },
+  initialContext: PropertyConversationState = createInitialConversationState(),
 ) {
   const messages: PropertyChatMessage[] = [];
-  const requests: PropertyConversationRequest[] = [];
+  const requests: ConversationRequest[] = [];
   const loading: boolean[] = [];
   let context = initialContext;
   let messageId = 0;
@@ -101,20 +103,21 @@ function createTurnHarness(
 }
 
 test("serializes the latest 20 plain history items and always includes structured context", () => {
-  const context: PropertyConversationContext = {
+  const context: PropertyConversationState = {
     query: {
       ...createDefaultPropertySearchQuery("sales"),
       location: "Cuffley",
     },
     resultPropertyIds: ["EA-1"],
     focusedPropertyId: "EA-1",
+    topic: "property_search",
   };
   const messages = Array.from({ length: 25 }, (_, index): PropertyChatMessage => ({
     id: `message-${index + 1}`,
     role: index % 2 === 0 ? "user" : "assistant",
     content: `Message ${index + 1}`,
     properties: [card("EA-1")],
-    action: "search",
+    action: "search_results",
     timestamp: new Date("2026-08-29T10:00:00.000Z"),
   }));
 
@@ -137,6 +140,7 @@ test("carries response context into the next request and replaces it with a quer
     },
     resultPropertyIds: ["EA-1"],
     focusedPropertyId: "EA-1",
+    topic: "property_search" as const,
   };
   const harness = createTurnHarness([
     response({ context: searchedContext }),
@@ -144,16 +148,16 @@ test("carries response context into the next request and replaces it with a quer
       response: "I have cleared the search.",
       action: "answer",
       properties: undefined,
-      context: { resultPropertyIds: [] },
+      context: createInitialConversationState(),
     }),
   ]);
 
   await harness.submit("Find homes in Cuffley");
   await harness.submit("Clear that search");
 
-  assert.deepEqual(harness.requests[0]?.context, { resultPropertyIds: [] });
+  assert.deepEqual(harness.requests[0]?.context, createInitialConversationState());
   assert.deepEqual(harness.requests[1]?.context, searchedContext);
-  assert.deepEqual(harness.context, { resultPropertyIds: [] });
+  assert.deepEqual(harness.context, createInitialConversationState());
   assert.deepEqual(harness.requests[1]?.history, [
     { role: "user", content: "Find homes in Cuffley" },
     { role: "assistant", content: "I found a matching property." },
@@ -166,7 +170,12 @@ test("an answer-only response appends text without cards even when context conta
       response: "The first home has three bedrooms.",
       action: "answer",
       properties: undefined,
-      context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1" },
+      context: {
+        ...createInitialConversationState(),
+        resultPropertyIds: ["EA-1"],
+        focusedPropertyId: "EA-1",
+        topic: "property_detail",
+      },
     }),
   ]);
 
@@ -187,12 +196,15 @@ test("cards enter the view only through validated response properties", async ()
 
   const invalidHarness = createTurnHarness([
     response({ properties: [{ id: "EA-2", title: "Incomplete" }] }),
-  ], { resultPropertyIds: ["EA-9"] });
+  ], { ...createInitialConversationState(), resultPropertyIds: ["EA-9"] });
   await invalidHarness.submit("Show me another home");
 
   const invalidMessage = invalidHarness.messages[1] as PropertyChatMessage;
   assert.deepEqual(getPropertyChatMessageView(invalidMessage).properties, []);
-  assert.deepEqual(invalidHarness.context, { resultPropertyIds: ["EA-9"] });
+  assert.deepEqual(invalidHarness.context, {
+    ...createInitialConversationState(),
+    resultPropertyIds: ["EA-9"],
+  });
   assert.match(invalidMessage.content, /trouble connecting/i);
 });
 
@@ -204,38 +216,48 @@ test("contact and unavailable replies produce the correct view decisions", async
       response: "Please contact the Banc team.",
       action: "contact_team",
       properties: undefined,
-      context: { resultPropertyIds: [] },
+      handoff: {
+        callHref: BANC_CONTACT.callHref,
+        whatsappHref: BANC_CONTACT.whatsappHref,
+      },
+      context: { ...createInitialConversationState(), topic: "handoff" },
     }),
     response({
       response: unavailableCopy,
-      action: "unavailable",
+      action: "service_unavailable",
       properties: undefined,
-      context: { resultPropertyIds: [] },
+      context: createInitialConversationState(),
     }),
   ]);
 
   await harness.submit("I need a person");
   await harness.submit("Try again");
 
-  assert.equal(
-    getPropertyChatMessageView(harness.messages[1] as PropertyChatMessage).showContactAction,
-    true,
+  assert.deepEqual(
+    getPropertyChatMessageView(harness.messages[1] as PropertyChatMessage).handoff,
+    {
+      callHref: BANC_CONTACT.callHref,
+      whatsappHref: BANC_CONTACT.whatsappHref,
+    },
   );
   assert.deepEqual(getPropertyChatMessageView(harness.messages[1] as PropertyChatMessage).properties, []);
   assert.equal(
-    getPropertyChatMessageView(harness.messages[3] as PropertyChatMessage).showContactAction,
-    false,
+    getPropertyChatMessageView(harness.messages[3] as PropertyChatMessage).handoff,
+    undefined,
   );
   assert.equal(harness.messages[3]?.content, unavailableCopy);
 });
 
 test("quick replies switch from search and contact choices to one result detail prompt", () => {
-  assert.deepEqual(getPropertyChatQuickReplies({ resultPropertyIds: [] }), [
+  assert.deepEqual(getPropertyChatQuickReplies(createInitialConversationState()), [
     "I want to buy a 3-bed in Cuffley",
     "I'm looking to rent",
     "I need to speak to the Banc team",
   ]);
-  assert.deepEqual(getPropertyChatQuickReplies({ resultPropertyIds: ["EA-1"] }), [
+  assert.deepEqual(getPropertyChatQuickReplies({
+    ...createInitialConversationState(),
+    resultPropertyIds: ["EA-1"],
+  }), [
     "Tell me about the first property",
   ]);
 });
@@ -251,7 +273,7 @@ test("same-tick submissions execute one real UI turn and expose loading transiti
   const submit = () => runSingleFlight(() => runPropertyChatTurn({
     content: "Find a home",
     messages: [],
-    context: { resultPropertyIds: [] },
+    context: createInitialConversationState(),
     nextMessageId: () => {
       messageId += 1;
       return `message-${messageId}`;

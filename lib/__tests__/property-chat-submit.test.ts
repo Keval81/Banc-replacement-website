@@ -1,0 +1,142 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+import { BANC_CONTACT } from "../banc-contact.ts";
+import {
+  createInitialConversationState,
+  type ConversationRequest,
+  type PropertyConversationState,
+} from "../banc-conversation/index.ts";
+import {
+  createPropertyChatRequest,
+  getPropertyChatMessageView,
+  runPropertyChatTurn,
+  type PropertyChatMessage,
+} from "../property-chat-submit.ts";
+
+const emptyConversationState = createInitialConversationState();
+
+function createTurnHarness(
+  response: unknown,
+  initialContext: PropertyConversationState = emptyConversationState,
+) {
+  const messages: PropertyChatMessage[] = [];
+  const requests: ConversationRequest[] = [];
+  const loading: boolean[] = [];
+  let context = initialContext;
+  let messageId = 0;
+
+  return {
+    get context() { return context; },
+    loading,
+    messages,
+    requests,
+    async submit(content: string) {
+      await runPropertyChatTurn({
+        content,
+        messages: [...messages],
+        context,
+        nextMessageId: () => {
+          messageId += 1;
+          return `message-${messageId}`;
+        },
+        now: () => new Date("2026-08-31T10:00:00.000Z"),
+        request: async (requestBody) => {
+          requests.push(requestBody);
+          return response;
+        },
+        onUserMessage: (message) => { messages.push(message); },
+        onAssistantMessage: (message) => { messages.push(message); },
+        onContextChange: (nextContext) => { context = nextContext; },
+        onLoadingChange: (isLoading) => { loading.push(isLoading); },
+      });
+    },
+  };
+}
+
+test("carries only parsed trusted sources and handoff links into the assistant message", async () => {
+  const harness = createTurnHarness({
+    response: "The Banc guide explains the next steps.",
+    action: "answer",
+    sources: [{ title: "Buyers guide", href: "/sales/buyers-guide" }],
+    handoff: {
+      callHref: BANC_CONTACT.callHref,
+      whatsappHref: BANC_CONTACT.whatsappHref,
+    },
+    context: emptyConversationState,
+  });
+
+  await harness.submit("What happens after my offer?");
+
+  const assistantMessage = harness.messages[1];
+  assert.deepEqual(assistantMessage?.sources, [
+    { title: "Buyers guide", href: "/sales/buyers-guide" },
+  ]);
+  assert.equal(assistantMessage?.handoff?.callHref, BANC_CONTACT.callHref);
+  assert.equal(assistantMessage?.handoff?.whatsappHref, BANC_CONTACT.whatsappHref);
+});
+
+test("keeps context and structured fields unchanged when the public response is invalid", async () => {
+  const context = createInitialConversationState();
+  const harness = createTurnHarness({
+    response: "Call https://untrusted.example.com.",
+    action: "answer",
+    sources: [{ title: "Untrusted", href: "https://untrusted.example.com" }],
+    handoff: {
+      callHref: BANC_CONTACT.callHref,
+      whatsappHref: BANC_CONTACT.whatsappHref,
+    },
+    context: { ...context, topic: "handoff" },
+  }, context);
+
+  await harness.submit("Can I speak to someone?");
+
+  assert.deepEqual(harness.context, context);
+  assert.equal(harness.messages[1]?.sources, undefined);
+  assert.equal(harness.messages[1]?.handoff, undefined);
+  assert.match(harness.messages[1]?.content ?? "", /trouble connecting/i);
+  assert.deepEqual(harness.loading, [true, false]);
+});
+
+test("serializes the latest 20 prose messages with the current in-memory context", () => {
+  const context = {
+    ...createInitialConversationState(),
+    topic: "banc_knowledge" as const,
+  };
+  const messages = Array.from({ length: 25 }, (_, index): PropertyChatMessage => ({
+    id: `message-${index + 1}`,
+    role: index % 2 === 0 ? "user" : "assistant",
+    content: `Message ${index + 1}`,
+    timestamp: new Date("2026-08-31T10:00:00.000Z"),
+  }));
+
+  const request = createPropertyChatRequest("  Tell me more  ", messages, context);
+
+  assert.equal(request.message, "Tell me more");
+  assert.equal(request.history.length, 20);
+  assert.deepEqual(request.history[0], { role: "assistant", content: "Message 6" });
+  assert.deepEqual(request.history[19], { role: "user", content: "Message 25" });
+  assert.deepEqual(request.context, context);
+});
+
+test("returns cloned trusted view fields without deriving a generic contact action", () => {
+  const view = getPropertyChatMessageView({
+    id: "assistant-1",
+    role: "assistant",
+    content: "Here are the next steps.",
+    action: "contact_team",
+    sources: [{ title: "Buyers guide", href: "/sales/buyers-guide" }],
+    handoff: {
+      callHref: BANC_CONTACT.callHref,
+      whatsappHref: BANC_CONTACT.whatsappHref,
+    },
+    timestamp: new Date("2026-08-31T10:00:00.000Z"),
+  });
+
+  assert.deepEqual(view.sources, [{ title: "Buyers guide", href: "/sales/buyers-guide" }]);
+  assert.deepEqual(view.handoff, {
+    callHref: BANC_CONTACT.callHref,
+    whatsappHref: BANC_CONTACT.whatsappHref,
+  });
+  assert.equal("showContactAction" in view, false);
+});

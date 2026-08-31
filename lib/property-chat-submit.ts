@@ -1,9 +1,9 @@
 import {
-  parsePropertyConversationResponse,
-  type PropertyConversationAction,
-  type PropertyConversationContext,
-  type PropertyConversationRequest,
-} from "./property-conversation/index.ts";
+  parseConversationResponse,
+  type ConversationAction,
+  type ConversationRequest,
+  type PropertyConversationState,
+} from "./banc-conversation/contracts.ts";
 import type { PropertyCardData } from "./property-view.ts";
 
 export type SingleFlightRunner = <T>(action: () => Promise<T>) => Promise<boolean>;
@@ -13,25 +13,28 @@ export interface PropertyChatMessage {
   role: "user" | "assistant";
   content: string;
   properties?: PropertyCardData[];
-  action?: PropertyConversationAction;
+  sources?: Array<{ title: string; href: string }>;
+  handoff?: { callHref: string; whatsappHref: string };
+  action?: ConversationAction;
   timestamp: Date;
 }
 
 export interface PropertyChatMessageView {
   properties: PropertyCardData[];
-  showContactAction: boolean;
+  sources: Array<{ title: string; href: string }>;
+  handoff?: { callHref: string; whatsappHref: string };
 }
 
 interface RunPropertyChatTurnOptions {
   content: string;
   messages: readonly PropertyChatMessage[];
-  context: PropertyConversationContext;
+  context: PropertyConversationState;
   nextMessageId: () => string;
   now?: () => Date;
-  request: (request: PropertyConversationRequest) => Promise<unknown>;
+  request: (request: ConversationRequest) => Promise<unknown>;
   onUserMessage: (message: PropertyChatMessage) => void;
   onAssistantMessage: (message: PropertyChatMessage) => void;
-  onContextChange: (context: PropertyConversationContext) => void;
+  onContextChange: (context: PropertyConversationState) => void;
   onLoadingChange: (isLoading: boolean) => void;
 }
 
@@ -49,8 +52,8 @@ const connectionErrorMessage =
 export function createPropertyChatRequest(
   content: string,
   messages: readonly PropertyChatMessage[],
-  context: PropertyConversationContext,
-): PropertyConversationRequest {
+  context: PropertyConversationState,
+): ConversationRequest {
   return {
     message: content.trim(),
     history: messages
@@ -65,12 +68,13 @@ export function getPropertyChatMessageView(
 ): PropertyChatMessageView {
   return {
     properties: message.properties === undefined ? [] : [...message.properties],
-    showContactAction: message.action === "contact_team",
+    sources: message.sources?.map((source) => ({ ...source })) ?? [],
+    handoff: message.handoff === undefined ? undefined : { ...message.handoff },
   };
 }
 
 export function getPropertyChatQuickReplies(
-  context: PropertyConversationContext,
+  context: PropertyConversationState,
 ): readonly string[] {
   return context.resultPropertyIds.length > 0
     ? resultQuickReplies
@@ -100,7 +104,7 @@ export async function runPropertyChatTurn({
   onLoadingChange(true);
 
   try {
-    const response = parsePropertyConversationResponse(
+    const response = parseConversationResponse(
       await request(createPropertyChatRequest(userMessage.content, messages, context)),
     );
     if (response === null) throw new Error("Invalid chat response");
@@ -111,6 +115,8 @@ export async function runPropertyChatTurn({
       role: "assistant",
       content: response.response,
       properties: response.properties,
+      sources: response.sources?.map((source) => ({ ...source })),
+      handoff: response.handoff === undefined ? undefined : { ...response.handoff },
       action: response.action,
       timestamp: now(),
     });
