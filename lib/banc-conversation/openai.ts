@@ -30,6 +30,7 @@ const MAX_HISTORY_MESSAGE_CHARACTERS = 700;
 const MAX_OPERATION_RESULTS = 2;
 const MAX_RESULT_ITEMS = 3;
 const MAX_RESULT_SUMMARY_CHARACTERS = 800;
+const MAX_RESPONSE_CANDIDATES = 8;
 const INTENT_MAX_OUTPUT_TOKENS = 700;
 const RESPONSE_MAX_OUTPUT_TOKENS = 400;
 
@@ -420,14 +421,14 @@ const planJsonSchema = {
   },
 } as const;
 
-function createResponseJsonSchema(groundedResponse: string) {
+function createResponseJsonSchema(groundedResponses: readonly string[]) {
   return {
     type: "object",
     additionalProperties: false,
     properties: {
       response: {
         type: "string",
-        enum: [groundedResponse],
+        enum: groundedResponses,
       },
     },
     required: ["response"],
@@ -480,6 +481,10 @@ export interface OpenAIConversationModelOptions {
 }
 
 type ProviderFailure = Exclude<ModelFailureCategory, "interpretation_invalid">;
+type SanitizedPropertySearchResult = Extract<
+  SanitizedOperationResult,
+  { requirements: unknown }
+>;
 
 type ProviderResult =
   | { status: "ok"; value: unknown }
@@ -707,40 +712,161 @@ function buildRepairInput(
   });
 }
 
-function groundedResponseForResult(result: SanitizedOperationResult): string {
+function readableFilter(value: string): string {
+  return value.replaceAll("_", " ");
+}
+
+function formatPrice(value: number): string {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatActiveRequirements(
+  result: SanitizedPropertySearchResult,
+): string {
+  const query = result.requirements;
+  const filters: string[] = [];
+  if (
+    query.minBedrooms !== undefined &&
+    query.minBedrooms === query.maxBedrooms
+  ) {
+    filters.push(`exactly ${query.minBedrooms} bedrooms`);
+  } else {
+    if (query.minBedrooms !== undefined) {
+      filters.push(`at least ${query.minBedrooms} bedrooms`);
+    }
+    if (query.maxBedrooms !== undefined) {
+      filters.push(`up to ${query.maxBedrooms} bedrooms`);
+    }
+  }
+  if (query.minBathrooms !== undefined) {
+    filters.push(`at least ${query.minBathrooms} bathrooms`);
+  }
+  if (query.minPrice !== undefined) {
+    filters.push(`from ${formatPrice(query.minPrice)}`);
+  }
+  if (query.maxPrice !== undefined) {
+    filters.push(`up to ${formatPrice(query.maxPrice)}`);
+  }
+  if (query.propertyTypes.length > 0) {
+    filters.push(query.propertyTypes.map(readableFilter).join(" or "));
+  }
+  if (query.tenures.length > 0) {
+    filters.push(query.tenures.map(readableFilter).join(" or "));
+  }
+  if (query.features.length > 0) {
+    filters.push(`with ${query.features.map(readableFilter).join(" and ")}`);
+  }
+
+  const purpose = query.department === "sales" ? "homes to buy" : "homes to rent";
+  const location = query.location === undefined ? "" : ` in ${query.location}`;
+  return filters.length === 0
+    ? `${purpose}${location}`
+    : `${purpose}${location} with ${filters.join(" ")}`;
+}
+
+function zeroResultRelaxation(
+  result: SanitizedPropertySearchResult,
+): string {
+  const query = result.requirements;
+  if (
+    query.minBedrooms !== undefined &&
+    query.minBedrooms === query.maxBedrooms
+  ) {
+    return `try at least ${query.minBedrooms} bedrooms instead`;
+  }
+  if (query.features.length > 0) {
+    return `remove the ${readableFilter(query.features[0])} requirement`;
+  }
+  if (query.maxPrice !== undefined) return "raise your maximum price";
+  if (query.minPrice !== undefined) return "lower your minimum price";
+  if (query.propertyTypes.length > 0) return "include more property types";
+  if (query.tenures.length > 0) return "include more tenure types";
+  if (query.minBedrooms !== undefined) return "reduce the minimum bedrooms";
+  if (query.minBathrooms !== undefined) return "reduce the minimum bathrooms";
+  if (query.location !== undefined) return "broaden the location";
+  return "broaden one requirement";
+}
+
+function responseCandidatesForResult(
+  result: SanitizedOperationResult,
+): string[] {
   switch (result.status) {
     case "search_results":
-      return `I found ${result.total} ${result.total === 1 ? "property" : "properties"} matching your current requirements.`;
+      return [
+        `I found ${result.total} ${result.total === 1 ? "property" : "properties"} matching your current requirements.`,
+      ];
     case "no_results":
-      return "I couldn't find any properties matching your current requirements. Would you like to relax one filter?";
-    case "property_facts":
-      return `I found verified details for ${result.facts.length} ${result.facts.length === 1 ? "property" : "properties"}.`;
-    case "knowledge":
-      return `I found ${result.sources.length} approved Banc ${result.sources.length === 1 ? "source" : "sources"} for your question.`;
+      return [
+        `I couldn't find any ${formatActiveRequirements(result)}. Would you like to ${zeroResultRelaxation(result)}?`,
+      ];
+    case "property_facts": {
+      const candidates = result.facts.flatMap((fact) => {
+        const details = [
+          `${fact.title} is listed at ${fact.priceDisplay} with ${fact.bedrooms} bedrooms and ${fact.bathrooms} bathrooms.`,
+        ];
+        if (fact.epc !== null && fact.features[0] !== undefined) {
+          details.push(
+            `${fact.title} has an EPC rating of ${fact.epc} and features a ${fact.features[0]}.`,
+          );
+        } else if (fact.epc !== null) {
+          details.push(`${fact.title} has an EPC rating of ${fact.epc}.`);
+        } else if (fact.features[0] !== undefined) {
+          details.push(`${fact.title} features a ${fact.features[0]}.`);
+        }
+        return details;
+      });
+      return candidates.length > 0
+        ? candidates
+        : ["I couldn't verify those property details. Which property would you like help with?"];
+    }
+    case "knowledge": {
+      const candidates = result.sources.map(
+        (source) => `Banc guidance says: ${source.excerpt}`,
+      );
+      return candidates.length > 0
+        ? candidates
+        : ["I couldn't find approved Banc guidance for that question. What would you like help with?"];
+    }
     case "reset":
-      return "I've reset your property search. What would you like to look for?";
+      return ["I've reset your property search. What would you like to look for?"];
     case "contact":
-      return "The Banc team can help with your enquiry. Would you like their contact options?";
+      return ["The Banc team can help with your enquiry. Would you like their contact options?"];
     case "clarification_required":
-      return result.question;
+      return [result.question];
   }
 }
 
-function buildGroundedResponse(
+function isSafeResponseText(value: string): boolean {
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || trimmed.length > 2_000) return false;
+  if (/\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)/i.test(trimmed)) {
+    return false;
+  }
+  return !/(?:\+?\d[\d\s().-]{7,}\d)/.test(trimmed);
+}
+
+function buildGroundedResponseCandidates(
   results: readonly SanitizedOperationResult[],
-): string {
-  const response = results
-    .slice(0, 2)
-    .map(groundedResponseForResult)
-    .join(" ");
-  return response.length > 0
-    ? response
-    : "I can help with your Banc property search. What would you like to know?";
+): string[] {
+  const candidates = [...new Set(
+    results
+      .slice(0, MAX_OPERATION_RESULTS)
+      .flatMap(responseCandidatesForResult)
+      .map((candidate) => candidate.trim())
+      .filter(isSafeResponseText),
+  )].slice(0, MAX_RESPONSE_CANDIDATES);
+  return candidates.length > 0
+    ? candidates
+    : ["I can help with your Banc property search. What would you like to know?"];
 }
 
 function buildResponseInput(
   input: ResponseWritingInput,
-  groundedResponse: string,
+  groundedResponses: readonly string[],
   sanitizedResults: readonly SanitizedOperationResult[],
 ): string | null {
   const currentState = sanitizeState(input.state);
@@ -750,7 +876,7 @@ function buildResponseInput(
     recentHistory: sanitizeHistory(input.history),
     currentState,
     trustedResults: sanitizedResults,
-    requiredResponse: groundedResponse,
+    allowedResponses: groundedResponses,
   });
 }
 
@@ -875,7 +1001,7 @@ function normalizedPlanValue(value: unknown): unknown {
 
 function parseResponseText(
   value: unknown,
-  groundedResponse: string,
+  groundedResponses: readonly string[],
 ): string | null {
   if (
     typeof value !== "object" ||
@@ -888,12 +1014,8 @@ function parseResponseText(
   const response = Reflect.get(value, "response");
   if (typeof response !== "string") return null;
   const trimmed = response.trim();
-  if (trimmed.length === 0 || trimmed.length > 2_000) return null;
-  if (/\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)/i.test(trimmed)) {
-    return null;
-  }
-  if (/(?:\+?\d[\d\s().-]{7,}\d)/.test(trimmed)) return null;
-  return trimmed === groundedResponse ? trimmed : null;
+  if (!isSafeResponseText(trimmed)) return null;
+  return groundedResponses.includes(trimmed) ? trimmed : null;
 }
 
 function hasConfiguration(options: OpenAIConversationModelOptions): options is {
@@ -974,13 +1096,13 @@ export function createOpenAIConversationModel(
       }
 
       let responseInput: string;
-      let groundedResponse: string;
+      let groundedResponses: string[];
       try {
         const sanitizedResults = sanitizeResults(input.results);
-        groundedResponse = buildGroundedResponse(sanitizedResults);
+        groundedResponses = buildGroundedResponseCandidates(sanitizedResults);
         const boundedResponseInput = buildResponseInput(
           input,
-          groundedResponse,
+          groundedResponses,
           sanitizedResults,
         );
         if (boundedResponseInput === null) {
@@ -998,7 +1120,7 @@ export function createOpenAIConversationModel(
         instructions: BANC_RESPONSE_INSTRUCTIONS,
         input: responseInput,
         formatName: "banc_conversation_response",
-        schema: createResponseJsonSchema(groundedResponse),
+        schema: createResponseJsonSchema(groundedResponses),
         maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
         signal,
       });
@@ -1006,7 +1128,7 @@ export function createOpenAIConversationModel(
         return { status: result.status, providerCalls: 1 };
       }
 
-      const response = parseResponseText(result.value, groundedResponse);
+      const response = parseResponseText(result.value, groundedResponses);
       return response === null
         ? { status: "model_unavailable", providerCalls: 1 }
         : { status: "ok", response, providerCalls: 1 };
