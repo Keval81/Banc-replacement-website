@@ -198,7 +198,7 @@ test("fingerprints every ordered result and total before capping public cards an
     assert.deepEqual(result.state.resultPropertyIds, ["EA-2", "EA-1", "EA-3"]);
     assert.equal(
       result.state.resultFingerprint,
-      '{"ids":["EA-2","EA-1","EA-3","EA-4"],"total":9}',
+      "v1:4:9:fbeb747a2cc5098c",
     );
   }
 });
@@ -208,7 +208,7 @@ test("suppresses cards when every ordered result id and total repeats", async ()
   portfolio.properties = [card("EA-1"), card("EA-2"), card("EA-3"), card("EA-4")];
   portfolio.total = 4;
   const state = stateWithResults(["EA-1", "EA-2", "EA-3"]);
-  state.resultFingerprint = '{"ids":["EA-1","EA-2","EA-3","EA-4"],"total":4}';
+  state.resultFingerprint = "v1:4:4:2800c09d74764b81";
 
   const result = await tools.execute({
     intent: { type: "update_property_search", mutation: {} },
@@ -236,7 +236,7 @@ test("returns no_results rather than a failure for an empty canonical search", a
   if (result.status === "no_results") {
     assert.equal(result.total, 0);
     assert.deepEqual(result.state.resultPropertyIds, []);
-    assert.equal(result.state.resultFingerprint, '{"ids":[],"total":0}');
+    assert.equal(result.state.resultFingerprint, "v1:0:0:870977c978039e45");
   }
 });
 

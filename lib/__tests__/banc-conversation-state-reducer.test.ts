@@ -5,7 +5,10 @@ import {
   applyPropertySearchMutation,
   createResultFingerprint,
 } from "../banc-conversation/state-reducer.ts";
-import type { PropertyConversationState } from "../banc-conversation/contracts.ts";
+import {
+  propertyConversationStateSchema,
+  type PropertyConversationState,
+} from "../banc-conversation/contracts.ts";
 import {
   createDefaultPropertySearchQuery,
 } from "../property-search/query.ts";
@@ -239,13 +242,40 @@ test("material refinements retain page size and return fresh canonical arrays", 
   assert.notEqual(next.query.features, current.query?.features);
 });
 
-test("fingerprints ordered authorized ids and total as stable server JSON", () => {
+test("fingerprints ordered authorized ids and total deterministically", () => {
+  const fingerprint = createResultFingerprint(["EA-2", "EA-1"], 14);
+
   assert.equal(
     createResultFingerprint(["EA-2", "EA-1"], 14),
-    '{"ids":["EA-2","EA-1"],"total":14}',
+    fingerprint,
   );
   assert.notEqual(
     createResultFingerprint(["EA-1", "EA-2"], 14),
     createResultFingerprint(["EA-2", "EA-1"], 14),
   );
+});
+
+test("bounds fingerprints for the canonical maximum ids without losing result identity", () => {
+  const ids = Array.from(
+    { length: 48 },
+    (_, index) => `${String(index).padStart(2, "0")}${"x".repeat(62)}`,
+  );
+  const fingerprint = createResultFingerprint(ids, 48);
+  const changedOrder = [...ids];
+  [changedOrder[0], changedOrder[1]] = [changedOrder[1], changedOrder[0]];
+
+  assert.ok(fingerprint.length <= 240);
+  assert.equal(propertyConversationStateSchema.safeParse({
+    resultPropertyIds: ids.slice(0, 3),
+    resultFingerprint: fingerprint,
+    topic: "property_search",
+  }).success, true);
+  assert.notEqual(createResultFingerprint(changedOrder, 48), fingerprint);
+  for (const [index] of ids.entries()) {
+    const changedId = [...ids];
+    changedId[index] = `${String(index).padStart(2, "0")}${"y".repeat(62)}`;
+    assert.notEqual(createResultFingerprint(changedId, 48), fingerprint);
+  }
+  assert.notEqual(createResultFingerprint(ids, 49), fingerprint);
+  assert.notEqual(createResultFingerprint(ids.slice(0, -1), 48), fingerprint);
 });

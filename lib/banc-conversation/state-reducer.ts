@@ -154,5 +154,23 @@ export function createResultFingerprint(
   ids: readonly string[],
   total: number,
 ): string {
-  return JSON.stringify({ ids, total });
+  let fnvHash = 0x811c9dc5;
+  let djbHash = 5381;
+  const consume = (value: string) => {
+    const framedValue = `${value.length}:${value};`;
+    for (let index = 0; index < framedValue.length; index += 1) {
+      const codeUnit = framedValue.charCodeAt(index);
+      fnvHash = Math.imul(fnvHash ^ codeUnit, 0x01000193) >>> 0;
+      djbHash = (Math.imul(djbHash, 33) ^ codeUnit) >>> 0;
+    }
+  };
+
+  consume(ids.length.toString(10));
+  consume(total.toString(10));
+  ids.forEach(consume);
+
+  const digest = [fnvHash, djbHash]
+    .map((hash) => hash.toString(16).padStart(8, "0"))
+    .join("");
+  return `v1:${ids.length.toString(36)}:${total.toString(36)}:${digest}`;
 }
