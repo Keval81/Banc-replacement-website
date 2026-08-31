@@ -113,6 +113,24 @@ test("with parking sets the canonical parking feature", () => {
   assert.deepEqual(next?.query?.features, ["parking"]);
 });
 
+test("setting tenure preserves the active location and bedroom refinement", () => {
+  const next = applyPropertySearchMutation(
+    stateWithQuery({
+      location: "Cuffley",
+      minBedrooms: 4,
+      maxBedrooms: 4,
+      tenures: [],
+    }),
+    { tenures: { operation: "set", value: ["freehold"] } },
+    "Freehold only",
+  );
+
+  assert.equal(next?.query?.location, "Cuffley");
+  assert.equal(next?.query?.minBedrooms, 4);
+  assert.equal(next?.query?.maxBedrooms, 4);
+  assert.deepEqual(next?.query?.tenures, ["freehold"]);
+});
+
 test("at least four bedrooms sets a minimum and clears an exact maximum", () => {
   const next = applyPropertySearchMutation(
     stateWithQuery({ minBedrooms: 2, maxBedrooms: 2 }),

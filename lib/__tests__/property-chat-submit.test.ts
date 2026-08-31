@@ -137,6 +137,55 @@ test("same-tick submissions run one chat turn while a request is in flight", asy
   assert.equal(await first, true);
 });
 
+test("same-tick chat submissions make one request and publish one logical turn", async () => {
+  const runSingleFlight = createSingleFlightRunner();
+  const messages: PropertyChatMessage[] = [];
+  const loading: boolean[] = [];
+  let releaseRequest: (() => void) | undefined;
+  let messageId = 0;
+  let requests = 0;
+  let context = createInitialConversationState();
+
+  const submit = () => runSingleFlight(() => runPropertyChatTurn({
+    content: "Find a home",
+    messages: [],
+    context,
+    nextMessageId: () => {
+      messageId += 1;
+      return `message-${messageId}`;
+    },
+    request: async () => {
+      requests += 1;
+      await new Promise<void>((resolve) => { releaseRequest = resolve; });
+      return {
+        response: "I found a suitable home.",
+        action: "answer",
+        context: createInitialConversationState(),
+      };
+    },
+    onUserMessage: (message) => { messages.push(message); },
+    onAssistantMessage: (message) => { messages.push(message); },
+    onContextChange: (nextContext) => { context = nextContext; },
+    onLoadingChange: (isLoading) => { loading.push(isLoading); },
+  }));
+
+  const first = submit();
+  const duplicate = submit();
+
+  assert.equal(await duplicate, false);
+  assert.equal(requests, 1);
+  assert.deepEqual(messages.map(({ role }) => role), ["user"]);
+  assert.deepEqual(loading, [true]);
+
+  assert.ok(releaseRequest);
+  releaseRequest();
+
+  assert.equal(await first, true);
+  assert.equal(requests, 1);
+  assert.deepEqual(messages.map(({ role }) => role), ["user", "assistant"]);
+  assert.deepEqual(loading, [true, false]);
+});
+
 test("the single-flight runner releases its lock after a rejected chat turn", async () => {
   const runSingleFlight = createSingleFlightRunner();
   let retriedTurns = 0;
