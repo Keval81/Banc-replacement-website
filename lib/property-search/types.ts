@@ -53,9 +53,13 @@ export interface PropertySearchRepositoryResult {
 }
 
 export interface PropertySearchRepository {
-  search(query: PropertySearchQuery): Promise<PropertySearchRepositoryResult>;
+  search(
+    query: PropertySearchQuery,
+    signal?: AbortSignal,
+  ): Promise<PropertySearchRepositoryResult>;
 }
 
 export type PropertySearch = (
   query: PropertySearchQuery,
+  signal?: AbortSignal,
 ) => Promise<PropertySearchResult>;

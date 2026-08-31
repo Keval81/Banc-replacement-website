@@ -80,17 +80,27 @@ function searchResult(
 class FakePortfolio implements PropertyPortfolio {
   readonly searchCalls: PropertySearchQuery[] = [];
   readonly factCalls: string[][] = [];
+  readonly searchSignals: Array<AbortSignal | undefined> = [];
+  readonly factSignals: Array<AbortSignal | undefined> = [];
   properties: PropertyCardData[] = [];
   total = 0;
   factsById = new Map<string, PropertyFacts>();
 
-  async search(query: PropertySearchQuery): Promise<PropertySearchResult> {
+  async search(
+    query: PropertySearchQuery,
+    signal?: AbortSignal,
+  ): Promise<PropertySearchResult> {
     this.searchCalls.push(query);
+    this.searchSignals.push(signal);
     return searchResult(query, this.properties, this.total);
   }
 
-  async getFacts(ids: string[]): Promise<PropertyFacts[]> {
+  async getFacts(
+    ids: string[],
+    signal?: AbortSignal,
+  ): Promise<PropertyFacts[]> {
     this.factCalls.push([...ids]);
+    this.factSignals.push(signal);
     return ids.flatMap((id) => {
       const value = this.factsById.get(id);
       return value === undefined ? [] : [value];
@@ -100,13 +110,40 @@ class FakePortfolio implements PropertyPortfolio {
 
 class FakeKnowledge implements BancKnowledge {
   readonly calls: string[] = [];
+  readonly signals: Array<AbortSignal | undefined> = [];
   results: BancKnowledgeResult[] = [];
 
-  async search(query: string): Promise<BancKnowledgeResult[]> {
+  async search(
+    query: string,
+    signal?: AbortSignal,
+  ): Promise<BancKnowledgeResult[]> {
     this.calls.push(query);
+    this.signals.push(signal);
     return this.results;
   }
 }
+
+test("passes the turn abort signal through property and knowledge operations", async () => {
+  const { portfolio, knowledge, tools } = setup();
+  const controller = new AbortController();
+
+  await tools.execute({
+    intent: {
+      type: "update_property_search",
+      mutation: { department: { operation: "set", value: "sales" } },
+    },
+    message: "I want to buy",
+    state: { resultPropertyIds: [], topic: "property_search" },
+  }, controller.signal);
+  await tools.execute({
+    intent: { type: "search_banc_knowledge", query: "buying" },
+    message: "How does buying work?",
+    state: { resultPropertyIds: [], topic: "property_search" },
+  }, controller.signal);
+
+  assert.equal(portfolio.searchSignals[0], controller.signal);
+  assert.equal(knowledge.signals[0], controller.signal);
+});
 
 function fiveBedroomPottersBarState(): PropertyConversationState {
   return {

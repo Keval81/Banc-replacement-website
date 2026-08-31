@@ -77,6 +77,21 @@ test("maps repository rows to safe cards with real totals and freshness", async 
   }
 });
 
+test("forwards the request abort signal to the property repository", async () => {
+  const controller = new AbortController();
+  let receivedSignal: AbortSignal | undefined;
+  const search = createPropertySearchService({
+    async search(_query, signal) {
+      receivedSignal = signal;
+      return { rows: [], total: 0, lastSyncedAt: null };
+    },
+  });
+
+  await search(validSalesQuery(), controller.signal);
+
+  assert.equal(receivedSignal, controller.signal);
+});
+
 test("validates and canonicalizes programmatic queries before using the repository", async () => {
   const received: PropertySearchQuery[] = [];
   const repository: PropertySearchRepository = {

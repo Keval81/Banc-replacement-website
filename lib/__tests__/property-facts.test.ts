@@ -132,6 +132,10 @@ function createFakeLookupClient(rows: DbProperty[]) {
       calls.push(["in", ...args]);
       return this;
     },
+    abortSignal(...args: unknown[]) {
+      calls.push(["abortSignal", ...args]);
+      return this;
+    },
     then(
       resolve: (value: { data: DbProperty[]; error: null }) => unknown,
     ) {
@@ -149,6 +153,21 @@ function createFakeLookupClient(rows: DbProperty[]) {
     calls,
   };
 }
+
+test("passes the request abort signal to the property facts query", async () => {
+  const fake = createFakeLookupClient([]);
+  const lookupFacts = createPropertyFactLookup(fake.client as never);
+  const controller = new AbortController();
+
+  await lookupFacts(["EA-1"], controller.signal);
+
+  assert.equal(
+    fake.calls.some(
+      ([method, signal]) => method === "abortSignal" && signal === controller.signal,
+    ),
+    true,
+  );
+});
 
 test("server lookup returns only active marketable rows in requested id order", async () => {
   const active = dbProperty({ id: "uuid-1", expert_agent_id: "EA-1" });

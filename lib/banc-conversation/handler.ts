@@ -56,7 +56,7 @@ export interface ConversationTools {
     intent: ConversationIntent;
     message: string;
     state: PropertyConversationState;
-  }): Promise<TrustedOperationResult>;
+  }, signal: AbortSignal): Promise<TrustedOperationResult>;
 }
 
 export interface BancConversationHandlerDependencies {
@@ -355,7 +355,10 @@ export function createBancConversationHandler({
       const operation = await withinDeadline(
         deadline,
         now,
-        () => tools.execute({ intent, message: request.message, state }),
+        (signal) => tools.execute(
+          { intent, message: request.message, state },
+          signal,
+        ),
       );
       if (operation.status === "timeout") {
         return failureResponse("model_timeout", intent.type);

@@ -6,8 +6,11 @@ import type {
 } from "../property-search/types.ts";
 
 export interface PropertyPortfolio {
-  search(query: PropertySearchQuery): Promise<PropertySearchResult>;
-  getFacts(ids: string[]): Promise<PropertyFacts[]>;
+  search(
+    query: PropertySearchQuery,
+    signal?: AbortSignal,
+  ): Promise<PropertySearchResult>;
+  getFacts(ids: string[], signal?: AbortSignal): Promise<PropertyFacts[]>;
 }
 
 export function createPropertyPortfolio(dependencies: {
@@ -15,7 +18,7 @@ export function createPropertyPortfolio(dependencies: {
   getFacts: PropertyFactLookup;
 }): PropertyPortfolio {
   return {
-    search: dependencies.search,
-    getFacts: dependencies.getFacts,
+    search: (query, signal) => dependencies.search(query, signal),
+    getFacts: (ids, signal) => dependencies.getFacts(ids, signal),
   };
 }

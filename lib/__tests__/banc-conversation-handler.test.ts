@@ -22,6 +22,7 @@ import type {
   ModelResponseResult,
   ResponseWritingInput,
 } from "../banc-conversation/openai.ts";
+import { createOpenAIConversationModel } from "../banc-conversation/openai.ts";
 import type { PropertyPortfolio } from "../banc-conversation/portfolio.ts";
 import { createConversationTools } from "../banc-conversation/tools.ts";
 import { createResultFingerprint } from "../banc-conversation/state-reducer.ts";
@@ -51,15 +52,16 @@ function card(id: string): PropertyCardData {
 }
 
 function facts(id: string): PropertyFacts {
+  const isSecond = id === "EA-2";
   return {
     id,
     title: `Property ${id}`,
     address: "Cuffley, Hertfordshire",
     department: "sales",
     status: "for_sale",
-    price: 750_000,
-    priceDisplay: "£750,000",
-    bedrooms: 5,
+    price: isSecond ? 650_000 : 750_000,
+    priceDisplay: isSecond ? "£650,000" : "£750,000",
+    bedrooms: isSecond ? 4 : 5,
     bathrooms: 2,
     receptions: 2,
     propertyType: "house",
@@ -69,6 +71,16 @@ function facts(id: string): PropertyFacts {
     features: ["garden"],
     summary: `Summary for ${id}.`,
   };
+}
+
+function openAIJsonResponse(value: unknown): Response {
+  return Response.json({
+    status: "completed",
+    output: [{
+      type: "message",
+      content: [{ type: "output_text", text: JSON.stringify(value) }],
+    }],
+  });
 }
 
 function searchResult(
@@ -325,6 +337,42 @@ test("answers facts for first and second properties and keeps comparisons in req
   );
 });
 
+test("returns one server-grounded comparison covering both authorized properties", async () => {
+  const comparison =
+    "Property EA-1 is listed at £750,000 with 5 bedrooms and 2 bathrooms, while Property EA-2 is listed at £650,000 with 4 bedrooms and 2 bathrooms. Property EA-2 is lower priced, Property EA-1 has more bedrooms, and both have 2 bathrooms.";
+  const providerResponses = [
+    openAIJsonResponse({
+      primary: {
+        type: "get_property_facts",
+        propertyIds: ["EA-1", "EA-2"],
+      },
+    }),
+    openAIJsonResponse({ response: comparison }),
+  ];
+  const model = createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch: async () => providerResponses.shift() ?? new Response(null, { status: 500 }),
+  });
+  const portfolio = new FakePortfolio();
+  const handler = createBancConversationHandler({
+    model,
+    tools: createConversationTools({
+      portfolio,
+      knowledge: new FakeKnowledge(),
+    }),
+    logger: () => undefined,
+  });
+
+  const response = await handler(requestFor("Compare them", activeState()));
+
+  assert.equal(response.action, "answer");
+  assert.equal(response.response, comparison);
+  assert.match(response.response, /Property EA-1.*Property EA-2/i);
+  assert.match(response.response, /lower priced|more bedrooms|both have/i);
+  assert.deepEqual(portfolio.factLookups, [["EA-1", "EA-2"]]);
+});
+
 test("suppresses unchanged cards while retaining a successful search response", async () => {
   const { handler, model } = setup();
   const state = activeState();
@@ -576,5 +624,40 @@ test("does not start trusted work after the shared twenty-second deadline", asyn
 
   assert.equal(response.action, "service_unavailable");
   assert.equal(portfolio.searches.length, 0);
+  assert.equal(diagnostics[0]?.category, "model_timeout");
+});
+
+test("actively aborts in-flight trusted work at the shared deadline", async () => {
+  const model = new FakeModel();
+  const times = [0, 0, 19_999, 19_999, 20_001, 20_001];
+  let receivedSignal: AbortSignal | undefined;
+  let aborted = false;
+  const diagnostics: ConversationDiagnosticEvent[] = [];
+  model.planResults.push(plan({
+    type: "update_property_search",
+    mutation: { department: { operation: "set", value: "sales" } },
+  }));
+  const handler = createBancConversationHandler({
+    model,
+    tools: {
+      execute: async (_input, signal: AbortSignal) => {
+        receivedSignal = signal;
+        return await new Promise<never>((_resolve, reject) => {
+          signal.addEventListener("abort", () => {
+            aborted = true;
+            reject(signal.reason);
+          }, { once: true });
+        });
+      },
+    },
+    now: () => times.shift() ?? 20_001,
+    logger: (event) => diagnostics.push(event),
+  });
+
+  const response = await handler(requestFor("Find a home"));
+
+  assert.equal(response.action, "service_unavailable");
+  assert.equal(receivedSignal?.aborted, true);
+  assert.equal(aborted, true);
   assert.equal(diagnostics[0]?.category, "model_timeout");
 });

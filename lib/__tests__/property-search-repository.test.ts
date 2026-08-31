@@ -66,6 +66,11 @@ interface FakeOptions {
 function createFakeClient(options: FakeOptions = {}) {
   const rpcCalls: Array<{ name: string; args: Record<string, unknown> }> = [];
   const freshnessCalls: Array<[string, ...unknown[]]> = [];
+  const abortSignals: AbortSignal[] = [];
+  const rpcResult = {
+    data: "rpcData" in options ? options.rpcData : [],
+    error: options.rpcError ?? null,
+  };
   const freshnessResult = {
     data:
       "freshnessData" in options
@@ -90,6 +95,10 @@ function createFakeClient(options: FakeOptions = {}) {
       freshnessCalls.push(["limit", ...args]);
       return this;
     },
+    abortSignal(signal: AbortSignal) {
+      abortSignals.push(signal);
+      return this;
+    },
     async maybeSingle() {
       freshnessCalls.push(["maybeSingle"]);
       return freshnessResult;
@@ -97,11 +106,16 @@ function createFakeClient(options: FakeOptions = {}) {
   };
   return {
     client: {
-      async rpc(name: string, args: Record<string, unknown>) {
+      rpc(name: string, args: Record<string, unknown>) {
         rpcCalls.push({ name, args });
         return {
-          data: "rpcData" in options ? options.rpcData : [],
-          error: options.rpcError ?? null,
+          abortSignal(signal: AbortSignal) {
+            abortSignals.push(signal);
+            return this;
+          },
+          then(resolve: (value: typeof rpcResult) => unknown) {
+            return Promise.resolve(resolve(rpcResult));
+          },
         };
       },
       from(table: string) {
@@ -111,8 +125,24 @@ function createFakeClient(options: FakeOptions = {}) {
     },
     rpcCalls,
     freshnessCalls,
+    abortSignals,
   };
 }
+
+test("passes the request abort signal to listing and freshness queries", async () => {
+  const fake = createFakeClient({
+    rpcData: [{ property: null, total_count: 0 }],
+  });
+  const repository = new SupabasePropertySearchRepository(fake.client as never);
+  const controller = new AbortController();
+
+  await repository.search(
+    createDefaultPropertySearchQuery("sales"),
+    controller.signal,
+  );
+
+  assert.deepEqual(fake.abortSignals, [controller.signal, controller.signal]);
+});
 
 test("maps every validated query field to the search RPC and reads dataset freshness", async () => {
   const rpcData = propertyRows(12, 27);

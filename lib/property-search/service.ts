@@ -11,9 +11,10 @@ export type { PropertySearchRepository, PropertySearchRepositoryResult };
 export function createPropertySearchService(
   repository: PropertySearchRepository,
 ): PropertySearch {
-  return async (untrustedQuery) => {
+  return async (untrustedQuery, signal) => {
+    signal?.throwIfAborted();
     const query = propertySearchQuerySchema.parse(untrustedQuery);
-    const result = await repository.search(query);
+    const result = await repository.search(query, signal);
 
     return {
       query,

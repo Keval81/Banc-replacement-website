@@ -791,6 +791,28 @@ function zeroResultRelaxation(
   return "broaden one requirement";
 }
 
+function twoPropertyComparison(
+  facts: readonly PropertyFacts[],
+): string | null {
+  const first = facts[0];
+  const second = facts[1];
+  if (first === undefined || second === undefined) return null;
+
+  const priceComparison = first.price === second.price
+    ? "both are listed at the same price"
+    : `${first.price < second.price ? first.title : second.title} is lower priced`;
+  const bedroomComparison = first.bedrooms === second.bedrooms
+    ? `both have ${first.bedrooms} bedrooms`
+    : `${first.bedrooms > second.bedrooms ? first.title : second.title} has more bedrooms`;
+  const bathroomComparison = first.bathrooms === second.bathrooms
+    ? `both have ${first.bathrooms} bathrooms`
+    : `${first.bathrooms > second.bathrooms ? first.title : second.title} has more bathrooms`;
+
+  const capitalizedPriceComparison =
+    `${priceComparison.charAt(0).toUpperCase()}${priceComparison.slice(1)}`;
+  return `${first.title} is listed at ${first.priceDisplay} with ${first.bedrooms} bedrooms and ${first.bathrooms} bathrooms, while ${second.title} is listed at ${second.priceDisplay} with ${second.bedrooms} bedrooms and ${second.bathrooms} bathrooms. ${capitalizedPriceComparison}, ${bedroomComparison}, and ${bathroomComparison}.`;
+}
+
 function responseCandidatesForResult(
   result: SanitizedOperationResult,
 ): string[] {
@@ -819,6 +841,8 @@ function responseCandidatesForResult(
         }
         return details;
       });
+      const comparison = twoPropertyComparison(result.facts);
+      if (comparison !== null) candidates.unshift(comparison);
       return candidates.length > 0
         ? candidates
         : ["I couldn't verify those property details. Which property would you like help with?"];

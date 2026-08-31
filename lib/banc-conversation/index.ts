@@ -1,3 +1,4 @@
+export * from "./chat-route.ts";
 export * from "./contracts.ts";
 export * from "./handler.ts";
 export * from "./knowledge.ts";

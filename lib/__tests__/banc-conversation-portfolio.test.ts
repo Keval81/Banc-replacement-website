@@ -27,19 +27,24 @@ test("adapts canonical property search and fact lookup functions without CRM cou
   const expectedFacts: PropertyFacts[] = [];
   const searchCalls: PropertySearchQuery[] = [];
   const factCalls: Array<readonly string[]> = [];
+  const signals: AbortSignal[] = [];
   const portfolio = createPropertyPortfolio({
-    search: async (receivedQuery) => {
+    search: async (receivedQuery, signal) => {
       searchCalls.push(receivedQuery);
+      if (signal !== undefined) signals.push(signal);
       return expectedSearchResult;
     },
-    getFacts: async (ids) => {
+    getFacts: async (ids, signal) => {
       factCalls.push(ids);
+      if (signal !== undefined) signals.push(signal);
       return expectedFacts;
     },
   });
+  const controller = new AbortController();
 
-  assert.equal(await portfolio.search(query), expectedSearchResult);
-  assert.equal(await portfolio.getFacts(["EA-1"]), expectedFacts);
+  assert.equal(await portfolio.search(query, controller.signal), expectedSearchResult);
+  assert.equal(await portfolio.getFacts(["EA-1"], controller.signal), expectedFacts);
   assert.deepEqual(searchCalls, [query]);
   assert.deepEqual(factCalls, [["EA-1"]]);
+  assert.deepEqual(signals, [controller.signal, controller.signal]);
 });

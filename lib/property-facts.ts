@@ -121,22 +121,27 @@ export function resolveActivePropertyReferences(
 
 export type PropertyFactLookup = (
   ids: readonly string[],
+  signal?: AbortSignal,
 ) => Promise<PropertyFacts[]>;
 
 export function createPropertyFactLookup(
   client: SupabaseClient,
 ): PropertyFactLookup {
-  return async (ids) => {
+  return async (ids, signal) => {
+    signal?.throwIfAborted();
     if (ids.length === 0) {
       return [];
     }
 
-    const { data, error } = await client
+    const factsQuery = client
       .from("properties")
       .select("*")
       .eq("is_active", true)
       .in("status", [...MARKETABLE_PROPERTY_STATUSES])
       .in("expert_agent_id", [...ids]);
+    const { data, error } = await (signal === undefined
+      ? factsQuery
+      : factsQuery.abortSignal(signal));
 
     if (error) {
       throw new Error("Property fact lookup failed");

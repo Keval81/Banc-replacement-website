@@ -105,7 +105,9 @@ export class SupabasePropertySearchRepository
 
   async search(
     query: PropertySearchQuery,
+    signal?: AbortSignal,
   ): Promise<PropertySearchRepositoryResult> {
+    signal?.throwIfAborted();
     const offset = (query.page - 1) * query.pageSize;
     if (
       !Number.isSafeInteger(offset) ||
@@ -115,7 +117,7 @@ export class SupabasePropertySearchRepository
       throw new Error("Property search query is outside supported pagination bounds");
     }
 
-    const { data, error } = await this.client.rpc("search_properties", {
+    const rpcQuery = this.client.rpc("search_properties", {
       p_department: query.department,
       p_location: query.location ?? null,
       p_min_price: query.minPrice ?? null,
@@ -131,6 +133,9 @@ export class SupabasePropertySearchRepository
       p_limit: query.pageSize,
       p_offset: offset,
     });
+    const { data, error } = await (signal === undefined
+      ? rpcQuery
+      : rpcQuery.abortSignal(signal));
 
     if (error) {
       throw new Error("Property search query failed");
@@ -139,14 +144,16 @@ export class SupabasePropertySearchRepository
     const rpcRows = parseSearchRows(data);
     const total = getConsistentTotal(rpcRows);
     const rows = validatePageShape(rpcRows, total, offset, query.pageSize);
-    const freshnessQuery = await this.client
+    const freshnessBuilder = this.client
       .from("crm_sync_runs")
       .select("finished_at")
       .eq("source_system", this.sourceSystem)
       .eq("status", "success")
       .order("finished_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(1);
+    const freshnessQuery = await (signal === undefined
+      ? freshnessBuilder
+      : freshnessBuilder.abortSignal(signal)).maybeSingle();
 
     if (freshnessQuery.error) {
       throw new Error("Property search freshness lookup failed");

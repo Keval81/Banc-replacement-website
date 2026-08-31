@@ -206,11 +206,15 @@ export function createConversationTools({
   knowledge,
 }: ConversationToolsDependencies) {
   return {
-    async execute({
-      intent,
-      message,
-      state: untrustedState,
-    }: ExecuteConversationOperation): Promise<TrustedOperationResult> {
+    async execute(
+      {
+        intent,
+        message,
+        state: untrustedState,
+      }: ExecuteConversationOperation,
+      signal?: AbortSignal,
+    ): Promise<TrustedOperationResult> {
+      signal?.throwIfAborted();
       const state = cloneState(untrustedState);
 
       switch (intent.type) {
@@ -224,7 +228,7 @@ export function createConversationTools({
             return clarification(state, DEPARTMENT_QUESTION);
           }
 
-          const searchResult = await portfolio.search(nextState.query);
+          const searchResult = await portfolio.search(nextState.query, signal);
           const orderedIds = searchResult.properties.map(({ id }) => id);
           const resultFingerprint = createResultFingerprint(
             orderedIds,
@@ -270,9 +274,10 @@ export function createConversationTools({
             return clarification(state, ACTIVE_PROPERTY_QUESTION);
           }
 
-          const portfolioFacts = await portfolio.getFacts([
-            ...intent.propertyIds,
-          ]);
+          const portfolioFacts = await portfolio.getFacts(
+            [...intent.propertyIds],
+            signal,
+          );
           const orderedFacts = factsInRequestedOrder(
             intent.propertyIds,
             portfolioFacts,
@@ -296,7 +301,7 @@ export function createConversationTools({
         }
 
         case "search_banc_knowledge": {
-          const sources = (await knowledge.search(intent.query))
+          const sources = (await knowledge.search(intent.query, signal))
             .map(cloneKnowledgeSource)
             .filter((source): source is BancKnowledgeResult => source !== null)
             .slice(0, 3);
@@ -319,7 +324,10 @@ export function createConversationTools({
             intent.propertyId !== undefined &&
             state.resultPropertyIds.includes(intent.propertyId)
           ) {
-            const liveFacts = await portfolio.getFacts([intent.propertyId]);
+            const liveFacts = await portfolio.getFacts(
+              [intent.propertyId],
+              signal,
+            );
             if (factsInRequestedOrder([intent.propertyId], liveFacts) !== null) {
               authorizedPropertyId = intent.propertyId;
             }

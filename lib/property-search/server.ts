@@ -25,16 +25,16 @@ export function createPropertyFactLookup(
 
 const factLookup = supabaseAdmin === null ? null : createPropertyFactLookup(supabaseAdmin);
 
-export const searchProperties: PropertySearch = async (query) => {
+export const searchProperties: PropertySearch = async (query, signal) => {
   if (service === null) {
     throw new Error("Property search is not configured");
   }
-  return service(query);
+  return service(query, signal);
 };
 
-export const lookupPropertyFacts: PropertyFactLookup = async (ids) => {
+export const lookupPropertyFacts: PropertyFactLookup = async (ids, signal) => {
   if (factLookup === null) {
     throw new Error("Property facts are not configured");
   }
-  return factLookup(ids);
+  return factLookup(ids, signal);
 };

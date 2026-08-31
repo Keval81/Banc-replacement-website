@@ -8,7 +8,7 @@ export interface BancKnowledgeResult {
 }
 
 export interface BancKnowledge {
-  search(query: string): Promise<BancKnowledgeResult[]>;
+  search(query: string, signal?: AbortSignal): Promise<BancKnowledgeResult[]>;
 }
 
 const MAX_RESULTS = 3;
@@ -139,7 +139,8 @@ export function createBancKnowledgeSearch(
   }
 
   return {
-    async search(query) {
+    async search(query, signal) {
+      signal?.throwIfAborted();
       const queryTokens = tokenize(query);
       if (queryTokens.length === 0) {
         return [];
@@ -147,7 +148,7 @@ export function createBancKnowledgeSearch(
 
       const queryPhrase = queryTokens.join(" ");
 
-      return documents
+      const results = documents
         .map((document) => ({
           document,
           score: scoreDocument(document, queryTokens, queryPhrase),
@@ -160,6 +161,8 @@ export function createBancKnowledgeSearch(
         )
         .slice(0, MAX_RESULTS)
         .map(({ document }) => resultFrom(document));
+      signal?.throwIfAborted();
+      return results;
     },
   };
 }

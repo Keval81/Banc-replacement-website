@@ -430,6 +430,58 @@ test("allows a server-owned response candidate with trusted property facts", asy
   assert.deepEqual(result, { status: "ok", response, providerCalls: 1 });
 });
 
+test("allows one server-grounded comparison candidate covering both trusted properties", async () => {
+  const response =
+    "Oak House is listed at £750,000 with 5 bedrooms and 2 bathrooms, while Elm House is listed at £650,000 with 4 bedrooms and 2 bathrooms. Elm House is lower priced, Oak House has more bedrooms, and both have 2 bathrooms.";
+  const fetch = createSequenceFetch([openAIJsonResponse({ response })]);
+  const model = createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch,
+  });
+  const sharedFacts = {
+    address: "Cuffley, Hertfordshire",
+    department: "sales" as const,
+    status: "for_sale" as const,
+    bathrooms: 2,
+    receptions: 2,
+    propertyType: "house",
+    tenure: "freehold",
+    epc: "B",
+    sqft: 1_800,
+    features: ["garden"],
+    summary: "A detached family home.",
+  };
+  const input: ResponseWritingInput = {
+    ...validTurnInput,
+    results: [{
+      status: "property_facts",
+      facts: [
+        {
+          ...sharedFacts,
+          id: "EA-1",
+          title: "Oak House",
+          price: 750_000,
+          priceDisplay: "£750,000",
+          bedrooms: 5,
+        },
+        {
+          ...sharedFacts,
+          id: "EA-2",
+          title: "Elm House",
+          price: 650_000,
+          priceDisplay: "£650,000",
+          bedrooms: 4,
+        },
+      ],
+    }],
+  };
+
+  const result = await model.writeResponse(input, abortSignal);
+
+  assert.deepEqual(result, { status: "ok", response, providerCalls: 1 });
+});
+
 test("allows a server-owned response candidate with approved Banc knowledge", async () => {
   const excerpt = "Cuffley is popular with families and close to countryside.";
   const response = `Banc guidance says: ${excerpt}`;
