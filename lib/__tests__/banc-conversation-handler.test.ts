@@ -259,7 +259,7 @@ test("preserves exact and minimum bedrooms across price, location, department, f
     check(query: PropertySearchQuery): void;
   }> = [
     {
-      message: "Make it cheaper",
+      message: "Set a £700,000 maximum price",
       primary: {
         type: "update_property_search",
         mutation: { maxPrice: { operation: "set", value: 700_000 } },
@@ -312,6 +312,21 @@ test("preserves exact and minimum bedrooms across price, location, department, f
     assert.ok(query, scenario.message);
     scenario.check(query);
   }
+});
+
+test("makes an active search cheaper without delegating the refinement to intent selection", async () => {
+  const { handler, model, portfolio } = setup();
+
+  const response = await handler(requestFor("Make it cheaper.", activeState()));
+
+  assert.equal(response.action, "search_results");
+  assert.equal(portfolio.searches[0]?.department, "sales");
+  assert.equal(portfolio.searches[0]?.location, "Cuffley");
+  assert.equal(portfolio.searches[0]?.minBedrooms, 5);
+  assert.equal(portfolio.searches[0]?.maxBedrooms, 5);
+  assert.equal(portfolio.searches[0]?.sort, "price_asc");
+  assert.equal(model.planInputs.length, 0);
+  assert.equal(model.responseInputs.length, 1);
 });
 
 test("answers facts for first and second properties and keeps comparisons in requested order", async () => {
@@ -399,6 +414,62 @@ test("answers Banc content questions with only trusted sources", async () => {
 
   assert.equal(response.action, "answer");
   assert.deepEqual(response.sources, [{ title: "Buyers guide", href: "/buyers" }]);
+});
+
+test("returns approved Banc guidance when optional response writing is unavailable", async () => {
+  const { handler, model, knowledge } = setup();
+  knowledge.results = [{
+    documentId: "buyers:offers",
+    title: "Buyers guide",
+    href: "/buyers",
+    excerpt: "Banc explains the offer process.",
+  }];
+  model.planResults.push(plan({ type: "search_banc_knowledge", query: "offer process" }));
+  model.responseResults.push({ status: "model_unavailable", providerCalls: 1 });
+
+  const response = await handler(requestFor("How do offers work?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(response.response, "Banc guidance says: Banc explains the offer process.");
+  assert.deepEqual(response.sources, [{ title: "Buyers guide", href: "/buyers" }]);
+  assert.equal(response.context.topic, "banc_knowledge");
+});
+
+test("keeps the trusted source when its excerpt cannot be repeated safely", async () => {
+  const { handler, model, knowledge } = setup();
+  knowledge.results = [{
+    documentId: "contact:cuffley",
+    title: "Contact Banc",
+    href: "/contact",
+    excerpt: "Call Banc on 01707 877781.",
+  }];
+  model.planResults.push(plan({ type: "search_banc_knowledge", query: "contact Banc" }));
+  model.responseResults.push({ status: "model_unavailable", providerCalls: 1 });
+
+  const response = await handler(requestFor("How can I contact Banc?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(
+    response.response,
+    "I found approved Banc guidance for that question. Please use the source below for details.",
+  );
+  assert.deepEqual(response.sources, [{ title: "Contact Banc", href: "/contact" }]);
+});
+
+test("returns an honest no-source answer when optional knowledge response writing is unavailable", async () => {
+  const { handler, model } = setup();
+  model.planResults.push(plan({ type: "search_banc_knowledge", query: "local crime rate" }));
+  model.responseResults.push({ status: "model_unavailable", providerCalls: 1 });
+
+  const response = await handler(requestFor("What is the local crime rate?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(
+    response.response,
+    "I couldn't find approved Banc guidance for that question. What would you like help with?",
+  );
+  assert.deepEqual(response.sources, []);
+  assert.equal(response.context.topic, "banc_knowledge");
 });
 
 test("asks for a valid active property when facts are unsupported", async () => {

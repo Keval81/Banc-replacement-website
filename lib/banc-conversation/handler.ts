@@ -21,6 +21,8 @@ import {
 const TURN_BUDGET_MS = 20_000;
 const MAX_TRUSTED_OPERATIONS = 2;
 const MAX_PROVIDER_CALLS = 3;
+const CHEAPER_REFINEMENT = /^\s*(?:make|show|find)?\s*(?:it|them)?\s*cheaper[.!?]*\s*$/i;
+const UNSAFE_RESPONSE_TEXT = /\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)|(?:\+?\d[\d\s().-]{7,}\d)/i;
 
 export const INTERPRETATION_CLARIFICATION =
   "Which location, price range, bedroom requirement or property would you like help with?";
@@ -190,6 +192,36 @@ function noResultsCopy(result: TrustedOperationResult): string {
     : MODEL_UNAVAILABLE_COPY;
 }
 
+function deterministicSearchPlan(
+  message: string,
+  state: PropertyConversationState,
+): ConversationPlan | null {
+  if (state.query === undefined || !CHEAPER_REFINEMENT.test(message)) {
+    return null;
+  }
+
+  return {
+    primary: {
+      type: "update_property_search",
+      mutation: { sort: { operation: "set", value: "price_asc" } },
+    },
+  };
+}
+
+function knowledgeFallbackCopy(result: TrustedOperationResult): string {
+  if (result.status !== "knowledge") return MODEL_UNAVAILABLE_COPY;
+
+  const excerpt = result.sources[0]?.excerpt.trim();
+  if (excerpt === undefined) {
+    return "I couldn't find approved Banc guidance for that question. What would you like help with?";
+  }
+
+  const candidate = `Banc guidance says: ${excerpt}`;
+  return candidate.length <= 2_000 && !UNSAFE_RESPONSE_TEXT.test(candidate)
+    ? candidate
+    : "I found approved Banc guidance for that question. Please use the source below for details.";
+}
+
 function parseOrFallback(
   candidate: ConversationResponse,
   state: PropertyConversationState,
@@ -300,31 +332,43 @@ export function createBancConversationHandler({
       }, trustedInitialState);
     };
 
-    const planCall = await withinDeadline(
-      deadline,
-      now,
-      (signal) => model.selectPlan({
-        message: request.message,
-        history: request.history,
-        state: trustedInitialState,
-      }, signal),
+    const deterministicPlan = deterministicSearchPlan(
+      request.message,
+      trustedInitialState,
     );
-    if (planCall.status === "timeout") {
-      return failureResponse("model_timeout");
-    }
-    if (planCall.status === "error") {
-      return failureResponse("model_unavailable");
-    }
+    let selectedPlan: ConversationPlan;
+    let providerCalls: number;
+    if (deterministicPlan !== null) {
+      selectedPlan = deterministicPlan;
+      providerCalls = 0;
+    } else {
+      const planCall = await withinDeadline(
+        deadline,
+        now,
+        (signal) => model.selectPlan({
+          message: request.message,
+          history: request.history,
+          state: trustedInitialState,
+        }, signal),
+      );
+      if (planCall.status === "timeout") {
+        return failureResponse("model_timeout");
+      }
+      if (planCall.status === "error") {
+        return failureResponse("model_unavailable");
+      }
 
-    const selected = planCall.value;
-    if (selected.status !== "ok") {
-      return failureResponse(selected.status);
+      const selected = planCall.value;
+      if (selected.status !== "ok") {
+        return failureResponse(selected.status);
+      }
+      const parsedPlan = parseConversationPlan(selected.plan);
+      if (parsedPlan === null) {
+        return failureResponse("interpretation_invalid");
+      }
+      selectedPlan = parsedPlan;
+      providerCalls = selected.providerCalls;
     }
-    const selectedPlan = parseConversationPlan(selected.plan);
-    if (selectedPlan === null) {
-      return failureResponse("interpretation_invalid");
-    }
-    let providerCalls = selected.providerCalls;
     let state: PropertyConversationState = trustedInitialState;
     const results: TrustedOperationResult[] = [];
     const intents: ConversationIntent[] = [selectedPlan.primary];
@@ -384,6 +428,14 @@ export function createBancConversationHandler({
       }, trustedInitialState);
     }
 
+    const knowledgeFallback = (): ConversationResponse | null =>
+      primary.status === "knowledge"
+        ? parseOrFallback(
+            successfulResponse(knowledgeFallbackCopy(primary), results),
+            trustedInitialState,
+          )
+        : null;
+
     if (providerCalls >= MAX_PROVIDER_CALLS || remainingMs(deadline, now) === 0) {
       if (primary.status === "no_results") {
         return parseOrFallback(
@@ -405,6 +457,8 @@ export function createBancConversationHandler({
       }, signal),
     );
     if (writeCall.status === "timeout") {
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
       if (primary.status === "no_results") {
         return parseOrFallback(
           successfulResponse(noResultsCopy(primary), results),
@@ -414,6 +468,8 @@ export function createBancConversationHandler({
       return failureResponse("model_timeout");
     }
     if (writeCall.status === "error") {
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
       return failureResponse("model_unavailable");
     }
 
@@ -421,6 +477,8 @@ export function createBancConversationHandler({
     providerCalls += written.providerCalls;
     if (providerCalls > MAX_PROVIDER_CALLS) {
       diagnose("model_unavailable");
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
       if (primary.status === "no_results") {
         return parseOrFallback(
           successfulResponse(noResultsCopy(primary), results),
@@ -435,6 +493,8 @@ export function createBancConversationHandler({
     }
     if (written.status !== "ok") {
       diagnose(written.status);
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
       if (primary.status === "no_results") {
         return parseOrFallback(
           successfulResponse(noResultsCopy(primary), results),
