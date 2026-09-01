@@ -136,24 +136,31 @@ test("returns at most three results with excerpts capped at 480 characters", asy
   assert.equal(results.every((result) => result.excerpt.length <= 480), true);
 });
 
-test("keeps matched approved metadata visible in the returned excerpt", async () => {
+test("uses approved page copy without exposing search metadata in the excerpt", async () => {
   const documents = [
     {
-      id: "metadata-match",
-      title: "General guide",
-      sectionTitle: "Overview",
-      href: "/general",
-      text: "x".repeat(700),
-      aliases: ["tenant deposit"],
+      id: "buyers:offer",
+      title: "Buyers Guide",
+      sectionTitle: "Make An Offer",
+      href: "/sales/buyers-guide",
+      text:
+        "It can be hard when deciding how much to offer, but always make sure the offer is viable.",
+      aliases: ["make an offer", "buying offer", "qualified buyer"],
     },
   ] satisfies ApprovedBancDocument[];
 
   const results = await createBancKnowledgeSearch(documents).search(
-    "tenant deposit",
+    "make an offer",
   );
 
-  assert.match(results[0]?.excerpt ?? "", /tenant deposit/i);
-  assert.ok((results[0]?.excerpt.length ?? 0) <= 480);
+  assert.equal(
+    results[0]?.excerpt,
+    "It can be hard when deciding how much to offer, but always make sure the offer is viable.",
+  );
+  assert.doesNotMatch(
+    results[0]?.excerpt ?? "",
+    /Buyers Guide|\/sales\/buyers-guide|buying offer|qualified buyer/,
+  );
 });
 
 test("keeps late matching passage evidence visible in the returned excerpt", async () => {

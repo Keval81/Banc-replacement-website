@@ -159,20 +159,11 @@ function containsPhrase(value: string, phrase: string): boolean {
   );
 }
 
-function excerptWithMetadata(
-  document: ApprovedBancDocument,
+function excerptFromPassage(
   passage: string,
   queryTokens: readonly string[],
-): string | null {
-  const evidence = [
-    document.title,
-    document.href,
-    document.sectionTitle,
-    ...document.aliases,
-    passage,
-  ]
-    .filter(Boolean)
-    .join("\n\n");
+): string {
+  const evidence = passage.trim();
   const targetTokens = new Set(queryTokens);
   const occurrences = [...evidence.matchAll(/[a-z0-9]+/gi)]
     .map((match) => ({
@@ -214,7 +205,7 @@ function excerptWithMetadata(
   }
 
   if (bestStart === -1 || bestEnd - bestStart > MAX_EXCERPT_LENGTH) {
-    return null;
+    return evidence.slice(0, MAX_EXCERPT_LENGTH).trim();
   }
 
   const evidenceLength = bestEnd - bestStart;
@@ -241,7 +232,7 @@ function matchingExcerpt(
     [...uniqueQueryTokens].every((token) => tokens.has(token));
 
   if (hasEveryQueryToken(metadataTokens)) {
-    return excerptWithMetadata(document, document.text, queryTokens);
+    return excerptFromPassage(document.text, queryTokens);
   }
 
   const passages = document.text
@@ -254,7 +245,7 @@ function matchingExcerpt(
       ...tokenize(passage),
     ]);
     if (hasEveryQueryToken(passageTokens)) {
-      return excerptWithMetadata(document, passage, queryTokens);
+      return excerptFromPassage(passage, queryTokens);
     }
   }
 
