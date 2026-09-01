@@ -291,6 +291,129 @@ test("maps rate limits separately from other provider failures", async () => {
   );
 });
 
+test("emits only allowlisted provider diagnostics without sensitive response data", async () => {
+  const events: unknown[] = [];
+  const fetch = createSequenceFetch([
+    Response.json(
+      {
+        object: "error",
+        status: "failed",
+        error: {
+          type: "invalid_request_error",
+          code: "model_not_found",
+          param: "model",
+          message: "SECRET-PROVIDER-MESSAGE https://example.com 01707 644 101",
+        },
+        output: [{
+          type: "message",
+          content: [{ type: "refusal", text: "SECRET-MODEL-OUTPUT" }],
+        }],
+        privatePropertyPayload: "SECRET-PROPERTY-PAYLOAD",
+      },
+      {
+        status: 400,
+        headers: { "x-request-id": "req_safe-123" },
+      },
+    ),
+  ]);
+  const model = createOpenAIConversationModel({
+    apiKey: "SECRET-API-KEY",
+    model: "SECRET-MODEL-VALUE",
+    fetch,
+    logger: (event: unknown) => events.push(event),
+  });
+
+  const result = await model.selectPlan({
+    ...validTurnInput,
+    message: "SECRET-VISITOR-MESSAGE",
+    history: [{ role: "user", content: "SECRET-VISITOR-HISTORY" }],
+  }, abortSignal);
+
+  assert.deepEqual(result, { status: "model_unavailable", providerCalls: 1 });
+  assert.deepEqual(events, [{
+    stage: "select_plan_provider",
+    callOrdinal: 1,
+    httpStatus: 400,
+    providerRequestId: "req_safe-123",
+    errorType: "invalid_request_error",
+    errorCode: "model_not_found",
+    errorParam: "model",
+    responseObject: "error",
+    responseStatus: "failed",
+    bodyJsonParsed: true,
+    outputItemCount: 1,
+    outputItemTypes: ["message"],
+    contentItemCount: 1,
+    contentItemTypes: ["refusal"],
+    outputTextCount: 0,
+    outputTextExtracted: false,
+    outputJsonParsed: false,
+  }]);
+  const serializedEvents = JSON.stringify(events);
+  for (const forbidden of [
+    "SECRET-PROVIDER-MESSAGE",
+    "SECRET-MODEL-OUTPUT",
+    "SECRET-PROPERTY-PAYLOAD",
+    "SECRET-API-KEY",
+    "SECRET-MODEL-VALUE",
+    "SECRET-VISITOR-MESSAGE",
+    "SECRET-VISITOR-HISTORY",
+    "https://example.com",
+    "01707 644 101",
+  ]) {
+    assert.doesNotMatch(serializedEvents, new RegExp(forbidden.replaceAll("-", "\\-")));
+  }
+});
+
+test("redacts unsafe provider diagnostic tokens", async () => {
+  const events: unknown[] = [];
+  const fetch = createSequenceFetch([
+    Response.json(
+      {
+        object: "https://secret.example/object",
+        status: "failed with SECRET DETAILS",
+        error: {
+          type: "invalid request SECRET",
+          code: "https://secret.example/code",
+          param: "phone 01707 644 101",
+        },
+      },
+      {
+        status: 400,
+        headers: { "x-request-id": "https://secret.example/request" },
+      },
+    ),
+  ]);
+
+  await createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch,
+    logger: (event: unknown) => events.push(event),
+  }).selectPlan(validTurnInput, abortSignal);
+
+  assert.deepEqual(events, [{
+    stage: "select_plan_provider",
+    callOrdinal: 1,
+    httpStatus: 400,
+    providerRequestId: "redacted",
+    errorType: "redacted",
+    errorCode: "redacted",
+    errorParam: "redacted",
+    responseObject: "redacted",
+    responseStatus: "redacted",
+    bodyJsonParsed: true,
+    outputItemCount: 0,
+    outputItemTypes: [],
+    contentItemCount: 0,
+    contentItemTypes: [],
+    outputTextCount: 0,
+    outputTextExtracted: false,
+    outputJsonParsed: false,
+  }]);
+  assert.doesNotMatch(JSON.stringify(events), /secret|01707|https:/i);
+});
+
 test("bounds recent history and excludes untrusted state fields from plan prompts", async () => {
   const fetch = createSequenceFetch([openAIJsonResponse(validPlan)]);
   const model = createOpenAIConversationModel({
