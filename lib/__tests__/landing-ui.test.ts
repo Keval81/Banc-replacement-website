@@ -230,8 +230,12 @@ test("keeps the Featured Listings section visible while data loads or is unavail
     join(import.meta.dirname, "..", "..", "app", "sections", "FeaturedListings.tsx"),
     "utf8",
   );
+  const loaderSource = readFileSync(
+    join(import.meta.dirname, "..", "featured-listings.ts"),
+    "utf8",
+  );
 
-  assert.match(source, /status:\s*["']loading["']/);
+  assert.match(loaderSource, /status:\s*["']loading["']/);
   assert.match(source, /Loading featured homes/);
   assert.match(source, /No featured homes are available right now/);
   assert.match(source, /We couldn(?:&apos;|')t load featured homes right now/);

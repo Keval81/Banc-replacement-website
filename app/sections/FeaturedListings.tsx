@@ -5,60 +5,37 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import PropertyCard from "@/components/PropertyCard";
 import { SectionHeader } from "@/components/SectionHeader";
-
-interface FeaturedItem {
-  id: string;
-  title: string;
-  address: string;
-  price: string;
-  priceNum: number;
-  tags: string[];
-  stats: { beds: number; baths: number; sqft?: number; epc?: string };
-  images: string[];
-  summary: string;
-}
-
-type FeaturedState =
-  | { status: "loading"; listings: [] }
-  | { status: "ready"; listings: FeaturedItem[] }
-  | { status: "error"; listings: [] };
+import {
+  INITIAL_FEATURED_LISTINGS_STATE,
+  loadFeaturedListings,
+  type FeaturedListingsState,
+} from "@/lib/featured-listings";
 
 export default function FeaturedListings() {
-  const [state, setState] = useState<FeaturedState>({
-    status: "loading",
-    listings: [],
-  });
+  const [state, setState] = useState<FeaturedListingsState>(
+    INITIAL_FEATURED_LISTINGS_STATE,
+  );
 
   useEffect(() => {
     const controller = new AbortController();
 
-    const loadFeaturedListings = async () => {
+    const updateFeaturedListings = async () => {
       try {
-        const response = await fetch(
-          "/api/properties?department=sales&status=for_sale&limit=3",
-          { signal: controller.signal },
-        );
-        if (!response.ok) {
-          throw new Error(
-            "Featured listings request failed with status " + response.status,
-          );
+        const nextState = await loadFeaturedListings(fetch, controller.signal);
+        if (!controller.signal.aborted) setState(nextState);
+      } catch (error) {
+        if (
+          controller.signal.aborted &&
+          error instanceof Error &&
+          error.name === "AbortError"
+        ) {
+          return;
         }
-
-        const data = await response.json() as { properties?: FeaturedItem[] };
-        if (!Array.isArray(data.properties)) {
-          throw new Error(
-            "Featured listings response did not contain a property list",
-          );
-        }
-
-        setState({ status: "ready", listings: data.properties });
-      } catch {
-        if (controller.signal.aborted) return;
         setState({ status: "error", listings: [] });
       }
     };
 
-    void loadFeaturedListings();
+    void updateFeaturedListings();
 
     return () => {
       controller.abort();
