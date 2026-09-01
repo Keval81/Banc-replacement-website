@@ -393,6 +393,12 @@ export function createBancConversationHandler({
     }
     let state: PropertyConversationState = trustedInitialState;
     const results: TrustedOperationResult[] = [];
+    const knowledgeFallback = (): ConversationResponse | null => {
+      const fallback = completedKnowledgeFallback(results);
+      return fallback === null
+        ? null
+        : parseOrFallback(fallback, trustedInitialState);
+    };
     const intents: ConversationIntent[] = [selectedPlan.primary];
 
     if (
@@ -404,6 +410,8 @@ export function createBancConversationHandler({
 
     for (const [index, intent] of intents.entries()) {
       if (remainingMs(deadline, now) === 0) {
+        const fallback = knowledgeFallback();
+        if (fallback !== null) return fallback;
         return failureResponse("model_timeout", intent.type);
       }
       if (
@@ -449,13 +457,6 @@ export function createBancConversationHandler({
         context: primary.state,
       }, trustedInitialState);
     }
-
-    const knowledgeFallback = (): ConversationResponse | null => {
-      const fallback = completedKnowledgeFallback(results);
-      return fallback === null
-        ? null
-        : parseOrFallback(fallback, trustedInitialState);
-    };
 
     const completedKnowledge = results.find(
       (result): result is Extract<TrustedOperationResult, { status: "knowledge" }> =>

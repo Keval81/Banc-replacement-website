@@ -464,6 +464,93 @@ test("returns completed primary knowledge when the response-writer deadline has 
   assert.equal(model.responseInputs.length, 0);
 });
 
+test("recovers completed primary knowledge before the deadline blocks supporting contact work", async () => {
+  const model = new FakeModel();
+  const portfolio = new FakePortfolio();
+  const knowledge = new FakeKnowledge();
+  knowledge.results = [{
+    documentId: "buyers:offers",
+    title: "Buyers guide",
+    href: "/buyers",
+    excerpt: "Banc explains the offer process.",
+  }];
+  const trustedTools = createConversationTools({ portfolio, knowledge });
+  const started: ConversationPlan["primary"]["type"][] = [];
+  model.planResults.push({
+    status: "ok",
+    providerCalls: 1,
+    plan: {
+      primary: { type: "search_banc_knowledge", query: "offer process" },
+      supporting: { type: "contact_banc", reason: "human" },
+    },
+  });
+  const times = [0, 0, 0, 0, 20_000];
+  const handler = createBancConversationHandler({
+    model,
+    tools: {
+      execute: async (input, signal) => {
+        started.push(input.intent.type);
+        return trustedTools.execute(input, signal);
+      },
+    },
+    now: () => times.shift() ?? 20_000,
+    logger: () => undefined,
+  });
+
+  const response = await handler(requestFor("How do offers work?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(response.response, "Banc guidance says: Banc explains the offer process.");
+  assert.deepEqual(response.sources, [{ title: "Buyers guide", href: "/buyers" }]);
+  assert.equal(response.context.topic, "banc_knowledge");
+  assert.deepEqual(started, ["search_banc_knowledge"]);
+  assert.equal(model.responseInputs.length, 0);
+});
+
+test("retains fixed contact controls when deadline blocks supporting work after empty knowledge", async () => {
+  const model = new FakeModel();
+  const portfolio = new FakePortfolio();
+  const knowledge = new FakeKnowledge();
+  const trustedTools = createConversationTools({ portfolio, knowledge });
+  const started: ConversationPlan["primary"]["type"][] = [];
+  model.planResults.push({
+    status: "ok",
+    providerCalls: 1,
+    plan: {
+      primary: { type: "search_banc_knowledge", query: "local crime rate" },
+      supporting: { type: "contact_banc", reason: "human" },
+    },
+  });
+  const times = [0, 0, 0, 0, 20_000];
+  const handler = createBancConversationHandler({
+    model,
+    tools: {
+      execute: async (input, signal) => {
+        started.push(input.intent.type);
+        return trustedTools.execute(input, signal);
+      },
+    },
+    now: () => times.shift() ?? 20_000,
+    logger: () => undefined,
+  });
+
+  const response = await handler(requestFor("What is the local crime rate?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(
+    response.response,
+    "I couldn't find approved Banc guidance for that question. What would you like help with?",
+  );
+  assert.deepEqual(response.sources, []);
+  assert.equal(response.context.topic, "banc_knowledge");
+  assert.deepEqual(response.handoff, {
+    callHref: BANC_CONTACT.callHref,
+    whatsappHref: BANC_CONTACT.whatsappHref,
+  });
+  assert.deepEqual(started, ["search_banc_knowledge"]);
+  assert.equal(model.responseInputs.length, 0);
+});
+
 test("preserves primary search cards and supporting knowledge when response writing is unavailable", async () => {
   const { handler, model, knowledge } = setup();
   knowledge.results = [{
