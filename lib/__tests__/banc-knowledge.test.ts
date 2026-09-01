@@ -136,14 +136,132 @@ test("returns at most three results with excerpts capped at 480 characters", asy
   assert.equal(results.every((result) => result.excerpt.length <= 480), true);
 });
 
+test("keeps matched approved metadata visible in the returned excerpt", async () => {
+  const documents = [
+    {
+      id: "metadata-match",
+      title: "General guide",
+      sectionTitle: "Overview",
+      href: "/general",
+      text: "x".repeat(700),
+      aliases: ["tenant deposit"],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search(
+    "tenant deposit",
+  );
+
+  assert.match(results[0]?.excerpt ?? "", /tenant deposit/i);
+  assert.ok((results[0]?.excerpt.length ?? 0) <= 480);
+});
+
+test("keeps late matching passage evidence visible in the returned excerpt", async () => {
+  const documents = [
+    {
+      id: "late-match",
+      title: "General guide",
+      sectionTitle: "Overview",
+      href: "/general",
+      text: `${"x".repeat(600)} parking is available nearby`,
+      aliases: [],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search("parking");
+
+  assert.match(results[0]?.excerpt ?? "", /parking/i);
+  assert.ok((results[0]?.excerpt.length ?? 0) <= 480);
+});
+
 test("returns no approved source for unsupported facts", async () => {
   const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
+  const unsupportedQueries = [
+    "What colour is the Cuffley office kitchen?",
+    "Kitchen at Cuffley office",
+    "Cuffley office kitchen",
+    "Wallpaper in Cuffley office",
+    "Kitchen at Mayfair office",
+    "news",
+    "Cuffley office news",
+    "News about Cuffley office",
+    "new Cuffley office",
+    "Does Cuffley office have parking?",
+    "Is parking available at Cuffley office?",
+  ] as const;
 
+  for (const query of unsupportedQueries) {
+    assert.deepEqual(await knowledge.search(query), [], query);
+  }
   assert.deepEqual(
     await knowledge.search("Does Banc provide cryptocurrency mortgages in Scotland?"),
     [],
   );
   assert.deepEqual(await knowledge.search("the and what is"), []);
+});
+
+test("grounds natural guide and fee wording without suffix-derived matches", async () => {
+  const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
+  const cases = [
+    ["buying process", "/sales/buyers-guide"],
+    ["home buying process", "/sales/buyers-guide"],
+    ["selling process", "/sales/sellers-guide"],
+    ["renting process", "/lettings/tenants-guide"],
+    ["lettings fees", "/lettings/tenants-guide"],
+    ["letting fees", "/lettings/tenants-guide"],
+  ] as const;
+
+  for (const [query, href] of cases) {
+    const results = await knowledge.search(query);
+    assert.equal(results[0]?.href, href, query);
+    assert.equal(
+      results.every((result) => result.href === href),
+      true,
+      `${query} returned a weak trailing source`,
+    );
+  }
+
+  assert.ok((await knowledge.search("viewing process")).length > 0);
+});
+
+test("ignores conversational framing without discarding factual qualifiers", async () => {
+  const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
+  const cases = [
+    ["Where is the Cuffley office?", "/contact"],
+    ["Where can I find the Cuffley office?", "/contact"],
+    ["Can you explain the buying process?", "/sales/buyers-guide"],
+    ["I want help buying a home", "/sales/buyers-guide"],
+    ["What services are available for landlords?", "/lettings/landlords-guide"],
+    ["Which documents are needed to rent?", "/lettings/tenants-guide"],
+    ["How do valuations work?", "/sales/sellers-guide"],
+    ["Is there a Cuffley office?", "/contact"],
+  ] as const;
+
+  for (const [query, href] of cases) {
+    const results = await knowledge.search(query);
+    assert.equal(results[0]?.href, href, query);
+  }
+});
+
+test("treats ordinary singular and plural knowledge terms equivalently", async () => {
+  const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
+  const pairs = [
+    ["mortgage fees", "mortgages fees"],
+    ["tenancy", "tenancies"],
+    ["deposit", "deposits"],
+    ["office", "offices"],
+    ["I want help buying a home", "I want help buying homes"],
+    ["purchase process", "purchases process"],
+    ["rental fees", "rentals fees"],
+    ["opening hours", "openings hours"],
+  ] as const;
+
+  for (const [singularQuery, pluralQuery] of pairs) {
+    const singularResults = await knowledge.search(singularQuery);
+    const pluralResults = await knowledge.search(pluralQuery);
+    assert.ok(singularResults.length > 0, singularQuery);
+    assert.equal(pluralResults[0]?.href, singularResults[0]?.href, pluralQuery);
+  }
 });
 
 test("rejects external, protocol-relative, and non-root-relative sources", () => {
