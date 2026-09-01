@@ -9,6 +9,7 @@ import {
   type ConversationResponse,
   type PropertyConversationState,
 } from "./contracts.ts";
+import { BANC_CONTACT } from "../banc-contact.ts";
 import type {
   ConversationModel,
   ModelFailureCategory,
@@ -208,9 +209,9 @@ function deterministicSearchPlan(
   };
 }
 
-function knowledgeFallbackCopy(result: TrustedOperationResult): string {
-  if (result.status !== "knowledge") return MODEL_UNAVAILABLE_COPY;
-
+function knowledgeFallbackCopy(
+  result: Extract<TrustedOperationResult, { status: "knowledge" }>,
+): string {
   const excerpt = result.sources[0]?.excerpt.trim();
   if (excerpt === undefined) {
     return "I couldn't find approved Banc guidance for that question. What would you like help with?";
@@ -278,6 +279,27 @@ function successfulResponse(
         }),
     context: finalResult.state,
   };
+}
+
+function completedKnowledgeFallback(
+  results: readonly TrustedOperationResult[],
+): ConversationResponse | null {
+  const knowledge = results.find(
+    (result): result is Extract<TrustedOperationResult, { status: "knowledge" }> =>
+      result.status === "knowledge",
+  );
+  if (knowledge === undefined) return null;
+
+  const response = successfulResponse(knowledgeFallbackCopy(knowledge), results);
+  return knowledge.sources.length === 0
+    ? {
+        ...response,
+        handoff: {
+          callHref: BANC_CONTACT.callHref,
+          whatsappHref: BANC_CONTACT.whatsappHref,
+        },
+      }
+    : response;
 }
 
 export function createBancConversationHandler({
@@ -428,15 +450,25 @@ export function createBancConversationHandler({
       }, trustedInitialState);
     }
 
-    const knowledgeFallback = (): ConversationResponse | null =>
-      primary.status === "knowledge"
-        ? parseOrFallback(
-            successfulResponse(knowledgeFallbackCopy(primary), results),
-            trustedInitialState,
-          )
-        : null;
+    const knowledgeFallback = (): ConversationResponse | null => {
+      const fallback = completedKnowledgeFallback(results);
+      return fallback === null
+        ? null
+        : parseOrFallback(fallback, trustedInitialState);
+    };
+
+    const completedKnowledge = results.find(
+      (result): result is Extract<TrustedOperationResult, { status: "knowledge" }> =>
+        result.status === "knowledge",
+    );
+    if (completedKnowledge?.sources.length === 0) {
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
+    }
 
     if (providerCalls >= MAX_PROVIDER_CALLS || remainingMs(deadline, now) === 0) {
+      const fallback = knowledgeFallback();
+      if (fallback !== null) return fallback;
       if (primary.status === "no_results") {
         return parseOrFallback(
           successfulResponse(noResultsCopy(primary), results),

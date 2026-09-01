@@ -435,6 +435,67 @@ test("returns approved Banc guidance when optional response writing is unavailab
   assert.equal(response.context.topic, "banc_knowledge");
 });
 
+test("returns completed primary knowledge when the response-writer deadline has elapsed", async () => {
+  const model = new FakeModel();
+  const portfolio = new FakePortfolio();
+  const knowledge = new FakeKnowledge();
+  knowledge.results = [{
+    documentId: "buyers:offers",
+    title: "Buyers guide",
+    href: "/buyers",
+    excerpt: "Banc explains the offer process.",
+  }];
+  model.planResults.push(plan({ type: "search_banc_knowledge", query: "offer process" }));
+  const times = [0, 0, 0, 0, 20_000];
+  const handler = createBancConversationHandler({
+    model,
+    tools: createConversationTools({ portfolio, knowledge }),
+    now: () => times.shift() ?? 20_000,
+    logger: () => undefined,
+  });
+
+  const response = await handler(requestFor("How do offers work?"));
+
+  assert.equal(response.action, "answer");
+  assert.equal(response.response, "Banc guidance says: Banc explains the offer process.");
+  assert.deepEqual(response.sources, [{ title: "Buyers guide", href: "/buyers" }]);
+  assert.equal(response.context.topic, "banc_knowledge");
+  assert.deepEqual(knowledge.searches, ["offer process"]);
+  assert.equal(model.responseInputs.length, 0);
+});
+
+test("preserves primary search cards and supporting knowledge when response writing is unavailable", async () => {
+  const { handler, model, knowledge } = setup();
+  knowledge.results = [{
+    documentId: "buyers:offers",
+    title: "Buyers guide",
+    href: "/buyers",
+    excerpt: "Banc explains the offer process.",
+  }];
+  model.planResults.push({
+    status: "ok",
+    providerCalls: 1,
+    plan: {
+      primary: {
+        type: "update_property_search",
+        mutation: {
+          department: { operation: "set", value: "sales" },
+          location: { operation: "set", value: "Cuffley" },
+        },
+      },
+      supporting: { type: "search_banc_knowledge", query: "offer process" },
+    },
+  });
+  model.responseResults.push({ status: "model_unavailable", providerCalls: 1 });
+
+  const response = await handler(requestFor("Find Cuffley homes and explain offers"));
+
+  assert.equal(response.action, "search_results");
+  assert.deepEqual(response.properties?.map(({ id }) => id), ["EA-1", "EA-2"]);
+  assert.deepEqual(response.sources, [{ title: "Buyers guide", href: "/buyers" }]);
+  assert.equal(response.context.topic, "banc_knowledge");
+});
+
 test("keeps the trusted source when its excerpt cannot be repeated safely", async () => {
   const { handler, model, knowledge } = setup();
   knowledge.results = [{
@@ -470,6 +531,11 @@ test("returns an honest no-source answer when optional knowledge response writin
   );
   assert.deepEqual(response.sources, []);
   assert.equal(response.context.topic, "banc_knowledge");
+  assert.deepEqual(response.handoff, {
+    callHref: BANC_CONTACT.callHref,
+    whatsappHref: BANC_CONTACT.whatsappHref,
+  });
+  assert.equal(model.responseInputs.length, 0);
 });
 
 test("asks for a valid active property when facts are unsupported", async () => {
@@ -661,7 +727,13 @@ test("runs at most two trusted operations and skips supporting facts invalidated
 });
 
 test("never exceeds three provider calls including repair and response writing", async () => {
-  const { handler, model } = setup();
+  const { handler, model, knowledge } = setup();
+  knowledge.results = [{
+    documentId: "buyers:offers",
+    title: "Buyers guide",
+    href: "/buyers",
+    excerpt: "Banc explains the offer process.",
+  }];
   model.planResults.push({
     status: "ok",
     providerCalls: 2,
