@@ -159,7 +159,7 @@ test("uses approved page copy without exposing search metadata in the excerpt", 
   );
   assert.doesNotMatch(
     results[0]?.excerpt ?? "",
-    /Buyers Guide|\/sales\/buyers-guide|buying offer|qualified buyer/,
+    /Buyers Guide|Make An Offer|\/sales\/buyers-guide|buying offer|qualified buyer/,
   );
 });
 
@@ -179,6 +179,48 @@ test("keeps late matching passage evidence visible in the returned excerpt", asy
 
   assert.match(results[0]?.excerpt ?? "", /parking/i);
   assert.ok((results[0]?.excerpt.length ?? 0) <= 480);
+});
+
+test("centres mixed metadata and body matches on the body evidence", async () => {
+  const documents = [
+    {
+      id: "cuffley-parking",
+      title: "Cuffley guide",
+      sectionTitle: "Overview",
+      href: "/area-guides/cuffley",
+      text: `${"x".repeat(600)} parking is available nearby`,
+      aliases: [],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search(
+    "Cuffley parking",
+  );
+
+  assert.match(results[0]?.excerpt ?? "", /parking is available nearby/i);
+  assert.doesNotMatch(
+    results[0]?.excerpt ?? "",
+    /Cuffley guide|\/area-guides\/cuffley/,
+  );
+});
+
+test("rejects body evidence that cannot fit in one bounded excerpt", async () => {
+  const documents = [
+    {
+      id: "separated-evidence",
+      title: "General guide",
+      sectionTitle: "Overview",
+      href: "/general",
+      text: `garden ${"x".repeat(600)} parking`,
+      aliases: [],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search(
+    "garden parking",
+  );
+
+  assert.deepEqual(results, []);
 });
 
 test("returns no approved source for unsupported facts", async () => {

@@ -162,9 +162,13 @@ function containsPhrase(value: string, phrase: string): boolean {
 function excerptFromPassage(
   passage: string,
   queryTokens: readonly string[],
-): string {
+): string | null {
   const evidence = passage.trim();
+  if (evidence.length === 0) return null;
   const targetTokens = new Set(queryTokens);
+  if (targetTokens.size === 0) {
+    return evidence.slice(0, MAX_EXCERPT_LENGTH).trim();
+  }
   const occurrences = [...evidence.matchAll(/[a-z0-9]+/gi)]
     .map((match) => ({
       end: (match.index ?? 0) + match[0].length,
@@ -205,7 +209,7 @@ function excerptFromPassage(
   }
 
   if (bestStart === -1 || bestEnd - bestStart > MAX_EXCERPT_LENGTH) {
-    return evidence.slice(0, MAX_EXCERPT_LENGTH).trim();
+    return null;
   }
 
   const evidenceLength = bestEnd - bestStart;
@@ -230,9 +234,15 @@ function matchingExcerpt(
   ]);
   const hasEveryQueryToken = (tokens: ReadonlySet<string>) =>
     [...uniqueQueryTokens].every((token) => tokens.has(token));
+  const passageQueryTokens = (tokens: ReadonlySet<string>) =>
+    [...uniqueQueryTokens].filter((token) => tokens.has(token));
 
   if (hasEveryQueryToken(metadataTokens)) {
-    return excerptFromPassage(document.text, queryTokens);
+    const documentTokens = tokenSet(document.text);
+    return excerptFromPassage(
+      document.text,
+      passageQueryTokens(documentTokens),
+    );
   }
 
   const passages = document.text
@@ -240,12 +250,16 @@ function matchingExcerpt(
     .map((passage) => passage.trim())
     .filter(Boolean);
   for (const passage of passages) {
-    const passageTokens = new Set([
+    const bodyTokens = tokenSet(passage);
+    const matchingTokens = new Set([
       ...metadataTokens,
-      ...tokenize(passage),
+      ...bodyTokens,
     ]);
-    if (hasEveryQueryToken(passageTokens)) {
-      return excerptFromPassage(passage, queryTokens);
+    if (hasEveryQueryToken(matchingTokens)) {
+      return excerptFromPassage(
+        passage,
+        passageQueryTokens(bodyTokens),
+      );
     }
   }
 
