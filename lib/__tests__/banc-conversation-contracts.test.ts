@@ -183,6 +183,23 @@ test("requires unique bounded property ids and valid handoff categories in plans
   });
 });
 
+test("keeps duplicate array rejection in application contracts", () => {
+  for (const mutation of [
+    { propertyTypes: { operation: "set", value: ["house", "house"] } },
+    { tenures: { operation: "set", value: ["freehold", "freehold"] } },
+    { features: { operation: "set", value: ["parking", "parking"] } },
+  ]) {
+    assert.equal(parsePropertySearchMutation(mutation), null);
+  }
+
+  assert.equal(parseConversationPlan({
+    primary: {
+      type: "get_property_facts",
+      propertyIds: ["EA-1", "EA-1"],
+    },
+  }), null);
+});
+
 test("request parsing authorizes focused ids and clones untrusted context arrays", () => {
   const resultPropertyIds = ["EA-1", "EA-2"];
   const request = parseConversationRequest({

@@ -123,6 +123,22 @@ function assertBoundedStructuredRequest(
   );
 }
 
+function containsObjectKey(value: unknown, key: string): boolean {
+  if (Array.isArray(value)) {
+    return value.some((item) => containsObjectKey(item, key));
+  }
+  if (typeof value !== "object" || value === null) return false;
+  const record = value as Record<string, unknown>;
+  return Object.hasOwn(record, key) ||
+    Object.values(record).some((item) => containsObjectKey(item, key));
+}
+
+function structuredOutputSchema(call: CapturedCall | undefined): unknown {
+  const body = requestBody(call);
+  const text = body.text as { format?: { schema?: unknown } } | undefined;
+  return text?.format?.schema;
+}
+
 test("selects a valid plan with one bounded structured provider call", async () => {
   const fetch = createSequenceFetch([openAIJsonResponse(validPlan)]);
   const model = createOpenAIConversationModel({
@@ -185,6 +201,55 @@ test("repairs malformed intent exactly once with validation feedback", async () 
   assert.doesNotMatch(fetch.calls[1]?.body ?? "", /test-key/);
   assert.doesNotMatch(fetch.calls[1]?.body ?? "", /PROVIDER-OUTPUT-SECRET/);
   assert.doesNotMatch(fetch.calls[1]?.body ?? "", /SECRET-RAW-PROPERTY/);
+});
+
+test("omits unsupported uniqueItems from every structured provider schema", async () => {
+  const fetch = createSequenceFetch([
+    openAIJsonResponse({
+      primary: {
+        type: "update_property_search",
+        mutation: { location: null },
+      },
+    }),
+    openAIJsonResponse(validPlan),
+    openAIJsonResponse({
+      response: "I've reset your property search. What would you like to look for?",
+    }),
+  ]);
+  const model = createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch,
+  });
+
+  assert.equal(
+    (await model.selectPlan(validTurnInput, abortSignal)).status,
+    "ok",
+  );
+  assert.equal(
+    (await model.writeResponse(
+      { ...validTurnInput, results: [{ status: "reset" }] },
+      abortSignal,
+    )).status,
+    "ok",
+  );
+  assert.equal(fetch.calls.length, 3);
+  assert.deepEqual(
+    fetch.calls.map((call) =>
+      ((requestBody(call).text as { format: { name: string } }).format.name)
+    ),
+    [
+      "banc_conversation_plan",
+      "banc_conversation_plan",
+      "banc_conversation_response",
+    ],
+  );
+  for (const call of fetch.calls) {
+    assert.equal(
+      containsObjectKey(structuredOutputSchema(call), "uniqueItems"),
+      false,
+    );
+  }
 });
 
 test("returns interpretation_invalid after one failed repair and never tries a third call", async () => {
@@ -289,129 +354,6 @@ test("maps rate limits separately from other provider failures", async () => {
     }).selectPlan(validTurnInput, abortSignal),
     { status: "model_unavailable", providerCalls: 1 },
   );
-});
-
-test("emits only allowlisted provider diagnostics without sensitive response data", async () => {
-  const events: unknown[] = [];
-  const fetch = createSequenceFetch([
-    Response.json(
-      {
-        object: "error",
-        status: "failed",
-        error: {
-          type: "invalid_request_error",
-          code: "model_not_found",
-          param: "model",
-          message: "SECRET-PROVIDER-MESSAGE https://example.com 01707 644 101",
-        },
-        output: [{
-          type: "message",
-          content: [{ type: "refusal", text: "SECRET-MODEL-OUTPUT" }],
-        }],
-        privatePropertyPayload: "SECRET-PROPERTY-PAYLOAD",
-      },
-      {
-        status: 400,
-        headers: { "x-request-id": "req_safe-123" },
-      },
-    ),
-  ]);
-  const model = createOpenAIConversationModel({
-    apiKey: "SECRET-API-KEY",
-    model: "SECRET-MODEL-VALUE",
-    fetch,
-    logger: (event: unknown) => events.push(event),
-  });
-
-  const result = await model.selectPlan({
-    ...validTurnInput,
-    message: "SECRET-VISITOR-MESSAGE",
-    history: [{ role: "user", content: "SECRET-VISITOR-HISTORY" }],
-  }, abortSignal);
-
-  assert.deepEqual(result, { status: "model_unavailable", providerCalls: 1 });
-  assert.deepEqual(events, [{
-    stage: "select_plan_provider",
-    callOrdinal: 1,
-    httpStatus: 400,
-    providerRequestId: "req_safe-123",
-    errorType: "invalid_request_error",
-    errorCode: "model_not_found",
-    errorParam: "model",
-    responseObject: "error",
-    responseStatus: "failed",
-    bodyJsonParsed: true,
-    outputItemCount: 1,
-    outputItemTypes: ["message"],
-    contentItemCount: 1,
-    contentItemTypes: ["refusal"],
-    outputTextCount: 0,
-    outputTextExtracted: false,
-    outputJsonParsed: false,
-  }]);
-  const serializedEvents = JSON.stringify(events);
-  for (const forbidden of [
-    "SECRET-PROVIDER-MESSAGE",
-    "SECRET-MODEL-OUTPUT",
-    "SECRET-PROPERTY-PAYLOAD",
-    "SECRET-API-KEY",
-    "SECRET-MODEL-VALUE",
-    "SECRET-VISITOR-MESSAGE",
-    "SECRET-VISITOR-HISTORY",
-    "https://example.com",
-    "01707 644 101",
-  ]) {
-    assert.doesNotMatch(serializedEvents, new RegExp(forbidden.replaceAll("-", "\\-")));
-  }
-});
-
-test("redacts unsafe provider diagnostic tokens", async () => {
-  const events: unknown[] = [];
-  const fetch = createSequenceFetch([
-    Response.json(
-      {
-        object: "https://secret.example/object",
-        status: "failed with SECRET DETAILS",
-        error: {
-          type: "invalid request SECRET",
-          code: "https://secret.example/code",
-          param: "phone 01707 644 101",
-        },
-      },
-      {
-        status: 400,
-        headers: { "x-request-id": "https://secret.example/request" },
-      },
-    ),
-  ]);
-
-  await createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-    logger: (event: unknown) => events.push(event),
-  }).selectPlan(validTurnInput, abortSignal);
-
-  assert.deepEqual(events, [{
-    stage: "select_plan_provider",
-    callOrdinal: 1,
-    httpStatus: 400,
-    providerRequestId: "redacted",
-    errorType: "redacted",
-    errorCode: "redacted",
-    errorParam: "redacted",
-    responseObject: "redacted",
-    responseStatus: "redacted",
-    bodyJsonParsed: true,
-    outputItemCount: 0,
-    outputItemTypes: [],
-    contentItemCount: 0,
-    contentItemTypes: [],
-    outputTextCount: 0,
-    outputTextExtracted: false,
-    outputJsonParsed: false,
-  }]);
-  assert.doesNotMatch(JSON.stringify(events), /secret|01707|https:/i);
 });
 
 test("bounds recent history and excludes untrusted state fields from plan prompts", async () => {

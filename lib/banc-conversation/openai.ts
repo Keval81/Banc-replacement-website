@@ -174,7 +174,6 @@ const planJsonSchema = {
             operation: { const: "set" },
             value: {
               type: "array",
-              uniqueItems: true,
               items: { type: "string", enum: SEARCH_PROPERTY_TYPES },
             },
           },
@@ -197,7 +196,6 @@ const planJsonSchema = {
             operation: { const: "set" },
             value: {
               type: "array",
-              uniqueItems: true,
               items: { type: "string", enum: SEARCH_TENURES },
             },
           },
@@ -220,7 +218,6 @@ const planJsonSchema = {
             operation: { const: "set" },
             value: {
               type: "array",
-              uniqueItems: true,
               items: { type: "string", enum: SEARCH_FEATURES },
             },
           },
@@ -346,7 +343,6 @@ const planJsonSchema = {
           type: "array",
           minItems: 1,
           maxItems: 3,
-          uniqueItems: true,
           items: { type: "string", minLength: 1, maxLength: 64 },
         },
       },
@@ -478,27 +474,6 @@ export interface OpenAIConversationModelOptions {
   apiKey?: string;
   model?: string;
   fetch?: typeof fetch;
-  logger?: (event: OpenAIProviderDiagnosticEvent) => void;
-}
-
-export interface OpenAIProviderDiagnosticEvent {
-  stage: "select_plan_provider" | "write_response_provider";
-  callOrdinal: 1 | 2;
-  httpStatus: number;
-  providerRequestId?: string;
-  errorType?: string;
-  errorCode?: string;
-  errorParam?: string;
-  responseObject?: string;
-  responseStatus?: string;
-  bodyJsonParsed: boolean;
-  outputItemCount: number;
-  outputItemTypes: string[];
-  contentItemCount: number;
-  contentItemTypes: string[];
-  outputTextCount: number;
-  outputTextExtracted: boolean;
-  outputJsonParsed: boolean;
 }
 
 type ProviderFailure = Exclude<ModelFailureCategory, "interpretation_invalid">;
@@ -510,8 +485,6 @@ type SanitizedPropertySearchResult = Extract<
 type ProviderResult =
   | { status: "ok"; value: unknown }
   | { status: ProviderFailure };
-
-type ProviderDiagnosticStage = OpenAIProviderDiagnosticEvent["stage"];
 
 function boundedText(value: unknown, maximum: number): string {
   return typeof value === "string" ? value.slice(0, maximum) : "";
@@ -927,120 +900,30 @@ function buildResponseInput(
   });
 }
 
-interface ExtractedOutputValue {
-  value: unknown | null;
-  outputTextCount: number;
-  outputTextExtracted: boolean;
-  outputJsonParsed: boolean;
-}
-
-function outputItems(payload: unknown): unknown[] {
-  if (!isRecord(payload)) return [];
-  const output = payload.output;
-  return Array.isArray(output) ? output : [];
-}
-
-function extractOutputValue(payload: unknown): ExtractedOutputValue {
-  const output = outputItems(payload);
+function extractOutputValue(payload: unknown): unknown | null {
+  if (typeof payload !== "object" || payload === null) return null;
+  const output = Reflect.get(payload, "output");
+  if (!Array.isArray(output)) return null;
 
   const texts = output.flatMap((item) => {
-    if (!isRecord(item)) return [];
-    const content = item.content;
+    if (typeof item !== "object" || item === null) return [];
+    const content = Reflect.get(item, "content");
     if (!Array.isArray(content)) return [];
     return content.flatMap((contentItem) => {
-      if (!isRecord(contentItem)) return [];
-      return contentItem.type === "output_text" &&
-          typeof contentItem.text === "string"
-        ? [contentItem.text]
+      if (typeof contentItem !== "object" || contentItem === null) return [];
+      return Reflect.get(contentItem, "type") === "output_text" &&
+        typeof Reflect.get(contentItem, "text") === "string"
+        ? [Reflect.get(contentItem, "text") as string]
         : [];
     });
   });
 
-  if (texts.length !== 1) {
-    return {
-      value: null,
-      outputTextCount: texts.length,
-      outputTextExtracted: false,
-      outputJsonParsed: false,
-    };
-  }
+  if (texts.length !== 1) return null;
   try {
-    return {
-      value: JSON.parse(texts[0]),
-      outputTextCount: 1,
-      outputTextExtracted: true,
-      outputJsonParsed: true,
-    };
+    return JSON.parse(texts[0]);
   } catch {
-    return {
-      value: null,
-      outputTextCount: 1,
-      outputTextExtracted: true,
-      outputJsonParsed: false,
-    };
+    return null;
   }
-}
-
-function safeDiagnosticToken(value: unknown): string | undefined {
-  if (typeof value !== "string") return undefined;
-  return value.length > 0 && value.length <= 80 &&
-      /^[A-Za-z0-9_.-]+$/.test(value)
-    ? value
-    : "redacted";
-}
-
-function providerDiagnosticEvent(options: {
-  stage: ProviderDiagnosticStage;
-  callOrdinal: 1 | 2;
-  response: Response;
-  payload: unknown;
-  bodyJsonParsed: boolean;
-  extracted: ExtractedOutputValue;
-}): OpenAIProviderDiagnosticEvent {
-  const output = outputItems(options.payload);
-  const content = output.flatMap((item) => {
-    if (!isRecord(item) || !Array.isArray(item.content)) return [];
-    return item.content;
-  });
-  const error = isRecord(options.payload) && isRecord(options.payload.error)
-    ? options.payload.error
-    : undefined;
-  const providerRequestId = safeDiagnosticToken(
-    options.response.headers.get("x-request-id"),
-  );
-  const errorType = safeDiagnosticToken(error?.type);
-  const errorCode = safeDiagnosticToken(error?.code);
-  const errorParam = safeDiagnosticToken(error?.param);
-  const responseObject = safeDiagnosticToken(
-    isRecord(options.payload) ? options.payload.object : undefined,
-  );
-  const responseStatus = safeDiagnosticToken(
-    isRecord(options.payload) ? options.payload.status : undefined,
-  );
-
-  return {
-    stage: options.stage,
-    callOrdinal: options.callOrdinal,
-    httpStatus: options.response.status,
-    ...(providerRequestId === undefined ? {} : { providerRequestId }),
-    ...(errorType === undefined ? {} : { errorType }),
-    ...(errorCode === undefined ? {} : { errorCode }),
-    ...(errorParam === undefined ? {} : { errorParam }),
-    ...(responseObject === undefined ? {} : { responseObject }),
-    ...(responseStatus === undefined ? {} : { responseStatus }),
-    bodyJsonParsed: options.bodyJsonParsed,
-    outputItemCount: output.length,
-    outputItemTypes: output.slice(0, 16).map((item) =>
-      safeDiagnosticToken(isRecord(item) ? item.type : undefined) ?? "missing"
-    ),
-    contentItemCount: content.length,
-    contentItemTypes: content.slice(0, 32).map((item) =>
-      safeDiagnosticToken(isRecord(item) ? item.type : undefined) ?? "missing"
-    ),
-    outputTextCount: options.extracted.outputTextCount,
-    outputTextExtracted: options.extracted.outputTextExtracted,
-    outputJsonParsed: options.extracted.outputJsonParsed,
-  };
 }
 
 function providerFailure(error: unknown): ProviderFailure {
@@ -1054,9 +937,6 @@ async function requestStructuredOutput(options: {
   apiKey: string;
   model: string;
   fetcher: typeof fetch;
-  logger: (event: OpenAIProviderDiagnosticEvent) => void;
-  stage: ProviderDiagnosticStage;
-  callOrdinal: 1 | 2;
   instructions: string;
   input: string;
   formatName: string;
@@ -1091,28 +971,17 @@ async function requestStructuredOutput(options: {
       signal: options.signal,
     });
 
-    let payload: unknown = null;
-    let bodyJsonParsed = false;
+    if (response.status === 429) return { status: "rate_limited" };
+    if (!response.ok) return { status: "model_unavailable" };
+
+    let payload: unknown;
     try {
       payload = await response.clone().json();
-      bodyJsonParsed = true;
     } catch {
-      payload = null;
+      return { status: "model_unavailable" };
     }
-    const extracted = extractOutputValue(payload);
-    options.logger(providerDiagnosticEvent({
-      stage: options.stage,
-      callOrdinal: options.callOrdinal,
-      response,
-      payload,
-      bodyJsonParsed,
-      extracted,
-    }));
 
-    if (response.status === 429) return { status: "rate_limited" };
-    if (!response.ok || !bodyJsonParsed) return { status: "model_unavailable" };
-
-    return { status: "ok", value: extracted.value };
+    return { status: "ok", value: extractOutputValue(payload) };
   } catch (error) {
     return { status: providerFailure(error) };
   }
@@ -1182,8 +1051,6 @@ export function createOpenAIConversationModel(
   options: OpenAIConversationModelOptions,
 ): ConversationModel {
   const fetcher = options.fetch ?? globalThis.fetch;
-  const logger = options.logger ?? ((event: OpenAIProviderDiagnosticEvent) =>
-    console.warn(event));
 
   return {
     async selectPlan(input, signal) {
@@ -1200,9 +1067,6 @@ export function createOpenAIConversationModel(
         apiKey: options.apiKey,
         model: options.model,
         fetcher,
-        logger,
-        stage: "select_plan_provider",
-        callOrdinal: 1,
         instructions: BANC_INTENT_INSTRUCTIONS,
         input: intentInput,
         formatName: "banc_conversation_plan",
@@ -1228,9 +1092,6 @@ export function createOpenAIConversationModel(
         apiKey: options.apiKey,
         model: options.model,
         fetcher,
-        logger,
-        stage: "select_plan_provider",
-        callOrdinal: 2,
         instructions: BANC_INTENT_INSTRUCTIONS,
         input: repairInput,
         formatName: "banc_conversation_plan",
@@ -1276,9 +1137,6 @@ export function createOpenAIConversationModel(
         apiKey: options.apiKey,
         model: options.model,
         fetcher,
-        logger,
-        stage: "write_response_provider",
-        callOrdinal: 1,
         instructions: BANC_RESPONSE_INSTRUCTIONS,
         input: responseInput,
         formatName: "banc_conversation_response",
