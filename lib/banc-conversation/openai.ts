@@ -30,7 +30,7 @@ const MAX_HISTORY_MESSAGE_CHARACTERS = 700;
 const MAX_OPERATION_RESULTS = 2;
 const MAX_RESULT_ITEMS = 3;
 const MAX_RESULT_SUMMARY_CHARACTERS = 800;
-const MAX_RESPONSE_CANDIDATES = 8;
+const MAX_RESPONSE_OPTIONS = 6;
 const INTENT_MAX_OUTPUT_TOKENS = 700;
 const RESPONSE_MAX_OUTPUT_TOKENS = 400;
 
@@ -417,17 +417,17 @@ const planJsonSchema = {
   },
 } as const;
 
-function createResponseJsonSchema(groundedResponses: readonly string[]) {
+function createResponseJsonSchema(options: readonly ResponseOption[]) {
   return {
     type: "object",
     additionalProperties: false,
     properties: {
-      response: {
+      responseId: {
         type: "string",
-        enum: groundedResponses,
+        enum: options.map((option) => option.id),
       },
     },
-    required: ["response"],
+    required: ["responseId"],
   } as const;
 }
 
@@ -477,6 +477,11 @@ export interface OpenAIConversationModelOptions {
 }
 
 type ProviderFailure = Exclude<ModelFailureCategory, "interpretation_invalid">;
+interface ResponseOption {
+  id: string;
+  text: string;
+}
+
 type SanitizedPropertySearchResult = Extract<
   SanitizedOperationResult,
   { requirements: unknown }
@@ -725,10 +730,7 @@ function formatActiveRequirements(
 ): string {
   const query = result.requirements;
   const filters: string[] = [];
-  if (
-    query.minBedrooms !== undefined &&
-    query.minBedrooms === query.maxBedrooms
-  ) {
+  if (query.minBedrooms !== undefined && query.minBedrooms === query.maxBedrooms) {
     filters.push(`exactly ${query.minBedrooms} bedrooms`);
   } else {
     if (query.minBedrooms !== undefined) {
@@ -741,12 +743,8 @@ function formatActiveRequirements(
   if (query.minBathrooms !== undefined) {
     filters.push(`at least ${query.minBathrooms} bathrooms`);
   }
-  if (query.minPrice !== undefined) {
-    filters.push(`from ${formatPrice(query.minPrice)}`);
-  }
-  if (query.maxPrice !== undefined) {
-    filters.push(`up to ${formatPrice(query.maxPrice)}`);
-  }
+  if (query.minPrice !== undefined) filters.push(`from ${formatPrice(query.minPrice)}`);
+  if (query.maxPrice !== undefined) filters.push(`up to ${formatPrice(query.maxPrice)}`);
   if (query.propertyTypes.length > 0) {
     filters.push(query.propertyTypes.map(readableFilter).join(" or "));
   }
@@ -758,20 +756,15 @@ function formatActiveRequirements(
   }
 
   const purpose = query.department === "sales" ? "homes to buy" : "homes to rent";
-  const location = query.location === undefined ? "" : ` in ${query.location}`;
+  const location = query.location === undefined ? "" : " in your chosen area";
   return filters.length === 0
     ? `${purpose}${location}`
     : `${purpose}${location} with ${filters.join(" ")}`;
 }
 
-function zeroResultRelaxation(
-  result: SanitizedPropertySearchResult,
-): string {
+function zeroResultRelaxation(result: SanitizedPropertySearchResult): string {
   const query = result.requirements;
-  if (
-    query.minBedrooms !== undefined &&
-    query.minBedrooms === query.maxBedrooms
-  ) {
+  if (query.minBedrooms !== undefined && query.minBedrooms === query.maxBedrooms) {
     return `try at least ${query.minBedrooms} bedrooms instead`;
   }
   if (query.features.length > 0) {
@@ -787,13 +780,28 @@ function zeroResultRelaxation(
   return "broaden one requirement";
 }
 
-function twoPropertyComparison(
-  facts: readonly PropertyFacts[],
-): string | null {
+function propertyFactsSentence(fact: PropertyFacts): string {
+  const bedrooms = `${fact.bedrooms} ${fact.bedrooms === 1 ? "bedroom" : "bedrooms"}`;
+  const bathrooms = `${fact.bathrooms} ${fact.bathrooms === 1 ? "bathroom" : "bathrooms"}`;
+  return `${fact.title} is listed at ${fact.priceDisplay} with ${bedrooms} and ${bathrooms}.`;
+}
+
+function propertyDetailSentence(fact: PropertyFacts): string | null {
+  if (fact.epc !== null && fact.features[0] !== undefined) {
+    return `${fact.title} has an EPC rating of ${fact.epc} and features a ${fact.features[0]}.`;
+  }
+  if (fact.epc !== null) return `${fact.title} has an EPC rating of ${fact.epc}.`;
+  if (fact.features[0] !== undefined) {
+    return `${fact.title} features a ${fact.features[0]}.`;
+  }
+  return null;
+}
+
+function twoPropertyComparison(facts: readonly PropertyFacts[]): string | null {
+  if (facts.length !== 2) return null;
   const first = facts[0];
   const second = facts[1];
   if (first === undefined || second === undefined) return null;
-
   const priceComparison = first.price === second.price
     ? "both are listed at the same price"
     : `${first.price < second.price ? first.title : second.title} is lower priced`;
@@ -803,58 +811,83 @@ function twoPropertyComparison(
   const bathroomComparison = first.bathrooms === second.bathrooms
     ? `both have ${first.bathrooms} bathrooms`
     : `${first.bathrooms > second.bathrooms ? first.title : second.title} has more bathrooms`;
-
-  const capitalizedPriceComparison =
-    `${priceComparison.charAt(0).toUpperCase()}${priceComparison.slice(1)}`;
-  return `${first.title} is listed at ${first.priceDisplay} with ${first.bedrooms} bedrooms and ${first.bathrooms} bathrooms, while ${second.title} is listed at ${second.priceDisplay} with ${second.bedrooms} bedrooms and ${second.bathrooms} bathrooms. ${capitalizedPriceComparison}, ${bedroomComparison}, and ${bathroomComparison}.`;
+  const comparison = `${priceComparison.charAt(0).toUpperCase()}${priceComparison.slice(1)}`;
+  return `${propertyFactsSentence(first).slice(0, -1)}, while ${propertyFactsSentence(second)} ${comparison}, ${bedroomComparison}, and ${bathroomComparison}.`;
 }
 
-function responseCandidatesForResult(
-  result: SanitizedOperationResult,
-): string[] {
+function responseCandidatesForResult(result: SanitizedOperationResult): string[] {
   switch (result.status) {
-    case "search_results":
+    case "search_results": {
+      const count = result.total === 1 ? "one" : String(result.total);
+      const noun = result.total === 1 ? "property" : "properties";
+      const followUp = result.total === 1 ? "the key details" : "the strongest options";
       return [
-        `I found ${result.total} ${result.total === 1 ? "property" : "properties"} matching your current requirements.`,
+        `I found ${result.total} ${noun} matching your current requirements.`,
+        `That gives us ${count} matching ${noun}. Shall I walk you through ${followUp}?`,
+        `Good news — I found ${count} ${noun} for those requirements. Would you like ${result.total === 1 ? "a quick overview" : "to compare them"}?`,
       ];
-    case "no_results":
+    }
+    case "no_results": {
+      const requirements = formatActiveRequirements(result);
+      const relaxation = zeroResultRelaxation(result);
       return [
-        `I couldn't find any ${formatActiveRequirements(result)}. Would you like to ${zeroResultRelaxation(result)}?`,
+        `I couldn't find any ${requirements}. Would you like to ${relaxation}?`,
+        `Nothing matches ${requirements} just yet. Shall we ${relaxation}?`,
+        `That search returned no matches for ${requirements}. We could ${relaxation} — would you like me to try?`,
       ];
+    }
     case "property_facts": {
-      const candidates = result.facts.flatMap((fact) => {
-        const details = [
-          `${fact.title} is listed at ${fact.priceDisplay} with ${fact.bedrooms} bedrooms and ${fact.bathrooms} bathrooms.`,
-        ];
-        if (fact.epc !== null && fact.features[0] !== undefined) {
-          details.push(
-            `${fact.title} has an EPC rating of ${fact.epc} and features a ${fact.features[0]}.`,
-          );
-        } else if (fact.epc !== null) {
-          details.push(`${fact.title} has an EPC rating of ${fact.epc}.`);
-        } else if (fact.features[0] !== undefined) {
-          details.push(`${fact.title} features a ${fact.features[0]}.`);
-        }
-        return details;
-      });
       const comparison = twoPropertyComparison(result.facts);
-      if (comparison !== null) candidates.unshift(comparison);
-      return candidates.length > 0
-        ? candidates
-        : ["I couldn't verify those property details. Which property would you like help with?"];
+      if (comparison !== null) {
+        return [
+          comparison,
+          `Here’s the verified side-by-side: ${comparison}`,
+          `${comparison} Would you like to focus on either property?`,
+        ];
+      }
+      if (result.facts.length > 2) {
+        const overview = `Here’s a verified overview: ${result.facts.map(propertyFactsSentence).join(" ")}`;
+        return [
+          overview,
+          `${overview} Would you like to compare any of these homes?`,
+          `I can verify these homes: ${result.facts.map(propertyFactsSentence).join(" ")}`,
+        ];
+      }
+      const fact = result.facts[0];
+      if (fact === undefined) {
+        return ["I couldn't verify those property details. Which property would you like help with?"];
+      }
+      const summary = propertyFactsSentence(fact);
+      const detail = propertyDetailSentence(fact) ?? summary;
+      return [
+        detail,
+        `Here’s what I can verify: ${summary}`,
+        `${summary} Would you like any other verified details?`,
+      ];
     }
     case "knowledge": {
-      const candidates = result.sources.map(
-        (source) => `Banc guidance says: ${source.excerpt}`,
-      );
-      return candidates.length > 0
-        ? candidates
-        : ["I couldn't find approved Banc guidance for that question. What would you like help with?"];
+      const source = result.sources[0];
+      if (source === undefined) {
+        return ["I couldn't find approved Banc guidance for that question. What would you like help with?"];
+      }
+      return [
+        `Banc guidance says: ${source.excerpt}`,
+        `Here’s the Banc guidance I found: ${source.excerpt}`,
+        `The approved guidance says: ${source.excerpt} Would you like help with anything related?`,
+      ];
     }
     case "reset":
-      return ["I've reset your property search. What would you like to look for?"];
+      return [
+        "I've reset your property search. What would you like to look for?",
+        "I've reset your search. Shall we find you a new home?",
+        "All clear — what kind of property would you like to search for now?",
+      ];
     case "contact":
-      return ["The Banc team can help with your enquiry. Would you like their contact options?"];
+      return [
+        "The Banc team can help with your enquiry. Would you like their contact options?",
+        "That’s something the Banc team can help with directly. Would you like the contact options?",
+        "I can connect you with the Banc team for that. Would you prefer to call or message?",
+      ];
     case "clarification_required":
       return [result.question];
   }
@@ -863,31 +896,59 @@ function responseCandidatesForResult(
 function isSafeResponseText(value: string): boolean {
   const trimmed = value.trim();
   if (trimmed.length === 0 || trimmed.length > 2_000) return false;
-  if (/\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)/i.test(trimmed)) {
+  if (/\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:[A-Z0-9-]+\.)+[A-Z]{2,24}(?:\/[^\s]*)?/i.test(trimmed)) {
     return false;
   }
   return !/(?:\+?\d[\d\s().-]{7,}\d)/.test(trimmed);
 }
 
-function buildGroundedResponseCandidates(
+function responseStatements(value: string): string {
+  return (value.match(/[^.!?]+[.!?]*/g) ?? [])
+    .filter((sentence) => !sentence.includes("?"))
+    .join(" ")
+    .trim();
+}
+
+function combinedResponseCandidates(
   results: readonly SanitizedOperationResult[],
 ): string[] {
-  const candidates = [...new Set(
-    results
-      .slice(0, MAX_OPERATION_RESULTS)
-      .flatMap(responseCandidatesForResult)
-      .map((candidate) => candidate.trim())
-      .filter(isSafeResponseText),
-  )].slice(0, MAX_RESPONSE_CANDIDATES);
-  return candidates.length > 0
-    ? candidates
-    : ["I can help with your Banc property search. What would you like to know?"];
+  const statements = results
+    .slice(0, MAX_OPERATION_RESULTS)
+    .map((result) => responseCandidatesForResult(result)[0])
+    .filter((candidate): candidate is string => candidate !== undefined)
+    .map(responseStatements)
+    .filter((candidate) => candidate.length > 0);
+  if (statements.length < 2) return [];
+
+  const combined = statements.join(" ");
+  return [
+    combined,
+    `Here’s what I found: ${combined}`,
+    `${combined} Would you like me to go into more detail?`,
+  ];
+}
+function buildResponseOptions(
+  results: readonly SanitizedOperationResult[],
+): ResponseOption[] {
+  const boundedResults = results.slice(0, MAX_OPERATION_RESULTS);
+  const candidates = [...new Set([
+    ...combinedResponseCandidates(boundedResults),
+    ...boundedResults.flatMap(responseCandidatesForResult),
+  ])].map((candidate) => candidate.trim()).filter(isSafeResponseText);
+  const safeCandidates = candidates.length > 0 ? candidates : [
+    "I can help with your Banc property search. What would you like to know?",
+  ];
+  return safeCandidates
+    .slice(0, MAX_RESPONSE_OPTIONS)
+    .map((optionText, index) => ({
+      id: `option_${index + 1}`,
+      text: optionText,
+    }));
 }
 
 function buildResponseInput(
   input: ResponseWritingInput,
-  groundedResponses: readonly string[],
-  sanitizedResults: readonly SanitizedOperationResult[],
+  responseOptions: readonly ResponseOption[],
 ): string | null {
   const currentState = sanitizeState(input.state);
   if (currentState === null) return null;
@@ -895,8 +956,7 @@ function buildResponseInput(
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
     currentState,
-    trustedResults: sanitizedResults,
-    allowedResponses: groundedResponses,
+    responseOptions,
   });
 }
 
@@ -1021,7 +1081,7 @@ function normalizedPlanValue(value: unknown): unknown {
 
 function parseResponseText(
   value: unknown,
-  groundedResponses: readonly string[],
+  responseOptions: readonly ResponseOption[],
 ): string | null {
   if (
     typeof value !== "object" ||
@@ -1031,11 +1091,9 @@ function parseResponseText(
   ) {
     return null;
   }
-  const response = Reflect.get(value, "response");
-  if (typeof response !== "string") return null;
-  const trimmed = response.trim();
-  if (!isSafeResponseText(trimmed)) return null;
-  return groundedResponses.includes(trimmed) ? trimmed : null;
+  const responseId = Reflect.get(value, "responseId");
+  if (typeof responseId !== "string") return null;
+  return responseOptions.find((option) => option.id === responseId)?.text ?? null;
 }
 
 function hasConfiguration(options: OpenAIConversationModelOptions): options is {
@@ -1116,15 +1174,12 @@ export function createOpenAIConversationModel(
       }
 
       let responseInput: string;
-      let groundedResponses: string[];
+      let sanitizedResults: SanitizedOperationResult[];
+      let responseOptions: ResponseOption[];
       try {
-        const sanitizedResults = sanitizeResults(input.results);
-        groundedResponses = buildGroundedResponseCandidates(sanitizedResults);
-        const boundedResponseInput = buildResponseInput(
-          input,
-          groundedResponses,
-          sanitizedResults,
-        );
+        sanitizedResults = sanitizeResults(input.results);
+        responseOptions = buildResponseOptions(sanitizedResults);
+        const boundedResponseInput = buildResponseInput(input, responseOptions);
         if (boundedResponseInput === null) {
           return { status: "model_unavailable", providerCalls: 0 };
         }
@@ -1140,7 +1195,7 @@ export function createOpenAIConversationModel(
         instructions: BANC_RESPONSE_INSTRUCTIONS,
         input: responseInput,
         formatName: "banc_conversation_response",
-        schema: createResponseJsonSchema(groundedResponses),
+        schema: createResponseJsonSchema(responseOptions),
         maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
         signal,
       });
@@ -1148,7 +1203,7 @@ export function createOpenAIConversationModel(
         return { status: result.status, providerCalls: 1 };
       }
 
-      const response = parseResponseText(result.value, groundedResponses);
+      const response = parseResponseText(result.value, responseOptions);
       return response === null
         ? { status: "model_unavailable", providerCalls: 1 }
         : { status: "ok", response, providerCalls: 1 };

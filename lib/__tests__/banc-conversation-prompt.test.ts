@@ -14,9 +14,12 @@ test("keeps intent selection limited to approved operations and safe fallback", 
   assert.match(BANC_INTENT_INSTRUCTIONS, /bedroom language is authoritative/i);
 });
 
-test("keeps response writing grounded and free of provider-authored contact links", () => {
-  assert.match(BANC_RESPONSE_INSTRUCTIONS, /sanitized trusted\s+result/i);
-  assert.match(BANC_RESPONSE_INSTRUCTIONS, /Ask at most one useful question/i);
-  assert.match(BANC_RESPONSE_INSTRUCTIONS, /Do not include\s+URLs, phone numbers, markdown links/i);
-  assert.match(BANC_RESPONSE_INSTRUCTIONS, /without silently changing the search/i);
+test("selects a conversational option without giving the provider factual authorship", () => {
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /server-authored response option/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /visitor's current/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /recent conversation/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /acknowledges/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /Avoid repeating the same/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /Return only its responseId/i);
+  assert.match(BANC_RESPONSE_INSTRUCTIONS, /server owns all factual wording/i);
 });

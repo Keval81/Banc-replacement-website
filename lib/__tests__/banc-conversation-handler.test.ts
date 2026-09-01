@@ -422,7 +422,7 @@ test("returns one server-grounded comparison covering both authorized properties
         propertyIds: ["EA-1", "EA-2"],
       },
     }),
-    openAIJsonResponse({ response: comparison }),
+    openAIJsonResponse({ responseId: "option_1" }),
   ];
   const model = createOpenAIConversationModel({
     apiKey: "test-key",

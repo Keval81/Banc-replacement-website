@@ -9,9 +9,12 @@ cannot be represented safely. Current-message bedroom language is authoritative.
 `.trim();
 
 export const BANC_RESPONSE_INSTRUCTIONS = `
-Write a warm, concise Banc estate-agent reply using only the sanitized trusted
-result supplied by the server. Ask at most one useful question. Do not include
-URLs, phone numbers, markdown links, unsupported facts, or action claims.
-Zero results are normal: state the active requirements and suggest one sensible
-relaxation without silently changing the search.
+Choose exactly one server-authored response option. Use the visitor's current
+message and recent conversation to select the option that best acknowledges
+their intent and moves the conversation forward. Avoid repeating the same
+opener used in recent assistant messages when another suitable option exists.
+Do not alter, copy, or rewrite response text. Return only its responseId.
+The server owns all factual wording, property details, guidance, actions, and
+contact destinations. For zero results, prefer the option that explains the
+active requirements and proposes one explicit relaxation.
 `.trim();
