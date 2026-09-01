@@ -239,10 +239,14 @@ function matchingExcerpt(
 
   if (hasEveryQueryToken(metadataTokens)) {
     const documentTokens = tokenSet(document.text);
-    return excerptFromPassage(
+    const bodyExcerpt = excerptFromPassage(
       document.text,
       passageQueryTokens(documentTokens),
     );
+    const fallbackExcerpt = document.text
+      .slice(0, MAX_EXCERPT_LENGTH)
+      .trim();
+    return bodyExcerpt ?? (fallbackExcerpt.length > 0 ? fallbackExcerpt : null);
   }
 
   const passages = document.text
@@ -256,10 +260,11 @@ function matchingExcerpt(
       ...bodyTokens,
     ]);
     if (hasEveryQueryToken(matchingTokens)) {
-      return excerptFromPassage(
+      const excerpt = excerptFromPassage(
         passage,
         passageQueryTokens(bodyTokens),
       );
+      if (excerpt !== null) return excerpt;
     }
   }
 

@@ -223,6 +223,49 @@ test("rejects body evidence that cannot fit in one bounded excerpt", async () =>
   assert.deepEqual(results, []);
 });
 
+test("continues to a later passage when earlier evidence cannot fit", async () => {
+  const documents = [
+    {
+      id: "later-concise-evidence",
+      title: "General guide",
+      sectionTitle: "Overview",
+      href: "/general",
+      text: `garden ${"x".repeat(600)} parking\n\nNearby garden parking is available.`,
+      aliases: [],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search(
+    "garden parking",
+  );
+
+  assert.match(
+    results[0]?.excerpt ?? "",
+    /Nearby garden parking is available\./,
+  );
+});
+
+test("keeps exact curated alias matches when body terms cannot share one excerpt", async () => {
+  const documents = [
+    {
+      id: "curated-alias",
+      title: "General guide",
+      sectionTitle: "Overview",
+      href: "/general",
+      text: `Approved outdoor-space guidance. garden ${"x".repeat(600)} parking`,
+      aliases: ["garden parking"],
+    },
+  ] satisfies ApprovedBancDocument[];
+
+  const results = await createBancKnowledgeSearch(documents).search(
+    "garden parking",
+  );
+
+  assert.equal(results.length, 1);
+  assert.match(results[0]?.excerpt ?? "", /Approved outdoor-space guidance\./);
+  assert.doesNotMatch(results[0]?.excerpt ?? "", /garden parking|\/general/);
+});
+
 test("returns no approved source for unsupported facts", async () => {
   const knowledge = createBancKnowledgeSearch(APPROVED_BANC_DOCUMENTS);
   const unsupportedQueries = [
