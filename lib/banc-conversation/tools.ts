@@ -334,7 +334,12 @@ export function createConversationTools({
           }
           return {
             status: "contact",
-            state: stateWithTopic(state, "handoff"),
+            state: {
+              ...stateWithTopic(state, "handoff"),
+              ...(authorizedPropertyId === undefined
+                ? {}
+                : { focusedPropertyId: authorizedPropertyId }),
+            },
             reason: intent.reason,
             handoff: {
               callHref: BANC_CONTACT.callHref,

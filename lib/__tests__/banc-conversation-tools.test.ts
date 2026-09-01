@@ -375,7 +375,10 @@ test("reset clears property state and returns a fresh default property-search to
 
 test("contact uses fixed Banc destinations and retains only an authorized active property id", async () => {
   const { portfolio, tools } = setup();
-  const state = stateWithResults(["EA-1"]);
+  const state = {
+    ...stateWithResults(["EA-1", "EA-2"]),
+    focusedPropertyId: "EA-2",
+  };
   portfolio.factsById.set("EA-1", facts("EA-1"));
 
   const authorized = await tools.execute({
@@ -390,6 +393,7 @@ test("contact uses fixed Banc destinations and retains only an authorized active
       whatsappHref: BANC_CONTACT.whatsappHref,
       propertyId: "EA-1",
     });
+    assert.equal(authorized.state.focusedPropertyId, "EA-1");
     assert.deepEqual(sanitizeOperationResult(authorized), {
       status: "contact",
       reason: "viewing",
@@ -408,6 +412,7 @@ test("contact uses fixed Banc destinations and retains only an authorized active
       callHref: BANC_CONTACT.callHref,
       whatsappHref: BANC_CONTACT.whatsappHref,
     });
+    assert.equal(noLongerActive.state.focusedPropertyId, "EA-2");
   }
 
   const unauthorized = await tools.execute({
@@ -421,6 +426,7 @@ test("contact uses fixed Banc destinations and retains only an authorized active
       callHref: BANC_CONTACT.callHref,
       whatsappHref: BANC_CONTACT.whatsappHref,
     });
+    assert.equal(unauthorized.state.focusedPropertyId, "EA-2");
   }
 });
 

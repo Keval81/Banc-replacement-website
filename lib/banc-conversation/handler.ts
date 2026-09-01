@@ -23,6 +23,7 @@ const TURN_BUDGET_MS = 20_000;
 const MAX_TRUSTED_OPERATIONS = 2;
 const MAX_PROVIDER_CALLS = 3;
 const CHEAPER_REFINEMENT = /^\s*(?:make|show|find)?\s*(?:it|them)?\s*cheaper[.!?]*\s*$/i;
+const EXPLICIT_VIEWING_PROPERTY_REFERENCE = /^\s*(?:please\s+)?(?:arrange|book|schedule|request)(?:\s+(?:me\s+)?(?:a|the))?\s+viewing\s+for\s+(?:the\s+)?(first|1st|second|2nd|third|3rd)(?:\s+(?:one|property|listing))?[.!?]*\s*$/i;
 const UNSAFE_RESPONSE_TEXT = /\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)|(?:\+?\d[\d\s().-]{7,}\d)/i;
 
 export const INTERPRETATION_CLARIFICATION =
@@ -193,6 +194,31 @@ function noResultsCopy(result: TrustedOperationResult): string {
     : MODEL_UNAVAILABLE_COPY;
 }
 
+function deterministicViewingPlan(
+  message: string,
+  state: PropertyConversationState,
+): ConversationPlan | null {
+  const ordinal = EXPLICIT_VIEWING_PROPERTY_REFERENCE.exec(message)?.[1]
+    ?.toLowerCase();
+  if (ordinal === undefined) return null;
+
+  const index = ordinal === "first" || ordinal === "1st"
+    ? 0
+    : ordinal === "second" || ordinal === "2nd"
+    ? 1
+    : 2;
+  const propertyId = state.resultPropertyIds[index];
+  if (propertyId === undefined) return null;
+
+  return {
+    primary: {
+      type: "contact_banc",
+      reason: "viewing",
+      propertyId,
+    },
+  };
+}
+
 function deterministicSearchPlan(
   message: string,
   state: PropertyConversationState,
@@ -354,10 +380,14 @@ export function createBancConversationHandler({
       }, trustedInitialState);
     };
 
-    const deterministicPlan = deterministicSearchPlan(
-      request.message,
-      trustedInitialState,
-    );
+    const deterministicPlan =
+      deterministicViewingPlan(
+        request.message,
+        trustedInitialState,
+      ) ?? deterministicSearchPlan(
+        request.message,
+        trustedInitialState,
+      );
     let selectedPlan: ConversationPlan;
     let providerCalls: number;
     if (deterministicPlan !== null) {

@@ -329,6 +329,66 @@ test("makes an active search cheaper without delegating the refinement to intent
   assert.equal(model.responseInputs.length, 1);
 });
 
+test("targets the first active property when arranging a viewing after focusing the second", async () => {
+  const { handler, model, portfolio } = setup();
+  const state: PropertyConversationState = {
+    ...activeState(),
+    focusedPropertyId: "EA-2",
+    topic: "property_detail",
+  };
+
+  const response = await handler(
+    requestFor("Arrange a viewing for the first one.", state),
+  );
+
+  assert.equal(response.action, "contact_team");
+  assert.equal(response.context.focusedPropertyId, "EA-1");
+  assert.equal(response.context.topic, "handoff");
+  assert.deepEqual(portfolio.factLookups, [["EA-1"]]);
+  assert.equal(model.planInputs.length, 0);
+});
+
+test("delegates ambiguous viewing ordinals instead of targeting the wrong property", async () => {
+  const { handler, model, portfolio } = setup();
+  model.planResults.push(plan({
+    type: "contact_banc",
+    reason: "viewing",
+    propertyId: "EA-2",
+  }));
+  const state: PropertyConversationState = {
+    ...activeState(),
+    focusedPropertyId: "EA-1",
+    topic: "property_detail",
+  };
+
+  const response = await handler(
+    requestFor("Book the first available viewing for the second one.", state),
+  );
+
+  assert.equal(response.action, "contact_team");
+  assert.equal(response.context.focusedPropertyId, "EA-2");
+  assert.deepEqual(portfolio.factLookups, [["EA-2"]]);
+  assert.equal(model.planInputs.length, 1);
+});
+
+test("does not turn a negated viewing request into a contact handoff", async () => {
+  const { handler, model, portfolio } = setup();
+  const state: PropertyConversationState = {
+    ...activeState(),
+    focusedPropertyId: "EA-2",
+    topic: "property_detail",
+  };
+
+  const response = await handler(
+    requestFor("Don't arrange a viewing for the first one.", state),
+  );
+
+  assert.equal(response.action, "clarify");
+  assert.deepEqual(portfolio.factLookups, []);
+  assert.equal(model.planInputs.length, 1);
+});
+
+
 test("answers facts for first and second properties and keeps comparisons in requested order", async () => {
   const { handler, model, portfolio } = setup();
   model.planResults.push(
