@@ -123,14 +123,74 @@ function assertBoundedStructuredRequest(
   );
 }
 
-function containsObjectKey(value: unknown, key: string): boolean {
+const supportedProviderSchemaKeywords = new Set([
+  "$defs",
+  "$ref",
+  "additionalProperties",
+  "anyOf",
+  "description",
+  "enum",
+  "exclusiveMaximum",
+  "exclusiveMinimum",
+  "format",
+  "items",
+  "maximum",
+  "maxItems",
+  "minimum",
+  "minItems",
+  "multipleOf",
+  "pattern",
+  "properties",
+  "required",
+  "type",
+]);
+
+interface UnsupportedSchemaKeyword {
+  keyword: string;
+  path: string;
+}
+
+function findUnsupportedSchemaKeywords(
+  value: unknown,
+  path = "$",
+  entriesAreSchemaNames = false,
+): UnsupportedSchemaKeyword[] {
   if (Array.isArray(value)) {
-    return value.some((item) => containsObjectKey(item, key));
+    return value.flatMap((item, index) =>
+      findUnsupportedSchemaKeywords(item, `${path}[${index}]`)
+    );
   }
-  if (typeof value !== "object" || value === null) return false;
-  const record = value as Record<string, unknown>;
-  return Object.hasOwn(record, key) ||
-    Object.values(record).some((item) => containsObjectKey(item, key));
+  if (typeof value !== "object" || value === null) return [];
+
+  return Object.entries(value as Record<string, unknown>).flatMap(
+    ([key, child]) => {
+      if (entriesAreSchemaNames) {
+        return findUnsupportedSchemaKeywords(child, `${path}.${key}`);
+      }
+
+      const issue = supportedProviderSchemaKeywords.has(key)
+        ? []
+        : [{ keyword: key, path: `${path}.${key}` }];
+      return [
+        ...issue,
+        ...findUnsupportedSchemaKeywords(
+          child,
+          `${path}.${key}`,
+          key === "properties" || key === "$defs",
+        ),
+      ];
+    },
+  );
+}
+
+function unsupportedKeywordCounts(
+  value: unknown,
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const { keyword } of findUnsupportedSchemaKeywords(value)) {
+    counts[keyword] = (counts[keyword] ?? 0) + 1;
+  }
+  return counts;
 }
 
 function structuredOutputSchema(call: CapturedCall | undefined): unknown {
@@ -203,7 +263,7 @@ test("repairs malformed intent exactly once with validation feedback", async () 
   assert.doesNotMatch(fetch.calls[1]?.body ?? "", /SECRET-RAW-PROPERTY/);
 });
 
-test("omits unsupported uniqueItems from every structured provider schema", async () => {
+test("uses only documented keywords in every structured provider schema", async () => {
   const fetch = createSequenceFetch([
     openAIJsonResponse({
       primary: {
@@ -235,21 +295,44 @@ test("omits unsupported uniqueItems from every structured provider schema", asyn
   );
   assert.equal(fetch.calls.length, 3);
   assert.deepEqual(
-    fetch.calls.map((call) =>
-      ((requestBody(call).text as { format: { name: string } }).format.name)
-    ),
+    findUnsupportedSchemaKeywords({
+      type: "object",
+      properties: {
+        const: { type: "string" },
+        minLength: { type: "string" },
+      },
+      required: ["const", "minLength"],
+      additionalProperties: false,
+    }),
+    [],
+  );
+  assert.deepEqual(
+    fetch.calls.map((call, index) => ({
+      callOrdinal: index + 1,
+      name: ((requestBody(call).text as { format: { name: string } }).format
+        .name),
+      unsupportedKeywords: unsupportedKeywordCounts(
+        structuredOutputSchema(call),
+      ),
+    })),
     [
-      "banc_conversation_plan",
-      "banc_conversation_plan",
-      "banc_conversation_response",
+      {
+        callOrdinal: 1,
+        name: "banc_conversation_plan",
+        unsupportedKeywords: {},
+      },
+      {
+        callOrdinal: 2,
+        name: "banc_conversation_plan",
+        unsupportedKeywords: {},
+      },
+      {
+        callOrdinal: 3,
+        name: "banc_conversation_response",
+        unsupportedKeywords: {},
+      },
     ],
   );
-  for (const call of fetch.calls) {
-    assert.equal(
-      containsObjectKey(structuredOutputSchema(call), "uniqueItems"),
-      false,
-    );
-  }
 });
 
 test("returns interpretation_invalid after one failed repair and never tries a third call", async () => {

@@ -200,6 +200,67 @@ test("keeps duplicate array rejection in application contracts", () => {
   }), null);
 });
 
+test("rejects empty and oversized provider-authored plan strings", () => {
+  for (const plan of [
+    {
+      primary: {
+        type: "update_property_search",
+        mutation: { location: { operation: "set", value: " " } },
+      },
+    },
+    {
+      primary: {
+        type: "update_property_search",
+        mutation: { location: { operation: "set", value: "x".repeat(121) } },
+      },
+    },
+    { primary: { type: "get_property_facts", propertyIds: [""] } },
+    {
+      primary: {
+        type: "get_property_facts",
+        propertyIds: ["x".repeat(65)],
+      },
+    },
+    { primary: { type: "search_banc_knowledge", query: " " } },
+    {
+      primary: {
+        type: "search_banc_knowledge",
+        query: "x".repeat(2_001),
+      },
+    },
+    {
+      primary: { type: "contact_banc", reason: "human", propertyId: "" },
+    },
+    {
+      primary: {
+        type: "contact_banc",
+        reason: "human",
+        propertyId: "x".repeat(65),
+      },
+    },
+    { primary: { type: "clarify", question: " " } },
+    {
+      primary: { type: "clarify", question: "x".repeat(2_001) },
+    },
+  ]) {
+    assert.equal(parseConversationPlan(plan), null);
+  }
+});
+
+test("rejects wrong provider-authored discriminator values", () => {
+  for (const plan of [
+    { primary: { type: "find_properties", location: "Cuffley" } },
+    {
+      primary: {
+        type: "update_property_search",
+        mutation: { location: { operation: "replace", value: "Cuffley" } },
+      },
+    },
+  ]) {
+    assert.equal(parseConversationPlan(plan), null);
+  }
+});
+
 test("request parsing authorizes focused ids and clones untrusted context arrays", () => {
   const resultPropertyIds = ["EA-1", "EA-2"];
   const request = parseConversationRequest({

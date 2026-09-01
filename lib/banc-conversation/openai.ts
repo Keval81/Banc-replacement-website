@@ -51,14 +51,14 @@ const planJsonSchema = {
     preserveMutation: {
       type: "object",
       additionalProperties: false,
-      properties: { operation: { const: "preserve" } },
+      properties: { operation: { enum: ["preserve"] } },
       required: ["operation"],
     },
     departmentMutation: {
       type: "object",
       additionalProperties: false,
       properties: {
-        operation: { const: "set" },
+        operation: { enum: ["set"] },
         value: { type: "string", enum: ["sales", "lettings"] },
       },
       required: ["operation", "value"],
@@ -68,15 +68,15 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
-            value: { type: "string", minLength: 1, maxLength: 120 },
+            operation: { enum: ["set"] },
+            value: { type: "string" },
           },
           required: ["operation", "value"],
         },
@@ -87,14 +87,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "integer",
               minimum: 0,
@@ -110,14 +110,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "integer",
               minimum: 0,
@@ -133,14 +133,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "object",
               additionalProperties: false,
@@ -164,14 +164,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "array",
               items: { type: "string", enum: SEARCH_PROPERTY_TYPES },
@@ -186,14 +186,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "array",
               items: { type: "string", enum: SEARCH_TENURES },
@@ -208,14 +208,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "array",
               items: { type: "string", enum: SEARCH_FEATURES },
@@ -230,14 +230,14 @@ const planJsonSchema = {
         {
           type: "object",
           additionalProperties: false,
-          properties: { operation: { const: "clear" } },
+          properties: { operation: { enum: ["clear"] } },
           required: ["operation"],
         },
         {
           type: "object",
           additionalProperties: false,
           properties: {
-            operation: { const: "set" },
+            operation: { enum: ["set"] },
             value: {
               type: "string",
               enum: ["default", "price_asc", "price_desc"],
@@ -329,7 +329,7 @@ const planJsonSchema = {
       type: "object",
       additionalProperties: false,
       properties: {
-        type: { const: "update_property_search" },
+        type: { enum: ["update_property_search"] },
         mutation: { $ref: "#/$defs/mutation" },
       },
       required: ["type", "mutation"],
@@ -338,12 +338,12 @@ const planJsonSchema = {
       type: "object",
       additionalProperties: false,
       properties: {
-        type: { const: "get_property_facts" },
+        type: { enum: ["get_property_facts"] },
         propertyIds: {
           type: "array",
           minItems: 1,
           maxItems: 3,
-          items: { type: "string", minLength: 1, maxLength: 64 },
+          items: { type: "string" },
         },
       },
       required: ["type", "propertyIds"],
@@ -352,22 +352,22 @@ const planJsonSchema = {
       type: "object",
       additionalProperties: false,
       properties: {
-        type: { const: "search_banc_knowledge" },
-        query: { type: "string", minLength: 1, maxLength: 2_000 },
+        type: { enum: ["search_banc_knowledge"] },
+        query: { type: "string" },
       },
       required: ["type", "query"],
     },
     resetConversationSearch: {
       type: "object",
       additionalProperties: false,
-      properties: { type: { const: "reset_conversation_search" } },
+      properties: { type: { enum: ["reset_conversation_search"] } },
       required: ["type"],
     },
     contactBanc: {
       type: "object",
       additionalProperties: false,
       properties: {
-        type: { const: "contact_banc" },
+        type: { enum: ["contact_banc"] },
         reason: {
           type: "string",
           enum: [
@@ -381,7 +381,7 @@ const planJsonSchema = {
         },
         propertyId: {
           anyOf: [
-            { type: "string", minLength: 1, maxLength: 64 },
+            { type: "string" },
             { type: "null" },
           ],
         },
@@ -392,8 +392,8 @@ const planJsonSchema = {
       type: "object",
       additionalProperties: false,
       properties: {
-        type: { const: "clarify" },
-        question: { type: "string", minLength: 1, maxLength: 2_000 },
+        type: { enum: ["clarify"] },
+        question: { type: "string" },
       },
       required: ["type", "question"],
     },
