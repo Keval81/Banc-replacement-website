@@ -219,3 +219,45 @@ test("returns cloned trusted view fields without deriving a generic contact acti
   });
   assert.equal("showContactAction" in view, false);
 });
+
+test("shows the server's rate-limit copy instead of the generic connection error", async () => {
+  const { PropertyChatRequestError, runPropertyChatTurn, createInitialConversationState } =
+    await import("../property-chat-submit.ts").then(async (module) => ({
+      ...module,
+      ...(await import("../banc-conversation/contracts.ts")),
+    }));
+  const assistant: string[] = [];
+
+  await runPropertyChatTurn({
+    content: "hello",
+    messages: [],
+    context: createInitialConversationState(),
+    nextMessageId: () => "id",
+    request: async () => {
+      throw new PropertyChatRequestError("You're sending messages quickly. Please wait a moment and try again.");
+    },
+    onUserMessage: () => {},
+    onAssistantMessage: (message) => assistant.push(message.content),
+    onContextChange: () => {},
+    onLoadingChange: () => {},
+  });
+
+  assert.deepEqual(assistant, ["You're sending messages quickly. Please wait a moment and try again."]);
+
+  assistant.length = 0;
+  await runPropertyChatTurn({
+    content: "hello",
+    messages: [],
+    context: createInitialConversationState(),
+    nextMessageId: () => "id",
+    request: async () => {
+      throw new Error("SECRET STACK");
+    },
+    onUserMessage: () => {},
+    onAssistantMessage: (message) => assistant.push(message.content),
+    onContextChange: () => {},
+    onLoadingChange: () => {},
+  });
+  assert.match(assistant[0] ?? "", /trouble connecting/);
+  assert.doesNotMatch(assistant[0] ?? "", /SECRET/);
+});

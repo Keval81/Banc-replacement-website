@@ -9,6 +9,7 @@ import {
   BANC_INTENT_INSTRUCTIONS,
   BANC_RESPONSE_INSTRUCTIONS,
 } from "./prompt.ts";
+import { verifyGroundedResponse } from "./grounding.ts";
 import type { SanitizedOperationResult } from "./tools.ts";
 import {
   SEARCH_FEATURES,
@@ -31,6 +32,7 @@ const MAX_OPERATION_RESULTS = 2;
 const MAX_RESULT_ITEMS = 3;
 const MAX_RESULT_SUMMARY_CHARACTERS = 800;
 const MAX_RESPONSE_OPTIONS = 6;
+const MAX_ACTIVE_PROPERTIES = 3;
 const INTENT_MAX_OUTPUT_TOKENS = 700;
 const RESPONSE_MAX_OUTPUT_TOKENS = 400;
 
@@ -417,24 +419,30 @@ const planJsonSchema = {
   },
 } as const;
 
-function createResponseJsonSchema(options: readonly ResponseOption[]) {
-  return {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      responseId: {
-        type: "string",
-        enum: options.map((option) => option.id),
-      },
+const responseJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  properties: {
+    response: {
+      type: "string",
+      description:
+        "The assistant's reply: one to four short plain-text sentences grounded only in trustedResults.",
     },
-    required: ["responseId"],
-  } as const;
+  },
+  required: ["response"],
+} as const;
+
+export interface ActivePropertySummary {
+  id: string;
+  title: string;
 }
 
 export interface IntentSelectionInput {
   message: string;
   history: readonly ConversationMessage[];
   state: PropertyConversationState;
+  /** Trusted id/title pairs for the active results, in display order. */
+  activeProperties?: readonly ActivePropertySummary[];
 }
 
 export interface ResponseWritingInput extends IntentSelectionInput {
@@ -670,13 +678,30 @@ function boundedInput(value: Record<string, unknown>): string | null {
   }
 }
 
+function sanitizeActiveProperties(
+  input: IntentSelectionInput,
+): Array<ActivePropertySummary & { position: number }> {
+  const activeIds = new Set(input.state.resultPropertyIds);
+  return (input.activeProperties ?? [])
+    .filter((property) => activeIds.has(property.id))
+    .slice(0, MAX_ACTIVE_PROPERTIES)
+    .map((property) => ({
+      position: input.state.resultPropertyIds.indexOf(property.id) + 1,
+      id: boundedText(property.id, 64),
+      title: boundedText(property.title, 120),
+    }))
+    .sort((left, right) => left.position - right.position);
+}
+
 function buildIntentInput(input: IntentSelectionInput): string | null {
   const currentState = sanitizeState(input.state);
   if (currentState === null) return null;
+  const activeProperties = sanitizeActiveProperties(input);
   return boundedInput({
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
     currentState,
+    ...(activeProperties.length === 0 ? {} : { activeProperties }),
   });
 }
 
@@ -946,17 +971,72 @@ function buildResponseOptions(
     }));
 }
 
+function describeTrustedResult(
+  result: SanitizedOperationResult,
+): Record<string, unknown> {
+  switch (result.status) {
+    case "search_results":
+    case "no_results":
+      return {
+        status: result.status,
+        total: result.total,
+        activeRequirements: formatActiveRequirements(result),
+        ...(result.status === "no_results"
+          ? { suggestedRelaxation: zeroResultRelaxation(result) }
+          : {}),
+        properties: result.properties.map((property) => ({
+          title: property.title,
+          price: property.price,
+          bedrooms: property.bedrooms,
+          bathrooms: property.bathrooms,
+          summary: property.summary,
+        })),
+      };
+    case "property_facts":
+      return {
+        status: "property_facts",
+        properties: result.facts.map((fact) => ({
+          title: fact.title,
+          price: fact.priceDisplay,
+          bedrooms: fact.bedrooms,
+          bathrooms: fact.bathrooms,
+          receptions: fact.receptions,
+          propertyType: fact.propertyType,
+          tenure: fact.tenure,
+          epc: fact.epc,
+          sqft: fact.sqft,
+          status: fact.status,
+          features: fact.features,
+          summary: fact.summary,
+        })),
+      };
+    case "knowledge":
+      return {
+        status: "knowledge",
+        sources: result.sources.map((source) => ({
+          title: source.title,
+          excerpt: source.excerpt,
+        })),
+      };
+    case "reset":
+      return { status: "reset" };
+    case "contact":
+      return { status: "contact", reason: result.reason };
+    case "clarification_required":
+      return { status: "clarification_required", question: result.question };
+  }
+}
+
 function buildResponseInput(
   input: ResponseWritingInput,
-  responseOptions: readonly ResponseOption[],
+  results: readonly SanitizedOperationResult[],
 ): string | null {
   const currentState = sanitizeState(input.state);
   if (currentState === null) return null;
   return boundedInput({
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
-    currentState,
-    responseOptions,
+    trustedResults: results.map(describeTrustedResult),
   });
 }
 
@@ -1081,7 +1161,7 @@ function normalizedPlanValue(value: unknown): unknown {
 
 function parseResponseText(
   value: unknown,
-  responseOptions: readonly ResponseOption[],
+  results: readonly SanitizedOperationResult[],
 ): string | null {
   if (
     typeof value !== "object" ||
@@ -1091,9 +1171,11 @@ function parseResponseText(
   ) {
     return null;
   }
-  const responseId = Reflect.get(value, "responseId");
-  if (typeof responseId !== "string") return null;
-  return responseOptions.find((option) => option.id === responseId)?.text ?? null;
+  const response = Reflect.get(value, "response");
+  if (typeof response !== "string") return null;
+  const trimmed = response.replaceAll(/\s+/g, " ").trim();
+  if (!isSafeResponseText(trimmed)) return null;
+  return verifyGroundedResponse(trimmed, results).ok ? trimmed : null;
 }
 
 function hasConfiguration(options: OpenAIConversationModelOptions): options is {
@@ -1175,11 +1257,11 @@ export function createOpenAIConversationModel(
 
       let responseInput: string;
       let sanitizedResults: SanitizedOperationResult[];
-      let responseOptions: ResponseOption[];
+      let serverAuthored: ResponseOption | undefined;
       try {
         sanitizedResults = sanitizeResults(input.results);
-        responseOptions = buildResponseOptions(sanitizedResults);
-        const boundedResponseInput = buildResponseInput(input, responseOptions);
+        serverAuthored = buildResponseOptions(sanitizedResults)[0];
+        const boundedResponseInput = buildResponseInput(input, sanitizedResults);
         if (boundedResponseInput === null) {
           return { status: "model_unavailable", providerCalls: 0 };
         }
@@ -1195,7 +1277,7 @@ export function createOpenAIConversationModel(
         instructions: BANC_RESPONSE_INSTRUCTIONS,
         input: responseInput,
         formatName: "banc_conversation_response",
-        schema: createResponseJsonSchema(responseOptions),
+        schema: responseJsonSchema,
         maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
         signal,
       });
@@ -1203,10 +1285,16 @@ export function createOpenAIConversationModel(
         return { status: result.status, providerCalls: 1 };
       }
 
-      const response = parseResponseText(result.value, responseOptions);
-      return response === null
+      // Model prose is used only when every claim in it is grounded in the
+      // trusted results; otherwise the server-authored wording is returned so
+      // a valid search or answer is never lost to an ungrounded sentence.
+      const grounded = parseResponseText(result.value, sanitizedResults);
+      if (grounded !== null) {
+        return { status: "ok", response: grounded, providerCalls: 1 };
+      }
+      return serverAuthored === undefined
         ? { status: "model_unavailable", providerCalls: 1 }
-        : { status: "ok", response, providerCalls: 1 };
+        : { status: "ok", response: serverAuthored.text, providerCalls: 1 };
     },
   };
 }

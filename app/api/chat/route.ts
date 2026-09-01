@@ -26,7 +26,7 @@ export const POST = createBancChatPost({
       apiKey: process.env.OPENAI_API_KEY,
       model: process.env.OPENAI_CHAT_MODEL,
     });
-    return createBancConversationHandler({ model, tools });
+    return createBancConversationHandler({ model, tools, portfolio });
   },
   createRequestId: randomUUID,
 });

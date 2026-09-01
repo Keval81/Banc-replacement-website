@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { CircleHelp, MessageCircle, X, Send, Phone } from "lucide-react";
+import { CircleHelp, MessageCircle, RotateCcw, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,6 +11,7 @@ import {
   type PropertyConversationState,
 } from "@/lib/banc-conversation/contracts";
 import {
+  PropertyChatRequestError,
   createSingleFlightRunner,
   getPropertyChatMessageView,
   getPropertyChatQuickReplies,
@@ -36,6 +37,20 @@ const transition = {
 
 const landingContactLauncher = getLandingUi("aker").mobileContactLauncher;
 
+const WELCOME_MESSAGE =
+  "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?";
+
+function createWelcomeMessage(): PropertyChatMessage {
+  return {
+    id: "welcome",
+    role: "assistant",
+    content: WELCOME_MESSAGE,
+    timestamp: new Date(),
+  };
+}
+
+const RATE_LIMIT_STATUS = 429;
+
 interface PropertyChatbotProps {
   mobileContactControlPlacement?: MobileContactControlPlacement;
   showProactivePrompt?: boolean;
@@ -47,14 +62,8 @@ export default function PropertyChatbot({
 }: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
-  const [messages, setMessages] = useState<PropertyChatMessage[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content:
-        "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?",
-      timestamp: new Date(),
-    },
+  const [messages, setMessages] = useState<PropertyChatMessage[]>(() => [
+    createWelcomeMessage(),
   ]);
   const [input, setInput] = useState("");
   const [conversationContext, setConversationContext] =
@@ -132,8 +141,18 @@ export default function PropertyChatbot({
     return () => clearTimeout(timer);
   }, [showPrompt]);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const hasConversation = messages.length > 1;
+  const startNewConversation = useCallback(() => {
+    if (isLoading) return;
+    setMessages([createWelcomeMessage()]);
+    setConversationContext(createInitialConversationState());
+    setInput("");
+    inputRef.current?.focus();
+  }, [isLoading]);
+
+  const sendMessage = async (text: string = input) => {
+    const content = text.trim();
+    if (!content || isLoading) return;
     await submissionRunnerRef.current(async () => {
       const nextMessageId = () => {
         messageIdRef.current += 1;
@@ -141,7 +160,7 @@ export default function PropertyChatbot({
       };
       setInput("");
       await runPropertyChatTurn({
-        content: input,
+        content,
         messages,
         context: conversationContext,
         nextMessageId,
@@ -151,7 +170,17 @@ export default function PropertyChatbot({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestBody),
           });
-          if (!response.ok) throw new Error("Chat request failed");
+          if (!response.ok) {
+            if (response.status === RATE_LIMIT_STATUS) {
+              const payload = (await response.json().catch(() => null)) as
+                | { error?: unknown }
+                | null;
+              if (typeof payload?.error === "string") {
+                throw new PropertyChatRequestError(payload.error);
+              }
+            }
+            throw new Error("Chat request failed");
+          }
           return response.json();
         },
         onUserMessage: (message) => {
@@ -359,13 +388,27 @@ export default function PropertyChatbot({
                     <p className="text-[10px] text-white/50">Property help, powered by AI</p>
                   </div>
                 </div>
-                <button
-                  onClick={closeChat}
-                  className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
-                  aria-label="Close chat"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  {hasConversation && (
+                    <button
+                      type="button"
+                      onClick={startNewConversation}
+                      disabled={isLoading}
+                      className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white disabled:opacity-40 cursor-pointer"
+                      aria-label="Start a new conversation"
+                      title="Start a new conversation"
+                    >
+                      <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  )}
+                  <button
+                    onClick={closeChat}
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
+                    aria-label="Close chat"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Messages */}
@@ -485,7 +528,7 @@ export default function PropertyChatbot({
                 })}
 
                 {isLoading && (
-                  <div className="flex justify-start">
+                  <div className="flex justify-start" aria-label="Assistant is typing">
                     <div className="rounded-2xl rounded-bl-sm bg-white border border-banc-grey/10 shadow-sm px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-banc-grey/40 animate-pulse" />
@@ -503,11 +546,12 @@ export default function PropertyChatbot({
                 {quickReplies.map((reply) => (
                   <button
                     key={reply}
+                    type="button"
+                    disabled={isLoading}
                     onClick={() => {
-                      setInput(reply);
-                      inputRef.current?.focus();
+                      void sendMessage(reply);
                     }}
-                    className="flex-shrink-0 rounded-full border border-banc-grey/20 bg-banc-grey-pale px-3 py-1.5 text-xs text-banc-dark hover:border-banc-sky hover:text-banc-sky transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                    className="flex-shrink-0 rounded-full disabled:opacity-50 border border-banc-grey/20 bg-banc-grey-pale px-3 py-1.5 text-xs text-banc-dark hover:border-banc-sky hover:text-banc-sky transition-colors duration-200 cursor-pointer whitespace-nowrap"
                   >
                     {reply}
                   </button>
@@ -524,13 +568,21 @@ export default function PropertyChatbot({
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      void sendMessage();
+                    }
+                  }}
                   placeholder="Type a message..."
                   className="flex-1 h-10 text-sm border-banc-grey/20 focus:border-banc-sky"
                   style={{ fontSize: "16px" }}
                 />
                 <button
-                  onClick={sendMessage}
+                  type="button"
+                  onClick={() => {
+                    void sendMessage();
+                  }}
                   disabled={isLoading || !input.trim()}
                   className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] bg-banc-dark-deep text-white hover:bg-banc-dark transition-colors duration-200 disabled:opacity-40 cursor-pointer"
                   aria-label="Send message"

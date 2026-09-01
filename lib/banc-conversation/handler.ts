@@ -11,9 +11,11 @@ import {
 } from "./contracts.ts";
 import { BANC_CONTACT } from "../banc-contact.ts";
 import type {
+  ActivePropertySummary,
   ConversationModel,
   ModelFailureCategory,
 } from "./openai.ts";
+import type { PropertyPortfolio } from "./portfolio.ts";
 import {
   sanitizeOperationResult,
   type TrustedOperationResult,
@@ -66,9 +68,16 @@ export interface ConversationTools {
 export interface BancConversationHandlerDependencies {
   model: ConversationModel;
   tools: ConversationTools;
+  /**
+   * Optional read-only portfolio used to give intent selection the titles of
+   * the active results so "the Victorian one" can be mapped to a trusted id.
+   */
+  portfolio?: Pick<PropertyPortfolio, "getFacts">;
   now?: () => number;
   logger?: (event: ConversationDiagnosticEvent) => void;
 }
+
+const ACTIVE_PROPERTY_LOOKUP_BUDGET_MS = 2_500;
 
 type TimedResult<T> =
   | { status: "ok"; value: T }
@@ -328,9 +337,31 @@ function completedKnowledgeFallback(
     : response;
 }
 
+async function describeActiveProperties(
+  portfolio: Pick<PropertyPortfolio, "getFacts"> | undefined,
+  state: PropertyConversationState,
+  deadline: number,
+  now: () => number,
+): Promise<ActivePropertySummary[]> {
+  if (portfolio === undefined || state.resultPropertyIds.length === 0) return [];
+  const lookupDeadline = Math.min(deadline, now() + ACTIVE_PROPERTY_LOOKUP_BUDGET_MS);
+  const lookup = await withinDeadline(
+    lookupDeadline,
+    now,
+    (signal) => portfolio.getFacts([...state.resultPropertyIds], signal),
+  );
+  if (lookup.status !== "ok") return [];
+  const factsById = new Map(lookup.value.map((fact) => [fact.id, fact.title]));
+  return state.resultPropertyIds.flatMap((id) => {
+    const title = factsById.get(id);
+    return title === undefined ? [] : [{ id, title }];
+  });
+}
+
 export function createBancConversationHandler({
   model,
   tools,
+  portfolio,
   now = performance.now.bind(performance),
   logger = (event) => console.warn(event),
 }: BancConversationHandlerDependencies) {
@@ -394,6 +425,12 @@ export function createBancConversationHandler({
       selectedPlan = deterministicPlan;
       providerCalls = 0;
     } else {
+      const activeProperties = await describeActiveProperties(
+        portfolio,
+        trustedInitialState,
+        deadline,
+        now,
+      );
       const planCall = await withinDeadline(
         deadline,
         now,
@@ -401,6 +438,7 @@ export function createBancConversationHandler({
           message: request.message,
           history: request.history,
           state: trustedInitialState,
+          ...(activeProperties.length === 0 ? {} : { activeProperties }),
         }, signal),
       );
       if (planCall.status === "timeout") {

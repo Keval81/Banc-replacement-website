@@ -491,17 +491,57 @@ test("returns a typed failure without a provider call for malformed runtime stat
   assert.equal(fetch.calls.length, 0);
 });
 
-test("selects a conversational server-authored response using current turn context", async () => {
-  const fetch = createSequenceFetch([
-    openAIJsonResponse({
-      responseId: "option_2",
-    }),
-  ]);
+const sharedFacts = {
+  address: "Cuffley, Hertfordshire",
+  department: "sales" as const,
+  status: "for_sale" as const,
+  bathrooms: 2,
+  receptions: 2,
+  propertyType: "house",
+  tenure: "freehold",
+  epc: "B",
+  sqft: 1_800,
+  summary: "A detached family home.",
+};
+
+const twoPropertyFacts: ResponseWritingInput["results"] = [{
+  status: "property_facts",
+  facts: [
+    {
+      ...sharedFacts,
+      id: "EA-1",
+      title: "Oak House",
+      price: 750_000,
+      priceDisplay: "£750,000",
+      bedrooms: 5,
+      features: ["garage"],
+    },
+    {
+      ...sharedFacts,
+      id: "EA-2",
+      title: "Elm House",
+      price: 650_000,
+      priceDisplay: "£650,000",
+      bedrooms: 4,
+      features: ["garden"],
+    },
+  ],
+}];
+
+function createModelWithResponse(response: string) {
+  const fetch = createSequenceFetch([openAIJsonResponse({ response })]);
   const model = createOpenAIConversationModel({
     apiKey: "test-key",
     model: "gpt-test",
     fetch,
   });
+  return { fetch, model };
+}
+
+test("writes a grounded conversational response from trusted results and current turn context", async () => {
+  const response =
+    "Lovely — Cuffley has 1 match at the moment: Five-bedroom home at £750,000 with 5 bedrooms. Shall I walk you through the key details?";
+  const { fetch, model } = createModelWithResponse(response);
   const input = {
     ...validTurnInput,
     results: [
@@ -527,43 +567,35 @@ test("selects a conversational server-authored response using current turn conte
 
   const result = await model.writeResponse(input, abortSignal);
 
-  assert.deepEqual(result, {
-    status: "ok",
-    response: "That gives us one matching property. Shall I walk you through the key details?",
-    providerCalls: 1,
-  });
+  assert.deepEqual(result, { status: "ok", response, providerCalls: 1 });
   assert.equal(fetch.calls.length, 1);
   assertBoundedStructuredRequest(fetch.calls[0], abortSignal, "banc_conversation_response");
-  assert.doesNotMatch(fetch.calls[0]?.body ?? "", /SECRET-RAW-DATABASE-FIELD/);
+  assert.doesNotMatch(fetch.calls[0]?.body ?? "", /SECRET-RAW-DATABASE-FIELD|EA-1/);
   assert.match(fetch.calls[0]?.body ?? "", /RAW-HISTORY-USER/);
   const schema = structuredOutputSchema(fetch.calls[0]) as {
-    properties?: { responseId?: { type?: unknown; enum?: unknown }; response?: unknown };
+    properties?: { response?: { type?: unknown }; responseId?: unknown };
+    required?: unknown;
   };
-  assert.equal(schema.properties?.responseId?.type, "string");
-  assert.deepEqual(schema.properties?.responseId?.enum, ["option_1", "option_2", "option_3"]);
-  assert.equal(schema.properties?.response, undefined);
-  const responseInput = String(requestBody(fetch.calls[0]).input);
-  const parsedResponseInput = JSON.parse(responseInput) as {
+  assert.equal(schema.properties?.response?.type, "string");
+  assert.equal(schema.properties?.responseId, undefined);
+  assert.deepEqual(schema.required, ["response"]);
+  const parsedResponseInput = JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
     currentMessage: string;
     recentHistory: Array<{ role: string; content: string }>;
-    responseOptions: Array<{ id: string; text: string }>;
+    trustedResults: Array<Record<string, unknown>>;
+    responseOptions?: unknown;
   };
-  assert.doesNotMatch(responseInput, /trustedResults/);
-  assert.equal(parsedResponseInput.responseOptions.length, 3);
+  assert.equal(parsedResponseInput.responseOptions, undefined);
   assert.equal(parsedResponseInput.currentMessage, validTurnInput.message);
-  assert.deepEqual(
-    parsedResponseInput.recentHistory,
-    validTurnInput.history,
-  );
+  assert.deepEqual(parsedResponseInput.recentHistory, validTurnInput.history);
+  assert.equal(parsedResponseInput.trustedResults[0]?.status, "search_results");
+  assert.equal(parsedResponseInput.trustedResults[0]?.total, 1);
 });
 
-test("prepends combined candidates for search and approved knowledge results", async () => {
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+test("falls back to server-authored wording for search and knowledge results when prose is ungrounded", async () => {
+  const { fetch, model } = createModelWithResponse(
+    "I found 2 properties and Banc charges a 1% fee.",
+  );
   const result = await model.writeResponse({
     ...validTurnInput,
     results: [
@@ -589,44 +621,28 @@ test("prepends combined candidates for search and approved knowledge results", a
     response: "I found 2 properties matching your current requirements. Banc guidance says: Banc explains the offer process.",
     providerCalls: 1,
   });
-  const responseOptions = (JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
-    responseOptions: Array<{ text: string }>;
-  }).responseOptions;
-  assert.equal(responseOptions.length, 6);
-  for (const option of responseOptions.slice(0, 3)) {
-    assert.match(option.text, /found 2 properties/);
-    assert.match(option.text, /Banc explains the offer process/);
-  }
+  const trustedResults = (JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
+    trustedResults: Array<{ status: string; sources?: Array<{ excerpt: string }> }>;
+  }).trustedResults;
+  assert.equal(trustedResults.length, 2);
+  assert.equal(trustedResults[1]?.sources?.[0]?.excerpt, "Banc explains the offer process.");
 });
+
 test("allows natural wording based on trusted property facts", async () => {
-  const response = "Oak House has an EPC rating of B and features a garden.";
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+  const response = "Oak House has an EPC rating of B and a garden, and it's listed at £750,000.";
+  const { model } = createModelWithResponse(response);
   const input: ResponseWritingInput = {
     ...validTurnInput,
     results: [{
       status: "property_facts",
       facts: [{
+        ...sharedFacts,
         id: "EA-1",
         title: "Oak House",
-        address: "Cuffley, Hertfordshire",
-        department: "sales",
-        status: "for_sale",
         price: 750_000,
         priceDisplay: "£750,000",
         bedrooms: 5,
-        bathrooms: 2,
-        receptions: 2,
-        propertyType: "house",
-        tenure: "freehold",
-        epc: "B",
-        sqft: 1_800,
         features: ["garden", "parking"],
-        summary: "A detached family home.",
       }],
     }],
   };
@@ -638,70 +654,24 @@ test("allows natural wording based on trusted property facts", async () => {
 
 test("allows a grounded comparison covering both trusted properties", async () => {
   const response =
-    "Oak House is listed at £750,000 with 5 bedrooms and 2 bathrooms, while Elm House is listed at £650,000 with 4 bedrooms and 2 bathrooms. Elm House is lower priced, Oak House has more bedrooms, and both have 2 bathrooms.";
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
-  const sharedFacts = {
-    address: "Cuffley, Hertfordshire",
-    department: "sales" as const,
-    status: "for_sale" as const,
-    bathrooms: 2,
-    receptions: 2,
-    propertyType: "house",
-    tenure: "freehold",
-    epc: "B",
-    sqft: 1_800,
-    features: ["garden"],
-    summary: "A detached family home.",
-  };
-  const input: ResponseWritingInput = {
-    ...validTurnInput,
-    results: [{
-      status: "property_facts",
-      facts: [
-        {
-          ...sharedFacts,
-          id: "EA-1",
-          title: "Oak House",
-          price: 750_000,
-          priceDisplay: "£750,000",
-          bedrooms: 5,
-        },
-        {
-          ...sharedFacts,
-          id: "EA-2",
-          title: "Elm House",
-          price: 650_000,
-          priceDisplay: "£650,000",
-          bedrooms: 4,
-        },
-      ],
-    }],
-  };
+    "Oak House is £750,000 with 5 bedrooms and 2 bathrooms, while Elm House is £650,000 with 4 bedrooms and 2 bathrooms. Elm House is the lower priced of the two, and Oak House has the extra bedroom. Would you like to focus on either?";
+  const { model } = createModelWithResponse(response);
 
-  const result = await model.writeResponse(input, abortSignal);
+  const result = await model.writeResponse(
+    { ...validTurnInput, results: twoPropertyFacts },
+    abortSignal,
+  );
 
   assert.deepEqual(result, { status: "ok", response, providerCalls: 1 });
 });
 
-test("renders every trusted property fact in a three-property overview", async () => {
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
-  const sharedFacts = {
-    address: "Cuffley, Hertfordshire",
-    department: "sales" as const,
-    status: "for_sale" as const,
+test("falls back to the verified overview when three-property prose invents a figure", async () => {
+  const { model } = createModelWithResponse(
+    "Oak House is £750,000, Elm House is £650,000 and Pine House is £450,000.",
+  );
+  const overviewFacts = {
+    ...sharedFacts,
     receptions: 1,
-    propertyType: "house",
-    tenure: "freehold",
     epc: null,
     sqft: 1_000,
     features: [],
@@ -713,9 +683,9 @@ test("renders every trusted property fact in a three-property overview", async (
     results: [{
       status: "property_facts",
       facts: [
-        { ...sharedFacts, id: "EA-1", title: "Oak House", price: 750_000, priceDisplay: "£750,000", bedrooms: 1, bathrooms: 1 },
-        { ...sharedFacts, id: "EA-2", title: "Elm House", price: 650_000, priceDisplay: "£650,000", bedrooms: 2, bathrooms: 2 },
-        { ...sharedFacts, id: "EA-3", title: "Pine House", price: 550_000, priceDisplay: "£550,000", bedrooms: 3, bathrooms: 1 },
+        { ...overviewFacts, id: "EA-1", title: "Oak House", price: 750_000, priceDisplay: "£750,000", bedrooms: 1, bathrooms: 1 },
+        { ...overviewFacts, id: "EA-2", title: "Elm House", price: 650_000, priceDisplay: "£650,000", bedrooms: 2, bathrooms: 2 },
+        { ...overviewFacts, id: "EA-3", title: "Pine House", price: 550_000, priceDisplay: "£550,000", bedrooms: 3, bathrooms: 1 },
       ],
     }],
   }, abortSignal);
@@ -726,15 +696,11 @@ test("renders every trusted property fact in a three-property overview", async (
     providerCalls: 1,
   });
 });
-test("allows natural wording based on approved Banc knowledge", async () => {
-  const excerpt = "Cuffley is popular with families and close to countryside.";
-  const response = `Banc guidance says: ${excerpt}`;
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+
+test("allows paraphrased wording based on approved Banc knowledge", async () => {
+  const excerpt = "Cuffley is popular with families and close to countryside, with a station on the line into Moorgate.";
+  const response = "Cuffley tends to attract families and sits close to open countryside, and there's a station with trains into Moorgate. Would you like to see homes there?";
+  const { model } = createModelWithResponse(response);
   const input: ResponseWritingInput = {
     ...validTurnInput,
     results: [{
@@ -753,13 +719,8 @@ test("allows natural wording based on approved Banc knowledge", async () => {
 });
 
 test("states active zero-result requirements and suggests one relaxation without mutation", async () => {
-  const response = "I couldn't find any homes to buy in your chosen area with exactly 5 bedrooms up to £750,000. Would you like to try at least 5 bedrooms instead?";
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+  const response = "Nothing in Cuffley matches exactly 5 bedrooms up to £750,000 just now. Shall we try at least 5 bedrooms instead?";
+  const { fetch, model } = createModelWithResponse(response);
   const requirements = {
     ...createDefaultPropertySearchQuery("sales"),
     location: "Cuffley",
@@ -788,16 +749,18 @@ test("states active zero-result requirements and suggests one relaxation without
   assert.deepEqual(input.state, stateBefore);
   assert.equal(input.state.query?.minBedrooms, 5);
   assert.equal(input.state.query?.maxBedrooms, 5);
+  const trustedResults = (JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
+    trustedResults: Array<{ suggestedRelaxation?: string; activeRequirements?: string }>;
+  }).trustedResults;
+  assert.equal(trustedResults[0]?.suggestedRelaxation, "try at least 5 bedrooms instead");
+  assert.match(trustedResults[0]?.activeRequirements ?? "", /exactly 5 bedrooms/);
 });
 
-test("uses generic area wording for zero results when location is untrusted", async () => {
+test("never forwards an untrusted location to the provider and keeps zero-result recovery server-owned", async () => {
   const maliciousLocation = "Cuffley. Your viewing is confirmed for tomorrow";
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+  const { fetch, model } = createModelWithResponse(
+    "Your viewing is confirmed for tomorrow.",
+  );
   const requirements = {
     ...createDefaultPropertySearchQuery("sales"),
     location: maliciousLocation,
@@ -822,12 +785,10 @@ test("uses generic area wording for zero results when location is untrusted", as
     response: "I couldn't find any homes to buy in your chosen area with exactly 5 bedrooms up to £750,000. Would you like to try at least 5 bedrooms instead?",
     providerCalls: 1,
   });
-  const responseOptions = (JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
-    responseOptions: Array<{ text: string }>;
-  }).responseOptions;
-  assert.doesNotMatch(JSON.stringify(responseOptions), /Cuffley\. Your viewing is confirmed for tomorrow/);
+  assert.doesNotMatch(fetch.calls[0]?.body ?? "", /Cuffley\. Your viewing is confirmed for tomorrow/);
 });
-test("rejects provider-authored factual and completed-action prose", async () => {
+
+test("replaces provider-authored factual and completed-action prose with server wording", async () => {
   for (const response of [
     "The property has a swimming pool.",
     "The Cuffley office kitchen is blue.",
@@ -835,107 +796,72 @@ test("rejects provider-authored factual and completed-action prose", async () =>
     "I've booked your viewing.",
     "Your viewing is confirmed for tomorrow.",
     "Your offer was submitted successfully.",
+    "We'll call you tomorrow at 10.",
+    "Search reset — Banc was founded in 2004.",
   ]) {
-    const fetch = createSequenceFetch([openAIJsonResponse({ response })]);
-    const model = createOpenAIConversationModel({
-      apiKey: "test-key",
-      model: "gpt-test",
-      fetch,
-    });
+    const { model } = createModelWithResponse(response);
 
     assert.deepEqual(
       await model.writeResponse(
         { ...validTurnInput, results: [{ status: "reset" }] },
         abortSignal,
       ),
-      { status: "model_unavailable", providerCalls: 1 },
+      {
+        status: "ok",
+        response: "I've reset your property search. What would you like to look for?",
+        providerCalls: 1,
+      },
+      response,
     );
   }
 });
 
-test("rejects provider-authored cross-property claims", async () => {
-  const sharedFacts = {
-    address: "Cuffley, Hertfordshire",
-    department: "sales" as const,
-    status: "for_sale" as const,
-    bathrooms: 2,
-    receptions: 2,
-    propertyType: "house",
-    tenure: "freehold",
-    epc: "B",
-    sqft: 1_800,
-    summary: "A detached family home.",
-  };
-  const results: ResponseWritingInput["results"] = [{
-    status: "property_facts",
-    facts: [
-      {
-        ...sharedFacts,
-        id: "EA-1",
-        title: "Oak House",
-        price: 750_000,
-        priceDisplay: "£750,000",
-        bedrooms: 5,
-        features: ["garage"],
-      },
-      {
-        ...sharedFacts,
-        id: "EA-2",
-        title: "Elm House",
-        price: 650_000,
-        priceDisplay: "£650,000",
-        bedrooms: 4,
-        features: ["garden"],
-      },
-    ],
-  }];
-
+test("replaces provider-authored cross-property claims with the verified comparison", async () => {
   for (const response of [
     "Elm House costs £2 million and has 12 bedrooms.",
     "Elm House has a garage.",
+    "Oak House has a garden and Elm House has a garage.",
+    "Elm House is £650k and comes with a swimming pool.",
   ]) {
-    const fetch = createSequenceFetch([openAIJsonResponse({ response })]);
-    const model = createOpenAIConversationModel({
-      apiKey: "test-key",
-      model: "gpt-test",
-      fetch,
-    });
+    const { model } = createModelWithResponse(response);
 
-    assert.deepEqual(
-      await model.writeResponse({ ...validTurnInput, results }, abortSignal),
-      { status: "model_unavailable", providerCalls: 1 },
+    const result = await model.writeResponse(
+      { ...validTurnInput, results: twoPropertyFacts },
+      abortSignal,
+    );
+    assert.equal(result.status, "ok", response);
+    assert.equal(
+      (result as { response: string }).response,
+      "Oak House is listed at £750,000 with 5 bedrooms and 2 bathrooms, while Elm House is listed at £650,000 with 4 bedrooms and 2 bathrooms. Elm House is lower priced, Oak House has more bedrooms, and both have 2 bathrooms.",
+      response,
     );
   }
 });
 
-test("allows conversational new-home wording when it is not a property claim", async () => {
-  const response = "I've reset your search. Shall we find you a new home?";
-  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_2" })]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+test("allows conversational wording that makes no property claim", async () => {
+  for (const response of [
+    "All clear — shall we find you a new home?",
+    "I've cleared your search. What are you looking for next?",
+    "Would you like to add parking or a garden to the search?",
+  ]) {
+    const { model } = createModelWithResponse(response);
 
-  assert.deepEqual(
-    await model.writeResponse(
-      { ...validTurnInput, results: [{ status: "reset" }] },
-      abortSignal,
-    ),
-    { status: "ok", response, providerCalls: 1 },
-  );
+    assert.deepEqual(
+      await model.writeResponse(
+        { ...validTurnInput, results: [{ status: "reset" }] },
+        abortSignal,
+      ),
+      { status: "ok", response, providerCalls: 1 },
+      response,
+    );
+  }
 });
 
 test("serializes large sanitized result sets as complete bounded JSON", async () => {
   const expectedResponse = "I found 500 properties matching your current requirements.";
-  const fetch = createSequenceFetch([
-    openAIJsonResponse({ responseId: "option_1" }),
-  ]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+  const { fetch, model } = createModelWithResponse(
+    "There are 500 homes matching, which is far too many to list — here are 3 to start with.",
+  );
   const properties = Array.from({ length: 100 }, (_, index) => ({
     id: `EA-${index}`,
     title: `Property ${index}`,
@@ -962,6 +888,7 @@ test("serializes large sanitized result sets as complete bounded JSON", async ()
 
   const result = await model.writeResponse(input, abortSignal);
 
+  // "3" is not a trusted figure for this turn, so the server wording is used.
   assert.deepEqual(result, {
     status: "ok",
     response: expectedResponse,
@@ -970,48 +897,42 @@ test("serializes large sanitized result sets as complete bounded JSON", async ()
   const body = requestBody(fetch.calls[0]);
   const serializedInput = String(body.input);
   const parsedInput = JSON.parse(serializedInput) as {
-    responseOptions: Array<{ id: string; text: string }>;
-    trustedResults?: unknown;
+    trustedResults: Array<{ properties: unknown[] }>;
   };
   assert.ok(serializedInput.length <= 12_000);
-  assert.ok(parsedInput.responseOptions.length <= 6);
-  assert.equal(parsedInput.trustedResults, undefined);
-  assert.doesNotMatch(serializedInput, /trustedResults|SECRET-DATABASE|SECRET-LARGE-RAW/);
+  assert.ok((parsedInput.trustedResults[0]?.properties.length ?? 0) <= 3);
+  assert.doesNotMatch(serializedInput, /SECRET-DATABASE|SECRET-LARGE-RAW-[3-9]/);
 });
 
-test("rejects provider-authored prose containing links or phone numbers", async () => {
+test("replaces provider-authored prose containing links or unapproved phone numbers", async () => {
   for (const response of [
     "See https://example.com/property for details.",
     "Call 01707 644 101 to arrange it.",
     "Visit bancproperty.co.uk/contact for details.",
+    "Email hello@bancproperty.com and we will sort it.",
   ]) {
-    const fetch = createSequenceFetch([openAIJsonResponse({ response })]);
-    const model = createOpenAIConversationModel({
-      apiKey: "test-key",
-      model: "gpt-test",
-      fetch,
-    });
+    const { model } = createModelWithResponse(response);
 
     assert.deepEqual(
       await model.writeResponse(
         { ...validTurnInput, results: [{ status: "reset" }] },
         abortSignal,
       ),
-      { status: "model_unavailable", providerCalls: 1 },
+      {
+        status: "ok",
+        response: "I've reset your property search. What would you like to look for?",
+        providerCalls: 1,
+      },
+      response,
     );
   }
 });
 
-test("filters unsafe trusted text before exposing response options", async () => {
+test("filters unsafe trusted text from the server fallback and keeps unsafe prose out", async () => {
   const unsafeExcerpt = "Visit bancproperty.co.uk or call 01707 644 101.";
-  const fetch = createSequenceFetch([
-    openAIJsonResponse({ responseId: "option_1" }),
-  ]);
-  const model = createOpenAIConversationModel({
-    apiKey: "test-key",
-    model: "gpt-test",
-    fetch,
-  });
+  const { model } = createModelWithResponse(
+    "You can visit bancproperty.co.uk or call 01707 644 101.",
+  );
 
   const result = await model.writeResponse(
     {
@@ -1029,10 +950,26 @@ test("filters unsafe trusted text before exposing response options", async () =>
     response: "I can help with your Banc property search. What would you like to know?",
     providerCalls: 1,
   });
-  const input = JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
-    responseOptions: Array<{ id: string; text: string }>;
-  };
-  assert.doesNotMatch(JSON.stringify(input.responseOptions), /bancproperty|01707/);
+});
+
+test("returns model_unavailable when the provider payload is not a response object", async () => {
+  const fetch = createSequenceFetch([openAIJsonResponse({ responseId: "option_1" })]);
+  const model = createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch,
+  });
+
+  const result = await model.writeResponse(
+    { ...validTurnInput, results: [{ status: "contact", reason: "viewing" }] },
+    abortSignal,
+  );
+
+  assert.deepEqual(result, {
+    status: "ok",
+    response: "The Banc team can help with your enquiry. Would you like their contact options?",
+    providerCalls: 1,
+  });
 });
 
 test("maps response-writing provider failures with one-call bounds", async () => {

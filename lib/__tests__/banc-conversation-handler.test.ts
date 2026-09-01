@@ -182,7 +182,7 @@ function activeState(ids = ["EA-1", "EA-2"]): PropertyConversationState {
   };
 }
 
-function setup() {
+function setup(options: { describeActiveProperties?: boolean } = {}) {
   const model = new FakeModel();
   const portfolio = new FakePortfolio();
   const knowledge = new FakeKnowledge();
@@ -190,6 +190,7 @@ function setup() {
   const handler = createBancConversationHandler({
     model,
     tools: createConversationTools({ portfolio, knowledge }),
+    ...(options.describeActiveProperties === true ? { portfolio } : {}),
     logger: (event) => diagnostics.push(event),
   });
   return { handler, model, portfolio, knowledge, diagnostics };
@@ -950,4 +951,32 @@ test("actively aborts in-flight trusted work at the shared deadline", async () =
   assert.equal(receivedSignal?.aborted, true);
   assert.equal(aborted, true);
   assert.equal(diagnostics[0]?.category, "model_timeout");
+});
+
+test("gives intent selection trusted titles for the active results when a portfolio is supplied", async () => {
+  const { handler, model, portfolio } = setup({ describeActiveProperties: true });
+  model.planResults = [plan({ type: "get_property_facts", propertyIds: ["EA-2"] })];
+
+  await handler(requestFor("Tell me about the second property", activeState()));
+
+  assert.deepEqual(portfolio.factLookups[0], ["EA-1", "EA-2"]);
+  assert.deepEqual(model.planInputs[0]?.activeProperties, [
+    { id: "EA-1", title: "Property EA-1" },
+    { id: "EA-2", title: "Property EA-2" },
+  ]);
+});
+
+test("omits active property titles when there are no results or the lookup fails", async () => {
+  const idle = setup({ describeActiveProperties: true });
+  idle.model.planResults = [plan({ type: "reset_conversation_search" })];
+  await idle.handler(requestFor("start again"));
+  assert.equal(idle.portfolio.factLookups.length, 0);
+  assert.equal(idle.model.planInputs[0]?.activeProperties, undefined);
+
+  const failing = setup({ describeActiveProperties: true });
+  failing.portfolio.failFacts = true;
+  failing.model.planResults = [plan({ type: "reset_conversation_search" })];
+  const response = await failing.handler(requestFor("start again", activeState()));
+  assert.equal(failing.model.planInputs[0]?.activeProperties, undefined);
+  assert.equal(response.action, "answer");
 });

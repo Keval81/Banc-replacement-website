@@ -49,6 +49,34 @@ const resultQuickReplies = ["Tell me about the first property"] as const;
 const connectionErrorMessage =
   "I'm having trouble connecting. Please try again or call us at 01707 877781.";
 
+/**
+ * Raised by the transport when the chat route answered with a user-facing
+ * message (for example a 429 rate limit) that should replace the generic
+ * connection copy.
+ */
+export class PropertyChatRequestError extends Error {
+  readonly userMessage: string;
+
+  constructor(userMessage: string) {
+    super(userMessage);
+    this.name = "PropertyChatRequestError";
+    this.userMessage = userMessage;
+  }
+}
+
+const MAX_USER_FACING_ERROR_LENGTH = 240;
+
+export function userFacingChatError(error: unknown): string {
+  if (
+    error instanceof PropertyChatRequestError &&
+    error.userMessage.trim().length > 0 &&
+    error.userMessage.length <= MAX_USER_FACING_ERROR_LENGTH
+  ) {
+    return error.userMessage.trim();
+  }
+  return connectionErrorMessage;
+}
+
 export function createPropertyChatRequest(
   content: string,
   messages: readonly PropertyChatMessage[],
@@ -120,11 +148,11 @@ export async function runPropertyChatTurn({
       action: response.action,
       timestamp: now(),
     });
-  } catch {
+  } catch (error) {
     onAssistantMessage({
       id: nextMessageId(),
       role: "assistant",
-      content: connectionErrorMessage,
+      content: userFacingChatError(error),
       timestamp: now(),
     });
   } finally {
