@@ -205,3 +205,37 @@ test("keeps mobile navigation and proactive chat available on regular pages", ()
     mobileWhatsappPanelPlacement: "above-trigger",
   });
 });
+
+test("retires legacy page caching while preserving the notification worker", () => {
+  const layoutSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "layout.tsx"),
+    "utf8",
+  );
+  const serviceWorkerSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "public", "sw.js"),
+    "utf8",
+  );
+
+  assert.match(layoutSource, /navigator\.serviceWorker\.register/);
+  assert.match(serviceWorkerSource, /cacheName\.startsWith\(["']banc-pwa-["']\)/);
+  assert.match(serviceWorkerSource, /client\.navigate\(client\.url\)/);
+  assert.match(serviceWorkerSource, /addEventListener\(["']push["']/);
+  assert.match(serviceWorkerSource, /addEventListener\(["']notificationclick["']/);
+  assert.doesNotMatch(serviceWorkerSource, /self\.registration\.unregister\(\)/);
+  assert.doesNotMatch(serviceWorkerSource, /addEventListener\(["']fetch["']/);
+});
+
+test("keeps the Featured Listings section visible while data loads or is unavailable", () => {
+  const source = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "FeaturedListings.tsx"),
+    "utf8",
+  );
+
+  assert.match(source, /status:\s*["']loading["']/);
+  assert.match(source, /Loading featured homes/);
+  assert.match(source, /No featured homes are available right now/);
+  assert.match(source, /We couldn(?:&apos;|')t load featured homes right now/);
+  assert.match(source, /href=["']\/sales\/properties["']/);
+  assert.doesNotMatch(source, /catch\(\(\)\s*=>\s*\{\}\)/);
+  assert.doesNotMatch(source, /if \(listings\.length === 0\) return null/);
+});
