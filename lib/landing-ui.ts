@@ -150,7 +150,7 @@ const landingUiByVariant: Record<LandingVariant, LandingUi> = {
   aker: {
     ...sharedActions,
     reviewLogoSurface: "transparent",
-    showLandingHeaderLogo: false,
+    showLandingHeaderLogo: true,
     mobileSocialActions: [
       {
         brand: "facebook",

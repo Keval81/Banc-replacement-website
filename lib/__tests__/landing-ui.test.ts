@@ -74,10 +74,21 @@ test("keeps valuation in the menu without duplicating it as a homepage hero tile
   );
 });
 
-test("uses social actions instead of a duplicate logo in the Aker mobile header", () => {
+test("shows the Banc lockup in the landing header alongside the social actions", () => {
   const ui = getLandingUi("aker");
+  const headerSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "Header.tsx"),
+    "utf8",
+  );
 
-  assert.equal(ui.showLandingHeaderLogo, false);
+  assert.equal(ui.showLandingHeaderLogo, true);
+  // The lockup is the brand-blue asset, and the transparent hero header
+  // renders it too — the social icons sit beside it rather than replacing it.
+  assert.match(headerSource, /src="\/banc-logo-blue\.png"/);
+  assert.doesNotMatch(
+    headerSource,
+    /transparent && !landingUi\.showLandingHeaderLogo \?/,
+  );
   assert.deepEqual(ui.mobileSocialActions, [
     {
       brand: "facebook",
