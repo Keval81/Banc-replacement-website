@@ -54,6 +54,8 @@ const contentSecurityPolicy = [
     "https://www.youtube-nocookie.com",
     "https://player.vimeo.com",
     "https://my.matterport.com",
+    // Postcode-area fallback map when Google Maps is unavailable.
+    "https://www.openstreetmap.org",
     "https://vercel.live",
   ].join(" "),
   "upgrade-insecure-requests",
