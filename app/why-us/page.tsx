@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/why-us", {
   title: "Why Choose Us | Banc Property Group",
   description: "Discover why Banc Property Group is the premium choice for selling, letting and managing properties in Cuffley, Mayfair and beyond. 45+ years combined experience.",
   keywords: "estate agent cuffley, property sales hertfordshire, why choose banc, best estate agent, property experts",
-};
+});
+
+export const revalidate = 3600;
 
 // Differentiators — condensed from the live site's own Why Us copy (bancproperty.com/why-us)
 const differentiators = [
@@ -412,7 +415,7 @@ export default function WhyUsPage() {
               What Our Clients Say
             </h2>
             <p className="mt-4 text-lg text-[#8A8880]">
-              Don't just take our word for it – hear from the people we've helped.
+              Don&apos;t just take our word for it – hear from the people we&apos;ve helped.
             </p>
           </div>
           
@@ -425,7 +428,7 @@ export default function WhyUsPage() {
               >
                 {/* Quote marks */}
                 <div className="absolute -top-4 left-6 w-8 h-8 bg-[#4AC8E8] rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl font-serif">"</span>
+                  <span className="text-white text-xl font-serif">&quot;</span>
                 </div>
                 
                 {/* Stars */}
@@ -437,7 +440,7 @@ export default function WhyUsPage() {
                 
                 {/* Quote */}
                 <p className="text-[#3D3B37] leading-relaxed mb-6">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </p>
                 
                 {/* Author */}
@@ -469,7 +472,7 @@ export default function WhyUsPage() {
               Ready to Experience the Banc Difference?
             </h2>
             <p className="mt-4 text-lg text-white/90">
-              Whether you're selling, letting, buying, or renting, we're here to help you achieve your property goals.
+              Whether you&apos;re selling, letting, buying, or renting, we&apos;re here to help you achieve your property goals.
             </p>
             
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">

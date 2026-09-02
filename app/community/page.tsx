@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Phone, Mail, Heart, Trophy } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/community", {
   title: "Community | Banc Property Group",
   description:
     "Playing our part in the local community — Banc Property Group sponsors local schools, tennis and football clubs across Cuffley and the surrounding villages.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function CommunityPage() {
   return (

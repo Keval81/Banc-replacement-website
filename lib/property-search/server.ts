@@ -6,7 +6,7 @@ import {
   createPropertyFactLookup as createSupabasePropertyFactLookup,
   type PropertyFactLookup,
 } from "../property-facts.ts";
-import { supabaseAdmin } from "../supabase.ts";
+import { supabaseAdmin } from "../supabase-admin.ts";
 import { createPropertySearchService } from "./service.ts";
 import { SupabasePropertySearchRepository } from "./supabase-repository.ts";
 import type { PropertySearch } from "./types.ts";

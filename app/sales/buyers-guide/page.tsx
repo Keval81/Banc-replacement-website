@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,10 +7,12 @@ import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { BUYERS_GUIDE } from "@/lib/banc-content/buyers-guide";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/sales/buyers-guide", {
   title: "Buyers Guide | Banc Property Group",
   description: "We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. Our local knowledge will help you source the right home for your needs.",
-};
+});
+
+export const revalidate = 3600;
 
 const guideSteps = BUYERS_GUIDE.sections.slice(0, 6);
 const completion = BUYERS_GUIDE.sections[6];

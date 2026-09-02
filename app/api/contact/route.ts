@@ -2,23 +2,51 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendEmail, emailTemplates } from "@/lib/email";
+import {
+  createPublicFormRateLimiter,
+  isHoneypotTripped,
+  rateLimitResponse,
+} from "@/lib/public-form-guard";
 
-// Validation schema
+export const runtime = "nodejs";
+
+const limiter = createPublicFormRateLimiter();
+
+// Validation schema (bounded lengths; unknown fields are stripped)
 const contactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().optional(),
-  subject: z.string().min(1, "Please select a subject"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().trim().email("Please enter a valid email address").max(254),
+  phone: z.string().trim().max(30).optional(),
+  subject: z.string().trim().min(1, "Please select a subject").max(120),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(5000),
   consent: z.boolean().refine((val) => val === true, {
     message: "You must agree to be contacted",
   }),
+  website: z.string().max(0).optional(), // honeypot
 });
 
 export async function POST(request: NextRequest) {
   try {
+    const limited = rateLimitResponse(limiter, request);
+    if (limited) return limited;
+
     // Parse request body
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Invalid JSON body" },
+        { status: 400 }
+      );
+    }
+
+    if (isHoneypotTripped(body)) {
+      return NextResponse.json(
+        { success: true, message: "Your message has been sent successfully" },
+        { status: 200 }
+      );
+    }
 
     // Validate input
     const result = contactSchema.safeParse(body);
@@ -76,6 +104,7 @@ export async function POST(request: NextRequest) {
             type: "contact_form",
             data: submission,
           }),
+          signal: AbortSignal.timeout(8000),
         });
       } catch (webhookError) {
         console.error("[CRM Webhook Error]", webhookError);
@@ -104,22 +133,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// GET endpoint for admin/development purposes
-export async function GET() {
-  // In production, add authentication here
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json(
-      { success: false, error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  const submissions = await db.contact.findAll();
-  return NextResponse.json({
-    success: true,
-    count: submissions.length,
-    data: submissions,
-  });
 }

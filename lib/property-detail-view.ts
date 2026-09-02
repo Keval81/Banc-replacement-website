@@ -8,9 +8,12 @@ export interface PropertyMediaAvailability {
 
 export type PropertyMediaMode = "photos" | PropertyMediaTabId;
 
+// https only. The Expert Agent feed still emits plain-http media URLs, so
+// getSafePropertyImageUrl upgrades those to https for the allowlisted hosts
+// rather than dropping them (the CSP's upgrade-insecure-requests would do the
+// same in the browser; next/image needs the https pattern server-side).
 export const PROPERTY_IMAGE_REMOTE_PATTERNS = [
-  { protocol: "http", hostname: "**.expertagent.co.uk" },
-  { protocol: "https", hostname: "**.expertagent.co.uk" },
+  { protocol: "https", hostname: "**.expertagent.co.uk", pathname: "/**" },
 ] as const;
 
 function matchesRemoteHostname(hostname: string, pattern: string): boolean {
@@ -76,6 +79,7 @@ export function getSafeExternalUrl(value: string): string | null {
 export function getSafePropertyImageUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());
+    if (url.protocol === "http:") url.protocol = "https:";
     const hostname = url.hostname.toLocaleLowerCase("en-GB");
     const matchesConfiguredPattern = PROPERTY_IMAGE_REMOTE_PATTERNS.some(
       (pattern) =>

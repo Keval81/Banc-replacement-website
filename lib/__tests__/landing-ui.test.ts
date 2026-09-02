@@ -218,7 +218,8 @@ test("retires legacy page caching while preserving the notification worker", () 
 
   assert.match(layoutSource, /navigator\.serviceWorker\.register/);
   assert.match(serviceWorkerSource, /cacheName\.startsWith\(["']banc-pwa-["']\)/);
-  assert.match(serviceWorkerSource, /client\.navigate\(client\.url\)/);
+  // Activation must not force-reload open tabs.
+  assert.doesNotMatch(serviceWorkerSource, /client\.navigate\(/);
   assert.match(serviceWorkerSource, /addEventListener\(["']push["']/);
   assert.match(serviceWorkerSource, /addEventListener\(["']notificationclick["']/);
   assert.doesNotMatch(serviceWorkerSource, /self\.registration\.unregister\(\)/);

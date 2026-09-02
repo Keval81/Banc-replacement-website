@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -22,6 +23,8 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for each category
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { category: categorySlug } = await params;
   const category = getCategoryBySlug(categorySlug);
@@ -32,7 +35,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     };
   }
 
-  return {
+  return withPageDefaults(`/blog/category/${category.slug}`, {
     title: `${category.name} | Blog Category`,
     description: category.description,
     openGraph: {
@@ -40,10 +43,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       description: category.description,
       type: "website",
     },
-    alternates: {
-      canonical: `https://bancproperty.com/blog/category/${category.slug}`,
-    },
-  };
+  });
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {

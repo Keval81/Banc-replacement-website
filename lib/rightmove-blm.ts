@@ -7,7 +7,8 @@
 //   RIGHTMOVE_FTP_USER=your_ftp_user
 //   RIGHTMOVE_FTP_PASSWORD=your_ftp_password
 
-import { supabaseAdmin, type DbProperty } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
+import type { DbProperty } from "./supabase";
 
 const NETWORK_ID = process.env.RIGHTMOVE_NETWORK_ID ?? "";
 const BRANCH_ID = process.env.RIGHTMOVE_BRANCH_ID ?? "";

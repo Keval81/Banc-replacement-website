@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/complaints", {
   title: "Complaints Procedure | Banc Property Group",
   description: "Our complaints procedure. We take all complaints seriously and are committed to resolving issues promptly and fairly.",
   keywords: "complaints procedure, estate agent complaints, property ombudsman, banc complaints",
-};
+});
+
+export const revalidate = 3600;
 
 // Complaints process steps
 const complaintSteps = [
@@ -127,7 +130,7 @@ export default function ComplaintsPage() {
               </div>
               
               <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917] mb-6">
-                We're Committed to Fairness
+                We&apos;re Committed to Fairness
               </h2>
               
               <p className="text-lg text-[#8A8880] mb-8">
@@ -305,7 +308,7 @@ export default function ComplaintsPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-[#4AC8E8] mt-0.5" />
-                    What you'd like us to do to put it right
+                    What you&apos;d like us to do to put it right
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="h-4 w-4 text-[#4AC8E8] mt-0.5" />
@@ -319,7 +322,7 @@ export default function ComplaintsPage() {
             <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30 shadow-lg">
               <h3 className="text-xl font-semibold text-[#1A1917] mb-2">Make a Complaint</h3>
               <p className="text-sm text-[#8A8880] mb-6">
-                Use this form to submit your complaint. We'll respond within 3 working days.
+                Use this form to submit your complaint. We&apos;ll respond within 3 working days.
               </p>
               
               <form className="space-y-5">
@@ -442,7 +445,7 @@ export default function ComplaintsPage() {
               Independent Redress
             </h2>
             <p className="mt-4 text-lg text-[#8A8880]">
-              If you're not satisfied with our final response, you can escalate your complaint 
+              If you&apos;re not satisfied with our final response, you can escalate your complaint 
               to an independent redress scheme.
             </p>
           </div>
@@ -486,7 +489,7 @@ export default function ComplaintsPage() {
                 <h4 className="font-semibold text-amber-800 mb-2">Important Note</h4>
                 <p className="text-sm text-amber-700">
                   You must wait until you receive our final written response (or 8 weeks from 
-                  the date of your complaint if we haven't responded) before escalating to 
+                  the date of your complaint if we haven&apos;t responded) before escalating to 
                   The Property Ombudsman. Their service is free for consumers.
                 </p>
               </div>

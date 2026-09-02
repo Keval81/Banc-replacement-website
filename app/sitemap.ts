@@ -1,109 +1,99 @@
-import { MetadataRoute } from "next";
-import { areaGuides as areaGuideData } from "@/lib/area-guides";
+import type { MetadataRoute } from "next";
 
-// Static pages with their priorities and change frequencies
-const staticPages = [
-  { url: "/", priority: 1.0, changeFrequency: "daily" as const },
-  { url: "/sales", priority: 0.9, changeFrequency: "daily" as const },
-  { url: "/sales/properties", priority: 0.9, changeFrequency: "hourly" as const },
-  { url: "/sales/buyers-guide", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/sales/sellers-guide", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/lettings", priority: 0.9, changeFrequency: "daily" as const },
-  { url: "/lettings/properties", priority: 0.9, changeFrequency: "hourly" as const },
-  { url: "/lettings/tenants-guide", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/lettings/landlords-guide", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/area-guides", priority: 0.8, changeFrequency: "weekly" as const },
-  { url: "/valuation", priority: 0.8, changeFrequency: "weekly" as const },
-  { url: "/contact", priority: 0.8, changeFrequency: "monthly" as const },
-  { url: "/why-us", priority: 0.7, changeFrequency: "monthly" as const },
-  { url: "/the-team", priority: 0.7, changeFrequency: "monthly" as const },
-  { url: "/track-record", priority: 0.7, changeFrequency: "monthly" as const },
-  { url: "/reviews", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/premier-homes", priority: 0.8, changeFrequency: "daily" as const },
-  { url: "/land-new-homes", priority: 0.7, changeFrequency: "weekly" as const },
-  { url: "/the-guild", priority: 0.6, changeFrequency: "monthly" as const },
-  { url: "/become-partner", priority: 0.6, changeFrequency: "monthly" as const },
-  { url: "/community", priority: 0.6, changeFrequency: "monthly" as const },
-  { url: "/blog", priority: 0.8, changeFrequency: "daily" as const },
+import { areaGuides } from "@/lib/area-guides";
+import { getAllPosts, categories as blogCategories } from "@/lib/blog";
+import { buildPropertyHref } from "@/lib/property-view";
+import { absoluteUrl } from "@/lib/site";
+import { STATIC_ROUTES } from "@/lib/site-routes";
+import { supabase, type DbProperty } from "@/lib/supabase";
+
+export const revalidate = 3600;
+
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+const MARKETABLE_STATUSES: DbProperty["status"][] = [
+  "for_sale",
+  "under_offer",
+  "to_let",
+  "let_agreed",
 ];
 
-// Area guides — real coverage areas from lib/area-guides
-const areaGuides = areaGuideData.map(({ slug, name }) => ({ slug, name }));
+type SitemapPropertyRow = Pick<
+  DbProperty,
+  "id" | "expert_agent_id" | "department" | "updated_at"
+>;
 
-// Blog categories
-const blogCategories = [
-  "market-news",
-  "area-guides",
-  "selling-tips",
-  "buying-tips",
-  "landlord-advice",
-];
+// Live property URLs. Degrades to an empty list (static routes only) when
+// Supabase is not configured or the query fails, so the sitemap never 500s.
+async function loadPropertyEntries(): Promise<SitemapEntry[]> {
+  const client = supabase;
+  if (!client) return [];
+
+  try {
+    const { data, error } = await client
+      .from("properties")
+      .select("id, expert_agent_id, department, updated_at")
+      .in("status", MARKETABLE_STATUSES)
+      .order("updated_at", { ascending: false })
+      .limit(5000);
+    if (error) {
+      console.error("sitemap: property query failed:", error.message);
+      return [];
+    }
+
+    return ((data ?? []) as SitemapPropertyRow[]).map((row) => ({
+      url: absoluteUrl(buildPropertyHref(row.department, row.expert_agent_id ?? row.id)),
+      lastModified: row.updated_at ? new Date(row.updated_at) : undefined,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    }));
+  } catch (error) {
+    console.error("sitemap: property query unavailable:", error);
+    return [];
+  }
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://bancproperty.com";
-  const currentDate = new Date();
+  const now = new Date();
 
-  // Static pages sitemap entries
-  const staticEntries = staticPages.map((page) => ({
-    url: `${baseUrl}${page.url}`,
-    lastModified: currentDate,
-    changeFrequency: page.changeFrequency,
-    priority: page.priority,
+  const staticEntries: SitemapEntry[] = STATIC_ROUTES.map((route) => ({
+    url: absoluteUrl(route.path),
+    lastModified: now,
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
   }));
 
-  // Area guides entries
-  const areaGuideEntries = areaGuides.map((area) => ({
-    url: `${baseUrl}/area-guides/${area.slug}`,
-    lastModified: currentDate,
-    changeFrequency: "weekly" as const,
+  const areaGuideEntries: SitemapEntry[] = areaGuides.map((area) => ({
+    url: absoluteUrl(`/area-guides/${area.slug}`),
+    lastModified: now,
+    changeFrequency: "monthly" as const,
     priority: 0.7,
   }));
 
-  // Blog category entries
-  const blogCategoryEntries = blogCategories.map((category) => ({
-    url: `${baseUrl}/blog/category/${category}`,
-    lastModified: currentDate,
-    changeFrequency: "weekly" as const,
+  const posts = getAllPosts();
+  const blogEntries: SitemapEntry[] = posts.map((post) => ({
+    url: absoluteUrl(`/blog/${post.slug}`),
+    lastModified: new Date(post.date),
+    changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
 
-  // Property pages (would be fetched from API in production)
-  // For now, we'll include sample property URLs
-  const propertyIds = ["chpk1487075", "chpk1487076", "chpk1487077"];
-  const propertyEntries = propertyIds.map((id) => ({
-    url: `${baseUrl}/sales/properties/${id}`,
-    lastModified: currentDate,
-    changeFrequency: "hourly" as const,
-    priority: 0.9,
-  }));
+  const blogCategoryEntries: SitemapEntry[] = blogCategories
+    .filter((category) => posts.some((post) => post.category === category.slug))
+    .map((category) => ({
+      url: absoluteUrl(`/blog/category/${category.slug}`),
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.5,
+    }));
 
-  // Lettings property entries
-  const lettingsEntries = propertyIds.map((id) => ({
-    url: `${baseUrl}/lettings/properties/${id}`,
-    lastModified: currentDate,
-    changeFrequency: "hourly" as const,
-    priority: 0.9,
-  }));
-
-  // Blog posts (would be fetched from content in production)
-  const blogSlugs = [
-    "top-tips-selling-home",
-    "area-guide-cuffley",
-    "property-market-hertfordshire",
-  ];
-  const blogEntries = blogSlugs.map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: currentDate,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  const propertyEntries = await loadPropertyEntries();
 
   return [
     ...staticEntries,
     ...areaGuideEntries,
+    ...blogEntries,
     ...blogCategoryEntries,
     ...propertyEntries,
-    ...lettingsEntries,
-    ...blogEntries,
   ];
 }

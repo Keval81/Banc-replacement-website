@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,11 +18,13 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/offices", {
   title: "Our Offices | Banc Property Group",
   description: "Visit our offices in Cuffley, Hertfordshire and Mayfair, London. Expert estate agents providing premium property services across Hertfordshire and Central London.",
   keywords: "banc property offices, estate agent cuffley, estate agent mayfair, property agents hertfordshire, london property agents",
-};
+});
+
+export const revalidate = 3600;
 
 const offices = [
   {
@@ -96,7 +99,7 @@ export default function OfficesPage() {
               Our Offices
             </h1>
             <p className="mt-6 text-xl text-white/70 leading-relaxed">
-              Visit us at one of our two locations. Whether you're in Hertfordshire or Central London, 
+              Visit us at one of our two locations. Whether you&apos;re in Hertfordshire or Central London, 
               our experienced team is ready to help with all your property needs.
             </p>
           </div>
@@ -215,7 +218,7 @@ export default function OfficesPage() {
               </div>
               
               <p className="text-white/60 mb-6">
-                Visit our Cuffley office if you're looking to buy, sell, let, or rent 
+                Visit our Cuffley office if you&apos;re looking to buy, sell, let, or rent 
                 in the following areas:
               </p>
               
@@ -249,7 +252,7 @@ export default function OfficesPage() {
               
               <p className="text-white/60 mb-6">
                 Contact our Mayfair office for premium properties valued at £1 million 
-                and above in London's most prestigious areas:
+                and above in London&apos;s most prestigious areas:
               </p>
               
               <div className="flex flex-wrap gap-2 mb-6">
@@ -283,10 +286,10 @@ export default function OfficesPage() {
                 </div>
                 
                 <h2 className="text-3xl font-semibold text-[#1A1917]">
-                  Can't Visit in Person?
+                  Can&apos;t Visit in Person?
                 </h2>
                 <p className="mt-4 text-lg text-[#8A8880]">
-                  We're always available by phone or email. Our team is ready to answer 
+                  We&apos;re always available by phone or email. Our team is ready to answer 
                   your questions and help you with your property needs.
                 </p>
                 

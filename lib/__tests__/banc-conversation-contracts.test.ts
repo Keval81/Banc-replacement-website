@@ -359,8 +359,9 @@ test("property card images follow the configured image allowlist", () => {
       " http://med05.expertagent.co.uk/a/photo.jpg ",
     ])],
   }));
+  // Plain-http feed URLs are upgraded to https by the shared allowlist helper.
   assert.deepEqual(approved?.properties?.[0]?.images, [
-    "http://med05.expertagent.co.uk/a/photo.jpg",
+    "https://med05.expertagent.co.uk/a/photo.jpg",
   ]);
 
   for (const image of [

@@ -1,4 +1,5 @@
 import React from "react";
+import { toJsonLd } from "@/lib/json-ld";
 
 // Organization Structured Data
 export const OrganizationStructuredData = () => {
@@ -61,7 +62,7 @@ export const OrganizationStructuredData = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -131,7 +132,7 @@ export const PropertyStructuredData = ({ property }: PropertyStructuredDataProps
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -156,7 +157,7 @@ export const WebsiteStructuredData = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -194,7 +195,7 @@ export const LocalBusinessStructuredData = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -226,7 +227,7 @@ export const FAQStructuredData = ({ faqs }: FAQStructuredDataProps) => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -266,7 +267,7 @@ export const BreadcrumbStructuredData = ({ items }: BreadcrumbStructuredDataProp
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };
@@ -354,7 +355,7 @@ export const ServiceAreaStructuredData = () => {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: toJsonLd(data) }}
     />
   );
 };

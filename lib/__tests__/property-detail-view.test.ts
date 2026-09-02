@@ -112,9 +112,10 @@ test("accepts only absolute http and https media URLs", () => {
 });
 
 test("accepts only property image hosts configured for Next Image", () => {
+  // Feed URLs are plain http; they are upgraded to https rather than dropped.
   assert.equal(
     getSafePropertyImageUrl(" http://med05.expertagent.co.uk/a/photo.jpg "),
-    "http://med05.expertagent.co.uk/a/photo.jpg"
+    "https://med05.expertagent.co.uk/a/photo.jpg"
   );
   assert.equal(
     getSafePropertyImageUrl("https://media.expertagent.co.uk/a/floorplan.gif"),

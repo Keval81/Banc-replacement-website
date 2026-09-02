@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/privacy", {
   title: "Privacy Policy | Banc Property Group",
   description: "Learn how Banc Property Group collects, uses, and protects your personal data.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function PrivacyPage() {
   return (

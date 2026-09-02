@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ResetCookieButton from "./ResetCookieButton";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/cookies", {
   title: "Cookie Policy | Banc Property Group",
   description: "Learn how Banc Property Group uses cookies and how you can manage your cookie preferences.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function CookiePolicyPage() {
   return (

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
+import { organizationJsonLd } from "@/lib/schema-org";
+import { absoluteUrl } from "@/lib/site";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Hero from "@/app/sections/Hero";
@@ -9,7 +13,7 @@ import Testimonials from "@/app/sections/Testimonials";
 // GoogleReviews removed — covered by Testimonials section
 // Partner logos moved to Footer
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/", {
   title: "Banc Property Group | Independent Estate Agents",
   description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire. Director-led team, premium marketing, and expert valuations. Your property journey starts here.",
   keywords: [
@@ -22,10 +26,9 @@ export const metadata: Metadata = {
     title: "Banc Property Group | Independent Estate Agents",
     description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
     type: "website",
-    url: "https://bancproperty.com",
     images: [
       {
-        url: "/api/og",
+        url: absoluteUrl("/api/og"),
         width: 1200,
         height: 630,
         alt: "Banc Property Group - Premium Estate Agents",
@@ -37,33 +40,38 @@ export const metadata: Metadata = {
     title: "Banc Property Group | Independent Estate Agents",
     description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire.",
   },
-  alternates: {
-    canonical: "https://bancproperty.com",
-  },
-};
+});
 
-// Homepage structured data
-const homepageStructuredData = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Banc Property Group | Independent Estate Agents",
-  description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire",
-  url: "https://bancproperty.com",
-  mainEntity: {
-    "@type": "RealEstateAgent",
+// Homepage structured data: the organisation itself (RealEstateAgent +
+// LocalBusiness) and the WebSite entity that points at it.
+const organization = organizationJsonLd();
+const homepageStructuredData = [
+  organization,
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${absoluteUrl("/")}#website`,
     name: "Banc Property Group",
+    url: absoluteUrl("/"),
+    publisher: { "@id": organization["@id"] },
   },
-};
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Banc Property Group | Independent Estate Agents",
+    description: "Exceptional properties and bespoke estate agency services in Cuffley and Hertfordshire",
+    url: absoluteUrl("/"),
+    isPartOf: { "@id": `${absoluteUrl("/")}#website` },
+    about: { "@id": organization["@id"] },
+  },
+];
+
+export const revalidate = 3600;
 
 export default function Home() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(homepageStructuredData),
-        }}
-      />
+      <JsonLd data={homepageStructuredData} />
       <div className="bg-white text-[#2C2A27]">
         <Header transparent />
         <main>

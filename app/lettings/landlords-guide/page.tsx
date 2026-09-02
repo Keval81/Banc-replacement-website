@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -31,10 +32,12 @@ import {
   LANDLORDS_GUIDE,
 } from "@/lib/banc-content/landlords-guide";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/lettings/landlords-guide", {
   title: "Landlords Guide | Banc Property Services",
   description: "Bespoke letting solutions for landlords. Expert property management services in Cuffley, Goffs Oak, Cheshunt, Potters Bar and surrounding areas. Property Guild approved agent.",
-};
+});
+
+export const revalidate = 3600;
 
 const whyChooseBanc = LANDLORD_BENEFITS.map((feature, index) => ({
   ...feature,

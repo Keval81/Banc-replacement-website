@@ -50,23 +50,35 @@ const mockReviews: Review[] = [
   },
 ];
 
-export default function LiveReviewFeed() {
+interface LiveReviewFeedProps {
+  /** Reviews to rotate through; renders nothing when empty. */
+  reviews?: Review[];
+}
+
+export default function LiveReviewFeed({ reviews = mockReviews }: LiveReviewFeedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const count = reviews.length;
 
   useEffect(() => {
+    if (count === 0) return;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     const interval = setInterval(() => {
       setIsVisible(false);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % mockReviews.length);
+      timeout = setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % count);
         setIsVisible(true);
       }, 300);
     }, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearInterval(interval);
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [count]);
 
-  const review = mockReviews[currentIndex];
+  const review = reviews[currentIndex % Math.max(count, 1)];
+  if (!review) return null;
 
   return (
     <div className="bg-gradient-to-r from-[#1a4d5c] to-[#2a5d6c] text-white py-3 overflow-hidden">

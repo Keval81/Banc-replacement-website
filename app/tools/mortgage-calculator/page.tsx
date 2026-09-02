@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft, Calculator, Info } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { MortgageCalculator } from "@/components/MortgageCalculator";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/tools/mortgage-calculator", {
   title: "Mortgage Calculator | Banc Property Group",
   description:
     "Calculate your monthly mortgage payments. Compare capital repayment and interest-only mortgages. View amortization schedules and total interest costs.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function MortgageCalculatorPage() {
   return (

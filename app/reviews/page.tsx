@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Quote, MapPin } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/reviews", {
   title: "Reviews | Banc Property Services",
   description: "Read what our clients say about Banc Property Group. Estate agency service across Cuffley, Cheshunt, Goffs Oak and beyond.",
-};
+});
+
+export const revalidate = 3600;
 
 interface Review {
   title: string;
@@ -209,7 +212,7 @@ export default function ReviewsPage() {
                   
                   {/* Testimonial Text */}
                   <blockquote className="text-[#8A8880] leading-relaxed text-base">
-                    "{review.text}"
+                    &quot;{review.text}&quot;
                   </blockquote>
                   
                   {/* Author */}

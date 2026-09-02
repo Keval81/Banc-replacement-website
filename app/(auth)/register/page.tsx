@@ -1,16 +1,16 @@
-"use client";
+import type { Metadata } from "next";
 
-import { Suspense } from "react";
-import RegisterForm from "./RegisterForm";
+import { buildMetadata } from "@/lib/seo";
+
+import RegisterPageClient from "./RegisterPageClient";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Create an Account | Banc Property Group",
+  description: "Create a free Banc Property Group account to save properties, set up alerts and track your property journey.",
+  path: "/register",
+  noindex: true,
+});
 
 export default function RegisterPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16 flex items-center justify-center">
-        <div className="text-white/60">Loading...</div>
-      </div>
-    }>
-      <RegisterForm />
-    </Suspense>
-  );
+  return <RegisterPageClient />;
 }

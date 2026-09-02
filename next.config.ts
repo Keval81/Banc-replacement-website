@@ -1,6 +1,59 @@
 import type { NextConfig } from "next";
 import { PROPERTY_IMAGE_REMOTE_PATTERNS } from "./lib/property-detail-view";
 
+const isDev = process.env.NODE_ENV !== "production";
+
+// Content-Security-Policy. Inline scripts are required by Next's JSON-LD and
+// the GA bootstrap, so script-src keeps 'unsafe-inline'; 'unsafe-eval' is only
+// added for the dev server (React Refresh). Extend the allowlists here when a
+// new third-party embed or API is introduced.
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self'",
+  "manifest-src 'self'",
+  "worker-src 'self' blob:",
+  [
+    "script-src 'self' 'unsafe-inline'",
+    isDev ? "'unsafe-eval'" : "",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://maps.googleapis.com",
+    "https://maps.gstatic.com",
+  ]
+    .filter(Boolean)
+    .join(" "),
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' blob: https:",
+  [
+    "connect-src 'self'",
+    "https://*.supabase.co",
+    "wss://*.supabase.co",
+    "https://www.google-analytics.com",
+    "https://*.google-analytics.com",
+    "https://*.analytics.google.com",
+    "https://www.googletagmanager.com",
+    "https://stats.g.doubleclick.net",
+    "https://maps.googleapis.com",
+    "https://*.googleapis.com",
+    "https://api.postcodes.io",
+  ].join(" "),
+  [
+    "frame-src",
+    "https://www.google.com",
+    "https://maps.google.com",
+    "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+    "https://player.vimeo.com",
+    "https://my.matterport.com",
+  ].join(" "),
+  "upgrade-insecure-requests",
+].join("; ");
+
 const nextConfig: NextConfig = {
   // Allow development access from network IPs
   allowedDevOrigins: ["192.168.0.90", "localhost", "127.0.0.1"],
@@ -48,8 +101,8 @@ const nextConfig: NextConfig = {
             value: "DENY",
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
+            key: "Content-Security-Policy",
+            value: contentSecurityPolicy,
           },
           {
             key: "Referrer-Policy",

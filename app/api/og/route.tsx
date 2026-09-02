@@ -1,27 +1,54 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
+import { getSafePropertyImageUrl } from "@/lib/property-detail-view";
 
 export const runtime = "edge";
 
+const MAX_TITLE = 120;
+const MAX_DESCRIPTION = 200;
+const MAX_PRICE = 40;
+
+const CACHE_HEADERS = {
+  "Cache-Control": "public, max-age=86400, s-maxage=86400",
+};
+
+function clampText(value: string | null, fallback: string, max: number): string {
+  const text = (value ?? "").replace(/\s+/g, " ").trim();
+  if (!text) return fallback;
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
+/**
+ * Only render remote images from the CRM media hosts (same allowlist as
+ * next/image) or same-origin /images paths; anything else is dropped.
+ */
+function getSafeOgImageUrl(value: string | null, origin: string): string | null {
+  if (!value) return null;
+  const trimmed = value.trim();
+  if (trimmed.startsWith("/images/") && !trimmed.startsWith("/images//")) {
+    return new URL(trimmed, origin).toString();
+  }
+  return getSafePropertyImageUrl(trimmed);
+}
+
+// Fonts: @vercel/og only accepts TTF/OTF/WOFF (not woff2). The default
+// bundled font is used so image generation never depends on a remote fetch.
+const FONT_FAMILY = "sans-serif";
+
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams, origin } = new URL(request.url);
 
-    // Get parameters from URL
-    const title = searchParams.get("title") || "Banc Property Group";
-    const description = searchParams.get("description") || "Premium Estate Agents in Cuffley, Mayfair & Hertfordshire";
-    const price = searchParams.get("price");
-    const image = searchParams.get("image");
+    // Get parameters from URL (bounded)
+    const title = clampText(searchParams.get("title"), "Banc Property Group", MAX_TITLE);
+    const description = clampText(
+      searchParams.get("description"),
+      "Premium Estate Agents in Cuffley, Mayfair & Hertfordshire",
+      MAX_DESCRIPTION
+    );
+    const price = clampText(searchParams.get("price"), "", MAX_PRICE) || null;
+    const image = getSafeOgImageUrl(searchParams.get("image"), origin);
     const type = searchParams.get("type") || "default"; // default, property, blog
-
-    // Load fonts
-    const montserratBold = await fetch(
-      new URL("https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2")
-    ).then((res) => res.arrayBuffer());
-
-    const montserratRegular = await fetch(
-      new URL("https://fonts.gstatic.com/s/montserrat/v26/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2")
-    ).then((res) => res.arrayBuffer());
 
     // Property card style OG image
     if (type === "property" && image) {
@@ -34,7 +61,7 @@ export async function GET(request: NextRequest) {
               display: "flex",
               flexDirection: "column",
               backgroundColor: "#ffffff",
-              fontFamily: "Montserrat",
+              fontFamily: FONT_FAMILY,
             }}
           >
             {/* Image Section */}
@@ -149,20 +176,7 @@ export async function GET(request: NextRequest) {
         {
           width: 1200,
           height: 630,
-          fonts: [
-            {
-              name: "Montserrat",
-              data: montserratRegular,
-              style: "normal",
-              weight: 400,
-            },
-            {
-              name: "Montserrat",
-              data: montserratBold,
-              style: "normal",
-              weight: 700,
-            },
-          ],
+          headers: CACHE_HEADERS,
         }
       );
     }
@@ -178,7 +192,7 @@ export async function GET(request: NextRequest) {
               display: "flex",
               flexDirection: "column",
               background: "linear-gradient(135deg, #1A1917 0%, #1a1c1f 100%)",
-              fontFamily: "Montserrat",
+              fontFamily: FONT_FAMILY,
               padding: 60,
             }}
           >
@@ -256,20 +270,7 @@ export async function GET(request: NextRequest) {
         {
           width: 1200,
           height: 630,
-          fonts: [
-            {
-              name: "Montserrat",
-              data: montserratRegular,
-              style: "normal",
-              weight: 400,
-            },
-            {
-              name: "Montserrat",
-              data: montserratBold,
-              style: "normal",
-              weight: 700,
-            },
-          ],
+          headers: CACHE_HEADERS,
         }
       );
     }
@@ -283,7 +284,7 @@ export async function GET(request: NextRequest) {
             width: "100%",
             display: "flex",
             background: "linear-gradient(135deg, #1A1917 0%, #1a1c1f 100%)",
-            fontFamily: "Montserrat",
+            fontFamily: FONT_FAMILY,
           }}
         >
           {/* Left Content */}
@@ -406,20 +407,7 @@ export async function GET(request: NextRequest) {
       {
         width: 1200,
         height: 630,
-        fonts: [
-          {
-            name: "Montserrat",
-            data: montserratRegular,
-            style: "normal",
-            weight: 400,
-          },
-          {
-            name: "Montserrat",
-            data: montserratBold,
-            style: "normal",
-            weight: 700,
-          },
-        ],
+        headers: CACHE_HEADERS,
       }
     );
   } catch (error) {

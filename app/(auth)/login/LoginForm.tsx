@@ -14,6 +14,8 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/account";
+  // Middleware sends users here with ?reason=unavailable when accounts are not configured.
+  const accountsUnavailable = searchParams.get("reason") === "unavailable";
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -70,6 +72,19 @@ export default function LoginForm() {
                 Sign in to access your account
               </p>
             </div>
+
+            {accountsUnavailable && (
+              <div
+                role="status"
+                className="mb-6 p-4 bg-white/10 border border-white/20 rounded-lg text-white/80 text-sm"
+              >
+                Accounts are not available yet. Please check back soon, or{" "}
+                <Link href="/contact" className="text-[#C5A880] hover:text-[#D4B88F]">
+                  contact us
+                </Link>{" "}
+                for help.
+              </div>
+            )}
 
             {error && (
               <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">

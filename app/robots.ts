@@ -1,49 +1,18 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
+
+import { absoluteUrl, SITE_URL } from "@/lib/site";
+import { PRIVATE_PATHS } from "@/lib/site-routes";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://bancproperty.com";
-
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-          "/_next/",
-          "/private/",
-          "/search?*",
-          "/*.json$",
-          "/cgi-bin/",
-        ],
-      },
-      {
-        userAgent: "Googlebot",
-        allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-          "/search?*",
-        ],
-      },
-      {
-        userAgent: "Googlebot-Image",
-        allow: [
-          "/",
-          "/properties/",
-        ],
-      },
-      {
-        userAgent: "bingbot",
-        allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-        ],
+        disallow: [...PRIVATE_PATHS],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: absoluteUrl("/sitemap.xml"),
+    host: SITE_URL,
   };
 }

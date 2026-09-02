@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
+import { absoluteUrl } from "@/lib/site";
+import { withPageDefaults } from "@/lib/seo";
 import SalesPageClient from "./SalesPageClient";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/sales", {
   title: "Property Sales | Selling Your Home with Banc",
   description: "Achieve the best price for your property with Banc Property Group. Expert valuations, premium marketing, and dedicated sales support throughout Hertfordshire and London.",
   keywords: [
@@ -15,12 +18,10 @@ export const metadata: Metadata = {
     title: "Property Sales | Selling Your Home with Banc",
     description: "Achieve the best price for your property with Banc Property Group. Expert valuations and premium marketing.",
     type: "website",
-    url: "https://bancproperty.com/sales",
   },
-  alternates: {
-    canonical: "https://bancproperty.com/sales",
-  },
-};
+});
+
+export const revalidate = 3600;
 
 // Structured data for sales page
 const salesPageStructuredData = {
@@ -28,7 +29,7 @@ const salesPageStructuredData = {
   "@type": "WebPage",
   name: "Property Sales | Banc Property Group",
   description: "Achieve the best price for your property with expert valuations and premium marketing",
-  url: "https://bancproperty.com/sales",
+  url: absoluteUrl("/sales"),
   mainEntity: {
     "@type": "Service",
     name: "Property Sales",
@@ -42,12 +43,7 @@ const salesPageStructuredData = {
 export default function SalesPage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(salesPageStructuredData),
-        }}
-      />
+      <JsonLd data={salesPageStructuredData} />
       <SalesPageClient />
     </>
   );

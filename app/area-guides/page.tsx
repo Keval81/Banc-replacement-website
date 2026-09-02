@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { areaGuides } from "@/lib/area-guides";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/area-guides", {
   title: "Area Guides | Banc Property Services",
   description: "Explore our area guides for Cuffley, Potters Bar, Cheshunt, Northaw, Brookmans Park, Goffs Oak, Newgate Street Village, Enfield, and Essendon. Discover the best of Hertfordshire and North London living.",
-};
+});
+
+export const revalidate = 3600;
 
 const areas = areaGuides.map(({ name, slug, image, teaser }) => ({
   name,
@@ -152,7 +155,7 @@ export default function AreaGuidesPage() {
           <div className="mt-20 text-center">
             <div className="max-w-2xl mx-auto">
               <h3 className="text-2xl lg:text-3xl font-bold text-[var(--charcoal)] mb-4">
-                Can't find what you're looking for?
+                Can&apos;t find what you&apos;re looking for?
               </h3>
               <p className="text-[var(--mid-grey)] mb-8 leading-relaxed">
                 We cover many more areas across Hertfordshire and North London.

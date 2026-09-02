@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/become-partner", {
   title: "Become a Partner | Banc Property Group",
   description:
     "Join Banc Property Group as a partner agent. Run your own business with uncapped earnings, back-end support, and the strength of our professional brand in North London, Hertfordshire and Essex.",
@@ -27,7 +28,9 @@ export const metadata: Metadata = {
       "Exciting opportunity to run your own estate agency business in partnership with a professional brand. Uncapped earnings and full back-end support.",
     type: "website",
   },
-};
+});
+
+export const revalidate = 3600;
 
 // Benefits data
 const benefits = [

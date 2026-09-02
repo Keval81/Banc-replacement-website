@@ -1,5 +1,8 @@
-// Shared in-memory store for alerts
-// In production, replace with a database
+// Shared in-memory store for alerts.
+//
+// NOTE: this store is per server instance (and resets on every cold start /
+// deploy). It is a stand-in until alerts are persisted in the database.
+// All access must be scoped to the authenticated user's id.
 
 export interface Alert {
   id: string;

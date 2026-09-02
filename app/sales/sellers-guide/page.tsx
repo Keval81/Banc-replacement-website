@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,13 @@ import {
 import Link from "next/link";
 import { SELLERS_GUIDE_SECTIONS } from "@/lib/banc-content/sellers-guide";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/sales/sellers-guide", {
   title: "Sellers Guide | Banc Property Group",
   description:
     "Selling your property is an exciting experience but often daunting. Our aim is to maximise the value of your home with the minimum of fuss.",
-};
+});
+
+export const revalidate = 3600;
 
 // --- Types ---
 

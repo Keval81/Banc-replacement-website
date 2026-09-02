@@ -7,7 +7,7 @@ import vm from "node:vm";
 type WorkerEvent = { waitUntil(promise: Promise<unknown>): void };
 type WorkerHandler = (event: WorkerEvent) => void;
 
-test("retires Banc page caches without touching unrelated caches or notification support", async () => {
+test("retires Banc page caches without reloading tabs, touching unrelated caches or notification support", async () => {
   const source = readFileSync(
     join(import.meta.dirname, "..", "..", "public", "sw.js"),
     "utf8",
@@ -71,7 +71,8 @@ test("retires Banc page caches without touching unrelated caches or notification
   assert.equal(skipWaitingCalls, 1);
   assert.deepEqual(deletedCaches, ["banc-pwa-v1", "banc-pwa-v3"]);
   assert.equal(claimCalls, 1);
-  assert.deepEqual(navigations, clients.map((client) => client.url));
+  // Activation must never force-navigate open tabs (it wiped in-progress forms).
+  assert.deepEqual(navigations, []);
   assert.equal(handlers.has("fetch"), false);
   assert.equal(handlers.has("push"), true);
   assert.equal(handlers.has("notificationclick"), true);

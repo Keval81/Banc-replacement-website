@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft, Home, Info } from "lucide-react";
 import Header from "@/components/Header";
@@ -6,11 +7,13 @@ import Footer from "@/components/Footer";
 import { ValuationTool } from "@/components/ValuationTool";
 import AVMValuation from "@/components/ai/AVMValuation";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/tools/valuation", {
   title: "Online Property Valuation | Banc Property Group",
   description:
     "Get an instant estimate of your property's value. Compare with recent sales and market trends in your area.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function ValuationPage() {
   return (

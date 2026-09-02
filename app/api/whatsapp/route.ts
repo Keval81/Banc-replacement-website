@@ -1,10 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-interface WhatsAppLinkParams {
-  phone?: string;
-  message?: string;
-  propertyRef?: string;
-  source?: string;
+const DEFAULT_PHONE = "447707877781";
+const PHONE_PATTERN = /^\d{7,15}$/;
+
+const paramsSchema = z.object({
+  phone: z.string().regex(PHONE_PATTERN, "Invalid phone number").optional(),
+  message: z.string().max(500, "Message too long").optional(),
+  propertyRef: z.string().trim().max(40).optional(),
+  source: z.string().trim().max(40).optional(),
+});
+
+type WhatsAppLinkParams = z.infer<typeof paramsSchema>;
+
+/** Strip spaces and leading "+" before validation so "+44 7707 877781" works. */
+function cleanPhone(value: string | null | undefined): string | undefined {
+  if (value === null || value === undefined) return undefined;
+  return value.replace(/[\s+]/g, "");
+}
+
+function buildLink(params: WhatsAppLinkParams) {
+  const phone = params.phone || cleanPhone(process.env.WHATSAPP_PHONE) || DEFAULT_PHONE;
+  let message = params.message || "";
+
+  // Build message if property ref provided
+  if (params.propertyRef && !message) {
+    message = `Hi, I'm interested in property ${params.propertyRef}. Can you provide more information?`;
+  }
+
+  // Add source tracking
+  const source = params.source || "website";
+  const fullMessage = message + (message ? " " : "") + `(via ${source})`;
+
+  return {
+    url: `https://wa.me/${phone}?text=${encodeURIComponent(fullMessage)}`,
+    phone,
+    message: fullMessage,
+    propertyRef: params.propertyRef,
+    source,
+  };
+}
+
+function invalid(issues: z.ZodIssue[]) {
+  return NextResponse.json(
+    { success: false, error: "Invalid request", details: issues },
+    { status: 400 }
+  );
 }
 
 /**
@@ -13,45 +54,25 @@ interface WhatsAppLinkParams {
  */
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  
-  // Get parameters
-  let phone = searchParams.get("phone") || process.env.WHATSAPP_PHONE || "447707877781";
-  let message = searchParams.get("message") || "";
-  const propertyRef = searchParams.get("propertyRef");
-  const source = searchParams.get("source") || "website";
 
-  // Clean phone number (remove spaces and +)
-  phone = phone.replace(/[\s+]/g, "");
+  const parsed = paramsSchema.safeParse({
+    phone: cleanPhone(searchParams.get("phone")),
+    message: searchParams.get("message") ?? undefined,
+    propertyRef: searchParams.get("propertyRef") ?? undefined,
+    source: searchParams.get("source") ?? undefined,
+  });
+  if (!parsed.success) return invalid(parsed.error.issues);
 
-  // Build message if property ref provided
-  if (propertyRef && !message) {
-    message = `Hi, I'm interested in property ${propertyRef}. Can you provide more information?`;
-  }
-
-  // Add source tracking
-  const fullMessage = message + (message ? " " : "") + `(via ${source})`;
-
-  // Generate WhatsApp link
-  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(fullMessage)}`;
+  const data = buildLink(parsed.data);
 
   // Return JSON or redirect based on Accept header
   const acceptHeader = request.headers.get("accept");
-  
   if (acceptHeader?.includes("application/json")) {
-    return NextResponse.json({
-      success: true,
-      data: {
-        url: whatsappUrl,
-        phone,
-        message: fullMessage,
-        propertyRef,
-        source,
-      },
-    });
+    return NextResponse.json({ success: true, data });
   }
 
   // Redirect to WhatsApp
-  return NextResponse.redirect(whatsappUrl, 302);
+  return NextResponse.redirect(data.url, 302);
 }
 
 /**
@@ -59,41 +80,23 @@ export async function GET(request: NextRequest) {
  * POST /api/whatsapp
  */
 export async function POST(request: NextRequest) {
+  let body: Record<string, unknown>;
   try {
-    const body: WhatsAppLinkParams = await request.json();
-    
-    let phone = body.phone || process.env.WHATSAPP_PHONE || "447707877781";
-    let message = body.message || "";
-    
-    // Clean phone number
-    phone = phone.replace(/[\s+]/g, "");
-
-    // Build message if property ref provided
-    if (body.propertyRef && !message) {
-      message = `Hi, I'm interested in property ${body.propertyRef}. Can you provide more information?`;
-    }
-
-    // Add source tracking
-    const source = body.source || "website";
-    const fullMessage = message + (message ? " " : "") + `(via ${source})`;
-
-    // Generate WhatsApp link
-    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(fullMessage)}`;
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        url: whatsappUrl,
-        phone,
-        message: fullMessage,
-        propertyRef: body.propertyRef,
-        source,
-      },
-    });
-  } catch (error) {
+    const json: unknown = await request.json();
+    if (!json || typeof json !== "object") throw new Error("not an object");
+    body = json as Record<string, unknown>;
+  } catch {
     return NextResponse.json(
       { success: false, error: "Invalid request body" },
       { status: 400 }
     );
   }
+
+  const parsed = paramsSchema.safeParse({
+    ...body,
+    phone: typeof body.phone === "string" ? cleanPhone(body.phone) : body.phone,
+  });
+  if (!parsed.success) return invalid(parsed.error.issues);
+
+  return NextResponse.json({ success: true, data: buildLink(parsed.data) });
 }

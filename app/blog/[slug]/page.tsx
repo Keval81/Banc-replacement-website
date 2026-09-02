@@ -5,14 +5,18 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/JsonLd";
+import { MdxContent } from "@/components/blog/MdxContent";
 import {
+  authors,
   getPostBySlug,
   getAllPosts,
   getRelatedPosts,
-  getAuthorBySlug,
+  getCategoryBySlug,
   formatDate,
-  generateBlogPostStructuredData,
 } from "@/lib/blog";
+import { articleJsonLd, breadcrumbJsonLd } from "@/lib/schema-org";
+import { absoluteUrl } from "@/lib/site";
 import { ArrowLeft, Calendar, Clock, User, Tag, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 
 interface BlogPostPageProps {
@@ -30,6 +34,8 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for each blog post
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
@@ -37,8 +43,14 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   if (!post) {
     return {
       title: "Post Not Found",
+      robots: { index: false, follow: true },
     };
   }
+
+  const canonical = absoluteUrl(`/blog/${post.slug}`);
+  const ogImage = absoluteUrl(
+    `/api/og?type=blog&title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.description)}`
+  );
 
   return {
     title: post.title,
@@ -48,11 +60,14 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.title,
       description: post.description,
       type: "article",
+      url: canonical,
+      siteName: "Banc Property Group",
+      locale: "en_GB",
       publishedTime: post.date,
       authors: [post.author],
       images: [
         {
-          url: `/api/og?type=blog&title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.description)}`,
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -63,10 +78,10 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [`/api/og?type=blog&title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.description)}`],
+      images: [ogImage],
     },
     alternates: {
-      canonical: `https://bancproperty.com/blog/${post.slug}`,
+      canonical,
     },
     keywords: post.tags,
   };
@@ -80,19 +95,38 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const author = getAuthorBySlug(
-    getAllPosts().find((p) => p.author === post.author)?.author || ""
-  );
+  const author = authors.find((a) => a.name === post.author);
+  const category = getCategoryBySlug(post.category);
   const relatedPosts = getRelatedPosts(slug, 3);
-  const structuredData = generateBlogPostStructuredData(post);
+  const postPath = `/blog/${post.slug}`;
+  const breadcrumbs = [
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: post.title, path: postPath },
+  ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
+      <JsonLd
+        data={[
+          articleJsonLd({
+            headline: post.title,
+            description: post.description,
+            path: postPath,
+            // "/banc-logo.png" is the loader's placeholder and does not exist
+            // in /public, so fall back to the generated OG card instead.
+            image:
+              post.featuredImage === "/banc-logo.png"
+                ? `/api/og?type=blog&title=${encodeURIComponent(post.title)}`
+                : post.featuredImage,
+            datePublished: post.date,
+            authorName: post.author,
+            authorPath: author ? `/blog/author/${author.slug}` : undefined,
+            keywords: post.tags,
+            section: category?.name ?? post.category,
+          }),
+          breadcrumbJsonLd(breadcrumbs),
+        ]}
       />
       <div className="min-h-screen bg-white">
         <Header />
@@ -100,18 +134,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         {/* Breadcrumb */}
         <div className="bg-[#F4F3F1] border-b border-[#E0DFDC]">
           <div className="mx-auto max-w-7xl px-4 lg:px-10 py-3">
-            <nav className="flex items-center gap-2 text-sm text-[#8A8880]">
-              <Link href="/" className="hover:text-[#4AC8E8] transition-colors">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/blog" className="hover:text-[#4AC8E8] transition-colors">
-                Blog
-              </Link>
-              <span>/</span>
-              <span className="text-[#2C2A27] truncate max-w-[200px] sm:max-w-[400px]">
-                {post.title}
-              </span>
+            <nav aria-label="Breadcrumb">
+              <ol className="flex items-center gap-2 text-sm text-[#8A8880]">
+                <li>
+                  <Link href="/" className="hover:text-[#4AC8E8] transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li>
+                  <Link href="/blog" className="hover:text-[#4AC8E8] transition-colors">
+                    Blog
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li
+                  aria-current="page"
+                  className="text-[#2C2A27] truncate max-w-[200px] sm:max-w-[400px]"
+                >
+                  {post.title}
+                </li>
+              </ol>
             </nav>
           </div>
         </div>
@@ -164,32 +207,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <main className="mx-auto max-w-4xl px-4 py-12 lg:px-10 lg:py-16">
           <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
             {/* Main Content */}
-            <article className="prose prose-lg max-w-none">
-              {/* Content would be rendered from MDX */}
-              <div className="text-[#3D3B37] leading-relaxed">
-                <p className="text-lg mb-6">{post.excerpt}</p>
-                <p className="mb-6">
-                  This is a sample blog post content. In a production environment, 
-                  this would be rendered from an MDX file with full support for 
-                  markdown formatting, images, and custom components.
-                </p>
-                <h2 className="text-xl font-semibold text-[#2C2A27] mt-8 mb-4">
-                  Key Insights
-                </h2>
-                <p className="mb-6">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do 
-                  eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim 
-                  ad minim veniam, quis nostrud exercitation ullamco laboris.
-                </p>
-                <h2 className="text-xl font-semibold text-[#2C2A27] mt-8 mb-4">
-                  Expert Advice
-                </h2>
-                <p className="mb-6">
-                  Duis aute irure dolor in reprehenderit in voluptate velit esse 
-                  cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat 
-                  cupidatat non proident, sunt in culpa qui officia deserunt mollit 
-                  anim id est laborum.
-                </p>
+            <article className="max-w-none">
+              <div className="text-[#3D3B37]">
+                {post.content.trim() !== "" ? (
+                  <MdxContent source={post.content} />
+                ) : (
+                  <p className="text-lg mb-6">{post.excerpt}</p>
+                )}
               </div>
 
               {/* Tags */}

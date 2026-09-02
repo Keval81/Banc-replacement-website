@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import PortalNav from "./PortalNav";
@@ -51,9 +53,9 @@ export default function PortalLayout({
                 <span className="text-white font-bold text-sm">B</span>
               </div>
               <div>
-                <h1 className="font-heading font-semibold text-[#1A1917] text-lg leading-tight">
+                <p className="font-heading font-semibold text-[#1A1917] text-lg leading-tight">
                   Banc Property
-                </h1>
+                </p>
                 <p className="text-xs text-[#8A8880]">{getPortalTitle()}</p>
               </div>
             </div>
@@ -126,12 +128,13 @@ export default function PortalLayout({
                         Help & Support
                       </a>
                       <hr className="my-2 border-[#E0DFDC]" />
-                      <a
+                      <Link
                         href="/api/auth/signout"
+                        prefetch={false}
                         className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
                         Sign Out
-                      </a>
+                      </Link>
                     </nav>
                   </div>
                 </>

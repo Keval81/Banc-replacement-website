@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft, PoundSterling, Info } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { StampDutyCalculator } from "@/components/StampDutyCalculator";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/tools/stamp-duty", {
   title: "Stamp Duty Calculator | Banc Property Group",
   description:
     "Calculate Stamp Duty Land Tax (SDLT) for England, LBTT for Scotland, or LTT for Wales. Compare rates for first-time buyers, home movers, and additional properties.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function StampDutyPage() {
   return (

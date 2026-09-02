@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import {
   Calculator,
@@ -12,11 +13,13 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/tools", {
   title: "Property Tools & Calculators | Banc Property Group",
   description:
     "Free property calculators and tools. Calculate stamp duty, mortgage payments, affordability, property yields, and get instant valuations.",
-};
+});
+
+export const revalidate = 3600;
 
 const tools = [
   {

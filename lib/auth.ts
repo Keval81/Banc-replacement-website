@@ -5,6 +5,9 @@ import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { prisma } from "./db";
 import { z } from "zod";
+import { authSecret, isAuthConfigured } from "./auth-config";
+
+export { isAuthConfigured };
 
 // Credentials validation schema
 const credentialsSchema = z.object({
@@ -27,6 +30,10 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  // Explicit secret + trustHost so a missing env var fails loudly at config
+  // time (see isAuthConfigured) rather than 500-ing every /api/auth/session.
+  secret: authSecret,
+  trustHost: true,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
@@ -128,4 +135,19 @@ export async function getSession() {
 export async function getCurrentUser() {
   const session = await auth();
   return session?.user;
+}
+
+/**
+ * Id of the signed-in user, or null. Safe to call when auth is not configured
+ * (returns null instead of letting NextAuth throw MissingSecret).
+ */
+export async function getAuthenticatedUserId(): Promise<string | null> {
+  if (!isAuthConfigured) return null;
+  try {
+    const session = await auth();
+    return session?.user?.id ?? null;
+  } catch (error) {
+    console.error("[auth] session lookup failed", error);
+    return null;
+  }
 }

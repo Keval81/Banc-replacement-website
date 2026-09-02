@@ -1,8 +1,5 @@
-export const metadata = {
-  title: "Property Search | Banc Property Services",
-  description: "Search for properties for sale and rent. Use our advanced filters to find your perfect home.",
-};
-
+// Metadata for /search lives in page.tsx (buildMetadata). This layout is a
+// pass-through kept so the route segment structure is unchanged.
 export default function SearchLayout({
   children,
 }: {

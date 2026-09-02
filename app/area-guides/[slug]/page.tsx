@@ -4,6 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { areaGuides, getAreaGuide } from "@/lib/area-guides";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/schema-org";
+import { buildMetadata } from "@/lib/seo";
+
+export const revalidate = 3600;
 
 interface AreaGuidePageProps {
   params: Promise<{ slug: string }>;
@@ -16,11 +21,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: AreaGuidePageProps): Promise<Metadata> {
   const { slug } = await params;
   const area = getAreaGuide(slug);
-  if (!area) return {};
-  return {
+  if (!area) return { title: "Area guide not found", robots: { index: false, follow: true } };
+  return buildMetadata({
     title: `${area.name} Area Guide | Banc Property Group`,
-    description: area.paragraphs[0].slice(0, 155),
-  };
+    description: area.paragraphs[0],
+    path: `/area-guides/${area.slug}`,
+    image: area.image,
+    imageAlt: `${area.name} area`,
+  });
 }
 
 export default async function AreaGuidePage({ params }: AreaGuidePageProps) {
@@ -32,6 +40,13 @@ export default async function AreaGuidePage({ params }: AreaGuidePageProps) {
 
   return (
     <div className="min-h-screen bg-[var(--off-white)]">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Area Guides", path: "/area-guides" },
+          { name: area.name, path: `/area-guides/${area.slug}` },
+        ])}
+      />
       <Header />
 
       {/* Hero */}

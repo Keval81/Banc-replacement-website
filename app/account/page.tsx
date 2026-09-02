@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "My Account | Banc Property Group",
+  description: "Manage your Banc Property Group account, saved properties, alerts and viewing requests.",
+  path: "/account",
+  noindex: true,
+});
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Header from "@/components/Header";

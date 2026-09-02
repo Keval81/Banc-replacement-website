@@ -1,106 +1,136 @@
 // API Route for Push Notification Subscriptions
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { getAuthenticatedUserId } from '@/lib/auth';
+import { isAdminRequest } from '@/lib/admin-token';
 
-// Store subscriptions in memory (use database in production)
-const subscriptions = new Map<string, any>();
+export const runtime = 'nodejs';
+
+const subscriptionSchema = z
+  .object({
+    endpoint: z.string().url().max(2048).refine((v) => v.startsWith('https://'), 'https only'),
+    expirationTime: z.number().nullable().optional(),
+    keys: z
+      .object({
+        p256dh: z.string().max(512),
+        auth: z.string().max(512),
+      })
+      .optional(),
+  })
+  .strict();
+
+const unsubscribeSchema = z.object({ endpoint: z.string().url().max(2048) }).strict();
+
+const broadcastSchema = z
+  .object({
+    title: z.string().trim().min(1).max(120),
+    body: z.string().trim().max(500).optional(),
+    tag: z.string().trim().max(60).optional(),
+    url: z.string().max(2048).optional(),
+    requireInteraction: z.boolean().optional(),
+  })
+  .strict();
+
+type StoredSubscription = z.infer<typeof subscriptionSchema> & {
+  userId: string;
+  createdAt: string;
+};
+
+// Store subscriptions in memory (per server instance; use a database in production)
+const subscriptions = new Map<string, StoredSubscription>();
+
+async function readJson(request: NextRequest): Promise<unknown> {
+  try {
+    return await request.json();
+  } catch {
+    return undefined;
+  }
+}
 
 export async function POST(request: NextRequest) {
-  try {
-    const subscription = await request.json();
-    
-    if (!subscription || !subscription.endpoint) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid subscription' },
-        { status: 400 }
-      );
-    }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
 
-    // Store subscription with user ID if available
-    const userId = request.headers.get('x-user-id') || 'anonymous';
-    subscriptions.set(`${userId}:${subscription.endpoint}`, {
-      ...subscription,
-      userId,
-      createdAt: new Date().toISOString(),
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: 'Subscribed to notifications',
-    });
-  } catch (error) {
-    console.error('Subscription error:', error);
+  const parsed = subscriptionSchema.safeParse(await readJson(request));
+  if (!parsed.success) {
     return NextResponse.json(
-      { success: false, error: 'Failed to subscribe' },
-      { status: 500 }
+      { success: false, error: 'Invalid subscription' },
+      { status: 400 }
     );
   }
+
+  subscriptions.set(`${userId}:${parsed.data.endpoint}`, {
+    ...parsed.data,
+    userId,
+    createdAt: new Date().toISOString(),
+  });
+
+  return NextResponse.json({
+    success: true,
+    message: 'Subscribed to notifications',
+  });
 }
 
 export async function DELETE(request: NextRequest) {
-  try {
-    const { endpoint } = await request.json();
-    
-    if (!endpoint) {
-      return NextResponse.json(
-        { success: false, error: 'Endpoint required' },
-        { status: 400 }
-      );
-    }
+  const userId = await getAuthenticatedUserId();
+  if (!userId) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
 
-    // Find and remove subscription
-    for (const [key, sub] of subscriptions.entries()) {
-      if (sub.endpoint === endpoint) {
-        subscriptions.delete(key);
-        break;
-      }
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Unsubscribed from notifications',
-    });
-  } catch (error) {
-    console.error('Unsubscribe error:', error);
+  const parsed = unsubscribeSchema.safeParse(await readJson(request));
+  if (!parsed.success) {
     return NextResponse.json(
-      { success: false, error: 'Failed to unsubscribe' },
-      { status: 500 }
+      { success: false, error: 'Endpoint required' },
+      { status: 400 }
     );
   }
+
+  // Only the owning user may remove a subscription
+  subscriptions.delete(`${userId}:${parsed.data.endpoint}`);
+
+  return NextResponse.json({
+    success: true,
+    message: 'Unsubscribed from notifications',
+  });
 }
 
 // Send push notification to a subscription
-async function sendPushNotification(subscription: any, payload: any) {
+async function sendPushNotification(
+  subscription: StoredSubscription,
+  payload: z.infer<typeof broadcastSchema>
+) {
   // In production, use web-push library with VAPID keys
   // This is a placeholder implementation
-  console.log('Sending push to:', subscription.endpoint, payload);
+  console.log('Sending push to:', subscription.endpoint, payload.title);
 }
 
-// Broadcast notification to all subscribers
+// Broadcast notification to all subscribers (admin only: ADMIN_API_TOKEN bearer)
 export async function PUT(request: NextRequest) {
-  try {
-    const payload = await request.json();
-    
-    // Send to all subscriptions
-    const results = [];
-    for (const [key, subscription] of subscriptions.entries()) {
-      try {
-        await sendPushNotification(subscription, payload);
-        results.push({ endpoint: subscription.endpoint, success: true });
-      } catch (error) {
-        results.push({ endpoint: subscription.endpoint, success: false, error });
-      }
-    }
+  if (!isAdminRequest(request)) {
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+  }
 
-    return NextResponse.json({
-      success: true,
-      sent: results.length,
-      results,
-    });
-  } catch (error) {
-    console.error('Broadcast error:', error);
+  const parsed = broadcastSchema.safeParse(await readJson(request));
+  if (!parsed.success) {
     return NextResponse.json(
-      { success: false, error: 'Failed to send notifications' },
-      { status: 500 }
+      { success: false, error: 'Invalid payload', details: parsed.error.issues },
+      { status: 400 }
     );
   }
+
+  let sent = 0;
+  let failed = 0;
+  for (const subscription of subscriptions.values()) {
+    try {
+      await sendPushNotification(subscription, parsed.data);
+      sent += 1;
+    } catch (error) {
+      console.error('Push send error:', error);
+      failed += 1;
+    }
+  }
+
+  return NextResponse.json({ success: true, sent, failed });
 }

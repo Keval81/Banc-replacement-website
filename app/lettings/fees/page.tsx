@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/lettings/fees", {
   title: "Lettings Fees | Banc Property Group",
   description: "Transparent fee information for tenants and landlords. Tenant fees banned under the Tenant Fees Act 2019. Full landlord service fees disclosed.",
   keywords: "lettings fees, tenant fees, landlord fees, property management fees, banc lettings",
-};
+});
+
+export const revalidate = 3600;
 
 // Tenant fees - compliant with Tenant Fees Act 2019
 const tenantFees = {
@@ -291,7 +294,7 @@ export default function LettingsFeesPage() {
                   </li>
                 </ul>
                 <p className="text-sm text-[#8A8880] mt-4">
-                  You'll receive prescribed information within 30 days of payment.
+                  You&apos;ll receive prescribed information within 30 days of payment.
                 </p>
               </div>
               

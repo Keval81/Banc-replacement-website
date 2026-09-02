@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft, TrendingUp, Info } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AffordabilityCalculator } from "@/components/AffordabilityCalculator";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/tools/affordability", {
   title: "Mortgage Affordability Calculator | Banc Property Group",
   description:
     "Find out how much you can borrow and your maximum property budget. Calculate based on income, deposit, and existing financial commitments.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function AffordabilityPage() {
   return (

@@ -2,25 +2,53 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { sendEmail, emailTemplates } from "@/lib/email";
+import {
+  createPublicFormRateLimiter,
+  isHoneypotTripped,
+  rateLimitResponse,
+} from "@/lib/public-form-guard";
 
-// Validation schema
+export const runtime = "nodejs";
+
+const limiter = createPublicFormRateLimiter();
+
+// Validation schema (bounded lengths; unknown fields are stripped)
 const valuationSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  phone: z.string().min(10, "Please enter a valid phone number"),
-  address: z.string().min(5, "Please enter the property address"),
-  postcode: z.string().min(5, "Please enter a valid postcode"),
-  propertyType: z.string().optional(),
-  bedrooms: z.string().optional(),
-  timeframe: z.string().optional(),
-  message: z.string().optional(),
+  firstName: z.string().trim().min(2, "First name must be at least 2 characters").max(80),
+  lastName: z.string().trim().min(2, "Last name must be at least 2 characters").max(80),
+  email: z.string().trim().email("Please enter a valid email address").max(254),
+  phone: z.string().trim().min(10, "Please enter a valid phone number").max(30),
+  address: z.string().trim().min(5, "Please enter the property address").max(300),
+  postcode: z.string().trim().min(5, "Please enter a valid postcode").max(10),
+  propertyType: z.string().trim().max(60).optional(),
+  bedrooms: z.string().trim().max(10).optional(),
+  timeframe: z.string().trim().max(60).optional(),
+  message: z.string().trim().max(5000).optional(),
+  website: z.string().max(0).optional(), // honeypot
 });
 
 export async function POST(request: NextRequest) {
   try {
+    const limited = rateLimitResponse(limiter, request);
+    if (limited) return limited;
+
     // Parse request body
-    const body = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Invalid JSON body" },
+        { status: 400 }
+      );
+    }
+
+    if (isHoneypotTripped(body)) {
+      return NextResponse.json(
+        { success: true, message: "Your valuation request has been submitted successfully" },
+        { status: 200 }
+      );
+    }
 
     // Validate input
     const result = valuationSchema.safeParse(body);
@@ -90,6 +118,7 @@ export async function POST(request: NextRequest) {
             type: "valuation_request",
             data: valuationRequest,
           }),
+          signal: AbortSignal.timeout(8000),
         });
       } catch (webhookError) {
         console.error("[CRM Webhook Error]", webhookError);
@@ -118,22 +147,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// GET endpoint for admin/development purposes
-export async function GET() {
-  // In production, add authentication here
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json(
-      { success: false, error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  const requests = await db.valuation.findAll();
-  return NextResponse.json({
-    success: true,
-    count: requests.length,
-    data: requests,
-  });
 }

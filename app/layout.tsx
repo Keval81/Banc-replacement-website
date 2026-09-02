@@ -71,6 +71,12 @@ export default function RootLayout({
   return (
     <html lang="en-GB" className={`${sourceSerif4.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-banc-dark-deep focus:px-4 focus:py-2 focus:text-white"
+        >
+          Skip to content
+        </a>
         <MotionProvider>
           <ThemeProvider
             defaultTheme="system"
@@ -81,18 +87,11 @@ export default function RootLayout({
             <ToastProvider position="bottom-center">
               <CookieProvider>
                 <ComparisonProvider>
-                  {/* Skip to content link for accessibility */}
-                  <a
-                    href="#main-content"
-                    className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[1000] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg"
-                  >
-                    Skip to main content
-                  </a>
-
                   <AuthProvider>
-                    <main id="main-content" className="min-h-screen">
+                    {/* Pages render their own <main>; keep this a plain div to avoid nested landmarks. */}
+                    <div id="main-content" className="min-h-screen">
                       {children}
-                    </main>
+                    </div>
                   </AuthProvider>
 
                   <SiteOverlays />
@@ -112,9 +111,9 @@ export default function RootLayout({
           {`
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').catch(function(error) {
-                  console.error('Banc service worker registration failed', error);
-                });
+                try {
+                  navigator.serviceWorker.register('/sw.js').catch(function() {});
+                } catch (e) {}
               });
             }
           `}

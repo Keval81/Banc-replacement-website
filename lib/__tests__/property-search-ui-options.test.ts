@@ -130,8 +130,8 @@ test("the active property search graph has no temporary compatibility layer", ()
     "app/sections/PropertySearch.tsx",
     "app/sections/LettingsPropertySearch.tsx",
     "app/sales/SalesPageClient.tsx",
-    "app/sales/properties/page.tsx",
-    "app/lettings/properties/page.tsx",
+    "app/sales/properties/SalesPropertiesPageClient.tsx",
+    "app/lettings/properties/LettingsPropertiesPageClient.tsx",
   ].map((file) => readFileSync(join(root, file), "utf8")).join("\n");
 
   for (const temporaryName of [

@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { JsonLd } from "@/components/JsonLd";
+import { BANC_LOGO_PATH } from "@/lib/schema-org";
+import { absoluteUrl } from "@/lib/site";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -7,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { getAllPosts, getFeaturedPosts, getAllCategories, formatDate } from "@/lib/blog";
 import { ArrowRight, Calendar, Clock, User, Tag } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/blog", {
   title: "Blog | Property News, Tips & Area Guides",
   description: "Expert insights on the property market in Hertfordshire and London. Tips for buyers, sellers, and landlords from Banc Property Group.",
   openGraph: {
@@ -15,10 +19,9 @@ export const metadata: Metadata = {
     description: "Expert insights on the property market in Hertfordshire and London. Tips for buyers, sellers, and landlords.",
     type: "website",
   },
-  alternates: {
-    canonical: "https://bancproperty.com/blog",
-  },
-};
+});
+
+export const revalidate = 3600;
 
 // Organization structured data
 const organizationStructuredData = {
@@ -26,13 +29,13 @@ const organizationStructuredData = {
   "@type": "Blog",
   name: "Banc Property Blog",
   description: "Expert insights on the property market in Hertfordshire and London",
-  url: "https://bancproperty.com/blog",
+  url: absoluteUrl("/blog"),
   publisher: {
     "@type": "Organization",
     name: "Banc Property Group",
     logo: {
       "@type": "ImageObject",
-      url: "https://bancproperty.com/banc-logo.png",
+      url: absoluteUrl(BANC_LOGO_PATH),
     },
   },
 };
@@ -44,12 +47,7 @@ export default function BlogPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(organizationStructuredData),
-        }}
-      />
+      <JsonLd data={organizationStructuredData} />
       <div className="min-h-screen bg-white">
         <Header />
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import {
   Sparkles
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/land-new-homes", {
   title: "Land & New Homes | Banc Property Services",
   description: "Specialist land and new homes services in North London and Hertfordshire. Expert marketing campaigns for new property developments and land acquisition.",
   keywords: "land acquisition, new homes, property development, marketing campaigns, North London, Hertfordshire, developers, builders",
@@ -27,7 +28,9 @@ export const metadata: Metadata = {
     description: "Expert marketing campaigns for new property developments across North London and Hertfordshire.",
     type: "website",
   },
-};
+});
+
+export const revalidate = 3600;
 
 export default function LandNewHomesPage() {
   return (

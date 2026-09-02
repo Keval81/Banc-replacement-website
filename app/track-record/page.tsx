@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/track-record", {
   title: "Track Record | Banc Property Services",
   description: "We have an impressive track record. See the properties Banc Property Group has sold across Cuffley, Goffs Oak, Cheshunt and the surrounding areas.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function TrackRecordPage() {
   return (

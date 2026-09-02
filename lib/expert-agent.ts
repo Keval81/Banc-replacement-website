@@ -8,7 +8,8 @@
 //   EXPERT_AGENT_API_URL=your_api_url
 //   EXPERT_AGENT_API_KEY=your_api_key
 
-import { supabaseAdmin, type DbProperty } from "./supabase";
+import { supabaseAdmin } from "./supabase-admin";
+import type { DbProperty } from "./supabase";
 
 const API_URL = process.env.EXPERT_AGENT_API_URL ?? "";
 const API_KEY = process.env.EXPERT_AGENT_API_KEY ?? "";

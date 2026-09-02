@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/terms", {
   title: "Terms of Use | Banc Property Group",
   description: "Terms and conditions for using the Banc Property Group website and services.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function TermsPage() {
   return (

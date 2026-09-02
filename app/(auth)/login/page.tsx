@@ -1,14 +1,16 @@
-"use client";
+import type { Metadata } from "next";
 
-import { Suspense } from "react";
-import LoginForm from "./LoginForm";
+import { buildMetadata } from "@/lib/seo";
+
+import LoginPageClient from "./LoginPageClient";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Sign In | Banc Property Group",
+  description: "Sign in to your Banc Property Group account to manage saved properties, alerts and viewing requests.",
+  path: "/login",
+  noindex: true,
+});
 
 export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16 flex items-center justify-center">
-      <div className="text-white/60">Loading...</div>
-    </div>}>
-      <LoginForm />
-    </Suspense>
-  );
+  return <LoginPageClient />;
 }

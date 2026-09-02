@@ -259,8 +259,11 @@ export default function SearchPage() {
       <Header />
       
       {/* Hero Search Bar */}
-      <section className="bg-[#1A1917] py-6">
+      <section className="bg-[#1A1917] py-6" aria-labelledby="search-page-heading">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
+          <h1 id="search-page-heading" className="sr-only">
+            Property search
+          </h1>
           <div className="flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />

@@ -11,14 +11,8 @@ self.addEventListener("activate", (event) => {
         .map((cacheName) => caches.delete(cacheName)),
     );
 
+    // Take control of open tabs without reloading them.
     await self.clients.claim();
-    const windowClients = await self.clients.matchAll({
-      type: "window",
-      includeUncontrolled: true,
-    });
-    await Promise.all(
-      windowClients.map((client) => client.navigate(client.url)),
-    );
   })());
 });
 

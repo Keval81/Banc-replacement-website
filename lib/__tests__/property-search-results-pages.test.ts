@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+// The route's page.tsx is a thin server wrapper exporting metadata; the
+// results UI lives in the *PageClient component beside it.
 const pages = [
-  ["sales", "../../app/sales/properties/page.tsx"],
-  ["lettings", "../../app/lettings/properties/page.tsx"],
+  ["sales", "../../app/sales/properties/SalesPropertiesPageClient.tsx"],
+  ["lettings", "../../app/lettings/properties/LettingsPropertiesPageClient.tsx"],
 ] as const;
 
 for (const [department, relativePath] of pages) {

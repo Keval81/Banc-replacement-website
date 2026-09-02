@@ -1,38 +1,96 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const GOOGLE_PLACES_API_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+const FETCH_TIMEOUT_MS = 8000;
+
+const AMENITY_TYPES = ['all', 'restaurant', 'supermarket', 'cafe', 'park', 'gym', 'hospital', 'pharmacy', 'shop'] as const;
+
+const querySchema = z
+  .object({
+    lat: z.coerce.number().min(-90).max(90).optional(),
+    lng: z.coerce.number().min(-180).max(180).optional(),
+    postcode: z
+      .string()
+      .trim()
+      .regex(/^[A-Za-z0-9 ]{5,8}$/, 'Invalid postcode')
+      .optional(),
+    type: z.enum(AMENITY_TYPES).default('all'),
+    radius: z.coerce.number().int().min(100).max(5000).default(1000),
+  })
+  .refine(
+    (q) => (q.lat !== undefined && q.lng !== undefined) || q.postcode !== undefined,
+    { message: 'Either lat/lng or postcode is required' }
+  );
+
+interface PlaceResult {
+  place_id?: string;
+  name?: string;
+  types?: string[];
+  vicinity?: string;
+  geometry?: { location?: { lat?: number; lng?: number } };
+  rating?: number;
+  opening_hours?: { open_now?: boolean };
+}
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const lat = searchParams.get('lat');
-    const lng = searchParams.get('lng');
-    const postcode = searchParams.get('postcode');
-    const type = searchParams.get('type') || 'all';
-    const radius = searchParams.get('radius') || '1000';
+    const parsed = querySchema.safeParse({
+      lat: searchParams.get('lat') ?? undefined,
+      lng: searchParams.get('lng') ?? undefined,
+      postcode: searchParams.get('postcode') ?? undefined,
+      type: searchParams.get('type') ?? undefined,
+      radius: searchParams.get('radius') ?? undefined,
+    });
 
-    if ((!lat || !lng) && !postcode) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Either lat/lng or postcode is required' },
+        { error: parsed.error.issues[0]?.message ?? 'Invalid query', details: parsed.error.issues },
         { status: 400 }
       );
     }
 
-    // Get coordinates from postcode if needed
-    let latitude = lat ? parseFloat(lat) : 0;
-    let longitude = lng ? parseFloat(lng) : 0;
+    const { postcode, type, radius } = parsed.data;
+    let latitude = parsed.data.lat;
+    let longitude = parsed.data.lng;
 
-    if (postcode && (!lat || !lng)) {
-      const geoResponse = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+    // Get coordinates from postcode if needed
+    if (postcode && (latitude === undefined || longitude === undefined)) {
+      const geoResponse = await fetch(
+        `https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`,
+        { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) }
+      );
       if (!geoResponse.ok) {
         return NextResponse.json(
           { error: 'Could not geocode postcode' },
           { status: 400 }
         );
       }
-      const geoData = await geoResponse.json();
-      latitude = geoData.result.latitude;
-      longitude = geoData.result.longitude;
+      const geoData: { result?: { latitude?: number; longitude?: number } | null } =
+        await geoResponse.json();
+      const result = geoData.result;
+      if (
+        !result ||
+        typeof result.latitude !== 'number' ||
+        typeof result.longitude !== 'number' ||
+        !Number.isFinite(result.latitude) ||
+        !Number.isFinite(result.longitude)
+      ) {
+        return NextResponse.json(
+          { error: 'Could not geocode postcode' },
+          { status: 400 }
+        );
+      }
+      latitude = result.latitude;
+      longitude = result.longitude;
+    }
+
+    if (latitude === undefined || longitude === undefined) {
+      return NextResponse.json(
+        { error: 'Either lat/lng or postcode is required' },
+        { status: 400 }
+      );
     }
 
     const apiKey = process.env.GOOGLE_PLACES_API_KEY;
@@ -60,28 +118,32 @@ export async function GET(request: NextRequest) {
     // Build Google Places API URL
     const placesUrl = new URL(GOOGLE_PLACES_API_URL);
     placesUrl.searchParams.append('location', `${latitude},${longitude}`);
-    placesUrl.searchParams.append('radius', radius);
+    placesUrl.searchParams.append('radius', String(radius));
     placesUrl.searchParams.append('key', apiKey);
     
     if (type !== 'all' && typeMapping[type]) {
       placesUrl.searchParams.append('type', typeMapping[type]);
     }
 
-    const response = await fetch(placesUrl.toString());
+    const response = await fetch(placesUrl.toString(), {
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
     if (!response.ok) {
       throw new Error(`Google Places API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    
-    const amenities = data.results?.map((place: any) => ({
+    const data: { results?: PlaceResult[] } = await response.json();
+    const originLat = latitude;
+    const originLng = longitude;
+
+    const amenities = (data.results ?? []).map((place) => ({
       id: place.place_id,
       name: place.name,
       type: mapPlaceType(place.types?.[0] || 'other'),
       address: place.vicinity,
-      distance: calculateDistance(latitude, longitude, place.geometry?.location?.lat, place.geometry?.location?.lng),
+      distance: calculateDistance(originLat, originLng, place.geometry?.location?.lat ?? NaN, place.geometry?.location?.lng ?? NaN),
       walkingTime: estimateWalkingTime(
-        calculateDistance(latitude, longitude, place.geometry?.location?.lat, place.geometry?.location?.lng)
+        calculateDistance(originLat, originLng, place.geometry?.location?.lat ?? NaN, place.geometry?.location?.lng ?? NaN)
       ),
       coordinates: {
         lat: place.geometry?.location?.lat,
@@ -89,7 +151,7 @@ export async function GET(request: NextRequest) {
       },
       rating: place.rating,
       openingHours: place.opening_hours?.open_now ? 'Open now' : 'Closed',
-    })) || [];
+    }));
 
     return NextResponse.json({
       amenities,

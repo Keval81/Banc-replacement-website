@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Crown, Award, TrendingUp } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/premier-homes", {
   title: "Banc Premier Homes | Banc Property Services",
   description: "Exclusive service for properties valued at £1 million and above. Discreet marketing, qualified buyers, and exceptional results.",
-};
+});
+
+export const revalidate = 3600;
 
 export default function PremierHomesPage() {
   return (

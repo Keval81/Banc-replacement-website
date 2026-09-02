@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -21,12 +22,38 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { JsonLd } from "@/components/JsonLd";
+import { BANC_OFFICES } from "@/lib/banc-content/contact";
+import {
+  breadcrumbJsonLd,
+  CUFFLEY_ADDRESS,
+  CUFFLEY_GEO,
+  officeJsonLd,
+} from "@/lib/schema-org";
 
-export const metadata: Metadata = {
+export const revalidate = 3600;
+
+const officeStructuredData = [
+  officeJsonLd({
+    office: BANC_OFFICES.cuffley,
+    path: "/offices/cuffley",
+    address: CUFFLEY_ADDRESS,
+    geo: CUFFLEY_GEO,
+    description:
+      "Banc Property Group's Cuffley office at 1 Station Road — independent estate agents serving Cuffley, Goffs Oak, Potters Bar and surrounding Hertfordshire villages.",
+  }),
+  breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Offices", path: "/offices" },
+    { name: BANC_OFFICES.cuffley.title, path: "/offices/cuffley" },
+  ]),
+];
+
+export const metadata: Metadata = withPageDefaults("/offices/cuffley", {
   title: "Cuffley Office | Banc Property Group",
   description: "Visit our Cuffley office at 1 Station Road, Cuffley, EN6 4HU. Expert estate agents serving Cuffley, Goffs Oak and surrounding Hertfordshire areas.",
   keywords: "cuffley estate agent, 1 station road cuffley, banc property cuffley, estate agent EN6",
-};
+});
 
 // Team members at Cuffley office
 const teamMembers = [
@@ -88,6 +115,7 @@ const areasCovered = [
 export default function CuffleyOfficePage() {
   return (
     <div className="min-h-screen bg-[#F4F3F1]">
+      <JsonLd data={officeStructuredData} />
       <Header />
       
       {/* Hero Section */}
@@ -340,7 +368,7 @@ export default function CuffleyOfficePage() {
               </h2>
               <p className="mt-4 text-lg text-[#8A8880]">
                 Book a free, no-obligation appointment to discuss your property needs. 
-                Whether you're selling, letting, buying, or renting, we're here to help.
+                Whether you&apos;re selling, letting, buying, or renting, we&apos;re here to help.
               </p>
               
               <div className="mt-8 space-y-6">

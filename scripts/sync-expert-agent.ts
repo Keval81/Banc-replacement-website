@@ -14,6 +14,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createClient } from "@supabase/supabase-js";
 import { expertAgentAdapter } from "../lib/crm/expert-agent-adapter.ts";
 import {
   createFtpCurlInvocation,
@@ -60,9 +61,14 @@ function printDryRun(rows: CanonicalPropertyWriteRow[]): void {
 
 async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
-  const { supabaseAdmin } = DRY_RUN
-    ? { supabaseAdmin: null }
-    : await import("../lib/supabase.ts");
+  // Built here rather than imported from lib/supabase-admin.ts: that module is
+  // marked `server-only`, which plain node cannot resolve.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+  const supabaseAdmin =
+    !DRY_RUN && supabaseUrl && supabaseServiceKey
+      ? createClient(supabaseUrl, supabaseServiceKey)
+      : null;
   if (!DRY_RUN && !supabaseAdmin) {
     fail("supabaseAdmin not configured (SUPABASE_SERVICE_ROLE_KEY)");
   }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,10 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageDefaults("/the-team", {
   title: "Meet The Team | Banc Property Group",
   description: "Meet the awesome team at Banc Property Group. Our experienced professionals are here to help you with all your property needs in Cuffley and surrounding areas.",
-};
+});
+
+export const revalidate = 3600;
 
 const team = [
   {

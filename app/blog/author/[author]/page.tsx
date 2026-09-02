@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -26,6 +27,8 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for each author
+export const revalidate = 3600;
+
 export async function generateMetadata({ params }: AuthorPageProps): Promise<Metadata> {
   const { author: authorSlug } = await params;
   const author = getAuthorBySlug(authorSlug);
@@ -36,7 +39,7 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
     };
   }
 
-  return {
+  return withPageDefaults(`/blog/author/${author.slug}`, {
     title: `${author.name} | Property Expert & Writer`,
     description: `${author.bio} Read articles by ${author.name} on the Banc Property blog.`,
     openGraph: {
@@ -44,10 +47,7 @@ export async function generateMetadata({ params }: AuthorPageProps): Promise<Met
       description: author.bio,
       type: "profile",
     },
-    alternates: {
-      canonical: `https://bancproperty.com/blog/author/${author.slug}`,
-    },
-  };
+  });
 }
 
 export default async function AuthorPage({ params }: AuthorPageProps) {

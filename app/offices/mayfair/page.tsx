@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -22,12 +23,36 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { JsonLd } from "@/components/JsonLd";
+import { BANC_OFFICES } from "@/lib/banc-content/contact";
+import {
+  breadcrumbJsonLd,
+  MAYFAIR_ADDRESS,
+  officeJsonLd,
+} from "@/lib/schema-org";
 
-export const metadata: Metadata = {
+export const revalidate = 3600;
+
+const officeStructuredData = [
+  officeJsonLd({
+    office: BANC_OFFICES.mayfair,
+    path: "/offices/mayfair",
+    address: MAYFAIR_ADDRESS,
+    description:
+      "Banc Property Group's Mayfair office at 121 Park Lane — prime central London sales and lettings.",
+  }),
+  breadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Offices", path: "/offices" },
+    { name: BANC_OFFICES.mayfair.title, path: "/offices/mayfair" },
+  ]),
+];
+
+export const metadata: Metadata = withPageDefaults("/offices/mayfair", {
   title: "Mayfair Office | Banc Property Group",
   description: "Visit our Mayfair office in the heart of London's luxury property district. Expert estate agents specialising in prime central London properties.",
   keywords: "mayfair estate agent, london property agent, prime central london, luxury property mayfair, banc mayfair",
-};
+});
 
 // Team members at Mayfair office
 const teamMembers = [
@@ -75,6 +100,7 @@ const areasCovered = [
 export default function MayfairOfficePage() {
   return (
     <div className="min-h-screen bg-[#F4F3F1]">
+      <JsonLd data={officeStructuredData} />
       <Header />
       
       {/* Hero Section */}
@@ -108,7 +134,7 @@ export default function MayfairOfficePage() {
               <p className="mt-6 text-lg text-white/70 leading-relaxed">
                 Our Mayfair office specialises in prime central London properties, 
                 discreet marketing for high-value homes, and bespoke services for 
-                discerning buyers and sellers in London's most prestigious locations.
+                discerning buyers and sellers in London&apos;s most prestigious locations.
               </p>
               
               {/* Quick contact info */}
