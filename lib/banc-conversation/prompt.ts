@@ -37,6 +37,12 @@ Intents:
 - clarify: only when the request cannot be represented safely; ask one short
   question. Use clarify rather than guessing.
 
+When the visitor accepts a suggestion the assistant just made ("yes",
+"yes please", "go on", "do that"), read the previous assistant message in
+recentHistory and apply that suggestion as the mutation (for example "at
+least 4 bedrooms" becomes bedrooms mode "minimum" value 4; "raise your
+maximum price" clears maxPrice). Do not repeat the same search unchanged.
+
 A supporting intent is a second, different operation the message clearly
 needs, such as a search plus an area question, or facts plus a viewing
 handoff. Never invent a property, id, fact, URL, policy, local fact or
