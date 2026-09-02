@@ -310,4 +310,52 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   animation: marquee2 20s linear infinite;
 }
 
+/* Hero tagline reveal.
+   Driven from CSS, not framer-motion: a motion element writes its `initial`
+   values into the server-rendered inline style, so a page that has not
+   hydrated shows the tagline at opacity 0 — permanently, in any engine where
+   the client bundle stalls. Here the resting styles are the readable ones and
+   the animation only plays back into them, so the worst case is no animation
+   rather than no tagline. */
+@keyframes banc-tagline-reveal {
+  from {
+    opacity: 0;
+    letter-spacing: -0.02em;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    letter-spacing: 0.2em;
+    filter: blur(0);
+  }
+}
+
+@keyframes banc-rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.banc-tagline-reveal {
+  letter-spacing: 0.2em;
+  animation: banc-tagline-reveal 1.7s cubic-bezier(0.16, 1, 0.3, 1) 0.9s;
+  animation-fill-mode: backwards;
+}
+
+.banc-rule-draw {
+  transform-origin: left center;
+  animation: banc-rule-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s;
+  animation-fill-mode: backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banc-tagline-reveal,
+  .banc-rule-draw {
+    animation: none;
+  }
+}
+
 /* Cache bust: Fri Feb 27 16:40:00 GMT 2026 */

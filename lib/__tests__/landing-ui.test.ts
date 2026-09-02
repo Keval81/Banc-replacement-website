@@ -179,11 +179,7 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
     !classes.includes("font-serif"),
     "the tagline is a label, not serif body copy",
   );
-  // Tracking settles once the lockup has landed.
-  assert.match(
-    heroSource,
-    /animate=\{\{ opacity: 1, letterSpacing: "0\.2em", filter: "blur\(0px\)" \}\}/,
-  );
+  // The reveal itself is covered by hero-tagline-reveal.test.ts.
   // The tagline belongs to the hero lockup, not to the header bar.
   assert.doesNotMatch(headerSource, /Local independent property specialists/);
 });
