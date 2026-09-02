@@ -164,7 +164,15 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
   );
   assert.ok(tagline, "the hero must render the site tagline under the lockup");
   const classes = tagline[1]?.split(/\s+/) ?? [];
-  for (const token of ["uppercase", "text-[9px]", "sm:text-[11px]", "font-medium"]) {
+  for (const token of [
+    "uppercase",
+    "font-medium",
+    // One line from 320px up — below 360px the larger size orphans the last
+    // word onto a second line.
+    "text-[9px]",
+    "min-[360px]:text-[10px]",
+    "sm:text-[13px]",
+  ]) {
     assert.ok(classes.includes(token), `the tagline must carry the ${token} class`);
   }
   assert.ok(
@@ -172,7 +180,10 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
     "the tagline is a label, not serif body copy",
   );
   // Tracking settles once the lockup has landed.
-  assert.match(heroSource, /animate=\{\{ opacity: 1, letterSpacing: "0\.18em" \}\}/);
+  assert.match(
+    heroSource,
+    /animate=\{\{ opacity: 1, letterSpacing: "0\.2em", filter: "blur\(0px\)" \}\}/,
+  );
   // The tagline belongs to the hero lockup, not to the header bar.
   assert.doesNotMatch(headerSource, /Local independent property specialists/);
 });

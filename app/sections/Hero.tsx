@@ -270,14 +270,14 @@ export default function Hero() {
               aria-hidden="true"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ delay: 0.8, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="hidden h-px w-14 flex-none origin-left bg-white/45 sm:block"
+              transition={{ delay: 0.8, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden h-px w-14 flex-none origin-left bg-white/50 sm:block sm:w-16"
             />
             <motion.p
-              initial={{ opacity: 0, letterSpacing: "0.04em" }}
-              animate={{ opacity: 1, letterSpacing: "0.18em" }}
-              transition={{ delay: 0.9, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[9px] font-medium uppercase text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] sm:text-[11px]"
+              initial={{ opacity: 0, letterSpacing: "-0.02em", filter: "blur(7px)" }}
+              animate={{ opacity: 1, letterSpacing: "0.2em", filter: "blur(0px)" }}
+              transition={{ delay: 0.9, duration: 1.7, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[9px] font-medium uppercase text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] min-[360px]:text-[10px] sm:text-[13px]"
             >
               Local independent property specialists
             </motion.p>
