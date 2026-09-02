@@ -153,6 +153,22 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
+test("points the footer valuation link at the one valuation flow", () => {
+  const footerSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "Footer.tsx"),
+    "utf8",
+  );
+
+  // /tools/valuation is a second, unstyled valuation form; the header CTA
+  // and the footer must land on the same flow.
+  assert.doesNotMatch(footerSource, /"\/tools\/valuation"/);
+  assert.match(
+    footerSource,
+    /\{ name: "Request a Valuation", href: "\/valuation" \}/,
+  );
+  assert.equal(getLandingUi("aker").valuationAction.href, "/valuation");
+});
+
 test("does not run a rotating review ticker under every page", () => {
   const layoutSource = readFileSync(
     join(import.meta.dirname, "..", "..", "app", "layout.tsx"),

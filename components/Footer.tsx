@@ -23,7 +23,7 @@ const footerLinks = {
   ],
   services: [
     { name: "Sell Your Home", href: "/sales/sellers-guide" },
-    { name: "Free Valuation", href: "/tools/valuation" },
+    { name: "Request a Valuation", href: "/valuation" },
     { name: "Property Search", href: "/sales/properties" },
     { name: "Lettings", href: "/lettings" },
     { name: "Property Management", href: "/lettings/landlords-guide" },
