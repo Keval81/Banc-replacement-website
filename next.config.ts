@@ -22,6 +22,8 @@ const contentSecurityPolicy = [
     "https://www.google-analytics.com",
     "https://maps.googleapis.com",
     "https://maps.gstatic.com",
+    // Vercel preview toolbar / live feedback on non-production deployments.
+    "https://vercel.live",
   ]
     .filter(Boolean)
     .join(" "),
@@ -41,6 +43,8 @@ const contentSecurityPolicy = [
     "https://maps.googleapis.com",
     "https://*.googleapis.com",
     "https://api.postcodes.io",
+    "https://vercel.live",
+    "wss://*.pusher.com",
   ].join(" "),
   [
     "frame-src",
@@ -50,6 +54,7 @@ const contentSecurityPolicy = [
     "https://www.youtube-nocookie.com",
     "https://player.vimeo.com",
     "https://my.matterport.com",
+    "https://vercel.live",
   ].join(" "),
   "upgrade-insecure-requests",
 ].join("; ");
