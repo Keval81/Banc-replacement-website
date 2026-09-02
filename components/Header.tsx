@@ -171,6 +171,14 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                 priority
               />
             </Link>
+            <span
+              className={cn(
+                "hidden shrink-0 whitespace-nowrap border-l border-white/20 pl-3 font-serif text-[13px] font-light leading-tight text-white/60 xl:block",
+                transparent && "drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]"
+              )}
+            >
+              Local independent property specialists
+            </span>
             {transparent && landingUi.mobileSocialActions.length > 0 && (
               <div
                 className="flex items-center gap-1 lg:hidden"

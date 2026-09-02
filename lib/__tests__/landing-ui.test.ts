@@ -153,6 +153,27 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
+test("carries the site tagline beside the header lockup on desktop only", () => {
+  const headerSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "Header.tsx"),
+    "utf8",
+  );
+
+  const tagline = headerSource.match(
+    /<span\s+className=\{cn\(\s*"([^"]+)"[^<]*?\)\}\s*>\s*Local independent property specialists/,
+  );
+
+  assert.ok(tagline, "the header must render the site tagline");
+  // Softer than the sans nav, and only from xl up: below 1280px the nav
+  // runs into it, which is exactly the clutter the brief warned about.
+  for (const token of ["hidden", "xl:block", "font-serif", "font-light"]) {
+    assert.ok(
+      tagline[1]?.split(/\s+/).includes(token),
+      `the tagline must carry the ${token} class`,
+    );
+  }
+});
+
 test("names the conversational agent Banc Bot everywhere a visitor sees it", () => {
   const chatbotSource = readFileSync(
     join(import.meta.dirname, "..", "..", "components", "ai", "PropertyChatbot.tsx"),
