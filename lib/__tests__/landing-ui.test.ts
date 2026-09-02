@@ -44,7 +44,7 @@ test("keeps the valuation and labelled phone actions available outside the hero"
   const ui = getLandingUi("aker");
 
   assert.deepEqual(ui.valuationAction, {
-    label: "Request a valuation",
+    label: "Request an instant valuation",
     href: "/valuation",
   });
   assert.deepEqual(ui.phoneAction, {

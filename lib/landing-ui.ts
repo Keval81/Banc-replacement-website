@@ -113,7 +113,7 @@ const sharedActions = {
     },
   },
   valuationAction: {
-    label: "Request a valuation",
+    label: "Request an instant valuation",
     href: "/valuation",
   },
   phoneAction: {
