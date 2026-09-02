@@ -153,6 +153,16 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
+test("does not run a rotating review ticker under every page", () => {
+  const layoutSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "layout.tsx"),
+    "utf8",
+  );
+
+  assert.doesNotMatch(layoutSource, /<LiveReviewFeed\s*\/>/);
+  assert.doesNotMatch(layoutSource, /from "@\/components\/social\/LiveReviewFeed"/);
+});
+
 test("uses one help launcher instead of competing contact controls on the landing page", () => {
   assert.deepEqual(getLandingOverlayPolicy("/"), {
     showMobileBottomNavigation: false,

@@ -11,7 +11,6 @@ import { AuthProvider } from "@/components/AuthProvider";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Script from "next/script";
-import LiveReviewFeed from "@/components/social/LiveReviewFeed";
 // SoldBanner moved to homepage as a section
 
 const sourceSerif4 = Source_Serif_4({
@@ -96,8 +95,10 @@ export default function RootLayout({
 
                   <SiteOverlays />
 
-                  {/* Social Proof Elements */}
-                  <LiveReviewFeed />
+                  {/* LiveReviewFeed removed: the rotating review strip sat
+                      under every page and read as a ticker rather than
+                      social proof. Reviews live on /reviews and in the
+                      homepage hero card. */}
 
                   <CookieConsent />
                   <GoogleAnalytics />
