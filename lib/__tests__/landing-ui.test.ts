@@ -153,6 +153,29 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
+test("names the conversational agent Banc Bot everywhere a visitor sees it", () => {
+  const chatbotSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "ai", "PropertyChatbot.tsx"),
+    "utf8",
+  );
+
+  assert.doesNotMatch(chatbotSource, /AI assistant/i);
+  assert.doesNotMatch(chatbotSource, /property assistant/i);
+  assert.match(chatbotSource, /I'm Banc Bot/);
+  for (const label of [
+    "Talk to Banc Bot about any current property",
+    "Open Banc Bot",
+    "Conversation with Banc Bot",
+    "Message Banc Bot",
+    "Banc Bot is typing",
+  ]) {
+    assert.ok(
+      chatbotSource.includes(label),
+      `PropertyChatbot must use the label ${JSON.stringify(label)}`,
+    );
+  }
+});
+
 test("points the footer valuation link at the one valuation flow", () => {
   const footerSource = readFileSync(
     join(import.meta.dirname, "..", "..", "components", "Footer.tsx"),
@@ -193,7 +216,7 @@ test("uses one help launcher instead of competing contact controls on the landin
 test("offers assistant and WhatsApp choices from the landing-page help launcher", () => {
   assert.deepEqual(getLandingUi("aker").mobileContactLauncher, {
     label: "Help",
-    assistantLabel: "Ask our AI assistant",
+    assistantLabel: "Ask Banc Bot",
     assistantAvatar: {
       src: "/images/ai/banc-ai-assistant.png",
       alt: "",

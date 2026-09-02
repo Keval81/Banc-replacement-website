@@ -58,7 +58,7 @@ export interface LandingUi {
   mobileSocialPresentation: MobileSocialPresentation;
   mobileContactLauncher: {
     label: "Help";
-    assistantLabel: "Ask our AI assistant";
+    assistantLabel: "Ask Banc Bot";
     assistantAvatar: {
       src: "/images/ai/banc-ai-assistant.png";
       alt: "";
@@ -127,7 +127,7 @@ const sharedActions = {
   },
   mobileContactLauncher: {
     label: "Help",
-    assistantLabel: "Ask our AI assistant",
+    assistantLabel: "Ask Banc Bot",
     assistantAvatar: {
       src: "/images/ai/banc-ai-assistant.png",
       alt: "",

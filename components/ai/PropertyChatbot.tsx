@@ -38,7 +38,7 @@ const transition = {
 const landingContactLauncher = getLandingUi("aker").mobileContactLauncher;
 
 const WELCOME_MESSAGE =
-  "Hello! I'm Banc's property assistant. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?";
+  "Hello! I'm Banc Bot. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?";
 
 function createWelcomeMessage(): PropertyChatMessage {
   return {
@@ -222,7 +222,7 @@ export default function PropertyChatbot({
                     className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
                   >
                     <p className="text-sm font-medium text-banc-dark leading-snug">
-                      Talk to our AI assistant about any current property
+                      Talk to Banc Bot about any current property
                     </p>
                     <p className="text-xs text-banc-grey mt-1">
                       Ask about a home you&apos;re buying or renting →
@@ -317,7 +317,7 @@ export default function PropertyChatbot({
                   ? isHelpMenuOpen
                     ? "Close help options"
                     : "Open help options"
-                  : "Open our AI assistant"
+                  : "Open Banc Bot"
               }
               aria-expanded={usesUnifiedHelp ? isHelpMenuOpen : undefined}
             >
@@ -383,7 +383,7 @@ export default function PropertyChatbot({
                       id="property-chat-title"
                       className="text-sm font-semibold text-white"
                     >
-                      Ask our AI assistant
+                      Banc Bot
                     </p>
                     <p className="text-[10px] text-white/50">Property help, powered by AI</p>
                   </div>
@@ -416,7 +416,7 @@ export default function PropertyChatbot({
                 role="log"
                 aria-live="polite"
                 aria-busy={isLoading}
-                aria-label="Conversation with our AI assistant"
+                aria-label="Conversation with Banc Bot"
                 className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
               >
                 {messages.map((message) => {
@@ -528,7 +528,7 @@ export default function PropertyChatbot({
                 })}
 
                 {isLoading && (
-                  <div className="flex justify-start" aria-label="Assistant is typing">
+                  <div className="flex justify-start" aria-label="Banc Bot is typing">
                     <div className="rounded-2xl rounded-bl-sm bg-white border border-banc-grey/10 shadow-sm px-4 py-3">
                       <div className="flex items-center gap-1.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-banc-grey/40 animate-pulse" />
@@ -561,7 +561,7 @@ export default function PropertyChatbot({
               {/* Input */}
               <div className="flex items-center gap-2 border-t border-banc-grey/10 bg-white p-3 shrink-0">
                 <label htmlFor="property-chat-input" className="sr-only">
-                  Message our AI assistant
+                  Message Banc Bot
                 </label>
                 <Input
                   id="property-chat-input"
