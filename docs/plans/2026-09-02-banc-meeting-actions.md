@@ -56,6 +56,31 @@
 Remaining follow-up: one card (BPGC1116) still prints both lines, because
 its address is the only place the street appears. Left as is.
 
+## Where this stopped (2026-09-02, end of session)
+
+Batch 1 and the review pass are complete on `main`, **local only — nothing
+pushed or deployed.** 453 tests pass, `tsc --noEmit` clean, ESLint unchanged
+from baseline, production build compiles.
+
+**Pick up here, in order:**
+
+1. ⚠ **Check the hero in real Safari.** The hero lockup and the Google review
+   card use framer-motion's `initial`, which is written into the
+   server-rendered inline style as `opacity: 0`. In a WebKit run where no
+   client JS executed, both stayed invisible indefinitely — the tagline had
+   the same fault and is now fixed in CSS (`8bf16dd`). Unknown whether real
+   Safari reproduces it; that run also failed to load the stylesheet, so it
+   may be an artifact of the headless build. **If Safari shows a blank hero
+   this is a launch blocker, not polish** — the fix is the same pattern used
+   for the tagline: `.banc-tagline-reveal` / `.banc-rule-draw` in
+   `app/globals.css`.
+2. Push and cut a preview deploy for Nitesh; book the end-of-week review call.
+3. Chase the blocking inputs — **N3 (DNS access) is the one that can miss the
+   13 Sep launch**, then N1 (three area phone numbers, which drop straight
+   into `BANC_PHONE_LINES`) and N2 (sales/lettings enquiry inboxes, which
+   Batch 4 needs).
+4. Start Batch 2.
+
 ### Batch 2 — Data correctness (Thu)
 10. **Exclude withdrawn / historic listings** from the Expert Agent import: filter on the feed's status/withdrawn fields so only live for sale / to let (+ recent under offer / let agreed) show. Audit the current 353 rows and archive the rest.
 11. **Schedule the Expert Agent sync** (launchd on the Mac mini) so listings and search columns stay fresh automatically.
