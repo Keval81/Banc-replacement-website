@@ -27,9 +27,8 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
   const tag = property.tags
     .map(getDisplayFact)
     .find((value): value is string => value !== null);
-  const location = [getDisplayFact(property.address), getDisplayFact(property.postcode)]
-    .filter((part): part is string => part !== null)
-    .join(", ");
+  // Street and area only — the postcode is deliberately not published.
+  const location = getDisplayFact(property.address);
   const numericFacts = [
     { icon: Bed, label: "Bedrooms", value: getDisplayCount(property.stats.beds) },
     { icon: Bath, label: "Bathrooms", value: getDisplayCount(property.stats.baths) },

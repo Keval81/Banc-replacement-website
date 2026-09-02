@@ -51,6 +51,39 @@ const base: DbProperty = {
   updated_at: "2026-08-15T00:00:00Z",
 };
 
+const identifiable: DbProperty = {
+  ...base,
+  title: "5 Hanyards Lane, Cuffley, EN6 4EF",
+  address: "5 Hanyards Lane, Cuffley, Hertfordshire, EN6 4EF",
+  latitude: 51.7091234,
+  longitude: -0.1275987,
+};
+
+test("strips door numbers and postcodes from the card the visitor sees", () => {
+  const card = dbToCard(identifiable);
+
+  assert.equal(card.title, "Hanyards Lane, Cuffley");
+  assert.equal(card.address, "Hanyards Lane, Cuffley, Hertfordshire");
+});
+
+test("publishes area coordinates rather than the plot's own position", () => {
+  const card = dbToCard(identifiable);
+
+  assert.deepEqual(card.coordinates, { latitude: 51.709, longitude: -0.128 });
+});
+
+test("strips door numbers, postcodes and photo alt text on the detail view", () => {
+  const detail = dbToDetail(identifiable);
+
+  assert.equal(detail.title, "Hanyards Lane, Cuffley");
+  assert.equal(detail.address, "Hanyards Lane, Cuffley, Hertfordshire");
+  assert.equal(detail.postcode, "EN6");
+  assert.equal(detail.latitude, 51.709);
+  assert.equal(detail.longitude, -0.128);
+  assert.equal(detail.gallery[0]?.alt, "Hanyards Lane, Cuffley — main photo");
+  assert.equal(detail.gallery[1]?.alt, "Hanyards Lane, Cuffley — photo 2");
+});
+
 test("formats sales price with pound and thousands separators", () => {
   const c = dbToCard(base);
   assert.equal(c.price, "£2,350,000");
@@ -192,7 +225,7 @@ test("dbToDetail builds gallery images, floorplans and keeps honest gaps", () =>
   assert.equal(d.rooms.length, 1);
 });
 
-test("dbToDetail passes coordinates and epc through", () => {
+test("dbToDetail passes area coordinates and epc through", () => {
   const d = dbToDetail({
     ...base,
     latitude: 51.7101,
@@ -200,8 +233,8 @@ test("dbToDetail passes coordinates and epc through", () => {
     epc_rating: "C",
     epc_image_url: "http://med01.expertagent.co.uk/x/EPC_80827980.png",
   });
-  assert.equal(d.latitude, 51.7101);
-  assert.equal(d.longitude, -0.1124);
+  assert.equal(d.latitude, 51.71);
+  assert.equal(d.longitude, -0.112);
   assert.equal(d.epcRating, "C");
   assert.match(d.epcImageUrl, /EPC_80827980/);
   const bare = dbToDetail(base);
@@ -209,10 +242,10 @@ test("dbToDetail passes coordinates and epc through", () => {
   assert.equal(bare.epcRating, undefined);
 });
 
-test("cards expose only complete, valid property coordinates", () => {
+test("cards expose only complete, valid area coordinates", () => {
   assert.deepEqual(
     dbToCard({ ...base, latitude: 51.7101, longitude: -0.1124 }).coordinates,
-    { latitude: 51.7101, longitude: -0.1124 },
+    { latitude: 51.71, longitude: -0.112 },
   );
   assert.equal(dbToCard({ ...base, latitude: 51.7101 }).coordinates, undefined);
   assert.equal(

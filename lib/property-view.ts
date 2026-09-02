@@ -9,6 +9,11 @@ import {
   type SearchPropertyType,
 } from "./crm/property-source.ts";
 import { getSafePropertyImageUrl } from "./property-detail-view.ts";
+import {
+  toAreaCoordinate,
+  toOutwardCode,
+  toPublicAddress,
+} from "./property-privacy.ts";
 
 export function buildPropertyHref(
   department: DbProperty["department"],
@@ -221,19 +226,21 @@ export function dbToCard(p: DbProperty): PropertyCardData {
   const images = p.images
     .map(getSafePropertyImageUrl)
     .filter((url): url is string => url !== null);
+  // Door numbers, postcodes and exact positions stay in the database for
+  // the team and the search RPC; nothing a visitor renders carries them.
+  const latitude = toAreaCoordinate(p.latitude);
+  const longitude = toAreaCoordinate(p.longitude);
   const hasValidCoordinates =
-    typeof p.latitude === "number" &&
-    Number.isFinite(p.latitude) &&
-    p.latitude >= -90 &&
-    p.latitude <= 90 &&
-    typeof p.longitude === "number" &&
-    Number.isFinite(p.longitude) &&
-    p.longitude >= -180 &&
-    p.longitude <= 180;
+    typeof latitude === "number" &&
+    latitude >= -90 &&
+    latitude <= 90 &&
+    typeof longitude === "number" &&
+    longitude >= -180 &&
+    longitude <= 180;
   return {
     id: p.expert_agent_id ?? p.id,
-    title: p.title,
-    address: p.address,
+    title: toPublicAddress(p.title),
+    address: toPublicAddress(p.address),
     price: p.department === "lettings" ? `${pounds} pcm` : pounds,
     priceNum: p.price,
     tags: tag ? [tag] : [],
@@ -251,8 +258,8 @@ export function dbToCard(p: DbProperty): PropertyCardData {
     ...(hasValidCoordinates
       ? {
           coordinates: {
-            latitude: p.latitude as number,
-            longitude: p.longitude as number,
+            latitude: latitude as number,
+            longitude: longitude as number,
           },
         }
       : {}),
@@ -320,7 +327,7 @@ export function dbToDetail(p: DbProperty): LivePropertyDetail {
     .filter((url): url is string => url !== null);
   return {
     ...card,
-    postcode: p.postcode,
+    postcode: toOutwardCode(p.postcode),
     priceQualifier: p.price_qualifier,
     receptions: p.receptions,
     description: p.description,
@@ -331,14 +338,15 @@ export function dbToDetail(p: DbProperty): LivePropertyDetail {
     virtualTourUrl: p.virtual_tour_url,
     addedDate: p.created_at,
     rooms: p.rooms,
-    latitude: p.latitude,
-    longitude: p.longitude,
+    latitude: card.coordinates?.latitude,
+    longitude: card.coordinates?.longitude,
     epcRating: p.epc_rating,
     epcImageUrl: p.epc_image_url,
     gallery: card.images.map((url, i) => ({
       id: `${ref}-${i}`,
       url,
-      alt: i === 0 ? `${p.title} — main photo` : `${p.title} — photo ${i + 1}`,
+      alt:
+        i === 0 ? `${card.title} — main photo` : `${card.title} — photo ${i + 1}`,
       isPrimary: i === 0,
     })),
     floorplans: floorplanUrls.map((url, i) => ({

@@ -3,6 +3,7 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import * as React from "react";
 
+import { AREA_MAP_ZOOM } from "@/lib/property-privacy";
 import {
   GOOGLE_MAP_INITIALIZATION_TIMEOUT_MS,
   getGoogleMapLoadState,
@@ -18,7 +19,7 @@ interface GooglePropertyMapProps {
 }
 
 const MAP_CONTAINER_STYLE = { width: "100%", height: "100%" };
-const FALLBACK_NOTICE = "Satellite map unavailable. Showing a standard postcode-area map.";
+const FALLBACK_NOTICE = "Satellite map unavailable. Showing a standard area map.";
 
 export function GooglePropertyMap({
   latitude,
@@ -140,7 +141,7 @@ function GooglePropertyMapLoader({
       <GoogleMap
         mapContainerStyle={MAP_CONTAINER_STYLE}
         center={{ lat: latitude, lng: longitude }}
-        zoom={18}
+        zoom={AREA_MAP_ZOOM}
         options={options}
         onLoad={(map) => {
           map.setMapTypeId(google.maps.MapTypeId.HYBRID);
@@ -166,7 +167,7 @@ function OpenStreetMapPropertyMap({
       </p>
       <MapFrame postcode={postcode}>
         <iframe
-          title={`Map of the ${postcode} postcode area`}
+          title={mapFrameTitle(postcode)}
           src={getOpenStreetMapEmbedUrl(latitude, longitude)}
           className="h-full w-full border-0"
           loading="lazy"
@@ -174,6 +175,12 @@ function OpenStreetMapPropertyMap({
       </MapFrame>
     </div>
   );
+}
+
+// `postcode` carries the outward area code only ("EN6"), never a full
+// postcode — see lib/property-privacy.ts.
+function mapFrameTitle(postcode: string): string {
+  return postcode ? `Map of the ${postcode} area` : "Map of the surrounding area";
 }
 
 function MapFrame({
@@ -189,9 +196,11 @@ function MapFrame({
         {children}
       </div>
       <div className="mt-3 rounded-lg bg-banc-grey-pale px-4 py-3">
-        <p className="text-sm font-semibold text-banc-dark">Approximate postcode area</p>
+        <p className="text-sm font-semibold text-banc-dark">Approximate area</p>
         <p className="mt-1 text-sm text-banc-muted-readable">
-          Map shows the {postcode} postcode area, not the property&apos;s exact position.
+          {postcode
+            ? `Map shows the ${postcode} area, not the property's exact position.`
+            : "Map shows the surrounding area, not the property's exact position."}
         </p>
       </div>
     </div>
