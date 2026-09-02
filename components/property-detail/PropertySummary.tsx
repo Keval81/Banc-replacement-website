@@ -7,6 +7,7 @@ import { useFavorites } from "@/app/hooks/useFavorites";
 import { getDisplayCount, getDisplayFact } from "@/lib/property-detail-view";
 import {
   buildPropertyShareData,
+  isSameAddressText,
   shareProperty,
   type LivePropertyDetail,
   type PropertyShareResult,
@@ -27,8 +28,11 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
   const tag = property.tags
     .map(getDisplayFact)
     .find((value): value is string => value !== null);
-  // Street and area only — the postcode is deliberately not published.
-  const location = getDisplayFact(property.address);
+  // Street and area only — the postcode is deliberately not published, and
+  // the line is dropped when the heading already says the same place.
+  const address = getDisplayFact(property.address);
+  const location =
+    address && !isSameAddressText(property.title, address) ? address : null;
   const numericFacts = [
     { icon: Bed, label: "Bedrooms", value: getDisplayCount(property.stats.beds) },
     { icon: Bath, label: "Bathrooms", value: getDisplayCount(property.stats.baths) },

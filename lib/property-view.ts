@@ -173,18 +173,58 @@ function normaliseAddressKey(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
-// True when two address strings say the same thing (ignoring case,
-// punctuation and one being a prefix of the other), so a card can avoid
-// printing "5 Lane, Town" twice.
+function addressSegments(value: string): string[] {
+  return value
+    .split(",")
+    .map(normaliseAddressKey)
+    .filter((segment) => segment !== "");
+}
+
+// True when one segment names the same street as the other, allowing for a
+// house name or block name in front of it ("Manor Cottage Vineyards Road" is
+// still Vineyards Road) — and for a town qualifier ("West Cheshunt" is still
+// Cheshunt).
+function isSameStreet(a: string, b: string): boolean {
+  if (a === b) return true;
+  return a.endsWith(` ${b}`) || b.endsWith(` ${a}`);
+}
+
+// True when two address strings say the same thing, so a card or a detail
+// header can avoid printing the street twice. Once door numbers are stripped,
+// feed titles are usually the address with the localities rewritten or
+// dropped, so the test is: does either string name the other's street?
+//
+// The street segment is the one that has to match, which is what stops
+// "Cuffley" from swallowing "Station Road, Cuffley".
 export function isSameAddressText(a: string, b: string): boolean {
   const left = normaliseAddressKey(a);
   const right = normaliseAddressKey(b);
   if (left.length === 0 || right.length === 0) return false;
-  return (
+  if (
     left === right ||
     left.startsWith(`${right} `) ||
     right.startsWith(`${left} `)
-  );
+  ) {
+    return true;
+  }
+
+  const leftParts = addressSegments(a);
+  const rightParts = addressSegments(b);
+  if (leftParts.length === 0 || rightParts.length === 0) return false;
+
+  // A block name can sit in its own segment ("Hudson Court, Darkes Lane"), so
+  // the shorter string's street is looked for across the longer's leading
+  // segments. A single-segment string has to match the very first: otherwise
+  // "Cuffley" would swallow "Station Road, Cuffley".
+  const [shorter, longer] =
+    leftParts.length <= rightParts.length
+      ? [leftParts, rightParts]
+      : [rightParts, leftParts];
+  const street = shorter[0];
+  const maxOffset = shorter.length >= 2 ? longer.length - shorter.length : 0;
+  return longer
+    .slice(0, maxOffset + 1)
+    .some((segment) => isSameStreet(segment, street));
 }
 
 export interface PropertyCardData {

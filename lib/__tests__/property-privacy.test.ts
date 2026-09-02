@@ -17,6 +17,23 @@ test("drops the door number but keeps the street and area", () => {
   assert.equal(toPublicAddress("12-14 Station Road, Cuffley"), "Station Road, Cuffley");
 });
 
+test("drops a door number that hides behind a house name", () => {
+  // The feed joins house_number + street, and house_number often carries the
+  // house name too: "Bridge House 69" + "Station Road".
+  assert.equal(
+    toPublicAddress("Bridge House 69 Station Road, Cuffley, Potters Bar, Hertfordshire"),
+    "Bridge House Station Road, Cuffley, Potters Bar, Hertfordshire",
+  );
+  assert.equal(
+    toPublicAddress("Manor Cottage Vineyards Road, Northaw"),
+    "Manor Cottage Vineyards Road, Northaw",
+  );
+  assert.equal(
+    toPublicAddress("Heytesbury: 4 bed detached property in a unique setting"),
+    "Heytesbury: 4 bed detached property in a unique setting",
+  );
+});
+
 test("drops flat and unit designators along with their number", () => {
   assert.equal(
     toPublicAddress("Flat 3, 21 The Avenue, Potters Bar"),

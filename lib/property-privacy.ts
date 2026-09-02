@@ -21,9 +21,14 @@ function isPostcodeFragment(segment: string): boolean {
   return OUTWARD_CODE.test(segment) || INWARD_CODE.test(segment);
 }
 
-// Removes a leading building identifier from one address segment. Returns an
-// empty string when the segment was nothing but an identifier, so the caller
-// can move on to the next segment ("Flat 3, 21 The Avenue").
+// Removes the building identifiers from one address segment. Returns an empty
+// string when the segment was nothing but an identifier, so the caller can
+// move on to the next segment ("Flat 3, 21 The Avenue").
+//
+// The number is not always leading: the feed joins house_number and street,
+// and house_number often carries a house name as well, giving
+// "Bridge House 69 Station Road". So every standalone number in the segment
+// goes, unless it counts something ("4 bed detached").
 function stripBuildingIdentifier(segment: string): string {
   const tokens = segment.split(/\s+/).filter(Boolean);
 
@@ -35,12 +40,13 @@ function stripBuildingIdentifier(segment: string): string {
     tokens.splice(0, 2);
   }
 
-  if (tokens.length > 0 && BUILDING_NUMBER.test(tokens[0])) {
-    const next = tokens[1];
-    if (next === undefined || !COUNTED_NOUN.test(next)) tokens.shift();
-  }
+  const kept = tokens.filter((token, index) => {
+    if (!BUILDING_NUMBER.test(token)) return true;
+    const next = tokens[index + 1];
+    return next !== undefined && COUNTED_NOUN.test(next);
+  });
 
-  return tokens.join(" ");
+  return kept.join(" ");
 }
 
 export function toPublicAddress(value: string): string {

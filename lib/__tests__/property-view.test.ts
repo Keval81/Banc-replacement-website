@@ -439,3 +439,45 @@ test("isSameAddressText spots a title that merely repeats the address", () => {
   assert.equal(isSameAddressText("Stunning family home", "5 Little Berkhamsted Lane"), false);
   assert.equal(isSameAddressText("", "Cuffley"), false);
 });
+
+test("isSameAddressText spots a title that repeats the address with places dropped", () => {
+  // Once door numbers are stripped, feed titles are often the address with
+  // the middle localities missing — the same street, said twice.
+  assert.equal(
+    isSameAddressText(
+      "Little Berkhamsted Lane, Hertford",
+      "Little Berkhamsted Lane, Little Berkhamsted, Hertford, Hertfordshire",
+    ),
+    true,
+  );
+  assert.equal(
+    isSameAddressText("Hanyards Lane, Cuffley", "Hanyards Lane, Cuffley, Hertfordshire"),
+    true,
+  );
+  // The same street with the town named differently is still one place.
+  assert.equal(
+    isSameAddressText("Foxes Drive, West Cheshunt", "Foxes Drive, Cheshunt, Hertfordshire"),
+    true,
+  );
+  assert.equal(
+    isSameAddressText("Dunnock Close, Edmonton", "Dunnock Close, Enfield, Greater London"),
+    true,
+  );
+  // A house name in front of the street does not make it a different street.
+  assert.equal(
+    isSameAddressText("Vineyards Road, Northaw", "Manor Cottage Vineyards Road, Northaw"),
+    true,
+  );
+  assert.equal(
+    isSameAddressText("Darkes Lane, Potters Bar", "Hudson Court, Darkes Lane, Potters Bar"),
+    true,
+  );
+  // A title that names only the area still leaves the street worth printing.
+  assert.equal(isSameAddressText("Cuffley", "Station Road, Cuffley"), false);
+  // Different streets in the same town are not the same place.
+  assert.equal(
+    isSameAddressText("Tolmers Road, Cuffley", "Hanyards Lane, Cuffley, Hertfordshire"),
+    false,
+  );
+  assert.equal(isSameAddressText("Stunning family home", "Station Road, Cuffley"), false);
+});
