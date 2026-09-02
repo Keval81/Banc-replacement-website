@@ -18,7 +18,7 @@
 
 ## 1. Build plan by batch
 
-### Batch 1 — Quick wins, visible immediately (Wed–Thu)
+### Batch 1 — Quick wins, visible immediately (Wed–Thu) — ✅ done
 1. **Logo in Banc blue** in the header (test legibility over video; fall back to white on dark frames if needed). Nitesh reviews on site.
 2. **Rename CTA** top-right to "Request an instant valuation".
 3. **Remove fake ticker** at the bottom of the homepage.
@@ -28,6 +28,28 @@
 7. **Site tagline** "Local independent property specialists" in a softer font under/near the logo — check desktop and mobile for clutter.
 8. **Property cards/detail — privacy:** strip door numbers and postcodes from displayed titles/addresses, breadcrumbs, page `<title>`, OG and JSON-LD; keep street + area. Map resolves to the area only (rounded coordinates / area circle, no exact pin).
 9. **Property detail layout:** EPC widget smaller; move "About the property" beneath "At a glance"; confirm the tabs (Photos / Floorplan / Map / EPC) on mobile.
+
+**Status: complete (2026-09-02), one commit per item on `main`.**
+
+| # | Commit | Notes |
+|---|--------|-------|
+| 1 | `54128fd` | Blue lockup now renders in every header, including the transparent one over the hero film, with a drop shadow for bright frames. The hero still carries the large white lockup — Nitesh to say whether he wants both. |
+| 2 | `ce4b26f` | Header CTA and mobile menu both read "Request an instant valuation". |
+| 3 | `4890ab7` | `LiveReviewFeed` unmounted from `app/layout.tsx`; it ran under every page, not just the homepage. |
+| 4 | `50f2a75` | The homepage's only free-valuation link was the footer's "Free Valuation" → `/tools/valuation`, a second unstyled form with dark-on-dark labels. Retargeted to `/valuation` and renamed, rather than deleted, so the footer keeps a valuation entry. Confirm this is the link Nitesh meant. |
+| 5 | `3ec902b` | Every visitor-facing string renamed, plus the response prompt. The avatar is already the robot artwork — no new asset supplied, so it is unchanged. |
+| 6 | `b1e0be2` | `BANC_PHONE_LINES` in `lib/banc-contact.ts` drives a header menu and a mobile-drawer list. Only the two confirmed numbers (Cuffley, Mayfair) are listed; a test forbids placeholder numbers. Adding N1's numbers there is the only change needed. |
+| 7 | `1a1d5c6` | Tagline set in the serif token at light weight, beside the lockup, from 1280px up — below that the nav collides with it. |
+| 8 | `0907c92` | `lib/property-privacy.ts` applied in `dbToCard`/`dbToDetail`, so cards, results, breadcrumbs, page titles, OG, JSON-LD, share text and the chatbot's trusted results all inherit it. Coordinates round to 3dp and the map frames at zoom 14. Verified against a production build: the only full postcode left in the rendered HTML is Banc's own office address in the footer. |
+| 9 | `a61cafd` | Overview order is now At a glance → About → Energy performance → Room dimensions; EPC capped at `max-w-md` / 280px. |
+
+**Open questions for Nitesh / follow-ups**
+
+- Item 1: the homepage now shows the blue lockup in the header *and* the large white lockup in the hero. Keep both, or drop the hero lockup?
+- Item 4: confirm the footer "Free Valuation" link was the broken one he meant.
+- Item 5: the avatar is a generic robot. Does he want bespoke artwork?
+- Item 8: house *names* are kept ("The Old Rectory, Northaw") — only numbers and postcodes are stripped. A house name identifies a home as precisely as a door number; confirm whether to strip those too.
+- Item 9: there is no EPC tab — the certificate is a body section. His note listed EPC among the tabs; confirm whether he wants a fourth tab.
 
 ### Batch 2 — Data correctness (Thu)
 10. **Exclude withdrawn / historic listings** from the Expert Agent import: filter on the feed's status/withdrawn fields so only live for sale / to let (+ recent under offer / let agreed) show. Audit the current 353 rows and archive the rest.
@@ -110,3 +132,5 @@ I'll have the first batch (logo, Banc Bot, privacy changes to addresses, tabs, E
 
 Cheers,
 Keval
+
+*Last updated: 2026-09-02*
