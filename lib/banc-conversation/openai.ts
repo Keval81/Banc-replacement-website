@@ -1066,6 +1066,43 @@ function extractOutputValue(payload: unknown): unknown | null {
   }
 }
 
+const MAX_LOGGED_ERROR_CHARACTERS = 400;
+
+/**
+ * Surfaces the provider's own error text (status, type, code, message) so a
+ * misconfigured model name or schema is diagnosable from server logs. The
+ * request body, API key and visitor text are never logged.
+ */
+async function logProviderFailure(
+  response: Response,
+  formatName: string,
+): Promise<void> {
+  let detail = "";
+  try {
+    const payload = (await response.clone().json()) as {
+      error?: { type?: unknown; code?: unknown; message?: unknown; param?: unknown };
+    };
+    const error = payload?.error ?? {};
+    detail = JSON.stringify({
+      type: error.type,
+      code: error.code,
+      param: error.param,
+      message: typeof error.message === "string"
+        ? error.message.slice(0, MAX_LOGGED_ERROR_CHARACTERS)
+        : undefined,
+    });
+  } catch {
+    detail = "unparseable error body";
+  }
+  try {
+    console.warn(
+      `[banc-conversation] provider request failed status=${response.status} format=${formatName} ${detail}`,
+    );
+  } catch {
+    // Logging must never affect the response path.
+  }
+}
+
 function providerFailure(error: unknown): ProviderFailure {
   return error instanceof Error &&
       (error.name === "AbortError" || error.name === "TimeoutError")
@@ -1112,7 +1149,10 @@ async function requestStructuredOutput(options: {
     });
 
     if (response.status === 429) return { status: "rate_limited" };
-    if (!response.ok) return { status: "model_unavailable" };
+    if (!response.ok) {
+      await logProviderFailure(response, options.formatName);
+      return { status: "model_unavailable" };
+    }
 
     let payload: unknown;
     try {
