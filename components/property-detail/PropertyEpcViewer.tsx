@@ -32,7 +32,9 @@ export function PropertyEpcViewer({
 
   return (
     <Dialog.Root>
-      <div className="rounded-lg border border-banc-grey/20 bg-white p-4 sm:p-6">
+      {/* A supporting panel, not a second hero: the full certificate is one
+          tap away in the dialog. */}
+      <div className="max-w-md rounded-lg border border-banc-grey/20 bg-white p-4">
         <div className="flex flex-wrap items-center gap-3">
           {rating && (
             <span
@@ -53,7 +55,7 @@ export function PropertyEpcViewer({
           <button
             type="button"
             aria-label="Expand EPC certificate"
-            className="group relative mt-5 flex min-h-11 w-full cursor-zoom-in justify-center overflow-hidden rounded-md bg-banc-grey-pale focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
+            className="group relative mt-4 flex min-h-11 w-full cursor-zoom-in justify-center overflow-hidden rounded-md bg-banc-grey-pale focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-banc-focus"
           >
             {/* The EPC URL is supplied by the property API, so Next/Image cannot know its dimensions. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -61,11 +63,11 @@ export function PropertyEpcViewer({
               src={epcImageUrl}
               alt={certificateAlt}
               loading="lazy"
-              className="max-h-[620px] w-full object-contain"
+              className="max-h-[280px] w-full object-contain"
             />
-            <span className="absolute bottom-3 right-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-banc-dark px-4 text-sm font-medium text-white shadow-lg">
+            <span className="absolute bottom-2 right-2 inline-flex min-h-11 items-center gap-2 rounded-full bg-banc-dark px-3 text-xs font-medium text-white shadow-lg">
               <Maximize2 className="h-4 w-4" aria-hidden="true" />
-              Expand certificate
+              Expand
             </span>
           </button>
         </Dialog.Trigger>

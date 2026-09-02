@@ -59,6 +59,19 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
         </section>
       )}
 
+      {paragraphs.length > 0 && (
+        <section aria-labelledby="about-property-heading">
+          <h2 id="about-property-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
+            About this property
+          </h2>
+          <div className="mt-5 max-w-[72ch] space-y-4 text-base leading-7 text-banc-muted-readable">
+            {paragraphs.map((paragraph, index) => (
+              <p key={`${paragraph}-${index}`}>{paragraph}</p>
+            ))}
+          </div>
+        </section>
+      )}
+
       {epcImageUrl && (
         <section aria-labelledby="energy-performance-heading">
           <h2
@@ -72,19 +85,6 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
               epcImageUrl={epcImageUrl}
               epcRating={property.epcRating}
             />
-          </div>
-        </section>
-      )}
-
-      {paragraphs.length > 0 && (
-        <section aria-labelledby="about-property-heading">
-          <h2 id="about-property-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
-            About this property
-          </h2>
-          <div className="mt-5 max-w-[72ch] space-y-4 text-base leading-7 text-banc-muted-readable">
-            {paragraphs.map((paragraph, index) => (
-              <p key={`${paragraph}-${index}`}>{paragraph}</p>
-            ))}
           </div>
         </section>
       )}
