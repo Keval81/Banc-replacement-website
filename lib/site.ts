@@ -1,6 +1,6 @@
 // Canonical site origin. Set NEXT_PUBLIC_SITE_URL in the environment to
 // override (e.g. preview deployments); defaults to the production domain.
-const DEFAULT_SITE_URL = "https://www.bancproperty.com";
+const DEFAULT_SITE_URL = "https://bancproperty.com";
 
 function normaliseOrigin(value: string | undefined): string {
   const trimmed = (value ?? "").trim();
