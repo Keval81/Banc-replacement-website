@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import React from "react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import { DemoBanner } from "@/components/ui/DemoBanner";
 import ActivityFeed from "@/components/portal/ActivityFeed";
 import MilestoneTracker from "@/components/portal/MilestoneTracker";
 import DocumentVault from "@/components/portal/DocumentVault";
@@ -179,19 +180,20 @@ export default function VendorPortalPage() {
   return (
     <PortalLayout user={mockUser} notifications={2}>
       <div className="space-y-6">
+        <DemoBanner />
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-heading font-bold text-[#1A1917]">
+            <h1 className="text-2xl font-heading font-bold text-banc-dark-deep">
               Welcome back, {mockUser.name.split(" ")[0]}
             </h1>
-            <p className="text-[#8A8880] mt-1">
+            <p className="text-banc-grey mt-1">
               Here&apos;s what&apos;s happening with your property
             </p>
           </div>
           <Link
             href="/sales/properties/prop-1"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#4AC8E8] text-white rounded-lg hover:bg-[#1A9BBF] transition-colors font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-banc-sky text-white rounded-lg hover:bg-banc-sky-dark transition-colors font-medium"
           >
             <Eye className="w-4 h-4" />
             View Listing
@@ -199,7 +201,7 @@ export default function VendorPortalPage() {
         </div>
 
         {/* Property Card */}
-        <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+        <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
           <div className="flex flex-col lg:flex-row">
             <div className="lg:w-1/3">
               <img
@@ -211,24 +213,24 @@ export default function VendorPortalPage() {
             <div className="p-5 lg:w-2/3">
               <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                 <div>
-                  <h2 className="text-xl font-heading font-semibold text-[#1A1917]">
+                  <h2 className="text-xl font-heading font-semibold text-banc-dark-deep">
                     15 Oakwood Drive, Cuffley
                   </h2>
-                  <p className="text-[#8A8880]">EN6 4JL</p>
+                  <p className="text-banc-grey">EN6 4JL</p>
                 </div>
-                <span className="px-3 py-1 bg-[#4AC8E8]/10 text-[#1A9BBF] text-sm font-medium rounded-full">
+                <span className="px-3 py-1 bg-banc-sky/10 text-banc-sky-dark text-sm font-medium rounded-full">
                   Under Offer
                 </span>
               </div>
-              <p className="text-2xl font-bold text-[#4AC8E8] mb-4">
+              <p className="text-2xl font-bold text-banc-sky mb-4">
                 £875,000
               </p>
               <div className="flex flex-wrap gap-4 text-sm">
-                <span className="flex items-center gap-1 text-[#8A8880]">
+                <span className="flex items-center gap-1 text-banc-grey">
                   <Home className="w-4 h-4" />
                   4 Bedrooms
                 </span>
-                <span className="flex items-center gap-1 text-[#8A8880]">
+                <span className="flex items-center gap-1 text-banc-grey">
                   <TrendingUp className="w-4 h-4" />
                   {mockPerformance.daysOnMarket} days on market
                 </span>
@@ -239,52 +241,52 @@ export default function VendorPortalPage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-lg flex items-center justify-center">
-                <Eye className="w-5 h-5 text-[#4AC8E8]" />
+              <div className="w-10 h-10 bg-banc-sky/10 rounded-lg flex items-center justify-center">
+                <Eye className="w-5 h-5 text-banc-sky" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.totalViews.toLocaleString()}
             </p>
-            <p className="text-sm text-[#8A8880]">Total Views</p>
+            <p className="text-sm text-banc-grey">Total Views</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-green-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.actualViewings}
             </p>
-            <p className="text-sm text-[#8A8880]">Viewings</p>
+            <p className="text-sm text-banc-grey">Viewings</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                 <FileText className="w-5 h-5 text-amber-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.brochureDownloads}
             </p>
-            <p className="text-sm text-[#8A8880]">Brochure Downloads</p>
+            <p className="text-sm text-banc-grey">Brochure Downloads</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <PoundSterling className="w-5 h-5 text-purple-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.offersReceived}
             </p>
-            <p className="text-sm text-[#8A8880]">Offers Received</p>
+            <p className="text-sm text-banc-grey">Offers Received</p>
           </div>
         </div>
 
@@ -305,46 +307,46 @@ export default function VendorPortalPage() {
 
           <div className="space-y-4">
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
-              <h3 className="font-heading font-semibold text-[#1A1917] mb-4">
+            <div className="bg-white rounded-xl border border-banc-line p-5">
+              <h3 className="font-heading font-semibold text-banc-dark-deep mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-2">
                 <a
                   href="/portal/vendor/viewings"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">View Calendar</span>
+                    <Calendar className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">View Calendar</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/portal/vendor/offers"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <PoundSterling className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Review Offers</span>
+                    <PoundSterling className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Review Offers</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/portal/vendor/messages"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Message Agent</span>
+                    <Users className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Message Agent</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
               </div>
             </div>
 
             {/* Agent Contact */}
-            <div className="bg-[#4AC8E8] rounded-xl p-5 text-white">
+            <div className="bg-banc-sky rounded-xl p-5 text-white">
               <h3 className="font-heading font-semibold mb-3">
                 Your Agent
               </h3>
@@ -359,7 +361,7 @@ export default function VendorPortalPage() {
               </div>
               <a
                 href="tel:+441707000000"
-                className="block w-full py-2 px-4 bg-white text-[#4AC8E8] text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="block w-full py-2 px-4 bg-white text-banc-sky text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Call Agent
               </a>

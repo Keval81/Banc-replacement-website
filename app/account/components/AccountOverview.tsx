@@ -50,8 +50,8 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
       count: 0,
       icon: Bell,
       href: "/alerts",
-      color: "text-[#4AC8E8]",
-      bgColor: "bg-[#4AC8E8]/10",
+      color: "text-banc-sky",
+      bgColor: "bg-banc-sky/10",
     },
     {
       title: "Requirements",
@@ -125,7 +125,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
         </h2>
         <div className="space-y-4">
           <div className="flex items-start gap-4">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4AC8E8]/20 text-sm font-medium text-[#4AC8E8]">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-banc-sky/20 text-sm font-medium text-banc-sky">
               1
             </div>
             <div>
@@ -136,7 +136,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
               <Link href="/account/requirements">
                 <Button
                   variant="link"
-                  className="mt-1 h-auto p-0 text-[#4AC8E8] hover:text-[#1A9BBF]"
+                  className="mt-1 h-auto p-0 text-banc-sky hover:text-banc-sky-dark"
                 >
                   Update requirements →
                 </Button>
@@ -156,7 +156,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
               <Link href="/sales/properties">
                 <Button
                   variant="link"
-                  className="mt-1 h-auto p-0 text-[#4AC8E8] hover:text-[#1A9BBF]"
+                  className="mt-1 h-auto p-0 text-banc-sky hover:text-banc-sky-dark"
                 >
                   View properties →
                 </Button>

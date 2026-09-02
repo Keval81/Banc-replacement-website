@@ -2,6 +2,7 @@
 
 import React from "react";
 import PortalLayout from "@/components/portal/PortalLayout";
+import { DemoBanner } from "@/components/ui/DemoBanner";
 import DocumentVault from "@/components/portal/DocumentVault";
 import {
   PortalUser,
@@ -191,62 +192,63 @@ export default function LandlordPortalPage() {
   return (
     <PortalLayout user={mockUser} notifications={2}>
       <div className="space-y-6">
+        <DemoBanner />
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-heading font-bold text-[#1A1917]">
+          <h1 className="text-2xl font-heading font-bold text-banc-dark-deep">
             Welcome back, {mockUser.name.split(" ")[0]}
           </h1>
-          <p className="text-[#8A8880] mt-1">
+          <p className="text-banc-grey mt-1">
             Manage your property portfolio
           </p>
         </div>
 
         {/* Portfolio Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-lg flex items-center justify-center">
-                <Home className="w-5 h-5 text-[#4AC8E8]" />
+              <div className="w-10 h-10 bg-banc-sky/10 rounded-lg flex items-center justify-center">
+                <Home className="w-5 h-5 text-banc-sky" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {mockProperties.length}
             </p>
-            <p className="text-sm text-[#8A8880]">Properties</p>
+            <p className="text-sm text-banc-grey">Properties</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <Users className="w-5 h-5 text-green-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">{activeTenancies}</p>
-            <p className="text-sm text-[#8A8880]">Active Tenancies</p>
+            <p className="text-2xl font-bold text-banc-dark-deep">{activeTenancies}</p>
+            <p className="text-sm text-banc-grey">Active Tenancies</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <PoundSterling className="w-5 h-5 text-purple-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {formatCurrency(totalMonthlyIncome)}
             </p>
-            <p className="text-sm text-[#8A8880]">Monthly Income</p>
+            <p className="text-sm text-banc-grey">Monthly Income</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-4">
+          <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
                 <Wrench className="w-5 h-5 text-amber-600" />
               </div>
             </div>
-            <p className="text-2xl font-bold text-[#1A1917]">
+            <p className="text-2xl font-bold text-banc-dark-deep">
               {pendingMaintenance.length}
             </p>
-            <p className="text-sm text-[#8A8880]">Open Requests</p>
+            <p className="text-sm text-banc-grey">Open Requests</p>
           </div>
         </div>
 
@@ -269,13 +271,13 @@ export default function LandlordPortalPage() {
 
         {/* Properties */}
         <div className="space-y-4">
-          <h2 className="text-xl font-heading font-semibold text-[#1A1917]">
+          <h2 className="text-xl font-heading font-semibold text-banc-dark-deep">
             Your Properties
           </h2>
           {mockProperties.map((property) => (
             <div
               key={property.id}
-              className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden"
+              className="bg-white rounded-xl border border-banc-line overflow-hidden"
             >
               <div className="flex flex-col lg:flex-row">
                 {/* Property Image & Basic Info */}
@@ -290,7 +292,7 @@ export default function LandlordPortalPage() {
                       className={`absolute top-2 right-2 px-2 py-1 text-xs font-medium rounded-full ${
                         property.tenancyStatus === "active"
                           ? "bg-green-100 text-green-700"
-                          : "bg-[#E0DFDC] text-[#1A1917]"
+                          : "bg-banc-line text-banc-dark-deep"
                       }`}
                     >
                       {property.tenancyStatus === "active"
@@ -298,27 +300,27 @@ export default function LandlordPortalPage() {
                         : "Void"}
                     </span>
                   </div>
-                  <h3 className="font-medium text-[#1A1917] mt-3">
+                  <h3 className="font-medium text-banc-dark-deep mt-3">
                     {property.address}
                   </h3>
-                  <p className="text-lg font-semibold text-[#4AC8E8]">
-                    {formatCurrency(property.monthlyRent)} <span className="text-sm font-normal text-[#8A8880]">pcm</span>
+                  <p className="text-lg font-semibold text-banc-sky">
+                    {formatCurrency(property.monthlyRent)} <span className="text-sm font-normal text-banc-grey">pcm</span>
                   </p>
                 </div>
 
                 {/* Property Details */}
-                <div className="lg:w-2/3 p-4 lg:border-l border-[#E0DFDC]">
+                <div className="lg:w-2/3 p-4 lg:border-l border-banc-line">
                   <div className="grid md:grid-cols-2 gap-4">
                     {/* Tenant Info */}
                     {property.tenant && (
-                      <div className="p-3 bg-[#F4F3F1] rounded-lg">
-                        <h4 className="text-sm font-medium text-[#8A8880] mb-2">
+                      <div className="p-3 bg-banc-grey-pale rounded-lg">
+                        <h4 className="text-sm font-medium text-banc-grey mb-2">
                           Current Tenant
                         </h4>
-                        <p className="font-medium text-[#1A1917]">
+                        <p className="font-medium text-banc-dark-deep">
                           {property.tenant.name}
                         </p>
-                        <p className="text-sm text-[#8A8880]">
+                        <p className="text-sm text-banc-grey">
                           Tenancy ends: {" "}
                           {new Date(property.tenant.tenancyEnd).toLocaleDateString("en-GB", {
                             month: "short",
@@ -330,13 +332,13 @@ export default function LandlordPortalPage() {
 
                     {/* Next Inspection */}
                     {property.nextInspectionDate && (
-                      <div className="p-3 bg-[#F4F3F1] rounded-lg">
-                        <h4 className="text-sm font-medium text-[#8A8880] mb-2">
+                      <div className="p-3 bg-banc-grey-pale rounded-lg">
+                        <h4 className="text-sm font-medium text-banc-grey mb-2">
                           Next Inspection
                         </h4>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-[#4AC8E8]" />
-                          <span className="font-medium text-[#1A1917]">
+                          <Calendar className="w-4 h-4 text-banc-sky" />
+                          <span className="font-medium text-banc-dark-deep">
                             {new Date(property.nextInspectionDate).toLocaleDateString("en-GB", {
                               day: "numeric",
                               month: "long",
@@ -350,7 +352,7 @@ export default function LandlordPortalPage() {
 
                   {/* Compliance Status */}
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-[#8A8880] mb-2">
+                    <h4 className="text-sm font-medium text-banc-grey mb-2">
                       Compliance Status
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -375,18 +377,18 @@ export default function LandlordPortalPage() {
                   {/* Maintenance Requests */}
                   {property.maintenanceRequests.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="text-sm font-medium text-[#8A8880] mb-2">
+                      <h4 className="text-sm font-medium text-banc-grey mb-2">
                         Maintenance Requests
                       </h4>
                       <div className="space-y-2">
                         {property.maintenanceRequests.map((request) => (
                           <div
                             key={request.id}
-                            className="flex items-center justify-between p-2 bg-[#F4F3F1] rounded-lg"
+                            className="flex items-center justify-between p-2 bg-banc-grey-pale rounded-lg"
                           >
                             <div className="flex items-center gap-2">
-                              <Wrench className="w-4 h-4 text-[#8A8880]" />
-                              <span className="text-sm text-[#1A1917]">
+                              <Wrench className="w-4 h-4 text-banc-grey" />
+                              <span className="text-sm text-banc-dark-deep">
                                 {request.title}
                               </span>
                             </div>
@@ -411,7 +413,7 @@ export default function LandlordPortalPage() {
                   {/* Income Graph (if available) */}
                   {property.incomeHistory.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="text-sm font-medium text-[#8A8880] mb-2">
+                      <h4 className="text-sm font-medium text-banc-grey mb-2">
                         Recent Income
                       </h4>
                       <div className="h-24 flex items-end gap-1">
@@ -426,11 +428,11 @@ export default function LandlordPortalPage() {
                               className="flex-1 flex flex-col items-center gap-1"
                             >
                               <div
-                                className="w-full bg-[#4AC8E8] rounded-t"
+                                className="w-full bg-banc-sky rounded-t"
                                 style={{ height: `${height}%` }}
                                 title={`${income.month}: ${formatCurrency(income.netIncome)}`}
                               />
-                              <span className="text-[10px] text-[#8A8880]">
+                              <span className="text-[10px] text-banc-grey">
                                 {income.month.split(" ")[0]}
                               </span>
                             </div>
@@ -453,56 +455,56 @@ export default function LandlordPortalPage() {
 
           <div className="space-y-4">
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
-              <h3 className="font-heading font-semibold text-[#1A1917] mb-4">
+            <div className="bg-white rounded-xl border border-banc-line p-5">
+              <h3 className="font-heading font-semibold text-banc-dark-deep mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-2">
                 <a
                   href="/portal/landlord/maintenance"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Wrench className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Report Maintenance</span>
+                    <Wrench className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Report Maintenance</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/portal/landlord/compliance"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">View Compliance</span>
+                    <FileText className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">View Compliance</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/portal/landlord/financials"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <TrendingUp className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Financial Reports</span>
+                    <TrendingUp className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Financial Reports</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/contact"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Contact Property Manager</span>
+                    <Users className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Contact Property Manager</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
                 </a>
               </div>
             </div>
 
             {/* Contact Card */}
-            <div className="bg-[#1A9BBF] rounded-xl p-5 text-white">
+            <div className="bg-banc-sky-dark rounded-xl p-5 text-white">
               <h3 className="font-heading font-semibold mb-3">
                 Your Property Manager
               </h3>
@@ -517,7 +519,7 @@ export default function LandlordPortalPage() {
               </div>
               <a
                 href="tel:+441707000000"
-                className="block w-full py-2 px-4 bg-white text-[#1A9BBF] text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="block w-full py-2 px-4 bg-white text-banc-sky-dark text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Call Manager
               </a>

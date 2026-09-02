@@ -9,7 +9,13 @@ import { Button } from "@/components/ui/button";
 import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
 import { getLandingUi } from "@/lib/landing-ui";
+import {
+  MODAL_FOCUSABLE_SELECTOR,
+  startModalFocusLifecycle,
+} from "@/lib/property-search/modal-focus-lifecycle";
 import { useSession, signOut } from "next-auth/react";
+
+const MOBILE_MENU_ID = "banc-mobile-menu";
 
 const landingUi = getLandingUi("aker");
 
@@ -55,6 +61,35 @@ export default function Header({ transparent = false }: { transparent?: boolean 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = React.useState<string | null>(null);
+  const mobileMenuRef = React.useRef<HTMLDivElement>(null);
+  const mobileToggleRef = React.useRef<HTMLButtonElement>(null);
+
+  // Escape closes the mobile menu, Tab stays inside it, and focus returns to
+  // the toggle on close (same lifecycle as the filter drawer and chatbot).
+  React.useEffect(() => {
+    if (!mobileOpen) return;
+
+    const getFocusableElements = () =>
+      Array.from(
+        mobileMenuRef.current?.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR) ?? [],
+      );
+    return startModalFocusLifecycle({
+      getActiveElement: () => document.activeElement,
+      getBodyOverflow: () => document.body.style.overflow,
+      setBodyOverflow: (value) => { document.body.style.overflow = value; },
+      getFocusableElements,
+      containerContains: (element) =>
+        element instanceof Node && Boolean(mobileMenuRef.current?.contains(element)),
+      addKeydownListener: (listener) =>
+        document.addEventListener("keydown", listener as (event: KeyboardEvent) => void),
+      removeKeydownListener: (listener) =>
+        document.removeEventListener("keydown", listener as (event: KeyboardEvent) => void),
+      requestFrame: (callback) => requestAnimationFrame(callback),
+      cancelFrame: (frame) => cancelAnimationFrame(frame as number),
+      onClose: () => setMobileOpen(false),
+      restoreFocus: () => mobileToggleRef.current?.focus(),
+    });
+  }, [mobileOpen]);
 
   // Lock body scroll when mobile menu is open
   React.useEffect(() => {
@@ -140,7 +175,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                     )}
                   >
                     {item.name}
-                    {hasDropdown && <ChevronDown className="h-3.5 w-3.5" />}
+                    {hasDropdown && <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />}
                   </Link>
                   
                   {/* Desktop Dropdown */}
@@ -189,10 +224,10 @@ export default function Header({ transparent = false }: { transparent?: boolean 
             {/* Favorites */}
             <Link 
               href="/favorites" 
-              className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:text-banc-sky transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 hover:text-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
               aria-label="Favorites"
             >
-              <Heart className="h-5 w-5" />
+              <Heart className="h-5 w-5" aria-hidden="true" />
             </Link>
 
             {/* Auth */}
@@ -209,8 +244,9 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                   size="icon"
                   className="text-white/60 hover:bg-white/5 hover:text-red-400"
                   onClick={() => signOut({ callbackUrl: "/" })}
+                  aria-label="Sign out"
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             ) : (
@@ -232,11 +268,16 @@ export default function Header({ transparent = false }: { transparent?: boolean 
 
           {/* Mobile Menu Button */}
           <button
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white active:bg-white/10 lg:hidden"
+            ref={mobileToggleRef}
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] border border-white/10 bg-white/5 text-white active:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls={MOBILE_MENU_ID}
+            aria-haspopup="dialog"
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
       </header>
@@ -251,6 +292,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40 bg-black/60 lg:hidden"
               onClick={() => setMobileOpen(false)}
+              aria-hidden="true"
             />
             
             <motion.div
@@ -258,17 +300,23 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              ref={mobileMenuRef}
+              id={MOBILE_MENU_ID}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`${MOBILE_MENU_ID}-title`}
               className="banc-dark-surface safe-area-drawer fixed bottom-0 right-0 top-0 z-50 flex w-[85%] max-w-[340px] flex-col bg-banc-dark-deep shadow-2xl lg:hidden"
             >
               {/* Mobile Header */}
               <div className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-4">
-                <span className="text-lg font-semibold text-white">Menu</span>
+                <span id={`${MOBILE_MENU_ID}-title`} className="text-lg font-semibold text-white">Menu</span>
                 <button
+                  type="button"
                   onClick={() => setMobileOpen(false)}
                   aria-label="Close menu"
-                  className="flex h-11 w-11 items-center justify-center rounded-lg text-white/70"
+                  className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] text-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
 
@@ -312,6 +360,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                     <div className="flex-1">
                       <p className="font-medium text-white">{session.user?.name}</p>
                       <button 
+                        type="button"
                         onClick={() => signOut()}
                         className="text-xs text-white/50 hover:text-white"
                       >
@@ -352,11 +401,15 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                           </Link>
                           {hasDropdown && (
                             <button
+                              type="button"
                               onClick={() => setMobileExpanded(isExpanded ? null : item.name)}
-                              className="flex h-11 w-11 items-center justify-center rounded-lg text-white/60 hover:bg-white/5 active:bg-white/10 transition-colors"
-                              aria-label={isExpanded ? "Collapse menu" : "Expand menu"}
+                              className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] text-white/60 hover:bg-white/5 active:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
+                              aria-label={isExpanded ? `Collapse ${item.name} menu` : `Expand ${item.name} menu`}
+                              aria-expanded={isExpanded}
+                              aria-controls={`${MOBILE_MENU_ID}-${item.name.toLowerCase()}`}
                             >
                               <ChevronDown 
+                                aria-hidden="true"
                                 className={cn(
                                   "h-5 w-5 transition-transform duration-200",
                                   isExpanded && "rotate-180"
@@ -368,6 +421,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                         
                         {hasDropdown && isExpanded && (
                           <motion.div 
+                            id={`${MOBILE_MENU_ID}-${item.name.toLowerCase()}`}
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}

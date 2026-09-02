@@ -76,7 +76,7 @@ export default function FavoritesList() {
           Start browsing properties and click the heart icon to save your favorites here.
         </p>
         <Link href="/sales/properties" className="mt-6">
-          <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white">
+          <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white">
             Browse Properties
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -122,7 +122,7 @@ export default function FavoritesList() {
           <div className="flex items-center justify-between p-4">
             <div>
               {favorite.propertyPrice && (
-                <p className="text-lg font-bold text-[#4AC8E8]">
+                <p className="text-lg font-bold text-banc-sky">
                   {favorite.propertyPrice}
                 </p>
               )}
@@ -134,7 +134,7 @@ export default function FavoritesList() {
               <Link href={`/sales/properties/${favorite.propertyId}`}>
                 <Button
                   size="sm"
-                  className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white"
+                  className="bg-banc-sky hover:bg-banc-sky-dark text-white"
                 >
                   View
                 </Button>

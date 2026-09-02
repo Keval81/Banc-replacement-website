@@ -15,11 +15,11 @@ export const revalidate = 3600;
 
 export default function TrackRecordPage() {
   return (
-    <div className="bg-white text-[#2C2A27]">
+    <div className="bg-white text-banc-dark">
       <Header />
 
       {/* Hero */}
-      <section className="relative bg-[#1A1917] py-24 lg:py-32">
+      <section className="relative bg-banc-dark-deep py-24 lg:py-32">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -27,11 +27,11 @@ export default function TrackRecordPage() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8] mb-4">Results</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-banc-sky mb-4">Results</p>
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
               Impressive Track Record
             </h1>
@@ -46,21 +46,21 @@ export default function TrackRecordPage() {
       {/* Sold properties CTA */}
       <section className="py-20">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8]">Recent Success</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-banc-sky">Recent Success</p>
           <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">See What We&apos;ve Sold</h2>
-          <p className="mt-4 text-lg text-[#8A8880]">
+          <p className="mt-4 text-lg text-banc-grey">
             Browse the properties we have sold and let across Cuffley, Goffs Oak, Cheshunt,
             Northaw and the surrounding villages.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/sold-prices">
-              <Button variant="outline" className="border-[#4AC8E8] text-[#4AC8E8] hover:bg-[#4AC8E8] hover:text-white">
+              <Button variant="outline" className="border-banc-sky text-banc-sky hover:bg-banc-sky hover:text-white">
                 View Sold Properties
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/sales/properties">
-              <Button variant="outline" className="border-[#1A1917] text-[#1A1917] hover:bg-[#1A1917] hover:text-white">
+              <Button variant="outline" className="border-banc-dark-deep text-banc-dark-deep hover:bg-banc-dark-deep hover:text-white">
                 Current Properties
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -70,10 +70,10 @@ export default function TrackRecordPage() {
       </section>
 
       {/* Testimonial — verbatim from bancproperty.com/reviews */}
-      <section className="bg-[#F4F3F1] py-20">
+      <section className="bg-banc-grey-pale py-20">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <div className="text-6xl text-[#4AC8E8] opacity-30">&quot;</div>
-          <blockquote className="text-2xl font-medium text-[#2C2A27] -mt-8">
+          <div className="text-6xl text-banc-sky opacity-30">&quot;</div>
+          <blockquote className="text-2xl font-medium text-banc-dark -mt-8">
             You guys are brilliant, when you valued our property at a much higher price than other
             agents we were sceptical we could achieve that but it sold for exactly that. You really
             know what you&apos;re talking about and because of your expert knowledge we were able to
@@ -81,10 +81,10 @@ export default function TrackRecordPage() {
           </blockquote>
           <div className="mt-6">
             <p className="font-semibold">Lesley &amp; James</p>
-            <p className="text-[#8A8880]">Beverley Gardens, Cheshunt</p>
+            <p className="text-banc-grey">Beverley Gardens, Cheshunt</p>
           </div>
           <div className="mt-8">
-            <Link href="/reviews" className="text-[#4AC8E8] font-medium hover:underline">
+            <Link href="/reviews" className="text-banc-sky font-medium hover:underline">
               Read all client reviews
             </Link>
           </div>
@@ -92,7 +92,7 @@ export default function TrackRecordPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[#4AC8E8] py-16">
+      <section className="bg-banc-sky py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
           <h2 className="text-3xl font-semibold text-white sm:text-4xl">
             Ready to achieve exceptional results?
@@ -101,7 +101,7 @@ export default function TrackRecordPage() {
             Let us put our track record to work for you.
           </p>
           <Link href="/valuation">
-            <Button className="mt-8 bg-white text-[#4AC8E8] hover:bg-white/90 px-8 py-6 text-base">
+            <Button className="mt-8 bg-white text-banc-sky hover:bg-white/90 px-8 py-6 text-base">
               Book Your Valuation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

@@ -67,8 +67,8 @@ export default function PushNotificationPrompt() {
         >
           <div className="bg-white rounded-xl shadow-2xl border p-4">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-full flex items-center justify-center shrink-0">
-                <Bell className="w-5 h-5 text-[#1a4d5c]" />
+              <div className="w-10 h-10 bg-banc-teal/10 rounded-full flex items-center justify-center shrink-0">
+                <Bell className="w-5 h-5 text-banc-teal" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-banc-dark">
@@ -82,7 +82,7 @@ export default function PushNotificationPrompt() {
                     size="sm"
                     onClick={handleEnable}
                     disabled={isLoading}
-                    className="bg-[#1a4d5c] hover:bg-[#1a4d5c]/90"
+                    className="bg-banc-teal hover:bg-banc-teal/90"
                   >
                     {isLoading ? (
                       <span className="animate-pulse">Enabling...</span>

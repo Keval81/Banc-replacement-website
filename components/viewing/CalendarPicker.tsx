@@ -111,34 +111,34 @@ export default function CalendarPicker({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
+    <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#E0DFDC]">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-banc-line">
         <button
           onClick={handlePrevMonth}
-          className="p-1 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+          className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
           aria-label="Previous month"
         >
-          <ChevronLeft className="w-5 h-5 text-[#8A8880]" />
+          <ChevronLeft className="w-5 h-5 text-banc-grey" />
         </button>
-        <h3 className="font-heading font-semibold text-[#1A1917]">
+        <h3 className="font-heading font-semibold text-banc-dark-deep">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </h3>
         <button
           onClick={handleNextMonth}
-          className="p-1 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+          className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
           aria-label="Next month"
         >
-          <ChevronRight className="w-5 h-5 text-[#8A8880]" />
+          <ChevronRight className="w-5 h-5 text-banc-grey" />
         </button>
       </div>
 
       {/* Day Names */}
-      <div className="grid grid-cols-7 gap-0 border-b border-[#E0DFDC]">
+      <div className="grid grid-cols-7 gap-0 border-b border-banc-line">
         {dayNames.map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-xs font-medium text-[#8A8880] uppercase"
+            className="py-2 text-center text-xs font-medium text-banc-grey uppercase"
           >
             {day}
           </div>
@@ -169,12 +169,12 @@ export default function CalendarPicker({
               className={`
                 aspect-square flex items-center justify-center text-sm
                 transition-colors relative
-                ${disabled ? "text-[#E0DFDC] cursor-not-allowed" : ""}
+                ${disabled ? "text-banc-line cursor-not-allowed" : ""}
                 ${
                   selected
-                    ? "bg-[#4AC8E8] text-white font-medium"
+                    ? "bg-banc-sky text-white font-medium"
                     : !disabled
-                    ? "hover:bg-[#F4F3F1] text-[#1A1917]"
+                    ? "hover:bg-banc-grey-pale text-banc-dark-deep"
                     : ""
                 }
               `}
@@ -182,7 +182,7 @@ export default function CalendarPicker({
               {day}
               {/* Available indicator dot */}
               {!disabled && available && !selected && (
-                <span className="absolute bottom-1 w-1 h-1 bg-[#4AC8E8] rounded-full" />
+                <span className="absolute bottom-1 w-1 h-1 bg-banc-sky rounded-full" />
               )}
             </button>
           );

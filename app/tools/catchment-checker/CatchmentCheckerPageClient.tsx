@@ -126,22 +126,22 @@ export default function CatchmentCheckerPage() {
         {/* Progress Steps */}
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 ${step === 'postcode' ? 'text-[#4AC8E8]' : 'text-green-600'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'postcode' ? 'bg-[#4AC8E8] text-white' : 'bg-green-100'}`}>
+            <div className={`flex items-center gap-2 ${step === 'postcode' ? 'text-banc-sky' : 'text-green-600'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'postcode' ? 'bg-banc-sky text-white' : 'bg-green-100'}`}>
                 {step === 'postcode' ? '1' : <CheckCircle className="h-5 w-5" />}
               </div>
               <span className="text-sm font-medium hidden sm:block">Enter Postcode</span>
             </div>
             <ArrowRight className="h-4 w-4 text-banc-grey" />
-            <div className={`flex items-center gap-2 ${step === 'school' ? 'text-[#4AC8E8]' : step === 'result' ? 'text-green-600' : 'text-banc-grey'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'school' ? 'bg-[#4AC8E8] text-white' : step === 'result' ? 'bg-green-100 text-green-600' : 'bg-banc-grey-pale'}`}>
+            <div className={`flex items-center gap-2 ${step === 'school' ? 'text-banc-sky' : step === 'result' ? 'text-green-600' : 'text-banc-grey'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'school' ? 'bg-banc-sky text-white' : step === 'result' ? 'bg-green-100 text-green-600' : 'bg-banc-grey-pale'}`}>
                 {step === 'result' ? <CheckCircle className="h-5 w-5" /> : '2'}
               </div>
               <span className="text-sm font-medium hidden sm:block">Select School</span>
             </div>
             <ArrowRight className="h-4 w-4 text-banc-grey" />
-            <div className={`flex items-center gap-2 ${step === 'result' ? 'text-[#4AC8E8]' : 'text-banc-grey'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'result' ? 'bg-[#4AC8E8] text-white' : 'bg-banc-grey-pale'}`}>
+            <div className={`flex items-center gap-2 ${step === 'result' ? 'text-banc-sky' : 'text-banc-grey'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'result' ? 'bg-banc-sky text-white' : 'bg-banc-grey-pale'}`}>
                 3
               </div>
               <span className="text-sm font-medium hidden sm:block">View Result</span>
@@ -162,8 +162,8 @@ export default function CatchmentCheckerPage() {
                 className="p-8"
               >
                 <div className="max-w-md mx-auto text-center">
-                  <div className="w-16 h-16 bg-[#4AC8E8] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <MapPin className="h-8 w-8 text-[#4AC8E8]" />
+                  <div className="w-16 h-16 bg-banc-sky bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <MapPin className="h-8 w-8 text-banc-sky" />
                   </div>
                   <h2 className="text-xl font-semibold text-banc-dark mb-2">Enter a Postcode</h2>
                   <p className="text-banc-grey mb-6">We&apos;ll find schools near this location</p>
@@ -179,7 +179,7 @@ export default function CatchmentCheckerPage() {
                     <Button 
                       onClick={fetchSchools} 
                       disabled={!postcode || loadingSchools}
-                      className="bg-[#4AC8E8] hover:bg-[#4AC8E8]/90"
+                      className="bg-banc-sky hover:bg-banc-sky/90"
                     >
                       {loadingSchools ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
                     </Button>
@@ -223,7 +223,7 @@ export default function CatchmentCheckerPage() {
                       transition={{ delay: index * 0.03 }}
                       onClick={() => checkCatchment(school)}
                       disabled={loading}
-                      className="flex items-start gap-4 p-4 text-left border border-banc-grey/20 rounded-lg hover:border-[#4AC8E8] hover:bg-blue-50 transition-colors"
+                      className="flex items-start gap-4 p-4 text-left border border-banc-grey/20 rounded-lg hover:border-banc-sky hover:bg-blue-50 transition-colors"
                     >
                       <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
                         <School className="h-6 w-6 text-purple-600" />
@@ -333,7 +333,7 @@ export default function CatchmentCheckerPage() {
                   <Button variant="outline" onClick={() => setStep('school')}>
                     Check Another School
                   </Button>
-                  <Button onClick={reset} className="bg-[#4AC8E8] hover:bg-[#4AC8E8]/90">
+                  <Button onClick={reset} className="bg-banc-sky hover:bg-banc-sky/90">
                     Start Over
                   </Button>
                 </div>

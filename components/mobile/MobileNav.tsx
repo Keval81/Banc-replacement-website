@@ -11,6 +11,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 interface MobileBottomNavProps {
   className?: string;
@@ -43,7 +44,7 @@ const navItems = [
   },
   { 
     name: "Call", 
-    href: "tel:01707877781", 
+    href: BANC_CONTACT.callHref, 
     icon: Phone,
     exact: false,
     isExternal: true 
@@ -164,7 +165,7 @@ export function MobilePropertyCTA({
     >
       <div className="flex gap-3">
         <a
-          href="tel:01707877781"
+          href={BANC_CONTACT.callHref}
           className={cn(
             "flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 font-medium",
             "border border-border bg-muted text-foreground",

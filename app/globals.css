@@ -12,12 +12,16 @@
   --banc-grey:         #8A8880;
   --banc-muted-readable: #5F5D57;
   --banc-grey-pale:    #F4F3F1;
-  --banc-focus:        #0B657A;
+  --banc-focus:        #0B6F89;
+  --banc-focus-hover:  #075E75;
   --banc-focus-dark:   #4AC8E8;
   --banc-gold:         #D4AF37;
   --banc-gold-light:   #FBF5DC;
   --banc-gold-dark:    #7A5C00;
   --banc-white:        #FFFFFF;
+  --banc-line:         #E0DFDC;
+  --banc-teal:         #1a4d5c;
+  --banc-cream:        #F6F2EA;
 
   /* Font families */
   --font-serif:        'Source Serif 4', Georgia, serif;
@@ -45,8 +49,8 @@
   --accent-foreground: var(--banc-sky-dark);
   --destructive: #EF4444;
   --destructive-foreground: var(--banc-white);
-  --border: #E0DFDC;
-  --input: #E0DFDC;
+  --border: var(--banc-line);
+  --input: var(--banc-line);
   --ring: var(--banc-focus);
   --radius: 0.5rem;
 }
@@ -65,10 +69,14 @@
   --color-banc-muted-readable: var(--banc-muted-readable);
   --color-banc-grey-pale: var(--banc-grey-pale);
   --color-banc-focus: var(--banc-focus);
+  --color-banc-focus-hover: var(--banc-focus-hover);
   --color-banc-gold: var(--banc-gold);
   --color-banc-gold-light: var(--banc-gold-light);
   --color-banc-gold-dark: var(--banc-gold-dark);
   --color-banc-white: var(--banc-white);
+  --color-banc-line: var(--banc-line);
+  --color-banc-teal: var(--banc-teal);
+  --color-banc-cream: var(--banc-cream);
   --font-sans: 'DM Sans', -apple-system, sans-serif;
   --font-serif: 'Source Serif 4', Georgia, serif;
   --font-heading: 'DM Sans', -apple-system, sans-serif;

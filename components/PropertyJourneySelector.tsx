@@ -30,7 +30,7 @@ export function PropertyJourneySelector({
             href={action.href}
             className={`group relative flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-[15px] border px-4 py-3 shadow-[0_14px_36px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep motion-reduce:transition-none ${
               isPrimary
-                ? "border-white/55 bg-[#F6F2EA]/95 text-banc-dark-deep hover:-translate-y-0.5 hover:bg-white"
+                ? "border-white/55 bg-banc-cream/95 text-banc-dark-deep hover:-translate-y-0.5 hover:bg-white"
                 : "border-white/30 bg-banc-dark-deep/68 text-white hover:-translate-y-0.5 hover:border-white/50 hover:bg-banc-dark-deep/82"
             }`}
           >

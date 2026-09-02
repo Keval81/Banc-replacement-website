@@ -48,7 +48,7 @@ export default function SmartDescription({ property, variant = 'badges' }: Smart
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: index * 0.1 }}
-          className="inline-flex items-center gap-1.5 text-xs font-medium bg-gradient-to-r from-[#1a4d5c]/10 to-[#1a4d5c]/5 text-[#1a4d5c] px-2.5 py-1 rounded-full border border-[#1a4d5c]/20"
+          className="inline-flex items-center gap-1.5 text-xs font-medium bg-gradient-to-r from-banc-teal/10 to-banc-teal/5 text-banc-teal px-2.5 py-1 rounded-full border border-banc-teal/20"
         >
           {iconMap[highlight]}
           {highlight}

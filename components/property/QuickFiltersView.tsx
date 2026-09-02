@@ -55,8 +55,8 @@ export default function QuickFilters({ filters, onFilterChange, className }: Qui
               }}
               className={cn(
                 "inline-flex min-h-11 shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-xl border px-4 text-sm font-medium transition-colors duration-200",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2",
-                active ? "border-[#0B6F89] bg-[#0B6F89] text-white shadow-md shadow-[#4AC8E8]/20" : "border-[#E0DFDC] bg-white text-[#5F5D57] hover:border-[#0B6F89] hover:text-[#0B6F89]",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2",
+                active ? "border-banc-focus bg-banc-focus text-white shadow-md shadow-banc-sky/20" : "border-banc-line bg-white text-banc-muted-readable hover:border-banc-focus hover:text-banc-focus",
               )}
             >
               <Icon className="h-4 w-4" />{filter.label}

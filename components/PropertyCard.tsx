@@ -23,7 +23,9 @@ import { getPropertyPhotoPresentation } from "@/lib/property-detail-view";
 import {
   buildPropertyHref,
   buildPropertyShareData,
+  isSameAddressText,
   shareProperty,
+  titleCaseAddress,
   type PropertyShareResult,
 } from "@/lib/property-view";
 import { cn } from "@/lib/utils";
@@ -57,10 +59,10 @@ interface PropertyCardProps {
   onCompareToggle?: () => void;
 }
 
-export function PropertyCard({
+function PropertyCardBase({
   id,
-  title,
-  address,
+  title: rawTitle,
+  address: rawAddress,
   price,
   tags,
   stats,
@@ -74,6 +76,11 @@ export function PropertyCard({
   canCompare = true,
   onCompareToggle,
 }: PropertyCardProps): React.ReactElement {
+  // CRM titles are often the raw uppercase address line; fold them into
+  // readable prose and don't print the address twice when it says the same.
+  const title = titleCaseAddress(rawTitle);
+  const address = titleCaseAddress(rawAddress);
+  const showAddressLine = !isSameAddressText(title, address);
   const photoPresentation = getPropertyPhotoPresentation(images);
   const safeImages = photoPresentation.items;
   const [imageIndex, setImageIndex] = React.useState(0);
@@ -226,7 +233,7 @@ export function PropertyCard({
             }
             aria-pressed={isCompared}
             className={cn(
-              "absolute right-3 top-3 z-20 flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-xs font-medium shadow-sm backdrop-blur-sm transition-colors sm:right-4 sm:top-4",
+              "absolute right-3 top-3 z-20 flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-xs font-medium shadow-sm backdrop-blur-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 sm:right-4 sm:top-4",
               isCompared
                 ? "border-banc-sky bg-banc-sky text-banc-dark"
                 : canCompare
@@ -248,7 +255,7 @@ export function PropertyCard({
             <button
               type="button"
               onClick={(event) => changeImage(event, -1)}
-              className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
               aria-label={`Previous image of ${title}`}
             >
               <ChevronLeft className="h-5 w-5" />
@@ -256,13 +263,18 @@ export function PropertyCard({
             <button
               type="button"
               onClick={(event) => changeImage(event, 1)}
-              className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/45 text-white opacity-100 backdrop-blur-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
               aria-label={`Next image of ${title}`}
             >
               <ChevronRight className="h-5 w-5" />
             </button>
-            <span className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm sm:bottom-4 sm:right-4">
-              {imageIndex + 1} / {safeImages.length}
+            <span
+              role="status"
+              aria-live="polite"
+              aria-label={`Image ${imageIndex + 1} of ${safeImages.length}`}
+              className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm sm:bottom-4 sm:right-4"
+            >
+              <span aria-hidden="true">{imageIndex + 1} / {safeImages.length}</span>
             </span>
           </>
         )}
@@ -275,9 +287,11 @@ export function PropertyCard({
         )}
       >
         <div className="min-w-0">
-          <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">
-            {address}
-          </p>
+          {showAddressLine && (
+            <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">
+              {address}
+            </p>
+          )}
           <h3 className="mt-2 line-clamp-2 font-heading text-xl font-medium leading-tight text-banc-dark sm:text-[1.35rem]">
             {title}
           </h3>
@@ -335,7 +349,7 @@ export function PropertyCard({
             }
             aria-pressed={favorited}
             className={cn(
-              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
+              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2",
               favorited
                 ? "border-banc-dark bg-banc-dark text-white"
                 : "border-banc-grey/30 text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale"
@@ -350,7 +364,7 @@ export function PropertyCard({
             onClick={handleShareClick}
             aria-label={`${shareLabel}: ${title}`}
             className={cn(
-              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
+              "relative z-20 flex h-11 w-11 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2",
               shareStatus === "copied"
                 ? "border-banc-sky bg-banc-sky/15 text-banc-dark"
                 : "border-banc-grey/30 text-banc-dark hover:border-banc-dark hover:bg-banc-grey-pale"
@@ -370,5 +384,10 @@ export function PropertyCard({
     </motion.article>
   );
 }
+
+// Pure presentation over props (favourites come from context), so memoising
+// keeps result grids from re-rendering every card on unrelated state changes.
+export const PropertyCard = React.memo(PropertyCardBase);
+PropertyCard.displayName = "PropertyCard";
 
 export default PropertyCard;

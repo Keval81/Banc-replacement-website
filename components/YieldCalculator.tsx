@@ -86,7 +86,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-[#1A1917] p-4", className)}>
+      <div className={cn("rounded-xl border border-white/10 bg-banc-dark-deep p-4", className)}>
         <div className="space-y-3">
           <div>
             <label className="mb-1.5 block text-xs text-white/60">Property Price</label>
@@ -98,7 +98,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £400,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
@@ -113,15 +113,15 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                 onChange={formatInput(setMonthlyRent)}
                 onBlur={() => formatCurrencyDisplay(monthlyRent, setMonthlyRent)}
                 placeholder="e.g. £1,500"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
 
           {propertyPriceNum > 0 && monthlyRentNum > 0 && (
-            <div className="rounded-lg bg-[#4AC8E8]/10 p-3 text-center">
+            <div className="rounded-lg bg-banc-sky/10 p-3 text-center">
               <p className="text-xs text-white/60">Gross Yield</p>
-              <p className="text-lg font-semibold text-[#4AC8E8]">
+              <p className="text-lg font-semibold text-banc-sky">
                 {formatPercent(result.grossYield)}
               </p>
             </div>
@@ -134,9 +134,9 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+      <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Calculator className="h-5 w-5 text-[#4AC8E8]" />
+          <Calculator className="h-5 w-5 text-banc-sky" />
           Investment Details
         </h3>
 
@@ -155,7 +155,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £400,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
@@ -174,7 +174,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                 onChange={formatInput(setMonthlyRent)}
                 onBlur={() => formatCurrencyDisplay(monthlyRent, setMonthlyRent)}
                 placeholder="e.g. £1,500"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
@@ -193,7 +193,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                 onChange={formatInput(setAnnualCosts)}
                 onBlur={() => formatCurrencyDisplay(annualCosts, setAnnualCosts)}
                 placeholder="e.g. £3,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
             <p className="mt-1 text-xs text-white/40">
@@ -212,14 +212,14 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
               className={cn(
                 "flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all",
                 includeMortgage
-                  ? "border-[#4AC8E8] bg-[#4AC8E8]/10"
+                  ? "border-banc-sky bg-banc-sky/10"
                   : "border-white/10 hover:border-white/20"
               )}
             >
               <div
                 className={cn(
                   "flex h-6 w-11 items-center rounded-full transition-colors",
-                  includeMortgage ? "bg-[#4AC8E8]" : "bg-white/20"
+                  includeMortgage ? "bg-banc-sky" : "bg-white/20"
                 )}
               >
                 <div
@@ -229,7 +229,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                   )}
                 />
               </div>
-              <span className={includeMortgage ? "text-[#4AC8E8]" : "text-white/70"}>
+              <span className={includeMortgage ? "text-banc-sky" : "text-white/70"}>
                 {includeMortgage ? "Mortgage Included" : "Cash Purchase"}
               </span>
             </button>
@@ -249,7 +249,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                   onChange={formatInput(setMortgageAmount)}
                   onBlur={() => formatCurrencyDisplay(mortgageAmount, setMortgageAmount)}
                   placeholder="e.g. £300,000"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
                 />
               </div>
             </div>
@@ -262,7 +262,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                   value={mortgageRate}
                   onChange={(e) => setMortgageRate(Number(e.target.value))}
                   placeholder="e.g. 5.5"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
                 />
                 <Percent className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
               </div>
@@ -272,12 +272,12 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
 
         {/* Default Costs Suggestion */}
         {defaultCosts && annualCosts === "" && (
-          <div className="mt-4 rounded-xl border border-[#4AC8E8]/30 bg-[#4AC8E8]/10 p-4">
+          <div className="mt-4 rounded-xl border border-banc-sky/30 bg-banc-sky/10 p-4">
             <p className="flex items-start gap-2 text-sm text-white/70">
-              <Info className="h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
+              <Info className="h-5 w-5 flex-shrink-0 text-banc-sky" />
               <span>
                 Based on your rent, typical annual costs would be approximately{" "}
-                <strong className="text-[#4AC8E8]">{formatCurrency(defaultCosts.total)}</strong>:
+                <strong className="text-banc-sky">{formatCurrency(defaultCosts.total)}</strong>:
                 <br />
                 • Void allowance (5%): {formatCurrency(defaultCosts.voids)}
                 <br />
@@ -288,7 +288,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
             </p>
             <button
               onClick={() => setAnnualCosts(formatCurrency(defaultCosts.total))}
-              className="mt-2 text-sm text-[#4AC8E8] hover:underline"
+              className="mt-2 text-sm text-banc-sky hover:underline"
             >
               Use these values
             </button>
@@ -301,23 +301,23 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
         <>
           {/* Main Results */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Gross Yield</p>
-              <p className="my-1 text-2xl font-bold text-[#4AC8E8]">{formatPercent(result.grossYield)}</p>
+              <p className="my-1 text-2xl font-bold text-banc-sky">{formatPercent(result.grossYield)}</p>
               <p className="text-xs text-white/40">Before costs</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Net Yield</p>
               <p className="my-1 text-2xl font-bold text-white">{formatPercent(result.netYield)}</p>
               <p className="text-xs text-white/40">After operating costs</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Annual Income</p>
               <p className="my-1 text-2xl font-bold text-white">{formatCurrency(result.netIncome)}</p>
               <p className="text-xs text-white/40">Net after costs</p>
             </div>
             {includeMortgage && result.roi !== undefined && (
-              <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+              <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
                 <p className="text-sm text-white/60">ROI</p>
                 <p
                   className={cn(
@@ -334,9 +334,9 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
 
           {/* Cash Flow Analysis */}
           {includeMortgage && result.cashFlow !== undefined && (
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
               <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-                <Wallet className="h-5 w-5 text-[#4AC8E8]" />
+                <Wallet className="h-5 w-5 text-banc-sky" />
                 Cash Flow Analysis
               </h3>
               <div className="grid gap-4 sm:grid-cols-3">
@@ -374,9 +374,9 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
           )}
 
           {/* Yield Breakdown */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <PieChart className="h-5 w-5 text-[#4AC8E8]" />
+              <PieChart className="h-5 w-5 text-banc-sky" />
               Income Breakdown
             </h3>
             <div className="space-y-4">
@@ -409,12 +409,12 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                   </p>
                 </div>
               )}
-              <div className="flex items-center justify-between rounded-xl bg-[#4AC8E8]/10 p-4">
+              <div className="flex items-center justify-between rounded-xl bg-banc-sky/10 p-4">
                 <div className="flex items-center gap-3">
-                  <Wallet className="h-5 w-5 text-[#4AC8E8]" />
+                  <Wallet className="h-5 w-5 text-banc-sky" />
                   <span className="font-medium text-white">Net Annual Income</span>
                 </div>
-                <p className="text-lg font-semibold text-[#4AC8E8]">
+                <p className="text-lg font-semibold text-banc-sky">
                   {formatCurrency(result.netIncome)}
                 </p>
               </div>
@@ -422,7 +422,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
           </div>
 
           {/* Investment Assessment */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 text-lg font-semibold text-white">Investment Assessment</h3>
             <div className="grid gap-4 sm:grid-cols-2">
               <div
@@ -469,7 +469,7 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/contact">
-              <Button className="w-full bg-[#4AC8E8] text-white hover:bg-[#1A9BBF] sm:w-auto">
+              <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark sm:w-auto">
                 Get Lettings Advice
               </Button>
             </Link>

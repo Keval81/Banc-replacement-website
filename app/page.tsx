@@ -72,7 +72,7 @@ export default function Home() {
   return (
     <>
       <JsonLd data={homepageStructuredData} />
-      <div className="bg-white text-[#2C2A27]">
+      <div className="bg-white text-banc-dark">
         <Header transparent />
         <main>
           <Hero />

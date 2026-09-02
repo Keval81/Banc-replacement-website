@@ -16,7 +16,7 @@ export const revalidate = 3600;
 
 export default function MortgageCalculatorPage() {
   return (
-    <div className="min-h-screen bg-[#1A1917]">
+    <div className="min-h-screen bg-banc-dark-deep">
       <Header />
 
       <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
@@ -24,7 +24,7 @@ export default function MortgageCalculatorPage() {
           {/* Back Link */}
           <Link
             href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-[#4AC8E8]"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-banc-sky"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
@@ -49,7 +49,7 @@ export default function MortgageCalculatorPage() {
           {/* Info Section */}
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <Info className="h-5 w-5 text-[#4AC8E8]" />
+              <Info className="h-5 w-5 text-banc-sky" />
               About Mortgage Calculations
             </h2>
             <div className="space-y-4 text-sm leading-relaxed text-white/70">

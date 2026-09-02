@@ -203,11 +203,11 @@ export default function AlertsPage() {
   const pausedAlerts = alerts.filter((a) => !a.isActive);
 
   return (
-    <div className="bg-white text-[#2C2A27] min-h-screen">
+    <div className="bg-white text-banc-dark min-h-screen">
       <Header />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#1A1917] to-[#1a1c1f] py-12">
+      <section className="bg-gradient-to-br from-banc-dark-deep to-[#1a1c1f] py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -227,7 +227,7 @@ export default function AlertsPage() {
               </Link>
               <Button 
                 onClick={() => setShowCreateModal(true)}
-                className="bg-[#4AC8E8] hover:bg-[#1A9BBF]"
+                className="bg-banc-sky hover:bg-banc-sky-dark"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Alert
@@ -238,24 +238,24 @@ export default function AlertsPage() {
       </section>
 
       {/* Stats */}
-      <section className="border-b border-[#E0DFDC] bg-[#F4F3F1]">
+      <section className="border-b border-banc-line bg-banc-grey-pale">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
+            <div className="bg-white rounded-xl p-4 border border-banc-line">
               <p className="text-sm text-banc-grey">Total Alerts</p>
               <p className="text-2xl font-semibold">{alerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
+            <div className="bg-white rounded-xl p-4 border border-banc-line">
               <p className="text-sm text-banc-grey">Active</p>
-              <p className="text-2xl font-semibold text-[#4AC8E8]">{activeAlerts.length}</p>
+              <p className="text-2xl font-semibold text-banc-sky">{activeAlerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
+            <div className="bg-white rounded-xl p-4 border border-banc-line">
               <p className="text-sm text-banc-grey">Paused</p>
               <p className="text-2xl font-semibold text-banc-grey">{pausedAlerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-[#E0DFDC]">
+            <div className="bg-white rounded-xl p-4 border border-banc-line">
               <p className="text-sm text-banc-grey">Total Matches</p>
-              <p className="text-2xl font-semibold text-[#4AC8E8]">
+              <p className="text-2xl font-semibold text-banc-sky">
                 {alerts.reduce((sum, a) => sum + a.matchCount, 0)}
               </p>
             </div>
@@ -268,7 +268,7 @@ export default function AlertsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {isLoading ? (
             <div className="flex justify-center py-16">
-              <div className="animate-spin w-8 h-8 border-2 border-[#4AC8E8] border-t-transparent rounded-full" />
+              <div className="animate-spin w-8 h-8 border-2 border-banc-sky border-t-transparent rounded-full" />
             </div>
           ) : alerts.length === 0 ? (
             <motion.div
@@ -289,7 +289,7 @@ export default function AlertsPage() {
                 </Link>
                 <Button 
                   onClick={() => setShowCreateModal(true)}
-                  className="bg-[#4AC8E8] hover:bg-[#1A9BBF]"
+                  className="bg-banc-sky hover:bg-banc-sky-dark"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Alert
@@ -302,7 +302,7 @@ export default function AlertsPage() {
               {activeAlerts.length > 0 && (
                 <div>
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-[#4AC8E8]" />
+                    <CheckCircle2 className="w-5 h-5 text-banc-sky" />
                     Active Alerts ({activeAlerts.length})
                   </h2>
                   <div className="space-y-4">
@@ -382,7 +382,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
       layout
       className={cn(
         "bg-white rounded-xl border overflow-hidden transition-shadow",
-        alert.isActive ? "border-[#E0DFDC]" : "border-banc-grey/20",
+        alert.isActive ? "border-banc-line" : "border-banc-grey/20",
         isExpanded && "shadow-lg"
       )}
     >
@@ -393,11 +393,11 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
       >
         <div className={cn(
           "w-10 h-10 rounded-full flex items-center justify-center",
-          alert.isActive ? "bg-[#4AC8E8]/10" : "bg-banc-grey-pale"
+          alert.isActive ? "bg-banc-sky/10" : "bg-banc-grey-pale"
         )}>
           <Bell className={cn(
             "w-5 h-5",
-            alert.isActive ? "text-[#4AC8E8]" : "text-banc-grey"
+            alert.isActive ? "text-banc-sky" : "text-banc-grey"
           )} />
         </div>
         
@@ -425,7 +425,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             className={cn(
               "p-2 rounded-full transition-colors",
               alert.isActive 
-                ? "text-[#4AC8E8] hover:bg-[#4AC8E8]/10" 
+                ? "text-banc-sky hover:bg-banc-sky/10" 
                 : "text-banc-grey hover:bg-banc-grey-pale"
             )}
             title={alert.isActive ? "Pause alert" : "Resume alert"}
@@ -634,7 +634,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                   className={cn(
                     "p-3 rounded-lg border text-sm font-medium transition-colors",
                     formData.frequency === freq
-                      ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
+                      ? "border-banc-sky bg-banc-sky/10 text-banc-sky"
                       : "border-banc-grey/20 hover:border-banc-grey/30"
                   )}
                 >
@@ -679,7 +679,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
               <select
                 value={formData.beds}
                 onChange={(e) => setFormData({ ...formData, beds: e.target.value })}
-                className="w-full min-h-[48px] px-4 py-3 border border-banc-grey/20 rounded-xl focus:ring-2 focus:ring-[#4AC8E8] focus:border-[#4AC8E8] appearance-none cursor-pointer transition-colors hover:border-[#4AC8E8]/50 bg-white"
+                className="w-full min-h-[48px] px-4 py-3 border border-banc-grey/20 rounded-xl focus:ring-2 focus:ring-banc-sky focus:border-banc-sky appearance-none cursor-pointer transition-colors hover:border-banc-sky/50 bg-white"
               >
                 <option value="">Any</option>
                 <option value="1">1+</option>
@@ -725,7 +725,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
             <Button type="button" variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" className="flex-1 bg-[#4AC8E8] hover:bg-[#1A9BBF]">
+            <Button type="submit" className="flex-1 bg-banc-sky hover:bg-banc-sky-dark">
               <Bell className="w-4 h-4 mr-2" />
               Create Alert
             </Button>

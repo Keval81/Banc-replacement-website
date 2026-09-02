@@ -132,25 +132,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <Header />
 
         {/* Breadcrumb */}
-        <div className="bg-[#F4F3F1] border-b border-[#E0DFDC]">
+        <div className="bg-banc-grey-pale border-b border-banc-line">
           <div className="mx-auto max-w-7xl px-4 lg:px-10 py-3">
             <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2 text-sm text-[#8A8880]">
+              <ol className="flex items-center gap-2 text-sm text-banc-grey">
                 <li>
-                  <Link href="/" className="hover:text-[#4AC8E8] transition-colors">
+                  <Link href="/" className="hover:text-banc-sky transition-colors">
                     Home
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
                 <li>
-                  <Link href="/blog" className="hover:text-[#4AC8E8] transition-colors">
+                  <Link href="/blog" className="hover:text-banc-sky transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
                 <li
                   aria-current="page"
-                  className="text-[#2C2A27] truncate max-w-[200px] sm:max-w-[400px]"
+                  className="text-banc-dark truncate max-w-[200px] sm:max-w-[400px]"
                 >
                   {post.title}
                 </li>
@@ -164,16 +164,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mb-4">
             <Link
               href={`/blog/category/${post.category}`}
-              className="inline-block rounded-full bg-[#4AC8E8]/10 px-3 py-1 text-sm font-medium text-[#4AC8E8] capitalize"
+              className="inline-block rounded-full bg-banc-sky/10 px-3 py-1 text-sm font-medium text-banc-sky capitalize"
             >
               {post.category.replace("-", " ")}
             </Link>
           </div>
-          <h1 className="text-2xl font-bold text-[#2C2A27] sm:text-3xl lg:text-4xl">
+          <h1 className="text-2xl font-bold text-banc-dark sm:text-3xl lg:text-4xl">
             {post.title}
           </h1>
-          <p className="mt-4 text-lg text-[#8A8880]">{post.description}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[#8A8880]">
+          <p className="mt-4 text-lg text-banc-grey">{post.description}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-banc-grey">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {formatDate(post.date)}
@@ -208,7 +208,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
             {/* Main Content */}
             <article className="max-w-none">
-              <div className="text-[#3D3B37]">
+              <div className="text-banc-dark-mid">
                 {post.content.trim() !== "" ? (
                   <MdxContent source={post.content} />
                 ) : (
@@ -221,7 +221,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-[#8A8880]"
+                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-banc-grey"
                   >
                     <Tag className="h-3 w-3" />
                     {tag}
@@ -230,8 +230,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               </div>
 
               {/* Share */}
-              <div className="mt-8 border-t border-[#E0DFDC] pt-8">
-                <p className="mb-4 text-sm font-medium text-[#8A8880]">Share this article</p>
+              <div className="mt-8 border-t border-banc-line pt-8">
+                <p className="mb-4 text-sm font-medium text-banc-grey">Share this article</p>
                 <div className="flex gap-3">
                   <Button variant="outline" size="sm" className="gap-2">
                     <Facebook className="h-4 w-4" />
@@ -253,8 +253,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <aside className="space-y-8">
               {/* Author Card */}
               {author && (
-                <div className="rounded-xl border border-[#E0DFDC] p-6">
-                  <p className="mb-4 text-sm font-medium text-[#8A8880]">Written by</p>
+                <div className="rounded-xl border border-banc-line p-6">
+                  <p className="mb-4 text-sm font-medium text-banc-grey">Written by</p>
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-full">
                       <Image
@@ -265,22 +265,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       />
                     </div>
                     <div>
-                      <p className="font-semibold text-[#2C2A27]">{author.name}</p>
-                      <p className="text-sm text-[#8A8880]">{author.role}</p>
+                      <p className="font-semibold text-banc-dark">{author.name}</p>
+                      <p className="text-sm text-banc-grey">{author.role}</p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm text-[#8A8880]">{author.bio}</p>
+                  <p className="mt-4 text-sm text-banc-grey">{author.bio}</p>
                 </div>
               )}
 
               {/* CTA */}
-              <div className="rounded-xl bg-[#4AC8E8] p-6 text-white">
+              <div className="rounded-xl bg-banc-sky p-6 text-white">
                 <h3 className="font-semibold">Looking to buy or sell?</h3>
                 <p className="mt-2 text-sm text-white/90">
                   Get expert advice from our team of property professionals.
                 </p>
                 <Link href="/contact">
-                  <Button className="mt-4 w-full bg-white text-[#4AC8E8] hover:bg-white/90">
+                  <Button className="mt-4 w-full bg-white text-banc-sky hover:bg-white/90">
                     Contact Us
                   </Button>
                 </Link>
@@ -291,9 +291,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="bg-[#F4F3F1] py-12 lg:py-16">
+          <section className="bg-banc-grey-pale py-12 lg:py-16">
             <div className="mx-auto max-w-7xl px-4 lg:px-10">
-              <h2 className="mb-8 text-xl font-semibold text-[#2C2A27]">Related Articles</h2>
+              <h2 className="mb-8 text-xl font-semibold text-banc-dark">Related Articles</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedPosts.map((relatedPost) => (
                   <article
@@ -310,10 +310,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         />
                       </div>
                       <div className="p-5">
-                        <h3 className="font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8]">
+                        <h3 className="font-semibold text-banc-dark transition-colors group-hover:text-banc-sky">
                           {relatedPost.title}
                         </h3>
-                        <p className="mt-2 text-sm text-[#8A8880] line-clamp-2">
+                        <p className="mt-2 text-sm text-banc-grey line-clamp-2">
                           {relatedPost.description}
                         </p>
                       </div>
@@ -329,7 +329,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-10">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-[#4AC8E8] hover:underline"
+            className="inline-flex items-center gap-2 text-banc-sky hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog

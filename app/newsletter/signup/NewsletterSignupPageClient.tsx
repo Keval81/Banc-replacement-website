@@ -76,7 +76,7 @@ export default function NewsletterSignupPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       {/* Hero */}
-      <div className="bg-[#1a4d5c] text-white py-16">
+      <div className="bg-banc-teal text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <Mail className="w-12 h-12 mx-auto mb-6 opacity-80" />
           <h1 className="text-4xl font-bold mb-4">
@@ -97,8 +97,8 @@ export default function NewsletterSignupPage() {
               <h2 className="text-xl font-semibold text-banc-dark">What You&apos;ll Receive</h2>
               
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center shrink-0">
-                  <Home className="w-5 h-5 text-[#1a4d5c]" />
+                <div className="w-10 h-10 bg-banc-teal/10 rounded-lg flex items-center justify-center shrink-0">
+                  <Home className="w-5 h-5 text-banc-teal" />
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">New Property Alerts</h3>
@@ -107,8 +107,8 @@ export default function NewsletterSignupPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center shrink-0">
-                  <TrendingUp className="w-5 h-5 text-[#1a4d5c]" />
+                <div className="w-10 h-10 bg-banc-teal/10 rounded-lg flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-5 h-5 text-banc-teal" />
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Market Updates</h3>
@@ -117,8 +117,8 @@ export default function NewsletterSignupPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center shrink-0">
-                  <Tag className="w-5 h-5 text-[#1a4d5c]" />
+                <div className="w-10 h-10 bg-banc-teal/10 rounded-lg flex items-center justify-center shrink-0">
+                  <Tag className="w-5 h-5 text-banc-teal" />
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Price Drop Alerts</h3>
@@ -127,8 +127,8 @@ export default function NewsletterSignupPage() {
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center shrink-0">
-                  <FileText className="w-5 h-5 text-[#1a4d5c]" />
+                <div className="w-10 h-10 bg-banc-teal/10 rounded-lg flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5 text-banc-teal" />
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Expert Insights</h3>
@@ -240,7 +240,7 @@ export default function NewsletterSignupPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#1a4d5c] hover:bg-[#1a4d5c]/90"
+                  className="w-full bg-banc-teal hover:bg-banc-teal/90"
                   disabled={isLoading}
                 >
                   {isLoading ? (

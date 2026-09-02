@@ -24,13 +24,13 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
         </p>
         <a
           href={actions.primaryHref}
-          className="mt-6 flex h-12 items-center justify-center rounded-full bg-banc-sky px-5 font-medium text-banc-dark hover:bg-banc-sky-mid"
+          className="mt-6 flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-banc-sky px-5 font-medium text-banc-dark hover:bg-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
           {actions.primaryLabel}
         </a>
         <a
           href={actions.secondaryHref}
-          className="mt-3 flex h-12 items-center justify-center rounded-full border border-banc-dark/20 px-5 font-medium text-banc-dark"
+          className="mt-3 flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-5 font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
           {actions.secondaryLabel}
         </a>
@@ -83,13 +83,13 @@ export function PropertyMobileActions({ property }: PropertyContactActionsProps)
       <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 py-3 pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)]">
         <a
           href={actions.primaryHref}
-          className="flex h-12 items-center justify-center rounded-full bg-banc-sky px-4 text-center text-sm font-medium text-banc-dark"
+          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-banc-sky px-4 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
           {actions.primaryLabel}
         </a>
         <a
           href={actions.secondaryHref}
-          className="flex h-12 items-center justify-center rounded-full border border-banc-dark/20 px-4 text-center text-sm font-medium text-banc-dark"
+          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-4 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
           {actions.secondaryLabel}
         </a>

@@ -81,7 +81,7 @@ export default function LiveReviewFeed({ reviews = mockReviews }: LiveReviewFeed
   if (!review) return null;
 
   return (
-    <div className="bg-gradient-to-r from-[#1a4d5c] to-[#2a5d6c] text-white py-3 overflow-hidden">
+    <div className="bg-gradient-to-r from-banc-teal to-[#2a5d6c] text-white py-3 overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center gap-4">
           {/* Live Indicator */}

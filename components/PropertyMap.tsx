@@ -43,7 +43,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   if (points.length === 0) {
     return (
       <div className="flex h-full items-center justify-center px-6 text-center">
-        <p className="text-[#5F5D57]">
+        <p className="text-banc-muted-readable">
           Map locations are unavailable for these properties.
         </p>
       </div>
@@ -53,7 +53,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   if (!apiKey) {
     return (
       <div className="h-full flex items-center justify-center text-center px-6">
-        <p className="text-[#8A8880]">
+        <p className="text-banc-grey">
           Map unavailable — set <code>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to enable the map view.
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   if (!isLoaded) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-[#8A8880]">Loading map…</p>
+        <p className="text-banc-grey">Loading map…</p>
       </div>
     );
   }
@@ -100,15 +100,15 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
                     className="w-full h-24 object-cover rounded mb-2"
                   />
                 ) : null}
-                <p className="text-sm font-semibold text-[#1A1917]">{p.title}</p>
-                <p className="text-xs text-[#5F5D57]">{p.address}</p>
-                <p className="mt-1 text-sm font-bold text-[#0B6F89]">{p.price}</p>
+                <p className="text-sm font-semibold text-banc-dark-deep">{p.title}</p>
+                <p className="text-xs text-banc-muted-readable">{p.address}</p>
+                <p className="mt-1 text-sm font-bold text-banc-focus">{p.price}</p>
               </Link>
             </InfoWindowF>
           ) : null
         )}
       </GoogleMap>
-      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium text-[#5F5D57] shadow-sm">
+      <p className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium text-banc-muted-readable shadow-sm">
         Map locations are approximate postcode areas
       </p>
     </div>

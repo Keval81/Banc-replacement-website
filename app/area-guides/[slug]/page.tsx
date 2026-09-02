@@ -57,7 +57,7 @@ export default async function AreaGuidePage({ params }: AreaGuidePageProps) {
             alt={`${area.name} area`}
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">

@@ -101,7 +101,7 @@ export default function ContactPageClient() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#1A1917] py-28 lg:py-36">
+      <section className="relative overflow-hidden bg-banc-dark-deep py-28 lg:py-36">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -109,10 +109,10 @@ export default function ContactPageClient() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         {/* Background gradient accent */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1A9BBF]/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-banc-sky-dark/30 via-transparent to-transparent" />
         
         {/* Subtle grid pattern */}
         <div 
@@ -131,12 +131,12 @@ export default function ContactPageClient() {
             transition={{ duration: 0.8 }}
           >
             <motion.p 
-              className="mb-6 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-[#4AC8E8]"
+              className="mb-6 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <span className="h-px w-8 bg-[#4AC8E8]" />
+              <span className="h-px w-8 bg-banc-sky" />
               Get in Touch
             </motion.p>
             
@@ -168,7 +168,7 @@ export default function ContactPageClient() {
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Contact Card */}
             <motion.div
-              className="relative overflow-hidden rounded-3xl bg-white p-10 shadow-xl shadow-[#1A1917]/5 lg:p-12"
+              className="relative overflow-hidden rounded-3xl bg-white p-10 shadow-xl shadow-banc-dark-deep/5 lg:p-12"
               variants={fadeInUp}
               initial="initial"
               whileInView="whileInView"
@@ -176,12 +176,12 @@ export default function ContactPageClient() {
               transition={fadeInUp.transition}
             >
               {/* Decorative accent */}
-              <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#4AC8E8] via-[#9ADFF2] to-[#4AC8E8]" />
+              <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-banc-sky via-banc-sky-mid to-banc-sky" />
               
-              <h2 className="text-3xl font-semibold text-[#1A1917]">
+              <h2 className="text-3xl font-semibold text-banc-dark-deep">
                 Visit Our Office
               </h2>
-              <p className="mt-3 text-[#8A8880]">
+              <p className="mt-3 text-banc-grey">
                 Pop in for a chat about your property requirements
               </p>
               
@@ -195,17 +195,17 @@ export default function ContactPageClient() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#F4F3F1] text-[#4AC8E8] transition-all duration-300 group-hover:bg-[#4AC8E8] group-hover:text-white">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-grey-pale text-banc-sky transition-all duration-300 group-hover:bg-banc-sky group-hover:text-white">
                       <detail.icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#8A8880]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-grey">
                         {detail.label}
                       </p>
                       {detail.href ? (
                         <a
                           href={detail.href}
-                          className="mt-1 inline-block text-[#1A1917] transition-colors hover:text-[#4AC8E8]"
+                          className="mt-1 inline-block text-banc-dark-deep transition-colors hover:text-banc-sky"
                           onClick={() => detail.label === "Phone" && trackCallClick("contact_page_details")}
                         >
                           {detail.lines.map((line, i) => (
@@ -215,7 +215,7 @@ export default function ContactPageClient() {
                           ))}
                         </a>
                       ) : (
-                        <div className="mt-1 text-[#1A1917]">
+                        <div className="mt-1 text-banc-dark-deep">
                           {detail.lines.map((line, i) => (
                             <p key={i} className={i === 0 ? "font-medium" : ""}>
                               {line}
@@ -239,7 +239,7 @@ export default function ContactPageClient() {
                 <a
                   href={cuffleyOffice.phone.callHref}
                   onClick={() => trackCallClick("contact_page_cta")}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#1A1917] px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#4AC8E8] hover:shadow-lg hover:shadow-[#4AC8E8]/25"
+                  className="inline-flex items-center gap-2 rounded-xl bg-banc-dark-deep px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-banc-sky hover:shadow-lg hover:shadow-banc-sky/25"
                 >
                   <Phone className="h-4 w-4" />
                   Call Us Now
@@ -247,22 +247,22 @@ export default function ContactPageClient() {
               </motion.div>
 
               {/* Mayfair office */}
-              <div className="mt-10 border-t border-[#F4F3F1] pt-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#8A8880]">
+              <div className="mt-10 border-t border-banc-grey-pale pt-8">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-grey">
                   {mayfairOffice.title}
                 </p>
-                <div className="mt-3 space-y-2 text-[#1A1917]">
+                <div className="mt-3 space-y-2 text-banc-dark-deep">
                   <p className="font-medium">{mayfairOffice.addressLines[0]}</p>
                   <a
                     href={mayfairOffice.phone.callHref}
-                    className="block transition-colors hover:text-[#4AC8E8]"
+                    className="block transition-colors hover:text-banc-sky"
                     onClick={() => trackCallClick("contact_page_mayfair")}
                   >
                     {mayfairOffice.phone.displayPhone}
                   </a>
                   <a
                     href={mayfairOffice.email.mailtoHref}
-                    className="block transition-colors hover:text-[#4AC8E8]"
+                    className="block transition-colors hover:text-banc-sky"
                   >
                     {mayfairOffice.email.displayEmail}
                   </a>
@@ -272,7 +272,7 @@ export default function ContactPageClient() {
 
             {/* Google Maps Embed */}
             <motion.div
-              className="group relative overflow-hidden rounded-3xl shadow-xl shadow-[#1A1917]/5"
+              className="group relative overflow-hidden rounded-3xl shadow-xl shadow-banc-dark-deep/5"
               variants={scaleIn}
               initial="initial"
               whileInView="whileInView"
@@ -306,12 +306,12 @@ export default function ContactPageClient() {
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#4AC8E8]/10 text-[#4AC8E8]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-banc-sky/10 text-banc-sky">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#1A1917]">Banc Property Group</p>
-                    <p className="text-sm text-[#8A8880]">
+                    <p className="font-semibold text-banc-dark-deep">Banc Property Group</p>
+                    <p className="text-sm text-banc-grey">
                       {cuffleyOffice.addressLines.slice(0, 2).join(", ")}
                     </p>
                   </div>
@@ -323,7 +323,7 @@ export default function ContactPageClient() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-[#1A1917] py-24 lg:py-32">
+      <section className="bg-banc-dark-deep py-24 lg:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <motion.div 
             className="mb-16 text-center"
@@ -332,10 +332,10 @@ export default function ContactPageClient() {
             whileInView="whileInView"
             viewport={fadeInUp.viewport}
           >
-            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-[#4AC8E8]">
-              <span className="h-px w-8 bg-[#4AC8E8]" />
+            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky">
+              <span className="h-px w-8 bg-banc-sky" />
               Testimonials
-              <span className="h-px w-8 bg-[#4AC8E8]" />
+              <span className="h-px w-8 bg-banc-sky" />
             </p>
             <h2 className="text-4xl font-semibold text-white">
               What Our Clients Say
@@ -353,10 +353,10 @@ export default function ContactPageClient() {
               <motion.div
                 key={index}
                 variants={scaleIn}
-                className="group relative overflow-hidden rounded-2xl bg-[#3D3B37] p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-[#44474d] hover:shadow-2xl hover:shadow-black/20"
+                className="group relative overflow-hidden rounded-2xl bg-banc-dark-mid p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-[#44474d] hover:shadow-2xl hover:shadow-black/20"
               >
                 {/* Quote icon with gradient */}
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-[#4AC8E8] to-[#1A9BBF] text-white shadow-lg shadow-[#4AC8E8]/20">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-banc-sky to-banc-sky-dark text-white shadow-lg shadow-banc-sky/20">
                   <Quote className="h-5 w-5" />
                 </div>
                 
@@ -367,7 +367,7 @@ export default function ContactPageClient() {
                 
                 {/* Author */}
                 <div className="mt-8 flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#4AC8E8]/20 text-[#4AC8E8] font-semibold">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-banc-sky/20 text-banc-sky font-semibold">
                     {testimonial.author.charAt(0)}
                   </div>
                   <div>
@@ -376,7 +376,7 @@ export default function ContactPageClient() {
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className="h-4 w-4 text-[#4AC8E8]"
+                          className="h-4 w-4 text-banc-sky"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -388,7 +388,7 @@ export default function ContactPageClient() {
                 </div>
                 
                 {/* Decorative gradient line */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#4AC8E8] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-banc-sky to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
               </motion.div>
             ))}
           </motion.div>
@@ -398,9 +398,9 @@ export default function ContactPageClient() {
       {/* Call Me Back Form Section - Premium Dark Design */}
       <section className="relative overflow-hidden bg-[#1a1d21] py-24 pb-32 lg:py-32">
         {/* Background elements */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#4AC8E8]/5 to-transparent" />
-        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-[#4AC8E8]/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-[#1A9BBF]/10 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-banc-sky/5 to-transparent" />
+        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-banc-sky/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-banc-sky-dark/10 blur-3xl" />
         
         <div className="relative mx-auto max-w-4xl px-6 lg:px-10">
           <motion.div 
@@ -410,7 +410,7 @@ export default function ContactPageClient() {
             whileInView="whileInView"
             viewport={fadeInUp.viewport}
           >
-            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-[#4AC8E8]">
+            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky">
               <Send className="h-4 w-4" />
               Request a Call
             </p>
@@ -424,20 +424,20 @@ export default function ContactPageClient() {
 
           <motion.form 
             onSubmit={handleSubmit}
-            className="relative overflow-hidden rounded-3xl bg-[#1A1917] p-10 shadow-2xl lg:p-14"
+            className="relative overflow-hidden rounded-3xl bg-banc-dark-deep p-10 shadow-2xl lg:p-14"
             variants={scaleIn}
             initial="initial"
             whileInView="whileInView"
             viewport={scaleIn.viewport}
           >
             {/* Top accent bar */}
-            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-[#4AC8E8] via-[#9ADFF2] to-[#4AC8E8]" />
+            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-banc-sky via-banc-sky-mid to-banc-sky" />
             
             <div className="grid gap-8 md:grid-cols-2">
               {/* Name Field */}
               <div className="group">
                 <label htmlFor="name" className="mb-2 block text-sm font-medium text-white/70">
-                  Name <span className="text-[#4AC8E8]">*</span>
+                  Name <span className="text-banc-sky">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -446,11 +446,11 @@ export default function ContactPageClient() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-[#3D3B37] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10"
+                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
                     placeholder="Your full name"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-[#4AC8E8]" />
+                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
                   </div>
                 </div>
               </div>
@@ -458,7 +458,7 @@ export default function ContactPageClient() {
               {/* Phone Field */}
               <div className="group">
                 <label htmlFor="phone" className="mb-2 block text-sm font-medium text-white/70">
-                  Phone <span className="text-[#4AC8E8]">*</span>
+                  Phone <span className="text-banc-sky">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -467,11 +467,11 @@ export default function ContactPageClient() {
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-[#3D3B37] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10"
+                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
                     placeholder="Your phone number"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-[#4AC8E8]" />
+                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
                   </div>
                 </div>
               </div>
@@ -479,7 +479,7 @@ export default function ContactPageClient() {
               {/* Email Field */}
               <div className="group md:col-span-2">
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-white/70">
-                  Email <span className="text-[#4AC8E8]">*</span>
+                  Email <span className="text-banc-sky">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -488,11 +488,11 @@ export default function ContactPageClient() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-[#3D3B37] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10"
+                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
                     placeholder="Your email address"
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-[#4AC8E8]" />
+                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
                   </div>
                 </div>
               </div>
@@ -500,14 +500,14 @@ export default function ContactPageClient() {
               {/* Subject Field */}
               <div className="group md:col-span-2">
                 <label htmlFor="subject" className="mb-2 block text-sm font-medium text-white/70">
-                  Subject <span className="text-[#4AC8E8]">*</span>
+                  Subject <span className="text-banc-sky">*</span>
                 </label>
                 <div className="relative">
                   <select
                     id="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full min-h-[56px] rounded-xl border-2 border-[#3D3B37] bg-[#1a1d21] px-4 py-4 text-white text-base transition-all duration-300 focus:border-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10 appearance-none cursor-pointer hover:border-[#4AC8E8]/50"
+                    className="w-full min-h-[56px] rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white text-base transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10 appearance-none cursor-pointer hover:border-banc-sky/50"
                   >
                     <option value="General Enquiry">General Enquiry</option>
                     <option value="Property Valuation">Property Valuation</option>
@@ -531,11 +531,11 @@ export default function ContactPageClient() {
                     rows={5}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full resize-none rounded-xl border-2 border-[#3D3B37] bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10"
+                    className="w-full resize-none rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
                     placeholder="How can we help you?"
                   />
                   <div className="absolute bottom-4 right-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-[#4AC8E8]" />
+                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
                   </div>
                 </div>
               </div>
@@ -549,7 +549,7 @@ export default function ContactPageClient() {
                     required
                     checked={formData.consent}
                     onChange={handleChange}
-                    className="peer h-6 w-6 cursor-pointer rounded-lg border-2 border-[#3D3B37] bg-[#1a1d21] checked:border-[#4AC8E8] checked:bg-[#4AC8E8] focus:outline-none focus:ring-4 focus:ring-[#4AC8E8]/10"
+                    className="peer h-6 w-6 cursor-pointer rounded-lg border-2 border-banc-dark-mid bg-[#1a1d21] checked:border-banc-sky checked:bg-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
                   />
                   <svg
                     className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100"
@@ -569,7 +569,7 @@ export default function ContactPageClient() {
                 </div>
                 <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-white/60">
                   Please tick this box if you are happy for us to contact you via phone and email. 
-                  You can view our full <a href="/privacy" className="text-[#4AC8E8] hover:underline">privacy policy</a> on our website.
+                  You can view our full <a href="/privacy" className="text-banc-sky hover:underline">privacy policy</a> on our website.
                 </label>
               </div>
 
@@ -578,7 +578,7 @@ export default function ContactPageClient() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-[#4AC8E8] to-[#1A9BBF] py-7 text-base font-semibold text-white transition-all duration-500 hover:shadow-lg hover:shadow-[#4AC8E8]/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-banc-sky to-banc-sky-dark py-7 text-base font-semibold text-white transition-all duration-500 hover:shadow-lg hover:shadow-banc-sky/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isSubmitting ? (

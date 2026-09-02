@@ -4,6 +4,10 @@ import { useState, useRef, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  MODAL_FOCUSABLE_SELECTOR,
+  startModalFocusLifecycle,
+} from "@/lib/property-search/modal-focus-lifecycle";
 
 interface BottomSheetProps {
   isOpen: boolean;
@@ -34,7 +38,12 @@ export function BottomSheet({
 }: BottomSheetProps) {
   const [currentSnap, setCurrentSnap] = useState(initialSnap);
   const constraintsRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
   const y = useMotionValue(0);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   // Convert snap points to pixel values (assuming viewport height)
   const getSnapPixels = (index: number) => {
@@ -63,16 +72,30 @@ export function BottomSheet({
     setCurrentSnap(closestSnap);
   };
 
-  // Lock body scroll when open
+  // Modal lifecycle: body scroll lock, initial focus, Tab trap, Escape to
+  // close and focus restored to the opener (shared with the filter drawer).
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!isOpen) return;
+
+    const getFocusableElements = () =>
+      Array.from(
+        constraintsRef.current?.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR) ?? [],
+      );
+    return startModalFocusLifecycle({
+      getActiveElement: () => document.activeElement,
+      getBodyOverflow: () => document.body.style.overflow,
+      setBodyOverflow: (value) => { document.body.style.overflow = value; },
+      getFocusableElements,
+      containerContains: (element) =>
+        element instanceof Node && Boolean(constraintsRef.current?.contains(element)),
+      addKeydownListener: (listener) =>
+        document.addEventListener("keydown", listener as (event: KeyboardEvent) => void),
+      removeKeydownListener: (listener) =>
+        document.removeEventListener("keydown", listener as (event: KeyboardEvent) => void),
+      requestFrame: (callback) => requestAnimationFrame(callback),
+      cancelFrame: (frame) => cancelAnimationFrame(frame as number),
+      onClose: () => onCloseRef.current(),
+    });
   }, [isOpen]);
 
   return (
@@ -116,6 +139,8 @@ export function BottomSheet({
             role="dialog"
             aria-modal="true"
             aria-labelledby={title ? "bottom-sheet-title" : undefined}
+            aria-label={title ? undefined : "Sheet"}
+            tabIndex={-1}
           >
             {/* Handle */}
             {showHandle && (
@@ -134,11 +159,12 @@ export function BottomSheet({
                 )}
                 {showCloseButton && (
                   <button
+                    type="button"
                     onClick={onClose}
-                    className="p-2 rounded-full hover:bg-muted transition-colors"
+                    className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
                     aria-label="Close"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5" aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -194,16 +220,18 @@ export function MobileFilterSheet({
         <div className="flex gap-3 p-4 border-t border-border bg-background">
           {onClear && (
             <button
+              type="button"
               onClick={onClear}
-              className="flex-1 px-4 py-3 rounded-xl border border-border font-medium text-foreground hover:bg-muted transition-colors"
+              className="flex-1 px-4 py-3 rounded-[var(--radius-md)] border border-border font-medium text-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
             >
               {clearLabel}
             </button>
           )}
           {onApply && (
             <button
+              type="button"
               onClick={onApply}
-              className="flex-1 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+              className="flex-1 px-4 py-3 rounded-[var(--radius-md)] bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
             >
               {applyLabel}
             </button>

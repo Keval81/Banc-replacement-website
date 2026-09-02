@@ -6,6 +6,7 @@ import Link from "next/link";
 import PropertyCard from "@/components/PropertyCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import {
+  FEATURED_LISTINGS_MOBILE_LIMIT,
   INITIAL_FEATURED_LISTINGS_STATE,
   loadFeaturedListings,
   type FeaturedListingsState,
@@ -61,7 +62,7 @@ export default function FeaturedListings() {
               {[0, 1, 2].map((item) => (
                 <div
                   key={item}
-                  className="min-h-[28rem] animate-pulse rounded-sm bg-[#F4F3F1]"
+                  className="min-h-[28rem] animate-pulse rounded-sm bg-banc-grey-pale"
                 />
               ))}
             </div>
@@ -80,7 +81,7 @@ export default function FeaturedListings() {
             </p>
             <Link
               href="/sales/properties"
-              className="mt-5 inline-flex min-h-11 items-center border-b border-[#2C2A27] text-sm font-semibold uppercase tracking-[0.14em] text-[#2C2A27]"
+              className="mt-5 inline-flex min-h-11 items-center border-b border-banc-dark text-sm font-semibold uppercase tracking-[0.14em] text-banc-dark"
             >
               Browse all properties
             </Link>
@@ -98,13 +99,17 @@ export default function FeaturedListings() {
             }}
             className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
           >
-            {state.listings.map((listing) => (
+            {state.listings.map((listing, index) => (
               <motion.div
                 key={listing.id}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 },
                 }}
+                // Desktop shows up to 8; phones stop at 6.
+                className={
+                  index >= FEATURED_LISTINGS_MOBILE_LIMIT ? "hidden sm:block" : undefined
+                }
               >
                 <PropertyCard {...listing} />
               </motion.div>

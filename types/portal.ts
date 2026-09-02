@@ -242,6 +242,11 @@ export interface OfferSubmission {
   additionalComments?: string;
   proofOfFunds?: File;
   agreedToTerms: boolean;
+  contact?: {
+    name: string;
+    email: string;
+    phone: string;
+  };
 }
 
 // ===== SALES PROGRESS TYPES =====

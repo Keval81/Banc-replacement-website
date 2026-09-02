@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Phone, Mail, Heart, Trophy } from "lucide-react";
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 export const metadata: Metadata = withPageDefaults("/community", {
   title: "Community | Banc Property Group",
@@ -92,11 +93,11 @@ export default function CommunityPage() {
                 </p>
                 <div className="mt-5 space-y-2">
                   <a
-                    href="tel:01707877781"
+                    href={BANC_CONTACT.callHref}
                     className="flex items-center gap-3 text-white/90 transition-colors hover:text-[var(--primary-cyan)]"
                   >
                     <Phone className="h-4 w-4" />
-                    01707 877781
+                    {BANC_CONTACT.displayPhone}
                   </a>
                   <a
                     href="mailto:andrew@bancproperty.com"

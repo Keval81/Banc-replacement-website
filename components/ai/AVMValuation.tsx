@@ -247,7 +247,7 @@ export default function AVMValuation() {
 
         <Button
           type="submit"
-          className="w-full bg-[#1a4d5c] hover:bg-[#1a4d5c]/90"
+          className="w-full bg-banc-teal hover:bg-banc-teal/90"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -276,7 +276,7 @@ export default function AVMValuation() {
             {/* Main Estimate */}
             <div className="text-center">
               <p className="text-banc-grey mb-2">Estimated Value</p>
-              <p className="text-5xl font-bold text-[#1a4d5c]">
+              <p className="text-5xl font-bold text-banc-teal">
                 {formatPrice(result.estimate)}
               </p>
               <div className="flex items-center justify-center gap-4 mt-3">
@@ -362,12 +362,12 @@ export default function AVMValuation() {
             </div>
 
             {/* CTA */}
-            <div className="bg-[#1a4d5c] text-white rounded-xl p-4 text-center">
+            <div className="bg-banc-teal text-white rounded-xl p-4 text-center">
               <p className="font-medium mb-2">Want a more accurate valuation?</p>
               <p className="text-sm text-white/80 mb-3">
                 Our local experts can provide a detailed in-person valuation
               </p>
-              <Button variant="secondary" className="bg-white text-[#1a4d5c] hover:bg-banc-grey-pale">
+              <Button variant="secondary" className="bg-white text-banc-teal hover:bg-banc-grey-pale">
                 Book Free Valuation
               </Button>
             </div>

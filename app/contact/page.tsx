@@ -13,7 +13,7 @@ export const revalidate = 3600;
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-[#F4F3F1] text-[#1A1917]">
+    <div className="min-h-screen bg-banc-grey-pale text-banc-dark-deep">
       <Header />
       <ContactPageClient />
       <Footer />

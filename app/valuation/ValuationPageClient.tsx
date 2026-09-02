@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 const propertyTypes = [
   "Detached House",
@@ -419,7 +420,7 @@ export default function ValuationPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
-                        placeholder="01707 877781"
+                        placeholder={BANC_CONTACT.displayPhone}
                       />
                     </div>
 
@@ -446,7 +447,7 @@ export default function ValuationPage() {
                           setConsent(e.target.checked);
                           setError(null);
                         }}
-                        className="mt-0.5 h-4 w-4 rounded border-banc-grey/40 accent-[#4AC8E8]"
+                        className="mt-0.5 h-4 w-4 rounded border-banc-grey/40 accent-banc-sky"
                       />
                       <span>
                         Please tick this box if you are happy for us to contact you via phone and email. *

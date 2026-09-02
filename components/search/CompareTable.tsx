@@ -31,7 +31,7 @@ export default function CompareTable({ className }: CompareTableProps) {
       <div className="text-center py-16">
         <p className="text-banc-grey mb-4">No properties selected for comparison</p>
         <Link href="/search">
-          <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF]">
+          <Button className="bg-banc-sky hover:bg-banc-sky-dark">
             Browse Properties
           </Button>
         </Link>
@@ -90,7 +90,7 @@ export default function CompareTable({ className }: CompareTableProps) {
             <td className="p-4 text-sm font-medium text-banc-grey">Price</td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
-                <span className="text-xl font-bold text-[#4AC8E8]">
+                <span className="text-xl font-bold text-banc-sky">
                   {property.price}
                 </span>
               </td>
@@ -143,7 +143,7 @@ export default function CompareTable({ className }: CompareTableProps) {
                   <td key={property.id} className="p-4">
                     <span className={cn(
                       "flex items-center gap-1",
-                      isBest && "text-[#4AC8E8] font-medium"
+                      isBest && "text-banc-sky font-medium"
                     )}>
                       {property.stats[key]}
                       {isBest && <Check className="w-4 h-4" />}
@@ -213,7 +213,7 @@ export default function CompareTable({ className }: CompareTableProps) {
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
                 <Link href={`/sales/properties/${property.id}`}>
-                  <Button className="w-full bg-[#4AC8E8] hover:bg-[#1A9BBF]">
+                  <Button className="w-full bg-banc-sky hover:bg-banc-sky-dark">
                     View Property
                   </Button>
                 </Link>
@@ -231,7 +231,7 @@ export default function CompareTable({ className }: CompareTableProps) {
         <Link href="/contact">
           <Button
             variant="outline"
-            className="border-[#4AC8E8] text-[#4AC8E8] hover:bg-[#4AC8E8] hover:text-white"
+            className="border-banc-sky text-banc-sky hover:bg-banc-sky hover:text-white"
           >
             <MapPin className="w-4 h-4 mr-2" />
             Contact About These

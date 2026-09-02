@@ -74,12 +74,12 @@ export default function TheGuildPage() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#4AC8E8]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#4AC8E8]/3 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-banc-sky/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-banc-sky/3 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
         </div>
         
         {/* Grid Pattern Overlay */}
@@ -98,7 +98,7 @@ export default function TheGuildPage() {
                 transition={{ duration: 0.6 }}
                 className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 mb-8"
               >
-                <Award className="h-4 w-4 text-[#4AC8E8]" />
+                <Award className="h-4 w-4 text-banc-sky" />
                 <span className="text-sm font-medium text-white/80 tracking-wide">Proud Member</span>
               </motion.div>
               
@@ -109,7 +109,7 @@ export default function TheGuildPage() {
                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white leading-[1.1] tracking-tight"
               >
                 The Guild of{" "}
-                <span className="text-[#4AC8E8]">Property</span>{" "}
+                <span className="text-banc-sky">Property</span>{" "}
                 Professionals
               </motion.h1>
               
@@ -131,7 +131,7 @@ export default function TheGuildPage() {
                 className="mt-10 flex flex-wrap gap-4"
               >
                 <Button 
-                  className="bg-[#4AC8E8] hover:bg-[#4AC8E8]/90 text-white px-8 py-6 text-base font-medium rounded-full group transition-all duration-300"
+                  className="bg-banc-sky hover:bg-banc-sky/90 text-white px-8 py-6 text-base font-medium rounded-full group transition-all duration-300"
                 >
                   <Link href="/sales/properties" className="flex items-center">
                     View Properties
@@ -156,7 +156,7 @@ export default function TheGuildPage() {
             >
               <div className="relative">
                 {/* Glow Effect */}
-                <div className="absolute inset-0 bg-[#4AC8E8]/20 rounded-3xl blur-[60px] scale-110" />
+                <div className="absolute inset-0 bg-banc-sky/20 rounded-3xl blur-[60px] scale-110" />
                 
                 {/* Logo Container */}
                 <div className="relative bg-white rounded-3xl p-12 lg:p-16 shadow-2xl shadow-black/20">
@@ -175,7 +175,7 @@ export default function TheGuildPage() {
                 <motion.div 
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-6 -right-6 bg-[#4AC8E8] text-white rounded-2xl p-4 shadow-lg"
+                  className="absolute -top-6 -right-6 bg-banc-sky text-white rounded-2xl p-4 shadow-lg"
                 >
                   <Building2 className="h-8 w-8" />
                 </motion.div>
@@ -204,7 +204,7 @@ export default function TheGuildPage() {
             transition={{ duration: 2, repeat: Infinity }}
             className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-2"
           >
-            <div className="w-1.5 h-3 bg-[#4AC8E8] rounded-full" />
+            <div className="w-1.5 h-3 bg-banc-sky rounded-full" />
           </motion.div>
         </motion.div>
       </section>
@@ -226,8 +226,8 @@ export default function TheGuildPage() {
                 
                 {/* Badge */}
                 <div className="absolute bottom-6 left-6 flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-2xl px-5 py-3">
-                  <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-xl flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-10 h-10 bg-banc-sky/10 rounded-xl flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
                     <p className="text-xs text-banc-grey uppercase tracking-wider">Our Promise</p>
@@ -237,19 +237,19 @@ export default function TheGuildPage() {
               </div>
               
               {/* Decorative */}
-              <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl -z-10" />
+              <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-banc-sky/5 rounded-full blur-3xl -z-10" />
             </div>
             
             {/* Content Side */}
             <div className="lg:pl-8">
-              <div className="inline-flex items-center gap-2 text-[#4AC8E8] mb-6">
-                <div className="h-px w-8 bg-[#4AC8E8]" />
+              <div className="inline-flex items-center gap-2 text-banc-sky mb-6">
+                <div className="h-px w-8 bg-banc-sky" />
                 <span className="text-sm font-medium uppercase tracking-[0.2em]">Our Membership</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a] leading-tight">
                 National Network.<br />
-                <span className="text-[#4AC8E8]">Local Independence.</span>
+                <span className="text-banc-sky">Local Independence.</span>
               </h2>
               
               <div className="mt-8 space-y-5">
@@ -269,8 +269,8 @@ export default function TheGuildPage() {
               
               <div className="mt-10 grid grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#4AC8E8]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="h-6 w-6 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 bg-banc-sky/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 className="h-6 w-6 text-banc-sky" />
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Quality Assured</p>
@@ -278,8 +278,8 @@ export default function TheGuildPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-[#4AC8E8]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-6 w-6 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 bg-banc-sky/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Shield className="h-6 w-6 text-banc-sky" />
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Trusted Network</p>
@@ -297,10 +297,10 @@ export default function TheGuildPage() {
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
           {/* Section Header */}
           <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-20">
-            <div className="inline-flex items-center gap-2 text-[#4AC8E8] mb-6 justify-center">
-              <div className="h-px w-8 bg-[#4AC8E8]" />
+            <div className="inline-flex items-center gap-2 text-banc-sky mb-6 justify-center">
+              <div className="h-px w-8 bg-banc-sky" />
               <span className="text-sm font-medium uppercase tracking-[0.2em]">Benefits for You</span>
-              <div className="h-px w-8 bg-[#4AC8E8]" />
+              <div className="h-px w-8 bg-banc-sky" />
             </div>
             <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a]">
               What Guild Membership Means
@@ -321,12 +321,12 @@ export default function TheGuildPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group bg-white rounded-2xl p-8 border border-banc-grey/10 hover:border-[#4AC8E8]/30 hover:shadow-xl hover:shadow-[#4AC8E8]/5 transition-all duration-500"
+                className="group bg-white rounded-2xl p-8 border border-banc-grey/10 hover:border-banc-sky/30 hover:shadow-xl hover:shadow-banc-sky/5 transition-all duration-500"
               >
-                <div className="w-14 h-14 bg-[#4AC8E8]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#4AC8E8] transition-colors duration-500">
-                  <benefit.icon className="h-7 w-7 text-[#4AC8E8] group-hover:text-white transition-colors duration-500" />
+                <div className="w-14 h-14 bg-banc-sky/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-banc-sky transition-colors duration-500">
+                  <benefit.icon className="h-7 w-7 text-banc-sky group-hover:text-white transition-colors duration-500" />
                 </div>
-                <h3 className="text-xl font-semibold text-[#1a1a1a] mb-3 group-hover:text-[#4AC8E8] transition-colors">
+                <h3 className="text-xl font-semibold text-[#1a1a1a] mb-3 group-hover:text-banc-sky transition-colors">
                   {benefit.title}
                 </h3>
                 <p className="text-banc-grey leading-relaxed text-sm">
@@ -342,7 +342,7 @@ export default function TheGuildPage() {
       <section className="bg-[#1a1a1a] py-20 lg:py-28 relative overflow-hidden">
         {/* Background Glow */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#4AC8E8]/10 rounded-full blur-[100px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-banc-sky/10 rounded-full blur-[100px]" />
         </div>
         
         <div className="relative z-10 mx-auto max-w-[1400px] px-6 lg:px-12">
@@ -356,7 +356,7 @@ export default function TheGuildPage() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#4AC8E8] tracking-tight">
+                <div className="text-4xl lg:text-5xl xl:text-6xl font-bold text-banc-sky tracking-tight">
                   {stat.value}
                 </div>
                 <div className="mt-3 text-white/60 text-sm lg:text-base font-medium">
@@ -374,17 +374,17 @@ export default function TheGuildPage() {
           <div className="grid gap-16 lg:grid-cols-12 items-start">
             {/* Left Column */}
             <div className="lg:col-span-5 lg:sticky lg:top-32">
-              <div className="inline-flex items-center gap-2 text-[#4AC8E8] mb-6">
-                <div className="h-px w-8 bg-[#4AC8E8]" />
+              <div className="inline-flex items-center gap-2 text-banc-sky mb-6">
+                <div className="h-px w-8 bg-banc-sky" />
                 <span className="text-sm font-medium uppercase tracking-[0.2em]">About The Guild</span>
               </div>
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a] leading-tight">
                 A Network Built on{" "}
-                <span className="text-[#4AC8E8]">Excellence</span>
+                <span className="text-banc-sky">Excellence</span>
               </h2>
               <div className="mt-8 flex items-center gap-4">
-                <div className="w-16 h-16 bg-[#4AC8E8]/10 rounded-2xl flex items-center justify-center">
-                  <Award className="h-8 w-8 text-[#4AC8E8]" />
+                <div className="w-16 h-16 bg-banc-sky/10 rounded-2xl flex items-center justify-center">
+                  <Award className="h-8 w-8 text-banc-sky" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-[#1a1a1a]">Since 1994</p>
@@ -416,7 +416,7 @@ export default function TheGuildPage() {
               </p>
               
               {/* Quote — Banc's own published words (bancproperty.com/why-us) */}
-              <div className="mt-10 bg-[#fafafa] rounded-2xl p-8 border-l-4 border-[#4AC8E8]">
+              <div className="mt-10 bg-[#fafafa] rounded-2xl p-8 border-l-4 border-banc-sky">
                 <p className="text-lg text-[#1a1a1a] italic leading-relaxed">
                   &ldquo;As a member of the Guild our associate office in Park Lane, Mayfair is
                   amongst the very best placed in Europe. The exposure your property receives is
@@ -424,8 +424,8 @@ export default function TheGuildPage() {
                   with.&rdquo;
                 </p>
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
-                    <span className="text-[#4AC8E8] font-semibold text-sm">B</span>
+                  <div className="w-10 h-10 bg-banc-sky/10 rounded-full flex items-center justify-center">
+                    <span className="text-banc-sky font-semibold text-sm">B</span>
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a] text-sm">Banc Property Group</p>
@@ -439,7 +439,7 @@ export default function TheGuildPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-[#4AC8E8] py-24 lg:py-32 relative overflow-hidden">
+      <section className="bg-banc-sky py-24 lg:py-32 relative overflow-hidden">
         {/* Decorative Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -463,7 +463,7 @@ export default function TheGuildPage() {
               
               <div className="flex flex-wrap justify-center gap-4">
                 <Button 
-                  className="bg-white text-[#4AC8E8] hover:bg-white/90 px-10 py-7 text-base font-semibold rounded-full group transition-all duration-300 shadow-lg shadow-black/10"
+                  className="bg-white text-banc-sky hover:bg-white/90 px-10 py-7 text-base font-semibold rounded-full group transition-all duration-300 shadow-lg shadow-black/10"
                 >
                   <Link href="/sales/properties" className="flex items-center">
                     Browse Properties

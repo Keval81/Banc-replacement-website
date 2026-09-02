@@ -26,7 +26,7 @@ export default async function AccountPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-to-br from-banc-dark-deep via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-4">
             <AccountSidebar user={session.user} />

@@ -51,7 +51,7 @@ export default function NewsletterUnsubscribePage() {
           </p>
           <p className="text-sm text-banc-grey mb-6">
             Changed your mind?{' '}
-            <a href="/newsletter/signup" className="text-[#1a4d5c] hover:underline">
+            <a href="/newsletter/signup" className="text-banc-teal hover:underline">
               Subscribe again
             </a>
           </p>
@@ -118,7 +118,7 @@ export default function NewsletterUnsubscribePage() {
         <div className="mt-6 pt-6 border-t text-center">
           <p className="text-sm text-banc-grey">
             Having trouble?{' '}
-            <a href="mailto:info@banc.co.uk" className="text-[#1a4d5c] hover:underline">
+            <a href="mailto:info@banc.co.uk" className="text-banc-teal hover:underline">
               Contact us
             </a>
           </p>

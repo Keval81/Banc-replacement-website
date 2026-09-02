@@ -36,11 +36,11 @@ export default function CookieConsent() {
           <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5">
             {/* Header */}
             <div className="flex items-start gap-3 p-4 sm:p-5">
-              <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#4AC8E8]/10 sm:flex">
-                <Cookie className="h-5 w-5 text-[#4AC8E8]" />
+              <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-banc-sky/10 sm:flex">
+                <Cookie className="h-5 w-5 text-banc-sky" />
               </div>
               <div className="flex-1">
-                <h3 className="text-base font-semibold text-[#1A1917] sm:text-lg">
+                <h3 className="text-base font-semibold text-banc-dark-deep sm:text-lg">
                   We value your privacy
                 </h3>
                 <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
@@ -64,14 +64,14 @@ export default function CookieConsent() {
                 >
                   <div className="space-y-4 p-6 pt-4">
                     {/* Essential Cookies */}
-                    <div className="flex items-start gap-4 rounded-xl bg-[#F4F3F1] p-4">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#1A1917]">
+                    <div className="flex items-start gap-4 rounded-xl bg-banc-grey-pale p-4">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-banc-dark-deep">
                         <Shield className="h-5 w-5 text-white" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-[#1A1917]">Essential Cookies</h4>
-                          <span className="rounded-full bg-[#1A1917] px-3 py-1 text-xs font-medium text-white">
+                          <h4 className="font-semibold text-banc-dark-deep">Essential Cookies</h4>
+                          <span className="rounded-full bg-banc-dark-deep px-3 py-1 text-xs font-medium text-white">
                             Always On
                           </span>
                         </div>
@@ -84,16 +84,16 @@ export default function CookieConsent() {
 
                     {/* Analytics Cookies */}
                     <div className="flex items-start gap-4 rounded-xl border border-[#E5E5E5] p-4">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#4AC8E8]/10">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-banc-sky/10">
                         <BarChart3 className="h-5 w-5 text-banc-focus" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-[#1A1917]">Analytics Cookies</h4>
+                          <h4 className="font-semibold text-banc-dark-deep">Analytics Cookies</h4>
                           <button
                             onClick={() => togglePreference("analytics")}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              localPrefs.analytics ? "bg-[#4AC8E8]" : "bg-[#E0DFDC]"
+                              localPrefs.analytics ? "bg-banc-sky" : "bg-banc-line"
                             }`}
                           >
                             <span
@@ -112,16 +112,16 @@ export default function CookieConsent() {
 
                     {/* Marketing Cookies */}
                     <div className="flex items-start gap-4 rounded-xl border border-[#E5E5E5] p-4">
-                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-[#4AC8E8]/10">
+                      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-banc-sky/10">
                         <Megaphone className="h-5 w-5 text-banc-focus" />
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-semibold text-[#1A1917]">Marketing Cookies</h4>
+                          <h4 className="font-semibold text-banc-dark-deep">Marketing Cookies</h4>
                           <button
                             onClick={() => togglePreference("marketing")}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              localPrefs.marketing ? "bg-[#4AC8E8]" : "bg-[#E0DFDC]"
+                              localPrefs.marketing ? "bg-banc-sky" : "bg-banc-line"
                             }`}
                           >
                             <span
@@ -152,7 +152,7 @@ export default function CookieConsent() {
             >
               <button
                 onClick={() => setShowDetails(!showDetails)}
-                className="flex min-h-11 cursor-pointer items-center gap-1 text-sm font-medium text-banc-muted-readable hover:text-[#1A1917] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                className="flex min-h-11 cursor-pointer items-center gap-1 text-sm font-medium text-banc-muted-readable hover:text-banc-dark-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
               >
                 {showDetails ? (
                   <>
@@ -172,7 +172,7 @@ export default function CookieConsent() {
                 {showDetails ? (
                   <Button
                     onClick={handleSavePreferences}
-                    className="min-h-11 w-full bg-[#4AC8E8] text-banc-dark hover:bg-banc-sky-mid sm:w-auto"
+                    className="min-h-11 w-full bg-banc-sky text-banc-dark hover:bg-banc-sky-mid sm:w-auto"
                   >
                     Save Preferences
                   </Button>
@@ -181,13 +181,13 @@ export default function CookieConsent() {
                     <Button
                       variant="outline"
                       onClick={rejectAll}
-                      className="min-h-11 border-[#E0DFDC] text-banc-muted-readable hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                      className="min-h-11 border-banc-line text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-dark-deep"
                     >
                       Reject All
                     </Button>
                     <Button
                       onClick={acceptAll}
-                      className="min-h-11 bg-[#1A1917] text-white hover:bg-[#2C2A27]"
+                      className="min-h-11 bg-banc-dark-deep text-white hover:bg-banc-dark"
                     >
                       Accept All
                     </Button>

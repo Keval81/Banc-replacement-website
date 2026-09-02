@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 export const metadata: Metadata = withPageDefaults("/the-team", {
   title: "Meet The Team | Banc Property Group",
@@ -26,7 +27,7 @@ const team = [
       "Outside of work, I have two beautiful children and a very patient better half who motivates me each day and keeps me grounded and busy! I'm a huge United and sports fan, albeit more armchair these days since my 'knee injury'! I love going to live music events, family days out and catching up with the latest sports news on Talk sport and enjoy good food followed by a good movie or better still the latest box sets."
     ],
     initials: "NB",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     mobile: "07850 082541",
     email: "nitesh@bancproperty.com",
     location: "Cuffley Office"
@@ -41,7 +42,7 @@ const team = [
       "I also head up Banc Premier Homes being your dedicated point of contact from viewings right through to completion. I have vast experience in selling some of the finest homes locally, we can offer bespoke exclusive marketing to tailor each and every prestigious home."
     ],
     initials: "AC",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     mobile: "07565 543153",
     email: "andrew@bancproperty.com",
     location: "Cuffley Office"
@@ -55,7 +56,7 @@ const team = [
       "I am involved in bringing properties to market, liaising with clients in those initial stages, and ensuring the smooth operation of the Cuffley office. I also work with our Managing Directors to support the drive for growth and development of Banc Property Group and strive for greatness."
     ],
     initials: "VG",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     email: "vicki@bancproperty.com",
     location: "Cuffley Office"
   },
@@ -70,7 +71,7 @@ const team = [
       "It's a pleasure working at Banc who are the best local Estate Agents based on performance and board presence."
     ],
     initials: "KS",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     email: "kay@bancproperty.com",
     location: "Cuffley Office"
   }
@@ -78,11 +79,11 @@ const team = [
 
 export default function TeamPage() {
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-[#1A1917] py-24 lg:py-36 overflow-hidden">
+      <section className="relative bg-banc-dark-deep py-24 lg:py-36 overflow-hidden">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -90,12 +91,12 @@ export default function TeamPage() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#4AC8E8] rounded-full blur-[128px]" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
         </div>
         
         {/* Grid pattern overlay */}
@@ -111,7 +112,7 @@ export default function TeamPage() {
           <div className="max-w-3xl mx-auto text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-              <Users className="h-4 w-4 text-[#4AC8E8]" />
+              <Users className="h-4 w-4 text-banc-sky" />
               <span className="text-sm font-medium text-white/80">Our People</span>
             </div>
             
@@ -119,11 +120,11 @@ export default function TeamPage() {
               Meet The Team
             </h1>
             <div className="mt-6 flex items-center justify-center gap-3">
-              <div className="h-px w-12 bg-[#4AC8E8]" />
+              <div className="h-px w-12 bg-banc-sky" />
               <p className="text-lg text-white/70 font-medium">
                 Meet the awesome team at Banc
               </p>
-              <div className="h-px w-12 bg-[#4AC8E8]" />
+              <div className="h-px w-12 bg-banc-sky" />
             </div>
             <p className="mt-6 text-white/60 max-w-2xl mx-auto leading-relaxed">
               Our experienced professionals bring decades of combined expertise in property, 
@@ -135,7 +136,7 @@ export default function TeamPage() {
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
           <span className="text-xs text-white/40 uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-[#4AC8E8] to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-banc-sky to-transparent" />
         </div>
       </section>
 
@@ -149,28 +150,28 @@ export default function TeamPage() {
                 className={`relative flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-start group`}
               >
                 {/* Visual connector line for desktop */}
-                <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-gradient-to-b from-transparent via-[#E0DFDC] to-transparent" 
+                <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-gradient-to-b from-transparent via-banc-line to-transparent" 
                   style={{ height: index === team.length - 1 ? '50%' : 'calc(100% + 8rem)' }}
                 />
                 
                 {/* Number indicator */}
-                <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-[#4AC8E8] items-center justify-center z-10 shadow-lg">
-                  <span className="text-lg font-bold text-[#4AC8E8]">0{index + 1}</span>
+                <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-banc-sky items-center justify-center z-10 shadow-lg">
+                  <span className="text-lg font-bold text-banc-sky">0{index + 1}</span>
                 </div>
                 
                 {/* Photo Column */}
                 <div className="w-full lg:w-2/5">
                   <div className="relative">
                     {/* Decorative frame */}
-                    <div className={`absolute -inset-4 border-2 border-[#4AC8E8]/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
+                    <div className={`absolute -inset-4 border-2 border-banc-sky/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
                     
                     {/* Monogram container — real headshots to follow from the client */}
-                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-[#1A1917]">
+                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-banc-dark-deep">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#4AC8E8]/10 rounded-full blur-3xl" />
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-banc-sky/10 rounded-full blur-3xl" />
                         <span
                           aria-hidden="true"
-                          className="relative text-8xl font-bold tracking-tight text-[#4AC8E8] transition-transform duration-700 group-hover:scale-105"
+                          className="relative text-8xl font-bold tracking-tight text-banc-sky transition-transform duration-700 group-hover:scale-105"
                         >
                           {member.initials}
                         </span>
@@ -178,7 +179,7 @@ export default function TeamPage() {
 
                       {/* Role badge */}
                       <div className="absolute bottom-4 left-4 right-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#4AC8E8] text-white text-xs font-semibold uppercase tracking-wider">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-banc-sky text-white text-xs font-semibold uppercase tracking-wider">
                           {member.role}
                         </div>
                       </div>
@@ -190,20 +191,20 @@ export default function TeamPage() {
                 <div className="w-full lg:w-3/5 flex flex-col justify-center">
                   {/* Name and Location */}
                   <div className="mb-6">
-                    <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917] mb-2">
+                    <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-2">
                       {member.name}
                     </h2>
-                    <div className="flex items-center gap-2 text-[#8A8880]">
-                      <MapPin className="h-4 w-4 text-[#4AC8E8]" />
+                    <div className="flex items-center gap-2 text-banc-grey">
+                      <MapPin className="h-4 w-4 text-banc-sky" />
                       <span className="text-sm">{member.location}</span>
                     </div>
                   </div>
                   
                   {/* Decorative line */}
-                  <div className="w-16 h-1 bg-[#4AC8E8] rounded-full mb-6" />
+                  <div className="w-16 h-1 bg-banc-sky rounded-full mb-6" />
                   
                   {/* Bio paragraphs */}
-                  <div className="space-y-4 text-[#3D3B37] leading-relaxed">
+                  <div className="space-y-4 text-banc-dark-mid leading-relaxed">
                     {member.bio.map((paragraph, pIndex) => (
                       <p key={pIndex} className="text-base lg:text-[17px]">
                         {paragraph}
@@ -212,15 +213,15 @@ export default function TeamPage() {
                   </div>
                   
                   {/* Contact Details */}
-                  <div className="mt-8 pt-6 border-t border-[#E0DFDC]/50">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-[#8A8880] mb-4">
+                  <div className="mt-8 pt-6 border-t border-banc-line/50">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-banc-grey mb-4">
                       Get in Touch
                     </p>
                     <div className="flex flex-wrap gap-4">
                       {member.phone && (
                         <a 
                           href={`tel:${member.phone.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Phone className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.phone}</span>
@@ -229,7 +230,7 @@ export default function TeamPage() {
                       {member.mobile && (
                         <a 
                           href={`tel:${member.mobile.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Smartphone className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.mobile}</span>
@@ -238,7 +239,7 @@ export default function TeamPage() {
                       {member.email && (
                         <a 
                           href={`mailto:${member.email}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#E0DFDC] text-[#1A1917] hover:border-[#4AC8E8] hover:text-[#4AC8E8] transition-all duration-200 shadow-sm hover:shadow-md"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
                         >
                           <Mail className="h-4 w-4" />
                           <span className="text-sm font-medium">{member.email}</span>
@@ -257,54 +258,54 @@ export default function TeamPage() {
       <section className="relative py-20 lg:py-28 bg-white overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#F4F3F1] to-transparent" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4AC8E8]/5 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-banc-grey-pale to-transparent" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-banc-sky/5 rounded-full blur-[100px]" />
         </div>
         
         <div className="relative mx-auto max-w-6xl px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
             {/* Left Column - Content */}
             <div className="lg:sticky lg:top-32">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
-                <Users className="h-4 w-4 text-[#4AC8E8]" />
-                <span className="text-sm font-medium text-[#1A9BBF]">Careers</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
+                <Users className="h-4 w-4 text-banc-sky" />
+                <span className="text-sm font-medium text-banc-sky-dark">Careers</span>
               </div>
               
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1A1917] leading-tight">
-                Looking To Join A <span className="text-[#4AC8E8]">Young Dynamic</span> Property Company?
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep leading-tight">
+                Looking To Join A <span className="text-banc-sky">Young Dynamic</span> Property Company?
               </h2>
               
-              <p className="mt-6 text-lg text-[#8A8880] leading-relaxed">
+              <p className="mt-6 text-lg text-banc-grey leading-relaxed">
                 Would you like to join the Banc Property Team? We&apos;re always looking for talented 
                 individuals who share our passion for exceptional property service.
               </p>
               
               <div className="mt-8 space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Growth Opportunities</h3>
-                    <p className="text-sm text-[#8A8880]">Develop your career in a supportive environment</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Growth Opportunities</h3>
+                    <p className="text-sm text-banc-grey">Develop your career in a supportive environment</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Local Expertise</h3>
-                    <p className="text-sm text-[#8A8880]">Work in the heart of the Cuffley community</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Local Expertise</h3>
+                    <p className="text-sm text-banc-grey">Work in the heart of the Cuffley community</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <ArrowRight className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Great Team</h3>
-                    <p className="text-sm text-[#8A8880]">Join a passionate and experienced team</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Great Team</h3>
+                    <p className="text-sm text-banc-grey">Join a passionate and experienced team</p>
                   </div>
                 </div>
               </div>
@@ -313,24 +314,24 @@ export default function TeamPage() {
             {/* Right Column - Form */}
             <div className="relative">
               {/* Form card */}
-              <div className="bg-[#F4F3F1] rounded-3xl p-8 lg:p-10 shadow-xl border border-[#E0DFDC]/30">
+              <div className="bg-banc-grey-pale rounded-3xl p-8 lg:p-10 shadow-xl border border-banc-line/30">
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-[#1A1917] mb-2">Apply Today</h3>
-                  <p className="text-[#8A8880] text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
+                  <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Apply Today</h3>
+                  <p className="text-banc-grey text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
                 </div>
                 
                 <form className="space-y-6">
                   {/* Name */}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-[#3D3B37] mb-2">
-                      Full Name <span className="text-[#4AC8E8]">*</span>
+                    <label htmlFor="name" className="block text-sm font-medium text-banc-dark-mid mb-2">
+                      Full Name <span className="text-banc-sky">*</span>
                     </label>
                     <Input
                       id="name"
                       name="name"
                       type="text"
                       placeholder="John Smith"
-                      className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
+                      className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
                       required
                     />
                   </div>
@@ -338,27 +339,27 @@ export default function TeamPage() {
                   {/* Phone & Email Row */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-[#3D3B37] mb-2">
+                      <label htmlFor="phone" className="block text-sm font-medium text-banc-dark-mid mb-2">
                         Phone Number
                       </label>
                       <Input
                         id="phone"
                         name="phone"
                         type="tel"
-                        placeholder="01707 877781"
-                        className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
+                        placeholder={BANC_CONTACT.displayPhone}
+                        className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
                       />
                     </div>
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-[#3D3B37] mb-2">
-                        Email Address <span className="text-[#4AC8E8]">*</span>
+                      <label htmlFor="email" className="block text-sm font-medium text-banc-dark-mid mb-2">
+                        Email Address <span className="text-banc-sky">*</span>
                       </label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full h-12 bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all"
+                        className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
                         required
                       />
                     </div>
@@ -366,37 +367,37 @@ export default function TeamPage() {
                   
                   {/* Message */}
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-[#3D3B37] mb-2">
-                      Your Message <span className="text-[#4AC8E8]">*</span>
+                    <label htmlFor="message" className="block text-sm font-medium text-banc-dark-mid mb-2">
+                      Your Message <span className="text-banc-sky">*</span>
                     </label>
                     <Textarea
                       id="message"
                       name="message"
                       placeholder="Tell us about yourself, your experience, and why you'd like to join the Banc team..."
                       rows={5}
-                      className="w-full bg-white border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 rounded-xl transition-all resize-none"
+                      className="w-full bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all resize-none"
                       required
                     />
                   </div>
                   
                   {/* Privacy Checkbox */}
-                  <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-[#E0DFDC]/50">
+                  <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-banc-line/50">
                     <Checkbox 
                       id="privacy" 
                       name="privacy"
                       required
-                      className="mt-0.5 border-[#E0DFDC] data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8] rounded"
+                      className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky rounded"
                     />
-                    <label htmlFor="privacy" className="text-sm text-[#8A8880] leading-relaxed cursor-pointer">
+                    <label htmlFor="privacy" className="text-sm text-banc-grey leading-relaxed cursor-pointer">
                       Please tick this box if you are happy for us to contact you via phone and email. 
-                      You can view our full <a href="/privacy" className="text-[#4AC8E8] hover:underline">privacy policy</a> on our website.
+                      You can view our full <a href="/privacy" className="text-banc-sky hover:underline">privacy policy</a> on our website.
                     </label>
                   </div>
                   
                   {/* Submit Button */}
                   <Button 
                     type="submit"
-                    className="w-full h-14 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-[#4AC8E8]/25 hover:shadow-xl hover:shadow-[#4AC8E8]/30"
+                    className="w-full h-14 bg-banc-sky hover:bg-banc-sky-dark text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30"
                   >
                     Submit Application
                     <ArrowRight className="h-5 w-5 ml-2" />
@@ -405,14 +406,14 @@ export default function TeamPage() {
               </div>
               
               {/* Decorative element */}
-              <div className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl bg-[#4AC8E8]/10" />
+              <div className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl bg-banc-sky/10" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Call to Action Banner */}
-      <section className="bg-[#1A1917] py-12">
+      <section className="bg-banc-dark-deep py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left">
             <div>
@@ -425,15 +426,15 @@ export default function TeamPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
-                href="tel:01707877781" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white font-semibold rounded-xl transition-all duration-300"
+                href={BANC_CONTACT.callHref} 
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold rounded-xl transition-all duration-300"
               >
                 <Phone className="h-5 w-5" />
-                01707 877781
+                {BANC_CONTACT.displayPhone}
               </a>
               <a 
                 href="/contact" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-[#F4F3F1] text-[#1A1917] font-semibold rounded-xl transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-banc-grey-pale text-banc-dark-deep font-semibold rounded-xl transition-all duration-300"
               >
                 Contact Us
                 <ArrowRight className="h-5 w-5" />

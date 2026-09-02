@@ -98,7 +98,7 @@ export default function RegisterForm() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-[#1A1917] via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
+      <main className="min-h-screen bg-gradient-to-br from-banc-dark-deep via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
         <div className="mx-auto max-w-lg px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -113,7 +113,7 @@ export default function RegisterForm() {
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                           step.id <= currentStep
-                            ? "bg-[#4AC8E8] text-white"
+                            ? "bg-banc-sky text-white"
                             : "bg-white/10 text-white/40"
                         }`}
                       >
@@ -127,7 +127,7 @@ export default function RegisterForm() {
                     {index < steps.length - 1 && (
                       <div
                         className={`mx-2 h-0.5 flex-1 ${
-                          step.id < currentStep ? "bg-[#4AC8E8]" : "bg-white/10"
+                          step.id < currentStep ? "bg-banc-sky" : "bg-white/10"
                         }`}
                       />
                     )}
@@ -193,11 +193,11 @@ export default function RegisterForm() {
                 </Button>
               )}
               {currentStep < 4 ? (
-                <Button onClick={handleNext} className="flex-1 bg-[#4AC8E8]">
+                <Button onClick={handleNext} className="flex-1 bg-banc-sky">
                   Continue
                 </Button>
               ) : (
-                <Button onClick={handleSubmit} className="flex-1 bg-[#4AC8E8]">
+                <Button onClick={handleSubmit} className="flex-1 bg-banc-sky">
                   Create Account
                 </Button>
               )}

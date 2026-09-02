@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { BUYERS_GUIDE } from "@/lib/banc-content/buyers-guide";
 
@@ -19,22 +20,25 @@ const completion = BUYERS_GUIDE.sections[6];
 
 export default function BuyersGuidePage() {
   return (
-    <div className="bg-white text-[#2C2A27]">
+    <div className="bg-white text-banc-dark">
       <Header />
 
       {/* Hero */}
-      <section className="relative bg-[#1A1917] py-24 lg:py-32">
+      <section className="relative bg-banc-dark-deep py-24 lg:py-32">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917] via-[#1A1917]/95 to-transparent z-10" />
-          <img
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep via-banc-dark-deep/95 to-transparent z-10" />
+          <Image
             src="https://images.unsplash.com/photo-1783934108429-284d1f160ae1?auto=format&fit=crop&w=2000&q=80"
             alt="Luxury home interior"
-            className="w-full h-full object-cover opacity-40"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-40"
           />
         </div>
         <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-10">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8] mb-4">Guide</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-banc-sky mb-4">Guide</p>
             <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
               {BUYERS_GUIDE.title}
             </h1>
@@ -51,9 +55,9 @@ export default function BuyersGuidePage() {
       </section>
 
       {/* Introduction */}
-      <section className="py-16 bg-[#F4F3F1]">
+      <section className="py-16 bg-banc-grey-pale">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <p className="text-lg text-[#8A8880] leading-relaxed">
+          <p className="text-lg text-banc-grey leading-relaxed">
             Below is a brief guide to the buying process. Whether you&apos;re a first-time buyer or seasoned property investor,
             we&apos;re here to make your journey as smooth as possible.
           </p>
@@ -71,22 +75,22 @@ export default function BuyersGuidePage() {
                   {/* Content Column */}
                   <div className={isReversed ? 'lg:order-2' : ''}>
                     {/* Step Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-4">
-                      <span className="text-xs font-semibold text-[#4AC8E8] uppercase tracking-wider">Step {index + 1} of 6</span>
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-4">
+                      <span className="text-xs font-semibold text-banc-sky uppercase tracking-wider">Step {index + 1} of 6</span>
                     </div>
                     
-                    <h2 className="text-2xl lg:text-3xl font-semibold text-[#2C2A27] mb-4">{step.title}</h2>
-                    <p className="text-[#8A8880] leading-relaxed mb-6">{step.body[0]}</p>
+                    <h2 className="text-2xl lg:text-3xl font-semibold text-banc-dark mb-4">{step.title}</h2>
+                    <p className="text-banc-grey leading-relaxed mb-6">{step.body[0]}</p>
                     
                     {/* Top Tip Box - Consistent styling with Sellers Guide */}
-                    <div className="bg-[#4AC8E8]/5 border-l-4 border-[#4AC8E8] p-5 rounded-r-xl">
+                    <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-5 rounded-r-xl">
                       <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#4AC8E8] flex items-center justify-center">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-banc-sky flex items-center justify-center">
                           <Sparkles className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold text-[#4AC8E8] text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
-                          <p className="text-[#3D3B37] leading-relaxed">{step.body[1]}</p>
+                          <p className="font-semibold text-banc-sky text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
+                          <p className="text-banc-dark-mid leading-relaxed">{step.body[1]}</p>
                         </div>
                       </div>
                     </div>
@@ -94,8 +98,8 @@ export default function BuyersGuidePage() {
                   
                   {/* Image Column */}
                   <div className={`relative ${isReversed ? 'lg:order-1' : ''}`}>
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-[#1A1917]/10">
-                      <img 
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-banc-dark-deep/10">
+                      <Image
                         src={[
                           "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
                           "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80",
@@ -103,13 +107,15 @@ export default function BuyersGuidePage() {
                           "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
                           "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
                           "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80"
-                        ][index]} 
+                        ][index]}
                         alt={step.title}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover"
                       />
                     </div>
                     {/* Decorative Frame */}
-                    <div className={`absolute -bottom-3 -right-3 w-full h-full border-2 border-[#4AC8E8]/20 rounded-2xl -z-10 ${isReversed ? 'lg:-left-3 lg:right-auto' : ''}`} />
+                    <div className={`absolute -bottom-3 -right-3 w-full h-full border-2 border-banc-sky/20 rounded-2xl -z-10 ${isReversed ? 'lg:-left-3 lg:right-auto' : ''}`} />
                   </div>
                 </div>
               );
@@ -119,21 +125,21 @@ export default function BuyersGuidePage() {
       </section>
 
       {/* Completion Section */}
-      <section className="py-20 bg-[#F4F3F1]">
+      <section className="py-20 bg-banc-grey-pale">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#4AC8E8] flex items-center justify-center mb-6">
+          <div className="w-16 h-16 mx-auto rounded-full bg-banc-sky flex items-center justify-center mb-6">
             <Sparkles className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-3xl font-semibold text-[#2C2A27] mb-4">{completion.title}</h2>
-          <p className="text-lg text-[#8A8880] leading-relaxed mb-6">
+          <h2 className="text-3xl font-semibold text-banc-dark mb-4">{completion.title}</h2>
+          <p className="text-lg text-banc-grey leading-relaxed mb-6">
             {completion.body[0]}
           </p>
-          <div className="bg-[#4AC8E8]/5 border-l-4 border-[#4AC8E8] p-4 rounded-r-lg inline-block text-left max-w-xl">
+          <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-4 rounded-r-lg inline-block text-left max-w-xl">
             <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
+              <Sparkles className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-[#4AC8E8] text-sm uppercase tracking-wider mb-1">Top Tip</p>
-                <p className="text-sm text-[#8A8880]">{completion.body[1]}</p>
+                <p className="font-semibold text-banc-sky text-sm uppercase tracking-wider mb-1">Top Tip</p>
+                <p className="text-sm text-banc-grey">{completion.body[1]}</p>
               </div>
             </div>
           </div>
@@ -143,10 +149,10 @@ export default function BuyersGuidePage() {
       {/* Mortgage Advice */}
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="rounded-2xl bg-[#1A1917] p-8 lg:p-12">
+          <div className="rounded-2xl bg-banc-dark-deep p-8 lg:p-12">
             <div className="grid gap-8 lg:grid-cols-2 items-center">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-[#4AC8E8]">Finance</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-banc-sky">Finance</p>
                 <h2 className="mt-4 text-3xl font-semibold text-white">Mortgage Advice</h2>
                 <p className="mt-4 text-white/70 leading-relaxed">
                   We work with independent mortgage advisers who can help you find the best deal 
@@ -155,21 +161,21 @@ export default function BuyersGuidePage() {
                 </p>
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#4AC8E8] mr-3 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
                     <span>Independent whole-of-market advice</span>
                   </div>
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#4AC8E8] mr-3 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
                     <span>Agreement in principle within 24 hours</span>
                   </div>
                   <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-[#4AC8E8] mr-3 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
                     <span>Access to exclusive rates</span>
                   </div>
                 </div>
               </div>
               <div className="text-center lg:text-right">
-                <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white px-8 py-6 text-base">
+                <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base">
                   Speak to a Mortgage Adviser
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -180,7 +186,7 @@ export default function BuyersGuidePage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[#4AC8E8] py-16">
+      <section className="bg-banc-sky py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
           <h2 className="text-3xl font-semibold text-white sm:text-4xl">
             Ready to start your property search?
@@ -190,7 +196,7 @@ export default function BuyersGuidePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/sales/properties">
-              <Button className="bg-white text-[#4AC8E8] hover:bg-white/90 px-8 py-6 text-base font-semibold">
+              <Button className="bg-white text-banc-sky hover:bg-white/90 px-8 py-6 text-base font-semibold">
                 View Properties
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

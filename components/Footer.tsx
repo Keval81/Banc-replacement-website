@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 const footerLinks = {
   about: [
@@ -90,9 +91,9 @@ export default function Footer() {
             
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="tel:01707877781" className="flex items-center gap-3 text-banc-grey hover:text-banc-sky transition-colors">
+              <a href={BANC_CONTACT.callHref} className="flex items-center gap-3 text-banc-grey hover:text-banc-sky transition-colors">
                 <Phone className="h-4 w-4" />
-                <span>01707 877781</span>
+                <span>{BANC_CONTACT.displayPhone}</span>
               </a>
               <a href="mailto:info@bancproperty.com" className="flex items-center gap-3 text-banc-grey hover:text-banc-sky transition-colors">
                 <Mail className="h-4 w-4" />
@@ -110,7 +111,7 @@ export default function Footer() {
                 href="https://www.facebook.com/BANCpropertygroup"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -119,7 +120,7 @@ export default function Footer() {
                 href="https://instagram.com/bancproperty"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -128,7 +129,7 @@ export default function Footer() {
                 href="https://www.youtube.com/channel/UCuNRAhFmoSsDzyL6sFpOGtQ"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors"
+                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
                 aria-label="YouTube"
               >
                 <Youtube className="h-5 w-5" />
@@ -137,7 +138,7 @@ export default function Footer() {
           </div>
 
           {/* About Links */}
-          <div>
+          <nav aria-label="About Banc">
             <h3 className="text-lg font-semibold mb-4">About</h3>
             <ul className="space-y-3">
               {footerLinks.about.map((link) => (
@@ -151,10 +152,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Services Links */}
-          <div>
+          <nav aria-label="Services">
             <h3 className="text-lg font-semibold mb-4">Services</h3>
             <ul className="space-y-3">
               {footerLinks.services.map((link) => (
@@ -168,10 +169,10 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Resources Links */}
-          <div>
+          <nav aria-label="Resources">
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
               {footerLinks.resources.map((link) => (
@@ -185,7 +186,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Newsletter */}
           <div>

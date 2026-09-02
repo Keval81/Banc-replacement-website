@@ -2,6 +2,7 @@
 // PropertyCard and the listing pages render.
 
 import type { DbProperty } from "./supabase";
+import { BANC_CONTACT } from "./banc-contact.ts";
 import {
   deriveSearchFeatures,
   normalizePropertyType,
@@ -60,7 +61,7 @@ export function buildPropertyLeadActions(
   return {
     primaryHref: `mailto:info@bancproperty.com?subject=${viewingSubject}&body=${viewingBody}`,
     primaryLabel: "Request a viewing",
-    secondaryHref: "tel:01707877781",
+    secondaryHref: BANC_CONTACT.callHref,
     secondaryLabel: department === "lettings" ? "Call the lettings team" : "Call the sales team",
   };
 }
@@ -121,6 +122,64 @@ export async function shareProperty(
   }
 
   return "unavailable";
+}
+
+// ---- Address presentation -------------------------------------------------
+// The CRM feed often ships titles as the raw uppercase address line
+// ("5 LITTLE BERKHAMSTED LANE, LITTLE BERKHAMSTED, HERTFORD"). Cards should
+// read as prose, so shouty strings are folded to title case while anything
+// already mixed-case is left exactly as written.
+
+const ADDRESS_SMALL_WORDS = new Set(["of", "on", "the", "and", "in", "at", "by", "upon"]);
+const UK_POSTCODE_PART = /^(?:[A-Z]{1,2}\d[A-Z\d]?|\d[A-Z]{2})$/i;
+
+function isShoutyText(value: string): boolean {
+  return /[A-Z]/.test(value) && !/[a-z]/.test(value);
+}
+
+function titleCaseWord(word: string, index: number): string {
+  if (word.length === 0) return word;
+  if (UK_POSTCODE_PART.test(word)) return word.toUpperCase();
+  const lower = word.toLowerCase();
+  if (index > 0 && ADDRESS_SMALL_WORDS.has(lower)) return lower;
+  // Capitalise the first letter and letters after hyphens; apostrophes
+  // ("John's", "O'Brien") only capitalise when they open the word.
+  return lower.replace(/(^|-)([a-z])|^(o')([a-z])/g, (match: string) =>
+    match.toUpperCase()
+  );
+}
+
+export function titleCaseAddress(value: string): string {
+  const trimmed = value.trim();
+  if (!isShoutyText(trimmed)) return trimmed;
+  return trimmed
+    .split(",")
+    .map((segment) =>
+      segment
+        .trim()
+        .split(/\s+/)
+        .map((word, index) => titleCaseWord(word, index))
+        .join(" ")
+    )
+    .join(", ");
+}
+
+function normaliseAddressKey(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+// True when two address strings say the same thing (ignoring case,
+// punctuation and one being a prefix of the other), so a card can avoid
+// printing "5 Lane, Town" twice.
+export function isSameAddressText(a: string, b: string): boolean {
+  const left = normaliseAddressKey(a);
+  const right = normaliseAddressKey(b);
+  if (left.length === 0 || right.length === 0) return false;
+  return (
+    left === right ||
+    left.startsWith(`${right} `) ||
+    right.startsWith(`${left} `)
+  );
 }
 
 export interface PropertyCardData {

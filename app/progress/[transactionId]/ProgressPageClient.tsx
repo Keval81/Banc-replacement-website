@@ -3,6 +3,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import DocumentVault from "@/components/portal/DocumentVault";
+import { DemoBanner } from "@/components/ui/DemoBanner";
 import {
   SalesProgress,
   SalesStage,
@@ -173,12 +174,12 @@ const getStageIcon = (status: SalesStageInfo["status"]) => {
     case "completed":
       return <CheckCircle className="w-6 h-6 text-green-500" />;
     case "in_progress":
-      return <Clock className="w-6 h-6 text-[#4AC8E8]" />;
+      return <Clock className="w-6 h-6 text-banc-sky" />;
     case "blocked":
       return <AlertCircle className="w-6 h-6 text-red-500" />;
     case "pending":
     default:
-      return <Hourglass className="w-6 h-6 text-[#E0DFDC]" />;
+      return <Hourglass className="w-6 h-6 text-banc-line" />;
   }
 };
 
@@ -209,12 +210,13 @@ export default function ProgressTrackerPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+    <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
       <div className="max-w-6xl mx-auto">
+        <DemoBanner />
         {/* Back Link */}
         <a
           href="/portal/vendor"
-          className="inline-flex items-center gap-2 text-[#8A8880] hover:text-[#4AC8E8] transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-banc-grey hover:text-banc-sky transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" />
           Back to portal
@@ -224,14 +226,14 @@ export default function ProgressTrackerPage() {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-heading font-bold text-[#1A1917]">
+              <h1 className="text-3xl font-heading font-bold text-banc-dark-deep">
                 Sale Progress
               </h1>
-              <p className="text-[#8A8880] mt-1">
+              <p className="text-banc-grey mt-1">
                 Transaction ID: {transactionId}
               </p>
             </div>
-            <span className="inline-flex items-center px-4 py-2 bg-[#4AC8E8]/10 text-[#1A9BBF] rounded-full font-medium">
+            <span className="inline-flex items-center px-4 py-2 bg-banc-sky/10 text-banc-sky-dark rounded-full font-medium">
               <Clock className="w-4 h-4 mr-2" />
               In Progress
             </span>
@@ -239,7 +241,7 @@ export default function ProgressTrackerPage() {
         </div>
 
         {/* Property Summary */}
-        <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden mb-6">
+        <div className="bg-white rounded-xl border border-banc-line overflow-hidden mb-6">
           <div className="flex flex-col lg:flex-row">
             <div className="lg:w-1/4">
               <img
@@ -251,18 +253,18 @@ export default function ProgressTrackerPage() {
             <div className="p-5 lg:w-3/4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-heading font-semibold text-[#1A1917]">
+                  <h2 className="text-xl font-heading font-semibold text-banc-dark-deep">
                     {mockProgress.propertyAddress}
                   </h2>
-                  <p className="text-2xl font-bold text-[#4AC8E8] mt-1">
+                  <p className="text-2xl font-bold text-banc-sky mt-1">
                     {formatCurrency(mockProgress.agreedPrice)}
                   </p>
-                  <p className="text-sm text-[#8A8880]">Agreed Price</p>
+                  <p className="text-sm text-banc-grey">Agreed Price</p>
                 </div>
                 {mockProgress.estimatedCompletion && (
                   <div className="md:text-right">
-                    <p className="text-sm text-[#8A8880]">Est. Completion</p>
-                    <p className="text-xl font-semibold text-[#1A1917]">
+                    <p className="text-sm text-banc-grey">Est. Completion</p>
+                    <p className="text-xl font-semibold text-banc-dark-deep">
                       {formatDate(mockProgress.estimatedCompletion)}
                     </p>
                   </div>
@@ -272,16 +274,16 @@ export default function ProgressTrackerPage() {
               {/* Progress Bar */}
               <div className="mt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-[#8A8880]">
+                  <span className="text-sm text-banc-grey">
                     Overall Progress
                   </span>
-                  <span className="text-sm font-medium text-[#4AC8E8]">
+                  <span className="text-sm font-medium text-banc-sky">
                     {progressPercentage}%
                   </span>
                 </div>
-                <div className="w-full h-3 bg-[#F4F3F1] rounded-full overflow-hidden">
+                <div className="w-full h-3 bg-banc-grey-pale rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#4AC8E8] to-[#9ADFF2] rounded-full transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-banc-sky to-banc-sky-mid rounded-full transition-all duration-500"
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>
@@ -294,8 +296,8 @@ export default function ProgressTrackerPage() {
           {/* Main Timeline */}
           <div className="lg:col-span-2 space-y-6">
             {/* Timeline */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-6">
-              <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-6">
+            <div className="bg-white rounded-xl border border-banc-line p-6">
+              <h2 className="text-xl font-heading font-semibold text-banc-dark-deep mb-6">
                 Milestone Timeline
               </h2>
               <div className="space-y-0">
@@ -307,7 +309,7 @@ export default function ProgressTrackerPage() {
                         className={`absolute left-3 top-10 w-0.5 h-[calc(100%+1rem)] ${
                           stage.status === "completed"
                             ? "bg-green-500"
-                            : "bg-[#E0DFDC]"
+                            : "bg-banc-line"
                         }`}
                       />
                     )}
@@ -320,10 +322,10 @@ export default function ProgressTrackerPage() {
                             stage.status === "completed"
                               ? "bg-green-500"
                               : stage.status === "in_progress"
-                              ? "bg-[#4AC8E8]"
+                              ? "bg-banc-sky"
                               : stage.status === "blocked"
                               ? "bg-red-500"
-                              : "bg-[#E0DFDC]"
+                              : "bg-banc-line"
                           }`}
                         >
                           {stage.status === "completed" ? (
@@ -339,10 +341,10 @@ export default function ProgressTrackerPage() {
                             <h3
                               className={`font-medium ${
                                 stage.status === "in_progress"
-                                  ? "text-[#4AC8E8]"
+                                  ? "text-banc-sky"
                                   : stage.status === "completed"
-                                  ? "text-[#1A1917]"
-                                  : "text-[#8A8880]"
+                                  ? "text-banc-dark-deep"
+                                  : "text-banc-grey"
                               }`}
                             >
                               {stage.title}
@@ -350,8 +352,8 @@ export default function ProgressTrackerPage() {
                             <p
                               className={`text-sm mt-0.5 ${
                                 stage.status === "in_progress"
-                                  ? "text-[#8A8880]"
-                                  : "text-[#8A8880]"
+                                  ? "text-banc-grey"
+                                  : "text-banc-grey"
                               }`}
                             >
                               {stage.description}
@@ -364,7 +366,7 @@ export default function ProgressTrackerPage() {
                               </p>
                             )}
                             {stage.estimatedDate && stage.status === "in_progress" && (
-                              <p className="text-xs text-[#4AC8E8] mt-2">
+                              <p className="text-xs text-banc-sky mt-2">
                                 Est. completion: {formatDate(stage.estimatedDate)}
                               </p>
                             )}
@@ -374,10 +376,10 @@ export default function ProgressTrackerPage() {
                               stage.status === "completed"
                                 ? "bg-green-100 text-green-700"
                                 : stage.status === "in_progress"
-                                ? "bg-[#4AC8E8]/10 text-[#1A9BBF]"
+                                ? "bg-banc-sky/10 text-banc-sky-dark"
                                 : stage.status === "blocked"
                                 ? "bg-red-100 text-red-700"
-                                : "bg-[#F4F3F1] text-[#8A8880]"
+                                : "bg-banc-grey-pale text-banc-grey"
                             }`}
                           >
                             {stage.status === "completed"
@@ -397,15 +399,15 @@ export default function ProgressTrackerPage() {
             </div>
 
             {/* Notes */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-6">
-              <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-4">
+            <div className="bg-white rounded-xl border border-banc-line p-6">
+              <h2 className="text-xl font-heading font-semibold text-banc-dark-deep mb-4">
                 Recent Updates
               </h2>
               <ul className="space-y-3">
                 {mockProgress.notes.map((note, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-[#4AC8E8] rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-[#1A1917]">{note}</p>
+                    <div className="w-2 h-2 bg-banc-sky rounded-full mt-2 flex-shrink-0" />
+                    <p className="text-banc-dark-deep">{note}</p>
                   </li>
                 ))}
               </ul>
@@ -413,8 +415,8 @@ export default function ProgressTrackerPage() {
 
             {/* Property Chain */}
             {mockProgress.chain && (
-              <div className="bg-white rounded-xl border border-[#E0DFDC] p-6">
-                <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-4">
+              <div className="bg-white rounded-xl border border-banc-line p-6">
+                <h2 className="text-xl font-heading font-semibold text-banc-dark-deep mb-4">
                   Property Chain
                 </h2>
                 <div className="space-y-4">
@@ -423,14 +425,14 @@ export default function ProgressTrackerPage() {
                       key={property.id}
                       className={`flex items-center gap-4 p-4 rounded-lg ${
                         property.position === "this"
-                          ? "bg-[#4AC8E8]/10 border-2 border-[#4AC8E8]"
-                          : "bg-[#F4F3F1]"
+                          ? "bg-banc-sky/10 border-2 border-banc-sky"
+                          : "bg-banc-grey-pale"
                       }`}
                     >
                       <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${
                           property.position === "this"
-                            ? "bg-[#4AC8E8]"
+                            ? "bg-banc-sky"
                             : "bg-white"
                         }`}
                       >
@@ -438,7 +440,7 @@ export default function ProgressTrackerPage() {
                           className={`w-5 h-5 ${
                             property.position === "this"
                               ? "text-white"
-                              : "text-[#8A8880]"
+                              : "text-banc-grey"
                           }`}
                         />
                       </div>
@@ -446,8 +448,8 @@ export default function ProgressTrackerPage() {
                         <p
                           className={`font-medium ${
                             property.position === "this"
-                              ? "text-[#1A1917]"
-                              : "text-[#8A8880]"
+                              ? "text-banc-dark-deep"
+                              : "text-banc-grey"
                           }`}
                         >
                           {property.address}
@@ -458,8 +460,8 @@ export default function ProgressTrackerPage() {
                               property.status === "sold"
                                 ? "bg-green-100 text-green-700"
                                 : property.status === "under_offer"
-                                ? "bg-[#4AC8E8]/10 text-[#1A9BBF]"
-                                : "bg-[#E0DFDC] text-[#8A8880]"
+                                ? "bg-banc-sky/10 text-banc-sky-dark"
+                                : "bg-banc-line text-banc-grey"
                             }`}
                           >
                             {property.status === "sold"
@@ -469,17 +471,17 @@ export default function ProgressTrackerPage() {
                               : "Unknown"}
                           </span>
                           {property.position === "above" && (
-                            <span className="text-xs text-[#8A8880]">
+                            <span className="text-xs text-banc-grey">
                               You are buying this
                             </span>
                           )}
                           {property.position === "below" && (
-                            <span className="text-xs text-[#8A8880]">
+                            <span className="text-xs text-banc-grey">
                               Your buyer is selling
                             </span>
                           )}
                           {property.position === "this" && (
-                            <span className="text-xs text-[#4AC8E8] font-medium">
+                            <span className="text-xs text-banc-sky font-medium">
                               Your Property
                             </span>
                           )}
@@ -499,7 +501,7 @@ export default function ProgressTrackerPage() {
           <div className="space-y-6">
             {/* Current Stage Card */}
             {currentStage && (
-              <div className="bg-[#4AC8E8] rounded-xl p-5 text-white">
+              <div className="bg-banc-sky rounded-xl p-5 text-white">
                 <h3 className="font-heading font-semibold mb-2">
                   Current Stage
                 </h3>
@@ -519,25 +521,25 @@ export default function ProgressTrackerPage() {
             )}
 
             {/* Stakeholders */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
-              <h3 className="font-heading font-semibold text-[#1A1917] mb-4">
+            <div className="bg-white rounded-xl border border-banc-line p-5">
+              <h3 className="font-heading font-semibold text-banc-dark-deep mb-4">
                 Your Team
               </h3>
               <div className="space-y-4">
                 {mockProgress.stakeholders.map((stakeholder) => (
                   <div
                     key={stakeholder.id}
-                    className="p-3 bg-[#F4F3F1] rounded-lg"
+                    className="p-3 bg-banc-grey-pale rounded-lg"
                   >
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
-                        <Users className="w-5 h-5 text-[#4AC8E8]" />
+                      <div className="w-10 h-10 bg-banc-sky/10 rounded-full flex items-center justify-center">
+                        <Users className="w-5 h-5 text-banc-sky" />
                       </div>
                       <div>
-                        <p className="font-medium text-[#1A1917]">
+                        <p className="font-medium text-banc-dark-deep">
                           {stakeholder.name}
                         </p>
-                        <p className="text-xs text-[#8A8880]">
+                        <p className="text-xs text-banc-grey">
                           {getRoleLabel(stakeholder.role)}
                         </p>
                       </div>
@@ -545,7 +547,7 @@ export default function ProgressTrackerPage() {
                     {stakeholder.phone && (
                       <a
                         href={`tel:${stakeholder.phone}`}
-                        className="flex items-center gap-2 text-sm text-[#4AC8E8] hover:underline"
+                        className="flex items-center gap-2 text-sm text-banc-sky hover:underline"
                       >
                         <Phone className="w-4 h-4" />
                         {stakeholder.phone}
@@ -554,7 +556,7 @@ export default function ProgressTrackerPage() {
                     {stakeholder.email && (
                       <a
                         href={`mailto:${stakeholder.email}`}
-                        className="flex items-center gap-2 text-sm text-[#4AC8E8] hover:underline mt-1"
+                        className="flex items-center gap-2 text-sm text-banc-sky hover:underline mt-1"
                       >
                         <Mail className="w-4 h-4" />
                         {stakeholder.email}
@@ -566,46 +568,46 @@ export default function ProgressTrackerPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-5">
-              <h3 className="font-heading font-semibold text-[#1A1917] mb-4">
+            <div className="bg-white rounded-xl border border-banc-line p-5">
+              <h3 className="font-heading font-semibold text-banc-dark-deep mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-2">
                 <a
                   href="/portal/vendor/messages"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Mail className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Message Team</span>
+                    <Mail className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Message Team</span>
                   </span>
-                  <ArrowRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/portal/vendor/documents"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Upload Document</span>
+                    <FileText className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Upload Document</span>
                   </span>
-                  <ArrowRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowRight className="w-4 h-4 text-banc-grey" />
                 </a>
                 <a
                   href="/contact"
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-[#F4F3F1] transition-colors"
+                  className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Phone className="w-5 h-5 text-[#4AC8E8]" />
-                    <span className="text-[#1A1917]">Call Agent</span>
+                    <Phone className="w-5 h-5 text-banc-sky" />
+                    <span className="text-banc-dark-deep">Call Agent</span>
                   </span>
-                  <ArrowRight className="w-4 h-4 text-[#8A8880]" />
+                  <ArrowRight className="w-4 h-4 text-banc-grey" />
                 </a>
               </div>
             </div>
 
             {/* Help */}
-            <div className="bg-[#1A9BBF] rounded-xl p-5 text-white">
+            <div className="bg-banc-sky-dark rounded-xl p-5 text-white">
               <h3 className="font-heading font-semibold mb-2">Need Help?</h3>
               <p className="text-sm text-white/80 mb-4">
                 Our team is here to guide you through every step of the selling
@@ -613,7 +615,7 @@ export default function ProgressTrackerPage() {
               </p>
               <a
                 href="/contact"
-                className="block w-full py-2 px-4 bg-white text-[#1A9BBF] text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="block w-full py-2 px-4 bg-white text-banc-sky-dark text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Contact Support
               </a>

@@ -100,8 +100,8 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-[#4AC8E8] text-white"
-                  : "text-[#8A8880] hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                  ? "bg-banc-sky text-white"
+                  : "text-banc-grey hover:bg-banc-grey-pale hover:text-banc-dark-deep"
               }`}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -109,7 +109,7 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               {item.badge && (
                 <span
                   className={`px-2 py-0.5 text-xs rounded-full ${
-                    active ? "bg-white/20 text-white" : "bg-[#4AC8E8] text-white"
+                    active ? "bg-white/20 text-white" : "bg-banc-sky text-white"
                   }`}
                 >
                   {item.badge}
@@ -121,7 +121,7 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
       </nav>
 
       {/* Secondary Navigation */}
-      <div className="px-3 pt-4 border-t border-[#E0DFDC] space-y-1">
+      <div className="px-3 pt-4 border-t border-banc-line space-y-1">
         {secondaryItems.map((item) => {
           const active = pathname === item.href;
           return (
@@ -131,8 +131,8 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-[#4AC8E8] text-white"
-                  : "text-[#8A8880] hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                  ? "bg-banc-sky text-white"
+                  : "text-banc-grey hover:bg-banc-grey-pale hover:text-banc-dark-deep"
               }`}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -143,11 +143,11 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
       </div>
 
       {/* Help Card */}
-      <div className="px-4 py-4 mt-4 mx-3 bg-[#F4F3F1] rounded-xl">
-        <p className="text-xs text-[#8A8880] mb-2">Need assistance?</p>
+      <div className="px-4 py-4 mt-4 mx-3 bg-banc-grey-pale rounded-xl">
+        <p className="text-xs text-banc-grey mb-2">Need assistance?</p>
         <a
           href="/contact"
-          className="text-sm font-medium text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
+          className="text-sm font-medium text-banc-sky hover:text-banc-sky-dark transition-colors"
         >
           Contact your agent →
         </a>

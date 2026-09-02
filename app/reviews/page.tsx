@@ -122,11 +122,11 @@ function ReviewTypeBadge({ type }: { type?: string }) {
 
 export default function ReviewsPage() {
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
       
       {/* Premium Hero Section */}
-      <section className="relative overflow-hidden bg-[#1A1917]">
+      <section className="relative overflow-hidden bg-banc-dark-deep">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -134,7 +134,7 @@ export default function ReviewsPage() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -145,7 +145,7 @@ export default function ReviewsPage() {
         </div>
         
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1A1917]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-banc-dark-deep/50" />
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
           <div className="text-center">
@@ -174,10 +174,10 @@ export default function ReviewsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-[#4AC8E8]/10 text-[#4AC8E8] text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-banc-sky/10 text-banc-sky text-sm font-medium mb-4">
               Client Testimonials
             </span>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
               Trusted by Homeowners Across Hertfordshire
             </h2>
           </div>
@@ -193,7 +193,7 @@ export default function ReviewsPage() {
               >
                 {/* Quote Icon - Large and prominent */}
                 <div className="absolute -top-3 -left-2">
-                  <div className="w-14 h-14 rounded-xl bg-[#4AC8E8] flex items-center justify-center shadow-lg shadow-[#4AC8E8]/20 group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-14 h-14 rounded-xl bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/20 group-hover:scale-110 transition-transform duration-300">
                     <Quote className="h-7 w-7 text-white fill-white" />
                   </div>
                 </div>
@@ -206,21 +206,21 @@ export default function ReviewsPage() {
                 {/* Content */}
                 <div className="mt-2">
                   {/* Headline */}
-                  <h3 className="text-xl font-semibold text-[#1A1917] leading-snug mb-4">
+                  <h3 className="text-xl font-semibold text-banc-dark-deep leading-snug mb-4">
                     {review.title}
                   </h3>
                   
                   {/* Testimonial Text */}
-                  <blockquote className="text-[#8A8880] leading-relaxed text-base">
+                  <blockquote className="text-banc-grey leading-relaxed text-base">
                     &quot;{review.text}&quot;
                   </blockquote>
                   
                   {/* Author */}
-                  <div className="mt-6 pt-6 border-t border-[#E0DFDC]">
-                    <p className="font-semibold text-[#1A1917]">{review.name}</p>
+                  <div className="mt-6 pt-6 border-t border-banc-line">
+                    <p className="font-semibold text-banc-dark-deep">{review.name}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <MapPin className="h-3.5 w-3.5 text-[#4AC8E8]" />
-                      <p className="text-sm text-[#8A8880]">{review.location}</p>
+                      <MapPin className="h-3.5 w-3.5 text-banc-sky" />
+                      <p className="text-sm text-banc-grey">{review.location}</p>
                     </div>
                   </div>
                 </div>
@@ -233,10 +233,10 @@ export default function ReviewsPage() {
       {/* Valuation CTA Section */}
       <section className="py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="relative overflow-hidden rounded-3xl bg-[#1A1917] p-12 lg:p-16">
+          <div className="relative overflow-hidden rounded-3xl bg-banc-dark-deep p-12 lg:p-16">
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-[#4AC8E8]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#4AC8E8]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-banc-sky/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-banc-sky/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
             <div className="relative text-center">
               <h2 className="text-3xl lg:text-4xl font-semibold text-white">
@@ -249,7 +249,7 @@ export default function ReviewsPage() {
 
               <a
                 href="/valuation"
-                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-[#4AC8E8] px-8 py-4 text-white font-semibold hover:bg-[#1A9BBF] transition-colors duration-200 shadow-lg shadow-[#4AC8E8]/25 hover:shadow-[#4AC8E8]/40"
+                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-banc-sky px-8 py-4 text-white font-semibold hover:bg-banc-sky-dark transition-colors duration-200 shadow-lg shadow-banc-sky/25 hover:shadow-banc-sky/40"
               >
                 Request a Valuation
               </a>

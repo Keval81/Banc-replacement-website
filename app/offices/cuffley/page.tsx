@@ -30,6 +30,7 @@ import {
   CUFFLEY_GEO,
   officeJsonLd,
 } from "@/lib/schema-org";
+import { BANC_CONTACT } from "@/lib/banc-contact";
 
 export const revalidate = 3600;
 
@@ -75,14 +76,14 @@ const teamMembers = [
     name: "Vicki Glashier",
     role: "Office Manager",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     email: "vicki@bancproperty.com"
   },
   {
     name: "Kay Stanley",
     role: "Sales Progressor",
     image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
-    phone: "01707 877781",
+    phone: BANC_CONTACT.displayPhone,
     email: "kay@bancproperty.com"
   }
 ];
@@ -114,12 +115,12 @@ const areasCovered = [
 
 export default function CuffleyOfficePage() {
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <JsonLd data={officeStructuredData} />
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-[#1A1917] py-24 lg:py-32 overflow-hidden">
+      <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0">
           <Image 
@@ -128,14 +129,14 @@ export default function CuffleyOfficePage() {
             fill
             className="object-cover opacity-20"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917] via-[#1A1917]/90 to-[#1A1917]/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep via-banc-dark-deep/90 to-banc-dark-deep/70" />
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-                <Building2 className="h-4 w-4 text-[#4AC8E8]" />
+                <Building2 className="h-4 w-4 text-banc-sky" />
                 <span className="text-sm font-medium text-white/80">Head Office</span>
               </div>
               
@@ -150,29 +151,29 @@ export default function CuffleyOfficePage() {
               
               {/* Quick contact info */}
               <div className="mt-8 space-y-4">
-                <a href="tel:01707877781" className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center group-hover:bg-[#4AC8E8]/30 transition-colors">
-                    <Phone className="h-5 w-5 text-[#4AC8E8]" />
+                <a href={BANC_CONTACT.callHref} className="flex items-center gap-4 group">
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center group-hover:bg-banc-sky/30 transition-colors">
+                    <Phone className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Call us</p>
-                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">01707 877781</p>
+                    <p className="text-lg font-semibold text-white group-hover:text-banc-sky transition-colors">{BANC_CONTACT.displayPhone}</p>
                   </div>
                 </a>
                 
                 <a href="mailto:info@bancproperty.com" className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center group-hover:bg-[#4AC8E8]/30 transition-colors">
-                    <Mail className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center group-hover:bg-banc-sky/30 transition-colors">
+                    <Mail className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Email us</p>
-                    <p className="text-lg font-semibold text-white group-hover:text-[#4AC8E8] transition-colors">info@bancproperty.com</p>
+                    <p className="text-lg font-semibold text-white group-hover:text-banc-sky transition-colors">info@bancproperty.com</p>
                   </div>
                 </a>
                 
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/20 flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-banc-sky" />
                   </div>
                   <div>
                     <p className="text-sm text-white/50">Visit us</p>
@@ -188,7 +189,7 @@ export default function CuffleyOfficePage() {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  <Button className="bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white px-6">
+                  <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-6">
                     <Navigation className="mr-2 h-4 w-4" />
                     Get Directions
                   </Button>
@@ -224,19 +225,19 @@ export default function CuffleyOfficePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Opening Hours */}
-            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30">
+            <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-[#4AC8E8]" />
+                <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
+                  <Clock className="h-6 w-6 text-banc-sky" />
                 </div>
-                <h2 className="text-xl font-semibold text-[#1A1917]">Opening Hours</h2>
+                <h2 className="text-xl font-semibold text-banc-dark-deep">Opening Hours</h2>
               </div>
               
               <div className="space-y-3">
                 {openingHours.map((item) => (
-                  <div key={item.day} className="flex justify-between items-center py-2 border-b border-[#E0DFDC]/20 last:border-0">
-                    <span className="text-[#3D3B37] font-medium">{item.day}</span>
-                    <span className={`${item.hours === 'Closed' ? 'text-[#8A8880]' : 'text-[#4AC8E8] font-semibold'}`}>
+                  <div key={item.day} className="flex justify-between items-center py-2 border-b border-banc-line/20 last:border-0">
+                    <span className="text-banc-dark-mid font-medium">{item.day}</span>
+                    <span className={`${item.hours === 'Closed' ? 'text-banc-grey' : 'text-banc-sky font-semibold'}`}>
                       {item.hours}
                     </span>
                   </div>
@@ -245,59 +246,59 @@ export default function CuffleyOfficePage() {
             </div>
             
             {/* Parking & Transport */}
-            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30">
+            <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center">
-                  <Car className="h-6 w-6 text-[#4AC8E8]" />
+                <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
+                  <Car className="h-6 w-6 text-banc-sky" />
                 </div>
-                <h2 className="text-xl font-semibold text-[#1A1917]">Parking & Transport</h2>
+                <h2 className="text-xl font-semibold text-banc-dark-deep">Parking & Transport</h2>
               </div>
               
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <Car className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
+                  <Car className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-[#1A1917]">Free Parking</p>
-                    <p className="text-sm text-[#8A8880]">Free parking available directly outside our office on Station Road</p>
+                    <p className="font-medium text-banc-dark-deep">Free Parking</p>
+                    <p className="text-sm text-banc-grey">Free parking available directly outside our office on Station Road</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Train className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
+                  <Train className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-[#1A1917]">Train Station</p>
-                    <p className="text-sm text-[#8A8880]">Cuffley Station is just a 2-minute walk from our office</p>
+                    <p className="font-medium text-banc-dark-deep">Train Station</p>
+                    <p className="text-sm text-banc-grey">Cuffley Station is just a 2-minute walk from our office</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Navigation className="h-5 w-5 text-[#4AC8E8] flex-shrink-0 mt-0.5" />
+                  <Navigation className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-[#1A1917]">Easy Access</p>
-                    <p className="text-sm text-[#8A8880]">Located in the centre of Cuffley village, easy to find</p>
+                    <p className="font-medium text-banc-dark-deep">Easy Access</p>
+                    <p className="text-sm text-banc-grey">Located in the centre of Cuffley village, easy to find</p>
                   </div>
                 </div>
               </div>
             </div>
             
             {/* Areas We Cover */}
-            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30">
+            <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-[#4AC8E8]" />
+                <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-banc-sky" />
                 </div>
-                <h2 className="text-xl font-semibold text-[#1A1917]">Areas We Cover</h2>
+                <h2 className="text-xl font-semibold text-banc-dark-deep">Areas We Cover</h2>
               </div>
               
               <div className="flex flex-wrap gap-2">
                 {areasCovered.map((area) => (
                   <span 
                     key={area}
-                    className="px-3 py-1.5 rounded-full bg-[#F4F3F1] text-sm text-[#3D3B37] border border-[#E0DFDC]/30"
+                    className="px-3 py-1.5 rounded-full bg-banc-grey-pale text-sm text-banc-dark-mid border border-banc-line/30"
                   >
                     {area}
                   </span>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-[#8A8880]">
+              <p className="mt-4 text-sm text-banc-grey">
                 And many more surrounding Hertfordshire and North London areas.
               </p>
             </div>
@@ -306,11 +307,11 @@ export default function CuffleyOfficePage() {
       </section>
 
       {/* Team Section */}
-      <section className="py-20 lg:py-28 bg-[#1A1917]">
+      <section className="py-20 lg:py-28 bg-banc-dark-deep">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Users className="h-4 w-4 text-[#4AC8E8]" />
+              <Users className="h-4 w-4 text-banc-sky" />
               <span className="text-sm font-medium text-white/80">Our Team</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-semibold text-white">
@@ -323,7 +324,7 @@ export default function CuffleyOfficePage() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {teamMembers.map((member) => (
-              <div key={member.name} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-[#4AC8E8]/50 transition-colors group">
+              <div key={member.name} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-banc-sky/50 transition-colors group">
                 <div className="relative h-64 overflow-hidden">
                   <Image 
                     src={member.image}
@@ -334,13 +335,13 @@ export default function CuffleyOfficePage() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-lg font-semibold text-white">{member.name}</h3>
-                  <p className="text-[#4AC8E8] text-sm">{member.role}</p>
+                  <p className="text-banc-sky text-sm">{member.role}</p>
                   <div className="mt-4 space-y-2">
-                    <a href={`tel:${member.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-[#4AC8E8] transition-colors">
+                    <a href={`tel:${member.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-banc-sky transition-colors">
                       <Phone className="h-4 w-4" />
                       {member.phone}
                     </a>
-                    <a href={`mailto:${member.email}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-[#4AC8E8] transition-colors">
+                    <a href={`mailto:${member.email}`} className="flex items-center gap-2 text-sm text-white/60 hover:text-banc-sky transition-colors">
                       <Mail className="h-4 w-4" />
                       {member.email}
                     </a>
@@ -358,69 +359,69 @@ export default function CuffleyOfficePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Left side - Info */}
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#4AC8E8]/10 border border-[#4AC8E8]/20 mb-6">
-                <Calendar className="h-4 w-4 text-[#4AC8E8]" />
-                <span className="text-sm font-medium text-[#1A9BBF]">Book an Appointment</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
+                <Calendar className="h-4 w-4 text-banc-sky" />
+                <span className="text-sm font-medium text-banc-sky-dark">Book an Appointment</span>
               </div>
               
-              <h2 className="text-3xl lg:text-4xl font-semibold text-[#1A1917]">
+              <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
                 Visit Our Cuffley Office
               </h2>
-              <p className="mt-4 text-lg text-[#8A8880]">
+              <p className="mt-4 text-lg text-banc-grey">
                 Book a free, no-obligation appointment to discuss your property needs. 
                 Whether you&apos;re selling, letting, buying, or renting, we&apos;re here to help.
               </p>
               
               <div className="mt-8 space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <Star className="h-6 w-6 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <Star className="h-6 w-6 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Free Valuation</h3>
-                    <p className="text-sm text-[#8A8880]">Get an accurate market appraisal of your property with no obligation.</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Free Valuation</h3>
+                    <p className="text-sm text-banc-grey">Get an accurate market appraisal of your property with no obligation.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <Users className="h-6 w-6 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <Users className="h-6 w-6 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Expert Advice</h3>
-                    <p className="text-sm text-[#8A8880]">Speak directly with our experienced directors and senior negotiators.</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Expert Advice</h3>
+                    <p className="text-sm text-banc-grey">Speak directly with our experienced directors and senior negotiators.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#4AC8E8]/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-6 w-6 text-[#4AC8E8]" />
+                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
+                    <Clock className="h-6 w-6 text-banc-sky" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#1A1917]">Flexible Times</h3>
-                    <p className="text-sm text-[#8A8880]">We offer appointments including evenings and weekends to suit your schedule.</p>
+                    <h3 className="font-semibold text-banc-dark-deep">Flexible Times</h3>
+                    <p className="text-sm text-banc-grey">We offer appointments including evenings and weekends to suit your schedule.</p>
                   </div>
                 </div>
               </div>
             </div>
             
             {/* Right side - Form */}
-            <div className="bg-white rounded-2xl p-8 border border-[#E0DFDC]/30 shadow-lg">
-              <h3 className="text-xl font-semibold text-[#1A1917] mb-6">Request an Appointment</h3>
+            <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
+              <h3 className="text-xl font-semibold text-banc-dark-deep mb-6">Request an Appointment</h3>
               
               <form className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#3D3B37] mb-2">First Name *</label>
+                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">First Name *</label>
                     <Input 
                       placeholder="John"
-                      className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#3D3B37] mb-2">Last Name *</label>
+                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Last Name *</label>
                     <Input 
                       placeholder="Smith"
-                      className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                       required
                     />
                   </div>
@@ -428,37 +429,37 @@ export default function CuffleyOfficePage() {
                 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-[#3D3B37] mb-2">Phone Number *</label>
+                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Phone Number *</label>
                     <Input 
                       type="tel"
-                      placeholder="01707 877781"
-                      className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                      placeholder={BANC_CONTACT.displayPhone}
+                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-[#3D3B37] mb-2">Email Address *</label>
+                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Email Address *</label>
                     <Input 
                       type="email"
                       placeholder="john@example.com"
-                      className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                       required
                     />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-[#3D3B37] mb-2">Property Address (if applicable)</label>
+                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Property Address (if applicable)</label>
                   <Input 
                     placeholder="1 Station Road, Cuffley, EN6 4HU"
-                    className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-[#3D3B37] mb-2">What would you like to discuss? *</label>
+                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">What would you like to discuss? *</label>
                   <select 
-                    className="w-full h-12 px-4 rounded-lg border border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-2 focus:ring-[#4AC8E8]/20 bg-white text-[#3D3B37]"
+                    className="w-full h-12 px-4 rounded-lg border border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 bg-white text-banc-dark-mid"
                     required
                   >
                     <option value="">Select a service...</option>
@@ -473,35 +474,35 @@ export default function CuffleyOfficePage() {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-[#3D3B37] mb-2">Preferred Date & Time</label>
+                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Preferred Date & Time</label>
                   <Input 
                     type="datetime-local"
-                    className="h-12 border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20"
+                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-[#3D3B37] mb-2">Additional Message</label>
+                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Additional Message</label>
                   <Textarea 
                     placeholder="Tell us more about your requirements..."
                     rows={4}
-                    className="border-[#E0DFDC] focus:border-[#4AC8E8] focus:ring-[#4AC8E8]/20 resize-none"
+                    className="border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none"
                   />
                 </div>
                 
-                <div className="flex items-start gap-3 p-4 bg-[#F4F3F1] rounded-xl">
+                <div className="flex items-start gap-3 p-4 bg-banc-grey-pale rounded-xl">
                   <Checkbox 
                     id="privacy-cuffley"
                     required
-                    className="mt-0.5 border-[#E0DFDC] data-[state=checked]:bg-[#4AC8E8] data-[state=checked]:border-[#4AC8E8]"
+                    className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
                   />
-                  <label htmlFor="privacy-cuffley" className="text-sm text-[#8A8880] leading-relaxed">
+                  <label htmlFor="privacy-cuffley" className="text-sm text-banc-grey leading-relaxed">
                     I agree to Banc Property Group contacting me about my enquiry. 
-                    Read our <Link href="/privacy" className="text-[#4AC8E8] hover:underline">Privacy Policy</Link>.
+                    Read our <Link href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</Link>.
                   </label>
                 </div>
                 
-                <Button type="submit" className="w-full h-12 bg-[#4AC8E8] hover:bg-[#1A9BBF] text-white font-semibold">
+                <Button type="submit" className="w-full h-12 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold">
                   Request Appointment
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

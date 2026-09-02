@@ -182,7 +182,7 @@ export default function Hero() {
 
       {!canAutoplay && (
         <button
-          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/40 px-6 py-3 text-sm text-white"
+          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/40 px-6 py-3 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
           onClick={startPlayback}
         >
           Play film

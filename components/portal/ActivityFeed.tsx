@@ -47,17 +47,17 @@ export default function ActivityFeed({
   const getActivityColor = (type: PropertyActivity["type"]) => {
     switch (type) {
       case "viewing":
-        return "bg-[#4AC8E8]";
+        return "bg-banc-sky";
       case "offer":
         return "bg-green-500";
       case "message":
-        return "bg-[#1A9BBF]";
+        return "bg-banc-sky-dark";
       case "marketing":
         return "bg-purple-500";
       case "milestone":
-        return "bg-[#9ADFF2]";
+        return "bg-banc-sky-mid";
       default:
-        return "bg-[#8A8880]";
+        return "bg-banc-grey";
     }
   };
 
@@ -81,22 +81,22 @@ export default function ActivityFeed({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden">
-      <div className="px-5 py-4 border-b border-[#E0DFDC] flex items-center justify-between">
-        <h3 className="font-heading font-semibold text-[#1A1917]">Activity Feed</h3>
-        <span className="text-sm text-[#8A8880]">
+    <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
+      <div className="px-5 py-4 border-b border-banc-line flex items-center justify-between">
+        <h3 className="font-heading font-semibold text-banc-dark-deep">Activity Feed</h3>
+        <span className="text-sm text-banc-grey">
           {activities.length} activities
         </span>
       </div>
 
-      <div className="divide-y divide-[#E0DFDC]">
+      <div className="divide-y divide-banc-line">
         {displayActivities.length === 0 ? (
           <div className="px-5 py-8 text-center">
-            <div className="w-12 h-12 bg-[#F4F3F1] rounded-full flex items-center justify-center mx-auto mb-3">
-              <FileText className="w-6 h-6 text-[#8A8880]" />
+            <div className="w-12 h-12 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-3">
+              <FileText className="w-6 h-6 text-banc-grey" />
             </div>
-            <p className="text-[#8A8880]">No recent activity</p>
-            <p className="text-sm text-[#8A8880] mt-1">
+            <p className="text-banc-grey">No recent activity</p>
+            <p className="text-sm text-banc-grey mt-1">
               Activities will appear here as they happen
             </p>
           </div>
@@ -104,7 +104,7 @@ export default function ActivityFeed({
           displayActivities.map((activity) => (
             <div
               key={activity.id}
-              className="px-5 py-4 hover:bg-[#F4F3F1]/50 transition-colors"
+              className="px-5 py-4 hover:bg-banc-grey-pale/50 transition-colors"
             >
               <div className="flex gap-4">
                 {/* Icon */}
@@ -120,10 +120,10 @@ export default function ActivityFeed({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <p className="font-medium text-[#1A1917]">
+                      <p className="font-medium text-banc-dark-deep">
                         {activity.title}
                       </p>
-                      <p className="text-sm text-[#8A8880] mt-0.5">
+                      <p className="text-sm text-banc-grey mt-0.5">
                         {activity.description}
                       </p>
 
@@ -131,7 +131,7 @@ export default function ActivityFeed({
                       {activity.metadata && (
                         <div className="mt-2 flex flex-wrap items-center gap-2">
                           {activity.metadata.viewingTime && (
-                            <span className="text-sm text-[#1A9BBF]">
+                            <span className="text-sm text-banc-sky-dark">
                               {activity.metadata.viewingTime}
                             </span>
                           )}
@@ -142,14 +142,14 @@ export default function ActivityFeed({
                           )}
                           {getOfferStatusBadge(activity.metadata.offerStatus)}
                           {activity.metadata.senderName && (
-                            <span className="text-sm text-[#8A8880]">
+                            <span className="text-sm text-banc-grey">
                               From: {activity.metadata.senderName}
                             </span>
                           )}
                         </div>
                       )}
                     </div>
-                    <span className="text-xs text-[#8A8880] flex-shrink-0">
+                    <span className="text-xs text-banc-grey flex-shrink-0">
                       {getRelativeTime(activity.timestamp)}
                     </span>
                   </div>
@@ -161,10 +161,10 @@ export default function ActivityFeed({
       </div>
 
       {showViewAll && activities.length > maxItems && (
-        <div className="px-5 py-3 border-t border-[#E0DFDC] bg-[#F4F3F1]/50">
+        <div className="px-5 py-3 border-t border-banc-line bg-banc-grey-pale/50">
           <a
             href="#"
-            className="text-sm font-medium text-[#4AC8E8] hover:text-[#1A9BBF] transition-colors"
+            className="text-sm font-medium text-banc-sky hover:text-banc-sky-dark transition-colors"
           >
             View all activity →
           </a>

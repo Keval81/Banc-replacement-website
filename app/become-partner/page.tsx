@@ -89,11 +89,11 @@ const weHandle = [
 
 export default function BecomePartnerPage() {
   return (
-    <div className="min-h-screen bg-[#F4F3F1]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#1A1917]">
+      <section className="relative overflow-hidden bg-banc-dark-deep">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -101,7 +101,7 @@ export default function BecomePartnerPage() {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -115,12 +115,12 @@ export default function BecomePartnerPage() {
         </div>
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#4AC8E8]/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-banc-sky/10 via-transparent to-transparent" />
 
         <div className="relative mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
           <div className="mx-auto max-w-4xl text-center">
             {/* Eyebrow */}
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-[#4AC8E8]/10 px-4 py-2 text-sm font-medium uppercase tracking-[0.2em] text-[#4AC8E8]">
+            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-banc-sky/10 px-4 py-2 text-sm font-medium uppercase tracking-[0.2em] text-banc-sky">
               <Sparkles className="h-4 w-4" />
               Career Opportunity
             </p>
@@ -142,7 +142,7 @@ export default function BecomePartnerPage() {
                 href="mailto:nitesh@bancproperty.com,andrew@bancproperty.com?subject=Partner Agent Application"
                 className="group"
               >
-                <Button className="bg-[#4AC8E8] px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-[#1A9BBF] hover:shadow-lg hover:shadow-[#4AC8E8]/25">
+                <Button className="bg-banc-sky px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-sky-dark hover:shadow-lg hover:shadow-banc-sky/25">
                   Apply Now
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
@@ -150,7 +150,7 @@ export default function BecomePartnerPage() {
               <a href="#opportunity">
                 <Button
                   variant="outline"
-                  className="border-white/30 bg-transparent px-8 py-6 text-base text-white transition-all duration-300 hover:border-[#4AC8E8] hover:bg-[#4AC8E8]/10 hover:text-white"
+                  className="border-white/30 bg-transparent px-8 py-6 text-base text-white transition-all duration-300 hover:border-banc-sky hover:bg-banc-sky/10 hover:text-white"
                 >
                   Learn More
                 </Button>
@@ -160,7 +160,7 @@ export default function BecomePartnerPage() {
         </div>
 
         {/* Decorative Elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4AC8E8]/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-banc-sky/50 to-transparent" />
       </section>
 
       {/* Introduction Section */}
@@ -169,18 +169,18 @@ export default function BecomePartnerPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Content */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#4AC8E8]">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
                 The Opportunity
               </p>
-              <h2 className="mt-4 font-heading text-3xl font-semibold text-[#1A1917] sm:text-4xl lg:text-5xl">
+              <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
                 Run Your Own Business with Professional Support
               </h2>
-              <div className="mt-6 space-y-4 text-lg leading-relaxed text-[#8A8880]">
+              <div className="mt-6 space-y-4 text-lg leading-relaxed text-banc-grey">
                 <p>
                   We are looking for local business partners in{" "}
-                  <strong className="text-[#1A1917]">North London</strong>,{" "}
-                  <strong className="text-[#1A1917]">Hertfordshire</strong> and{" "}
-                  <strong className="text-[#1A1917]">Essex</strong> areas.
+                  <strong className="text-banc-dark-deep">North London</strong>,{" "}
+                  <strong className="text-banc-dark-deep">Hertfordshire</strong> and{" "}
+                  <strong className="text-banc-dark-deep">Essex</strong> areas.
                 </p>
                 <p>
                   This is an exciting opportunity to run your own business and to be
@@ -193,13 +193,13 @@ export default function BecomePartnerPage() {
 
             {/* Visual Card */}
             <div className="relative">
-              <div className="relative overflow-hidden rounded-2xl bg-[#1A1917] p-8 shadow-2xl lg:p-10">
+              <div className="relative overflow-hidden rounded-2xl bg-banc-dark-deep p-8 shadow-2xl lg:p-10">
                 {/* Decorative gradient */}
-                <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-[#4AC8E8]/20 blur-3xl" />
+                <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-banc-sky/20 blur-3xl" />
                 
                 <div className="relative">
-                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#4AC8E8]/20">
-                    <Briefcase className="h-7 w-7 text-[#4AC8E8]" />
+                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-banc-sky/20">
+                    <Briefcase className="h-7 w-7 text-banc-sky" />
                   </div>
                   <h3 className="font-heading text-2xl font-semibold text-white">
                     Partner Agent Model
@@ -212,11 +212,11 @@ export default function BecomePartnerPage() {
                   {/* Stats */}
                   <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
                     <div>
-                      <p className="font-heading text-3xl font-bold text-[#4AC8E8]">3</p>
+                      <p className="font-heading text-3xl font-bold text-banc-sky">3</p>
                       <p className="mt-1 text-sm text-white/60">Key Regions</p>
                     </div>
                     <div>
-                      <p className="font-heading text-3xl font-bold text-[#4AC8E8]">∞</p>
+                      <p className="font-heading text-3xl font-bold text-banc-sky">∞</p>
                       <p className="mt-1 text-sm text-white/60">Earning Potential</p>
                     </div>
                   </div>
@@ -224,18 +224,18 @@ export default function BecomePartnerPage() {
               </div>
               
               {/* Decorative corner accent */}
-              <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl bg-[#4AC8E8]/20" />
+              <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl bg-banc-sky/20" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="bg-[#1A1917] py-20 lg:py-28">
+      <section className="bg-banc-dark-deep py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#4AC8E8]">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
               Why Partner With Us
             </p>
             <h2 className="mt-4 font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -251,10 +251,10 @@ export default function BecomePartnerPage() {
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:border-[#4AC8E8]/50 hover:bg-white/10"
+                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:border-banc-sky/50 hover:bg-white/10"
               >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#4AC8E8]/20 transition-colors duration-300 group-hover:bg-[#4AC8E8]">
-                  <benefit.icon className="h-6 w-6 text-[#4AC8E8] transition-colors duration-300 group-hover:text-white" />
+                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-banc-sky/20 transition-colors duration-300 group-hover:bg-banc-sky">
+                  <benefit.icon className="h-6 w-6 text-banc-sky transition-colors duration-300 group-hover:text-white" />
                 </div>
                 <h3 className="font-heading text-xl font-semibold text-white">
                   {benefit.title}
@@ -273,13 +273,13 @@ export default function BecomePartnerPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#4AC8E8]">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
               How It Works
             </p>
-            <h2 className="mt-4 font-heading text-3xl font-semibold text-[#1A1917] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
               What You Handle vs What We Handle
             </h2>
-            <p className="mt-4 text-lg text-[#8A8880]">
+            <p className="mt-4 text-lg text-banc-grey">
               Our partner agents concentrate on the tasks that estate agents love,
               whilst we handle the back-end operations
             </p>
@@ -288,10 +288,10 @@ export default function BecomePartnerPage() {
           {/* Comparison Grid */}
           <div className="mt-16 grid gap-8 lg:grid-cols-2">
             {/* You Handle */}
-            <div className="overflow-hidden rounded-2xl border border-[#1A1917]/10 bg-white shadow-lg">
-              <div className="bg-[#1A1917] px-6 py-5">
+            <div className="overflow-hidden rounded-2xl border border-banc-dark-deep/10 bg-white shadow-lg">
+              <div className="bg-banc-dark-deep px-6 py-5">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#4AC8E8]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky">
                     <Users className="h-5 w-5 text-white" />
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-white">
@@ -306,8 +306,8 @@ export default function BecomePartnerPage() {
                 <ul className="space-y-4">
                   {youHandle.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
-                      <span className="text-[#3D3B37]">{item}</span>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-sky" />
+                      <span className="text-banc-dark-mid">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -315,11 +315,11 @@ export default function BecomePartnerPage() {
             </div>
 
             {/* We Handle */}
-            <div className="overflow-hidden rounded-2xl border border-[#4AC8E8]/20 bg-white shadow-lg shadow-[#4AC8E8]/5">
-              <div className="bg-[#4AC8E8] px-6 py-5">
+            <div className="overflow-hidden rounded-2xl border border-banc-sky/20 bg-white shadow-lg shadow-banc-sky/5">
+              <div className="bg-banc-sky px-6 py-5">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
-                    <Shield className="h-5 w-5 text-[#4AC8E8]" />
+                    <Shield className="h-5 w-5 text-banc-sky" />
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-white">
                     We Handle
@@ -333,8 +333,8 @@ export default function BecomePartnerPage() {
                 <ul className="space-y-4">
                   {weHandle.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
-                      <span className="text-[#3D3B37]">{item}</span>
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-sky" />
+                      <span className="text-banc-dark-mid">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -345,11 +345,11 @@ export default function BecomePartnerPage() {
       </section>
 
       {/* Ideal Partner Traits Section */}
-      <section className="bg-[#1A1917] py-20 lg:py-28">
+      <section className="bg-banc-dark-deep py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#4AC8E8]">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
               Ideal Candidate
             </p>
             <h2 className="mt-4 font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -368,11 +368,11 @@ export default function BecomePartnerPage() {
                 className="group relative overflow-hidden rounded-2xl bg-white/5 p-6 transition-all duration-300 hover:bg-white/10"
               >
                 {/* Hover accent */}
-                <div className="absolute left-0 top-0 h-full w-1 bg-[#4AC8E8] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute left-0 top-0 h-full w-1 bg-banc-sky opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#4AC8E8]/20 transition-colors duration-300 group-hover:bg-[#4AC8E8]">
-                    <trait.icon className="h-6 w-6 text-[#4AC8E8] transition-colors duration-300 group-hover:text-white" />
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-sky/20 transition-colors duration-300 group-hover:bg-banc-sky">
+                    <trait.icon className="h-6 w-6 text-banc-sky transition-colors duration-300 group-hover:text-white" />
                   </div>
                   <div>
                     <h3 className="font-heading text-lg font-semibold text-white">
@@ -403,13 +403,13 @@ export default function BecomePartnerPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Content */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#4AC8E8]">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
                 Locations
               </p>
-              <h2 className="mt-4 font-heading text-3xl font-semibold text-[#1A1917] sm:text-4xl">
+              <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
                 Currently Recruiting In
               </h2>
-              <p className="mt-4 text-lg text-[#8A8880]">
+              <p className="mt-4 text-lg text-banc-grey">
                 We are actively seeking partners in these key regions
               </p>
 
@@ -417,12 +417,12 @@ export default function BecomePartnerPage() {
                 {["North London", "Hertfordshire", "Essex"].map((region) => (
                   <div
                     key={region}
-                    className="flex items-center gap-4 rounded-xl border border-[#1A1917]/10 bg-white p-4 shadow-sm transition-all duration-300 hover:border-[#4AC8E8]/30 hover:shadow-md"
+                    className="flex items-center gap-4 rounded-xl border border-banc-dark-deep/10 bg-white p-4 shadow-sm transition-all duration-300 hover:border-banc-sky/30 hover:shadow-md"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#4AC8E8]/10">
-                      <Target className="h-5 w-5 text-[#4AC8E8]" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky/10">
+                      <Target className="h-5 w-5 text-banc-sky" />
                     </div>
-                    <span className="font-heading text-lg font-medium text-[#1A1917]">
+                    <span className="font-heading text-lg font-medium text-banc-dark-deep">
                       {region}
                     </span>
                   </div>
@@ -432,7 +432,7 @@ export default function BecomePartnerPage() {
 
             {/* Visual/Map Placeholder */}
             <div className="relative">
-              <div className="aspect-square overflow-hidden rounded-2xl bg-[#1A1917] p-8 lg:aspect-auto lg:h-[400px]">
+              <div className="aspect-square overflow-hidden rounded-2xl bg-banc-dark-deep p-8 lg:aspect-auto lg:h-[400px]">
                 {/* Decorative Map Background */}
                 <div className="absolute inset-0 opacity-10">
                   <svg
@@ -450,8 +450,8 @@ export default function BecomePartnerPage() {
                 </div>
 
                 <div className="relative flex h-full flex-col items-center justify-center text-center">
-                  <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-[#4AC8E8]/20">
-                    <MapPin className="h-10 w-10 text-[#4AC8E8]" />
+                  <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/20">
+                    <MapPin className="h-10 w-10 text-banc-sky" />
                   </div>
                   <h3 className="font-heading text-2xl font-semibold text-white">
                     Join Our Network
@@ -467,7 +467,7 @@ export default function BecomePartnerPage() {
       </section>
 
       {/* Contact CTA Section */}
-      <section className="relative overflow-hidden bg-[#1A1917] py-20 lg:py-28">
+      <section className="relative overflow-hidden bg-banc-dark-deep py-20 lg:py-28">
         {/* Background Elements */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -478,12 +478,12 @@ export default function BecomePartnerPage() {
             }}
           />
         </div>
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-[#4AC8E8]/10 blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-[#4AC8E8]/10 blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-banc-sky/10 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-banc-sky/10 blur-3xl" />
 
         <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
-          <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[#4AC8E8]/20">
-            <Mail className="h-8 w-8 text-[#4AC8E8]" />
+          <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-banc-sky/20">
+            <Mail className="h-8 w-8 text-banc-sky" />
           </div>
 
           <h2 className="font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
@@ -502,7 +502,7 @@ export default function BecomePartnerPage() {
               href="mailto:nitesh@bancproperty.com?subject=Partner Agent Application"
               className="w-full sm:w-auto"
             >
-              <Button className="w-full bg-[#4AC8E8] px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-[#1A9BBF] hover:shadow-lg hover:shadow-[#4AC8E8]/25 sm:w-auto">
+              <Button className="w-full bg-banc-sky px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-sky-dark hover:shadow-lg hover:shadow-banc-sky/25 sm:w-auto">
                 <Mail className="mr-2 h-5 w-5" />
                 Email Nitesh
               </Button>
@@ -511,7 +511,7 @@ export default function BecomePartnerPage() {
               href="mailto:andrew@bancproperty.com?subject=Partner Agent Application"
               className="w-full sm:w-auto"
             >
-              <Button className="w-full bg-white px-8 py-6 text-base font-medium text-[#1A1917] transition-all duration-300 hover:bg-white/90 sm:w-auto">
+              <Button className="w-full bg-white px-8 py-6 text-base font-medium text-banc-dark-deep transition-all duration-300 hover:bg-white/90 sm:w-auto">
                 <Mail className="mr-2 h-5 w-5" />
                 Email Andrew
               </Button>

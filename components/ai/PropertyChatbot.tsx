@@ -269,7 +269,7 @@ export default function PropertyChatbot({
                     onClick={openChat}
                     className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-left text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
                   >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#F6F2EA] ring-1 ring-banc-dark-deep/10">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-banc-cream ring-1 ring-banc-dark-deep/10">
                       <Image
                         src={landingContactLauncher.assistantAvatar.src}
                         alt={landingContactLauncher.assistantAvatar.alt}
@@ -329,7 +329,7 @@ export default function PropertyChatbot({
                 )
               ) : (
                 <span
-                  className="h-12 w-12 overflow-hidden rounded-full bg-[#F6F2EA]"
+                  className="h-12 w-12 overflow-hidden rounded-full bg-banc-cream"
                   aria-hidden="true"
                 >
                   <Image
@@ -369,7 +369,7 @@ export default function PropertyChatbot({
               {/* Header */}
               <div className="flex items-center justify-between bg-banc-dark-deep px-4 py-3 shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#F6F2EA] ring-1 ring-white/20">
+                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-banc-cream ring-1 ring-white/20">
                     <Image
                       src={landingContactLauncher.assistantAvatar.src}
                       alt={landingContactLauncher.assistantAvatar.alt}
@@ -453,7 +453,7 @@ export default function PropertyChatbot({
                                   property.id,
                                 )}
                                 onClick={closeChat}
-                                className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89]"
+                                className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
                               >
                                 <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
                                   {imageUrl && (
@@ -494,7 +494,7 @@ export default function PropertyChatbot({
                               key={source.href}
                               href={source.href}
                               onClick={closeChat}
-                              className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-[#0B6F89] underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-[#075E75] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2"
+                              className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-banc-focus underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
                             >
                               {source.title}
                             </Link>
@@ -506,7 +506,7 @@ export default function PropertyChatbot({
                         <div className="mt-2.5 flex flex-col gap-2 sm:flex-row">
                           <a
                             href={messageView.handoff.callHref}
-                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0B6F89] px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#075E75] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2"
+                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-banc-focus px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
                           >
                             <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                             Call Banc

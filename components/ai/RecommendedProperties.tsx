@@ -3,13 +3,30 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 // PropertyCard component may have different props - using a generic card for now
-const SimplePropertyCard = ({ property }: { property: any }) => (
+// Minimal shape of the recommendation payload this card reads.
+interface RecommendedPropertyData {
+  id?: string;
+  title?: string;
+  price?: { amount?: number };
+  address?: { town?: string; postcode?: string };
+  details?: { bedrooms?: number; bathrooms?: number };
+  media?: { images?: Array<{ url?: string }> };
+}
+
+const SimplePropertyCard = ({ property }: { property: RecommendedPropertyData }) => (
   <div className="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
     <div className="aspect-[4/3] bg-banc-grey/20 relative">
       {property.media?.images?.[0]?.url ? (
-        <img 
-          src={property.media.images[0].url} 
-          alt={property.title}
+        // Recommendation images come from arbitrary CRM hosts that are not in
+        // next.config remotePatterns, so a plain lazy <img> is the honest choice.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={property.media.images[0].url}
+          alt={property.title ?? "Recommended property"}
+          width={640}
+          height={480}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover"
         />
       ) : (
@@ -36,7 +53,7 @@ import { Sparkles, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface RecommendedProperty {
-  property: any;
+  property: RecommendedPropertyData;
   score: number;
   reasons: string[];
   breakdown: {
@@ -111,7 +128,7 @@ export default function RecommendedProperties({
       <section className="py-12 bg-banc-grey-pale">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-[#1a4d5c]" />
+            <Loader2 className="w-8 h-8 animate-spin text-banc-teal" />
           </div>
         </div>
       </section>
@@ -128,8 +145,8 @@ export default function RecommendedProperties({
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#1a4d5c]/10 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-[#1a4d5c]" />
+            <div className="w-10 h-10 bg-banc-teal/10 rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-banc-teal" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-banc-dark">{title}</h2>
@@ -178,7 +195,7 @@ export default function RecommendedProperties({
                   {rec.reasons.slice(0, 2).map((reason, i) => (
                     <span
                       key={i}
-                      className="text-xs bg-[#1a4d5c]/10 text-[#1a4d5c] px-2 py-0.5 rounded-full"
+                      className="text-xs bg-banc-teal/10 text-banc-teal px-2 py-0.5 rounded-full"
                     >
                       {reason}
                     </span>
@@ -193,7 +210,7 @@ export default function RecommendedProperties({
         <div className="text-center mt-8">
           <a
             href="/search"
-            className="inline-flex items-center gap-2 text-[#1a4d5c] hover:underline font-medium"
+            className="inline-flex items-center gap-2 text-banc-teal hover:underline font-medium"
           >
             View all properties
             <span aria-hidden="true">→</span>

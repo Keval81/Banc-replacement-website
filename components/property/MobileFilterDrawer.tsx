@@ -85,7 +85,7 @@ export default function MobileFilterDrawer({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-[#1A1917]/60 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-banc-dark-deep/60 backdrop-blur-sm z-40 lg:hidden"
             aria-hidden="true"
           />
 
@@ -152,11 +152,11 @@ export function MobileFilterButton({
       onClick={onClick}
       className={cn(
         "inline-flex min-h-11 items-center gap-2 px-4 py-2.5 rounded-xl",
-        "bg-white border border-[#E0DFDC]",
-        "text-sm font-medium text-[#1A1917]",
-        "hover:border-[#0B6F89] hover:text-[#0B6F89]",
+        "bg-white border border-banc-line",
+        "text-sm font-medium text-banc-dark-deep",
+        "hover:border-banc-focus hover:text-banc-focus",
         "transition-colors duration-200",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2",
         className
       )}
       aria-label="Open filters"
@@ -164,7 +164,7 @@ export function MobileFilterButton({
       <SlidersHorizontal className="w-4 h-4" />
       <span className="hidden sm:inline">Filters</span>
       {activeFilterCount > 0 && (
-        <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#0B6F89] text-white text-xs font-semibold">
+        <span className="flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-banc-focus text-white text-xs font-semibold">
           {activeFilterCount}
         </span>
       )}

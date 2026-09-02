@@ -125,7 +125,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-[#1A1917] p-4", className)}>
+      <div className={cn("rounded-xl border border-white/10 bg-banc-dark-deep p-4", className)}>
         <div className="space-y-3">
           <div>
             <label className="mb-1.5 block text-xs text-white/60">Property Price</label>
@@ -137,7 +137,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
@@ -150,7 +150,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               max="50"
               value={depositPercent}
               onChange={(e) => handleDepositPercentChange(Number(e.target.value))}
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-[#4AC8E8]"
+              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-banc-sky"
             />
           </div>
 
@@ -164,7 +164,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   className={cn(
                     "rounded-lg px-2 py-1.5 text-xs transition-all",
                     interestRate === rate
-                      ? "bg-[#4AC8E8] text-white"
+                      ? "bg-banc-sky text-white"
                       : "bg-white/5 text-white/70 hover:bg-white/10"
                   )}
                 >
@@ -175,9 +175,9 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {propertyPriceNum > 0 && (
-            <div className="rounded-lg bg-[#4AC8E8]/10 p-3 text-center">
+            <div className="rounded-lg bg-banc-sky/10 p-3 text-center">
               <p className="text-xs text-white/60">Monthly Payment</p>
-              <p className="text-lg font-semibold text-[#4AC8E8]">
+              <p className="text-lg font-semibold text-banc-sky">
                 {formatCurrency(result.monthlyPayment)}
               </p>
             </div>
@@ -190,9 +190,9 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+      <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Calculator className="h-5 w-5 text-[#4AC8E8]" />
+          <Calculator className="h-5 w-5 text-banc-sky" />
           Mortgage Details
         </h3>
 
@@ -208,7 +208,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
@@ -228,7 +228,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   onChange={(e) => handleDepositAmountChange(e.target.value)}
                   onBlur={() => formatCurrencyDisplay(deposit, setDeposit)}
                   placeholder="e.g. £50,000"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
                 />
               </div>
             </div>
@@ -239,7 +239,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               step="0.5"
               value={depositPercent}
               onChange={(e) => handleDepositPercentChange(Number(e.target.value))}
-              className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-[#4AC8E8]"
+              className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-banc-sky"
             />
             <div className="mt-1 flex justify-between text-xs text-white/40">
               <span>5%</span>
@@ -261,7 +261,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   className={cn(
                     "rounded-lg px-4 py-2 text-sm transition-all",
                     interestRate === rate
-                      ? "bg-[#4AC8E8] text-white"
+                      ? "bg-banc-sky text-white"
                       : "bg-white/5 text-white/70 hover:bg-white/10"
                   )}
                 >
@@ -275,7 +275,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 step="0.01"
                 value={interestRate}
                 onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-banc-sky focus:outline-none"
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40">%</span>
             </div>
@@ -291,10 +291,10 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               <select
                 value={termYears}
                 onChange={(e) => setTermYears(Number(e.target.value))}
-                className="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-banc-sky focus:outline-none"
               >
                 {Array.from({ length: 31 }, (_, i) => i + 10).map((year) => (
-                  <option key={year} value={year} className="bg-[#1A1917]">
+                  <option key={year} value={year} className="bg-banc-dark-deep">
                     {year} years
                   </option>
                 ))}
@@ -326,14 +326,14 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 className={cn(
                   "rounded-xl border p-4 text-left transition-all",
                   repaymentType === type.value
-                    ? "border-[#4AC8E8] bg-[#4AC8E8]/10"
+                    ? "border-banc-sky bg-banc-sky/10"
                     : "border-white/10 hover:border-white/20"
                 )}
               >
                 <p
                   className={cn(
                     "font-medium",
-                    repaymentType === type.value ? "text-[#4AC8E8]" : "text-white"
+                    repaymentType === type.value ? "text-banc-sky" : "text-white"
                   )}
                 >
                   {type.label}
@@ -350,28 +350,28 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
         <>
           {/* Main Results */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Monthly Payment</p>
-              <p className="my-1 text-2xl font-bold text-[#4AC8E8]">
+              <p className="my-1 text-2xl font-bold text-banc-sky">
                 {formatCurrency(result.monthlyPayment)}
               </p>
               <p className="text-xs text-white/40">per month</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Loan Amount</p>
               <p className="my-1 text-2xl font-bold text-white">
                 {formatCurrency(result.loanAmount)}
               </p>
               <p className="text-xs text-white/40">{formatPercent(result.ltv)} LTV</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Total Interest</p>
               <p className="my-1 text-2xl font-bold text-white">
                 {formatCurrency(result.totalInterest)}
               </p>
               <p className="text-xs text-white/40">over {termYears} years</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Total Cost</p>
               <p className="my-1 text-2xl font-bold text-white">
                 {formatCurrency(result.totalCost)}
@@ -381,9 +381,9 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {/* Pie Chart Visualization */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <PieChart className="h-5 w-5 text-[#4AC8E8]" />
+              <PieChart className="h-5 w-5 text-banc-sky" />
               Payment Breakdown
             </h3>
             <div className="flex flex-col items-center gap-8 md:flex-row">
@@ -423,7 +423,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               <div className="flex-1 space-y-4">
                 <div className="flex items-center justify-between rounded-xl bg-white/5 p-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-4 w-4 rounded-full bg-[#4AC8E8]" />
+                    <div className="h-4 w-4 rounded-full bg-banc-sky" />
                     <span className="text-white">Principal</span>
                   </div>
                   <div className="text-right">
@@ -446,9 +446,9 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {/* LTV Indicator */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <TrendingUp className="h-5 w-5 text-[#4AC8E8]" />
+              <TrendingUp className="h-5 w-5 text-banc-sky" />
               Loan-to-Value Ratio
             </h3>
             <div className="space-y-4">
@@ -510,13 +510,13 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {/* Amortization Schedule */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <button
               onClick={() => setShowAmortization(!showAmortization)}
               className="flex w-full items-center justify-between"
             >
               <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-                <TrendingUp className="h-5 w-5 text-[#4AC8E8]" />
+                <TrendingUp className="h-5 w-5 text-banc-sky" />
                 Amortization Schedule
               </h3>
               {showAmortization ? (
@@ -544,7 +544,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                         <td className="py-2 text-right text-sm text-white/70">
                           {formatCurrency(year.interest)}
                         </td>
-                        <td className="py-2 text-right text-sm text-[#4AC8E8]">
+                        <td className="py-2 text-right text-sm text-banc-sky">
                           {formatCurrency(year.principal)}
                         </td>
                         <td className="py-2 text-right text-sm text-white/70">
@@ -564,7 +564,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/contact">
-              <Button className="w-full bg-[#4AC8E8] text-white hover:bg-[#1A9BBF] sm:w-auto">
+              <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark sm:w-auto">
                 Get Mortgage Advice
               </Button>
             </Link>

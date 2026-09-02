@@ -253,7 +253,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-[#1A1917] p-4", className)}>
+      <div className={cn("rounded-xl border border-white/10 bg-banc-dark-deep p-4", className)}>
         <div className="space-y-3">
           <div>
             <label className="mb-1.5 block text-xs text-white/60">Postcode</label>
@@ -263,14 +263,16 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value)}
                 placeholder="e.g. EN6 4HU"
-                className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm uppercase text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm uppercase text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
               <button
+                type="button"
                 onClick={handlePostcodeSearch}
                 disabled={isLoading || !postcode}
-                className="rounded-lg bg-[#4AC8E8] px-3 py-2 text-white hover:bg-[#1A9BBF] disabled:opacity-50"
+                aria-label="Search postcode"
+                className="rounded-lg bg-banc-sky px-3 py-2 text-white hover:bg-banc-sky-dark disabled:opacity-50"
               >
-                <Search className="h-4 w-4" />
+                <Search className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -281,7 +283,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               <select
                 value={selectedAddress}
                 onChange={(e) => setSelectedAddress(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-banc-sky focus:outline-none"
               >
                 <option value="">Choose address...</option>
                 {addresses.map((addr) => (
@@ -294,9 +296,9 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           )}
 
           {showResults && valuation && (
-            <div className="rounded-lg bg-[#4AC8E8]/10 p-3 text-center">
+            <div className="rounded-lg bg-banc-sky/10 p-3 text-center">
               <p className="text-xs text-white/60">Estimated Value</p>
-              <p className="text-lg font-semibold text-[#4AC8E8]">
+              <p className="text-lg font-semibold text-banc-sky">
                 {formatCurrency(valuation.estimate)}
               </p>
             </div>
@@ -309,9 +311,9 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+      <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Calculator className="h-5 w-5 text-[#4AC8E8]" />
+          <Calculator className="h-5 w-5 text-banc-sky" />
           Property Details
         </h3>
 
@@ -328,12 +330,12 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 value={postcode}
                 onChange={(e) => setPostcode(e.target.value.toUpperCase())}
                 placeholder="e.g. EN6 4HU"
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg uppercase text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg uppercase text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
               <button
                 onClick={handlePostcodeSearch}
                 disabled={isLoading || !postcode}
-                className="flex items-center gap-2 rounded-xl bg-[#4AC8E8] px-6 py-3 font-medium text-white transition-colors hover:bg-[#1A9BBF] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-banc-sky px-6 py-3 font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
               >
                 <Search className="h-5 w-5" />
                 Find
@@ -351,7 +353,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               <select
                 value={selectedAddress}
                 onChange={(e) => setSelectedAddress(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-banc-sky focus:outline-none"
               >
                 <option value="">Choose an address...</option>
                 {addresses.map((addr) => (
@@ -380,7 +382,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   className={cn(
                     "rounded-xl border px-3 py-3 text-sm transition-all",
                     propertyType === type.value
-                      ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
+                      ? "border-banc-sky bg-banc-sky/10 text-banc-sky"
                       : "border-white/10 text-white/70 hover:border-white/20"
                   )}
                 >
@@ -405,7 +407,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                     className={cn(
                       "h-12 w-12 rounded-xl border text-lg font-medium transition-all",
                       beds === num
-                        ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
+                        ? "border-banc-sky bg-banc-sky/10 text-banc-sky"
                         : "border-white/10 text-white/70 hover:border-white/20"
                     )}
                   >
@@ -427,7 +429,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                     className={cn(
                       "h-12 w-12 rounded-xl border text-lg font-medium transition-all",
                       baths === num
-                        ? "border-[#4AC8E8] bg-[#4AC8E8]/10 text-[#4AC8E8]"
+                        ? "border-banc-sky bg-banc-sky/10 text-banc-sky"
                         : "border-white/10 text-white/70 hover:border-white/20"
                     )}
                   >
@@ -443,7 +445,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
             <button
               onClick={handleValuation}
               disabled={isLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#4AC8E8] py-4 text-lg font-medium text-white transition-colors hover:bg-[#1A9BBF] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-sky py-4 text-lg font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -465,7 +467,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
       {showResults && valuation && (
         <>
           {/* Main Valuation */}
-          <div className="rounded-2xl bg-gradient-to-br from-[#4AC8E8]/20 to-[#4AC8E8]/5 p-6 text-center">
+          <div className="rounded-2xl bg-gradient-to-br from-banc-sky/20 to-banc-sky/5 p-6 text-center">
             <div className="mb-4 flex items-center justify-center gap-2">
               {valuation.confidence === "high" ? (
                 <CheckCircle className="h-5 w-5 text-green-400" />
@@ -482,7 +484,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               </span>
             </div>
             <p className="text-white/70">Estimated Value Range</p>
-            <p className="my-2 text-4xl font-bold text-[#4AC8E8]">
+            <p className="my-2 text-4xl font-bold text-banc-sky">
               {formatCurrency(valuation.low)} - {formatCurrency(valuation.high)}
             </p>
             <p className="text-2xl font-semibold text-white">
@@ -492,7 +494,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
 
           {/* Key Stats */}
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Market Trend</p>
               <div className="my-2 flex items-center justify-center gap-2">
                 {valuation.trend === "up" ? (
@@ -512,16 +514,16 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               </div>
               <p className="text-xs text-white/40">Last 12 months</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Last Sold</p>
               <p className="my-2 text-2xl font-bold text-white">
                 {formatCurrency(valuation.lastSold.price)}
               </p>
               <p className="text-xs text-white/40">{valuation.lastSold.date}</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-5 text-center">
+            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
               <p className="text-sm text-white/60">Value Change</p>
-              <p className="my-2 text-2xl font-bold text-[#4AC8E8]">
+              <p className="my-2 text-2xl font-bold text-banc-sky">
                 +
                 {formatCurrency(valuation.estimate - valuation.lastSold.price)}
               </p>
@@ -530,7 +532,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           </div>
 
           {/* Comparable Sales */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 text-lg font-semibold text-white">Comparable Sales Nearby</h3>
             <div className="space-y-3">
               {comparables.map((comp, index) => (
@@ -544,14 +546,14 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                       {comp.beds} bed {comp.type} • Sold {comp.date} • {comp.distance}
                     </p>
                   </div>
-                  <p className="text-lg font-semibold text-[#4AC8E8]">{formatCurrency(comp.price)}</p>
+                  <p className="text-lg font-semibold text-banc-sky">{formatCurrency(comp.price)}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Market Trend Graph Placeholder */}
-          <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
             <h3 className="mb-4 text-lg font-semibold text-white">Local Market Trends</h3>
             <div className="h-48 rounded-xl bg-white/5 p-4">
               {/* Placeholder for actual chart */}
@@ -559,7 +561,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 {[40, 45, 42, 48, 52, 55, 58, 60, 65, 68, 72, 75].map((height, i) => (
                   <div
                     key={i}
-                    className="relative flex-1 rounded-t bg-gradient-to-t from-[#4AC8E8]/50 to-[#4AC8E8] transition-all hover:opacity-80"
+                    className="relative flex-1 rounded-t bg-gradient-to-t from-banc-sky/50 to-banc-sky transition-all hover:opacity-80"
                     style={{ height: `${height}%` }}
                   >
                     <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-xs text-white/50">
@@ -577,7 +579,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           {/* API Integration Notice */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <p className="flex items-start gap-2 text-sm text-white/60">
-              <AlertCircle className="h-5 w-5 flex-shrink-0 text-[#4AC8E8]" />
+              <AlertCircle className="h-5 w-5 flex-shrink-0 text-banc-sky" />
               <span>
                 This is an estimate based on local market data. For an accurate valuation, book a 
                 professional appraisal with one of our local property experts.
@@ -588,7 +590,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/valuation">
-              <Button className="w-full bg-[#4AC8E8] text-white hover:bg-[#1A9BBF] sm:w-auto">
+              <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark sm:w-auto">
                 Book Accurate Valuation
               </Button>
             </Link>
@@ -606,7 +608,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
 
       {/* Manual Valuation Form - Show if no results yet */}
       {!showResults && !isLoading && addresses.length === 0 && !submitSuccess && (
-        <div className="rounded-2xl border border-white/10 bg-[#1A1917] p-6">
+        <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
           <h3 className="mb-4 text-lg font-semibold text-white">Request a Professional Valuation</h3>
           <p className="mb-4 text-sm text-white/60">
             Not finding your address? Request a professional valuation from our team. 
@@ -625,7 +627,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none",
                   formErrors.firstName 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.firstName && (
@@ -645,7 +647,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none",
                   formErrors.lastName 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.lastName && (
@@ -665,7 +667,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none",
                   formErrors.email 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.email && (
@@ -685,7 +687,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none",
                   formErrors.phone 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.phone && (
@@ -705,7 +707,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none",
                   formErrors.address 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.address && (
@@ -725,7 +727,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   "w-full rounded-xl border bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:outline-none uppercase",
                   formErrors.postcode 
                     ? "border-red-500 focus:border-red-500" 
-                    : "border-white/10 focus:border-[#4AC8E8]"
+                    : "border-white/10 focus:border-banc-sky"
                 )}
               />
               {formErrors.postcode && (
@@ -739,14 +741,14 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 name="propertyType"
                 value={formData.propertyType}
                 onChange={handleInputChange}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-banc-sky focus:outline-none"
               >
-                <option value="" className="bg-[#1A1917]">Property Type</option>
-                <option value="detached" className="bg-[#1A1917]">Detached</option>
-                <option value="semi-detached" className="bg-[#1A1917]">Semi-Detached</option>
-                <option value="terrace" className="bg-[#1A1917]">Terrace</option>
-                <option value="flat" className="bg-[#1A1917]">Flat</option>
-                <option value="bungalow" className="bg-[#1A1917]">Bungalow</option>
+                <option value="" className="bg-banc-dark-deep">Property Type</option>
+                <option value="detached" className="bg-banc-dark-deep">Detached</option>
+                <option value="semi-detached" className="bg-banc-dark-deep">Semi-Detached</option>
+                <option value="terrace" className="bg-banc-dark-deep">Terrace</option>
+                <option value="flat" className="bg-banc-dark-deep">Flat</option>
+                <option value="bungalow" className="bg-banc-dark-deep">Bungalow</option>
               </select>
             </div>
 
@@ -756,15 +758,15 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 name="bedrooms"
                 value={formData.bedrooms}
                 onChange={handleInputChange}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-banc-sky focus:outline-none"
               >
-                <option value="" className="bg-[#1A1917]">Number of Bedrooms</option>
-                <option value="1" className="bg-[#1A1917]">1 Bedroom</option>
-                <option value="2" className="bg-[#1A1917]">2 Bedrooms</option>
-                <option value="3" className="bg-[#1A1917]">3 Bedrooms</option>
-                <option value="4" className="bg-[#1A1917]">4 Bedrooms</option>
-                <option value="5" className="bg-[#1A1917]">5 Bedrooms</option>
-                <option value="6+" className="bg-[#1A1917]">6+ Bedrooms</option>
+                <option value="" className="bg-banc-dark-deep">Number of Bedrooms</option>
+                <option value="1" className="bg-banc-dark-deep">1 Bedroom</option>
+                <option value="2" className="bg-banc-dark-deep">2 Bedrooms</option>
+                <option value="3" className="bg-banc-dark-deep">3 Bedrooms</option>
+                <option value="4" className="bg-banc-dark-deep">4 Bedrooms</option>
+                <option value="5" className="bg-banc-dark-deep">5 Bedrooms</option>
+                <option value="6+" className="bg-banc-dark-deep">6+ Bedrooms</option>
               </select>
             </div>
 
@@ -774,14 +776,14 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 name="timeframe"
                 value={formData.timeframe}
                 onChange={handleInputChange}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-banc-sky focus:outline-none"
               >
-                <option value="" className="bg-[#1A1917]">When are you looking to sell?</option>
-                <option value="asap" className="bg-[#1A1917]">As soon as possible</option>
-                <option value="1-3months" className="bg-[#1A1917]">1-3 months</option>
-                <option value="3-6months" className="bg-[#1A1917]">3-6 months</option>
-                <option value="6-12months" className="bg-[#1A1917]">6-12 months</option>
-                <option value="just-curious" className="bg-[#1A1917]">Just curious</option>
+                <option value="" className="bg-banc-dark-deep">When are you looking to sell?</option>
+                <option value="asap" className="bg-banc-dark-deep">As soon as possible</option>
+                <option value="1-3months" className="bg-banc-dark-deep">1-3 months</option>
+                <option value="3-6months" className="bg-banc-dark-deep">3-6 months</option>
+                <option value="6-12months" className="bg-banc-dark-deep">6-12 months</option>
+                <option value="just-curious" className="bg-banc-dark-deep">Just curious</option>
               </select>
             </div>
 
@@ -793,7 +795,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 onChange={handleInputChange}
                 placeholder="Additional information (optional)"
                 rows={3}
-                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-[#4AC8E8] focus:outline-none"
+                className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
               />
             </div>
 
@@ -805,12 +807,12 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                   name="consent"
                   checked={formData.consent}
                   onChange={handleInputChange}
-                  className="mt-1 h-5 w-5 rounded border-white/30 bg-white/5 text-[#4AC8E8] focus:ring-[#4AC8E8] focus:ring-offset-0"
+                  className="mt-1 h-5 w-5 rounded border-white/30 bg-white/5 text-banc-sky focus:ring-banc-sky focus:ring-offset-0"
                 />
                 <span className="text-sm text-white/60">
                   I agree to be contacted by Banc Property Group regarding my valuation request. 
                   I understand that my data will be processed in accordance with the{" "}
-                  <Link href="/privacy" className="text-[#4AC8E8] hover:underline">
+                  <Link href="/privacy" className="text-banc-sky hover:underline">
                     Privacy Policy
                   </Link>
                   . *
@@ -826,7 +828,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#4AC8E8] py-4 font-medium text-white transition-colors hover:bg-[#1A9BBF] disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-sky py-4 font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
@@ -854,7 +856,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           </p>
           <button
             onClick={() => setSubmitSuccess(false)}
-            className="mt-4 text-sm text-[#4AC8E8] hover:underline"
+            className="mt-4 text-sm text-banc-sky hover:underline"
           >
             Submit another request
           </button>

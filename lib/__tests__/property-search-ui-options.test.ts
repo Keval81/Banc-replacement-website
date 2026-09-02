@@ -174,8 +174,8 @@ test("active Task 7 controls use the accessible neutral text color", () => {
     "PropertySearchBarView.tsx",
   ].map((file) => readFileSync(join(componentDirectory, file), "utf8")).join("\n");
 
-  assert.doesNotMatch(source, /#8A8880|#9CA3AF/);
-  assert.match(source, /#5F5D57/);
+  assert.doesNotMatch(source, /#8A8880|#9CA3AF|banc-grey(?!-)/);
+  assert.match(source, /#5F5D57|banc-muted-readable/);
 });
 
 test("active Task 7 controls reserve cyan for decorative pale fills", () => {
@@ -189,15 +189,18 @@ test("active Task 7 controls reserve cyan for decorative pale fills", () => {
     "PropertySearchBarView.tsx",
   ].map((file) => readFileSync(join(componentDirectory, file), "utf8")).join("\n");
 
-  assert.doesNotMatch(source, /text-\[#4AC8E8\]|border-\[#4AC8E8\]|ring-\[#4AC8E8\]|bg-\[#4AC8E8\](?!\/)/);
-  assert.match(source, /#0B6F89/);
-  assert.match(source, /hover:bg-\[#075E75\]/);
+  assert.doesNotMatch(
+    source,
+    /text-\[#4AC8E8\]|border-\[#4AC8E8\]|ring-\[#4AC8E8\]|bg-\[#4AC8E8\](?!\/)|text-banc-sky(?!-)|border-banc-sky(?!-)|ring-banc-sky(?!-)|bg-banc-sky(?![-\/])/,
+  );
+  assert.match(source, /#0B6F89|banc-focus(?!-)/);
+  assert.match(source, /hover:bg-\[#075E75\]|hover:bg-banc-focus-hover/);
   const buttonSnippets = [...source.matchAll(/<Button[\s\S]*?<\/Button>/g)].map((match) => match[0]);
   assert.equal(buttonSnippets.length, 3);
-  assert.equal(buttonSnippets.every((button) => button.includes("focus-visible:ring-[#0B6F89]")), true);
+  assert.equal(buttonSnippets.every((button) => button.includes("focus-visible:ring-banc-focus")), true);
   const checkboxSnippet = source.match(/<Checkbox[\s\S]*?\/>/)?.[0] ?? "";
-  assert.equal(checkboxSnippet.includes("focus-visible:ring-[#0B6F89]"), true);
-  assert.equal(checkboxSnippet.includes("border-[#0B6F89]"), true);
+  assert.equal(checkboxSnippet.includes("focus-visible:ring-banc-focus"), true);
+  assert.equal(checkboxSnippet.includes("border-banc-focus"), true);
 
   const sharedCheckbox = readFileSync(join(sharedComponentDirectory, "ui", "checkbox.tsx"), "utf8");
   const sharedButton = readFileSync(join(sharedComponentDirectory, "ui", "button.tsx"), "utf8");
@@ -205,7 +208,7 @@ test("active Task 7 controls reserve cyan for decorative pale fills", () => {
   assert.match(sharedButton, /hover:border-banc-sky/);
 
   const outlineButton = buttonSnippets.find((button) => button.includes('variant="outline"')) ?? "";
-  assert.equal(outlineButton.includes("border-[#5F5D57]"), true);
-  assert.equal(outlineButton.includes("text-[#1A1917]"), true);
-  assert.equal(outlineButton.includes("hover:border-[#0B6F89]"), true);
+  assert.equal(outlineButton.includes("border-banc-muted-readable"), true);
+  assert.equal(outlineButton.includes("text-banc-dark-deep"), true);
+  assert.equal(outlineButton.includes("hover:border-banc-focus"), true);
 });

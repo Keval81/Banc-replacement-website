@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       <Header />
 
       {/* Hero */}
-      <section className="relative overflow-hidden bg-[#1A1917] py-12 lg:py-20">
+      <section className="relative overflow-hidden bg-banc-dark-deep py-12 lg:py-20">
         {/* Hero Background Image */}
         <div className="absolute inset-0">
           <img
@@ -69,12 +69,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             alt=""
             className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1A1917]/80 via-[#1A1917]/60 to-[#1A1917]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
         </div>
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           <Link
             href="/blog"
-            className="mb-4 inline-flex items-center gap-2 text-[#4AC8E8] hover:underline"
+            className="mb-4 inline-flex items-center gap-2 text-banc-sky hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog
@@ -95,7 +95,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {posts.map((post) => (
               <article
                 key={post.slug}
-                className="group flex flex-col overflow-hidden rounded-xl border border-[#E0DFDC] bg-white transition-shadow hover:shadow-lg"
+                className="group flex flex-col overflow-hidden rounded-xl border border-banc-line bg-white transition-shadow hover:shadow-lg"
               >
                 <Link href={`/blog/${post.slug}`} className="flex flex-1 flex-col">
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -108,7 +108,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-[#8A8880]">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-grey">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(post.date)}
@@ -118,13 +118,13 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                         {post.readingTime}
                       </span>
                     </div>
-                    <h3 className="mb-2 text-base font-semibold text-[#2C2A27] transition-colors group-hover:text-[#4AC8E8] line-clamp-2">
+                    <h3 className="mb-2 text-base font-semibold text-banc-dark transition-colors group-hover:text-banc-sky line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="mb-4 flex-1 text-sm text-[#8A8880] line-clamp-3">
+                    <p className="mb-4 flex-1 text-sm text-banc-grey line-clamp-3">
                       {post.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-[#8A8880]">
+                    <div className="flex items-center gap-2 text-sm text-banc-grey">
                       <User className="h-4 w-4" />
                       <span>{post.author}</span>
                     </div>
@@ -135,12 +135,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg text-[#8A8880]">
+            <p className="text-lg text-banc-grey">
               No posts found in this category yet.
             </p>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-[#4AC8E8] hover:underline"
+              className="mt-4 inline-block text-banc-sky hover:underline"
             >
               Browse all articles
             </Link>

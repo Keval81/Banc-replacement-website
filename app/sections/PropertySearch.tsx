@@ -78,7 +78,7 @@ export default function PropertySearch() {
             </div>
 
             <div
-              className="inline-flex w-fit rounded-xl border border-[#E0DFDC] bg-white p-1"
+              className="inline-flex w-fit rounded-xl border border-banc-line bg-white p-1"
               role="group"
               aria-label="Search properties to buy or rent"
             >
@@ -86,10 +86,10 @@ export default function PropertySearch() {
                 type="button"
                 aria-pressed={query.department === "sales"}
                 onClick={() => handleDepartmentChange("sales")}
-                className={`min-h-11 min-w-24 rounded-lg px-5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2 ${
+                className={`min-h-11 min-w-24 rounded-lg px-5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 ${
                   query.department === "sales"
-                    ? "bg-[#0B6F89] text-white"
-                    : "text-[#5F5D57] hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                    ? "bg-banc-focus text-white"
+                    : "text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-dark-deep"
                 }`}
               >
                 Buy
@@ -98,10 +98,10 @@ export default function PropertySearch() {
                 type="button"
                 aria-pressed={query.department === "lettings"}
                 onClick={() => handleDepartmentChange("lettings")}
-                className={`min-h-11 min-w-24 rounded-lg px-5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0B6F89] focus-visible:ring-offset-2 ${
+                className={`min-h-11 min-w-24 rounded-lg px-5 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 ${
                   query.department === "lettings"
-                    ? "bg-[#0B6F89] text-white"
-                    : "text-[#5F5D57] hover:bg-[#F4F3F1] hover:text-[#1A1917]"
+                    ? "bg-banc-focus text-white"
+                    : "text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-dark-deep"
                 }`}
               >
                 Rent

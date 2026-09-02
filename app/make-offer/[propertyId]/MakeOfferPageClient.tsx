@@ -1,84 +1,134 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import OfferForm from "@/components/offers/OfferForm";
+import { useLiveProperty } from "@/hooks/useLiveProperty";
+import { BANC_CONTACT } from "@/lib/banc-contact";
+import { buildOfferEnquiry, submitContactEnquiry } from "@/lib/property-enquiry";
+import { buildPropertyHref } from "@/lib/property-view";
 import { OfferSubmission } from "@/types/portal";
 import {
   ChevronLeft,
   Home,
-  MapPin,
   Bed,
   Bath,
   Square,
   CheckCircle,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
-
-// Mock property data - would come from API
-const mockProperty = {
-  id: "prop-123",
-  address: "12 The Ridings, Cuffley",
-  postcode: "EN6 4JL",
-  price: 925000,
-  displayPrice: "£925,000",
-  bedrooms: 4,
-  bathrooms: 2,
-  sqft: 1850,
-  image: "/images/property-1.jpg",
-  agent: {
-    name: "Sarah Williams",
-    phone: "+44 1707 123456",
-  },
-  description:
-    "A stunning four-bedroom detached family home situated in a highly sought-after location in Cuffley. The property benefits from a spacious living room, modern kitchen/diner, and a beautiful south-facing garden.",
-};
 
 export default function MakeOfferPage() {
   const params = useParams();
-  const propertyId = params.propertyId as string;
+  const propertyId = typeof params.propertyId === "string" ? params.propertyId : "";
+  const propertyState = useLiveProperty(propertyId);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedAmount, setSubmittedAmount] = useState(0);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = async (data: OfferSubmission) => {
+    if (propertyState.phase !== "ready") return;
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const payload = buildOfferEnquiry(propertyState.property, {
+      name: data.contact?.name ?? "",
+      email: data.contact?.email ?? "",
+      phone: data.contact?.phone ?? "",
+      amount: data.amount,
+      position: data.position,
+      timescale: data.timescale,
+      mortgageInPrinciple: data.mortgageInPrinciple,
+      chainFree: data.chainFree,
+      additionalComments: data.additionalComments,
+      proofOfFundsFileName: data.proofOfFunds?.name,
+    });
+    const result = await submitContactEnquiry(fetch, payload);
 
-    // In real app, submit to API
-    console.log("Offer submitted:", data);
-
-    setSubmittedAmount(data.amount);
     setIsSubmitting(false);
-    setIsSuccess(true);
+    if (result.ok) {
+      setSubmittedAmount(data.amount);
+      setIsSuccess(true);
+    } else {
+      setSubmitError(result.error);
+    }
   };
+
+  if (propertyState.phase === "loading") {
+    return (
+      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+        <div
+          className="max-w-6xl mx-auto flex min-h-[50vh] flex-col items-center justify-center"
+          role="status"
+          aria-live="polite"
+        >
+          <Loader2 className="mb-4 h-10 w-10 animate-spin text-[#4AC8E8] motion-reduce:animate-none" aria-hidden="true" />
+          <p className="text-[#8A8880]">Loading property…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (propertyState.phase === "notfound") {
+    return (
+      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center">
+            <h1 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
+              We couldn&apos;t find that property
+            </h1>
+            <p className="text-[#8A8880] mb-6">
+              It may have been sold, let or withdrawn from the market. You can
+              browse our current listings or call the office on{" "}
+              <a href={BANC_CONTACT.callHref} className="text-[#4AC8E8] hover:underline">
+                {BANC_CONTACT.displayPhone}
+              </a>
+              .
+            </p>
+            <Link
+              href="/sales/properties"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
+            >
+              Browse properties
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const property = propertyState.property;
+  const propertyHref = buildPropertyHref(property.department, property.id);
+  const heroImage = property.images[0];
 
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center">
+          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center" role="status">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-green-600" />
+              <CheckCircle className="w-10 h-10 text-green-600" aria-hidden="true" />
             </div>
             <h2 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
-              Offer Submitted Successfully!
+              Offer sent to our team
             </h2>
             <p className="text-[#8A8880] mb-6">
               Your offer of{" "}
               <strong>
-                £{submittedAmount.toLocaleString()}
+                £{submittedAmount.toLocaleString("en-GB")}
               </strong>{" "}
-              for <strong>{mockProperty.address}</strong> has been submitted.
+              for <strong>{property.title}</strong> has been received.
             </p>
             <div className="bg-[#F4F3F1] rounded-lg p-4 mb-6">
               <p className="text-sm text-[#8A8880]">
-                The vendor will be notified and will review your offer within 24
-                hours. You&apos;ll receive an email notification once they respond.
+                We&apos;ll pass your offer to the vendor and come back to you by
+                phone or email. You&apos;ll receive a confirmation email shortly.
               </p>
             </div>
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
@@ -89,12 +139,12 @@ export default function MakeOfferPage() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a
-                href="/portal/applicant"
+              <Link
+                href={propertyHref}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
               >
-                Track Your Offer
-              </a>
+                Back to the property
+              </Link>
               <Link
                 href="/sales/properties"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E0DFDC] text-[#1A1917] rounded-lg font-medium hover:bg-[#F4F3F1] transition-colors"
@@ -112,13 +162,13 @@ export default function MakeOfferPage() {
     <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Back Link */}
-        <a
-          href={`/sales/properties/${propertyId}`}
+        <Link
+          href={propertyHref}
           className="inline-flex items-center gap-2 text-[#8A8880] hover:text-[#4AC8E8] transition-colors mb-6"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           Back to property
-        </a>
+        </Link>
 
         {/* Header */}
         <div className="mb-8">
@@ -126,8 +176,8 @@ export default function MakeOfferPage() {
             Make an Offer
           </h1>
           <p className="text-[#8A8880] mt-2">
-            Submit your offer for this property. The vendor will review and
-            respond within 24 hours.
+            Submit your offer for this property. Our team will present it to
+            the vendor and come back to you.
           </p>
         </div>
 
@@ -135,62 +185,80 @@ export default function MakeOfferPage() {
           {/* Left Column - Property Info */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden sticky top-4">
-              <img
-                src={mockProperty.image}
-                alt={mockProperty.address}
-                className="w-full h-48 object-cover"
-              />
+              <div className="relative h-48 w-full bg-[#F4F3F1]">
+                {heroImage ? (
+                  <Image
+                    src={heroImage}
+                    alt={`${property.title}, ${property.address}`}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                ) : null}
+              </div>
               <div className="p-5">
                 <h2 className="font-heading font-semibold text-[#1A1917]">
-                  {mockProperty.address}
+                  {property.title}
                 </h2>
-                <p className="text-[#8A8880] text-sm">{mockProperty.postcode}</p>
+                <p className="text-[#8A8880] text-sm">{property.address}</p>
+                {property.postcode ? (
+                  <p className="text-[#8A8880] text-sm">{property.postcode}</p>
+                ) : null}
                 <p className="text-xl font-bold text-[#4AC8E8] mt-2">
-                  {mockProperty.displayPrice}
+                  {property.price}
                 </p>
-                <p className="text-sm text-[#8A8880] mt-1">Asking Price</p>
+                <p className="text-sm text-[#8A8880] mt-1">
+                  {property.priceQualifier || "Asking Price"}
+                </p>
 
                 <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#E0DFDC] text-sm text-[#8A8880]">
                   <span className="flex items-center gap-1">
-                    <Bed className="w-4 h-4" />
-                    {mockProperty.bedrooms}
+                    <Bed className="w-4 h-4" aria-hidden="true" />
+                    {property.stats.beds}
+                    <span className="sr-only"> bedrooms</span>
                   </span>
                   <span className="flex items-center gap-1">
-                    <Bath className="w-4 h-4" />
-                    {mockProperty.bathrooms}
+                    <Bath className="w-4 h-4" aria-hidden="true" />
+                    {property.stats.baths}
+                    <span className="sr-only"> bathrooms</span>
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Square className="w-4 h-4" />
-                    {mockProperty.sqft} sq ft
-                  </span>
+                  {property.stats.sqft !== undefined && (
+                    <span className="flex items-center gap-1">
+                      <Square className="w-4 h-4" aria-hidden="true" />
+                      {property.stats.sqft.toLocaleString("en-GB")} sq ft
+                    </span>
+                  )}
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
                   <p className="text-sm text-[#8A8880] line-clamp-3">
-                    {mockProperty.description}
+                    {property.summary}
                   </p>
-                  <a
-                    href={`/sales/properties/${propertyId}`}
+                  <Link
+                    href={propertyHref}
                     className="text-sm text-[#4AC8E8] hover:underline mt-2 inline-block"
                   >
                     View full details →
-                  </a>
+                  </Link>
                 </div>
 
-                {/* Agent Info */}
+                {/* Office Info */}
                 <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
-                  <p className="text-sm text-[#8A8880] mb-2">Listing Agent</p>
+                  <p className="text-sm text-[#8A8880] mb-2">Listing agent</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
-                      <Home className="w-5 h-5 text-[#4AC8E8]" />
+                      <Home className="w-5 h-5 text-[#4AC8E8]" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="font-medium text-[#1A1917]">
-                        {mockProperty.agent.name}
+                        Banc Property Group
                       </p>
-                      <p className="text-sm text-[#8A8880]">
-                        {mockProperty.agent.phone}
-                      </p>
+                      <a
+                        href={BANC_CONTACT.callHref}
+                        className="text-sm text-[#8A8880] hover:text-[#4AC8E8]"
+                      >
+                        {BANC_CONTACT.displayPhone}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -204,9 +272,18 @@ export default function MakeOfferPage() {
               <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-6">
                 Your Offer Details
               </h2>
+              {submitError && (
+                <div
+                  role="alert"
+                  className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                >
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                  <p>{submitError}</p>
+                </div>
+              )}
               <OfferForm
-                propertyId={propertyId}
-                askingPrice={mockProperty.price}
+                propertyId={property.id}
+                askingPrice={property.priceNum}
                 onSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
               />
@@ -222,19 +299,19 @@ export default function MakeOfferPage() {
                   <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
                     1
                   </span>
-                  Your offer will be sent to the vendor and their agent
+                  Your offer is sent to our sales team, who present it to the vendor
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
                     2
                   </span>
-                  The vendor will review your offer and financial position
+                  The vendor reviews your offer and financial position
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
                     3
                   </span>
-                  You&apos;ll receive a response within 24 hours
+                  We come back to you by phone or email — usually within one working day
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">

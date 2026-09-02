@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   buildPropertyLeadActions,
+  isSameAddressText,
+  titleCaseAddress,
   buildPropertyHref,
   buildPropertyShareData,
   dbToCard,
@@ -364,4 +366,43 @@ test("builds department-appropriate lead actions with complete property context"
     assert.equal(actions.secondaryHref, "tel:01707877781");
     assert.equal(actions.secondaryLabel, item.teamLabel);
   }
+});
+
+test("titleCaseAddress folds shouty CRM address lines into readable prose", () => {
+  assert.equal(
+    titleCaseAddress("5 LITTLE BERKHAMSTED LANE, LITTLE BERKHAMSTED, HERTFORD, HERTFORDSHIRE"),
+    "5 Little Berkhamsted Lane, Little Berkhamsted, Hertford, Hertfordshire"
+  );
+  assert.equal(
+    titleCaseAddress("FLAT 2, ST JOHN'S COURT, STOKE-ON-TRENT, EN6 4JL"),
+    "Flat 2, St John's Court, Stoke-On-Trent, EN6 4JL"
+  );
+  assert.equal(titleCaseAddress("THE OLD RECTORY, CHURCH OF ENGLAND LANE"), "The Old Rectory, Church of England Lane");
+  assert.equal(titleCaseAddress("  CUFFLEY  "), "Cuffley");
+});
+
+test("titleCaseAddress leaves mixed-case and non-alphabetic titles untouched", () => {
+  assert.equal(
+    titleCaseAddress("Stunning 4-bed home in Cuffley EN6"),
+    "Stunning 4-bed home in Cuffley EN6"
+  );
+  assert.equal(titleCaseAddress("Hillside"), "Hillside");
+  assert.equal(titleCaseAddress("12"), "12");
+  assert.equal(titleCaseAddress(""), "");
+});
+
+test("isSameAddressText spots a title that merely repeats the address", () => {
+  assert.equal(
+    isSameAddressText(
+      "5 LITTLE BERKHAMSTED LANE, LITTLE BERKHAMSTED",
+      "5 Little Berkhamsted Lane, Little Berkhamsted"
+    ),
+    true
+  );
+  assert.equal(
+    isSameAddressText("5 Little Berkhamsted Lane", "5 Little Berkhamsted Lane, Hertford, SG13 8LY"),
+    true
+  );
+  assert.equal(isSameAddressText("Stunning family home", "5 Little Berkhamsted Lane"), false);
+  assert.equal(isSameAddressText("", "Cuffley"), false);
 });
