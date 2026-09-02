@@ -43,13 +43,18 @@
 | 8 | `0907c92` | `lib/property-privacy.ts` applied in `dbToCard`/`dbToDetail`, so cards, results, breadcrumbs, page titles, OG, JSON-LD, share text and the chatbot's trusted results all inherit it. Coordinates round to 3dp and the map frames at zoom 14. Verified against a production build: the only full postcode left in the rendered HTML is Banc's own office address in the footer. |
 | 9 | `a61cafd` | Overview order is now At a glance → About → Energy performance → Room dimensions; EPC capped at `max-w-md` / 280px. |
 
-**Open questions for Nitesh / follow-ups**
+**Review pass — answers and revisions (2026-09-02)**
 
-- Item 1: the homepage now shows the blue lockup in the header *and* the large white lockup in the hero. Keep both, or drop the hero lockup?
-- Item 4: confirm the footer "Free Valuation" link was the broken one he meant.
-- Item 5: the avatar is a generic robot. Does he want bespoke artwork?
-- Item 8: house *names* are kept ("The Old Rectory, Northaw") — only numbers and postcodes are stripped. A house name identifies a home as precisely as a door number; confirm whether to strip those too.
-- Item 9: there is no EPC tab — the certificate is a body section. His note listed EPC among the tabs; confirm whether he wants a fourth tab.
+| Question | Answer | Commit |
+|---|---|---|
+| Blue lockup in the header or the hero? | The hero. The header logo is dropped on the landing page (it stays on every other header); the hero lockup is now brand blue with the tagline under it. | `9cbebc7` |
+| Was the footer "Free Valuation" the broken link? | Yes, accepted as fixed. | — |
+| Bespoke avatar artwork? | Yes. Four candidates generated; the warm cream character was chosen and shipped as `public/images/ai/banc-bot.png`. | `b9efb42` |
+| Strip house names too? | No — numbers and postcodes only. But the review found cards repeating the title and the address, and fixing it exposed a leak: `Bridge House 69 Station Road` published a door number, because the number was not leading. Both fixed; re-audited across all 48 live listings with zero identifiers left. | `c043e62` |
+| Add an EPC tab? | No — the certificate stays a body section. | — |
+
+Remaining follow-up: one card (BPGC1116) still prints both lines, because
+its address is the only place the street appears. Left as is.
 
 ### Batch 2 — Data correctness (Thu)
 10. **Exclude withdrawn / historic listings** from the Expert Agent import: filter on the feed's status/withdrawn fields so only live for sale / to let (+ recent under offer / let agreed) show. Audit the current 353 rows and archive the rest.
