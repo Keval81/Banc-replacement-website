@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
 import { getLandingUi } from "@/lib/landing-ui";
+import { BANC_PHONE_LINES } from "@/lib/banc-contact";
 import {
   MODAL_FOCUSABLE_SELECTOR,
   startModalFocusLifecycle,
@@ -16,6 +17,7 @@ import {
 import { useSession, signOut } from "next-auth/react";
 
 const MOBILE_MENU_ID = "banc-mobile-menu";
+const PHONE_MENU_ID = "banc-phone-menu";
 
 const landingUi = getLandingUi("aker");
 
@@ -61,8 +63,31 @@ export default function Header({ transparent = false }: { transparent?: boolean 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = React.useState<string | null>(null);
+  const [phoneMenuOpen, setPhoneMenuOpen] = React.useState(false);
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
   const mobileToggleRef = React.useRef<HTMLButtonElement>(null);
+  const phoneMenuRef = React.useRef<HTMLDivElement>(null);
+
+  // Escape or a click outside dismisses the area-phone menu.
+  React.useEffect(() => {
+    if (!phoneMenuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPhoneMenuOpen(false);
+    };
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target;
+      if (target instanceof Node && phoneMenuRef.current?.contains(target)) return;
+      setPhoneMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, [phoneMenuOpen]);
 
   // Escape closes the mobile menu, Tab stays inside it, and focus returns to
   // the toggle on close (same lifecycle as the filter drawer and chatbot).
@@ -221,14 +246,49 @@ export default function Header({ transparent = false }: { transparent?: boolean 
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
-            {/* Phone */}
-            <a
-              href={landingUi.phoneAction.href}
-              aria-label={landingUi.phoneAction.label}
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
-            >
-              <Phone className="h-5 w-5" aria-hidden="true" />
-            </a>
+            {/* Phone — one line per area */}
+            <div className="relative" ref={phoneMenuRef}>
+              <button
+                type="button"
+                onClick={() => setPhoneMenuOpen((open) => !open)}
+                aria-label={landingUi.phoneAction.label}
+                aria-haspopup="menu"
+                aria-expanded={phoneMenuOpen}
+                aria-controls={PHONE_MENU_ID}
+                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+              >
+                <Phone className="h-5 w-5" aria-hidden="true" />
+              </button>
+
+              <AnimatePresence>
+                {phoneMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    id={PHONE_MENU_ID}
+                    role="menu"
+                    aria-label="Call a Banc office"
+                    className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-white/10 bg-banc-dark-deep p-2 shadow-2xl"
+                    style={{ transformOrigin: "top right" }}
+                  >
+                    {BANC_PHONE_LINES.map((line) => (
+                      <a
+                        key={line.area}
+                        role="menuitem"
+                        href={line.callHref}
+                        onClick={() => setPhoneMenuOpen(false)}
+                        className="flex min-h-[44px] flex-col justify-center rounded-lg px-4 py-2 transition-colors duration-200 hover:bg-banc-sky/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                      >
+                        <span className="text-sm font-medium text-white">{line.area}</span>
+                        <span className="text-xs text-white/60">{line.displayPhone}</span>
+                      </a>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             
             {/* Favorites */}
             <Link 
@@ -340,14 +400,25 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                       {landingUi.valuationAction.label}
                     </Button>
                   </Link>
-                  <a
-                    href={landingUi.phoneAction.href}
-                    aria-label={landingUi.phoneAction.label}
-                    className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-banc-sky/40 text-banc-sky transition-colors duration-200 hover:border-banc-sky hover:bg-banc-sky/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
-                  >
-                    <Phone className="h-5 w-5" aria-hidden="true" />
-                  </a>
                 </div>
+
+                {/* Area phone lines — a drawer has room to list them outright */}
+                <ul className="my-4 space-y-2" aria-label="Call a Banc office">
+                  {BANC_PHONE_LINES.map((line) => (
+                    <li key={line.area}>
+                      <a
+                        href={line.callHref}
+                        className="flex min-h-11 items-center gap-3 rounded-lg border border-banc-sky/40 px-3 py-2 text-banc-sky transition-colors duration-200 hover:border-banc-sky hover:bg-banc-sky/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                      >
+                        <Phone className="h-5 w-5 shrink-0" aria-hidden="true" />
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-medium text-white">{line.area}</span>
+                          <span className="block text-xs text-white/60">{line.displayPhone}</span>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
 
                 {/* Mobile Auth */}
                 {isAuthenticated ? (
