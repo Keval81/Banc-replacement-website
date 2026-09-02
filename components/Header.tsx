@@ -154,49 +154,32 @@ export default function Header({ transparent = false }: { transparent?: boolean 
         )}
       >
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
-          {/* Brand lockup in Banc blue, on every header including the
-              transparent one over the hero film. On mobile the landing
-              header keeps its social icons beside the lockup. */}
-          <div className="flex min-w-0 items-center gap-3">
-            <Link href="/" aria-label="Banc Property Group" className="flex shrink-0 items-center">
+          {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
+          {transparent && !landingUi.showLandingHeaderLogo ? (
+            <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group social media">
+              {landingUi.mobileSocialActions.map((action) => (
+                <SocialIconLink
+                  key={action.brand}
+                  href={action.href}
+                  label={action.label}
+                  iconSrc={action.iconSrc}
+                  imageLoading={action.imageLoading}
+                  presentation={landingUi.mobileSocialPresentation}
+                />
+              ))}
+            </div>
+          ) : (
+            <Link href="/" aria-label="Banc Property Group" className="flex items-center">
               <Image
                 src="/banc-logo-blue.png"
                 alt="Banc Property Group"
                 width={200}
                 height={60}
-                className={cn(
-                  "h-8 w-auto object-contain lg:h-12",
-                  transparent && "drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)]"
-                )}
+                className="h-8 w-auto object-contain lg:h-12"
                 priority
               />
             </Link>
-            <span
-              className={cn(
-                "hidden shrink-0 whitespace-nowrap border-l border-white/20 pl-3 font-serif text-[13px] font-light leading-tight text-white/60 xl:block",
-                transparent && "drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]"
-              )}
-            >
-              Local independent property specialists
-            </span>
-            {transparent && landingUi.mobileSocialActions.length > 0 && (
-              <div
-                className="flex items-center gap-1 lg:hidden"
-                aria-label="Banc Property Group social media"
-              >
-                {landingUi.mobileSocialActions.map((action) => (
-                  <SocialIconLink
-                    key={action.brand}
-                    href={action.href}
-                    label={action.label}
-                    iconSrc={action.iconSrc}
-                    imageLoading={action.imageLoading}
-                    presentation={landingUi.mobileSocialPresentation}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-6 text-sm font-medium text-white/90 lg:flex">

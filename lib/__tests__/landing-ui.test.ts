@@ -74,21 +74,12 @@ test("keeps valuation in the menu without duplicating it as a homepage hero tile
   );
 });
 
-test("shows the Banc lockup in the landing header alongside the social actions", () => {
+test("uses social actions instead of a duplicate logo in the Aker mobile header", () => {
   const ui = getLandingUi("aker");
-  const headerSource = readFileSync(
-    join(import.meta.dirname, "..", "..", "components", "Header.tsx"),
-    "utf8",
-  );
 
-  assert.equal(ui.showLandingHeaderLogo, true);
-  // The lockup is the brand-blue asset, and the transparent hero header
-  // renders it too — the social icons sit beside it rather than replacing it.
-  assert.match(headerSource, /src="\/banc-logo-blue\.png"/);
-  assert.doesNotMatch(
-    headerSource,
-    /transparent && !landingUi\.showLandingHeaderLogo \?/,
-  );
+  // The hero carries the brand lockup; repeating it in the header over the
+  // same frame reads as two logos.
+  assert.equal(ui.showLandingHeaderLogo, false);
   assert.deepEqual(ui.mobileSocialActions, [
     {
       brand: "facebook",
@@ -153,25 +144,32 @@ test("keeps reviews desktop-only and removes the redundant mobile bottom navigat
   }
 });
 
-test("carries the site tagline beside the header lockup on desktop only", () => {
+test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
+  const heroSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "Hero.tsx"),
+    "utf8",
+  );
   const headerSource = readFileSync(
     join(import.meta.dirname, "..", "..", "components", "Header.tsx"),
     "utf8",
   );
 
-  const tagline = headerSource.match(
-    /<span\s+className=\{cn\(\s*"([^"]+)"[^<]*?\)\}\s*>\s*Local independent property specialists/,
+  assert.match(heroSource, /src="\/banc-logo-blue\.png"/);
+  assert.doesNotMatch(heroSource, /banc-logo-white-clear\.png/);
+  assert.match(heroSource, /Local independent property specialists/);
+  // Softer than the sans nav: the serif token at a light weight.
+  const tagline = heroSource.match(
+    /<p\s+className="([^"]+)"[^<]*?>\s*Local independent property specialists/,
   );
-
-  assert.ok(tagline, "the header must render the site tagline");
-  // Softer than the sans nav, and only from xl up: below 1280px the nav
-  // runs into it, which is exactly the clutter the brief warned about.
-  for (const token of ["hidden", "xl:block", "font-serif", "font-light"]) {
+  assert.ok(tagline, "the hero must render the site tagline under the lockup");
+  for (const token of ["font-serif", "font-light"]) {
     assert.ok(
       tagline[1]?.split(/\s+/).includes(token),
       `the tagline must carry the ${token} class`,
     );
   }
+  // The tagline belongs to the hero lockup, not to the header bar.
+  assert.doesNotMatch(headerSource, /Local independent property specialists/);
 });
 
 test("names the conversational agent Banc Bot everywhere a visitor sees it", () => {

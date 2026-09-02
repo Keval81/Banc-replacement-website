@@ -248,17 +248,25 @@ export default function Hero() {
             </span>
             {/* Logo replaces the wordmark at the same scale (the old text was
                 clamp(96px,15vw,210px) tall; the lockup is wider, so height
-                maps to a slightly smaller clamp to hold the same presence). */}
+                maps to a slightly smaller clamp to hold the same presence).
+                In brand blue over the film, with a drop shadow so it holds
+                against the brightest frames. */}
             <Image
-              src="/banc-logo-white-clear.png"
+              src="/banc-logo-blue.png"
               alt=""
               width={800}
               height={190}
               priority
-              className="block h-auto"
+              className="block h-auto drop-shadow-[0_2px_14px_rgba(0,0,0,0.65)]"
               style={{ width: "min(72vw, 560px)" }}
             />
           </h1>
+          <p
+            className="mt-3 font-serif text-base font-light tracking-[0.02em] text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.75)] sm:mt-4 sm:text-lg"
+            style={{ maxWidth: "min(72vw, 560px)" }}
+          >
+            Local independent property specialists
+          </p>
 
           <PropertyJourneySelector
             data-placement={landingUi.mobileHeroActionPlacement}
