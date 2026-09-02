@@ -157,17 +157,22 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
   assert.match(heroSource, /src="\/banc-logo-blue\.png"/);
   assert.doesNotMatch(heroSource, /banc-logo-white-clear\.png/);
   assert.match(heroSource, /Local independent property specialists/);
-  // Softer than the sans nav: the serif token at a light weight.
+  // The site's label voice: a tracked uppercase eyebrow at the same scale
+  // SectionHeader uses, not body copy.
   const tagline = heroSource.match(
-    /<p\s+className="([^"]+)"[^<]*?>\s*Local independent property specialists/,
+    /className="([^"]+)"\s*>\s*Local independent property specialists/,
   );
   assert.ok(tagline, "the hero must render the site tagline under the lockup");
-  for (const token of ["font-serif", "font-light"]) {
-    assert.ok(
-      tagline[1]?.split(/\s+/).includes(token),
-      `the tagline must carry the ${token} class`,
-    );
+  const classes = tagline[1]?.split(/\s+/) ?? [];
+  for (const token of ["uppercase", "text-[9px]", "sm:text-[11px]", "font-medium"]) {
+    assert.ok(classes.includes(token), `the tagline must carry the ${token} class`);
   }
+  assert.ok(
+    !classes.includes("font-serif"),
+    "the tagline is a label, not serif body copy",
+  );
+  // Tracking settles once the lockup has landed.
+  assert.match(heroSource, /animate=\{\{ opacity: 1, letterSpacing: "0\.18em" \}\}/);
   // The tagline belongs to the hero lockup, not to the header bar.
   assert.doesNotMatch(headerSource, /Local independent property specialists/);
 });

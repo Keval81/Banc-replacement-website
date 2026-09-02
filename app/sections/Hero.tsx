@@ -261,12 +261,27 @@ export default function Hero() {
               style={{ width: "min(72vw, 560px)" }}
             />
           </h1>
-          <p
-            className="mt-3 font-serif text-base font-light tracking-[0.02em] text-white/90 drop-shadow-[0_1px_8px_rgba(0,0,0,0.75)] sm:mt-4 sm:text-lg"
-            style={{ maxWidth: "min(72vw, 560px)" }}
-          >
-            Local independent property specialists
-          </p>
+          {/* Tagline in the site's label voice — hairline + tracked uppercase,
+              the same pairing SectionHeader uses to open every section. It
+              settles into its final tracking once the lockup has landed;
+              MotionConfig honours prefers-reduced-motion. */}
+          <div className="mt-4 flex items-center gap-3 sm:mt-5 sm:gap-4">
+            <motion.span
+              aria-hidden="true"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ delay: 0.8, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="hidden h-px w-14 flex-none origin-left bg-white/45 sm:block"
+            />
+            <motion.p
+              initial={{ opacity: 0, letterSpacing: "0.04em" }}
+              animate={{ opacity: 1, letterSpacing: "0.18em" }}
+              transition={{ delay: 0.9, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[9px] font-medium uppercase text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] sm:text-[11px]"
+            >
+              Local independent property specialists
+            </motion.p>
+          </div>
 
           <PropertyJourneySelector
             data-placement={landingUi.mobileHeroActionPlacement}
