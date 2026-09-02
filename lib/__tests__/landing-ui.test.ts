@@ -237,7 +237,7 @@ test("offers assistant and WhatsApp choices from the landing-page help launcher"
     label: "Help",
     assistantLabel: "Ask Banc Bot",
     assistantAvatar: {
-      src: "/images/ai/banc-ai-assistant.png",
+      src: "/images/ai/banc-bot.png",
       alt: "",
     },
     whatsappLabel: "Chat on WhatsApp",

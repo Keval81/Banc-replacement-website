@@ -60,7 +60,7 @@ export interface LandingUi {
     label: "Help";
     assistantLabel: "Ask Banc Bot";
     assistantAvatar: {
-      src: "/images/ai/banc-ai-assistant.png";
+      src: "/images/ai/banc-bot.png";
       alt: "";
     };
     whatsappLabel: "Chat on WhatsApp";
@@ -129,7 +129,7 @@ const sharedActions = {
     label: "Help",
     assistantLabel: "Ask Banc Bot",
     assistantAvatar: {
-      src: "/images/ai/banc-ai-assistant.png",
+      src: "/images/ai/banc-bot.png",
       alt: "",
     },
     whatsappLabel: "Chat on WhatsApp",
