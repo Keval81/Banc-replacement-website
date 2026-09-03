@@ -70,7 +70,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Energy Performance Certificate</h3>
-            <p className="text-sm text-banc-grey">Valid until {new Date(epc.lodgementDate).getFullYear() + 10}</p>
+            <p className="text-sm text-banc-muted-readable">Valid until {new Date(epc.lodgementDate).getFullYear() + 10}</p>
           </div>
           <Leaf className="h-5 w-5 text-green-500 ml-auto" />
         </div>
@@ -81,7 +81,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
         <button
           onClick={() => setActiveTab("current")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === "current" ? "text-emerald-600" : "text-banc-grey hover:text-banc-dark-mid"
+            activeTab === "current" ? "text-emerald-600" : "text-banc-muted-readable hover:text-banc-dark-mid"
           }`}
         >
           Current Rating
@@ -95,7 +95,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
         <button
           onClick={() => setActiveTab("potential")}
           className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-            activeTab === "potential" ? "text-emerald-600" : "text-banc-grey hover:text-banc-dark-mid"
+            activeTab === "potential" ? "text-emerald-600" : "text-banc-muted-readable hover:text-banc-dark-mid"
           }`}
         >
           Potential Rating
@@ -112,17 +112,17 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
         {/* Rating Display */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="text-sm text-banc-grey mb-1">
+            <p className="text-sm text-banc-muted-readable mb-1">
               {activeTab === "current" ? "Current Rating" : "Potential Rating"}
             </p>
             <div className="flex items-baseline gap-2">
               <span className={`text-5xl font-bold ${activeColors.text}`}>
                 {activeRating}
               </span>
-              <span className="text-2xl text-banc-grey">/</span>
-              <span className="text-2xl text-banc-grey">G</span>
+              <span className="text-2xl text-banc-muted-readable">/</span>
+              <span className="text-2xl text-banc-muted-readable">G</span>
             </div>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-sm text-banc-muted-readable mt-1">
               Score: <span className="font-semibold">{activeScore}</span>
             </p>
           </div>
@@ -162,7 +162,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
                     </div>
                   )}
                 </div>
-                <span className="text-xs text-banc-grey w-12 text-right">{max}+</span>
+                <span className="text-xs text-banc-muted-readable w-12 text-right">{max}+</span>
               </div>
             );
           })}
@@ -179,21 +179,21 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
               <>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Thermometer className="h-3.5 w-3.5" />
                       Heating
                     </span>
                     <span className="font-medium">£{epc.heatingCostCurrent}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Lightbulb className="h-3.5 w-3.5" />
                       Lighting
                     </span>
                     <span className="font-medium">£{epc.lightingCostCurrent}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Droplets className="h-3.5 w-3.5" />
                       Hot Water
                     </span>
@@ -202,7 +202,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
                 </div>
                 <div className="flex items-center justify-center border-l border-banc-grey/20">
                   <div className="text-center">
-                    <p className="text-xs text-banc-grey mb-1">Total per year</p>
+                    <p className="text-xs text-banc-muted-readable mb-1">Total per year</p>
                     <p className="text-2xl font-bold text-banc-dark">£{currentTotalCost}</p>
                   </div>
                 </div>
@@ -211,21 +211,21 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
               <>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Thermometer className="h-3.5 w-3.5" />
                       Heating
                     </span>
                     <span className="font-medium">£{epc.heatingCostPotential}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Lightbulb className="h-3.5 w-3.5" />
                       Lighting
                     </span>
                     <span className="font-medium">£{epc.lightingCostPotential}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-banc-grey flex items-center gap-1">
+                    <span className="text-banc-muted-readable flex items-center gap-1">
                       <Droplets className="h-3.5 w-3.5" />
                       Hot Water
                     </span>
@@ -234,7 +234,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
                 </div>
                 <div className="flex items-center justify-center border-l border-banc-grey/20">
                   <div className="text-center">
-                    <p className="text-xs text-banc-grey mb-1">Potential savings</p>
+                    <p className="text-xs text-banc-muted-readable mb-1">Potential savings</p>
                     <p className="text-2xl font-bold text-green-600">£{annualSavings}</p>
                     <p className="text-xs text-green-600">per year</p>
                   </div>
@@ -247,19 +247,19 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
         {/* Property Details */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-banc-grey">Property Type</p>
+            <p className="text-xs text-banc-muted-readable">Property Type</p>
             <p className="font-medium text-banc-dark">{epc.propertyType}</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-banc-grey">Built Form</p>
+            <p className="text-xs text-banc-muted-readable">Built Form</p>
             <p className="font-medium text-banc-dark">{epc.builtForm}</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-banc-grey">Floor Area</p>
+            <p className="text-xs text-banc-muted-readable">Floor Area</p>
             <p className="font-medium text-banc-dark">{epc.totalFloorArea} m²</p>
           </div>
           <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-banc-grey">CO₂ Emissions</p>
+            <p className="text-xs text-banc-muted-readable">CO₂ Emissions</p>
             <p className="font-medium text-banc-dark">{epc.co2Emissions} tonnes/year</p>
           </div>
         </div>
@@ -273,9 +273,9 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
             >
               <span className="font-semibold text-banc-dark">Recommended Improvements</span>
               {showImprovementsList ? (
-                <ChevronUp className="h-5 w-5 text-banc-grey" />
+                <ChevronUp className="h-5 w-5 text-banc-muted-readable" />
               ) : (
-                <ChevronDown className="h-5 w-5 text-banc-grey" />
+                <ChevronDown className="h-5 w-5 text-banc-muted-readable" />
               )}
             </button>
             
@@ -300,7 +300,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
                             Save £{improvement.typicalSaving}/year
                           </span>
                         </div>
-                        <div className="flex gap-4 text-xs text-banc-grey">
+                        <div className="flex gap-4 text-xs text-banc-muted-readable">
                           <span>Est. cost: {improvement.indicativeCost}</span>
                         </div>
                       </div>
@@ -313,7 +313,7 @@ export function EPCVisualizer({ epc, className = "", showImprovements = true }: 
         )}
 
         {/* Info */}
-        <div className="mt-4 pt-4 border-t border-banc-grey/20 flex items-center gap-1.5 text-sm text-banc-grey">
+        <div className="mt-4 pt-4 border-t border-banc-grey/20 flex items-center gap-1.5 text-sm text-banc-muted-readable">
           <Info className="h-4 w-4" />
           <span>Based on standard assumptions about occupancy and energy use</span>
         </div>

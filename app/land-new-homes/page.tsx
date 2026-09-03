@@ -63,14 +63,14 @@ export default function LandNewHomesPage() {
           <div className="max-w-3xl">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/30 mb-8">
-              <Sparkles className="w-4 h-4 text-banc-sky" />
-              <span className="text-sm font-medium text-banc-sky tracking-wide">Premium Development Services</span>
+              <Sparkles className="w-4 h-4 text-banc-focus" />
+              <span className="text-sm font-medium text-banc-focus tracking-wide">Premium Development Services</span>
             </div>
             
             {/* Title */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1]">
               Land &<br />
-              <span className="text-banc-sky">New Homes</span>
+              <span className="text-banc-focus">New Homes</span>
             </h1>
             
             {/* Description */}
@@ -85,7 +85,7 @@ export default function LandNewHomesPage() {
               <Button 
                 asChild
                 size="lg"
-                className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base font-semibold rounded-full group"
+                className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-semibold rounded-full group"
               >
                 <a href="#contact">
                   <Phone className="mr-2 h-5 w-5" />
@@ -97,7 +97,7 @@ export default function LandNewHomesPage() {
                 asChild
                 variant="outline" 
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base rounded-full"
+                className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base rounded-full"
               >
                 <a href="#services">Explore Services</a>
               </Button>
@@ -107,19 +107,19 @@ export default function LandNewHomesPage() {
             <div className="mt-12 flex flex-wrap items-center gap-8">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-sky" />
+                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
                 </div>
                 <span className="text-white/70 text-sm">Bespoke Campaigns</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-sky" />
+                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
                 </div>
                 <span className="text-white/70 text-sm">Local Expertise</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-sky" />
+                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
                 </div>
                 <span className="text-white/70 text-sm">Proven Results</span>
               </div>
@@ -154,19 +154,19 @@ export default function LandNewHomesPage() {
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="grid grid-cols-3 gap-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <Building2 className="w-6 h-6 text-banc-sky mx-auto mb-2" />
+                      <Building2 className="w-6 h-6 text-banc-focus mx-auto mb-2" />
                       <p className="text-sm font-bold text-banc-dark-deep">New Homes</p>
-                      <p className="text-xs text-banc-grey">Marketing</p>
+                      <p className="text-xs text-banc-muted-readable">Marketing</p>
                     </div>
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <TrendingUp className="w-6 h-6 text-banc-sky mx-auto mb-2" />
+                      <TrendingUp className="w-6 h-6 text-banc-focus mx-auto mb-2" />
                       <p className="text-sm font-bold text-banc-dark-deep">Land</p>
-                      <p className="text-xs text-banc-grey">Acquisition</p>
+                      <p className="text-xs text-banc-muted-readable">Acquisition</p>
                     </div>
                     <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <Users className="w-6 h-6 text-banc-sky mx-auto mb-2" />
+                      <Users className="w-6 h-6 text-banc-focus mx-auto mb-2" />
                       <p className="text-sm font-bold text-banc-dark-deep">Director</p>
-                      <p className="text-xs text-banc-grey">Led Service</p>
+                      <p className="text-xs text-banc-muted-readable">Led Service</p>
                     </div>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function LandNewHomesPage() {
               <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-banc-sky/10 rounded-full blur-3xl" />
               
               {/* Floating Badge */}
-              <div className="absolute -top-4 -right-4 bg-banc-sky text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
+              <div className="absolute -top-4 -right-4 bg-banc-focus text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
                 <Home className="w-4 h-4" />
                 <span className="text-sm font-semibold">New Homes</span>
               </div>
@@ -186,8 +186,8 @@ export default function LandNewHomesPage() {
             {/* Content Side */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 mb-6">
-                <Building2 className="w-4 h-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky uppercase tracking-wider">Development Services</span>
+                <Building2 className="w-4 h-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus uppercase tracking-wider">Development Services</span>
               </div>
               
               <h2 className="text-4xl sm:text-5xl font-bold text-banc-dark-deep leading-tight">
@@ -230,7 +230,7 @@ export default function LandNewHomesPage() {
                 ].map((feature, idx) => (
                   <div key={idx} className="flex items-center gap-3">
                     <div className="w-6 h-6 rounded-full bg-banc-sky/20 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-banc-sky" />
+                      <CheckCircle2 className="w-4 h-4 text-banc-focus" />
                     </div>
                     <span className="text-banc-dark-mid text-sm font-medium">{feature}</span>
                   </div>
@@ -256,8 +256,8 @@ export default function LandNewHomesPage() {
             {/* Content Side */}
             <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 mb-6">
-                <Landmark className="w-4 h-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky uppercase tracking-wider">Land Opportunities</span>
+                <Landmark className="w-4 h-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus uppercase tracking-wider">Land Opportunities</span>
               </div>
               
               <h2 className="text-4xl sm:text-5xl font-bold text-banc-dark-deep leading-tight">
@@ -283,7 +283,7 @@ export default function LandNewHomesPage() {
               {/* Contact Highlight Box */}
               <div className="mt-8 p-6 bg-gradient-to-r from-banc-sky/10 to-transparent rounded-2xl border-l-4 border-banc-sky">
                 <p className="text-banc-dark-mid leading-relaxed">
-                  Please call <strong className="text-banc-dark-deep">Nitesh Bheda</strong> or <strong className="text-banc-dark-deep">Andrew Crump</strong> on <a href={BANC_CONTACT.callHref} className="text-banc-sky font-semibold hover:underline">{BANC_CONTACT.displayPhone}</a> alternatively email <a href="mailto:nitesh@bancproperty.com" className="text-banc-sky hover:underline">nitesh@bancproperty.com</a> or <a href="mailto:andrew@bancproperty.com" className="text-banc-sky hover:underline">andrew@bancproperty.com</a> to discuss your enquiry.
+                  Please call <strong className="text-banc-dark-deep">Nitesh Bheda</strong> or <strong className="text-banc-dark-deep">Andrew Crump</strong> on <a href={BANC_CONTACT.callHref} className="text-banc-focus font-semibold hover:underline">{BANC_CONTACT.displayPhone}</a> alternatively email <a href="mailto:nitesh@bancproperty.com" className="text-banc-focus hover:underline">nitesh@bancproperty.com</a> or <a href="mailto:andrew@bancproperty.com" className="text-banc-focus hover:underline">andrew@bancproperty.com</a> to discuss your enquiry.
                 </p>
               </div>
               
@@ -315,11 +315,11 @@ export default function LandNewHomesPage() {
               <div className="absolute bottom-8 -left-8 bg-white rounded-2xl shadow-xl p-6 max-w-xs">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-banc-sky" />
+                    <MapPin className="w-5 h-5 text-banc-focus" />
                   </div>
                   <span className="font-semibold text-banc-dark-deep">Local Expertise</span>
                 </div>
-                <p className="text-sm text-banc-grey">Deep knowledge of North London and Hertfordshire development opportunities</p>
+                <p className="text-sm text-banc-muted-readable">Deep knowledge of North London and Hertfordshire development opportunities</p>
               </div>
               
               {/* Floating Badge */}
@@ -449,7 +449,7 @@ export default function LandNewHomesPage() {
             <Button 
               asChild
               size="lg"
-              className="bg-banc-sky hover:bg-banc-sky-dark text-white px-10 py-7 text-lg font-semibold rounded-full group"
+              className="bg-banc-focus hover:bg-banc-focus-hover text-white px-10 py-7 text-lg font-semibold rounded-full group"
             >
               <a href={BANC_CONTACT.callHref}>
                 <Phone className="mr-3 h-5 w-5" />
@@ -461,7 +461,7 @@ export default function LandNewHomesPage() {
               asChild
               variant="outline" 
               size="lg"
-              className="border-white/30 text-white hover:bg-white/10 px-10 py-7 text-lg rounded-full"
+              className="bg-transparent border-white/30 text-white hover:bg-white/10 px-10 py-7 text-lg rounded-full"
             >
               <a href="mailto:nitesh@bancproperty.com">
                 <Mail className="mr-3 h-5 w-5" />

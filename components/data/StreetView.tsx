@@ -137,7 +137,7 @@ export function StreetView({
       {/* Header */}
       <div className="px-4 py-3 bg-banc-grey-pale border-b border-banc-grey/20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-banc-grey" />
+          <MapPin className="h-4 w-4 text-banc-muted-readable" />
           <span className="text-sm font-medium text-banc-dark-mid">
             {address || 'Street View'}
           </span>
@@ -196,22 +196,22 @@ export function StreetView({
           <div className="absolute inset-0 flex items-center justify-center bg-banc-grey-pale">
             <div className="text-center">
               <div className="w-8 h-8 border-2 border-banc-grey/30 border-t-[#4AC8E8] rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-sm text-banc-grey">Loading Street View...</p>
+              <p className="text-sm text-banc-muted-readable">Loading Street View...</p>
             </div>
           </div>
         )}
         {error && (
           <div className="absolute inset-0 flex items-center justify-center bg-banc-grey-pale">
             <div className="text-center p-4">
-              <MapPin className="h-12 w-12 text-banc-grey mx-auto mb-2" />
-              <p className="text-banc-grey">{error}</p>
+              <MapPin className="h-12 w-12 text-banc-muted-readable mx-auto mb-2" />
+              <p className="text-banc-muted-readable">{error}</p>
             </div>
           </div>
         )}
       </div>
 
       {/* Footer */}
-      <div className="px-4 py-2 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey flex items-center justify-between">
+      <div className="px-4 py-2 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-muted-readable flex items-center justify-between">
         <span>Drag to look around</span>
         <span>Google Street View</span>
       </div>

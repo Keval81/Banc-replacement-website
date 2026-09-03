@@ -82,7 +82,7 @@ export default function BlogPage() {
         <section className="border-b border-banc-line bg-banc-grey-pale">
           <div className="mx-auto max-w-7xl px-4 lg:px-10">
             <div className="flex flex-wrap items-center gap-2 py-4">
-              <span className="mr-2 text-sm font-medium text-banc-grey">Categories:</span>
+              <span className="mr-2 text-sm font-medium text-banc-muted-readable">Categories:</span>
               {categories.map((category) => (
                 <Link
                   key={category.slug}
@@ -116,12 +116,12 @@ export default function BlogPage() {
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        <div className="absolute left-4 top-4 rounded-full bg-banc-sky px-3 py-1 text-xs font-semibold text-white">
+                        <div className="absolute left-4 top-4 rounded-full bg-banc-focus px-3 py-1 text-xs font-semibold text-white">
                           Featured
                         </div>
                       </div>
                       <div className="p-6">
-                        <div className="mb-3 flex items-center gap-4 text-sm text-banc-grey">
+                        <div className="mb-3 flex items-center gap-4 text-sm text-banc-muted-readable">
                           <span className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
                             {formatDate(post.date)}
@@ -134,10 +134,10 @@ export default function BlogPage() {
                         <h3 className="mb-2 text-xl font-semibold text-banc-dark transition-colors group-hover:text-banc-sky">
                           {post.title}
                         </h3>
-                        <p className="mb-4 text-sm text-banc-grey line-clamp-2">
+                        <p className="mb-4 text-sm text-banc-muted-readable line-clamp-2">
                           {post.description}
                         </p>
-                        <span className="inline-flex items-center text-sm font-medium text-banc-sky">
+                        <span className="inline-flex items-center text-sm font-medium text-banc-focus">
                           Read Article
                           <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </span>
@@ -169,7 +169,7 @@ export default function BlogPage() {
                       />
                     </div>
                     <div className="flex flex-1 flex-col p-5">
-                      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-grey">
+                      <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-muted-readable">
                         <span className="rounded-full bg-[#F3F4F6] px-2 py-1 capitalize">
                           {post.category.replace("-", " ")}
                         </span>
@@ -181,10 +181,10 @@ export default function BlogPage() {
                       <h3 className="mb-2 text-base font-semibold text-banc-dark transition-colors group-hover:text-banc-sky line-clamp-2">
                         {post.title}
                       </h3>
-                      <p className="mb-4 flex-1 text-sm text-banc-grey line-clamp-3">
+                      <p className="mb-4 flex-1 text-sm text-banc-muted-readable line-clamp-3">
                         {post.description}
                       </p>
-                      <div className="flex items-center gap-2 text-sm text-banc-grey">
+                      <div className="flex items-center gap-2 text-sm text-banc-muted-readable">
                         <User className="h-4 w-4" />
                         <span>{post.author}</span>
                       </div>
@@ -210,7 +210,7 @@ export default function BlogPage() {
                   placeholder="Enter your email"
                   className="flex-1 rounded-lg bg-white/10 px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-banc-sky"
                 />
-                <Button className="bg-banc-sky px-6 py-3 text-sm font-semibold text-white hover:bg-banc-sky-dark">
+                <Button className="bg-banc-focus px-6 py-3 text-sm font-semibold text-white hover:bg-banc-sky-dark">
                   Subscribe
                 </Button>
               </form>

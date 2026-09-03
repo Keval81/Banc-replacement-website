@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="bg-banc-grey-pale border-b border-banc-line">
           <div className="mx-auto max-w-7xl px-4 lg:px-10 py-3">
             <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2 text-sm text-banc-grey">
+              <ol className="flex items-center gap-2 text-sm text-banc-muted-readable">
                 <li>
                   <Link href="/" className="hover:text-banc-sky transition-colors">
                     Home
@@ -164,7 +164,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mb-4">
             <Link
               href={`/blog/category/${post.category}`}
-              className="inline-block rounded-full bg-banc-sky/10 px-3 py-1 text-sm font-medium text-banc-sky capitalize"
+              className="inline-block rounded-full bg-banc-sky/10 px-3 py-1 text-sm font-medium text-banc-focus capitalize"
             >
               {post.category.replace("-", " ")}
             </Link>
@@ -172,8 +172,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className="text-2xl font-bold text-banc-dark sm:text-3xl lg:text-4xl">
             {post.title}
           </h1>
-          <p className="mt-4 text-lg text-banc-grey">{post.description}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-banc-grey">
+          <p className="mt-4 text-lg text-banc-muted-readable">{post.description}</p>
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-banc-muted-readable">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {formatDate(post.date)}
@@ -221,7 +221,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-banc-grey"
+                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-banc-muted-readable"
                   >
                     <Tag className="h-3 w-3" />
                     {tag}
@@ -231,7 +231,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
               {/* Share */}
               <div className="mt-8 border-t border-banc-line pt-8">
-                <p className="mb-4 text-sm font-medium text-banc-grey">Share this article</p>
+                <p className="mb-4 text-sm font-medium text-banc-muted-readable">Share this article</p>
                 <div className="flex gap-3">
                   <Button variant="outline" size="sm" className="gap-2">
                     <Facebook className="h-4 w-4" />
@@ -254,7 +254,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               {/* Author Card */}
               {author && (
                 <div className="rounded-xl border border-banc-line p-6">
-                  <p className="mb-4 text-sm font-medium text-banc-grey">Written by</p>
+                  <p className="mb-4 text-sm font-medium text-banc-muted-readable">Written by</p>
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-full">
                       <Image
@@ -266,21 +266,21 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     </div>
                     <div>
                       <p className="font-semibold text-banc-dark">{author.name}</p>
-                      <p className="text-sm text-banc-grey">{author.role}</p>
+                      <p className="text-sm text-banc-muted-readable">{author.role}</p>
                     </div>
                   </div>
-                  <p className="mt-4 text-sm text-banc-grey">{author.bio}</p>
+                  <p className="mt-4 text-sm text-banc-muted-readable">{author.bio}</p>
                 </div>
               )}
 
               {/* CTA */}
-              <div className="rounded-xl bg-banc-sky p-6 text-white">
+              <div className="rounded-xl bg-banc-focus p-6 text-white">
                 <h3 className="font-semibold">Looking to buy or sell?</h3>
                 <p className="mt-2 text-sm text-white/90">
                   Get expert advice from our team of property professionals.
                 </p>
                 <Link href="/contact">
-                  <Button className="mt-4 w-full bg-white text-banc-sky hover:bg-white/90">
+                  <Button className="mt-4 w-full bg-white text-banc-focus hover:bg-white/90">
                     Contact Us
                   </Button>
                 </Link>
@@ -313,7 +313,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                         <h3 className="font-semibold text-banc-dark transition-colors group-hover:text-banc-sky">
                           {relatedPost.title}
                         </h3>
-                        <p className="mt-2 text-sm text-banc-grey line-clamp-2">
+                        <p className="mt-2 text-sm text-banc-muted-readable line-clamp-2">
                           {relatedPost.description}
                         </p>
                       </div>
@@ -329,7 +329,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-10">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-banc-sky hover:underline"
+            className="inline-flex items-center gap-2 text-banc-focus hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog

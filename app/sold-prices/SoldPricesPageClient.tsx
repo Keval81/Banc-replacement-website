@@ -130,7 +130,7 @@ export default function SoldPricesPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-banc-dark mb-2">Sold Prices</h1>
-          <p className="text-banc-grey">Search HM Land Registry sold price data for any UK postcode</p>
+          <p className="text-banc-muted-readable">Search HM Land Registry sold price data for any UK postcode</p>
         </div>
 
         {/* Search Section */}
@@ -186,25 +186,25 @@ export default function SoldPricesPage() {
                   <h2 className="text-lg font-semibold text-banc-dark mb-4">Market Summary</h2>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-banc-grey">Average Price</span>
+                      <span className="text-banc-muted-readable">Average Price</span>
                       <span className="text-xl font-bold text-banc-dark">{formatPrice(stats.averagePrice)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-banc-grey">Median Price</span>
+                      <span className="text-banc-muted-readable">Median Price</span>
                       <span className="text-lg font-semibold text-banc-dark">{formatPrice(stats.medianPrice)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-banc-grey">Sales (12 months)</span>
+                      <span className="text-banc-muted-readable">Sales (12 months)</span>
                       <span className="font-semibold text-banc-dark">{stats.salesCount12Months}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-banc-grey">Price Change</span>
+                      <span className="text-banc-muted-readable">Price Change</span>
                       <span className={`font-semibold ${stats.priceChangePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                         {stats.priceChangePercent >= 0 ? '+' : ''}{stats.priceChangePercent}%
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-banc-grey">Price per sq ft</span>
+                      <span className="text-banc-muted-readable">Price per sq ft</span>
                       <span className="font-semibold text-banc-dark">£{stats.pricePerSqft}</span>
                     </div>
                   </div>
@@ -221,7 +221,7 @@ export default function SoldPricesPage() {
               <div className="bg-white rounded-xl shadow-sm border border-banc-grey/20 p-4 mb-6">
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4 text-banc-grey" />
+                    <Filter className="h-4 w-4 text-banc-muted-readable" />
                     <span className="text-sm font-medium text-banc-dark-mid">Filters:</span>
                   </div>
                   
@@ -246,7 +246,7 @@ export default function SoldPricesPage() {
                   </select>
 
                   <div className="flex items-center gap-2 ml-auto">
-                    <span className="text-sm text-banc-grey">{filteredPrices.length} results</span>
+                    <span className="text-sm text-banc-muted-readable">{filteredPrices.length} results</span>
                     <div className="flex border rounded-md overflow-hidden">
                       <button
                         onClick={() => setViewMode('list')}
@@ -283,17 +283,17 @@ export default function SoldPricesPage() {
                             <Badge variant="secondary" className="text-xs">New Build</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-banc-grey">{price.postcode}</p>
+                        <p className="text-sm text-banc-muted-readable">{price.postcode}</p>
                         <div className="flex flex-wrap items-center gap-3 mt-3">
-                          <span className="text-sm text-banc-grey flex items-center gap-1">
+                          <span className="text-sm text-banc-muted-readable flex items-center gap-1">
                             <Building2 className="h-3.5 w-3.5" />
                             {price.propertyType}
                           </span>
-                          <span className="text-sm text-banc-grey flex items-center gap-1">
+                          <span className="text-sm text-banc-muted-readable flex items-center gap-1">
                             <Calendar className="h-3.5 w-3.5" />
                             {formatDate(price.date)}
                           </span>
-                          <span className="text-sm text-banc-grey capitalize">
+                          <span className="text-sm text-banc-muted-readable capitalize">
                             {price.tenure}
                           </span>
                         </div>
@@ -308,8 +308,8 @@ export default function SoldPricesPage() {
 
               {filteredPrices.length === 0 && (
                 <div className="text-center py-12 bg-white rounded-xl border border-banc-grey/20">
-                  <Home className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
-                  <p className="text-banc-grey">No results match your filters</p>
+                  <Home className="h-12 w-12 mx-auto mb-3 text-banc-muted-readable" />
+                  <p className="text-banc-muted-readable">No results match your filters</p>
                 </div>
               )}
             </div>
@@ -319,9 +319,9 @@ export default function SoldPricesPage() {
         {/* Empty State */}
         {!loading && prices.length === 0 && !error && (
           <div className="text-center py-16">
-            <Home className="h-16 w-16 mx-auto mb-4 text-banc-grey" />
+            <Home className="h-16 w-16 mx-auto mb-4 text-banc-muted-readable" />
             <h3 className="text-lg font-medium text-banc-dark mb-2">Search for Sold Prices</h3>
-            <p className="text-banc-grey">Enter a postcode to see sold price history and area statistics</p>
+            <p className="text-banc-muted-readable">Enter a postcode to see sold price history and area statistics</p>
           </div>
         )}
       </div>

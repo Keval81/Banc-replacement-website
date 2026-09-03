@@ -100,8 +100,8 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-banc-sky text-white"
-                  : "text-banc-grey hover:bg-banc-grey-pale hover:text-banc-dark-deep"
+                  ? "bg-banc-focus text-white"
+                  : "text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-dark-deep"
               }`}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -109,7 +109,7 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               {item.badge && (
                 <span
                   className={`px-2 py-0.5 text-xs rounded-full ${
-                    active ? "bg-white/20 text-white" : "bg-banc-sky text-white"
+                    active ? "bg-white/20 text-white" : "bg-banc-focus text-white"
                   }`}
                 >
                   {item.badge}
@@ -131,8 +131,8 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
               onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-banc-sky text-white"
-                  : "text-banc-grey hover:bg-banc-grey-pale hover:text-banc-dark-deep"
+                  ? "bg-banc-focus text-white"
+                  : "text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-dark-deep"
               }`}
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
@@ -144,10 +144,10 @@ export default function PortalNav({ userRole, onNavigate }: PortalNavProps) {
 
       {/* Help Card */}
       <div className="px-4 py-4 mt-4 mx-3 bg-banc-grey-pale rounded-xl">
-        <p className="text-xs text-banc-grey mb-2">Need assistance?</p>
+        <p className="text-xs text-banc-muted-readable mb-2">Need assistance?</p>
         <a
           href="/contact"
-          className="text-sm font-medium text-banc-sky hover:text-banc-sky-dark transition-colors"
+          className="text-sm font-medium text-banc-focus hover:text-banc-sky-dark transition-colors"
         >
           Contact your agent →
         </a>

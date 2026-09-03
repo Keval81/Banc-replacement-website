@@ -36,7 +36,7 @@ export default function TimeSlots({
             <h3 className="font-heading font-semibold text-banc-dark-deep">
               Available Times
             </h3>
-            <p className="text-sm text-banc-grey mt-0.5">
+            <p className="text-sm text-banc-muted-readable mt-0.5">
               {date.toLocaleDateString("en-GB", {
                 weekday: "long",
                 day: "numeric",
@@ -44,7 +44,7 @@ export default function TimeSlots({
               })}
             </p>
           </div>
-          <div className="flex items-center gap-3 text-xs text-banc-grey">
+          <div className="flex items-center gap-3 text-xs text-banc-muted-readable">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 bg-banc-sky rounded-full" />
               Available
@@ -61,16 +61,16 @@ export default function TimeSlots({
         {slots.length === 0 ? (
           <div className="text-center py-6">
             <Clock className="w-10 h-10 text-banc-line mx-auto mb-3" />
-            <p className="text-banc-grey">No time slots available</p>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-banc-muted-readable">No time slots available</p>
+            <p className="text-sm text-banc-muted-readable mt-1">
               Please select a different date
             </p>
           </div>
         ) : availableSlots.length === 0 ? (
           <div className="text-center py-6">
             <AlertCircle className="w-10 h-10 text-banc-line mx-auto mb-3" />
-            <p className="text-banc-grey">All slots booked for this date</p>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-banc-muted-readable">All slots booked for this date</p>
+            <p className="text-sm text-banc-muted-readable mt-1">
               Please select a different date
             </p>
           </div>
@@ -99,25 +99,25 @@ export default function TimeSlots({
                   <span
                     className={`block font-medium ${
                       isSelected
-                        ? "text-banc-sky"
+                        ? "text-banc-focus"
                         : isAvailable
                         ? "text-banc-dark-deep"
-                        : "text-banc-grey"
+                        : "text-banc-muted-readable"
                     }`}
                   >
                     {formatTime(slot.time)}
                   </span>
-                  <span className="block text-xs text-banc-grey mt-0.5">
+                  <span className="block text-xs text-banc-muted-readable mt-0.5">
                     {slot.duration} mins
                   </span>
                   {isSelected && (
                     <span className="absolute top-1 right-1">
-                      <Check className="w-4 h-4 text-banc-sky" />
+                      <Check className="w-4 h-4 text-banc-focus" />
                     </span>
                   )}
                   {!isAvailable && (
                     <span className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-xs font-medium text-banc-grey bg-white/80 px-2 py-0.5 rounded">
+                      <span className="text-xs font-medium text-banc-muted-readable bg-white/80 px-2 py-0.5 rounded">
                         Booked
                       </span>
                     </span>
@@ -131,7 +131,7 @@ export default function TimeSlots({
 
       {unavailableCount > 0 && availableSlots.length > 0 && (
         <div className="px-5 py-3 border-t border-banc-line bg-banc-grey-pale/50">
-          <p className="text-xs text-banc-grey text-center">
+          <p className="text-xs text-banc-muted-readable text-center">
             {unavailableCount} slot{unavailableCount !== 1 ? "s" : ""} already booked
           </p>
         </div>

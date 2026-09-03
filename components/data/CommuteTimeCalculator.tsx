@@ -114,7 +114,7 @@ export function CommuteTimeCalculator({
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Commute Calculator</h3>
-            <p className="text-sm text-banc-grey">Travel times to key destinations</p>
+            <p className="text-sm text-banc-muted-readable">Travel times to key destinations</p>
           </div>
         </div>
       </div>
@@ -153,10 +153,10 @@ export function CommuteTimeCalculator({
               className="flex items-center justify-between p-3 bg-banc-grey-pale rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <Building2 className="h-4 w-4 text-banc-grey" />
+                <Building2 className="h-4 w-4 text-banc-muted-readable" />
                 <div>
                   <p className="font-medium text-banc-dark">{dest.name}</p>
-                  <p className="text-xs text-banc-grey">{dest.postcode}</p>
+                  <p className="text-xs text-banc-muted-readable">{dest.postcode}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -166,7 +166,7 @@ export function CommuteTimeCalculator({
                     {dest.modes && dest.modes.length > 0 && (
                       <div className="flex items-center gap-1 justify-end">
                         {dest.modes.filter((m, i, a) => a.indexOf(m) === i).slice(0, 3).map((mode, i) => (
-                          <span key={i} className="text-banc-grey">
+                          <span key={i} className="text-banc-muted-readable">
                             {getModeIcon(mode)}
                           </span>
                         ))}
@@ -176,7 +176,7 @@ export function CommuteTimeCalculator({
                 )}
                 <button
                   onClick={() => removeDestination(index)}
-                  className="text-banc-grey hover:text-red-500"
+                  className="text-banc-muted-readable hover:text-red-500"
                 >
                   <X className="h-4 w-4" />
                 </button>

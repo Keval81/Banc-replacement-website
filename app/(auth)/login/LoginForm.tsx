@@ -79,7 +79,7 @@ export default function LoginForm() {
                 className="mb-6 p-4 bg-white/10 border border-white/20 rounded-lg text-white/80 text-sm"
               >
                 Accounts are not available yet. Please check back soon, or{" "}
-                <Link href="/contact" className="text-[#C5A880] hover:text-[#D4B88F]">
+                <Link href="/contact" className="text-banc-gold-dark hover:text-banc-gold">
                   contact us
                 </Link>{" "}
                 for help.
@@ -125,10 +125,10 @@ export default function LoginForm() {
 
               <div className="flex items-center justify-between">
                 <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-white/20 bg-white/5 text-[#C5A880]" />
+                  <input type="checkbox" className="rounded border-white/20 bg-white/5 text-banc-gold-dark" />
                   <span className="ml-2 text-sm text-white/60">Remember me</span>
                 </label>
-                <Link href="/forgot-password" className="text-sm text-[#C5A880] hover:text-[#D4B88F]">
+                <Link href="/forgot-password" className="text-sm text-banc-gold-dark hover:text-banc-gold">
                   Forgot password?
                 </Link>
               </div>
@@ -144,7 +144,7 @@ export default function LoginForm() {
 
             <p className="mt-6 text-center text-white/60">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-[#C5A880] hover:text-[#D4B88F] font-medium">
+              <Link href="/register" className="text-banc-gold-dark hover:text-banc-gold font-medium">
                 Create one
               </Link>
             </p>

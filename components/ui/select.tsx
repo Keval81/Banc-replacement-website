@@ -113,7 +113,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn("py-2 pl-8 pr-2 text-xs font-semibold uppercase tracking-wide text-banc-grey", className)}
+    className={cn("py-2 pl-8 pr-2 text-xs font-semibold uppercase tracking-wide text-banc-muted-readable", className)}
     {...props}
   />
 ))
@@ -138,7 +138,7 @@ const SelectItem = React.forwardRef<
   >
     <span className="absolute left-2.5 flex h-4 w-4 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4 text-banc-sky" />
+        <Check className="h-4 w-4 text-banc-focus" />
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -170,7 +170,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-xs font-semibold text-banc-grey font-sans mb-2">
+          <label className="block text-xs font-semibold text-banc-muted-readable font-sans mb-2">
             {label}
           </label>
         )}
@@ -190,7 +190,7 @@ const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
           >
             {children}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-muted-readable pointer-events-none" />
         </div>
         {error && (
           <p className="mt-1.5 text-xs text-red-500">{error}</p>

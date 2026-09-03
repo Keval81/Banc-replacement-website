@@ -181,7 +181,7 @@ export default function ContactPageClient() {
               <h2 className="text-3xl font-semibold text-banc-dark-deep">
                 Visit Our Office
               </h2>
-              <p className="mt-3 text-banc-grey">
+              <p className="mt-3 text-banc-muted-readable">
                 Pop in for a chat about your property requirements
               </p>
               
@@ -195,11 +195,11 @@ export default function ContactPageClient() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-grey-pale text-banc-sky transition-all duration-300 group-hover:bg-banc-sky group-hover:text-white">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-grey-pale text-banc-focus transition-all duration-300 group-hover:bg-banc-sky group-hover:text-white">
                       <detail.icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-grey">
+                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-muted-readable">
                         {detail.label}
                       </p>
                       {detail.href ? (
@@ -248,7 +248,7 @@ export default function ContactPageClient() {
 
               {/* Mayfair office */}
               <div className="mt-10 border-t border-banc-grey-pale pt-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-grey">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-muted-readable">
                   {mayfairOffice.title}
                 </p>
                 <div className="mt-3 space-y-2 text-banc-dark-deep">
@@ -306,12 +306,12 @@ export default function ContactPageClient() {
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-banc-sky/10 text-banc-sky">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-banc-sky/10 text-banc-focus">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
                     <p className="font-semibold text-banc-dark-deep">Banc Property Group</p>
-                    <p className="text-sm text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable">
                       {cuffleyOffice.addressLines.slice(0, 2).join(", ")}
                     </p>
                   </div>

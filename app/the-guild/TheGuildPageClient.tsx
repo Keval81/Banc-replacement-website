@@ -131,7 +131,7 @@ export default function TheGuildPage() {
                 className="mt-10 flex flex-wrap gap-4"
               >
                 <Button 
-                  className="bg-banc-sky hover:bg-banc-sky/90 text-white px-8 py-6 text-base font-medium rounded-full group transition-all duration-300"
+                  className="bg-banc-focus hover:bg-banc-sky/90 text-white px-8 py-6 text-base font-medium rounded-full group transition-all duration-300"
                 >
                   <Link href="/sales/properties" className="flex items-center">
                     View Properties
@@ -140,7 +140,7 @@ export default function TheGuildPage() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="border-white/20 text-white hover:bg-white/5 hover:border-white/30 px-8 py-6 text-base rounded-full transition-all duration-300"
+                  className="bg-transparent border-white/20 text-white hover:bg-white/5 hover:border-white/30 px-8 py-6 text-base rounded-full transition-all duration-300"
                 >
                   <Link href="/contact">Contact Us</Link>
                 </Button>
@@ -175,7 +175,7 @@ export default function TheGuildPage() {
                 <motion.div 
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-6 -right-6 bg-banc-sky text-white rounded-2xl p-4 shadow-lg"
+                  className="absolute -top-6 -right-6 bg-banc-focus text-white rounded-2xl p-4 shadow-lg"
                 >
                   <Building2 className="h-8 w-8" />
                 </motion.div>
@@ -227,10 +227,10 @@ export default function TheGuildPage() {
                 {/* Badge */}
                 <div className="absolute bottom-6 left-6 flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-2xl px-5 py-3">
                   <div className="w-10 h-10 bg-banc-sky/10 rounded-xl flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-banc-sky" />
+                    <MapPin className="h-5 w-5 text-banc-focus" />
                   </div>
                   <div>
-                    <p className="text-xs text-banc-grey uppercase tracking-wider">Our Promise</p>
+                    <p className="text-xs text-banc-muted-readable uppercase tracking-wider">Our Promise</p>
                     <p className="text-sm font-semibold text-[#1a1a1a]">Local expertise, national reach</p>
                   </div>
                 </div>
@@ -242,24 +242,24 @@ export default function TheGuildPage() {
             
             {/* Content Side */}
             <div className="lg:pl-8">
-              <div className="inline-flex items-center gap-2 text-banc-sky mb-6">
+              <div className="inline-flex items-center gap-2 text-banc-focus mb-6">
                 <div className="h-px w-8 bg-banc-sky" />
                 <span className="text-sm font-medium uppercase tracking-[0.2em]">Our Membership</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a] leading-tight">
                 National Network.<br />
-                <span className="text-banc-sky">Local Independence.</span>
+                <span className="text-banc-focus">Local Independence.</span>
               </h2>
               
               <div className="mt-8 space-y-5">
-                <p className="text-lg text-banc-grey leading-relaxed">
+                <p className="text-lg text-banc-muted-readable leading-relaxed">
                   Banc is proud to be a member of The Guild of Property Professionals, 
                   a prestigious network of independent estate agents across the UK. This 
                   membership reflects our commitment to maintaining the highest standards 
                   of service while benefiting from national exposure and shared expertise.
                 </p>
-                <p className="text-banc-grey leading-relaxed">
+                <p className="text-banc-muted-readable leading-relaxed">
                   Unlike corporate chains, The Guild brings together carefully selected 
                   independent agents who share a passion for exceptional customer service 
                   and deep local knowledge. As a member, we combine our Cuffley and 
@@ -270,20 +270,20 @@ export default function TheGuildPage() {
               <div className="mt-10 grid grid-cols-2 gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-banc-sky/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <CheckCircle2 className="h-6 w-6 text-banc-sky" />
+                    <CheckCircle2 className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Quality Assured</p>
-                    <p className="text-sm text-banc-grey mt-1">Rigorous selection process</p>
+                    <p className="text-sm text-banc-muted-readable mt-1">Rigorous selection process</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-banc-sky/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-6 w-6 text-banc-sky" />
+                    <Shield className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a]">Trusted Network</p>
-                    <p className="text-sm text-banc-grey mt-1">Professional excellence</p>
+                    <p className="text-sm text-banc-muted-readable mt-1">Professional excellence</p>
                   </div>
                 </div>
               </div>
@@ -297,7 +297,7 @@ export default function TheGuildPage() {
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
           {/* Section Header */}
           <div className="max-w-3xl mx-auto text-center mb-16 lg:mb-20">
-            <div className="inline-flex items-center gap-2 text-banc-sky mb-6 justify-center">
+            <div className="inline-flex items-center gap-2 text-banc-focus mb-6 justify-center">
               <div className="h-px w-8 bg-banc-sky" />
               <span className="text-sm font-medium uppercase tracking-[0.2em]">Benefits for You</span>
               <div className="h-px w-8 bg-banc-sky" />
@@ -305,7 +305,7 @@ export default function TheGuildPage() {
             <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a]">
               What Guild Membership Means
             </h2>
-            <p className="mt-6 text-lg text-banc-grey leading-relaxed">
+            <p className="mt-6 text-lg text-banc-muted-readable leading-relaxed">
               Our partnership with The Guild delivers tangible advantages that help us 
               achieve better results and provide a superior experience for buyers and 
               sellers alike.
@@ -324,12 +324,12 @@ export default function TheGuildPage() {
                 className="group bg-white rounded-2xl p-8 border border-banc-grey/10 hover:border-banc-sky/30 hover:shadow-xl hover:shadow-banc-sky/5 transition-all duration-500"
               >
                 <div className="w-14 h-14 bg-banc-sky/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-banc-sky transition-colors duration-500">
-                  <benefit.icon className="h-7 w-7 text-banc-sky group-hover:text-white transition-colors duration-500" />
+                  <benefit.icon className="h-7 w-7 text-banc-focus group-hover:text-white transition-colors duration-500" />
                 </div>
                 <h3 className="text-xl font-semibold text-[#1a1a1a] mb-3 group-hover:text-banc-sky transition-colors">
                   {benefit.title}
                 </h3>
-                <p className="text-banc-grey leading-relaxed text-sm">
+                <p className="text-banc-muted-readable leading-relaxed text-sm">
                   {benefit.description}
                 </p>
               </motion.div>
@@ -374,41 +374,41 @@ export default function TheGuildPage() {
           <div className="grid gap-16 lg:grid-cols-12 items-start">
             {/* Left Column */}
             <div className="lg:col-span-5 lg:sticky lg:top-32">
-              <div className="inline-flex items-center gap-2 text-banc-sky mb-6">
+              <div className="inline-flex items-center gap-2 text-banc-focus mb-6">
                 <div className="h-px w-8 bg-banc-sky" />
                 <span className="text-sm font-medium uppercase tracking-[0.2em]">About The Guild</span>
               </div>
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-[#1a1a1a] leading-tight">
                 A Network Built on{" "}
-                <span className="text-banc-sky">Excellence</span>
+                <span className="text-banc-focus">Excellence</span>
               </h2>
               <div className="mt-8 flex items-center gap-4">
                 <div className="w-16 h-16 bg-banc-sky/10 rounded-2xl flex items-center justify-center">
-                  <Award className="h-8 w-8 text-banc-sky" />
+                  <Award className="h-8 w-8 text-banc-focus" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-[#1a1a1a]">Since 1994</p>
-                  <p className="text-banc-grey">30+ years of excellence</p>
+                  <p className="text-banc-muted-readable">30+ years of excellence</p>
                 </div>
               </div>
             </div>
             
             {/* Right Column */}
             <div className="lg:col-span-7 space-y-6">
-              <p className="text-lg text-banc-grey leading-relaxed">
+              <p className="text-lg text-banc-muted-readable leading-relaxed">
                 The Guild has been working alongside independent estate agents for over 30 years,
                 establishing itself as one of the UK&apos;s most respected networks. Unlike
                 corporate chains, The Guild champions the independent agency model, recognising
                 that local expertise, community connections, and personalised service are
                 irreplaceable assets in the property market.
               </p>
-              <p className="text-banc-grey leading-relaxed">
+              <p className="text-banc-muted-readable leading-relaxed">
                 Each member is exclusively chosen as The Guild representative in their area based
                 on their dedication and expertise in the local property market. This selective
                 approach means that when you work with a Guild member like Banc, you can be
                 confident you&apos;re working with a trusted agent in your area.
               </p>
-              <p className="text-banc-grey leading-relaxed">
+              <p className="text-banc-muted-readable leading-relaxed">
                 The Guild&apos;s collaborative culture means members share best practices, market insights, 
                 and resources, while retaining the independence that allows them to provide the 
                 personalised service that only a local agent can offer. It&apos;s this unique combination 
@@ -425,11 +425,11 @@ export default function TheGuildPage() {
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                   <div className="w-10 h-10 bg-banc-sky/10 rounded-full flex items-center justify-center">
-                    <span className="text-banc-sky font-semibold text-sm">B</span>
+                    <span className="text-banc-focus font-semibold text-sm">B</span>
                   </div>
                   <div>
                     <p className="font-semibold text-[#1a1a1a] text-sm">Banc Property Group</p>
-                    <p className="text-banc-grey text-xs">Proud Guild Member</p>
+                    <p className="text-banc-muted-readable text-xs">Proud Guild Member</p>
                   </div>
                 </div>
               </div>
@@ -463,7 +463,7 @@ export default function TheGuildPage() {
               
               <div className="flex flex-wrap justify-center gap-4">
                 <Button 
-                  className="bg-white text-banc-sky hover:bg-white/90 px-10 py-7 text-base font-semibold rounded-full group transition-all duration-300 shadow-lg shadow-black/10"
+                  className="bg-white text-banc-focus hover:bg-white/90 px-10 py-7 text-base font-semibold rounded-full group transition-all duration-300 shadow-lg shadow-black/10"
                 >
                   <Link href="/sales/properties" className="flex items-center">
                     Browse Properties
@@ -472,7 +472,7 @@ export default function TheGuildPage() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="border-2 border-white text-white hover:bg-white/10 px-10 py-7 text-base rounded-full transition-all duration-300"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-10 py-7 text-base rounded-full transition-all duration-300"
                 >
                   <Link href="/contact" className="flex items-center">
                     Get in Touch

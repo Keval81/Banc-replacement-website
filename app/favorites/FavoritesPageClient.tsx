@@ -130,7 +130,7 @@ export default function FavoritesPage() {
                 Start browsing and save properties you&apos;re interested in.
               </p>
               <Link href="/sales/properties">
-                <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white">
                   <Home className="mr-2 h-4 w-4" />
                   Browse Properties
                 </Button>
@@ -169,7 +169,7 @@ export default function FavoritesPage() {
                     <p className="mt-1 text-sm text-white/60 line-clamp-1">
                       {favorite.propertyAddress}
                     </p>
-                    <p className="mt-2 text-lg font-bold text-banc-sky">
+                    <p className="mt-2 text-lg font-bold text-banc-focus">
                       {favorite.propertyPrice}
                     </p>
 
@@ -182,7 +182,7 @@ export default function FavoritesPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="w-full border-white/20 bg-white/5 text-white hover:bg-white/10"
+                          className="bg-transparent w-full border-white/20 bg-white/5 text-white hover:bg-white/10"
                         >
                           View Details
                           <ArrowRight className="ml-2 h-3 w-3" />

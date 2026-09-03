@@ -250,7 +250,7 @@ function LettingsPropertiesPageContent() {
           <p className="mt-4 text-white/90">
             Register your requirements and we&apos;ll notify you when matching properties become available.
           </p>
-          <Button className="mt-6 bg-white text-banc-sky hover:bg-white/90 px-8 py-5">
+          <Button className="mt-6 bg-white text-banc-focus hover:bg-white/90 px-8 py-5">
             Register as a Tenant
           </Button>
         </div>
@@ -268,7 +268,7 @@ export default function LettingsPropertiesPage() {
       <div className="bg-white text-banc-dark min-h-screen">
         <Header />
         <div className="flex items-center justify-center h-[60vh]">
-          <Loader2 className="h-8 w-8 animate-spin text-banc-sky" />
+          <Loader2 className="h-8 w-8 animate-spin text-banc-focus" />
         </div>
         <Footer />
       </div>

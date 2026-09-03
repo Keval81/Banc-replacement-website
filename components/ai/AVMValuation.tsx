@@ -113,7 +113,7 @@ export default function AVMValuation() {
       case 'down':
         return <TrendingDown className="w-5 h-5 text-red-600" />;
       default:
-        return <Minus className="w-5 h-5 text-banc-grey" />;
+        return <Minus className="w-5 h-5 text-banc-muted-readable" />;
     }
   };
 
@@ -136,7 +136,7 @@ export default function AVMValuation() {
           <div className="md:col-span-2">
             <Label htmlFor="address">Property Address *</Label>
             <div className="relative mt-1">
-              <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-grey w-4 h-4" />
+              <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-muted-readable w-4 h-4" />
               <Input
                 id="address"
                 value={formData.address}
@@ -151,7 +151,7 @@ export default function AVMValuation() {
           <div>
             <Label htmlFor="postcode">Postcode *</Label>
             <div className="relative mt-1">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-grey w-4 h-4" />
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-banc-muted-readable w-4 h-4" />
               <Input
                 id="postcode"
                 value={formData.postcode}
@@ -275,12 +275,12 @@ export default function AVMValuation() {
           >
             {/* Main Estimate */}
             <div className="text-center">
-              <p className="text-banc-grey mb-2">Estimated Value</p>
+              <p className="text-banc-muted-readable mb-2">Estimated Value</p>
               <p className="text-5xl font-bold text-banc-teal">
                 {formatPrice(result.estimate)}
               </p>
               <div className="flex items-center justify-center gap-4 mt-3">
-                <span className="text-banc-grey">
+                <span className="text-banc-muted-readable">
                   Range: {formatPrice(result.lowEstimate)} - {formatPrice(result.highEstimate)}
                 </span>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${getConfidenceColor(result.confidenceLevel)}`}>
@@ -293,14 +293,14 @@ export default function AVMValuation() {
             {/* Market Trend */}
             <div className="bg-white rounded-xl p-4 flex items-center justify-between">
               <div>
-                <p className="text-sm text-banc-grey">Market Trend</p>
+                <p className="text-sm text-banc-muted-readable">Market Trend</p>
                 <p className="font-medium">{result.marketTrend.period}</p>
               </div>
               <div className="flex items-center gap-2">
                 {getTrendIcon()}
                 <span className={`font-bold ${
                   result.marketTrend.direction === 'up' ? 'text-green-600' :
-                  result.marketTrend.direction === 'down' ? 'text-red-600' : 'text-banc-grey'
+                  result.marketTrend.direction === 'down' ? 'text-red-600' : 'text-banc-muted-readable'
                 }`}>
                   {result.marketTrend.direction === 'up' ? '+' : ''}
                   {result.marketTrend.percentage}%
@@ -329,7 +329,7 @@ export default function AVMValuation() {
                     <p className="font-medium text-banc-dark mb-2">Considerations</p>
                     <ul className="space-y-1">
                       {result.factors.negative.map((factor, i) => (
-                        <li key={i} className="text-sm text-banc-grey flex items-center gap-2">
+                        <li key={i} className="text-sm text-banc-muted-readable flex items-center gap-2">
                           <AlertCircle className="w-4 h-4" />
                           {factor}
                         </li>
@@ -348,13 +348,13 @@ export default function AVMValuation() {
                   <div key={i} className="bg-white rounded-lg p-3 flex items-center justify-between text-sm">
                     <div>
                       <p className="font-medium">{comp.address}</p>
-                      <p className="text-banc-grey">
+                      <p className="text-banc-muted-readable">
                         {comp.bedrooms} bed {comp.propertyType} • Sold {comp.date}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold">{formatPrice(comp.price)}</p>
-                      <p className="text-banc-grey">{comp.distance} miles away</p>
+                      <p className="text-banc-muted-readable">{comp.distance} miles away</p>
                     </div>
                   </div>
                 ))}

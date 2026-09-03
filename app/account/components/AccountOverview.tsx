@@ -50,7 +50,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
       count: 0,
       icon: Bell,
       href: "/alerts",
-      color: "text-banc-sky",
+      color: "text-banc-focus",
       bgColor: "bg-banc-sky/10",
     },
     {
@@ -125,7 +125,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
         </h2>
         <div className="space-y-4">
           <div className="flex items-start gap-4">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-banc-sky/20 text-sm font-medium text-banc-sky">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-banc-sky/20 text-sm font-medium text-banc-focus">
               1
             </div>
             <div>
@@ -136,7 +136,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
               <Link href="/account/requirements">
                 <Button
                   variant="link"
-                  className="mt-1 h-auto p-0 text-banc-sky hover:text-banc-sky-dark"
+                  className="mt-1 h-auto p-0 text-banc-focus hover:text-banc-sky-dark"
                 >
                   Update requirements →
                 </Button>
@@ -156,7 +156,7 @@ export default function AccountOverview({ user }: AccountOverviewProps) {
               <Link href="/sales/properties">
                 <Button
                   variant="link"
-                  className="mt-1 h-auto p-0 text-banc-sky hover:text-banc-sky-dark"
+                  className="mt-1 h-auto p-0 text-banc-focus hover:text-banc-sky-dark"
                 >
                   View properties →
                 </Button>

@@ -108,7 +108,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-grey">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-muted-readable">
                       <span className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(post.date)}
@@ -121,10 +121,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                     <h3 className="mb-2 text-base font-semibold text-banc-dark transition-colors group-hover:text-banc-sky line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="mb-4 flex-1 text-sm text-banc-grey line-clamp-3">
+                    <p className="mb-4 flex-1 text-sm text-banc-muted-readable line-clamp-3">
                       {post.description}
                     </p>
-                    <div className="flex items-center gap-2 text-sm text-banc-grey">
+                    <div className="flex items-center gap-2 text-sm text-banc-muted-readable">
                       <User className="h-4 w-4" />
                       <span>{post.author}</span>
                     </div>
@@ -135,12 +135,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg text-banc-grey">
+            <p className="text-lg text-banc-muted-readable">
               No posts found in this category yet.
             </p>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-banc-sky hover:underline"
+              className="mt-4 inline-block text-banc-focus hover:underline"
             >
               Browse all articles
             </Link>

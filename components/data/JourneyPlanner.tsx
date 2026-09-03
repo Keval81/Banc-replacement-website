@@ -109,7 +109,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Journey Planner</h3>
-            <p className="text-sm text-banc-grey">Plan your commute</p>
+            <p className="text-sm text-banc-muted-readable">Plan your commute</p>
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
         <div className="space-y-3 mb-4">
           {!fromPostcode && (
             <div className="flex items-center gap-3">
-              <MapPin className="h-5 w-5 text-banc-grey flex-shrink-0" />
+              <MapPin className="h-5 w-5 text-banc-muted-readable flex-shrink-0" />
               <Input
                 placeholder="From postcode..."
                 value={from}
@@ -129,7 +129,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
             </div>
           )}
           <div className="flex items-center gap-3">
-            <MapPin className="h-5 w-5 text-banc-grey flex-shrink-0" />
+            <MapPin className="h-5 w-5 text-banc-muted-readable flex-shrink-0" />
             <Input
               placeholder="To postcode..."
               value={to}
@@ -150,7 +150,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
 
         {/* Quick Destinations */}
         <div className="mb-4">
-          <p className="text-sm text-banc-grey mb-2">Quick destinations:</p>
+          <p className="text-sm text-banc-muted-readable mb-2">Quick destinations:</p>
           <div className="flex flex-wrap gap-2">
             {COMMON_DESTINATIONS.map((dest) => (
               <button
@@ -183,7 +183,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-3xl font-bold text-banc-dark">{journey.duration} min</p>
-                <p className="text-sm text-banc-grey">
+                <p className="text-sm text-banc-muted-readable">
                   {journey.modes.filter((m, i, a) => a.indexOf(m) === i).join(' → ')}
                 </p>
               </div>
@@ -191,7 +191,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
                 <div className="text-right">
                   <p className="text-xl font-bold text-banc-dark">{journey.fare.total}</p>
                   {journey.fare.zones && (
-                    <p className="text-sm text-banc-grey">{journey.fare.zones}</p>
+                    <p className="text-sm text-banc-muted-readable">{journey.fare.zones}</p>
                   )}
                 </div>
               )}
@@ -206,7 +206,7 @@ export function JourneyPlanner({ fromPostcode, className = "" }: JourneyPlannerP
                   </div>
                   <div className="flex-1">
                     <p className="text-sm text-banc-dark">{step.instruction}</p>
-                    <p className="text-xs text-banc-grey">{step.duration} min</p>
+                    <p className="text-xs text-banc-muted-readable">{step.duration} min</p>
                   </div>
                 </div>
               ))}

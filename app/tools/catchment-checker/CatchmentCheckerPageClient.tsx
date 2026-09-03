@@ -118,7 +118,7 @@ export default function CatchmentCheckerPage() {
         {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-banc-dark mb-4">School Catchment Checker</h1>
-          <p className="text-lg text-banc-grey max-w-2xl mx-auto">
+          <p className="text-lg text-banc-muted-readable max-w-2xl mx-auto">
             Check if a property falls within a school&apos;s catchment area and see admission likelihood.
           </p>
         </div>
@@ -132,15 +132,15 @@ export default function CatchmentCheckerPage() {
               </div>
               <span className="text-sm font-medium hidden sm:block">Enter Postcode</span>
             </div>
-            <ArrowRight className="h-4 w-4 text-banc-grey" />
-            <div className={`flex items-center gap-2 ${step === 'school' ? 'text-banc-focus' : step === 'result' ? 'text-green-600' : 'text-banc-grey'}`}>
+            <ArrowRight className="h-4 w-4 text-banc-muted-readable" />
+            <div className={`flex items-center gap-2 ${step === 'school' ? 'text-banc-focus' : step === 'result' ? 'text-green-600' : 'text-banc-muted-readable'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'school' ? 'bg-banc-focus text-white' : step === 'result' ? 'bg-green-100 text-green-600' : 'bg-banc-grey-pale'}`}>
                 {step === 'result' ? <CheckCircle className="h-5 w-5" /> : '2'}
               </div>
               <span className="text-sm font-medium hidden sm:block">Select School</span>
             </div>
-            <ArrowRight className="h-4 w-4 text-banc-grey" />
-            <div className={`flex items-center gap-2 ${step === 'result' ? 'text-banc-focus' : 'text-banc-grey'}`}>
+            <ArrowRight className="h-4 w-4 text-banc-muted-readable" />
+            <div className={`flex items-center gap-2 ${step === 'result' ? 'text-banc-focus' : 'text-banc-muted-readable'}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step === 'result' ? 'bg-banc-focus text-white' : 'bg-banc-grey-pale'}`}>
                 3
               </div>
@@ -166,7 +166,7 @@ export default function CatchmentCheckerPage() {
                     <MapPin className="h-8 w-8 text-banc-focus" />
                   </div>
                   <h2 className="text-xl font-semibold text-banc-dark mb-2">Enter a Postcode</h2>
-                  <p className="text-banc-grey mb-6">We&apos;ll find schools near this location</p>
+                  <p className="text-banc-muted-readable mb-6">We&apos;ll find schools near this location</p>
                   
                   <div className="flex gap-3">
                     <Input
@@ -207,7 +207,7 @@ export default function CatchmentCheckerPage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-semibold text-banc-dark">Select a School</h2>
-                    <p className="text-banc-grey">Found {schools.length} schools near {postcode}</p>
+                    <p className="text-banc-muted-readable">Found {schools.length} schools near {postcode}</p>
                   </div>
                   <Button variant="outline" onClick={reset} size="sm">
                     Change Postcode
@@ -235,8 +235,8 @@ export default function CatchmentCheckerPage() {
                             {school.ofstedRating}
                           </span>
                         </div>
-                        <p className="text-sm text-banc-grey mt-1">{school.address}</p>
-                        <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-banc-grey">
+                        <p className="text-sm text-banc-muted-readable mt-1">{school.address}</p>
+                        <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-banc-muted-readable">
                           <span className="flex items-center gap-1">
                             <GraduationCap className="h-3.5 w-3.5" />
                             {school.type}
@@ -251,7 +251,7 @@ export default function CatchmentCheckerPage() {
                           </span>
                         </div>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-banc-grey flex-shrink-0" />
+                      <ArrowRight className="h-5 w-5 text-banc-muted-readable flex-shrink-0" />
                     </motion.button>
                   ))}
                 </div>
@@ -278,7 +278,7 @@ export default function CatchmentCheckerPage() {
                   <h2 className="text-2xl font-bold text-banc-dark mb-2">
                     {result.inCatchment ? 'In Catchment Area' : 'Outside Catchment Area'}
                   </h2>
-                  <p className="text-banc-grey">
+                  <p className="text-banc-muted-readable">
                     {result.school.name}
                   </p>
                 </div>
@@ -288,14 +288,14 @@ export default function CatchmentCheckerPage() {
                     <h3 className="font-semibold text-banc-dark mb-4">Distance Information</h3>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-banc-grey flex items-center gap-2">
+                        <span className="text-banc-muted-readable flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
                           Distance
                         </span>
                         <span className="font-semibold">{result.distance} miles</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-banc-grey flex items-center gap-2">
+                        <span className="text-banc-muted-readable flex items-center gap-2">
                           <Footprints className="h-4 w-4" />
                           Walking Time
                         </span>
@@ -303,7 +303,7 @@ export default function CatchmentCheckerPage() {
                       </div>
                       {result.lastYearAdmissionDistance && (
                         <div className="flex justify-between items-center">
-                          <span className="text-banc-grey flex items-center gap-2">
+                          <span className="text-banc-muted-readable flex items-center gap-2">
                             <Info className="h-4 w-4" />
                             Last Year&apos;s Cutoff
                           </span>
@@ -321,7 +321,7 @@ export default function CatchmentCheckerPage() {
                           {LIKELIHOOD_LABELS[result.likelihood]}
                         </span>
                       </div>
-                      <p className="text-sm text-banc-grey">
+                      <p className="text-sm text-banc-muted-readable">
                         Based on distance from school and historical admission data.
                         Actual admission depends on availability and catchment criteria.
                       </p>
@@ -338,7 +338,7 @@ export default function CatchmentCheckerPage() {
                   </Button>
                 </div>
 
-                <p className="text-center text-xs text-banc-grey mt-6">
+                <p className="text-center text-xs text-banc-muted-readable mt-6">
                   Disclaimer: Catchment areas can change year to year. Always check with the school or local authority for the most up-to-date information.
                 </p>
               </motion.div>

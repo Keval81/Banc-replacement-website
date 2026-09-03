@@ -57,7 +57,7 @@ export default function BuyersGuidePage() {
       {/* Introduction */}
       <section className="py-16 bg-banc-grey-pale">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <p className="text-lg text-banc-grey leading-relaxed">
+          <p className="text-lg text-banc-muted-readable leading-relaxed">
             Below is a brief guide to the buying process. Whether you&apos;re a first-time buyer or seasoned property investor,
             we&apos;re here to make your journey as smooth as possible.
           </p>
@@ -76,11 +76,11 @@ export default function BuyersGuidePage() {
                   <div className={isReversed ? 'lg:order-2' : ''}>
                     {/* Step Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-4">
-                      <span className="text-xs font-semibold text-banc-sky uppercase tracking-wider">Step {index + 1} of 6</span>
+                      <span className="text-xs font-semibold text-banc-focus uppercase tracking-wider">Step {index + 1} of 6</span>
                     </div>
                     
                     <h2 className="text-2xl lg:text-3xl font-semibold text-banc-dark mb-4">{step.title}</h2>
-                    <p className="text-banc-grey leading-relaxed mb-6">{step.body[0]}</p>
+                    <p className="text-banc-muted-readable leading-relaxed mb-6">{step.body[0]}</p>
                     
                     {/* Top Tip Box - Consistent styling with Sellers Guide */}
                     <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-5 rounded-r-xl">
@@ -89,7 +89,7 @@ export default function BuyersGuidePage() {
                           <Sparkles className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold text-banc-sky text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
+                          <p className="font-semibold text-banc-focus text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
                           <p className="text-banc-dark-mid leading-relaxed">{step.body[1]}</p>
                         </div>
                       </div>
@@ -131,15 +131,15 @@ export default function BuyersGuidePage() {
             <Sparkles className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-3xl font-semibold text-banc-dark mb-4">{completion.title}</h2>
-          <p className="text-lg text-banc-grey leading-relaxed mb-6">
+          <p className="text-lg text-banc-muted-readable leading-relaxed mb-6">
             {completion.body[0]}
           </p>
           <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-4 rounded-r-lg inline-block text-left max-w-xl">
             <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+              <Sparkles className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-banc-sky text-sm uppercase tracking-wider mb-1">Top Tip</p>
-                <p className="text-sm text-banc-grey">{completion.body[1]}</p>
+                <p className="font-semibold text-banc-focus text-sm uppercase tracking-wider mb-1">Top Tip</p>
+                <p className="text-sm text-banc-muted-readable">{completion.body[1]}</p>
               </div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function BuyersGuidePage() {
                 </div>
               </div>
               <div className="text-center lg:text-right">
-                <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base">
                   Speak to a Mortgage Adviser
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -196,12 +196,12 @@ export default function BuyersGuidePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link href="/sales/properties">
-              <Button className="bg-white text-banc-sky hover:bg-white/90 px-8 py-6 text-base font-semibold">
+              <Button className="bg-white text-banc-focus hover:bg-white/90 px-8 py-6 text-base font-semibold">
                 View Properties
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
+            <Button variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
               Register with Us
             </Button>
           </div>

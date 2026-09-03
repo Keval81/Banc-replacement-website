@@ -113,7 +113,7 @@ export default function RegisterForm() {
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                           step.id <= currentStep
-                            ? "bg-banc-sky text-white"
+                            ? "bg-banc-focus text-white"
                             : "bg-white/10 text-white/40"
                         }`}
                       >

@@ -277,7 +277,7 @@ export default function PropertyChatbot({
                     <p className="text-sm font-medium text-banc-dark leading-snug">
                       Talk to Banc Bot about any current property
                     </p>
-                    <p className="text-xs text-banc-grey mt-1">
+                    <p className="text-xs text-banc-muted-readable mt-1">
                       Ask about a home you&apos;re buying or renting →
                     </p>
                   </button>
@@ -288,7 +288,7 @@ export default function PropertyChatbot({
                       setShowPrompt(false);
                       setPromptDismissed(true);
                     }}
-                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-banc-grey/20 text-banc-grey hover:bg-banc-grey/40 transition-colors duration-200 cursor-pointer"
+                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-banc-grey/20 text-banc-muted-readable hover:bg-banc-grey/40 transition-colors duration-200 cursor-pointer"
                     aria-label="Dismiss"
                   >
                     <X className="h-3 w-3" />
@@ -528,10 +528,10 @@ export default function PropertyChatbot({
                                   <p className="truncate text-xs font-medium text-banc-dark">
                                     {property.title}
                                   </p>
-                                  <p className="text-[10px] text-banc-grey">
+                                  <p className="text-[10px] text-banc-muted-readable">
                                     {property.stats.beds} bed · {property.price}
                                   </p>
-                                  <p className="truncate text-[10px] text-banc-grey">
+                                  <p className="truncate text-[10px] text-banc-muted-readable">
                                     {property.address}
                                   </p>
                                 </div>
@@ -543,7 +543,7 @@ export default function PropertyChatbot({
 
                       {messageView.sources.length > 0 && (
                         <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
-                          <p className="text-[10px] font-semibold uppercase tracking-wide text-banc-grey">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-banc-muted-readable">
                             Sources
                           </p>
                           {messageView.sources.map((source) => (

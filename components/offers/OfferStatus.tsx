@@ -52,8 +52,8 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         return {
           icon: Clock,
           bgColor: "bg-banc-sky/10",
-          iconColor: "text-banc-sky",
-          textColor: "text-banc-sky-dark",
+          iconColor: "text-banc-focus",
+          textColor: "text-banc-focus",
           label: "Submitted",
           description: "Your offer has been submitted and will be reviewed shortly.",
         };
@@ -61,7 +61,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         return {
           icon: XCircle,
           bgColor: "bg-banc-grey-pale",
-          iconColor: "text-banc-grey",
+          iconColor: "text-banc-muted-readable",
           textColor: "text-banc-dark",
           label: "Withdrawn",
           description: "You have withdrawn this offer.",
@@ -70,7 +70,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         return {
           icon: Clock,
           bgColor: "bg-banc-grey-pale",
-          iconColor: "text-banc-grey",
+          iconColor: "text-banc-muted-readable",
           textColor: "text-banc-dark",
           label: status,
           description: "Your offer is being processed.",
@@ -111,7 +111,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
               </h4>
               <a
                 href={`/sales/properties/${offer.propertyId}`}
-                className="text-sm text-banc-sky hover:underline mt-1 inline-block"
+                className="text-sm text-banc-focus hover:underline mt-1 inline-block"
               >
                 View Property →
               </a>
@@ -122,28 +122,28 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         {/* Offer Details */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-banc-grey">Offer Amount</span>
+            <span className="text-banc-muted-readable">Offer Amount</span>
             <span className="text-2xl font-bold text-banc-dark-deep">
               {formatCurrency(offer.amount)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-banc-grey">Your Position</span>
+            <span className="text-banc-muted-readable">Your Position</span>
             <span className="font-medium text-banc-dark-deep">
               {getBuyerPositionLabel(offer.position)}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-banc-grey">Preferred Timescale</span>
+            <span className="text-banc-muted-readable">Preferred Timescale</span>
             <span className="font-medium text-banc-dark-deep capitalize">
               {offer.timescale.replace("_", " ")}
             </span>
           </div>
 
           <div className="flex justify-between items-center">
-            <span className="text-banc-grey">Submitted</span>
+            <span className="text-banc-muted-readable">Submitted</span>
             <span className="text-banc-dark-deep">
               {formatDate(offer.submittedAt)}
             </span>
@@ -151,7 +151,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
 
           {offer.updatedAt !== offer.submittedAt && (
             <div className="flex justify-between items-center">
-              <span className="text-banc-grey">Last Updated</span>
+              <span className="text-banc-muted-readable">Last Updated</span>
               <span className="text-banc-dark-deep">
                 {formatDate(offer.updatedAt)}
               </span>
@@ -162,7 +162,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         {/* Notes */}
         {offer.notes && (
           <div className="mt-5 pt-5 border-t border-banc-line">
-            <p className="text-sm text-banc-grey mb-1">Notes:</p>
+            <p className="text-sm text-banc-muted-readable mb-1">Notes:</p>
             <p className="text-banc-dark-deep">{offer.notes}</p>
           </div>
         )}
@@ -170,7 +170,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
         {/* Proof of Funds */}
         {offer.proofOfFunds && (
           <div className="mt-5 pt-5 border-t border-banc-line">
-            <p className="text-sm text-banc-grey mb-2">Proof of Funds:</p>
+            <p className="text-sm text-banc-muted-readable mb-2">Proof of Funds:</p>
             <a
               href={offer.proofOfFunds.url}
               className="inline-flex items-center gap-2 px-4 py-2 bg-banc-grey-pale rounded-lg text-banc-dark-deep hover:bg-banc-sky/10 transition-colors"
@@ -209,7 +209,7 @@ export default function OfferStatus({ offer, showPropertyDetails = true }: Offer
             </button>
             <button
               disabled
-              className="flex-1 py-2 px-4 bg-banc-sky text-white rounded-lg cursor-not-allowed"
+              className="flex-1 py-2 px-4 bg-banc-focus text-white rounded-lg cursor-not-allowed"
             >
               Make New Offer
             </button>

@@ -63,12 +63,12 @@ export default function MilestoneTracker({
       case "completed":
         return "text-green-600";
       case "in_progress":
-        return "text-banc-sky";
+        return "text-banc-focus";
       case "blocked":
         return "text-red-600";
       case "pending":
       default:
-        return "text-banc-grey";
+        return "text-banc-muted-readable";
     }
   };
 
@@ -82,7 +82,7 @@ export default function MilestoneTracker({
           <h3 className="font-heading font-semibold text-banc-dark-deep">
             Sale Progress
           </h3>
-          <span className="text-sm font-medium text-banc-sky">
+          <span className="text-sm font-medium text-banc-focus">
             {completedCount} of {milestones.length} completed
           </span>
         </div>
@@ -121,13 +121,13 @@ export default function MilestoneTracker({
                             ? "text-banc-dark-deep"
                             : milestone.status === "in_progress"
                             ? "text-banc-dark-deep"
-                            : "text-banc-grey"
+                            : "text-banc-muted-readable"
                         }`}
                       >
                         {milestone.title}
                       </p>
                       {showDetails && milestone.description && (
-                        <p className="text-sm text-banc-grey mt-0.5">
+                        <p className="text-sm text-banc-muted-readable mt-0.5">
                           {milestone.description}
                         </p>
                       )}
@@ -137,10 +137,10 @@ export default function MilestoneTracker({
                         milestone.status === "completed"
                           ? "bg-green-100 text-green-700"
                           : milestone.status === "in_progress"
-                          ? "bg-banc-sky/10 text-banc-sky-dark"
+                          ? "bg-banc-sky/10 text-banc-focus"
                           : milestone.status === "blocked"
                           ? "bg-red-100 text-red-700"
-                          : "bg-banc-grey-pale text-banc-grey"
+                          : "bg-banc-grey-pale text-banc-muted-readable"
                       }`}
                     >
                       {getStatusLabel(milestone.status)}
@@ -149,7 +149,7 @@ export default function MilestoneTracker({
 
                   {/* Dates */}
                   {(milestone.completedDate || milestone.estimatedDate) && (
-                    <div className="mt-2 text-xs text-banc-grey">
+                    <div className="mt-2 text-xs text-banc-muted-readable">
                       {milestone.completedDate ? (
                         <span className="text-green-600">
                           Completed: {new Date(milestone.completedDate).toLocaleDateString("en-GB")}

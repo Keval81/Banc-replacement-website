@@ -50,7 +50,7 @@ export function PropertyJourneySelector({
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none ${
                 isPrimary
                   ? "border-banc-dark-deep/15 bg-banc-sky/85 text-banc-dark-deep"
-                  : "border-white/25 bg-white/10 text-banc-sky"
+                  : "border-white/25 bg-white/10 text-banc-focus"
               }`}
               aria-hidden="true"
             >

@@ -34,7 +34,7 @@ export function SchoolCatchmentMap({
         </div>
         <div className="flex-1 min-w-0">
           <h4 className="font-medium text-banc-dark">{school.name}</h4>
-          <p className="text-sm text-banc-grey">{school.distance} miles away</p>
+          <p className="text-sm text-banc-muted-readable">{school.distance} miles away</p>
           
           <div className="flex flex-wrap items-center gap-2 mt-2">
             <Badge variant="outline" className={
@@ -58,7 +58,7 @@ export function SchoolCatchmentMap({
       {propertyCoordinates && (
         <div className="mt-3 pt-3 border-t border-banc-grey/10">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-banc-grey">Walking distance</span>
+            <span className="text-banc-muted-readable">Walking distance</span>
             <span className="font-medium">{school.walkingTime} minutes</span>
           </div>
         </div>

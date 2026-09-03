@@ -98,7 +98,7 @@ export default function BookingForm({
           Your Details
         </h3>
         {!isComplete && (
-          <p className="text-sm text-banc-grey mt-1">
+          <p className="text-sm text-banc-muted-readable mt-1">
             Please select a date and time above
           </p>
         )}
@@ -111,7 +111,7 @@ export default function BookingForm({
             Full Name <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
             <input
               type="text"
               name="name"
@@ -138,7 +138,7 @@ export default function BookingForm({
             Email Address <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
             <input
               type="email"
               name="email"
@@ -165,7 +165,7 @@ export default function BookingForm({
             Phone Number <span className="text-red-500">*</span>
           </label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
             <input
               type="tel"
               name="phone"
@@ -192,7 +192,7 @@ export default function BookingForm({
             Special Requests (Optional)
           </label>
           <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-banc-grey" />
+            <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-banc-muted-readable" />
             <textarea
               name="specialRequests"
               value={formData.specialRequests}
@@ -222,11 +222,11 @@ export default function BookingForm({
                 }
               }}
               disabled={!isComplete || isSubmitting}
-              className="mt-1 w-4 h-4 rounded border-banc-line text-banc-sky focus:ring-banc-sky"
+              className="mt-1 w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
             />
-            <span className="text-sm text-banc-grey">
+            <span className="text-sm text-banc-muted-readable">
               I agree to Banc Property Group&apos;s{" "}
-              <a href="/privacy" className="text-banc-sky hover:underline">
+              <a href="/privacy" className="text-banc-focus hover:underline">
                 Privacy Policy
               </a>{" "}
               and consent to being contacted regarding this viewing request.
@@ -240,7 +240,7 @@ export default function BookingForm({
         {/* Selected Date/Time Summary */}
         {isComplete && (
           <div className="p-4 bg-banc-grey-pale rounded-lg">
-            <p className="text-sm text-banc-grey">Selected Viewing:</p>
+            <p className="text-sm text-banc-muted-readable">Selected Viewing:</p>
             <p className="font-medium text-banc-dark-deep">
               {selectedDate.toLocaleDateString("en-GB", {
                 weekday: "long",
@@ -261,7 +261,7 @@ export default function BookingForm({
             flex items-center justify-center gap-2
             ${
               isComplete && !isSubmitting
-                ? "bg-banc-sky text-white hover:bg-banc-sky-dark"
+                ? "bg-banc-focus text-white hover:bg-banc-sky-dark"
                 : "bg-banc-line text-white cursor-not-allowed"
             }
           `}
@@ -280,7 +280,7 @@ export default function BookingForm({
         </button>
 
         {!isComplete && (
-          <p className="text-center text-sm text-banc-grey">
+          <p className="text-center text-sm text-banc-muted-readable">
             Please select a date and time to continue
           </p>
         )}

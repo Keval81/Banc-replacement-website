@@ -174,13 +174,13 @@ export default function MayfairOfficePage() {
               {/* CTA buttons */}
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link href="/premier-homes">
-                  <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-6">
+                  <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-6">
                     <Crown className="mr-2 h-4 w-4" />
                     Premier Homes
                   </Button>
                 </Link>
                 <Link href="#appointment">
-                  <Button variant="outline" className="border-white text-white hover:bg-white/10 px-6">
+                  <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-6">
                     <Calendar className="mr-2 h-4 w-4" />
                     Private Consultation
                   </Button>
@@ -219,7 +219,7 @@ export default function MayfairOfficePage() {
               </div>
             </div>
             <Link href="/premier-homes">
-              <Button className="bg-white text-banc-sky hover:bg-white/90 px-6">
+              <Button className="bg-white text-banc-focus hover:bg-white/90 px-6">
                 Learn More
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -236,7 +236,7 @@ export default function MayfairOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-banc-sky" />
+                  <Clock className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Opening Hours</h2>
               </div>
@@ -245,13 +245,13 @@ export default function MayfairOfficePage() {
                 {openingHours.map((item) => (
                   <div key={item.day} className="flex justify-between items-center py-2 border-b border-banc-line/20 last:border-0">
                     <span className="text-banc-dark-mid font-medium">{item.day}</span>
-                    <span className={`${item.hours === 'Closed' ? 'text-banc-grey' : 'text-banc-sky font-semibold'}`}>
+                    <span className={`${item.hours === 'Closed' ? 'text-banc-muted-readable' : 'text-banc-focus font-semibold'}`}>
                       {item.hours}
                     </span>
                   </div>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-banc-grey">
+              <p className="mt-4 text-sm text-banc-muted-readable">
                 Private appointments available outside standard hours.
               </p>
             </div>
@@ -260,31 +260,31 @@ export default function MayfairOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Train className="h-6 w-6 text-banc-sky" />
+                  <Train className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Location & Access</h2>
               </div>
               
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <Train className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Train className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Tube Stations</p>
-                    <p className="text-sm text-banc-grey">Green Park, Hyde Park Corner, and Bond Street stations within walking distance</p>
+                    <p className="text-sm text-banc-muted-readable">Green Park, Hyde Park Corner, and Bond Street stations within walking distance</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Car className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Car className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Parking</p>
-                    <p className="text-sm text-banc-grey">Metered street parking and nearby NCP car parks available</p>
+                    <p className="text-sm text-banc-muted-readable">Metered street parking and nearby NCP car parks available</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Navigation className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Navigation className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Private Consultations</p>
-                    <p className="text-sm text-banc-grey">Meetings by appointment at our Mayfair location or at your property</p>
+                    <p className="text-sm text-banc-muted-readable">Meetings by appointment at our Mayfair location or at your property</p>
                   </div>
                 </div>
               </div>
@@ -294,7 +294,7 @@ export default function MayfairOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-banc-sky" />
+                  <MapPin className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Prime Areas Covered</h2>
               </div>
@@ -309,7 +309,7 @@ export default function MayfairOfficePage() {
                   </span>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-banc-grey">
+              <p className="mt-4 text-sm text-banc-muted-readable">
                 Covering all prime central London locations.
               </p>
             </div>
@@ -368,13 +368,13 @@ export default function MayfairOfficePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-              <Users className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-banc-sky-dark">Our London Team</span>
+              <Users className="h-4 w-4 text-banc-focus" />
+              <span className="text-sm font-medium text-banc-focus">Our London Team</span>
             </div>
             <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
               Meet the Mayfair Team
             </h2>
-            <p className="mt-4 text-lg text-banc-grey">
+            <p className="mt-4 text-lg text-banc-muted-readable">
               Our directors personally handle all premier properties, ensuring the highest level of service.
             </p>
           </div>
@@ -392,13 +392,13 @@ export default function MayfairOfficePage() {
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-semibold text-banc-dark-deep">{member.name}</h3>
-                  <p className="text-banc-sky font-medium">{member.role}</p>
+                  <p className="text-banc-focus font-medium">{member.role}</p>
                   <div className="mt-4 space-y-2">
-                    <a href={`tel:${member.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-sm text-banc-grey hover:text-banc-sky transition-colors">
+                    <a href={`tel:${member.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-sm text-banc-muted-readable hover:text-banc-sky transition-colors">
                       <Phone className="h-4 w-4" />
                       {member.phone}
                     </a>
-                    <a href={`mailto:${member.email}`} className="flex items-center gap-2 text-sm text-banc-grey hover:text-banc-sky transition-colors">
+                    <a href={`mailto:${member.email}`} className="flex items-center gap-2 text-sm text-banc-muted-readable hover:text-banc-sky transition-colors">
                       <Mail className="h-4 w-4" />
                       {member.email}
                     </a>
@@ -417,14 +417,14 @@ export default function MayfairOfficePage() {
             {/* Left side - Info */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Crown className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">Private Consultation</span>
+                <Crown className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">Private Consultation</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
                 Arrange a Private Consultation
               </h2>
-              <p className="mt-4 text-lg text-banc-grey">
+              <p className="mt-4 text-lg text-banc-muted-readable">
                 For properties valued at £1 million and above, we offer a bespoke, 
                 discreet service tailored to your requirements.
               </p>
@@ -432,29 +432,29 @@ export default function MayfairOfficePage() {
               <div className="mt-8 space-y-6">
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Building2 className="h-6 w-6 text-banc-sky" />
+                    <Building2 className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Discretion Assured</h3>
-                    <p className="text-sm text-banc-grey">Private valuations and off-market opportunities available.</p>
+                    <p className="text-sm text-banc-muted-readable">Private valuations and off-market opportunities available.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Star className="h-6 w-6 text-banc-sky" />
+                    <Star className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Bespoke Marketing</h3>
-                    <p className="text-sm text-banc-grey">Tailored campaigns designed specifically for your property.</p>
+                    <p className="text-sm text-banc-muted-readable">Tailored campaigns designed specifically for your property.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Navigation className="h-6 w-6 text-banc-sky" />
+                    <Navigation className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Global Reach</h3>
-                    <p className="text-sm text-banc-grey">Access to qualified buyers from around the world.</p>
+                    <p className="text-sm text-banc-muted-readable">Access to qualified buyers from around the world.</p>
                   </div>
                 </div>
               </div>
@@ -463,7 +463,7 @@ export default function MayfairOfficePage() {
             {/* Right side - Form */}
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
               <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Request Private Consultation</h3>
-              <p className="text-sm text-banc-grey mb-6">
+              <p className="text-sm text-banc-muted-readable mb-6">
                 All enquiries are treated with the strictest confidence.
               </p>
               
@@ -544,14 +544,14 @@ export default function MayfairOfficePage() {
                     required
                     className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
                   />
-                  <label htmlFor="privacy-mayfair" className="text-sm text-banc-grey leading-relaxed">
+                  <label htmlFor="privacy-mayfair" className="text-sm text-banc-muted-readable leading-relaxed">
                     I agree to Banc Property Group contacting me about my enquiry. 
                     All information will be treated confidentially. 
-                    Read our <Link href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</Link>.
+                    Read our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
                   </label>
                 </div>
                 
-                <Button type="submit" className="w-full h-12 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold">
+                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
                   Request Private Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

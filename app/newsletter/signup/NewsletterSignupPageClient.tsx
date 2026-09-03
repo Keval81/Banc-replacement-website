@@ -62,7 +62,7 @@ export default function NewsletterSignupPage() {
           <h2 className="text-2xl font-bold text-banc-dark mb-3">
             You&apos;re Subscribed!
           </h2>
-          <p className="text-banc-grey mb-6">
+          <p className="text-banc-muted-readable mb-6">
             Thank you for subscribing to our newsletter. You&apos;ll receive property updates and market insights at {formData.email}.
           </p>
           <Button onClick={() => window.location.href = '/'} className="w-full">
@@ -102,7 +102,7 @@ export default function NewsletterSignupPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">New Property Alerts</h3>
-                  <p className="text-sm text-banc-grey">Be the first to know when properties matching your criteria come on the market.</p>
+                  <p className="text-sm text-banc-muted-readable">Be the first to know when properties matching your criteria come on the market.</p>
                 </div>
               </div>
 
@@ -112,7 +112,7 @@ export default function NewsletterSignupPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Market Updates</h3>
-                  <p className="text-sm text-banc-grey">Weekly market reports and price trend analysis for your area.</p>
+                  <p className="text-sm text-banc-muted-readable">Weekly market reports and price trend analysis for your area.</p>
                 </div>
               </div>
 
@@ -122,7 +122,7 @@ export default function NewsletterSignupPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Price Drop Alerts</h3>
-                  <p className="text-sm text-banc-grey">Get notified when properties you&apos;re interested in reduce in price.</p>
+                  <p className="text-sm text-banc-muted-readable">Get notified when properties you&apos;re interested in reduce in price.</p>
                 </div>
               </div>
 
@@ -132,7 +132,7 @@ export default function NewsletterSignupPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-banc-dark">Expert Insights</h3>
-                  <p className="text-sm text-banc-grey">Tips and advice from our property experts on buying, selling, and investing.</p>
+                  <p className="text-sm text-banc-muted-readable">Tips and advice from our property experts on buying, selling, and investing.</p>
                 </div>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function NewsletterSignupPage() {
                   )}
                 </Button>
 
-                <p className="text-xs text-banc-grey text-center">
+                <p className="text-xs text-banc-muted-readable text-center">
                   By subscribing, you agree to our privacy policy. You can unsubscribe at any time.
                 </p>
               </form>

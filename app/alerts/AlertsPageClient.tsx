@@ -220,7 +220,7 @@ export default function AlertsPage() {
             </div>
             <div className="flex items-center gap-3">
               <Link href="/search">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10">
                   <Search className="w-4 h-4 mr-2" />
                   Browse Properties
                 </Button>
@@ -242,20 +242,20 @@ export default function AlertsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white rounded-xl p-4 border border-banc-line">
-              <p className="text-sm text-banc-grey">Total Alerts</p>
+              <p className="text-sm text-banc-muted-readable">Total Alerts</p>
               <p className="text-2xl font-semibold">{alerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-banc-line">
-              <p className="text-sm text-banc-grey">Active</p>
-              <p className="text-2xl font-semibold text-banc-sky">{activeAlerts.length}</p>
+              <p className="text-sm text-banc-muted-readable">Active</p>
+              <p className="text-2xl font-semibold text-banc-focus">{activeAlerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-banc-line">
-              <p className="text-sm text-banc-grey">Paused</p>
-              <p className="text-2xl font-semibold text-banc-grey">{pausedAlerts.length}</p>
+              <p className="text-sm text-banc-muted-readable">Paused</p>
+              <p className="text-2xl font-semibold text-banc-muted-readable">{pausedAlerts.length}</p>
             </div>
             <div className="bg-white rounded-xl p-4 border border-banc-line">
-              <p className="text-sm text-banc-grey">Total Matches</p>
-              <p className="text-2xl font-semibold text-banc-sky">
+              <p className="text-sm text-banc-muted-readable">Total Matches</p>
+              <p className="text-2xl font-semibold text-banc-focus">
                 {alerts.reduce((sum, a) => sum + a.matchCount, 0)}
               </p>
             </div>
@@ -276,9 +276,9 @@ export default function AlertsPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Bell className="w-16 h-16 text-banc-grey mx-auto mb-4" />
+              <Bell className="w-16 h-16 text-banc-muted-readable mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">No alerts yet</h2>
-              <p className="text-banc-grey mb-6 max-w-md mx-auto">
+              <p className="text-banc-muted-readable mb-6 max-w-md mx-auto">
                 Create a property alert to get notified when new properties matching your criteria are listed.
               </p>
               <div className="flex justify-center gap-3">
@@ -302,7 +302,7 @@ export default function AlertsPage() {
               {activeAlerts.length > 0 && (
                 <div>
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-banc-sky" />
+                    <CheckCircle2 className="w-5 h-5 text-banc-focus" />
                     Active Alerts ({activeAlerts.length})
                   </h2>
                   <div className="space-y-4">
@@ -327,7 +327,7 @@ export default function AlertsPage() {
               {pausedAlerts.length > 0 && (
                 <div>
                   <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Pause className="w-5 h-5 text-banc-grey" />
+                    <Pause className="w-5 h-5 text-banc-muted-readable" />
                     Paused Alerts ({pausedAlerts.length})
                   </h2>
                   <div className="space-y-4 opacity-70">
@@ -397,13 +397,13 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
         )}>
           <Bell className={cn(
             "w-5 h-5",
-            alert.isActive ? "text-banc-sky" : "text-banc-grey"
+            alert.isActive ? "text-banc-focus" : "text-banc-muted-readable"
           )} />
         </div>
         
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate">{alert.name}</h3>
-          <div className="flex items-center gap-3 text-sm text-banc-grey">
+          <div className="flex items-center gap-3 text-sm text-banc-muted-readable">
             <span className="flex items-center gap-1">
               <FrequencyIcon className="w-3.5 h-3.5" />
               {frequencyLabels[alert.frequency]}
@@ -425,8 +425,8 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             className={cn(
               "p-2 rounded-full transition-colors",
               alert.isActive 
-                ? "text-banc-sky hover:bg-banc-sky/10" 
-                : "text-banc-grey hover:bg-banc-grey-pale"
+                ? "text-banc-focus hover:bg-banc-sky/10" 
+                : "text-banc-muted-readable hover:bg-banc-grey-pale"
             )}
             title={alert.isActive ? "Pause alert" : "Resume alert"}
           >
@@ -434,7 +434,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(); }}
-            className="p-2 text-banc-grey hover:text-banc-grey hover:bg-banc-grey-pale rounded-full"
+            className="p-2 text-banc-muted-readable hover:text-banc-grey hover:bg-banc-grey-pale rounded-full"
             title="Edit alert"
           >
             <Edit2 className="w-4 h-4" />
@@ -447,9 +447,9 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             <Trash2 className="w-4 h-4" />
           </button>
           {isExpanded ? (
-            <ChevronUp className="w-5 h-5 text-banc-grey" />
+            <ChevronUp className="w-5 h-5 text-banc-muted-readable" />
           ) : (
-            <ChevronDown className="w-5 h-5 text-banc-grey" />
+            <ChevronDown className="w-5 h-5 text-banc-muted-readable" />
           )}
         </div>
       </div>
@@ -466,18 +466,18 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
               {alert.criteria.location && (
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <MapPin className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Location</p>
+                    <p className="text-xs text-banc-muted-readable">Location</p>
                     <p className="text-sm font-medium">{alert.criteria.location}</p>
                   </div>
                 </div>
               )}
               {(alert.criteria.minPrice || alert.criteria.maxPrice) && (
                 <div className="flex items-start gap-2">
-                  <PoundSterling className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <PoundSterling className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Price Range</p>
+                    <p className="text-xs text-banc-muted-readable">Price Range</p>
                     <p className="text-sm font-medium">
                       {alert.criteria.minPrice ? `£${alert.criteria.minPrice.toLocaleString()}` : "No min"}
                       {" - "}
@@ -488,18 +488,18 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
               )}
               {alert.criteria.beds && (
                 <div className="flex items-start gap-2">
-                  <Bed className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <Bed className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Bedrooms</p>
+                    <p className="text-xs text-banc-muted-readable">Bedrooms</p>
                     <p className="text-sm font-medium">{alert.criteria.beds}+</p>
                   </div>
                 </div>
               )}
               {alert.criteria.propertyType && alert.criteria.propertyType.length > 0 && (
                 <div className="flex items-start gap-2">
-                  <Home className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <Home className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Property Type</p>
+                    <p className="text-xs text-banc-muted-readable">Property Type</p>
                     <p className="text-sm font-medium capitalize">
                       {alert.criteria.propertyType.join(", ")}
                     </p>
@@ -508,18 +508,18 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
               )}
               {alert.criteria.tenure && (
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <AlertCircle className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Tenure</p>
+                    <p className="text-xs text-banc-muted-readable">Tenure</p>
                     <p className="text-sm font-medium capitalize">{alert.criteria.tenure}</p>
                   </div>
                 </div>
               )}
               {alert.criteria.keywords && (
                 <div className="flex items-start gap-2">
-                  <Search className="w-4 h-4 text-banc-grey mt-0.5" />
+                  <Search className="w-4 h-4 text-banc-muted-readable mt-0.5" />
                   <div>
-                    <p className="text-xs text-banc-grey">Keywords</p>
+                    <p className="text-xs text-banc-muted-readable">Keywords</p>
                     <p className="text-sm font-medium">{alert.criteria.keywords}</p>
                   </div>
                 </div>
@@ -606,7 +606,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
               <X className="w-5 h-5" />
             </button>
           </div>
-          <p className="text-banc-grey text-sm mt-1">
+          <p className="text-banc-muted-readable text-sm mt-1">
             Get notified when properties matching your criteria are listed
           </p>
         </div>
@@ -634,7 +634,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                   className={cn(
                     "p-3 rounded-lg border text-sm font-medium transition-colors",
                     formData.frequency === freq
-                      ? "border-banc-sky bg-banc-sky/10 text-banc-sky"
+                      ? "border-banc-sky bg-banc-sky/10 text-banc-focus"
                       : "border-banc-grey/20 hover:border-banc-grey/30"
                   )}
                 >
@@ -649,7 +649,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
             <label className="block text-sm font-medium mb-2">Price Range</label>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
                 <Input
                   type="number"
                   placeholder="Min"
@@ -658,9 +658,9 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                   className="pl-7"
                 />
               </div>
-              <span className="text-banc-grey">-</span>
+              <span className="text-banc-muted-readable">-</span>
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-grey">£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
                 <Input
                   type="number"
                   placeholder="Max"
@@ -688,7 +688,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                 <option value="4">4+</option>
                 <option value="5">5+</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable pointer-events-none" />
             </div>
           </div>
 
@@ -696,7 +696,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
           <div>
             <label className="block text-sm font-medium mb-2">Location</label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey" />
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable" />
               <Input
                 placeholder="e.g., Cuffley, Mayfair..."
                 value={formData.location}
@@ -710,7 +710,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
           <div>
             <label className="block text-sm font-medium mb-2">Keywords</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-grey" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable" />
               <Input
                 placeholder="e.g., garden, garage, parking..."
                 value={formData.keywords}

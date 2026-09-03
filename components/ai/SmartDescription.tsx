@@ -34,7 +34,7 @@ export default function SmartDescription({ property, variant = 'badges' }: Smart
 
   if (variant === 'text') {
     return (
-      <p className="text-banc-grey italic">
+      <p className="text-banc-muted-readable italic">
         {highlights.join(' • ')}
       </p>
     );

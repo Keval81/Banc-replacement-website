@@ -57,7 +57,7 @@ function TopTip({ children }: TopTipProps) {
           <Lightbulb className="h-5 w-5 text-white" />
         </div>
         <div className="flex-1 pt-1">
-          <span className="font-semibold text-banc-sky uppercase text-xs tracking-[0.2em] mb-1 block">
+          <span className="font-semibold text-banc-focus uppercase text-xs tracking-[0.2em] mb-1 block">
             Top Tip
           </span>
           <p className="text-banc-dark-deep leading-relaxed font-medium">
@@ -103,9 +103,9 @@ function CheckItem({
   return (
     <li className="flex items-start gap-4 group/item">
       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-banc-sky/10 flex items-center justify-center mt-0.5 group-hover/item:bg-banc-sky/20 transition-colors duration-200">
-        <Icon className="h-3.5 w-3.5 text-banc-sky" />
+        <Icon className="h-3.5 w-3.5 text-banc-focus" />
       </div>
-      <span className="text-banc-grey leading-relaxed group-hover/item:text-banc-dark-deep transition-colors duration-200">
+      <span className="text-banc-muted-readable leading-relaxed group-hover/item:text-banc-dark-deep transition-colors duration-200">
         {highlight ? (
           <>
             <span className="font-semibold text-banc-dark-deep">{highlight}</span>{" "}
@@ -260,14 +260,14 @@ export default function SellersGuidePage() {
 
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25 group">
+              <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25 group">
                 Book Free Valuation
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Link href="/sales/properties">
                 <Button
                   variant="outline"
-                  className="border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base font-medium rounded-full transition-all duration-300"
+                  className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base font-medium rounded-full transition-all duration-300"
                 >
                   View Sold Properties
                 </Button>
@@ -361,14 +361,14 @@ export default function SellersGuidePage() {
                       </h2>
 
                       {step.description && (
-                        <p className="mt-4 text-lg text-banc-grey leading-relaxed">
+                        <p className="mt-4 text-lg text-banc-muted-readable leading-relaxed">
                           {step.description}
                         </p>
                       )}
 
                       {step.quote && (
                         <blockquote className="mt-6 pl-6 border-l-2 border-banc-sky">
-                          <p className="text-xl font-medium text-banc-sky italic">
+                          <p className="text-xl font-medium text-banc-focus italic">
                             &ldquo;{step.quote}&rdquo;
                           </p>
                         </blockquote>
@@ -439,7 +439,7 @@ export default function SellersGuidePage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 lg:justify-end">
                   <Link href="/why-us">
-                    <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25 group w-full sm:w-auto">
+                    <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25 group w-full sm:w-auto">
                       Learn More About Us
                       <ArrowUpRight className="ml-2 h-5 w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </Button>
@@ -476,7 +476,7 @@ export default function SellersGuidePage() {
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button className="bg-white text-banc-sky hover:bg-white/90 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-xl hover:shadow-white/25 group w-full sm:w-auto">
+              <Button className="bg-white text-banc-focus hover:bg-white/90 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 hover:shadow-xl hover:shadow-white/25 group w-full sm:w-auto">
                 Book Your Free Valuation
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -484,7 +484,7 @@ export default function SellersGuidePage() {
               <Link href="/sales/properties">
                 <Button
                   variant="outline"
-                  className="border-2 border-white/50 text-white hover:bg-white/10 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
+                  className="bg-transparent border-2 border-white/50 text-white hover:bg-white/10 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
                 >
                   View Our Success Stories
                 </Button>

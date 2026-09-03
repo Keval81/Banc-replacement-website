@@ -187,13 +187,13 @@ export default function VendorPortalPage() {
             <h1 className="text-2xl font-heading font-bold text-banc-dark-deep">
               Welcome back, {mockUser.name.split(" ")[0]}
             </h1>
-            <p className="text-banc-grey mt-1">
+            <p className="text-banc-muted-readable mt-1">
               Here&apos;s what&apos;s happening with your property
             </p>
           </div>
           <Link
             href="/sales/properties/prop-1"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-banc-sky text-white rounded-lg hover:bg-banc-sky-dark transition-colors font-medium"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-banc-focus text-white rounded-lg hover:bg-banc-focus-hover transition-colors font-medium"
           >
             <Eye className="w-4 h-4" />
             View Listing
@@ -216,21 +216,21 @@ export default function VendorPortalPage() {
                   <h2 className="text-xl font-heading font-semibold text-banc-dark-deep">
                     15 Oakwood Drive, Cuffley
                   </h2>
-                  <p className="text-banc-grey">EN6 4JL</p>
+                  <p className="text-banc-muted-readable">EN6 4JL</p>
                 </div>
-                <span className="px-3 py-1 bg-banc-sky/10 text-banc-sky-dark text-sm font-medium rounded-full">
+                <span className="px-3 py-1 bg-banc-sky/10 text-banc-focus text-sm font-medium rounded-full">
                   Under Offer
                 </span>
               </div>
-              <p className="text-2xl font-bold text-banc-sky mb-4">
+              <p className="text-2xl font-bold text-banc-focus mb-4">
                 £875,000
               </p>
               <div className="flex flex-wrap gap-4 text-sm">
-                <span className="flex items-center gap-1 text-banc-grey">
+                <span className="flex items-center gap-1 text-banc-muted-readable">
                   <Home className="w-4 h-4" />
                   4 Bedrooms
                 </span>
-                <span className="flex items-center gap-1 text-banc-grey">
+                <span className="flex items-center gap-1 text-banc-muted-readable">
                   <TrendingUp className="w-4 h-4" />
                   {mockPerformance.daysOnMarket} days on market
                 </span>
@@ -244,13 +244,13 @@ export default function VendorPortalPage() {
           <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-banc-sky/10 rounded-lg flex items-center justify-center">
-                <Eye className="w-5 h-5 text-banc-sky" />
+                <Eye className="w-5 h-5 text-banc-focus" />
               </div>
             </div>
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.totalViews.toLocaleString()}
             </p>
-            <p className="text-sm text-banc-grey">Total Views</p>
+            <p className="text-sm text-banc-muted-readable">Total Views</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -262,7 +262,7 @@ export default function VendorPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.actualViewings}
             </p>
-            <p className="text-sm text-banc-grey">Viewings</p>
+            <p className="text-sm text-banc-muted-readable">Viewings</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -274,7 +274,7 @@ export default function VendorPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.brochureDownloads}
             </p>
-            <p className="text-sm text-banc-grey">Brochure Downloads</p>
+            <p className="text-sm text-banc-muted-readable">Brochure Downloads</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -286,7 +286,7 @@ export default function VendorPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockPerformance.offersReceived}
             </p>
-            <p className="text-sm text-banc-grey">Offers Received</p>
+            <p className="text-sm text-banc-muted-readable">Offers Received</p>
           </div>
         </div>
 
@@ -317,36 +317,36 @@ export default function VendorPortalPage() {
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-banc-sky" />
+                    <Calendar className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">View Calendar</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/portal/vendor/offers"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <PoundSterling className="w-5 h-5 text-banc-sky" />
+                    <PoundSterling className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Review Offers</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/portal/vendor/messages"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-banc-sky" />
+                    <Users className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Message Agent</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
               </div>
             </div>
 
             {/* Agent Contact */}
-            <div className="bg-banc-sky rounded-xl p-5 text-white">
+            <div className="bg-banc-focus rounded-xl p-5 text-white">
               <h3 className="font-heading font-semibold mb-3">
                 Your Agent
               </h3>
@@ -361,7 +361,7 @@ export default function VendorPortalPage() {
               </div>
               <a
                 href="tel:+441707000000"
-                className="block w-full py-2 px-4 bg-white text-banc-sky text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="block w-full py-2 px-4 bg-white text-banc-focus text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Call Agent
               </a>

@@ -126,15 +126,15 @@ export default function ComplaintsPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Scale className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">Our Promise</span>
+                <Scale className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">Our Promise</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-6">
                 We&apos;re Committed to Fairness
               </h2>
               
-              <p className="text-lg text-banc-grey mb-8">
+              <p className="text-lg text-banc-muted-readable mb-8">
                 We take all complaints seriously and are committed to dealing with them promptly, 
                 fairly, and confidentially. Our complaints procedure is designed to be simple 
                 and straightforward.
@@ -151,7 +151,7 @@ export default function ComplaintsPage() {
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-6 h-6 rounded-full bg-banc-sky/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-4 w-4 text-banc-sky" />
+                      <Check className="h-4 w-4 text-banc-focus" />
                     </div>
                     <span className="text-banc-dark-mid">{item}</span>
                   </div>
@@ -168,24 +168,24 @@ export default function ComplaintsPage() {
                 <h3 className="text-xl font-semibold text-banc-dark-deep">Before You Complain</h3>
               </div>
               
-              <p className="text-banc-grey mb-6">
+              <p className="text-banc-muted-readable mb-6">
                 If you have an issue, we recommend trying to resolve it informally first. 
                 Often, a quick conversation can sort things out without needing a formal complaint.
               </p>
               
               <div className="bg-banc-grey-pale rounded-xl p-6">
                 <h4 className="font-semibold text-banc-dark-deep mb-3">Try These First:</h4>
-                <ul className="space-y-2 text-banc-grey">
+                <ul className="space-y-2 text-banc-muted-readable">
                   <li className="flex items-start gap-2">
-                    <span className="text-banc-sky">1.</span>
+                    <span className="text-banc-focus">1.</span>
                     Speak to your dedicated negotiator
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-banc-sky">2.</span>
+                    <span className="text-banc-focus">2.</span>
                     Call our office on {BANC_CONTACT.displayPhone}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-banc-sky">3.</span>
+                    <span className="text-banc-focus">3.</span>
                     Email your property manager directly
                   </li>
                 </ul>
@@ -241,15 +241,15 @@ export default function ComplaintsPage() {
             {/* Contact methods */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Mail className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">Contact Us</span>
+                <Mail className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">Contact Us</span>
               </div>
               
               <h2 className="text-3xl font-semibold text-banc-dark-deep mb-6">
                 How to Contact Us
               </h2>
               
-              <p className="text-banc-grey mb-8">
+              <p className="text-banc-muted-readable mb-8">
                 You can make a complaint using any of the following methods. Please provide 
                 as much detail as possible to help us investigate effectively.
               </p>
@@ -257,31 +257,31 @@ export default function ComplaintsPage() {
               <div className="space-y-4">
                 <a href="mailto:complaints@bancproperty.com" className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30 hover:border-banc-sky/50 transition-colors group">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-6 w-6 text-banc-sky" />
+                    <Mail className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep group-hover:text-banc-sky transition-colors">Email</h3>
-                    <p className="text-sm text-banc-grey">complaints@bancproperty.com</p>
+                    <p className="text-sm text-banc-muted-readable">complaints@bancproperty.com</p>
                   </div>
                 </a>
                 
                 <a href={BANC_CONTACT.callHref} className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30 hover:border-banc-sky/50 transition-colors group">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-banc-sky" />
+                    <Phone className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep group-hover:text-banc-sky transition-colors">Phone</h3>
-                    <p className="text-sm text-banc-grey">{BANC_CONTACT.displayPhone}</p>
+                    <p className="text-sm text-banc-muted-readable">{BANC_CONTACT.displayPhone}</p>
                   </div>
                 </a>
                 
                 <div className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Building2 className="h-6 w-6 text-banc-sky" />
+                    <Building2 className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Post</h3>
-                    <p className="text-sm text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable">
                       Complaints Department<br />
                       Banc Property Group<br />
                       1 Station Road<br />
@@ -294,25 +294,25 @@ export default function ComplaintsPage() {
               {/* What to include */}
               <div className="mt-8 bg-banc-grey-pale rounded-xl p-6">
                 <h4 className="font-semibold text-banc-dark-deep mb-3">Please Include:</h4>
-                <ul className="space-y-2 text-sm text-banc-grey">
+                <ul className="space-y-2 text-sm text-banc-muted-readable">
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-sky mt-0.5" />
+                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
                     Your full name and contact details
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-sky mt-0.5" />
+                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
                     Property address (if applicable)
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-sky mt-0.5" />
+                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
                     Details of what went wrong
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-sky mt-0.5" />
+                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
                     What you&apos;d like us to do to put it right
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-sky mt-0.5" />
+                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
                     Any relevant reference numbers
                   </li>
                 </ul>
@@ -322,7 +322,7 @@ export default function ComplaintsPage() {
             {/* Complaint form */}
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
               <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Make a Complaint</h3>
-              <p className="text-sm text-banc-grey mb-6">
+              <p className="text-sm text-banc-muted-readable mb-6">
                 Use this form to submit your complaint. We&apos;ll respond within 3 working days.
               </p>
               
@@ -389,7 +389,7 @@ export default function ComplaintsPage() {
                       <option value="staff">Staff Conduct</option>
                       <option value="other">Other</option>
                     </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-grey pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-muted-readable pointer-events-none" />
                   </div>
                 </div>
                 
@@ -418,13 +418,13 @@ export default function ComplaintsPage() {
                     required
                     className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
                   />
-                  <label htmlFor="privacy-complaint" className="text-sm text-banc-grey leading-relaxed">
+                  <label htmlFor="privacy-complaint" className="text-sm text-banc-muted-readable leading-relaxed">
                     I understand that my personal information will be used to investigate this complaint 
-                    in accordance with our <Link href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</Link>.
+                    in accordance with our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
                   </label>
                 </div>
                 
-                <Button type="submit" className="w-full h-12 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold">
+                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
                   Submit Complaint
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -439,13 +439,13 @@ export default function ComplaintsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-              <Scale className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-banc-sky-dark">Independent Redress</span>
+              <Scale className="h-4 w-4 text-banc-focus" />
+              <span className="text-sm font-medium text-banc-focus">Independent Redress</span>
             </div>
             <h2 className="text-3xl font-semibold text-banc-dark-deep">
               Independent Redress
             </h2>
-            <p className="mt-4 text-lg text-banc-grey">
+            <p className="mt-4 text-lg text-banc-muted-readable">
               If you&apos;re not satisfied with our final response, you can escalate your complaint 
               to an independent redress scheme.
             </p>
@@ -455,27 +455,27 @@ export default function ComplaintsPage() {
             {redressSchemes.map((scheme) => (
               <div key={scheme.name} className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-sm">
                 <div className="w-14 h-14 rounded-xl bg-banc-sky/10 flex items-center justify-center mb-4">
-                  <Scale className="h-7 w-7 text-banc-sky" />
+                  <Scale className="h-7 w-7 text-banc-focus" />
                 </div>
                 <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">{scheme.name}</h3>
-                <p className="text-banc-grey mb-6">{scheme.description}</p>
+                <p className="text-banc-muted-readable mb-6">{scheme.description}</p>
                 
                 <div className="space-y-3 text-sm">
                   <a 
                     href={`https://${scheme.website}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-banc-sky hover:underline"
+                    className="flex items-center gap-2 text-banc-focus hover:underline"
                   >
                     <FileText className="h-4 w-4" />
                     {scheme.website}
                   </a>
                   <a href={`tel:${scheme.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-banc-dark-mid">
-                    <Phone className="h-4 w-4 text-banc-sky" />
+                    <Phone className="h-4 w-4 text-banc-focus" />
                     {scheme.phone}
                   </a>
                   <a href={`mailto:${scheme.email}`} className="flex items-center gap-2 text-banc-dark-mid">
-                    <Mail className="h-4 w-4 text-banc-sky" />
+                    <Mail className="h-4 w-4 text-banc-focus" />
                     {scheme.email}
                   </a>
                 </div>
@@ -508,31 +508,31 @@ export default function ComplaintsPage() {
                 <h2 className="text-2xl font-semibold text-banc-dark-deep mb-4">
                   Regulatory Information
                 </h2>
-                <p className="text-banc-grey mb-6">
+                <p className="text-banc-muted-readable mb-6">
                   Banc Property Group is committed to maintaining the highest professional standards. 
                   We are members of professional bodies and subject to regulatory oversight.
                 </p>
                 
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-sky mt-0.5" />
+                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
                     <div>
                       <p className="font-medium text-banc-dark-deep">Member of The Property Ombudsman</p>
-                      <p className="text-sm text-banc-grey">Redress scheme membership</p>
+                      <p className="text-sm text-banc-muted-readable">Redress scheme membership</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-sky mt-0.5" />
+                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
                     <div>
                       <p className="font-medium text-banc-dark-deep">Propertymark Member</p>
-                      <p className="text-sm text-banc-grey">Professional body membership</p>
+                      <p className="text-sm text-banc-muted-readable">Professional body membership</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-sky mt-0.5" />
+                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
                     <div>
                       <p className="font-medium text-banc-dark-deep">Client Money Protection</p>
-                      <p className="text-sm text-banc-grey">All client funds fully protected</p>
+                      <p className="text-sm text-banc-muted-readable">All client funds fully protected</p>
                     </div>
                   </div>
                 </div>
@@ -542,19 +542,19 @@ export default function ComplaintsPage() {
                 <h3 className="font-semibold text-banc-dark-deep mb-4">Our Registration Details</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-grey">Company Name</span>
+                    <span className="text-banc-muted-readable">Company Name</span>
                     <span className="font-medium text-banc-dark-deep">Banc Property Group Ltd</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-grey">Registered Address</span>
+                    <span className="text-banc-muted-readable">Registered Address</span>
                     <span className="font-medium text-banc-dark-deep">1 Station Road, Cuffley, EN6 4HU</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-grey">Phone</span>
+                    <span className="text-banc-muted-readable">Phone</span>
                     <span className="font-medium text-banc-dark-deep">{BANC_CONTACT.displayPhone}</span>
                   </div>
                   <div className="flex justify-between py-2">
-                    <span className="text-banc-grey">Email</span>
+                    <span className="text-banc-muted-readable">Email</span>
                     <span className="font-medium text-banc-dark-deep">info@bancproperty.com</span>
                   </div>
                 </div>

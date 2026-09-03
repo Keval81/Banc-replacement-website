@@ -189,13 +189,13 @@ export default function CuffleyOfficePage() {
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
-                  <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-6">
+                  <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-6">
                     <Navigation className="mr-2 h-4 w-4" />
                     Get Directions
                   </Button>
                 </a>
                 <Link href="#appointment">
-                  <Button variant="outline" className="border-white text-white hover:bg-white/10 px-6">
+                  <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-6">
                     <Calendar className="mr-2 h-4 w-4" />
                     Book Appointment
                   </Button>
@@ -228,7 +228,7 @@ export default function CuffleyOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-banc-sky" />
+                  <Clock className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Opening Hours</h2>
               </div>
@@ -237,7 +237,7 @@ export default function CuffleyOfficePage() {
                 {openingHours.map((item) => (
                   <div key={item.day} className="flex justify-between items-center py-2 border-b border-banc-line/20 last:border-0">
                     <span className="text-banc-dark-mid font-medium">{item.day}</span>
-                    <span className={`${item.hours === 'Closed' ? 'text-banc-grey' : 'text-banc-sky font-semibold'}`}>
+                    <span className={`${item.hours === 'Closed' ? 'text-banc-muted-readable' : 'text-banc-focus font-semibold'}`}>
                       {item.hours}
                     </span>
                   </div>
@@ -249,31 +249,31 @@ export default function CuffleyOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Car className="h-6 w-6 text-banc-sky" />
+                  <Car className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Parking & Transport</h2>
               </div>
               
               <div className="space-y-4">
                 <div className="flex gap-3">
-                  <Car className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Car className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Free Parking</p>
-                    <p className="text-sm text-banc-grey">Free parking available directly outside our office on Station Road</p>
+                    <p className="text-sm text-banc-muted-readable">Free parking available directly outside our office on Station Road</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Train className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Train className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Train Station</p>
-                    <p className="text-sm text-banc-grey">Cuffley Station is just a 2-minute walk from our office</p>
+                    <p className="text-sm text-banc-muted-readable">Cuffley Station is just a 2-minute walk from our office</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <Navigation className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <Navigation className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-banc-dark-deep">Easy Access</p>
-                    <p className="text-sm text-banc-grey">Located in the centre of Cuffley village, easy to find</p>
+                    <p className="text-sm text-banc-muted-readable">Located in the centre of Cuffley village, easy to find</p>
                   </div>
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default function CuffleyOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <MapPin className="h-6 w-6 text-banc-sky" />
+                  <MapPin className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h2 className="text-xl font-semibold text-banc-dark-deep">Areas We Cover</h2>
               </div>
@@ -298,7 +298,7 @@ export default function CuffleyOfficePage() {
                   </span>
                 ))}
               </div>
-              <p className="mt-4 text-sm text-banc-grey">
+              <p className="mt-4 text-sm text-banc-muted-readable">
                 And many more surrounding Hertfordshire and North London areas.
               </p>
             </div>
@@ -360,14 +360,14 @@ export default function CuffleyOfficePage() {
             {/* Left side - Info */}
             <div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Calendar className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">Book an Appointment</span>
+                <Calendar className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">Book an Appointment</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
                 Visit Our Cuffley Office
               </h2>
-              <p className="mt-4 text-lg text-banc-grey">
+              <p className="mt-4 text-lg text-banc-muted-readable">
                 Book a free, no-obligation appointment to discuss your property needs. 
                 Whether you&apos;re selling, letting, buying, or renting, we&apos;re here to help.
               </p>
@@ -375,29 +375,29 @@ export default function CuffleyOfficePage() {
               <div className="mt-8 space-y-6">
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Star className="h-6 w-6 text-banc-sky" />
+                    <Star className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Free Valuation</h3>
-                    <p className="text-sm text-banc-grey">Get an accurate market appraisal of your property with no obligation.</p>
+                    <p className="text-sm text-banc-muted-readable">Get an accurate market appraisal of your property with no obligation.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Users className="h-6 w-6 text-banc-sky" />
+                    <Users className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Expert Advice</h3>
-                    <p className="text-sm text-banc-grey">Speak directly with our experienced directors and senior negotiators.</p>
+                    <p className="text-sm text-banc-muted-readable">Speak directly with our experienced directors and senior negotiators.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-6 w-6 text-banc-sky" />
+                    <Clock className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Flexible Times</h3>
-                    <p className="text-sm text-banc-grey">We offer appointments including evenings and weekends to suit your schedule.</p>
+                    <p className="text-sm text-banc-muted-readable">We offer appointments including evenings and weekends to suit your schedule.</p>
                   </div>
                 </div>
               </div>
@@ -496,13 +496,13 @@ export default function CuffleyOfficePage() {
                     required
                     className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
                   />
-                  <label htmlFor="privacy-cuffley" className="text-sm text-banc-grey leading-relaxed">
+                  <label htmlFor="privacy-cuffley" className="text-sm text-banc-muted-readable leading-relaxed">
                     I agree to Banc Property Group contacting me about my enquiry. 
-                    Read our <Link href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</Link>.
+                    Read our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
                   </label>
                 </div>
                 
-                <Button type="submit" className="w-full h-12 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold">
+                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
                   Request Appointment
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

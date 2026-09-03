@@ -76,7 +76,7 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Sold Price History</h3>
-            <p className="text-sm text-banc-grey">HM Land Registry data</p>
+            <p className="text-sm text-banc-muted-readable">HM Land Registry data</p>
           </div>
         </div>
       </div>
@@ -102,23 +102,23 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
       {stats && !loading && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border-b border-banc-grey/20">
           <div className="text-center">
-            <p className="text-xs text-banc-grey mb-1">Average Price</p>
+            <p className="text-xs text-banc-muted-readable mb-1">Average Price</p>
             <p className="text-lg font-bold text-banc-dark">
               {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(stats.averagePrice)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-banc-grey mb-1">Median Price</p>
+            <p className="text-xs text-banc-muted-readable mb-1">Median Price</p>
             <p className="text-lg font-bold text-banc-dark">
               {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(stats.medianPrice)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-banc-grey mb-1">Sales (12m)</p>
+            <p className="text-xs text-banc-muted-readable mb-1">Sales (12m)</p>
             <p className="text-lg font-bold text-banc-dark">{stats.salesCount12Months}</p>
           </div>
           <div className="text-center">
-            <p className="text-xs text-banc-grey mb-1">Price Change</p>
+            <p className="text-xs text-banc-muted-readable mb-1">Price Change</p>
             <p className={`text-lg font-bold ${stats.priceChangePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {stats.priceChangePercent >= 0 ? '+' : ''}{stats.priceChangePercent}%
             </p>
@@ -149,7 +149,7 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-banc-grey" />
+            <Loader2 className="h-8 w-8 animate-spin text-banc-muted-readable" />
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-red-500">
@@ -157,8 +157,8 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
             {error}
           </div>
         ) : filteredPrices.length === 0 ? (
-          <div className="text-center py-12 text-banc-grey">
-            <Home className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
+          <div className="text-center py-12 text-banc-muted-readable">
+            <Home className="h-12 w-12 mx-auto mb-3 text-banc-muted-readable" />
             <p>No sold prices found</p>
             {!initialPostcode && <p className="text-sm mt-1">Enter a postcode to search</p>}
           </div>
@@ -176,11 +176,11 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
                   <div>
                     <p className="font-medium text-banc-dark">{price.address}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-banc-grey flex items-center gap-1">
+                      <span className="text-xs text-banc-muted-readable flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
                         {formatDate(price.date)}
                       </span>
-                      <span className="text-xs text-banc-grey flex items-center gap-1">
+                      <span className="text-xs text-banc-muted-readable flex items-center gap-1">
                         <Building2 className="h-3 w-3" />
                         {price.propertyType}
                       </span>
@@ -193,7 +193,7 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-banc-dark">{price.priceFormatted}</p>
-                    <span className="text-xs text-banc-grey">{price.tenure}</span>
+                    <span className="text-xs text-banc-muted-readable">{price.tenure}</span>
                   </div>
                 </div>
               </motion.div>
@@ -204,7 +204,7 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
 
       {/* Footer */}
       {prices.length > 0 && (
-        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey text-center">
+        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-muted-readable text-center">
           Data from HM Land Registry • Updated daily
         </div>
       )}

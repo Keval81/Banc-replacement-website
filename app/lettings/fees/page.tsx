@@ -191,8 +191,8 @@ export default function LettingsFeesPage() {
             {/* Main content */}
             <div className="lg:col-span-2">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Users className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">For Tenants</span>
+                <Users className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">For Tenants</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-4">
@@ -216,7 +216,7 @@ export default function LettingsFeesPage() {
                 </div>
               </div>
               
-              <p className="text-lg text-banc-grey mb-8">
+              <p className="text-lg text-banc-muted-readable mb-8">
                 Under current legislation, we are only permitted to charge the following payments to tenants:
               </p>
               
@@ -227,9 +227,9 @@ export default function LettingsFeesPage() {
                     <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
                       <div>
                         <h3 className="text-lg font-semibold text-banc-dark-deep">{fee.name}</h3>
-                        <p className="text-banc-grey mt-1">{fee.description}</p>
+                        <p className="text-banc-muted-readable mt-1">{fee.description}</p>
                       </div>
-                      <span className="px-4 py-2 rounded-full bg-banc-sky/10 text-banc-sky font-semibold text-sm">
+                      <span className="px-4 py-2 rounded-full bg-banc-sky/10 text-banc-focus font-semibold text-sm">
                         {fee.amount}
                       </span>
                     </div>
@@ -239,8 +239,8 @@ export default function LettingsFeesPage() {
                         <p className="text-sm font-medium text-banc-dark-mid mb-2">Refund conditions:</p>
                         <ul className="space-y-1">
                           {fee.conditions.map((condition, index) => (
-                            <li key={index} className="text-sm text-banc-grey flex items-start gap-2">
-                              <span className="text-banc-sky mt-1">•</span>
+                            <li key={index} className="text-sm text-banc-muted-readable flex items-start gap-2">
+                              <span className="text-banc-focus mt-1">•</span>
                               {condition}
                             </li>
                           ))}
@@ -250,7 +250,7 @@ export default function LettingsFeesPage() {
                     
                     {fee.note && (
                       <div className="mt-4 pt-4 border-t border-banc-line/30">
-                        <p className="text-sm text-banc-grey">{fee.note}</p>
+                        <p className="text-sm text-banc-muted-readable">{fee.note}</p>
                       </div>
                     )}
                   </div>
@@ -282,19 +282,19 @@ export default function LettingsFeesPage() {
               {/* Deposit protection info */}
               <div className="bg-white rounded-2xl p-6 border border-banc-line/30">
                 <div className="flex items-center gap-2 mb-4">
-                  <Shield className="h-5 w-5 text-banc-sky" />
+                  <Shield className="h-5 w-5 text-banc-focus" />
                   <h3 className="font-semibold text-banc-dark-deep">Deposit Protection</h3>
                 </div>
-                <p className="text-sm text-banc-grey mb-4">
+                <p className="text-sm text-banc-muted-readable mb-4">
                   Your security deposit is protected in a government-approved scheme:
                 </p>
-                <ul className="space-y-2 text-sm text-banc-grey">
+                <ul className="space-y-2 text-sm text-banc-muted-readable">
                   <li className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-green-500" />
                     Government-authorised tenancy deposit scheme
                   </li>
                 </ul>
-                <p className="text-sm text-banc-grey mt-4">
+                <p className="text-sm text-banc-muted-readable mt-4">
                   You&apos;ll receive prescribed information within 30 days of payment.
                 </p>
               </div>
@@ -307,7 +307,7 @@ export default function LettingsFeesPage() {
                   Browse our available rental properties
                 </p>
                 <Link href="/lettings/properties">
-                  <Button className="w-full bg-white text-banc-sky hover:bg-white/90">
+                  <Button className="w-full bg-white text-banc-focus hover:bg-white/90">
                     View Properties
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -342,13 +342,13 @@ export default function LettingsFeesPage() {
                 key={service.name}
                 className={`relative rounded-2xl p-8 ${
                   service.popular 
-                    ? 'bg-banc-sky text-white' 
+                    ? 'bg-banc-focus text-white' 
                     : 'bg-white/5 border border-white/10 text-white'
                 }`}
               >
                 {service.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-white text-banc-sky text-xs font-semibold">
+                    <span className="px-4 py-1.5 rounded-full bg-white text-banc-focus text-xs font-semibold">
                       Most Popular
                     </span>
                   </div>
@@ -414,7 +414,7 @@ export default function LettingsFeesPage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-banc-sky" />
+                  <FileText className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h3 className="text-xl font-semibold text-banc-dark-deep">Fee Transparency</h3>
               </div>
@@ -427,8 +427,8 @@ export default function LettingsFeesPage() {
                   "Landlord fees are deducted from rent collected",
                   "Setup fee (landlord's share): one week's rent (inc VAT), payable upon instruction"
                 ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3 text-banc-grey">
-                    <Check className="h-5 w-5 text-banc-sky flex-shrink-0 mt-0.5" />
+                  <li key={index} className="flex items-start gap-3 text-banc-muted-readable">
+                    <Check className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
                     {item}
                   </li>
                 ))}
@@ -439,12 +439,12 @@ export default function LettingsFeesPage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Info className="h-6 w-6 text-banc-sky" />
+                  <Info className="h-6 w-6 text-banc-focus" />
                 </div>
                 <h3 className="text-xl font-semibold text-banc-dark-deep">Cancellation Policy</h3>
               </div>
               
-              <div className="space-y-4 text-banc-grey">
+              <div className="space-y-4 text-banc-muted-readable">
                 <p>
                   <strong className="text-banc-dark-deep">Tenants:</strong> Once a holding deposit
                   is paid, it becomes non-refundable if you withdraw from the tenancy
@@ -458,9 +458,9 @@ export default function LettingsFeesPage() {
                 <p>
                   <strong className="text-banc-dark-deep">Questions:</strong> Contact Andrew Crump
                   or Nitesh Bheda on{" "}
-                  <a href={BANC_CONTACT.callHref} className="text-banc-sky hover:underline">{BANC_CONTACT.displayPhone}</a>, or email{" "}
-                  <a href="mailto:andrew@bancproperty.com" className="text-banc-sky hover:underline">andrew@bancproperty.com</a> /{" "}
-                  <a href="mailto:nitesh@bancproperty.com" className="text-banc-sky hover:underline">nitesh@bancproperty.com</a>.
+                  <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">{BANC_CONTACT.displayPhone}</a>, or email{" "}
+                  <a href="mailto:andrew@bancproperty.com" className="text-banc-focus hover:underline">andrew@bancproperty.com</a> /{" "}
+                  <a href="mailto:nitesh@bancproperty.com" className="text-banc-focus hover:underline">nitesh@bancproperty.com</a>.
                 </p>
               </div>
             </div>
@@ -475,14 +475,14 @@ export default function LettingsFeesPage() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                  <Shield className="h-4 w-4 text-banc-sky" />
-                  <span className="text-sm font-medium text-banc-sky-dark">Protection</span>
+                  <Shield className="h-4 w-4 text-banc-focus" />
+                  <span className="text-sm font-medium text-banc-focus">Protection</span>
                 </div>
                 
                 <h2 className="text-3xl font-semibold text-banc-dark-deep">
                   Client Money Protection
                 </h2>
-                <p className="mt-4 text-lg text-banc-grey">
+                <p className="mt-4 text-lg text-banc-muted-readable">
                   Banc Property Group is a member of a Client Money Protection scheme, 
                   providing peace of mind that your money is protected.
                 </p>
@@ -490,29 +490,29 @@ export default function LettingsFeesPage() {
                 <div className="mt-8 space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-sky" />
+                      <Check className="h-5 w-5 text-banc-focus" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-banc-dark-deep">Client Money Protected</h3>
-                      <p className="text-sm text-banc-grey">All client funds held in segregated accounts</p>
+                      <p className="text-sm text-banc-muted-readable">All client funds held in segregated accounts</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-sky" />
+                      <Check className="h-5 w-5 text-banc-focus" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-banc-dark-deep">Client Money Protect Member</h3>
-                      <p className="text-sm text-banc-grey">Client money protection for landlords and tenants</p>
+                      <p className="text-sm text-banc-muted-readable">Client money protection for landlords and tenants</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-sky" />
+                      <Check className="h-5 w-5 text-banc-focus" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-banc-dark-deep">Redress Scheme</h3>
-                      <p className="text-sm text-banc-grey">Member of The Property Ombudsman</p>
+                      <p className="text-sm text-banc-muted-readable">Member of The Property Ombudsman</p>
                     </div>
                   </div>
                 </div>
@@ -520,24 +520,24 @@ export default function LettingsFeesPage() {
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Shield className="h-10 w-10 text-banc-sky mx-auto mb-3" />
+                  <Shield className="h-10 w-10 text-banc-focus mx-auto mb-3" />
                   <p className="font-semibold text-banc-dark-deep">Client Money Protection</p>
-                  <p className="text-sm text-banc-grey">Fully Protected</p>
+                  <p className="text-sm text-banc-muted-readable">Fully Protected</p>
                 </div>
                 <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Building2 className="h-10 w-10 text-banc-sky mx-auto mb-3" />
+                  <Building2 className="h-10 w-10 text-banc-focus mx-auto mb-3" />
                   <p className="font-semibold text-banc-dark-deep">Professional Membership</p>
-                  <p className="text-sm text-banc-grey">The Guild of Professional Estate Agents</p>
+                  <p className="text-sm text-banc-muted-readable">The Guild of Professional Estate Agents</p>
                 </div>
                 <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <FileText className="h-10 w-10 text-banc-sky mx-auto mb-3" />
+                  <FileText className="h-10 w-10 text-banc-focus mx-auto mb-3" />
                   <p className="font-semibold text-banc-dark-deep">Redress Scheme</p>
-                  <p className="text-sm text-banc-grey">The Property Ombudsman</p>
+                  <p className="text-sm text-banc-muted-readable">The Property Ombudsman</p>
                 </div>
                 <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Key className="h-10 w-10 text-banc-sky mx-auto mb-3" />
+                  <Key className="h-10 w-10 text-banc-focus mx-auto mb-3" />
                   <p className="font-semibold text-banc-dark-deep">Deposit Protection</p>
-                  <p className="text-sm text-banc-grey">Government-authorised scheme</p>
+                  <p className="text-sm text-banc-muted-readable">Government-authorised scheme</p>
                 </div>
               </div>
             </div>
@@ -557,13 +557,13 @@ export default function LettingsFeesPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href={BANC_CONTACT.callHref}>
-              <Button className="bg-white text-banc-sky hover:bg-white/90 px-8 py-6 text-base font-semibold">
+              <Button className="bg-white text-banc-focus hover:bg-white/90 px-8 py-6 text-base font-semibold">
                 <Phone className="mr-2 h-5 w-5" />
                 Call {BANC_CONTACT.displayPhone}
               </Button>
             </a>
             <Link href="/contact">
-              <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
+              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
                 Contact Us
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

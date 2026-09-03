@@ -38,7 +38,7 @@ export default function AccountSidebar({ user }: AccountSidebarProps) {
         {/* User Card */}
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-banc-sky/20 text-banc-sky">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-banc-sky/20 text-banc-focus">
               {user.image ? (
                 <img
                   src={user.image}
@@ -69,7 +69,7 @@ export default function AccountSidebar({ user }: AccountSidebarProps) {
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-banc-sky/10 text-banc-sky"
+                    ? "bg-banc-sky/10 text-banc-focus"
                     : "text-white/70 hover:bg-white/5 hover:text-white"
                 )}
               >

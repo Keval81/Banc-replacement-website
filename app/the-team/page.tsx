@@ -156,7 +156,7 @@ export default function TeamPage() {
                 
                 {/* Number indicator */}
                 <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-banc-sky items-center justify-center z-10 shadow-lg">
-                  <span className="text-lg font-bold text-banc-sky">0{index + 1}</span>
+                  <span className="text-lg font-bold text-banc-focus">0{index + 1}</span>
                 </div>
                 
                 {/* Photo Column */}
@@ -179,7 +179,7 @@ export default function TeamPage() {
 
                       {/* Role badge */}
                       <div className="absolute bottom-4 left-4 right-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-banc-sky text-white text-xs font-semibold uppercase tracking-wider">
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-banc-focus text-white text-xs font-semibold uppercase tracking-wider">
                           {member.role}
                         </div>
                       </div>
@@ -194,8 +194,8 @@ export default function TeamPage() {
                     <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-2">
                       {member.name}
                     </h2>
-                    <div className="flex items-center gap-2 text-banc-grey">
-                      <MapPin className="h-4 w-4 text-banc-sky" />
+                    <div className="flex items-center gap-2 text-banc-muted-readable">
+                      <MapPin className="h-4 w-4 text-banc-focus" />
                       <span className="text-sm">{member.location}</span>
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export default function TeamPage() {
                   
                   {/* Contact Details */}
                   <div className="mt-8 pt-6 border-t border-banc-line/50">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-banc-grey mb-4">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-banc-muted-readable mb-4">
                       Get in Touch
                     </p>
                     <div className="flex flex-wrap gap-4">
@@ -267,15 +267,15 @@ export default function TeamPage() {
             {/* Left Column - Content */}
             <div className="lg:sticky lg:top-32">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Users className="h-4 w-4 text-banc-sky" />
-                <span className="text-sm font-medium text-banc-sky-dark">Careers</span>
+                <Users className="h-4 w-4 text-banc-focus" />
+                <span className="text-sm font-medium text-banc-focus">Careers</span>
               </div>
               
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep leading-tight">
-                Looking To Join A <span className="text-banc-sky">Young Dynamic</span> Property Company?
+                Looking To Join A <span className="text-banc-focus">Young Dynamic</span> Property Company?
               </h2>
               
-              <p className="mt-6 text-lg text-banc-grey leading-relaxed">
+              <p className="mt-6 text-lg text-banc-muted-readable leading-relaxed">
                 Would you like to join the Banc Property Team? We&apos;re always looking for talented 
                 individuals who share our passion for exceptional property service.
               </p>
@@ -283,29 +283,29 @@ export default function TeamPage() {
               <div className="mt-8 space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-sky" />
+                    <ArrowRight className="h-5 w-5 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Growth Opportunities</h3>
-                    <p className="text-sm text-banc-grey">Develop your career in a supportive environment</p>
+                    <p className="text-sm text-banc-muted-readable">Develop your career in a supportive environment</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-sky" />
+                    <ArrowRight className="h-5 w-5 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Local Expertise</h3>
-                    <p className="text-sm text-banc-grey">Work in the heart of the Cuffley community</p>
+                    <p className="text-sm text-banc-muted-readable">Work in the heart of the Cuffley community</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-sky" />
+                    <ArrowRight className="h-5 w-5 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep">Great Team</h3>
-                    <p className="text-sm text-banc-grey">Join a passionate and experienced team</p>
+                    <p className="text-sm text-banc-muted-readable">Join a passionate and experienced team</p>
                   </div>
                 </div>
               </div>
@@ -317,14 +317,14 @@ export default function TeamPage() {
               <div className="bg-banc-grey-pale rounded-3xl p-8 lg:p-10 shadow-xl border border-banc-line/30">
                 <div className="mb-8">
                   <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Apply Today</h3>
-                  <p className="text-banc-grey text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
+                  <p className="text-banc-muted-readable text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
                 </div>
                 
                 <form className="space-y-6">
                   {/* Name */}
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                      Full Name <span className="text-banc-sky">*</span>
+                      Full Name <span className="text-banc-focus">*</span>
                     </label>
                     <Input
                       id="name"
@@ -352,7 +352,7 @@ export default function TeamPage() {
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                        Email Address <span className="text-banc-sky">*</span>
+                        Email Address <span className="text-banc-focus">*</span>
                       </label>
                       <Input
                         id="email"
@@ -368,7 +368,7 @@ export default function TeamPage() {
                   {/* Message */}
                   <div>
                     <label htmlFor="message" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                      Your Message <span className="text-banc-sky">*</span>
+                      Your Message <span className="text-banc-focus">*</span>
                     </label>
                     <Textarea
                       id="message"
@@ -388,16 +388,16 @@ export default function TeamPage() {
                       required
                       className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky rounded"
                     />
-                    <label htmlFor="privacy" className="text-sm text-banc-grey leading-relaxed cursor-pointer">
+                    <label htmlFor="privacy" className="text-sm text-banc-muted-readable leading-relaxed cursor-pointer">
                       Please tick this box if you are happy for us to contact you via phone and email. 
-                      You can view our full <a href="/privacy" className="text-banc-sky hover:underline">privacy policy</a> on our website.
+                      You can view our full <a href="/privacy" className="text-banc-focus hover:underline">privacy policy</a> on our website.
                     </label>
                   </div>
                   
                   {/* Submit Button */}
                   <Button 
                     type="submit"
-                    className="w-full h-14 bg-banc-sky hover:bg-banc-sky-dark text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30"
+                    className="w-full h-14 bg-banc-focus hover:bg-banc-focus-hover text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30"
                   >
                     Submit Application
                     <ArrowRight className="h-5 w-5 ml-2" />
@@ -427,7 +427,7 @@ export default function TeamPage() {
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
                 href={BANC_CONTACT.callHref} 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-sky hover:bg-banc-sky-dark text-white font-semibold rounded-xl transition-all duration-300"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold rounded-xl transition-all duration-300"
               >
                 <Phone className="h-5 w-5" />
                 {BANC_CONTACT.displayPhone}

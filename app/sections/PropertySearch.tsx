@@ -66,7 +66,7 @@ export default function PropertySearch() {
         >
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-banc-grey">
+              <p className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
                 Search
               </p>
               <h2

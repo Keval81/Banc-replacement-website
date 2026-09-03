@@ -24,14 +24,14 @@ export default function TermsPage() {
             <h1 className="text-4xl font-semibold text-banc-dark-deep lg:text-5xl">
               Terms of Use
             </h1>
-            <p className="mt-4 text-lg text-banc-grey">
+            <p className="mt-4 text-lg text-banc-muted-readable">
               Last updated: February 2026
             </p>
           </div>
 
           {/* Content */}
           <div className="rounded-2xl bg-white p-8 shadow-lg lg:p-12">
-            <div className="prose prose-lg max-w-none text-banc-grey">
+            <div className="prose prose-lg max-w-none text-banc-muted-readable">
               <section className="mb-10">
                 <h2 className="text-2xl font-semibold text-banc-dark-deep">1. Introduction</h2>
                 <p className="mt-4">
@@ -232,10 +232,10 @@ export default function TermsPage() {
                   <p>Cuffley, Hertfordshire</p>
                   <p>EN6 4HU</p>
                   <p className="mt-3">
-                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-sky hover:underline">info@bancproperty.com</a>
+                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-focus hover:underline">info@bancproperty.com</a>
                   </p>
                   <p>
-                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-sky hover:underline">{BANC_CONTACT.displayPhone}</a>
+                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">{BANC_CONTACT.displayPhone}</a>
                   </p>
                 </div>
               </section>

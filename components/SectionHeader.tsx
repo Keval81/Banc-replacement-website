@@ -9,7 +9,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ number, label, title, dark = false }: SectionHeaderProps) {
   const ink = dark ? "text-white" : "text-banc-dark";
-  const mut = dark ? "text-white/60" : "text-banc-grey";
+  const mut = dark ? "text-white/60" : "text-banc-muted-readable";
   const hair = dark ? "border-white/15" : "border-banc-dark/15";
   return (
     <div className={`border-t ${hair} pt-5`}>

@@ -169,7 +169,7 @@ export default function OfferForm({
           Your Offer Amount
         </label>
         <div className="relative">
-          <PoundSterling className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" />
+          <PoundSterling className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
           <input
             type="text"
             value={formData.amount ? formData.amount.toLocaleString() : ""}
@@ -191,7 +191,7 @@ export default function OfferForm({
         {/* Comparison to asking price */}
         {formData.amount && formData.amount > 0 && (
           <div className="mt-3 flex items-center gap-4 text-sm">
-            <span className="text-banc-grey">
+            <span className="text-banc-muted-readable">
               {percentageOfAsking}% of asking price
             </span>
             {difference !== 0 && (
@@ -220,7 +220,7 @@ export default function OfferForm({
                 }))
               }
               disabled={isSubmitting}
-              className="px-3 py-1.5 text-sm bg-banc-grey-pale hover:bg-banc-sky/10 text-banc-grey hover:text-banc-sky rounded-lg transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 text-sm bg-banc-grey-pale hover:bg-banc-sky/10 text-banc-muted-readable hover:text-banc-sky rounded-lg transition-colors disabled:opacity-50"
             >
               {pct}%
             </button>
@@ -235,11 +235,11 @@ export default function OfferForm({
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label htmlFor="offer-name" className="block text-sm text-banc-grey mb-1.5">
+            <label htmlFor="offer-name" className="block text-sm text-banc-muted-readable mb-1.5">
               Full name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" aria-hidden="true" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
               <input
                 id="offer-name"
                 type="text"
@@ -255,11 +255,11 @@ export default function OfferForm({
             {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="offer-email" className="block text-sm text-banc-grey mb-1.5">
+            <label htmlFor="offer-email" className="block text-sm text-banc-muted-readable mb-1.5">
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" aria-hidden="true" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
               <input
                 id="offer-email"
                 type="email"
@@ -275,11 +275,11 @@ export default function OfferForm({
             {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="offer-phone" className="block text-sm text-banc-grey mb-1.5">
+            <label htmlFor="offer-phone" className="block text-sm text-banc-muted-readable mb-1.5">
               Phone number
             </label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-grey" aria-hidden="true" />
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
               <input
                 id="offer-phone"
                 type="tel"
@@ -328,11 +328,11 @@ export default function OfferForm({
                   setFormData((prev) => ({ ...prev, position: pos.value }))
                 }
                 disabled={isSubmitting}
-                className="mt-0.5 w-4 h-4 text-banc-sky focus:ring-banc-sky"
+                className="mt-0.5 w-4 h-4 text-banc-focus focus:ring-banc-sky"
               />
               <div>
                 <span className="font-medium text-banc-dark-deep">{pos.label}</span>
-                <p className="text-sm text-banc-grey">{pos.description}</p>
+                <p className="text-sm text-banc-muted-readable">{pos.description}</p>
               </div>
             </label>
           ))}
@@ -375,11 +375,11 @@ export default function OfferForm({
                 disabled={isSubmitting}
                 className="sr-only"
               />
-              <Clock className="w-5 h-5 text-banc-sky mb-2" />
+              <Clock className="w-5 h-5 text-banc-focus mb-2" />
               <span className="font-medium text-banc-dark-deep text-sm">
                 {time.label}
               </span>
-              <span className="text-xs text-banc-grey">{time.description}</span>
+              <span className="text-xs text-banc-muted-readable">{time.description}</span>
             </label>
           ))}
         </div>
@@ -400,7 +400,7 @@ export default function OfferForm({
               }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-banc-line text-banc-sky focus:ring-banc-sky"
+            className="w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
           />
           <span className="text-banc-dark-deep">
             I have a Mortgage Agreement in Principle
@@ -415,7 +415,7 @@ export default function OfferForm({
               setFormData((prev) => ({ ...prev, chainFree: e.target.checked }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-banc-line text-banc-sky focus:ring-banc-sky"
+            className="w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
           />
           <span className="text-banc-dark-deep">I am chain-free</span>
         </label>
@@ -426,7 +426,7 @@ export default function OfferForm({
         <label className="block text-sm font-medium text-banc-dark-deep mb-3">
           Proof of Funds (Optional)
         </label>
-        <p className="text-sm text-banc-grey mb-3">
+        <p className="text-sm text-banc-muted-readable mb-3">
           Upload bank statement or mortgage agreement in principle to strengthen
           your offer
         </p>
@@ -439,7 +439,7 @@ export default function OfferForm({
                 <p className="font-medium text-banc-dark-deep">
                   {proofOfFundsFile.name}
                 </p>
-                <p className="text-sm text-banc-grey">
+                <p className="text-sm text-banc-muted-readable">
                   {(proofOfFundsFile.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>
@@ -454,11 +454,11 @@ export default function OfferForm({
             </div>
           ) : (
             <label className="cursor-pointer">
-              <Upload className="w-8 h-8 text-banc-grey mx-auto mb-2" />
+              <Upload className="w-8 h-8 text-banc-muted-readable mx-auto mb-2" />
               <p className="text-sm text-banc-dark-deep">
                 Click to upload or drag and drop
               </p>
-              <p className="text-xs text-banc-grey mt-1">
+              <p className="text-xs text-banc-muted-readable mt-1">
                 PDF, JPG, PNG up to 10MB
               </p>
               <input
@@ -511,20 +511,20 @@ export default function OfferForm({
               if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }));
             }}
             disabled={isSubmitting}
-            className="mt-1 w-4 h-4 rounded border-banc-line text-banc-sky focus:ring-banc-sky"
+            className="mt-1 w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
           />
           <div>
             <span className="text-banc-dark-deep">
               I confirm this is a genuine offer and I understand that providing
               false information may result in legal action.
             </span>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-sm text-banc-muted-readable mt-1">
               I agree to the{" "}
-              <a href="/terms" className="text-banc-sky hover:underline">
+              <a href="/terms" className="text-banc-focus hover:underline">
                 Terms of Business
               </a>{" "}
               and{" "}
-              <a href="/privacy" className="text-banc-sky hover:underline">
+              <a href="/privacy" className="text-banc-focus hover:underline">
                 Privacy Policy
               </a>
               .
@@ -564,7 +564,7 @@ export default function OfferForm({
         )}
       </button>
 
-      <p className="text-center text-sm text-banc-grey">
+      <p className="text-center text-sm text-banc-muted-readable">
         Your offer will be reviewed and the vendor will be notified within 24
         hours.
       </p>

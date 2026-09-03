@@ -68,10 +68,10 @@ export default function Testimonials() {
                   <span className="text-[11px] uppercase tracking-[0.18em] text-banc-dark">
                     {t.name}
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-grey">
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
                     {t.location}
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-grey">
+                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
                     Google review &middot; 5.0
                   </span>
                 </figcaption>

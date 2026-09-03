@@ -270,7 +270,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
                 onClick={handlePostcodeSearch}
                 disabled={isLoading || !postcode}
                 aria-label="Search postcode"
-                className="rounded-lg bg-banc-sky px-3 py-2 text-white hover:bg-banc-sky-dark disabled:opacity-50"
+                className="rounded-lg bg-banc-focus px-3 py-2 text-white hover:bg-banc-focus-hover disabled:opacity-50"
               >
                 <Search className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -335,7 +335,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               <button
                 onClick={handlePostcodeSearch}
                 disabled={isLoading || !postcode}
-                className="flex items-center gap-2 rounded-xl bg-banc-sky px-6 py-3 font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-banc-focus px-6 py-3 font-medium text-white transition-colors hover:bg-banc-focus-hover disabled:opacity-50"
               >
                 <Search className="h-5 w-5" />
                 Find
@@ -445,7 +445,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
             <button
               onClick={handleValuation}
               disabled={isLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-sky py-4 text-lg font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-focus py-4 text-lg font-medium text-white transition-colors hover:bg-banc-focus-hover disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -484,7 +484,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               </span>
             </div>
             <p className="text-white/70">Estimated Value Range</p>
-            <p className="my-2 text-4xl font-bold text-banc-sky">
+            <p className="my-2 text-4xl font-bold text-banc-focus">
               {formatCurrency(valuation.low)} - {formatCurrency(valuation.high)}
             </p>
             <p className="text-2xl font-semibold text-white">
@@ -579,7 +579,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           {/* API Integration Notice */}
           <div className="rounded-xl border border-white/10 bg-white/5 p-4">
             <p className="flex items-start gap-2 text-sm text-white/60">
-              <AlertCircle className="h-5 w-5 flex-shrink-0 text-banc-sky" />
+              <AlertCircle className="h-5 w-5 flex-shrink-0 text-banc-focus" />
               <span>
                 This is an estimate based on local market data. For an accurate valuation, book a 
                 professional appraisal with one of our local property experts.
@@ -590,14 +590,14 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/valuation">
-              <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark sm:w-auto">
+              <Button className="w-full bg-banc-focus text-white hover:bg-banc-focus-hover sm:w-auto">
                 Book Accurate Valuation
               </Button>
             </Link>
             <Link href="/contact">
               <Button
                 variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10 sm:w-auto"
+                className="bg-transparent w-full border-white/20 text-white hover:bg-white/10 sm:w-auto"
               >
                 Speak to an Expert
               </Button>
@@ -828,7 +828,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-sky py-4 font-medium text-white transition-colors hover:bg-banc-sky-dark disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-banc-focus py-4 font-medium text-white transition-colors hover:bg-banc-focus-hover disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
@@ -856,7 +856,7 @@ export function ValuationTool({ className, compact = false }: ValuationToolProps
           </p>
           <button
             onClick={() => setSubmitSuccess(false)}
-            className="mt-4 text-sm text-banc-sky hover:underline"
+            className="mt-4 text-sm text-banc-focus hover:underline"
           >
             Submit another request
           </button>

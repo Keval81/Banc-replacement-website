@@ -46,10 +46,10 @@ export default function NewsletterUnsubscribePage() {
           <h2 className="text-2xl font-bold text-banc-dark mb-3">
             You&apos;ve Been Unsubscribed
           </h2>
-          <p className="text-banc-grey mb-6">
+          <p className="text-banc-muted-readable mb-6">
             You have been successfully removed from our mailing list. You will no longer receive emails from us.
           </p>
-          <p className="text-sm text-banc-grey mb-6">
+          <p className="text-sm text-banc-muted-readable mb-6">
             Changed your mind?{' '}
             <a href="/newsletter/signup" className="text-banc-teal hover:underline">
               Subscribe again
@@ -68,12 +68,12 @@ export default function NewsletterUnsubscribePage() {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-4">
-            <Frown className="w-8 h-8 text-banc-grey" />
+            <Frown className="w-8 h-8 text-banc-muted-readable" />
           </div>
           <h1 className="text-2xl font-bold text-banc-dark mb-2">
             Unsubscribe
           </h1>
-          <p className="text-banc-grey">
+          <p className="text-banc-muted-readable">
             We&apos;re sorry to see you go. Enter your email to unsubscribe from our newsletter.
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function NewsletterUnsubscribePage() {
         </form>
 
         <div className="mt-6 pt-6 border-t text-center">
-          <p className="text-sm text-banc-grey">
+          <p className="text-sm text-banc-muted-readable">
             Having trouble?{' '}
             <a href="mailto:info@banc.co.uk" className="text-banc-teal hover:underline">
               Contact us

@@ -138,13 +138,13 @@ export default function LettingsPage() {
         <div className="mx-auto max-w-7xl px-4 lg:px-10">
           {/* Section Header */}
           <div className="mb-6 text-center lg:mb-12">
-            <span className="inline-block rounded-full bg-banc-sky/10 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-banc-sky lg:px-4">
+            <span className="inline-block rounded-full bg-banc-sky/10 px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-banc-focus lg:px-4">
               Our Services
             </span>
             <h2 className="mt-2 text-xl font-semibold lg:mt-3 lg:text-4xl">
               Lettings Services
             </h2>
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-banc-grey lg:mt-3 lg:text-base">
+            <p className="mx-auto mt-2 max-w-2xl text-sm text-banc-muted-readable lg:mt-3 lg:text-base">
               Comprehensive letting solutions designed to meet the needs of both landlords and tenants.
             </p>
           </div>
@@ -159,17 +159,17 @@ export default function LettingsPage() {
                   href={card.href}
                   className="group block rounded-xl border border-banc-line bg-white p-4 transition-all active:bg-banc-grey-pale lg:rounded-2xl lg:p-6 lg:hover:border-banc-sky lg:hover:shadow-lg"
                 >
-                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky/10 text-banc-sky transition-all lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl lg:group-hover:bg-banc-sky lg:group-hover:text-white">
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky/10 text-banc-focus transition-all lg:mb-4 lg:h-12 lg:w-12 lg:rounded-xl lg:group-hover:bg-banc-sky lg:group-hover:text-white">
                     <IconComponent className="h-5 w-5 lg:h-6 lg:w-6" />
                   </div>
                   
                   <h3 className="text-sm font-semibold lg:text-base">{card.title}</h3>
                   
-                  <p className="mt-1 text-xs text-banc-grey lg:mt-2 lg:text-sm">
+                  <p className="mt-1 text-xs text-banc-muted-readable lg:mt-2 lg:text-sm">
                     {card.description}
                   </p>
                   
-                  <span className="mt-2 inline-flex items-center text-xs text-banc-sky lg:mt-3 lg:text-sm">
+                  <span className="mt-2 inline-flex items-center text-xs text-banc-focus lg:mt-3 lg:text-sm">
                     Learn more
                     <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
                   </span>
@@ -225,7 +225,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/landlords-guide"
-                className="mt-5 inline-flex items-center rounded-lg bg-banc-sky px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-banc-sky-dark lg:mt-6 lg:px-5 lg:hover:bg-banc-sky-dark"
+                className="mt-5 inline-flex items-center rounded-lg bg-banc-focus px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-banc-sky-dark lg:mt-6 lg:px-5 lg:hover:bg-banc-sky-dark"
               >
                 Landlords Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -262,7 +262,7 @@ export default function LettingsPage() {
               
               <Link 
                 href="/lettings/tenants-guide"
-                className="mt-5 inline-flex items-center rounded-lg bg-banc-sky px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-banc-sky-dark lg:mt-6 lg:px-5 lg:hover:bg-banc-sky-dark"
+                className="mt-5 inline-flex items-center rounded-lg bg-banc-focus px-4 py-2.5 text-sm font-semibold text-white transition-colors active:bg-banc-sky-dark lg:mt-6 lg:px-5 lg:hover:bg-banc-sky-dark"
               >
                 Tenants Guide
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -286,7 +286,7 @@ export default function LettingsPage() {
           </p>
           <Link 
             href="/contact"
-            className="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-banc-sky transition-all active:bg-white/90 lg:mt-6 lg:px-8 lg:py-4 lg:text-base lg:hover:bg-white/90"
+            className="mt-5 inline-flex items-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-banc-focus transition-all active:bg-white/90 lg:mt-6 lg:px-8 lg:py-4 lg:text-base lg:hover:bg-white/90"
           >
             Contact Us
             <ArrowRight className="ml-2 h-4 w-4 lg:h-5 lg:w-5" />

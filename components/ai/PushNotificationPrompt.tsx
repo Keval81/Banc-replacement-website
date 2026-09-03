@@ -74,7 +74,7 @@ export default function PushNotificationPrompt() {
                 <h3 className="font-semibold text-banc-dark">
                   Stay Updated on New Properties
                 </h3>
-                <p className="text-sm text-banc-grey mt-1">
+                <p className="text-sm text-banc-muted-readable mt-1">
                   Get instant notifications when new properties matching your criteria are listed.
                 </p>
                 <div className="flex gap-2 mt-3">
@@ -157,7 +157,7 @@ export function NotificationToggle() {
       className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
         isEnabled
           ? 'bg-green-100 text-green-700 hover:bg-green-200'
-          : 'bg-banc-grey-pale text-banc-grey hover:bg-banc-grey/20'
+          : 'bg-banc-grey-pale text-banc-muted-readable hover:bg-banc-grey/20'
       }`}
     >
       {isEnabled ? (

@@ -37,7 +37,7 @@ export default function CookieConsent() {
             {/* Header */}
             <div className="flex items-start gap-3 p-4 sm:p-5">
               <div className="hidden h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-banc-sky/10 sm:flex">
-                <Cookie className="h-5 w-5 text-banc-sky" />
+                <Cookie className="h-5 w-5 text-banc-focus" />
               </div>
               <div className="flex-1">
                 <h3 className="text-base font-semibold text-banc-dark-deep sm:text-lg">

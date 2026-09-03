@@ -118,13 +118,13 @@ export default function LandlordsGuidePage() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
+              <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
                 Book Free Valuation
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button
                 variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-6 text-base"
+                className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-6 text-base"
               >
                 Download Guide
               </Button>
@@ -142,14 +142,14 @@ export default function LandlordsGuidePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             {/* Left Column - Main Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
                 Introduction
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Expert Letting Services
               </h2>
 
-              <div className="mt-8 space-y-6 text-banc-grey text-lg leading-relaxed">
+              <div className="mt-8 space-y-6 text-banc-muted-readable text-lg leading-relaxed">
                 <p>{lettingServices.body[1]}</p>
                 <p>{lettingServices.body[2]}</p>
               </div>
@@ -157,30 +157,30 @@ export default function LandlordsGuidePage() {
               {/* Accreditation Badges */}
               <div className="mt-10 flex flex-wrap gap-4">
                 <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <BadgeCheck className="h-6 w-6 text-banc-sky" />
+                  <BadgeCheck className="h-6 w-6 text-banc-focus" />
                   <div>
                     <p className="text-sm font-semibold text-banc-dark-deep">
                       Property Guild
                     </p>
-                    <p className="text-xs text-banc-grey">Approved Agent</p>
+                    <p className="text-xs text-banc-muted-readable">Approved Agent</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <Lock className="h-6 w-6 text-banc-sky" />
+                  <Lock className="h-6 w-6 text-banc-focus" />
                   <div>
                     <p className="text-sm font-semibold text-banc-dark-deep">
                       CMP Protected
                     </p>
-                    <p className="text-xs text-banc-grey">Client Money</p>
+                    <p className="text-xs text-banc-muted-readable">Client Money</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <Shield className="h-6 w-6 text-banc-sky" />
+                  <Shield className="h-6 w-6 text-banc-focus" />
                   <div>
                     <p className="text-sm font-semibold text-banc-dark-deep">
                       The Property Ombudsman
                     </p>
-                    <p className="text-xs text-banc-grey">Redress Scheme</p>
+                    <p className="text-xs text-banc-muted-readable">Redress Scheme</p>
                   </div>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function LandlordsGuidePage() {
                   Covering Your Area
                 </h3>
 
-                <p className="text-banc-grey leading-relaxed">
+                <p className="text-banc-muted-readable leading-relaxed">
                   From Apartments, Victorian cottages to Country estates, let our
                   lettings department look after your properties of every type,
                   size and style there is.
@@ -217,7 +217,7 @@ export default function LandlordsGuidePage() {
                   )}
                 </div>
 
-                <p className="mt-6 text-banc-grey leading-relaxed">
+                <p className="mt-6 text-banc-muted-readable leading-relaxed">
                   We handle an impressive portfolio of rented properties
                   throughout these areas and surrounding locations. Whether you
                   are thinking of letting your property for the first time, or
@@ -251,7 +251,7 @@ export default function LandlordsGuidePage() {
                 </div>
               </div>
               <div>
-                <p className="text-sm uppercase tracking-widest text-banc-sky font-medium">
+                <p className="text-sm uppercase tracking-widest text-banc-focus font-medium">
                   Strict Referencing
                 </p>
                 <p className="text-3xl font-semibold text-white mt-1">
@@ -296,11 +296,11 @@ export default function LandlordsGuidePage() {
               <div className="absolute -bottom-6 -right-6 lg:right-8 bg-white rounded-xl shadow-2xl p-6 max-w-xs">
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-full bg-banc-sky/10 flex items-center justify-center">
-                    <CheckCircle className="h-7 w-7 text-banc-sky" />
+                    <CheckCircle className="h-7 w-7 text-banc-focus" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-banc-dark-deep">30%</p>
-                    <p className="text-sm text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable">
                       Pass strict referencing
                     </p>
                   </div>
@@ -310,18 +310,18 @@ export default function LandlordsGuidePage() {
 
             {/* Content Side */}
             <div className="order-1 lg:order-2">
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
                 Our Priority
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Quality Tenants
               </h2>
 
-              <div className="mt-8 space-y-6 text-banc-grey text-lg leading-relaxed">
+              <div className="mt-8 space-y-6 text-banc-muted-readable text-lg leading-relaxed">
                 <p>{qualityTenants.body[0]}</p>
                 <p>
                   {qualityTenants.body[1].split(LANDLORD_TENANT_PASS_RATE)[0]}
-                  <span className="text-banc-sky font-bold">
+                  <span className="text-banc-focus font-bold">
                     {LANDLORD_TENANT_PASS_RATE}
                   </span>
                   {qualityTenants.body[1].split(LANDLORD_TENANT_PASS_RATE)[1]}
@@ -339,14 +339,14 @@ export default function LandlordsGuidePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-start">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
                 Marketing
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 It&apos;s All About The Internet!
               </h2>
 
-              <p className="mt-8 text-banc-grey text-lg leading-relaxed">
+              <p className="mt-8 text-banc-muted-readable text-lg leading-relaxed">
                 These days people looking for rental property rely on the
                 internet, not local papers. Which is why we&apos;ll heavily
                 promote your property on our own website,{" "}
@@ -365,7 +365,7 @@ export default function LandlordsGuidePage() {
                     key={index}
                     className="inline-flex items-center px-5 py-3 rounded-full bg-white text-banc-dark-deep text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <item.icon className="h-4 w-4 mr-2 text-banc-sky" />
+                    <item.icon className="h-4 w-4 mr-2 text-banc-focus" />
                     {item.label}
                   </div>
                 ))}
@@ -479,13 +479,13 @@ export default function LandlordsGuidePage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Header */}
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
+            <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
               Why Us
             </p>
             <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
               Why Choose Banc
             </h2>
-            <p className="mt-6 text-banc-grey max-w-2xl mx-auto text-lg">
+            <p className="mt-6 text-banc-muted-readable max-w-2xl mx-auto text-lg">
               We pride ourselves on delivering exceptional service to landlords
               across our coverage areas
             </p>
@@ -503,13 +503,13 @@ export default function LandlordsGuidePage() {
 
                 <div className="flex items-start gap-4">
                   <div className="h-12 w-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0 group-hover:bg-banc-sky/20 transition-colors">
-                    <item.icon className="h-6 w-6 text-banc-sky" />
+                    <item.icon className="h-6 w-6 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep text-lg">
                       {item.title}
                     </h3>
-                    <p className="mt-1 text-banc-grey">{item.description}</p>
+                    <p className="mt-1 text-banc-muted-readable">{item.description}</p>
                   </div>
                 </div>
               </div>
@@ -524,21 +524,21 @@ export default function LandlordsGuidePage() {
           <div className="grid gap-16 lg:grid-cols-2 items-center">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
+              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
                 Protection
               </p>
               <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
                 Insurance Products Available
               </h2>
 
-              <p className="mt-8 text-banc-grey text-lg leading-relaxed">
+              <p className="mt-8 text-banc-muted-readable text-lg leading-relaxed">
                 Protect your investment with our range of landlord insurance
                 products. We offer comprehensive coverage options to give you
                 complete peace of mind.
               </p>
 
               <div className="mt-10">
-                <Button className="bg-banc-sky hover:bg-banc-sky-dark text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
                   Enquire About Insurance
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -546,16 +546,16 @@ export default function LandlordsGuidePage() {
 
               {/* Trust indicators */}
               <div className="mt-10 flex items-center gap-6">
-                <div className="flex items-center gap-2 text-banc-grey">
-                  <Shield className="h-5 w-5 text-banc-sky" />
+                <div className="flex items-center gap-2 text-banc-muted-readable">
+                  <Shield className="h-5 w-5 text-banc-focus" />
                   <span className="text-sm">Fully Protected</span>
                 </div>
-                <div className="flex items-center gap-2 text-banc-grey">
-                  <CheckCircle className="h-5 w-5 text-banc-sky" />
+                <div className="flex items-center gap-2 text-banc-muted-readable">
+                  <CheckCircle className="h-5 w-5 text-banc-focus" />
                   <span className="text-sm">Quick Claims</span>
                 </div>
-                <div className="flex items-center gap-2 text-banc-grey">
-                  <Award className="h-5 w-5 text-banc-sky" />
+                <div className="flex items-center gap-2 text-banc-muted-readable">
+                  <Award className="h-5 w-5 text-banc-focus" />
                   <span className="text-sm">A-Rated Providers</span>
                 </div>
               </div>
@@ -569,13 +569,13 @@ export default function LandlordsGuidePage() {
                   className="group flex items-center gap-5 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent hover:border-banc-sky/20"
                 >
                   <div className="h-14 w-14 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0 group-hover:bg-banc-sky/20 transition-colors">
-                    <product.icon className="h-7 w-7 text-banc-sky" />
+                    <product.icon className="h-7 w-7 text-banc-focus" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-banc-dark-deep text-lg">
                       {product.title}
                     </h3>
-                    <p className="text-banc-grey text-sm mt-0.5">
+                    <p className="text-banc-muted-readable text-sm mt-0.5">
                       {product.description}
                     </p>
                   </div>
@@ -604,13 +604,13 @@ export default function LandlordsGuidePage() {
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button className="bg-white text-banc-sky hover:bg-white/90 px-10 py-7 text-base font-semibold transition-all duration-300 hover:shadow-xl">
+            <Button className="bg-white text-banc-focus hover:bg-white/90 px-10 py-7 text-base font-semibold transition-all duration-300 hover:shadow-xl">
               Book Free Valuation
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
               variant="outline"
-              className="border-white text-white hover:bg-white/10 px-10 py-7 text-base font-semibold"
+              className="bg-transparent border-white text-white hover:bg-white/10 px-10 py-7 text-base font-semibold"
             >
               Contact Lettings Team
             </Button>

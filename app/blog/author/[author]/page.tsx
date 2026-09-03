@@ -167,7 +167,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                     />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-grey">
+                    <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-banc-muted-readable">
                       <span className="rounded-full bg-[#F3F4F6] px-2 py-1 capitalize">
                         {post.category.replace("-", " ")}
                       </span>
@@ -183,7 +183,7 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
                     <h3 className="mb-2 text-base font-semibold text-banc-dark transition-colors group-hover:text-banc-sky line-clamp-2">
                       {post.title}
                     </h3>
-                    <p className="flex-1 text-sm text-banc-grey line-clamp-3">
+                    <p className="flex-1 text-sm text-banc-muted-readable line-clamp-3">
                       {post.description}
                     </p>
                   </div>
@@ -193,12 +193,12 @@ export default async function AuthorPage({ params }: AuthorPageProps) {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-lg text-banc-grey">
+            <p className="text-lg text-banc-muted-readable">
               No posts found from this author yet.
             </p>
             <Link
               href="/blog"
-              className="mt-4 inline-block text-banc-sky hover:underline"
+              className="mt-4 inline-block text-banc-focus hover:underline"
             >
               Browse all articles
             </Link>

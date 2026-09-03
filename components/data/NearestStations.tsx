@@ -134,7 +134,7 @@ export function NearestStations({
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Transport Links</h3>
-            <p className="text-sm text-banc-grey">Nearby stations & travel times</p>
+            <p className="text-sm text-banc-muted-readable">Nearby stations & travel times</p>
           </div>
         </div>
       </div>
@@ -186,7 +186,7 @@ export function NearestStations({
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-banc-grey" />
+            <Loader2 className="h-8 w-8 animate-spin text-banc-muted-readable" />
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-red-500">
@@ -194,8 +194,8 @@ export function NearestStations({
             {error}
           </div>
         ) : stations.length === 0 ? (
-          <div className="text-center py-12 text-banc-grey">
-            <Train className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
+          <div className="text-center py-12 text-banc-muted-readable">
+            <Train className="h-12 w-12 mx-auto mb-3 text-banc-muted-readable" />
             <p>No stations found</p>
             {!initialPostcode && <p className="text-sm mt-1">Enter a postcode to search</p>}
           </div>
@@ -213,12 +213,12 @@ export function NearestStations({
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="text-banc-grey">
+                      <div className="text-banc-muted-readable">
                         {TYPE_ICONS[station.type] || <Train className="h-4 w-4" />}
                       </div>
                       <h4 className="font-medium text-banc-dark">{station.name}</h4>
                     </div>
-                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-banc-grey">
+                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-banc-muted-readable">
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" />
                         {station.distance} miles
@@ -247,7 +247,7 @@ export function NearestStations({
                           </span>
                         ))}
                         {station.lines.length > 4 && (
-                          <span className="text-xs text-banc-grey px-1">
+                          <span className="text-xs text-banc-muted-readable px-1">
                             +{station.lines.length - 4} more
                           </span>
                         )}
@@ -267,7 +267,7 @@ export function NearestStations({
                     <div className="space-y-2">
                       {station.lines.length > 0 && (
                         <div>
-                          <p className="text-xs text-banc-grey mb-1">All Lines</p>
+                          <p className="text-xs text-banc-muted-readable mb-1">All Lines</p>
                           <div className="flex flex-wrap gap-1">
                             {station.lines.map((line) => (
                               <span
@@ -308,7 +308,7 @@ export function NearestStations({
 
       {/* Footer */}
       {stations.length > 0 && (
-        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey text-center">
+        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-muted-readable text-center">
           Data from TfL and National Rail Enquiries
         </div>
       )}

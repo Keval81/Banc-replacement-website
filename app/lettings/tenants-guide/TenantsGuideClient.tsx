@@ -149,7 +149,7 @@ export default function TenantsGuideClient() {
                 <div className="flex flex-col md:flex-row md:items-start gap-6 mb-8">
                   {/* Number & Icon */}
                   <div className="flex items-center gap-4 md:w-48 flex-shrink-0">
-                    <span className="text-5xl font-bold text-banc-sky/20 font-heading">
+                    <span className="text-5xl font-bold text-banc-focus/20 font-heading">
                       {section.number}
                     </span>
                     <div className="w-14 h-14 rounded-2xl bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/20">
@@ -185,7 +185,7 @@ export default function TenantsGuideClient() {
                             className="flex items-start gap-4"
                           >
                             <span className="w-2 h-2 rounded-full bg-banc-sky mt-2.5 flex-shrink-0" />
-                            <span className="text-banc-grey leading-relaxed">{item}</span>
+                            <span className="text-banc-muted-readable leading-relaxed">{item}</span>
                           </motion.li>
                         ))}
                       </ul>
@@ -210,7 +210,7 @@ export default function TenantsGuideClient() {
                                 <div className="w-5 h-5 rounded-full border-2 border-banc-sky/30 flex items-center justify-center flex-shrink-0">
                                   <div className="w-2 h-2 rounded-full bg-banc-sky" />
                                 </div>
-                                <span className="text-sm text-banc-grey">{item}</span>
+                                <span className="text-sm text-banc-muted-readable">{item}</span>
                               </div>
                             ))}
                           </div>
@@ -363,8 +363,8 @@ export default function TenantsGuideClient() {
               {/* Content side */}
               <div className="flex-1 text-center lg:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-banc-sky/20 border border-banc-sky/30 mb-4">
-                  <BadgeCheck className="h-4 w-4 text-banc-sky" />
-                  <span className="text-sm font-medium text-banc-sky">Accredited Agent</span>
+                  <BadgeCheck className="h-4 w-4 text-banc-focus" />
+                  <span className="text-sm font-medium text-banc-focus">Accredited Agent</span>
                 </div>
                 
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4">
@@ -380,15 +380,15 @@ export default function TenantsGuideClient() {
                 
                 <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-banc-sky" />
+                    <CheckCircle className="h-5 w-5 text-banc-focus" />
                     <span>Professional Standards</span>
                   </div>
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-banc-sky" />
+                    <CheckCircle className="h-5 w-5 text-banc-focus" />
                     <span>Transparent Fees</span>
                   </div>
                   <div className="flex items-center gap-2 text-white/60">
-                    <CheckCircle className="h-5 w-5 text-banc-sky" />
+                    <CheckCircle className="h-5 w-5 text-banc-focus" />
                     <span>Client Money Protection</span>
                   </div>
                 </div>
@@ -427,7 +427,7 @@ export default function TenantsGuideClient() {
               <Link href="/lettings/properties">
                 <Button 
                   size="lg"
-                  className="bg-white text-banc-sky hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 transition-all duration-300"
+                  className="bg-white text-banc-focus hover:bg-white/90 px-8 py-6 text-base font-semibold rounded-xl shadow-xl shadow-black/10 hover:shadow-2xl hover:shadow-black/20 transition-all duration-300"
                 >
                   Browse Properties
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -436,7 +436,7 @@ export default function TenantsGuideClient() {
               <Button 
                 size="lg"
                 variant="outline" 
-                className="border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl transition-all duration-300"
+                className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl transition-all duration-300"
               >
                 Register Your Requirements
               </Button>

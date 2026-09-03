@@ -157,7 +157,7 @@ export default function ValuationPage() {
             <h1 className="mb-3 text-3xl font-semibold text-banc-dark font-serif lg:text-4xl">
               Request a Free Valuation
             </h1>
-            <p className="text-banc-grey">
+            <p className="text-banc-muted-readable">
               Discover the true value of your property in 3 simple steps
             </p>
           </motion.div>
@@ -176,10 +176,10 @@ export default function ValuationPage() {
                       <div
                         className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
                           isCompleted
-                            ? "bg-banc-sky text-white"
+                            ? "bg-banc-focus text-white"
                             : isActive
-                            ? "bg-banc-sky text-white ring-4 ring-banc-sky/20"
-                            : "bg-white text-banc-grey border border-banc-grey/30"
+                            ? "bg-banc-focus text-white ring-4 ring-banc-sky/20"
+                            : "bg-white text-banc-muted-readable border border-banc-grey/30"
                         }`}
                       >
                         {isCompleted ? (
@@ -190,7 +190,7 @@ export default function ValuationPage() {
                       </div>
                       <span
                         className={`mt-2 text-xs font-medium hidden sm:block ${
-                          isActive || isCompleted ? "text-banc-dark" : "text-banc-grey"
+                          isActive || isCompleted ? "text-banc-dark" : "text-banc-muted-readable"
                         }`}
                       >
                         {step.title}
@@ -239,10 +239,10 @@ export default function ValuationPage() {
                 >
                   <div>
                     <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <MapPin className="h-5 w-5 text-banc-sky" />
+                      <MapPin className="h-5 w-5 text-banc-focus" />
                       Where is your property?
                     </h2>
-                    <p className="mt-1 text-sm text-banc-grey">
+                    <p className="mt-1 text-sm text-banc-muted-readable">
                       Enter the address of the property you&apos;d like valued
                     </p>
                   </div>
@@ -289,10 +289,10 @@ export default function ValuationPage() {
                 >
                   <div>
                     <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <Home className="h-5 w-5 text-banc-sky" />
+                      <Home className="h-5 w-5 text-banc-focus" />
                       Tell us about your property
                     </h2>
-                    <p className="mt-1 text-sm text-banc-grey">
+                    <p className="mt-1 text-sm text-banc-muted-readable">
                       These details help us provide a more accurate valuation
                     </p>
                   </div>
@@ -321,7 +321,7 @@ export default function ValuationPage() {
                             onClick={() => handleChange("bedrooms", num)}
                             className={`rounded-[6px] border px-5 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer min-h-[44px] ${
                               formData.bedrooms === num
-                                ? "border-banc-sky bg-banc-sky text-white"
+                                ? "border-banc-sky bg-banc-focus text-white"
                                 : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"
                             }`}
                           >
@@ -333,7 +333,7 @@ export default function ValuationPage() {
 
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-banc-dark">
-                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
                         Looking to sell in...
                       </label>
                       <NativeSelect
@@ -362,10 +362,10 @@ export default function ValuationPage() {
                 >
                   <div>
                     <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <User className="h-5 w-5 text-banc-sky" />
+                      <User className="h-5 w-5 text-banc-focus" />
                       Your contact details
                     </h2>
-                    <p className="mt-1 text-sm text-banc-grey">
+                    <p className="mt-1 text-sm text-banc-muted-readable">
                       We&apos;ll use these to send your valuation report
                     </p>
                   </div>
@@ -398,7 +398,7 @@ export default function ValuationPage() {
 
                     <div className="space-y-2">
                       <label htmlFor="email" className="block text-sm font-medium text-banc-dark">
-                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
                         Email Address *
                       </label>
                       <Input
@@ -412,7 +412,7 @@ export default function ValuationPage() {
 
                     <div className="space-y-2">
                       <label htmlFor="phone" className="block text-sm font-medium text-banc-dark">
-                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
                         Phone Number *
                       </label>
                       <Input
@@ -426,7 +426,7 @@ export default function ValuationPage() {
 
                     <div className="space-y-2">
                       <label htmlFor="message" className="block text-sm font-medium text-banc-dark">
-                        <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-banc-sky" />
+                        <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
                         Additional Information (Optional)
                       </label>
                       <Textarea
@@ -438,7 +438,7 @@ export default function ValuationPage() {
                       />
                     </div>
 
-                    <label htmlFor="consent" className="flex items-start gap-3 text-sm text-banc-grey cursor-pointer">
+                    <label htmlFor="consent" className="flex items-start gap-3 text-sm text-banc-muted-readable cursor-pointer">
                       <input
                         id="consent"
                         type="checkbox"
@@ -467,15 +467,15 @@ export default function ValuationPage() {
                   className="py-8 text-center"
                 >
                   <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/10">
-                    <CheckCircle className="h-10 w-10 text-banc-sky" />
+                    <CheckCircle className="h-10 w-10 text-banc-focus" />
                   </div>
                   <h2 className="mb-4 text-2xl font-semibold text-banc-dark font-serif lg:text-3xl">
                     Thank You!
                   </h2>
-                  <p className="mb-2 text-banc-grey max-w-md mx-auto">
+                  <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">
                     Your valuation request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.
                   </p>
-                  <p className="mb-8 text-banc-grey max-w-md mx-auto">
+                  <p className="mb-8 text-banc-muted-readable max-w-md mx-auto">
                     One of our property experts will contact you within 24 hours to arrange your free, no-obligation valuation.
                   </p>
 
@@ -488,8 +488,8 @@ export default function ValuationPage() {
                         "We provide a detailed market appraisal",
                         "You decide — no obligation",
                       ].map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-banc-grey">
-                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-sky" />
+                        <li key={i} className="flex items-start gap-2 text-sm text-banc-muted-readable">
+                          <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-focus" />
                           {item}
                         </li>
                       ))}
@@ -498,7 +498,7 @@ export default function ValuationPage() {
 
                   <Button
                     onClick={() => (window.location.href = "/")}
-                    className="bg-banc-sky px-8 py-5 text-white hover:bg-banc-sky-dark"
+                    className="bg-banc-focus px-8 py-5 text-white hover:bg-banc-sky-dark"
                   >
                     Return to Homepage
                   </Button>
@@ -510,7 +510,7 @@ export default function ValuationPage() {
             {currentStep < 4 && (
               <div className="mt-8 flex items-center justify-between border-t border-banc-grey/10 pt-6">
                 {currentStep > 1 ? (
-                  <Button variant="ghost" onClick={prevStep} className="text-banc-grey">
+                  <Button variant="ghost" onClick={prevStep} className="text-banc-muted-readable">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                   </Button>
@@ -521,7 +521,7 @@ export default function ValuationPage() {
                 <Button
                   onClick={nextStep}
                   disabled={isSubmitting}
-                  className="bg-banc-sky px-8 py-5 text-white hover:bg-banc-sky-dark disabled:opacity-70"
+                  className="bg-banc-focus px-8 py-5 text-white hover:bg-banc-focus-hover disabled:opacity-70"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
@@ -543,9 +543,9 @@ export default function ValuationPage() {
 
           {/* Privacy note */}
           {currentStep < 4 && (
-            <p className="mt-4 text-center text-sm text-banc-grey">
+            <p className="mt-4 text-center text-sm text-banc-muted-readable">
               By submitting, you agree to our{" "}
-              <a href="/privacy" className="text-banc-sky hover:underline">Privacy Policy</a>.
+              <a href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</a>.
               We never share your details with third parties.
             </p>
           )}

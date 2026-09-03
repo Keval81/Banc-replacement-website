@@ -104,7 +104,7 @@ export default function FAQPage() {
             {/* Category Navigation - Desktop */}
             <div className="hidden lg:block">
               <div className="sticky top-32">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-banc-grey mb-4">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-banc-muted-readable mb-4">
                   Categories
                 </h3>
                 <nav className="space-y-1">
@@ -116,7 +116,7 @@ export default function FAQPage() {
                       href={`#${category.id}`}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl text-banc-dark-mid hover:bg-white hover:shadow-sm transition-all group"
                     >
-                      <CategoryIcon className="h-5 w-5 text-banc-grey group-hover:text-banc-sky transition-colors" />
+                      <CategoryIcon className="h-5 w-5 text-banc-muted-readable group-hover:text-banc-sky transition-colors" />
                       <span className="font-medium">{category.name}</span>
                     </a>
                     );
@@ -133,7 +133,7 @@ export default function FAQPage() {
                 <div key={category.id} id={category.id}>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                      <CategoryIcon className="h-6 w-6 text-banc-sky" />
+                      <CategoryIcon className="h-6 w-6 text-banc-focus" />
                     </div>
                     <h2 className="text-2xl font-semibold text-banc-dark-deep">{category.name}</h2>
                   </div>
@@ -219,13 +219,13 @@ export default function FAQPage() {
                 className="flex items-center gap-4 p-4 bg-white rounded-xl border border-banc-line/30 hover:border-banc-sky/50 hover:shadow-md transition-all group"
               >
                 <div className="w-12 h-12 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                  <item.icon className="h-5 w-5 text-banc-sky" />
+                  <item.icon className="h-5 w-5 text-banc-focus" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-banc-dark-deep group-hover:text-banc-sky transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-banc-grey">{item.desc}</p>
+                  <p className="text-sm text-banc-muted-readable">{item.desc}</p>
                 </div>
                 <ArrowRight className="h-5 w-5 text-banc-line group-hover:text-banc-sky group-hover:translate-x-1 transition-all" />
               </Link>

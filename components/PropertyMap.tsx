@@ -53,7 +53,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   if (!apiKey) {
     return (
       <div className="h-full flex items-center justify-center text-center px-6">
-        <p className="text-banc-grey">
+        <p className="text-banc-muted-readable">
           Map unavailable — set <code>NEXT_PUBLIC_GOOGLE_MAPS_API_KEY</code> to enable the map view.
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
   if (!isLoaded) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-banc-grey">Loading map…</p>
+        <p className="text-banc-muted-readable">Loading map…</p>
       </div>
     );
   }

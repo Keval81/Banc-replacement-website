@@ -20,7 +20,7 @@ export default function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className={`text-sm text-banc-grey ${className}`}
+      className={`text-sm text-banc-muted-readable ${className}`}
     >
       <ol className="flex flex-wrap items-center gap-2">
         {allItems.map((item, index) => {

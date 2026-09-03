@@ -84,7 +84,7 @@ export default function ActivityFeed({
     <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
       <div className="px-5 py-4 border-b border-banc-line flex items-center justify-between">
         <h3 className="font-heading font-semibold text-banc-dark-deep">Activity Feed</h3>
-        <span className="text-sm text-banc-grey">
+        <span className="text-sm text-banc-muted-readable">
           {activities.length} activities
         </span>
       </div>
@@ -93,10 +93,10 @@ export default function ActivityFeed({
         {displayActivities.length === 0 ? (
           <div className="px-5 py-8 text-center">
             <div className="w-12 h-12 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-3">
-              <FileText className="w-6 h-6 text-banc-grey" />
+              <FileText className="w-6 h-6 text-banc-muted-readable" />
             </div>
-            <p className="text-banc-grey">No recent activity</p>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-banc-muted-readable">No recent activity</p>
+            <p className="text-sm text-banc-muted-readable mt-1">
               Activities will appear here as they happen
             </p>
           </div>
@@ -123,7 +123,7 @@ export default function ActivityFeed({
                       <p className="font-medium text-banc-dark-deep">
                         {activity.title}
                       </p>
-                      <p className="text-sm text-banc-grey mt-0.5">
+                      <p className="text-sm text-banc-muted-readable mt-0.5">
                         {activity.description}
                       </p>
 
@@ -131,7 +131,7 @@ export default function ActivityFeed({
                       {activity.metadata && (
                         <div className="mt-2 flex flex-wrap items-center gap-2">
                           {activity.metadata.viewingTime && (
-                            <span className="text-sm text-banc-sky-dark">
+                            <span className="text-sm text-banc-focus">
                               {activity.metadata.viewingTime}
                             </span>
                           )}
@@ -142,14 +142,14 @@ export default function ActivityFeed({
                           )}
                           {getOfferStatusBadge(activity.metadata.offerStatus)}
                           {activity.metadata.senderName && (
-                            <span className="text-sm text-banc-grey">
+                            <span className="text-sm text-banc-muted-readable">
                               From: {activity.metadata.senderName}
                             </span>
                           )}
                         </div>
                       )}
                     </div>
-                    <span className="text-xs text-banc-grey flex-shrink-0">
+                    <span className="text-xs text-banc-muted-readable flex-shrink-0">
                       {getRelativeTime(activity.timestamp)}
                     </span>
                   </div>
@@ -164,7 +164,7 @@ export default function ActivityFeed({
         <div className="px-5 py-3 border-t border-banc-line bg-banc-grey-pale/50">
           <a
             href="#"
-            className="text-sm font-medium text-banc-sky hover:text-banc-sky-dark transition-colors"
+            className="text-sm font-medium text-banc-focus hover:text-banc-sky-dark transition-colors"
           >
             View all activity →
           </a>

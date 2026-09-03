@@ -30,7 +30,7 @@ const SimplePropertyCard = ({ property }: { property: RecommendedPropertyData })
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className="w-full h-full flex items-center justify-center text-banc-grey">
+        <div className="w-full h-full flex items-center justify-center text-banc-muted-readable">
           No Image
         </div>
       )}
@@ -40,8 +40,8 @@ const SimplePropertyCard = ({ property }: { property: RecommendedPropertyData })
         £{(property.price?.amount || 0).toLocaleString()}
       </p>
       <h3 className="font-semibold text-banc-dark mt-1">{property.title}</h3>
-      <p className="text-sm text-banc-grey">{property.address?.town}, {property.address?.postcode}</p>
-      <div className="flex gap-4 mt-3 text-sm text-banc-grey">
+      <p className="text-sm text-banc-muted-readable">{property.address?.town}, {property.address?.postcode}</p>
+      <div className="flex gap-4 mt-3 text-sm text-banc-muted-readable">
         <span>{property.details?.bedrooms} beds</span>
         <span>{property.details?.bathrooms} baths</span>
       </div>
@@ -150,7 +150,7 @@ export default function RecommendedProperties({
             </div>
             <div>
               <h2 className="text-2xl font-bold text-banc-dark">{title}</h2>
-              <p className="text-banc-grey text-sm">
+              <p className="text-banc-muted-readable text-sm">
                 Properties matched to your preferences using AI
               </p>
             </div>

@@ -146,7 +146,7 @@ export default function ApplicantPortalPage() {
           <h1 className="text-2xl font-heading font-bold text-banc-dark-deep">
             Welcome back, {mockUser.name.split(" ")[0]}
           </h1>
-          <p className="text-banc-grey mt-1">
+          <p className="text-banc-muted-readable mt-1">
             Track your property search and viewings
           </p>
         </div>
@@ -162,19 +162,19 @@ export default function ApplicantPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockSavedProperties.length}
             </p>
-            <p className="text-sm text-banc-grey">Saved Properties</p>
+            <p className="text-sm text-banc-muted-readable">Saved Properties</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-banc-sky/10 rounded-lg flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-banc-sky" />
+                <Calendar className="w-5 h-5 text-banc-focus" />
               </div>
             </div>
             <p className="text-2xl font-bold text-banc-dark-deep">
               {upcomingViewings.length}
             </p>
-            <p className="text-sm text-banc-grey">Upcoming Viewings</p>
+            <p className="text-sm text-banc-muted-readable">Upcoming Viewings</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -186,7 +186,7 @@ export default function ApplicantPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockOffers.length}
             </p>
-            <p className="text-sm text-banc-grey">Active Offers</p>
+            <p className="text-sm text-banc-muted-readable">Active Offers</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -198,7 +198,7 @@ export default function ApplicantPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockAlerts.length}
             </p>
-            <p className="text-sm text-banc-grey">Property Alerts</p>
+            <p className="text-sm text-banc-muted-readable">Property Alerts</p>
           </div>
         </div>
 
@@ -214,7 +214,7 @@ export default function ApplicantPortalPage() {
                 </h3>
                 <a
                   href="/portal/applicant/saved"
-                  className="text-sm text-banc-sky hover:text-banc-sky-dark transition-colors"
+                  className="text-sm text-banc-focus hover:text-banc-sky-dark transition-colors"
                 >
                   View All →
                 </a>
@@ -237,7 +237,7 @@ export default function ApplicantPortalPage() {
                             <h4 className="font-medium text-banc-dark-deep truncate">
                               {property.address}
                             </h4>
-                            <p className="text-lg font-semibold text-banc-sky">
+                            <p className="text-lg font-semibold text-banc-focus">
                               {property.price}
                             </p>
                           </div>
@@ -245,7 +245,7 @@ export default function ApplicantPortalPage() {
                             <Heart className="w-5 h-5 fill-current" />
                           </button>
                         </div>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-banc-grey">
+                        <div className="flex items-center gap-4 mt-2 text-sm text-banc-muted-readable">
                           <span className="flex items-center gap-1">
                             <Bed className="w-4 h-4" />
                             {property.bedrooms}
@@ -256,7 +256,7 @@ export default function ApplicantPortalPage() {
                           </span>
                         </div>
                         {property.notes && (
-                          <p className="mt-2 text-sm text-banc-grey italic">
+                          <p className="mt-2 text-sm text-banc-muted-readable italic">
                             &ldquo;{property.notes}&rdquo;
                           </p>
                         )}
@@ -275,7 +275,7 @@ export default function ApplicantPortalPage() {
                 </h3>
                 <a
                   href="/portal/applicant/viewings"
-                  className="text-sm text-banc-sky hover:text-banc-sky-dark transition-colors"
+                  className="text-sm text-banc-focus hover:text-banc-sky-dark transition-colors"
                 >
                   View All →
                 </a>
@@ -284,10 +284,10 @@ export default function ApplicantPortalPage() {
                 {upcomingViewings.length === 0 ? (
                   <div className="p-8 text-center">
                     <Calendar className="w-12 h-12 text-banc-line mx-auto mb-3" />
-                    <p className="text-banc-grey">No upcoming viewings</p>
+                    <p className="text-banc-muted-readable">No upcoming viewings</p>
                     <Link
                       href="/sales/properties"
-                      className="inline-block mt-3 text-banc-sky hover:underline"
+                      className="inline-block mt-3 text-banc-focus hover:underline"
                     >
                       Browse Properties →
                     </Link>
@@ -314,7 +314,7 @@ export default function ApplicantPortalPage() {
                             {viewing.propertyAddress}
                           </h4>
                           <div className="flex items-center gap-4 mt-2 text-sm">
-                            <span className="flex items-center gap-1 text-banc-grey">
+                            <span className="flex items-center gap-1 text-banc-muted-readable">
                               <Calendar className="w-4 h-4" />
                               {new Date(viewing.date).toLocaleDateString("en-GB", {
                                 weekday: "short",
@@ -322,13 +322,13 @@ export default function ApplicantPortalPage() {
                                 month: "short",
                               })}
                             </span>
-                            <span className="flex items-center gap-1 text-banc-sky">
+                            <span className="flex items-center gap-1 text-banc-focus">
                               <Eye className="w-4 h-4" />
                               {viewing.time}
                             </span>
                           </div>
                           {viewing.agentName && (
-                            <p className="mt-2 text-sm text-banc-grey">
+                            <p className="mt-2 text-sm text-banc-muted-readable">
                               Agent: {viewing.agentName}
                             </p>
                           )}
@@ -363,7 +363,7 @@ export default function ApplicantPortalPage() {
                 </h3>
                 <a
                   href="/portal/applicant/alerts"
-                  className="text-sm text-banc-sky hover:text-banc-sky-dark"
+                  className="text-sm text-banc-focus hover:text-banc-sky-dark"
                 >
                   Manage →
                 </a>
@@ -384,17 +384,17 @@ export default function ApplicantPortalPage() {
                         }`}
                       />
                     </div>
-                    <p className="text-sm text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable">
                       {alert.locations.join(", ")}
                     </p>
-                    <p className="text-sm text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable">
                       £{(alert.minPrice || 0).toLocaleString()} - £
                       {(alert.maxPrice || 0).toLocaleString()}
                     </p>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-4 py-2 px-4 border border-banc-sky text-banc-sky rounded-lg hover:bg-banc-sky/5 transition-colors text-sm font-medium">
+              <button className="w-full mt-4 py-2 px-4 border border-banc-sky text-banc-focus rounded-lg hover:bg-banc-sky/5 transition-colors text-sm font-medium">
                 + Create New Alert
               </button>
             </div>
@@ -410,30 +410,30 @@ export default function ApplicantPortalPage() {
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Home className="w-5 h-5 text-banc-sky" />
+                    <Home className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Browse Properties</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </Link>
                 <a
                   href="/sales/buyers-guide"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-banc-sky" />
+                    <MapPin className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Buyer&apos;s Guide</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/contact"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <MessageSquare className="w-5 h-5 text-banc-sky" />
+                    <MessageSquare className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Contact Agent</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
               </div>
             </div>

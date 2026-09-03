@@ -142,7 +142,7 @@ export default function BecomePartnerPage() {
                 href="mailto:nitesh@bancproperty.com,andrew@bancproperty.com?subject=Partner Agent Application"
                 className="group"
               >
-                <Button className="bg-banc-sky px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-sky-dark hover:shadow-lg hover:shadow-banc-sky/25">
+                <Button className="bg-banc-focus px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-focus-hover hover:shadow-lg hover:shadow-banc-sky/25">
                   Apply Now
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
@@ -169,13 +169,13 @@ export default function BecomePartnerPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             {/* Content */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
                 The Opportunity
               </p>
               <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
                 Run Your Own Business with Professional Support
               </h2>
-              <div className="mt-6 space-y-4 text-lg leading-relaxed text-banc-grey">
+              <div className="mt-6 space-y-4 text-lg leading-relaxed text-banc-muted-readable">
                 <p>
                   We are looking for local business partners in{" "}
                   <strong className="text-banc-dark-deep">North London</strong>,{" "}
@@ -273,13 +273,13 @@ export default function BecomePartnerPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
               How It Works
             </p>
             <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
               What You Handle vs What We Handle
             </h2>
-            <p className="mt-4 text-lg text-banc-grey">
+            <p className="mt-4 text-lg text-banc-muted-readable">
               Our partner agents concentrate on the tasks that estate agents love,
               whilst we handle the back-end operations
             </p>
@@ -306,7 +306,7 @@ export default function BecomePartnerPage() {
                 <ul className="space-y-4">
                   {youHandle.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-sky" />
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" />
                       <span className="text-banc-dark-mid">{item}</span>
                     </li>
                   ))}
@@ -319,7 +319,7 @@ export default function BecomePartnerPage() {
               <div className="bg-banc-sky px-6 py-5">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
-                    <Shield className="h-5 w-5 text-banc-sky" />
+                    <Shield className="h-5 w-5 text-banc-focus" />
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-white">
                     We Handle
@@ -333,7 +333,7 @@ export default function BecomePartnerPage() {
                 <ul className="space-y-4">
                   {weHandle.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-sky" />
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" />
                       <span className="text-banc-dark-mid">{item}</span>
                     </li>
                   ))}
@@ -403,13 +403,13 @@ export default function BecomePartnerPage() {
           <div className="grid items-center gap-12 lg:grid-cols-2">
             {/* Content */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
+              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
                 Locations
               </p>
               <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
                 Currently Recruiting In
               </h2>
-              <p className="mt-4 text-lg text-banc-grey">
+              <p className="mt-4 text-lg text-banc-muted-readable">
                 We are actively seeking partners in these key regions
               </p>
 
@@ -420,7 +420,7 @@ export default function BecomePartnerPage() {
                     className="flex items-center gap-4 rounded-xl border border-banc-dark-deep/10 bg-white p-4 shadow-sm transition-all duration-300 hover:border-banc-sky/30 hover:shadow-md"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky/10">
-                      <Target className="h-5 w-5 text-banc-sky" />
+                      <Target className="h-5 w-5 text-banc-focus" />
                     </div>
                     <span className="font-heading text-lg font-medium text-banc-dark-deep">
                       {region}
@@ -502,7 +502,7 @@ export default function BecomePartnerPage() {
               href="mailto:nitesh@bancproperty.com?subject=Partner Agent Application"
               className="w-full sm:w-auto"
             >
-              <Button className="w-full bg-banc-sky px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-sky-dark hover:shadow-lg hover:shadow-banc-sky/25 sm:w-auto">
+              <Button className="w-full bg-banc-focus px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-focus-hover hover:shadow-lg hover:shadow-banc-sky/25 sm:w-auto">
                 <Mail className="mr-2 h-5 w-5" />
                 Email Nitesh
               </Button>

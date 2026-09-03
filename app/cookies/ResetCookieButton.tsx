@@ -10,7 +10,7 @@ export default function ResetCookieButton() {
           window.location.reload();
         }
       }}
-      className="rounded-xl bg-banc-sky px-6 py-3 font-medium text-white transition-colors hover:bg-banc-sky-dark"
+      className="rounded-xl bg-banc-focus px-6 py-3 font-medium text-white transition-colors hover:bg-banc-sky-dark"
     >
       Reset Cookie Preferences
     </button>

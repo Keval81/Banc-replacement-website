@@ -174,7 +174,7 @@ export default function ReviewsPage() {
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 rounded-full bg-banc-sky/10 text-banc-sky text-sm font-medium mb-4">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-banc-sky/10 text-banc-focus text-sm font-medium mb-4">
               Client Testimonials
             </span>
             <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
@@ -211,7 +211,7 @@ export default function ReviewsPage() {
                   </h3>
                   
                   {/* Testimonial Text */}
-                  <blockquote className="text-banc-grey leading-relaxed text-base">
+                  <blockquote className="text-banc-muted-readable leading-relaxed text-base">
                     &quot;{review.text}&quot;
                   </blockquote>
                   
@@ -219,8 +219,8 @@ export default function ReviewsPage() {
                   <div className="mt-6 pt-6 border-t border-banc-line">
                     <p className="font-semibold text-banc-dark-deep">{review.name}</p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <MapPin className="h-3.5 w-3.5 text-banc-sky" />
-                      <p className="text-sm text-banc-grey">{review.location}</p>
+                      <MapPin className="h-3.5 w-3.5 text-banc-focus" />
+                      <p className="text-sm text-banc-muted-readable">{review.location}</p>
                     </div>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ export default function ReviewsPage() {
 
               <a
                 href="/valuation"
-                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-banc-sky px-8 py-4 text-white font-semibold hover:bg-banc-sky-dark transition-colors duration-200 shadow-lg shadow-banc-sky/25 hover:shadow-banc-sky/40"
+                className="mt-8 inline-flex items-center gap-3 rounded-xl bg-banc-focus px-8 py-4 text-white font-semibold hover:bg-banc-focus-hover transition-colors duration-200 shadow-lg shadow-banc-sky/25 hover:shadow-banc-sky/40"
               >
                 Request a Valuation
               </a>

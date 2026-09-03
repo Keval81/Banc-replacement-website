@@ -20,7 +20,7 @@ export default function MatchScore({
   const getColor = () => {
     if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
     if (score >= 60) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-banc-grey bg-banc-grey-pale border-banc-grey/20';
+    return 'text-banc-muted-readable bg-banc-grey-pale border-banc-grey/20';
   };
 
   const getSizeClasses = () => {
@@ -50,7 +50,7 @@ export default function MatchScore({
             fill="none"
             stroke="currentColor"
             strokeWidth="8"
-            className="text-banc-grey/20"
+            className="text-banc-muted-readable/20"
           />
           {/* Progress circle */}
           <motion.circle
@@ -65,7 +65,7 @@ export default function MatchScore({
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
             transition={{ duration: 1, ease: 'easeOut' }}
-            className={score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-banc-grey'}
+            className={score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-banc-muted-readable'}
           />
         </svg>
         
@@ -75,7 +75,7 @@ export default function MatchScore({
             {score}%
           </span>
           {showLabel && size !== 'sm' && (
-            <span className="text-[10px] text-banc-grey">Match</span>
+            <span className="text-[10px] text-banc-muted-readable">Match</span>
           )}
         </div>
 

@@ -119,7 +119,7 @@ export default function CalendarPicker({
           className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
           aria-label="Previous month"
         >
-          <ChevronLeft className="w-5 h-5 text-banc-grey" />
+          <ChevronLeft className="w-5 h-5 text-banc-muted-readable" />
         </button>
         <h3 className="font-heading font-semibold text-banc-dark-deep">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
@@ -129,7 +129,7 @@ export default function CalendarPicker({
           className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
           aria-label="Next month"
         >
-          <ChevronRight className="w-5 h-5 text-banc-grey" />
+          <ChevronRight className="w-5 h-5 text-banc-muted-readable" />
         </button>
       </div>
 
@@ -138,7 +138,7 @@ export default function CalendarPicker({
         {dayNames.map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-xs font-medium text-banc-grey uppercase"
+            className="py-2 text-center text-xs font-medium text-banc-muted-readable uppercase"
           >
             {day}
           </div>
@@ -172,7 +172,7 @@ export default function CalendarPicker({
                 ${disabled ? "text-banc-line cursor-not-allowed" : ""}
                 ${
                   selected
-                    ? "bg-banc-sky text-white font-medium"
+                    ? "bg-banc-focus text-white font-medium"
                     : !disabled
                     ? "hover:bg-banc-grey-pale text-banc-dark-deep"
                     : ""

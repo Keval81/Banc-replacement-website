@@ -36,10 +36,10 @@ function SoldCard({ property }: { property: SoldProperty }) {
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-banc-dark truncate">{property.address}</p>
-        <p className="text-xs text-banc-grey">{property.location}</p>
+        <p className="text-xs text-banc-muted-readable">{property.location}</p>
         <div className="flex items-center gap-3 mt-1">
-          <span className="text-sm font-bold text-banc-sky">{property.price}</span>
-          <span className="text-[10px] text-banc-grey">{property.daysOnMarket} days</span>
+          <span className="text-sm font-bold text-banc-focus">{property.price}</span>
+          <span className="text-[10px] text-banc-muted-readable">{property.daysOnMarket} days</span>
         </div>
       </div>
     </div>
@@ -52,7 +52,7 @@ export default function SoldBanner() {
   return (
     <section className="bg-banc-grey-pale py-10 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 mb-6">
-        <p className="text-sm uppercase tracking-[0.3em] text-banc-grey mb-2">Track Record</p>
+        <p className="text-sm uppercase tracking-[0.3em] text-banc-muted-readable mb-2">Track Record</p>
         <h2 className="text-2xl font-medium text-banc-dark sm:text-3xl font-serif">
           Recently Sold
         </h2>

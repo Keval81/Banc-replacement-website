@@ -74,7 +74,7 @@ export default function LettingsPropertySearch({ variant = "section" }: Lettings
         >
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <p className="text-sm uppercase tracking-[0.3em] text-banc-grey font-heading">
+              <p className="text-sm uppercase tracking-[0.3em] text-banc-muted-readable font-heading">
                 Search Rentals
               </p>
               <h2 className="text-2xl font-semibold text-banc-dark-deep sm:text-3xl font-heading">

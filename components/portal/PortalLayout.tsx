@@ -56,7 +56,7 @@ export default function PortalLayout({
                 <p className="font-heading font-semibold text-banc-dark-deep text-lg leading-tight">
                   Banc Property
                 </p>
-                <p className="text-xs text-banc-grey">{getPortalTitle()}</p>
+                <p className="text-xs text-banc-muted-readable">{getPortalTitle()}</p>
               </div>
             </div>
           </div>
@@ -68,9 +68,9 @@ export default function PortalLayout({
               className="relative p-2 rounded-lg hover:bg-banc-grey-pale transition-colors"
               aria-label="Notifications"
             >
-              <Bell className="w-5 h-5 text-banc-grey" />
+              <Bell className="w-5 h-5 text-banc-muted-readable" />
               {notifications > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-banc-sky text-white text-xs font-medium rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-banc-focus text-white text-xs font-medium rounded-full flex items-center justify-center">
                   {notifications > 9 ? "9+" : notifications}
                 </span>
               )}
@@ -97,9 +97,9 @@ export default function PortalLayout({
                   <p className="text-sm font-medium text-banc-dark-deep leading-tight">
                     {user.name}
                   </p>
-                  <p className="text-xs text-banc-grey capitalize">{user.role}</p>
+                  <p className="text-xs text-banc-muted-readable capitalize">{user.role}</p>
                 </div>
-                <ChevronDown className="w-4 h-4 text-banc-grey hidden sm:block" />
+                <ChevronDown className="w-4 h-4 text-banc-muted-readable hidden sm:block" />
               </button>
 
               {/* Profile Dropdown */}
@@ -112,7 +112,7 @@ export default function PortalLayout({
                   <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-xl shadow-lg border border-banc-line z-50 overflow-hidden">
                     <div className="p-4 border-b border-banc-line">
                       <p className="font-medium text-banc-dark-deep">{user.name}</p>
-                      <p className="text-sm text-banc-grey">{user.email}</p>
+                      <p className="text-sm text-banc-muted-readable">{user.email}</p>
                     </div>
                     <nav className="p-2">
                       <a

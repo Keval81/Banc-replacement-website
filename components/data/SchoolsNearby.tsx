@@ -105,7 +105,7 @@ export function SchoolsNearby({
           </div>
           <div>
             <h3 className="font-semibold text-banc-dark">Nearby Schools</h3>
-            <p className="text-sm text-banc-grey">DfE and Ofsted data</p>
+            <p className="text-sm text-banc-muted-readable">DfE and Ofsted data</p>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@ export function SchoolsNearby({
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-banc-grey" />
+            <Loader2 className="h-8 w-8 animate-spin text-banc-muted-readable" />
           </div>
         ) : error ? (
           <div className="flex items-center justify-center py-12 text-red-500">
@@ -163,8 +163,8 @@ export function SchoolsNearby({
             {error}
           </div>
         ) : filteredSchools.length === 0 ? (
-          <div className="text-center py-12 text-banc-grey">
-            <School className="h-12 w-12 mx-auto mb-3 text-banc-grey" />
+          <div className="text-center py-12 text-banc-muted-readable">
+            <School className="h-12 w-12 mx-auto mb-3 text-banc-muted-readable" />
             <p>No schools found</p>
             {!initialPostcode && <p className="text-sm mt-1">Enter a postcode to search</p>}
           </div>
@@ -187,8 +187,8 @@ export function SchoolsNearby({
                         {school.ofstedRating}
                       </Badge>
                     </div>
-                    <p className="text-sm text-banc-grey mt-1">{school.address}</p>
-                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-banc-grey">
+                    <p className="text-sm text-banc-muted-readable mt-1">{school.address}</p>
+                    <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-banc-muted-readable">
                       <span className="flex items-center gap-1">
                         <GraduationCap className="h-3.5 w-3.5" />
                         {TYPE_LABELS[school.type] || school.type}
@@ -221,28 +221,28 @@ export function SchoolsNearby({
                   >
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <p className="text-banc-grey">Age Range</p>
+                        <p className="text-banc-muted-readable">Age Range</p>
                         <p className="font-medium">{school.ageRange.min} - {school.ageRange.max} years</p>
                       </div>
                       <div>
-                        <p className="text-banc-grey">Gender</p>
+                        <p className="text-banc-muted-readable">Gender</p>
                         <p className="font-medium capitalize">{school.gender}</p>
                       </div>
                       {school.religion && (
                         <div>
-                          <p className="text-banc-grey">Religion</p>
+                          <p className="text-banc-muted-readable">Religion</p>
                           <p className="font-medium">{school.religion}</p>
                         </div>
                       )}
                       {school.hasSixthForm && (
                         <div>
-                          <p className="text-banc-grey">Sixth Form</p>
+                          <p className="text-banc-muted-readable">Sixth Form</p>
                           <p className="font-medium">Yes</p>
                         </div>
                       )}
                       {school.ofstedDate && (
                         <div>
-                          <p className="text-banc-grey">Last Inspection</p>
+                          <p className="text-banc-muted-readable">Last Inspection</p>
                           <p className="font-medium flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
                             {new Date(school.ofstedDate).toLocaleDateString('en-GB')}
@@ -273,7 +273,7 @@ export function SchoolsNearby({
 
       {/* Footer */}
       {schools.length > 0 && (
-        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-grey text-center">
+        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-muted-readable text-center">
           Data from Department for Education and Ofsted
         </div>
       )}

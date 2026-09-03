@@ -25,14 +25,14 @@ export default function CookiePolicyPage() {
             <h1 className="text-4xl font-semibold text-banc-dark-deep lg:text-5xl">
               Cookie Policy
             </h1>
-            <p className="mt-4 text-lg text-banc-grey">
+            <p className="mt-4 text-lg text-banc-muted-readable">
               Last updated: February 2026
             </p>
           </div>
 
           {/* Content */}
           <div className="rounded-2xl bg-white p-8 shadow-lg lg:p-12">
-            <div className="prose prose-lg max-w-none text-banc-grey">
+            <div className="prose prose-lg max-w-none text-banc-muted-readable">
               <section className="mb-10">
                 <h2 className="text-2xl font-semibold text-banc-dark-deep">1. What Are Cookies</h2>
                 <p className="mt-4">
@@ -209,7 +209,7 @@ export default function CookiePolicyPage() {
                       href="https://support.google.com/chrome/answer/95647" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       Google Chrome
                     </a>
@@ -219,7 +219,7 @@ export default function CookiePolicyPage() {
                       href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       Mozilla Firefox
                     </a>
@@ -229,7 +229,7 @@ export default function CookiePolicyPage() {
                       href="https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       Safari
                     </a>
@@ -239,7 +239,7 @@ export default function CookiePolicyPage() {
                       href="https://support.microsoft.com/en-us/help/17442/windows-internet-explorer-delete-manage-cookies" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       Microsoft Edge
                     </a>
@@ -263,7 +263,7 @@ export default function CookiePolicyPage() {
                       href="https://www.allaboutcookies.org/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       All About Cookies
                     </a>
@@ -273,7 +273,7 @@ export default function CookiePolicyPage() {
                       href="https://www.aboutcookies.org/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       About Cookies
                     </a>
@@ -283,7 +283,7 @@ export default function CookiePolicyPage() {
                       href="https://ico.org.uk/for-the-public/online/cookies/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-sky hover:underline"
+                      className="text-banc-focus hover:underline"
                     >
                       ICO - Cookies Guidance
                     </a>
@@ -315,10 +315,10 @@ export default function CookiePolicyPage() {
                   <p>Cuffley, Hertfordshire</p>
                   <p>EN6 4HU</p>
                   <p className="mt-3">
-                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-sky hover:underline">info@bancproperty.com</a>
+                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-focus hover:underline">info@bancproperty.com</a>
                   </p>
                   <p>
-                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-sky hover:underline">{BANC_CONTACT.displayPhone}</a>
+                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">{BANC_CONTACT.displayPhone}</a>
                   </p>
                 </div>
               </section>

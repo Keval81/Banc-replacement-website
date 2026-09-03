@@ -38,7 +38,7 @@ export default function ComparePage() {
             </div>
             <div className="flex items-center gap-2">
               <Link href="/search">
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                <Button variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10">
                   <Plus className="w-4 h-4 mr-2" />
                   Add More
                 </Button>
@@ -47,7 +47,7 @@ export default function ComparePage() {
                 <Button 
                   variant="outline" 
                   onClick={clearComparison}
-                  className="border-white/20 text-white hover:bg-white/10"
+                  className="bg-transparent border-white/20 text-white hover:bg-white/10"
                 >
                   Clear All
                 </Button>
@@ -66,9 +66,9 @@ export default function ComparePage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Scale className="w-16 h-16 text-banc-grey mx-auto mb-4" />
+              <Scale className="w-16 h-16 text-banc-muted-readable mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">No properties to compare</h2>
-              <p className="text-banc-grey mb-6 max-w-md mx-auto">
+              <p className="text-banc-muted-readable mb-6 max-w-md mx-auto">
                 Select properties from the search page to compare them side-by-side. 
                 You can compare up to 3 properties at once.
               </p>
@@ -84,9 +84,9 @@ export default function ComparePage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-16 bg-banc-grey-pale rounded-2xl"
             >
-              <Scale className="w-16 h-16 text-banc-grey mx-auto mb-4" />
+              <Scale className="w-16 h-16 text-banc-muted-readable mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Add more properties</h2>
-              <p className="text-banc-grey mb-6 max-w-md mx-auto">
+              <p className="text-banc-muted-readable mb-6 max-w-md mx-auto">
                 You have 1 property selected. Add at least one more property to see a comparison.
               </p>
               <Link href="/search">
@@ -118,7 +118,7 @@ export default function ComparePage() {
 
               {/* Bottom CTA */}
               <div className="mt-8 text-center">
-                <p className="text-banc-grey mb-4">
+                <p className="text-banc-muted-readable mb-4">
                   Want to see more options? Continue browsing or adjust your search criteria.
                 </p>
                 <div className="flex justify-center gap-3">

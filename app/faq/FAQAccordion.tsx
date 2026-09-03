@@ -37,7 +37,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
           >
             <span className={cn(
               "font-semibold text-banc-dark-deep pr-4",
-              openIndex === index && "text-banc-sky"
+              openIndex === index && "text-banc-focus"
             )}>
               {item.question}
             </span>
@@ -46,7 +46,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
               openIndex === index && "bg-banc-sky rotate-180"
             )}>
               <ChevronDown className={cn(
-                "h-5 w-5 text-banc-grey transition-colors",
+                "h-5 w-5 text-banc-muted-readable transition-colors",
                 openIndex === index && "text-white"
               )} />
             </div>
@@ -61,7 +61,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
             <div className="overflow-hidden">
               <div className="px-5 pb-5">
                 <div className="pt-2 border-t border-banc-line/20">
-                  <p className="text-banc-grey leading-relaxed pt-4">
+                  <p className="text-banc-muted-readable leading-relaxed pt-4">
                     {item.answer}
                   </p>
                 </div>

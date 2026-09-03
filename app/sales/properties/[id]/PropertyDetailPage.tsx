@@ -125,7 +125,7 @@ function PropertyDetailLoader({
 
       {state.phase === "loading" && (
         <div className="flex min-h-[60vh] flex-col items-center justify-center">
-          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-sky motion-reduce:animate-none" />
+          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-focus motion-reduce:animate-none" />
           <p className="text-banc-muted-readable">Loading property…</p>
         </div>
       )}

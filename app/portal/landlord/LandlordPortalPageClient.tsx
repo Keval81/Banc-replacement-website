@@ -170,7 +170,7 @@ const getPriorityColor = (priority: MaintenanceRequest["priority"]) => {
     case "medium":
       return "text-blue-600";
     default:
-      return "text-banc-grey";
+      return "text-banc-muted-readable";
   }
 };
 
@@ -198,7 +198,7 @@ export default function LandlordPortalPage() {
           <h1 className="text-2xl font-heading font-bold text-banc-dark-deep">
             Welcome back, {mockUser.name.split(" ")[0]}
           </h1>
-          <p className="text-banc-grey mt-1">
+          <p className="text-banc-muted-readable mt-1">
             Manage your property portfolio
           </p>
         </div>
@@ -208,13 +208,13 @@ export default function LandlordPortalPage() {
           <div className="bg-white rounded-xl border border-banc-line p-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-banc-sky/10 rounded-lg flex items-center justify-center">
-                <Home className="w-5 h-5 text-banc-sky" />
+                <Home className="w-5 h-5 text-banc-focus" />
               </div>
             </div>
             <p className="text-2xl font-bold text-banc-dark-deep">
               {mockProperties.length}
             </p>
-            <p className="text-sm text-banc-grey">Properties</p>
+            <p className="text-sm text-banc-muted-readable">Properties</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -224,7 +224,7 @@ export default function LandlordPortalPage() {
               </div>
             </div>
             <p className="text-2xl font-bold text-banc-dark-deep">{activeTenancies}</p>
-            <p className="text-sm text-banc-grey">Active Tenancies</p>
+            <p className="text-sm text-banc-muted-readable">Active Tenancies</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -236,7 +236,7 @@ export default function LandlordPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {formatCurrency(totalMonthlyIncome)}
             </p>
-            <p className="text-sm text-banc-grey">Monthly Income</p>
+            <p className="text-sm text-banc-muted-readable">Monthly Income</p>
           </div>
 
           <div className="bg-white rounded-xl border border-banc-line p-4">
@@ -248,7 +248,7 @@ export default function LandlordPortalPage() {
             <p className="text-2xl font-bold text-banc-dark-deep">
               {pendingMaintenance.length}
             </p>
-            <p className="text-sm text-banc-grey">Open Requests</p>
+            <p className="text-sm text-banc-muted-readable">Open Requests</p>
           </div>
         </div>
 
@@ -303,8 +303,8 @@ export default function LandlordPortalPage() {
                   <h3 className="font-medium text-banc-dark-deep mt-3">
                     {property.address}
                   </h3>
-                  <p className="text-lg font-semibold text-banc-sky">
-                    {formatCurrency(property.monthlyRent)} <span className="text-sm font-normal text-banc-grey">pcm</span>
+                  <p className="text-lg font-semibold text-banc-focus">
+                    {formatCurrency(property.monthlyRent)} <span className="text-sm font-normal text-banc-muted-readable">pcm</span>
                   </p>
                 </div>
 
@@ -314,13 +314,13 @@ export default function LandlordPortalPage() {
                     {/* Tenant Info */}
                     {property.tenant && (
                       <div className="p-3 bg-banc-grey-pale rounded-lg">
-                        <h4 className="text-sm font-medium text-banc-grey mb-2">
+                        <h4 className="text-sm font-medium text-banc-muted-readable mb-2">
                           Current Tenant
                         </h4>
                         <p className="font-medium text-banc-dark-deep">
                           {property.tenant.name}
                         </p>
-                        <p className="text-sm text-banc-grey">
+                        <p className="text-sm text-banc-muted-readable">
                           Tenancy ends: {" "}
                           {new Date(property.tenant.tenancyEnd).toLocaleDateString("en-GB", {
                             month: "short",
@@ -333,11 +333,11 @@ export default function LandlordPortalPage() {
                     {/* Next Inspection */}
                     {property.nextInspectionDate && (
                       <div className="p-3 bg-banc-grey-pale rounded-lg">
-                        <h4 className="text-sm font-medium text-banc-grey mb-2">
+                        <h4 className="text-sm font-medium text-banc-muted-readable mb-2">
                           Next Inspection
                         </h4>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-banc-sky" />
+                          <Calendar className="w-4 h-4 text-banc-focus" />
                           <span className="font-medium text-banc-dark-deep">
                             {new Date(property.nextInspectionDate).toLocaleDateString("en-GB", {
                               day: "numeric",
@@ -352,7 +352,7 @@ export default function LandlordPortalPage() {
 
                   {/* Compliance Status */}
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium text-banc-grey mb-2">
+                    <h4 className="text-sm font-medium text-banc-muted-readable mb-2">
                       Compliance Status
                     </h4>
                     <div className="flex flex-wrap gap-2">
@@ -377,7 +377,7 @@ export default function LandlordPortalPage() {
                   {/* Maintenance Requests */}
                   {property.maintenanceRequests.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="text-sm font-medium text-banc-grey mb-2">
+                      <h4 className="text-sm font-medium text-banc-muted-readable mb-2">
                         Maintenance Requests
                       </h4>
                       <div className="space-y-2">
@@ -387,7 +387,7 @@ export default function LandlordPortalPage() {
                             className="flex items-center justify-between p-2 bg-banc-grey-pale rounded-lg"
                           >
                             <div className="flex items-center gap-2">
-                              <Wrench className="w-4 h-4 text-banc-grey" />
+                              <Wrench className="w-4 h-4 text-banc-muted-readable" />
                               <span className="text-sm text-banc-dark-deep">
                                 {request.title}
                               </span>
@@ -413,7 +413,7 @@ export default function LandlordPortalPage() {
                   {/* Income Graph (if available) */}
                   {property.incomeHistory.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="text-sm font-medium text-banc-grey mb-2">
+                      <h4 className="text-sm font-medium text-banc-muted-readable mb-2">
                         Recent Income
                       </h4>
                       <div className="h-24 flex items-end gap-1">
@@ -432,7 +432,7 @@ export default function LandlordPortalPage() {
                                 style={{ height: `${height}%` }}
                                 title={`${income.month}: ${formatCurrency(income.netIncome)}`}
                               />
-                              <span className="text-[10px] text-banc-grey">
+                              <span className="text-[10px] text-banc-muted-readable">
                                 {income.month.split(" ")[0]}
                               </span>
                             </div>
@@ -465,40 +465,40 @@ export default function LandlordPortalPage() {
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Wrench className="w-5 h-5 text-banc-sky" />
+                    <Wrench className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Report Maintenance</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/portal/landlord/compliance"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-banc-sky" />
+                    <FileText className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">View Compliance</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/portal/landlord/financials"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <TrendingUp className="w-5 h-5 text-banc-sky" />
+                    <TrendingUp className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Financial Reports</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
                 <a
                   href="/contact"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-banc-grey-pale transition-colors"
                 >
                   <span className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-banc-sky" />
+                    <Users className="w-5 h-5 text-banc-focus" />
                     <span className="text-banc-dark-deep">Contact Property Manager</span>
                   </span>
-                  <ArrowUpRight className="w-4 h-4 text-banc-grey" />
+                  <ArrowUpRight className="w-4 h-4 text-banc-muted-readable" />
                 </a>
               </div>
             </div>
@@ -519,7 +519,7 @@ export default function LandlordPortalPage() {
               </div>
               <a
                 href="tel:+441707000000"
-                className="block w-full py-2 px-4 bg-white text-banc-sky-dark text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
+                className="block w-full py-2 px-4 bg-white text-banc-focus text-center rounded-lg font-medium hover:bg-white/90 transition-colors"
               >
                 Call Manager
               </a>

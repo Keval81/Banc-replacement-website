@@ -37,12 +37,12 @@ export default function DocumentVault({
       case "epc":
       case "floorplan":
       case "brochure":
-        return <Image className="w-6 h-6 text-banc-sky" />;
+        return <Image className="w-6 h-6 text-banc-focus" />;
       case "contract":
       case "id":
         return <FileCheck className="w-6 h-6 text-green-500" />;
       default:
-        return <FileText className="w-6 h-6 text-banc-grey" />;
+        return <FileText className="w-6 h-6 text-banc-muted-readable" />;
     }
   };
 
@@ -94,7 +94,7 @@ export default function DocumentVault({
           <h3 className="font-heading font-semibold text-banc-dark-deep">
             Document Vault
           </h3>
-          <p className="text-sm text-banc-grey mt-0.5">
+          <p className="text-sm text-banc-muted-readable mt-0.5">
             {documents.length} document{documents.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -112,12 +112,12 @@ export default function DocumentVault({
         >
           <label className="flex flex-col items-center justify-center cursor-pointer">
             <div className="w-12 h-12 bg-banc-sky/10 rounded-full flex items-center justify-center mb-3">
-              <Upload className="w-6 h-6 text-banc-sky" />
+              <Upload className="w-6 h-6 text-banc-focus" />
             </div>
             <p className="text-sm font-medium text-banc-dark-deep">
               Click to upload or drag and drop
             </p>
-            <p className="text-xs text-banc-grey mt-1">
+            <p className="text-xs text-banc-muted-readable mt-1">
               PDF, JPG, PNG up to {maxFileSize}MB
             </p>
             <input
@@ -136,10 +136,10 @@ export default function DocumentVault({
         {documents.length === 0 ? (
           <div className="px-5 py-8 text-center">
             <div className="w-12 h-12 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-3">
-              <File className="w-6 h-6 text-banc-grey" />
+              <File className="w-6 h-6 text-banc-muted-readable" />
             </div>
-            <p className="text-banc-grey">No documents yet</p>
-            <p className="text-sm text-banc-grey mt-1">
+            <p className="text-banc-muted-readable">No documents yet</p>
+            <p className="text-sm text-banc-muted-readable mt-1">
               Upload documents to store them securely
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function DocumentVault({
                   <p className="font-medium text-banc-dark-deep truncate">
                     {doc.name}
                   </p>
-                  <div className="flex items-center gap-2 text-xs text-banc-grey">
+                  <div className="flex items-center gap-2 text-xs text-banc-muted-readable">
                     <span className="px-2 py-0.5 bg-banc-grey-pale rounded-full">
                       {documentTypes[doc.type]}
                     </span>
@@ -171,7 +171,7 @@ export default function DocumentVault({
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => setViewDocument(doc)}
-                    className="p-2 rounded-lg hover:bg-banc-grey-pale text-banc-grey hover:text-banc-sky transition-colors"
+                    className="p-2 rounded-lg hover:bg-banc-grey-pale text-banc-muted-readable hover:text-banc-sky transition-colors"
                     title="View"
                   >
                     <Eye className="w-4 h-4" />
@@ -179,7 +179,7 @@ export default function DocumentVault({
                   <a
                     href={doc.url}
                     download
-                    className="p-2 rounded-lg hover:bg-banc-grey-pale text-banc-grey hover:text-banc-sky transition-colors"
+                    className="p-2 rounded-lg hover:bg-banc-grey-pale text-banc-muted-readable hover:text-banc-sky transition-colors"
                     title="Download"
                   >
                     <Download className="w-4 h-4" />
@@ -187,7 +187,7 @@ export default function DocumentVault({
                   {onDelete && (
                     <button
                       onClick={() => onDelete(doc.id)}
-                      className="p-2 rounded-lg hover:bg-red-50 text-banc-grey hover:text-red-500 transition-colors"
+                      className="p-2 rounded-lg hover:bg-red-50 text-banc-muted-readable hover:text-red-500 transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -209,7 +209,7 @@ export default function DocumentVault({
                 <h4 className="font-medium text-banc-dark-deep">
                   {viewDocument.name}
                 </h4>
-                <p className="text-sm text-banc-grey">
+                <p className="text-sm text-banc-muted-readable">
                   {documentTypes[viewDocument.type]} •{" "}
                   {formatFileSize(viewDocument.size)}
                 </p>
@@ -233,13 +233,13 @@ export default function DocumentVault({
               ) : (
                 <div className="bg-white rounded-lg p-8 text-center">
                   <FileText className="w-16 h-16 text-banc-line mx-auto mb-4" />
-                  <p className="text-banc-grey">
+                  <p className="text-banc-muted-readable">
                     Preview not available for this file type
                   </p>
                   <a
                     href={viewDocument.url}
                     download
-                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-banc-sky text-white rounded-lg hover:bg-banc-sky-dark transition-colors"
+                    className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-banc-focus text-white rounded-lg hover:bg-banc-focus-hover transition-colors"
                   >
                     <Download className="w-4 h-4" />
                     Download to View
