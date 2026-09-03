@@ -87,6 +87,37 @@ Still open: the OpenAI account that key belongs to bills for all live
 traffic from launch. Decide whether that sits with Digital Inroads or with
 Banc before the 13th.
 
+## Safari hero check — CLEARED (2026-09-03)
+
+**The hero is not blank in Safari. This is no longer a launch blocker.**
+
+Verified in real Safari 1440x900 against a production build (`next build`
++ `next start`), not a headless run: the blue BANC lockup, the tagline and
+its rule, the Google review card, the journey selector and the header CTA
+all render, and the film plays behind them. Every framer-motion `initial`
+in the hero hydrates and reveals.
+
+**What the earlier "invisible in WebKit" run actually was.** The CSP in
+`next.config.ts` ends with `upgrade-insecure-requests`. Safari, unlike
+Chrome, does **not** exempt localhost from that directive, so on
+`http://localhost:PORT` it upgrades every subresource to `https://` and
+they all fail — stylesheet, images and **all the JavaScript**. The page
+renders as unstyled blue-link HTML with a broken logo, and because no
+client JS runs, framer-motion never animates and the SSR `opacity: 0`
+stays put forever. That is one bug wearing two costumes, and it is a
+local-testing artifact only: production and Vercel previews are HTTPS,
+where the directive is a no-op.
+
+**So: to test this site in Safari over localhost you must first strip
+`upgrade-insecure-requests`.** It is baked into `.next/routes-manifest.json`
+at build time, so editing `next.config.ts` alone does nothing to a server
+already built — patch the manifest (and restore it afterwards) or rebuild.
+
+The SSR `opacity: 0` inline styles are still there and still confirmed in
+the production HTML (`style="opacity:0;transform:translateY(24px)"` on the
+lockup). They are fine in any browser that runs the JS; they only strand
+content when JS fails entirely. Not worth converting to CSS now.
+
 ## Where this stopped (2026-09-03, end of session)
 
 25 commits on `main`, **local only — still nothing pushed or deployed.**
@@ -102,11 +133,12 @@ the sticky enquiry bar.
 
 **Pick up here, in order:**
 
-1. ⚠ **Check the hero in real Safari** (detail below — still unverified, and
-   still the one thing that could be a launch blocker).
+1. ~~Check the hero in real Safari~~ — **done 2026-09-03, cleared.** See the
+   Safari section above.
 2. Push and cut a preview deploy for Nitesh; book the end-of-week review
    call. Vercel already holds the working OpenAI key and model, so Banc Bot
-   will work on the preview.
+   will work on the preview. All 26 unpushed commits are authored
+   `kevbheda@gmail.com`, so Vercel will not block the build.
 3. Chase **N3 (DNS access)** — the only outstanding input that can miss the
    13 Sep launch — then N1 and N2.
 4. Start Batch 2.
@@ -225,4 +257,4 @@ I'll have the first batch (logo, Banc Bot, privacy changes to addresses, tabs, E
 Cheers,
 Keval
 
-*Last updated: 2026-09-02*
+*Last updated: 2026-09-03*
