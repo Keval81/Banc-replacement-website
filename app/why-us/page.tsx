@@ -429,7 +429,7 @@ export default function WhyUsPage() {
               >
                 {/* Quote marks */}
                 <div className="absolute -top-4 left-6 w-8 h-8 bg-banc-sky rounded-full flex items-center justify-center">
-                  <span className="text-white text-xl font-serif">&quot;</span>
+                  <span className="text-banc-dark-deep text-xl font-serif">&quot;</span>
                 </div>
                 
                 {/* Stars */}
@@ -469,10 +469,10 @@ export default function WhyUsPage() {
       <section className="py-20 lg:py-24 bg-banc-sky">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl lg:text-4xl font-semibold text-white">
+            <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep">
               Ready to Experience the Banc Difference?
             </h2>
-            <p className="mt-4 text-lg text-white/90">
+            <p className="mt-4 text-lg text-banc-dark-deep/90">
               Whether you&apos;re selling, letting, buying, or renting, we&apos;re here to help you achieve your property goals.
             </p>
             
@@ -484,15 +484,15 @@ export default function WhyUsPage() {
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl">
+                <Button variant="outline" className="bg-transparent border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl">
                   <Phone className="mr-2 h-5 w-5" />
                   Contact Us
                 </Button>
               </Link>
             </div>
             
-            <p className="mt-6 text-sm text-white/70">
-              Call us: <a href={BANC_CONTACT.callHref} className="font-semibold text-white hover:underline">{BANC_CONTACT.displayPhone}</a>
+            <p className="mt-6 text-sm text-banc-dark-deep/70">
+              Call us: <a href={BANC_CONTACT.callHref} className="font-semibold text-banc-dark-deep hover:underline">{BANC_CONTACT.displayPhone}</a>
             </p>
           </div>
         </div>

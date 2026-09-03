@@ -153,7 +153,7 @@ export default function TenantsGuideClient() {
                       {section.number}
                     </span>
                     <div className="w-14 h-14 rounded-2xl bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/20">
-                      <section.icon className="h-7 w-7 text-white" />
+                      <section.icon className="h-7 w-7 text-banc-dark-deep" />
                     </div>
                   </div>
                   
@@ -274,7 +274,7 @@ export default function TenantsGuideClient() {
             <div className="inline-flex items-center gap-3 mb-6">
               <span className="text-6xl font-bold text-banc-sky/20 font-heading">07</span>
               <div className="w-16 h-16 rounded-2xl bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/20">
-                <PoundSterling className="h-8 w-8 text-white" />
+                <PoundSterling className="h-8 w-8 text-banc-dark-deep" />
               </div>
             </div>
             
@@ -356,7 +356,7 @@ export default function TenantsGuideClient() {
               {/* Badge/Icon side */}
               <div className="flex-shrink-0">
                 <div className="w-28 h-28 rounded-full bg-banc-sky flex items-center justify-center shadow-2xl shadow-banc-sky/30">
-                  <ShieldCheck className="h-14 w-14 text-white" />
+                  <ShieldCheck className="h-14 w-14 text-banc-dark-deep" />
                 </div>
               </div>
               
@@ -414,11 +414,11 @@ export default function TenantsGuideClient() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-banc-dark-deep tracking-tight">
               Ready to find your perfect rental home?
             </h2>
             
-            <p className="mt-6 text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+            <p className="mt-6 text-lg md:text-xl text-banc-dark-deep/90 max-w-2xl mx-auto">
               Browse our available properties or register your requirements with our lettings team 
               for personalised recommendations.
             </p>
@@ -436,7 +436,7 @@ export default function TenantsGuideClient() {
               <Button 
                 size="lg"
                 variant="outline" 
-                className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl transition-all duration-300"
+                className="bg-transparent border-2 border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold rounded-xl transition-all duration-300"
               >
                 Register Your Requirements
               </Button>

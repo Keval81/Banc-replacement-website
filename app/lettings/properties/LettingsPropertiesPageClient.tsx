@@ -244,10 +244,10 @@ function LettingsPropertiesPageContent() {
       {/* Tenant Registration CTA */}
       <section className="bg-banc-sky py-12">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-          <h2 className="text-2xl font-semibold text-white sm:text-3xl">
+          <h2 className="text-2xl font-semibold text-banc-dark-deep sm:text-3xl">
             Can&apos;t find what you&apos;re looking for?
           </h2>
-          <p className="mt-4 text-white/90">
+          <p className="mt-4 text-banc-dark-deep/90">
             Register your requirements and we&apos;ll notify you when matching properties become available.
           </p>
           <Button className="mt-6 bg-white text-banc-focus hover:bg-white/90 px-8 py-5">

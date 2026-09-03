@@ -54,7 +54,7 @@ function TopTip({ children }: TopTipProps) {
       <div className="absolute inset-0 bg-gradient-to-r from-banc-sky/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       <div className="relative flex items-start gap-4">
         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/25">
-          <Lightbulb className="h-5 w-5 text-white" />
+          <Lightbulb className="h-5 w-5 text-banc-dark-deep" />
         </div>
         <div className="flex-1 pt-1">
           <span className="font-semibold text-banc-focus uppercase text-xs tracking-[0.2em] mb-1 block">
@@ -465,11 +465,11 @@ export default function SellersGuidePage() {
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-20 lg:py-28">
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white tracking-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-banc-dark-deep tracking-tight">
               Ready to Begin Your Selling Journey?
             </h2>
 
-            <p className="mt-6 text-lg md:text-xl text-white/80 leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-banc-dark-deep/80 leading-relaxed">
               Take the first step towards a successful sale. Book your free,
               no-obligation market appraisal with one of our property experts
               today.
@@ -484,7 +484,7 @@ export default function SellersGuidePage() {
               <Link href="/sales/properties">
                 <Button
                   variant="outline"
-                  className="bg-transparent border-2 border-white/50 text-white hover:bg-white/10 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
+                  className="bg-transparent border-2 border-white/50 text-banc-dark-deep hover:bg-white/10 px-10 py-7 text-lg font-semibold rounded-full transition-all duration-300 w-full sm:w-auto"
                 >
                   View Our Success Stories
                 </Button>
@@ -492,17 +492,17 @@ export default function SellersGuidePage() {
             </div>
 
             {/* Trust Indicators */}
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-white/60 text-sm">
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-banc-dark-deep/70 text-sm">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-white" />
+                <CheckCircle2 className="h-4 w-4 text-banc-dark-deep" />
                 <span>No Obligation</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-white" />
+                <CheckCircle2 className="h-4 w-4 text-banc-dark-deep" />
                 <span>Expert Advice</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-white" />
+                <CheckCircle2 className="h-4 w-4 text-banc-dark-deep" />
                 <span>Flexible Appointments</span>
               </div>
             </div>

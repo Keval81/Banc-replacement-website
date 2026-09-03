@@ -301,9 +301,9 @@ export default function LettingsFeesPage() {
               
               {/* CTA */}
               <div className="bg-banc-sky rounded-2xl p-6 text-center">
-                <Home className="h-8 w-8 text-white mx-auto mb-3" />
-                <h3 className="font-semibold text-white mb-2">Looking to Rent?</h3>
-                <p className="text-sm text-white/80 mb-4">
+                <Home className="h-8 w-8 text-banc-dark-deep mx-auto mb-3" />
+                <h3 className="font-semibold text-banc-dark-deep mb-2">Looking to Rent?</h3>
+                <p className="text-sm text-banc-dark-deep/80 mb-4">
                   Browse our available rental properties
                 </p>
                 <Link href="/lettings/properties">
@@ -548,10 +548,10 @@ export default function LettingsFeesPage() {
       {/* CTA Section */}
       <section className="py-20 lg:py-24 bg-banc-sky">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-4">
+          <h2 className="text-3xl font-semibold text-banc-dark-deep mb-4">
             Have Questions About Fees?
           </h2>
-          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-banc-dark-deep/90 mb-8 max-w-2xl mx-auto">
             Our team is happy to explain any aspect of our fee structure. 
             Get in touch for a no-obligation chat.
           </p>
@@ -563,7 +563,7 @@ export default function LettingsFeesPage() {
               </Button>
             </a>
             <Link href="/contact">
-              <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
+              <Button variant="outline" className="bg-transparent border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold">
                 Contact Us
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>

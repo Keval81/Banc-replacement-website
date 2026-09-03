@@ -548,7 +548,7 @@ export default function OfferForm({
               ? "bg-banc-line cursor-not-allowed"
               : "bg-banc-sky hover:bg-banc-sky-dark"
           }
-          text-white
+          text-banc-dark-deep
         `}
       >
         {isSubmitting ? (

@@ -50,7 +50,7 @@ export default function PortalLayout({
             </button>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-banc-sky rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">B</span>
+                <span className="text-banc-dark-deep font-bold text-sm">B</span>
               </div>
               <div>
                 <p className="font-heading font-semibold text-banc-dark-deep text-lg leading-tight">

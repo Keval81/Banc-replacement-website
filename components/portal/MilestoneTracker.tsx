@@ -24,7 +24,7 @@ export default function MilestoneTracker({
       case "in_progress":
         return (
           <div className="w-8 h-8 bg-banc-sky rounded-full flex items-center justify-center ring-4 ring-banc-sky/20">
-            <Clock className="w-4 h-4 text-white" />
+            <Clock className="w-4 h-4 text-banc-dark-deep" />
           </div>
         );
       case "blocked":

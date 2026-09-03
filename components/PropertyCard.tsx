@@ -237,7 +237,7 @@ function PropertyCardBase({
               isCompared
                 ? "border-banc-sky bg-banc-sky text-banc-dark"
                 : canCompare
-                  ? "border-white/30 bg-black/55 text-white hover:bg-black/75"
+                  ? "border-white/30 bg-black/55 text-banc-dark-deep hover:bg-black/75"
                   : "cursor-not-allowed border-white/20 bg-black/35 text-white/55"
             )}
           >

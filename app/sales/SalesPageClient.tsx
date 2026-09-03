@@ -202,10 +202,10 @@ export default function SalesPageClient() {
       {/* CTA */}
       <section className="bg-banc-sky py-10 lg:py-16">
         <div className="mx-auto max-w-7xl px-4 text-center lg:px-10">
-          <h2 className="text-xl font-semibold text-white lg:text-4xl">
+          <h2 className="text-xl font-semibold text-banc-dark-deep lg:text-4xl">
             Ready to sell your property?
           </h2>
-          <p className="mt-2 text-sm text-white/90 lg:mt-3 lg:text-lg">
+          <p className="mt-2 text-sm text-banc-dark-deep/90 lg:mt-3 lg:text-lg">
             Get a free, no-obligation valuation from our expert team.
           </p>
           <Link href="/contact">

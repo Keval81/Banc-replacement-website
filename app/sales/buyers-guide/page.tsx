@@ -86,7 +86,7 @@ export default function BuyersGuidePage() {
                     <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-5 rounded-r-xl">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0 w-10 h-10 rounded-full bg-banc-sky flex items-center justify-center">
-                          <Sparkles className="h-5 w-5 text-white" />
+                          <Sparkles className="h-5 w-5 text-banc-dark-deep" />
                         </div>
                         <div>
                           <p className="font-semibold text-banc-focus text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
@@ -128,7 +128,7 @@ export default function BuyersGuidePage() {
       <section className="py-20 bg-banc-grey-pale">
         <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
           <div className="w-16 h-16 mx-auto rounded-full bg-banc-sky flex items-center justify-center mb-6">
-            <Sparkles className="h-8 w-8 text-white" />
+            <Sparkles className="h-8 w-8 text-banc-dark-deep" />
           </div>
           <h2 className="text-3xl font-semibold text-banc-dark mb-4">{completion.title}</h2>
           <p className="text-lg text-banc-muted-readable leading-relaxed mb-6">
@@ -188,10 +188,10 @@ export default function BuyersGuidePage() {
       {/* CTA */}
       <section className="bg-banc-sky py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">
+          <h2 className="text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
             Ready to start your property search?
           </h2>
-          <p className="mt-4 text-lg text-white/90">
+          <p className="mt-4 text-lg text-banc-dark-deep/90">
             Browse our portfolio of premium properties for sale.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -201,7 +201,7 @@ export default function BuyersGuidePage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-base font-semibold">
+            <Button variant="outline" className="bg-transparent border-2 border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold">
               Register with Us
             </Button>
           </div>

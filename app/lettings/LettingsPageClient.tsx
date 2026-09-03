@@ -278,10 +278,10 @@ export default function LettingsPage() {
         <div className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         
         <div className="relative mx-auto max-w-7xl px-4 text-center lg:px-10">
-          <h2 className="text-xl font-semibold text-white lg:text-4xl">
+          <h2 className="text-xl font-semibold text-banc-dark-deep lg:text-4xl">
             Ready to get started?
           </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-white/90 lg:mt-3 lg:text-lg">
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-banc-dark-deep/90 lg:mt-3 lg:text-lg">
             Contact our lettings team today for expert advice and assistance.
           </p>
           <Link 

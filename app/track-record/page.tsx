@@ -94,10 +94,10 @@ export default function TrackRecordPage() {
       {/* CTA */}
       <section className="bg-banc-sky py-16">
         <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">
+          <h2 className="text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
             Ready to achieve exceptional results?
           </h2>
-          <p className="mt-4 text-lg text-white/90">
+          <p className="mt-4 text-lg text-banc-dark-deep/90">
             Let us put our track record to work for you.
           </p>
           <Link href="/valuation">

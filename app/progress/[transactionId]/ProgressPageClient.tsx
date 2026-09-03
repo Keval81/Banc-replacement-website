@@ -329,7 +329,7 @@ export default function ProgressTrackerPage() {
                           }`}
                         >
                           {stage.status === "completed" ? (
-                            <CheckCircle className="w-4 h-4 text-white" />
+                            <CheckCircle className="w-4 h-4 text-banc-dark-deep" />
                           ) : stage.status === "in_progress" ? (
                             <div className="w-2 h-2 bg-white rounded-full" />
                           ) : null}
@@ -439,7 +439,7 @@ export default function ProgressTrackerPage() {
                         <Home
                           className={`w-5 h-5 ${
                             property.position === "this"
-                              ? "text-white"
+                              ? "text-banc-dark-deep"
                               : "text-banc-muted-readable"
                           }`}
                         />

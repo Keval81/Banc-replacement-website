@@ -191,7 +191,7 @@ export default function LandlordsGuidePage() {
               <div className="absolute -inset-4 bg-gradient-to-br from-banc-sky/10 to-transparent rounded-3xl" />
               <div className="relative bg-banc-grey-pale rounded-2xl p-8 lg:p-10">
                 <div className="h-14 w-14 rounded-xl bg-banc-sky flex items-center justify-center mb-6">
-                  <Home className="h-7 w-7 text-white" />
+                  <Home className="h-7 w-7 text-banc-dark-deep" />
                 </div>
 
                 <h3 className="text-2xl font-semibold mb-4">
@@ -376,7 +376,7 @@ export default function LandlordsGuidePage() {
             <div className="relative">
               <div className="bg-banc-dark-deep rounded-2xl p-10 shadow-xl">
                 <div className="h-14 w-14 rounded-xl bg-banc-sky flex items-center justify-center mb-6">
-                  <Globe className="h-7 w-7 text-white" />
+                  <Globe className="h-7 w-7 text-banc-dark-deep" />
                 </div>
 
                 <h3 className="text-2xl font-semibold text-white mb-4">
@@ -449,7 +449,7 @@ export default function LandlordsGuidePage() {
           <div className="mt-12 bg-gradient-to-r from-banc-sky/20 to-banc-sky/5 rounded-2xl p-10 border border-banc-sky/20">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
               <div className="h-20 w-20 rounded-2xl bg-banc-sky flex items-center justify-center flex-shrink-0 shadow-lg shadow-banc-sky/25">
-                <Users className="h-10 w-10 text-white" />
+                <Users className="h-10 w-10 text-banc-dark-deep" />
               </div>
               <div>
                 <h3 className="text-2xl font-semibold text-white mb-3">

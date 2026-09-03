@@ -194,7 +194,7 @@ export default function ReviewsPage() {
                 {/* Quote Icon - Large and prominent */}
                 <div className="absolute -top-3 -left-2">
                   <div className="w-14 h-14 rounded-xl bg-banc-sky flex items-center justify-center shadow-lg shadow-banc-sky/20 group-hover:scale-110 transition-transform duration-300">
-                    <Quote className="h-7 w-7 text-white fill-white" />
+                    <Quote className="h-7 w-7 text-banc-dark-deep fill-white" />
                   </div>
                 </div>
                 

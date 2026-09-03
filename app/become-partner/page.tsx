@@ -292,7 +292,7 @@ export default function BecomePartnerPage() {
               <div className="bg-banc-dark-deep px-6 py-5">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky">
-                    <Users className="h-5 w-5 text-white" />
+                    <Users className="h-5 w-5 text-banc-dark-deep" />
                   </div>
                   <h3 className="font-heading text-xl font-semibold text-white">
                     You Handle
@@ -321,11 +321,11 @@ export default function BecomePartnerPage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
                     <Shield className="h-5 w-5 text-banc-focus" />
                   </div>
-                  <h3 className="font-heading text-xl font-semibold text-white">
+                  <h3 className="font-heading text-xl font-semibold text-banc-dark-deep">
                     We Handle
                   </h3>
                 </div>
-                <p className="mt-2 text-sm text-white/80">
+                <p className="mt-2 text-sm text-banc-dark-deep/80">
                   The operational and administrative burden
                 </p>
               </div>

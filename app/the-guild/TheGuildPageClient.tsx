@@ -453,10 +453,10 @@ export default function TheGuildPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-white mb-6">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep mb-6">
                 Experience the Guild Difference
               </h2>
-              <p className="text-lg lg:text-xl text-white/80 max-w-2xl mx-auto mb-12">
+              <p className="text-lg lg:text-xl text-banc-dark-deep/80 max-w-2xl mx-auto mb-12">
                 Whether you&apos;re buying, selling, or letting, benefit from the perfect 
                 combination of local expertise and national reach.
               </p>
@@ -472,7 +472,7 @@ export default function TheGuildPage() {
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-10 py-7 text-base rounded-full transition-all duration-300"
+                  className="bg-transparent border-2 border-white text-banc-dark-deep hover:bg-white/10 px-10 py-7 text-base rounded-full transition-all duration-300"
                 >
                   <Link href="/contact" className="flex items-center">
                     Get in Touch

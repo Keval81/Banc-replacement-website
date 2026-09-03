@@ -47,7 +47,7 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
             )}>
               <ChevronDown className={cn(
                 "h-5 w-5 text-banc-muted-readable transition-colors",
-                openIndex === index && "text-white"
+                openIndex === index && "text-banc-dark-deep"
               )} />
             </div>
           </button>
