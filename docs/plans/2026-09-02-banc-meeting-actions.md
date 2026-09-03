@@ -354,6 +354,40 @@ Verified in Chrome on production across all six pages.
 same way, untouched pages carry 20-25 elements below AA (`/lettings` "Our
 Services" at 1.96:1, `/why-us` "What Sets Us Apart" at 2.92:1) against 2 on
 the restyled tools pages. Not fixed here — flagging it as its own pass.
+
+**23, 24, 25 — done 2026-09-03 (`b1e75bd`).** All three sit on one shared
+primitive, `components/Carousel.tsx`: a scroll-snapping track with prev/next
+controls that disable at the ends, arrow-key support and a carousel
+role/label. It does **not** autoplay — the rotating review ticker was removed
+in Batch 1, and content that moves out from under a reader is the classic
+carousel accessibility failure. The track is a real scroll container, so
+touch and trackpad work regardless of the buttons.
+
+- **23** — the ten `/why-us` differentiators were a static four-column grid.
+  They are now colour-backed cards drawing from `lib/carousel-surfaces.ts`,
+  which pairs each background with the ink that belongs on it. **A card
+  cannot be given a colour without readable text**, which is how the site
+  accumulated 488 AA failures in the first place. The test asserts the
+  *composited* value: `text-banc-dark-deep/80` on cyan is 4.10:1 if you guess
+  the hex, 5.96:1 once you actually blend it — the first draft failed.
+- **24** — the homepage showed 3 of the 12 real Google reviews, rotating on a
+  7-second timer. All 12 are now cards with the requested hover-lift,
+  expressed as movement plus a hairline rather than the drop shadow DESIGN.md
+  forbids. Reviews moved to `lib/reviews.ts`; they had been inlined in
+  `app/reviews/page.tsx`, so the carousel would have needed a hand-maintained
+  second copy.
+- **25** — featured homes are a slideshow, each slide carrying the price on a
+  scrim over the photograph plus an Enquire CTA. Loading, empty and error
+  states untouched. **The `#enquire` anchor did not exist** — the enquiry
+  panel now has that id, and a test ties the link to a target that answers
+  it. **Drone-style footage is NOT included: it needs assets that don't
+  exist yet (an input to chase with Nitesh).**
+
+Verified by driving each carousel in Chrome, not by photographing it: all
+three advance, prev disabled at start and enabled after. Contrast
+re-measured on `/`, `/why-us`, `/reviews`, `/track-record` — zero failures.
+Mobile checked at 390px, no horizontal page overflow.
+
 20. **Maintenance reporting page** (how to report, hours, WhatsApp number N6, acknowledgement copy) + "Report a maintenance issue" link in the Lettings menu — mock-up first for Nitesh to review.
 21. **CMP logo + certificate** in the footer (N4).
 22. **Team page** with cartoon/animated headshots + bios and an office group photo (N5).
