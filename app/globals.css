@@ -339,15 +339,19 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   }
 }
 
+/* The delays clear the hero film's own 1.5s fade-in, which starts once the
+   video reports ready — measured at ~1.8s from parse. A CSS animation is
+   timed from parse, not from hydration, so without this the reveal plays
+   underneath the fade and is never seen. */
 .banc-tagline-reveal {
   letter-spacing: 0.2em;
-  animation: banc-tagline-reveal 1.7s cubic-bezier(0.16, 1, 0.3, 1) 0.9s;
+  animation: banc-tagline-reveal 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2s;
   animation-fill-mode: backwards;
 }
 
 .banc-rule-draw {
   transform-origin: left center;
-  animation: banc-rule-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.8s;
+  animation: banc-rule-draw 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1.9s;
   animation-fill-mode: backwards;
 }
 
