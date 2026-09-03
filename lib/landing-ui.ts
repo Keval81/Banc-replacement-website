@@ -1,4 +1,5 @@
 import { BANC_CONTACT } from "./banc-contact.ts";
+import { isPropertyDetailPath } from "./property-detail-view.ts";
 
 export type LandingVariant = "classic" | "aker";
 
@@ -31,6 +32,10 @@ export type MobileContactControlPlacement =
 export type MobileWhatsappPanelPlacement =
   | "above-trigger"
   | "responsive-rail";
+
+// How much room the chat launcher has to leave at the bottom of the page.
+// A property page keeps a sticky enquiry bar there until lg.
+export type ChatLauncherClearance = "standard" | "clears-sticky-actions";
 
 interface HeroVideo {
   desktop: {
@@ -81,6 +86,7 @@ export interface LandingOverlayPolicy {
   showStandaloneWhatsapp: boolean;
   mobileContactControlPlacement: MobileContactControlPlacement;
   mobileWhatsappPanelPlacement: MobileWhatsappPanelPlacement;
+  chatLauncherClearance: ChatLauncherClearance;
 }
 
 const sharedActions = {
@@ -181,6 +187,22 @@ export function getLandingOverlayPolicy(
 ): LandingOverlayPolicy {
   const isLandingPage = pathname === "/";
 
+  // A property page has its own sticky enquiry bar along the bottom, so the
+  // floating controls that would sit on top of it stay away. Banc Bot does
+  // not: a visitor who followed a listing link out of the chat has to be
+  // able to carry on the conversation from where they landed.
+  if (isPropertyDetailPath(pathname)) {
+    return {
+      showMobileBottomNavigation: false,
+      showProactiveChatPrompt: false,
+      showPushNotificationPrompt: false,
+      showStandaloneWhatsapp: false,
+      mobileContactControlPlacement: "standard",
+      mobileWhatsappPanelPlacement: "above-trigger",
+      chatLauncherClearance: "clears-sticky-actions",
+    };
+  }
+
   return {
     showMobileBottomNavigation: !isLandingPage,
     showProactiveChatPrompt: !isLandingPage,
@@ -190,5 +212,6 @@ export function getLandingOverlayPolicy(
       ? "unified-help"
       : "standard",
     mobileWhatsappPanelPlacement: "above-trigger",
+    chatLauncherClearance: "standard",
   };
 }

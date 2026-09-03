@@ -6,12 +6,11 @@ import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import { FloatingWhatsApp } from "@/components/mobile/FloatingWhatsApp";
 import { MobileBottomNav } from "@/components/mobile/MobileNav";
 import { getLandingOverlayPolicy } from "@/lib/landing-ui";
-import { isPropertyDetailPath } from "@/lib/property-detail-view";
 
 export function SiteOverlays(): React.ReactElement | null {
   const pathname = usePathname();
-  if (isPropertyDetailPath(pathname)) return null;
-
+  // Which overlays a route gets is the policy's call, including on property
+  // pages — the assistant has to survive a visitor following a listing link.
   const overlayPolicy = getLandingOverlayPolicy(pathname);
 
   return (
@@ -28,6 +27,7 @@ export function SiteOverlays(): React.ReactElement | null {
           overlayPolicy.mobileContactControlPlacement
         }
         showProactivePrompt={overlayPolicy.showProactiveChatPrompt}
+        launcherClearance={overlayPolicy.chatLauncherClearance}
       />
       {overlayPolicy.showPushNotificationPrompt && <PushNotificationPrompt />}
     </>

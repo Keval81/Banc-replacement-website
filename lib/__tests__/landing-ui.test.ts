@@ -176,6 +176,18 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
   assert.doesNotMatch(headerSource, /Local independent/);
 });
 
+test("keeps the chat launcher clear of the property page enquiry bar", () => {
+  const chatbotSource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "ai", "PropertyChatbot.tsx"),
+    "utf8",
+  );
+
+  // The enquiry bar is lg:hidden, so a launcher that drops to its resting
+  // offset at sm lands on top of it from 640 to 1023px.
+  assert.match(chatbotSource, /clears-sticky-actions/);
+  assert.match(chatbotSource, /lg:bottom-\[calc\(1\.5rem/);
+});
+
 test("names the conversational agent Banc Bot everywhere a visitor sees it", () => {
   const chatbotSource = readFileSync(
     join(import.meta.dirname, "..", "..", "components", "ai", "PropertyChatbot.tsx"),
@@ -233,6 +245,7 @@ test("uses one help launcher instead of competing contact controls on the landin
     showStandaloneWhatsapp: false,
     mobileContactControlPlacement: "unified-help",
     mobileWhatsappPanelPlacement: "above-trigger",
+    chatLauncherClearance: "standard",
   });
 });
 
@@ -278,6 +291,38 @@ test("renders the shared editorial property actions at both hero breakpoints", (
   );
 });
 
+test("keeps Banc Bot reachable on a property page, without the other overlays", () => {
+  // Following a listing link out of the chat used to land on a page with no
+  // chat on it at all. The sticky enquiry bar owns the bottom of this page,
+  // so the assistant comes back but nothing else does.
+  for (const path of [
+    "/sales/properties/BPGC1011",
+    "/lettings/properties/BPGC1311",
+  ]) {
+    assert.deepEqual(getLandingOverlayPolicy(path), {
+      showMobileBottomNavigation: false,
+      showProactiveChatPrompt: false,
+      showPushNotificationPrompt: false,
+      showStandaloneWhatsapp: false,
+      mobileContactControlPlacement: "standard",
+      mobileWhatsappPanelPlacement: "above-trigger",
+      // The sticky enquiry bar runs to lg, so the launcher has to stay
+      // above it for longer than the usual sm step.
+      chatLauncherClearance: "clears-sticky-actions",
+    });
+  }
+
+  const overlaySource = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "mobile", "SiteOverlays.tsx"),
+    "utf8",
+  );
+  assert.doesNotMatch(
+    overlaySource,
+    /isPropertyDetailPath\(pathname\)\)\s*return null/,
+    "the overlay stack must not drop the assistant on property pages",
+  );
+});
+
 test("keeps mobile navigation and proactive chat available on regular pages", () => {
   assert.deepEqual(getLandingOverlayPolicy("/sales/properties"), {
     showMobileBottomNavigation: true,
@@ -286,6 +331,7 @@ test("keeps mobile navigation and proactive chat available on regular pages", ()
     showStandaloneWhatsapp: true,
     mobileContactControlPlacement: "standard",
     mobileWhatsappPanelPlacement: "above-trigger",
+    chatLauncherClearance: "standard",
   });
 });
 

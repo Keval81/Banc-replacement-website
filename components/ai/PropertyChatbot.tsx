@@ -18,6 +18,12 @@ import {
   runPropertyChatTurn,
   type PropertyChatMessage,
 } from "@/lib/property-chat-submit";
+import {
+  clearPropertyChatSession,
+  loadPropertyChatSession,
+  savePropertyChatSession,
+  type PropertyChatSession,
+} from "@/lib/property-chat-session";
 import { buildPropertyHref } from "@/lib/property-view";
 import { getSafePropertyImageUrl } from "@/lib/property-detail-view";
 import {
@@ -26,6 +32,7 @@ import {
 } from "@/lib/property-search/modal-focus-lifecycle";
 import {
   getLandingUi,
+  type ChatLauncherClearance,
   type MobileContactControlPlacement,
 } from "@/lib/landing-ui";
 
@@ -51,23 +58,49 @@ function createWelcomeMessage(): PropertyChatMessage {
 
 const RATE_LIMIT_STATUS = 429;
 
+// The panel unmounts on every route change, so the thread lives in
+// sessionStorage rather than in component state alone.
+function readStoredSession(): PropertyChatSession | null {
+  if (typeof window === "undefined") return null;
+  return loadPropertyChatSession(window.sessionStorage);
+}
+
+// Restored ids must not collide with the ones this mount goes on to mint.
+function highestMessageIndex(messages: readonly PropertyChatMessage[]): number {
+  return messages.reduce((highest, message) => {
+    const match = /^property-chat-(\d+)$/.exec(message.id);
+    const index = match ? Number(match[1]) : 0;
+    return index > highest ? index : highest;
+  }, 0);
+}
+
 interface PropertyChatbotProps {
   mobileContactControlPlacement?: MobileContactControlPlacement;
   showProactivePrompt?: boolean;
+  launcherClearance?: ChatLauncherClearance;
 }
 
 export default function PropertyChatbot({
   mobileContactControlPlacement = "standard",
   showProactivePrompt = true,
+  launcherClearance = "standard",
 }: PropertyChatbotProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
-  const [messages, setMessages] = useState<PropertyChatMessage[]>(() => [
-    createWelcomeMessage(),
-  ]);
+  // The thread carried over from the previous page is adopted up front. The
+  // panel starts closed, so the server and client agree on what is painted;
+  // only what is behind the launcher differs.
+  const [messages, setMessages] = useState<PropertyChatMessage[]>(() => {
+    const stored = readStoredSession();
+    return stored && stored.messages.length > 0
+      ? stored.messages
+      : [createWelcomeMessage()];
+  });
   const [input, setInput] = useState("");
   const [conversationContext, setConversationContext] =
-    useState<PropertyConversationState>(createInitialConversationState);
+    useState<PropertyConversationState>(
+      () => readStoredSession()?.state ?? createInitialConversationState(),
+    );
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
@@ -77,8 +110,13 @@ export default function PropertyChatbot({
   const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const chatPanelRef = useRef<HTMLDivElement>(null);
   const submissionRunnerRef = useRef(createSingleFlightRunner());
-  const messageIdRef = useRef(0);
+  // Seeded past any restored id so a resumed thread cannot mint a duplicate.
+  const messageIdRef = useRef<number | null>(null);
+  if (messageIdRef.current === null) {
+    messageIdRef.current = highestMessageIndex(messages);
+  }
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
+  const clearsStickyActions = launcherClearance === "clears-sticky-actions";
   const quickReplies = getPropertyChatQuickReplies(conversationContext);
   const openChat = useCallback(() => {
     setIsHelpMenuOpen(false);
@@ -141,12 +179,23 @@ export default function PropertyChatbot({
     return () => clearTimeout(timer);
   }, [showPrompt]);
 
+  // Write the thread back on every change so the next page can pick it up.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    savePropertyChatSession(window.sessionStorage, {
+      messages,
+      state: conversationContext,
+    });
+  }, [messages, conversationContext]);
+
   const hasConversation = messages.length > 1;
   const startNewConversation = useCallback(() => {
     if (isLoading) return;
     setMessages([createWelcomeMessage()]);
     setConversationContext(createInitialConversationState());
     setInput("");
+    messageIdRef.current = 0;
+    if (typeof window !== "undefined") clearPropertyChatSession(window.sessionStorage);
     inputRef.current?.focus();
   }, [isLoading]);
 
@@ -155,7 +204,7 @@ export default function PropertyChatbot({
     if (!content || isLoading) return;
     await submissionRunnerRef.current(async () => {
       const nextMessageId = () => {
-        messageIdRef.current += 1;
+        messageIdRef.current = (messageIdRef.current ?? 0) + 1;
         return `property-chat-${messageIdRef.current}`;
       };
       setInput("");
@@ -201,7 +250,11 @@ export default function PropertyChatbot({
       <AnimatePresence>
         {!isOpen && (
           <div
-            className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
+            className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
+              clearsStickyActions
+                ? "bottom-[calc(9rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+                : "sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+            } ${
               usesUnifiedHelp
                 ? "bottom-[calc(1rem+env(safe-area-inset-bottom))] flex-col"
                 : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
@@ -363,7 +416,11 @@ export default function PropertyChatbot({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.95 }}
             transition={transition}
-            className="fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] sm:left-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:w-[380px]"
+            className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 sm:left-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:w-[380px] ${
+              clearsStickyActions
+                ? "sm:bottom-[calc(8rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+                : "sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+            }`}
           >
             <div className="flex flex-col overflow-hidden rounded-[16px] border border-banc-grey/15 bg-white shadow-2xl max-h-[80dvh] sm:max-h-[520px]">
               {/* Header */}
