@@ -266,14 +266,16 @@ export default function Hero() {
               reveal is CSS (see globals.css) so the copy is readable without
               client JS; framer-motion would inline opacity:0 into the SSR
               markup and strand it there if the page never hydrates. */}
-          <div className="mt-4 flex items-center gap-3 sm:mt-5 sm:gap-4">
+          {/* Locked to the lockup's own measure so the rule, the tagline and
+              the mark all share one left edge and one width. */}
+          <div className="mt-4 sm:mt-5" style={{ width: "min(72vw, 560px)" }}>
             <span
               aria-hidden="true"
-              className="banc-rule-draw hidden h-px w-14 flex-none bg-white/50 md:block md:w-16"
+              className="banc-rule-draw block h-px w-full bg-white/40"
             />
             {/* The break is explicit rather than left to the wrap: at mobile
                 sizes the line otherwise strands "specialists" on its own. */}
-            <p className="banc-tagline-reveal text-[14px] font-medium uppercase leading-[1.5] text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] md:text-[18px]">
+            <p className="banc-tagline-reveal mt-3 text-[14px] font-medium uppercase leading-[1.5] text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] md:text-[18px]">
               Local independent
               <br className="md:hidden" />{" "}
               property specialists
