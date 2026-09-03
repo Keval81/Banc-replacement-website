@@ -125,37 +125,37 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-white/10 bg-banc-dark-deep p-4", className)}>
+      <div className={cn("rounded-xl border border-banc-line bg-white p-4", className)}>
         <div className="space-y-3">
           <div>
-            <label className="mb-1.5 block text-xs text-white/60">Property Price</label>
+            <label className="mb-1.5 block text-xs text-banc-muted-readable">Property Price</label>
             <div className="relative">
-              <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+              <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
               <input
                 type="text"
                 value={propertyPrice}
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-9 py-2 text-sm text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
+                className="w-full rounded-lg border border-banc-line bg-banc-grey-pale px-9 py-2 text-sm text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs text-white/60">Deposit ({depositPercent.toFixed(0)}%)</label>
+            <label className="mb-1.5 block text-xs text-banc-muted-readable">Deposit ({depositPercent.toFixed(0)}%)</label>
             <input
               type="range"
               min="5"
               max="50"
               value={depositPercent}
               onChange={(e) => handleDepositPercentChange(Number(e.target.value))}
-              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-banc-sky"
+              className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-banc-grey-pale accent-banc-sky"
             />
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs text-white/60">Interest Rate</label>
+            <label className="mb-1.5 block text-xs text-banc-muted-readable">Interest Rate</label>
             <div className="grid grid-cols-4 gap-1">
               {[3, 4, 5, 6].map((rate) => (
                 <button
@@ -164,8 +164,8 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   className={cn(
                     "rounded-lg px-2 py-1.5 text-xs transition-all",
                     interestRate === rate
-                      ? "bg-banc-sky text-white"
-                      : "bg-white/5 text-white/70 hover:bg-white/10"
+                      ? "bg-banc-focus text-white"
+                      : "bg-banc-grey-pale text-banc-muted-readable hover:bg-banc-grey-pale"
                   )}
                 >
                   {rate}%
@@ -176,8 +176,8 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
 
           {propertyPriceNum > 0 && (
             <div className="rounded-lg bg-banc-sky/10 p-3 text-center">
-              <p className="text-xs text-white/60">Monthly Payment</p>
-              <p className="text-lg font-semibold text-banc-sky">
+              <p className="text-xs text-banc-muted-readable">Monthly Payment</p>
+              <p className="text-lg font-semibold text-banc-focus">
                 {formatCurrency(result.monthlyPayment)}
               </p>
             </div>
@@ -190,45 +190,45 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
-        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-          <Calculator className="h-5 w-5 text-banc-sky" />
+      <div className="rounded-2xl border border-banc-line bg-white p-6">
+        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
+          <Calculator className="h-5 w-5 text-banc-focus" />
           Mortgage Details
         </h3>
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Property Price */}
           <div>
-            <label className="mb-2 block text-sm text-white/70">Property Price</label>
+            <label className="mb-2 block text-sm text-banc-muted-readable">Property Price</label>
             <div className="relative">
-              <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+              <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
               <input
                 type="text"
                 value={propertyPrice}
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £500,000"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
+                className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
               />
             </div>
           </div>
 
           {/* Deposit */}
           <div>
-            <label className="mb-2 block text-sm text-white/70">
+            <label className="mb-2 block text-sm text-banc-muted-readable">
               Deposit
-              <span className="ml-2 text-xs text-white/50">({depositPercent.toFixed(1)}%)</span>
+              <span className="ml-2 text-xs text-banc-muted-readable">({depositPercent.toFixed(1)}%)</span>
             </label>
             <div className="flex gap-2">
               <div className="relative flex-1">
-                <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
                 <input
                   type="text"
                   value={depositMode === "amount" ? deposit : formatCurrency(effectiveDeposit)}
                   onChange={(e) => handleDepositAmountChange(e.target.value)}
                   onBlur={() => formatCurrencyDisplay(deposit, setDeposit)}
                   placeholder="e.g. £50,000"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-12 py-3 text-lg text-white placeholder:text-white/30 focus:border-banc-sky focus:outline-none"
+                  className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
                 />
               </div>
             </div>
@@ -239,9 +239,9 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               step="0.5"
               value={depositPercent}
               onChange={(e) => handleDepositPercentChange(Number(e.target.value))}
-              className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-white/10 accent-banc-sky"
+              className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-lg bg-banc-grey-pale accent-banc-sky"
             />
-            <div className="mt-1 flex justify-between text-xs text-white/40">
+            <div className="mt-1 flex justify-between text-xs text-banc-muted-readable">
               <span>5%</span>
               <span>50%</span>
             </div>
@@ -249,7 +249,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
 
           {/* Interest Rate */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-white/70">
+            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
               <Percent className="h-4 w-4" />
               Interest Rate
             </label>
@@ -261,8 +261,8 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   className={cn(
                     "rounded-lg px-4 py-2 text-sm transition-all",
                     interestRate === rate
-                      ? "bg-banc-sky text-white"
-                      : "bg-white/5 text-white/70 hover:bg-white/10"
+                      ? "bg-banc-focus text-white"
+                      : "bg-banc-grey-pale text-banc-muted-readable hover:bg-banc-grey-pale"
                   )}
                 >
                   {rate}%
@@ -275,15 +275,15 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 step="0.01"
                 value={interestRate}
                 onChange={(e) => setInterestRate(Number(e.target.value))}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-banc-sky focus:outline-none"
+                className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-4 py-3 text-lg text-banc-dark-deep focus:border-banc-sky focus:outline-none"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40">%</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-banc-muted-readable">%</span>
             </div>
           </div>
 
           {/* Term */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-white/70">
+            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
               <Clock className="h-4 w-4" />
               Mortgage Term
             </label>
@@ -291,22 +291,22 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               <select
                 value={termYears}
                 onChange={(e) => setTermYears(Number(e.target.value))}
-                className="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-lg text-white focus:border-banc-sky focus:outline-none"
+                className="w-full appearance-none rounded-xl border border-banc-line bg-banc-grey-pale px-4 py-3 text-lg text-banc-dark-deep focus:border-banc-sky focus:outline-none"
               >
                 {Array.from({ length: 31 }, (_, i) => i + 10).map((year) => (
-                  <option key={year} value={year} className="bg-banc-dark-deep">
+                  <option key={year} value={year} className="bg-white">
                     {year} years
                   </option>
                 ))}
               </select>
-              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
             </div>
           </div>
         </div>
 
         {/* Repayment Type */}
         <div className="mt-6">
-          <label className="mb-2 block text-sm text-white/70">Repayment Type</label>
+          <label className="mb-2 block text-sm text-banc-muted-readable">Repayment Type</label>
           <div className="grid gap-3 sm:grid-cols-2">
             {[
               {
@@ -327,18 +327,18 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   "rounded-xl border p-4 text-left transition-all",
                   repaymentType === type.value
                     ? "border-banc-sky bg-banc-sky/10"
-                    : "border-white/10 hover:border-white/20"
+                    : "border-banc-line hover:border-banc-focus"
                 )}
               >
                 <p
                   className={cn(
                     "font-medium",
-                    repaymentType === type.value ? "text-banc-sky" : "text-white"
+                    repaymentType === type.value ? "text-banc-focus" : "text-banc-dark-deep"
                   )}
                 >
                   {type.label}
                 </p>
-                <p className="text-xs text-white/50">{type.desc}</p>
+                <p className="text-xs text-banc-muted-readable">{type.desc}</p>
               </button>
             ))}
           </div>
@@ -350,40 +350,40 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
         <>
           {/* Main Results */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
-              <p className="text-sm text-white/60">Monthly Payment</p>
-              <p className="my-1 text-2xl font-bold text-banc-sky">
+            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
+              <p className="text-sm text-banc-muted-readable">Monthly Payment</p>
+              <p className="my-1 text-2xl font-bold text-banc-focus">
                 {formatCurrency(result.monthlyPayment)}
               </p>
-              <p className="text-xs text-white/40">per month</p>
+              <p className="text-xs text-banc-muted-readable">per month</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
-              <p className="text-sm text-white/60">Loan Amount</p>
-              <p className="my-1 text-2xl font-bold text-white">
+            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
+              <p className="text-sm text-banc-muted-readable">Loan Amount</p>
+              <p className="my-1 text-2xl font-bold text-banc-dark-deep">
                 {formatCurrency(result.loanAmount)}
               </p>
-              <p className="text-xs text-white/40">{formatPercent(result.ltv)} LTV</p>
+              <p className="text-xs text-banc-muted-readable">{formatPercent(result.ltv)} LTV</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
-              <p className="text-sm text-white/60">Total Interest</p>
-              <p className="my-1 text-2xl font-bold text-white">
+            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
+              <p className="text-sm text-banc-muted-readable">Total Interest</p>
+              <p className="my-1 text-2xl font-bold text-banc-dark-deep">
                 {formatCurrency(result.totalInterest)}
               </p>
-              <p className="text-xs text-white/40">over {termYears} years</p>
+              <p className="text-xs text-banc-muted-readable">over {termYears} years</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-5 text-center">
-              <p className="text-sm text-white/60">Total Cost</p>
-              <p className="my-1 text-2xl font-bold text-white">
+            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
+              <p className="text-sm text-banc-muted-readable">Total Cost</p>
+              <p className="my-1 text-2xl font-bold text-banc-dark-deep">
                 {formatCurrency(result.totalCost)}
               </p>
-              <p className="text-xs text-white/40">including deposit</p>
+              <p className="text-xs text-banc-muted-readable">including deposit</p>
             </div>
           </div>
 
           {/* Pie Chart Visualization */}
-          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <PieChart className="h-5 w-5 text-banc-sky" />
+          <div className="rounded-2xl border border-banc-line bg-white p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
+              <PieChart className="h-5 w-5 text-banc-focus" />
               Payment Breakdown
             </h3>
             <div className="flex flex-col items-center gap-8 md:flex-row">
@@ -412,33 +412,33 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-2xl font-bold text-white">
+                  <span className="text-2xl font-bold text-banc-dark-deep">
                     {formatPercent(pieData.principalPercent)}
                   </span>
-                  <span className="text-xs text-white/50">Principal</span>
+                  <span className="text-xs text-banc-muted-readable">Principal</span>
                 </div>
               </div>
 
               {/* Legend */}
               <div className="flex-1 space-y-4">
-                <div className="flex items-center justify-between rounded-xl bg-white/5 p-4">
+                <div className="flex items-center justify-between rounded-xl bg-banc-grey-pale p-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-4 w-4 rounded-full bg-banc-sky" />
-                    <span className="text-white">Principal</span>
+                    <div className="h-4 w-4 rounded-full bg-banc-focus" />
+                    <span className="text-banc-dark-deep">Principal</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium text-white">{formatCurrency(result.loanAmount)}</p>
-                    <p className="text-sm text-white/50">{formatPercent(pieData.principalPercent)}</p>
+                    <p className="font-medium text-banc-dark-deep">{formatCurrency(result.loanAmount)}</p>
+                    <p className="text-sm text-banc-muted-readable">{formatPercent(pieData.principalPercent)}</p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-white/5 p-4">
+                <div className="flex items-center justify-between rounded-xl bg-banc-grey-pale p-4">
                   <div className="flex items-center gap-3">
-                    <div className="h-4 w-4 rounded-full bg-white/30" />
-                    <span className="text-white">Interest</span>
+                    <div className="h-4 w-4 rounded-full bg-banc-grey-pale" />
+                    <span className="text-banc-dark-deep">Interest</span>
                   </div>
                   <div className="text-right">
-                    <p className="font-medium text-white">{formatCurrency(result.totalInterest)}</p>
-                    <p className="text-sm text-white/50">{formatPercent(pieData.interestPercent)}</p>
+                    <p className="font-medium text-banc-dark-deep">{formatCurrency(result.totalInterest)}</p>
+                    <p className="text-sm text-banc-muted-readable">{formatPercent(pieData.interestPercent)}</p>
                   </div>
                 </div>
               </div>
@@ -446,14 +446,14 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {/* LTV Indicator */}
-          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
-              <TrendingUp className="h-5 w-5 text-banc-sky" />
+          <div className="rounded-2xl border border-banc-line bg-white p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
+              <TrendingUp className="h-5 w-5 text-banc-focus" />
               Loan-to-Value Ratio
             </h3>
             <div className="space-y-4">
               <div className="relative">
-                <div className="h-4 rounded-full bg-white/10">
+                <div className="h-4 rounded-full bg-banc-grey-pale">
                   <div
                     className={cn(
                       "h-full rounded-full transition-all",
@@ -470,7 +470,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                 {[60, 75, 80, 85, 90].map((ltv) => (
                   <div
                     key={ltv}
-                    className="absolute top-5 -translate-x-1/2 text-xs text-white/40"
+                    className="absolute top-5 -translate-x-1/2 text-xs text-banc-muted-readable"
                     style={{ left: `${ltv}%` }}
                   >
                     {ltv}%
@@ -479,7 +479,7 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               </div>
               <div className="flex items-center justify-between pt-6">
                 <div>
-                  <p className="text-sm text-white/60">Your LTV</p>
+                  <p className="text-sm text-banc-muted-readable">Your LTV</p>
                   <p
                     className={cn(
                       "text-2xl font-bold",
@@ -490,8 +490,8 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-white/60">LTV Band</p>
-                  <p className="text-lg font-medium text-white">
+                  <p className="text-sm text-banc-muted-readable">LTV Band</p>
+                  <p className="text-lg font-medium text-banc-dark-deep">
                     {result.ltv <= 60
                       ? "Excellent (≤60%)"
                       : result.ltv <= 75
@@ -510,19 +510,19 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           </div>
 
           {/* Amortization Schedule */}
-          <div className="rounded-2xl border border-white/10 bg-banc-dark-deep p-6">
+          <div className="rounded-2xl border border-banc-line bg-white p-6">
             <button
               onClick={() => setShowAmortization(!showAmortization)}
               className="flex w-full items-center justify-between"
             >
-              <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-                <TrendingUp className="h-5 w-5 text-banc-sky" />
+              <h3 className="flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
+                <TrendingUp className="h-5 w-5 text-banc-focus" />
                 Amortization Schedule
               </h3>
               {showAmortization ? (
-                <ChevronUp className="h-5 w-5 text-white/40" />
+                <ChevronUp className="h-5 w-5 text-banc-muted-readable" />
               ) : (
-                <ChevronDown className="h-5 w-5 text-white/40" />
+                <ChevronDown className="h-5 w-5 text-banc-muted-readable" />
               )}
             </button>
 
@@ -530,31 +530,31 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="py-3 text-left text-sm font-medium text-white/60">Year</th>
-                      <th className="py-3 text-right text-sm font-medium text-white/60">Interest</th>
-                      <th className="py-3 text-right text-sm font-medium text-white/60">Principal</th>
-                      <th className="py-3 text-right text-sm font-medium text-white/60">Balance</th>
+                    <tr className="border-b border-banc-line">
+                      <th className="py-3 text-left text-sm font-medium text-banc-muted-readable">Year</th>
+                      <th className="py-3 text-right text-sm font-medium text-banc-muted-readable">Interest</th>
+                      <th className="py-3 text-right text-sm font-medium text-banc-muted-readable">Principal</th>
+                      <th className="py-3 text-right text-sm font-medium text-banc-muted-readable">Balance</th>
                     </tr>
                   </thead>
                   <tbody>
                     {yearlySchedule.map((year) => (
-                      <tr key={year.year} className="border-b border-white/5">
-                        <td className="py-2 text-sm text-white">Year {year.year}</td>
-                        <td className="py-2 text-right text-sm text-white/70">
+                      <tr key={year.year} className="border-b border-banc-line">
+                        <td className="py-2 text-sm text-banc-dark-deep">Year {year.year}</td>
+                        <td className="py-2 text-right text-sm text-banc-muted-readable">
                           {formatCurrency(year.interest)}
                         </td>
-                        <td className="py-2 text-right text-sm text-banc-sky">
+                        <td className="py-2 text-right text-sm text-banc-focus">
                           {formatCurrency(year.principal)}
                         </td>
-                        <td className="py-2 text-right text-sm text-white/70">
+                        <td className="py-2 text-right text-sm text-banc-muted-readable">
                           {formatCurrency(year.balance)}
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-                <p className="mt-3 text-center text-xs text-white/40">
+                <p className="mt-3 text-center text-xs text-banc-muted-readable">
                   Showing first 10 years. Full schedule available on request.
                 </p>
               </div>
@@ -564,13 +564,13 @@ export function MortgageCalculator({ className, compact = false }: MortgageCalcu
           {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/contact">
-              <Button className="w-full bg-banc-sky text-white hover:bg-banc-sky-dark sm:w-auto">
+              <Button className="w-full bg-banc-focus text-white hover:bg-banc-focus-hover sm:w-auto">
                 Get Mortgage Advice
               </Button>
             </Link>
             <Button
               variant="outline"
-              className="w-full border-white/20 text-white hover:bg-white/10 sm:w-auto"
+              className="w-full border-banc-line text-banc-dark-deep hover:bg-banc-grey-pale sm:w-auto"
               onClick={() => {
                 const data = {
                   propertyPrice: propertyPriceNum,

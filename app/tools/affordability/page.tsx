@@ -16,7 +16,7 @@ export const revalidate = 3600;
 
 export default function AffordabilityPage() {
   return (
-    <div className="min-h-screen bg-banc-dark-deep">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
       <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
@@ -24,7 +24,7 @@ export default function AffordabilityPage() {
           {/* Back Link */}
           <Link
             href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-banc-sky"
+            className="mb-6 inline-flex items-center gap-2 text-sm text-banc-muted-readable transition-colors hover:text-banc-focus"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Tools
@@ -32,14 +32,14 @@ export default function AffordabilityPage() {
 
           {/* Header */}
           <div className="mb-8">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-2">
-              <TrendingUp className="h-4 w-4 text-purple-400" />
-              <span className="text-sm text-purple-400">Affordability Tool</span>
+            <div className="mb-4 inline-flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-banc-focus" />
+              <span className="text-xs font-medium uppercase tracking-[0.12em] text-banc-muted-readable">Affordability Tool</span>
             </div>
-            <h1 className="mb-4 text-4xl font-bold text-white lg:text-5xl">
+            <h1 className="mb-4 text-4xl font-semibold text-banc-dark-deep lg:text-5xl">
               Affordability Calculator
             </h1>
-            <p className="text-lg text-white/70">
+            <p className="text-lg text-banc-muted-readable">
               Discover how much you could borrow and what your maximum property budget might be. Factor
               in your income, deposit, and existing commitments.
             </p>
@@ -49,32 +49,32 @@ export default function AffordabilityPage() {
           <AffordabilityCalculator />
 
           {/* Info Section */}
-          <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-white">
-              <Info className="h-5 w-5 text-banc-sky" />
+          <div className="mt-12 rounded-2xl border border-banc-line bg-banc-grey-pale p-6">
+            <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-banc-dark-deep">
+              <Info className="h-5 w-5 text-banc-focus" />
               Understanding Affordability
             </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-white/70">
+            <div className="space-y-4 text-sm leading-relaxed text-banc-muted-readable">
               <p>
-                <strong className="text-white">Income Multipliers:</strong> Lenders typically offer
+                <strong className="text-banc-dark-deep">Income Multipliers:</strong> Lenders typically offer
                 between 4 and 5.5 times your annual income. The exact multiplier depends on your credit
                 history, employment type, and existing financial commitments.
               </p>
               <p>
-                <strong className="text-white">Debt-to-Income Ratio:</strong> Lenders will look at your
+                <strong className="text-banc-dark-deep">Debt-to-Income Ratio:</strong> Lenders will look at your
                 existing monthly debt payments (loans, credit cards, car finance) when assessing how
                 much you can borrow. High existing debt may reduce the amount you can borrow.
               </p>
               <p>
-                <strong className="text-white">The 28% Rule:</strong> As a general guideline, your
+                <strong className="text-banc-dark-deep">The 28% Rule:</strong> As a general guideline, your
                 monthly mortgage payment should not exceed 28% of your gross monthly income.
               </p>
               <p>
-                <strong className="text-white">Joint Applications:</strong> When applying with a
+                <strong className="text-banc-dark-deep">Joint Applications:</strong> When applying with a
                 partner, lenders will consider your combined income. This can significantly increase
                 your borrowing capacity.
               </p>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-banc-muted-readable">
                 This calculator provides estimates based on standard industry multiples. Your actual
                 borrowing capacity will depend on the lender&apos;s specific criteria and your individual
                 circumstances.
