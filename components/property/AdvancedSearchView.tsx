@@ -69,22 +69,26 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
   const priceOptions = getPriceOptions(department);
   return (
     <div className={cn("flex h-full min-w-0 flex-col bg-white", !isMobile && "rounded-2xl border border-banc-line shadow-sm")}>
-      <header className={cn("flex items-center justify-between gap-3 border-b border-banc-line px-5 py-4", isMobile && "sticky top-0 z-10 bg-white")}>
+      <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-banc-line bg-white px-5 py-4">
         <div className="flex min-w-0 items-center gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-banc-sky/10"><SlidersHorizontal className="h-5 w-5 text-banc-focus" /></span>
           <div className="min-w-0"><h2 className="font-heading text-lg font-semibold text-banc-dark-deep">Filters</h2><p className="text-sm text-banc-muted-readable" aria-live="polite">{isLoading ? "Loading properties…" : resultCount !== undefined ? `${resultCount} propert${resultCount === 1 ? "y" : "ies"} found` : department === "sales" ? "Properties to buy" : "Properties to rent"}</p></div>
         </div>
         <div className="flex shrink-0 items-center gap-1">
           {hasActiveFilters && <button type="button" onClick={onClearFilters} className="min-h-11 px-2 text-sm font-medium text-banc-focus transition-colors duration-200 hover:text-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus">Clear all</button>}
-          {isMobile && onClose && <button type="button" onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus" aria-label="Close filters"><X className="h-5 w-5 text-banc-muted-readable" /></button>}
+          {onClose && <button type="button" onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus" aria-label="Close filters"><X className="h-5 w-5 text-banc-muted-readable" /></button>}
         </div>
       </header>
 
       <div className="flex-1 overflow-y-auto px-5">
+        {/* The results header carries sorting on desktop; the drawer has no
+            results header of its own, so it keeps the control. */}
+        {isMobile && (
         <div className="border-b border-banc-line py-5">
           <Label htmlFor="property-sort" className="mb-2 block text-sm font-semibold text-banc-dark-deep">Sort by</Label>
           <div className="relative"><select id="property-sort" value={filters.sort} onChange={(event) => onFilterChange({ sort: event.target.value as PropertySearchFilters["sort"] })} className="min-h-11 w-full appearance-none rounded-xl border border-banc-line bg-banc-grey-pale px-4 pr-10 text-base text-banc-dark-deep focus:outline-none focus:ring-2 focus:ring-banc-focus sm:text-sm">{SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" /></div>
         </div>
+        )}
 
         <FilterSection title="Location" icon={MapPin}>
           <Label htmlFor="advanced-location" className="sr-only">Area, town or postcode</Label>
@@ -103,7 +107,7 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
         <FilterSection title="Features & amenities" icon={TreePine}><OptionList<SearchFeature> name="feature" options={FEATURE_OPTIONS} selected={filters.features} canonicalOrder={SEARCH_FEATURES} onChange={(features) => onFilterChange({ features })} /></FilterSection>
       </div>
 
-      {isMobile && <footer className="sticky bottom-0 space-y-2 border-t border-banc-line bg-white p-4"><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} disabled={isLoading} className="h-12 w-full bg-banc-focus text-base font-semibold text-white hover:bg-banc-focus-hover focus-visible:ring-banc-focus">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading…</> : `Show ${resultCount !== undefined ? resultCount : ""} results`}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full border-banc-muted-readable text-base text-banc-dark-deep hover:border-banc-focus focus-visible:ring-banc-focus">Clear all filters</Button>}</footer>}
+      <footer className="sticky bottom-0 space-y-2 border-t border-banc-line bg-white p-4"><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} disabled={isLoading} className="h-12 w-full bg-banc-focus text-base font-semibold text-white hover:bg-banc-focus-hover focus-visible:ring-banc-focus">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading…</> : `Show ${resultCount !== undefined ? resultCount : ""} results`}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full border-banc-muted-readable text-base text-banc-dark-deep hover:border-banc-focus focus-visible:ring-banc-focus">Clear all filters</Button>}</footer>
     </div>
   );
 }
