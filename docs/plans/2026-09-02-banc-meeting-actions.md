@@ -259,7 +259,46 @@ and apply-and-close footer. Its own Sort by drops on desktop, where the
 results header carries it, and stays in the drawer, which has no results
 header. Driven in Chrome to confirm: close button present, footer reads
 "Show 60 results", no duplicate sort, and the panel closes.
-14. **Radius search:** "This area only / 0.5 / 1 / 3 / 5 miles" — geocode the typed location (postcodes.io for postcodes, Google Geocoding for place names), then distance filter in the search RPC.
+14. ~~**Radius search**~~ — **done 2026-09-03 (`15a0b86`).**
+
+**14 — radius search, without a Google key.** The plan assumed Google
+Geocoding for place names; this project holds no Google Maps key at all
+(the same gap behind the `gm_authFailure` map fallback). postcodes.io covers
+every case on its own and needs no key: `/postcodes/{pc}` for full
+postcodes, `/outcodes/{outcode}` for a bare outcode, and `/places?q=` for
+place names. Checked live against Cuffley, Brookmans Park, Goffs Oak,
+Mayfair, both postcode spellings, and a nonsense string.
+
+Design points worth keeping:
+
+- **A live centre replaces the text match rather than narrowing it.** Asking
+  for three miles around Cuffley should return streets near Cuffley whose
+  address never says Cuffley. Live, that is the difference between 34
+  results and 37.
+- **A failed geocode widens rather than empties.** If the lookup fails the
+  search falls back to text matching; it never returns a blank page because
+  a third party was down. A radius with no location is dropped on parse.
+- **Distance is haversine in miles** (`7917.5226 * asin(sqrt(...))`), not
+  PostGIS, which this project does not enable. At Hertfordshire scale the
+  error is metres. Properties with no coordinates drop out of a radius
+  search rather than into it.
+- **Resolving the centre lives in the repository**, so the `(query, signal)`
+  interface every caller uses — the chatbot's portfolio search included —
+  stayed untouched.
+- `radius` also left `UNSUPPORTED_FILTER_KEYS`, the tripwire that stopped
+  the UI advertising filters the backend could not honour.
+
+Migration `202609030001_radius_search.sql`, applied to the live project.
+Verified against live data: no centre 60 (unchanged), then 24 / 37 / 57 / 60
+at ½ / 1 / 3 / 5 miles of Cuffley, and 0 within 3 miles of Mayfair.
+
+**One bug this surfaced, of the kind types cannot catch.**
+`getPropertySearchFilters` hand-copies each field into the UI's filter
+state, and it did not copy `radius`. Every field is optional, so omitting
+one type-checks perfectly: the URL said `radius=1`, the search honoured it
+and returned 37, while the control silently read "This area only" and no
+chip appeared. Caught by driving the real page in Chrome, not by the suite.
+Now covered by a regression test.
 
 ### Batch 4 — Lead capture (Fri–Mon)
 15. **Viewing request:** preferred date + time fields; email to the sales or lettings inbox (N2) with name, contact details, property and preferred slot. Calendar sync deferred to Street.
