@@ -52,7 +52,6 @@ export const STATIC_ROUTES: readonly StaticRoute[] = [
   { path: "/tools/catchment-checker", priority: 0.5, changeFrequency: "monthly" },
   { path: "/tools/mortgage-calculator", priority: 0.5, changeFrequency: "monthly" },
   { path: "/tools/stamp-duty", priority: 0.5, changeFrequency: "monthly" },
-  { path: "/tools/valuation", priority: 0.5, changeFrequency: "monthly" },
   { path: "/tools/yield-calculator", priority: 0.5, changeFrequency: "monthly" },
   { path: "/newsletter/signup", priority: 0.4, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },

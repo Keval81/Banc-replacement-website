@@ -3,7 +3,6 @@ import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import {
   Calculator,
-  Home,
   PoundSterling,
   TrendingUp,
   TrendingDown,
@@ -51,16 +50,6 @@ const tools = [
     href: "/tools/affordability",
     color: "from-purple-500/20 to-purple-500/5",
     iconColor: "text-purple-400",
-  },
-  {
-    id: "valuation",
-    title: "Online Valuation Tool",
-    description:
-      "Get an instant estimate of your property's value. Compare with recent sales and market trends.",
-    icon: Home,
-    href: "/tools/valuation",
-    color: "from-orange-500/20 to-orange-500/5",
-    iconColor: "text-orange-400",
   },
   {
     id: "yield",

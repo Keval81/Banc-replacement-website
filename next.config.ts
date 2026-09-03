@@ -149,6 +149,14 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // A second valuation form, dark-on-dark to the point of being
+        // unreadable (13 elements below AA, worst 1.23:1) and competing with
+        // /valuation for the same intent.
+        source: "/tools/valuation",
+        destination: "/valuation",
+        permanent: true,
+      },
+      {
         source: "/about",
         destination: "/why-us",
         permanent: true,

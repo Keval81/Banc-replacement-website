@@ -33,11 +33,13 @@ const dropdowns = {
     { title: "Our Properties", href: "/sales/properties" },
     { title: "Buyers Guide", href: "/sales/buyers-guide" },
     { title: "Sellers Guide", href: "/sales/sellers-guide" },
+    { title: "Stamp Duty Calculator", href: "/tools/stamp-duty" },
   ],
   Lettings: [
     { title: "Rental Properties", href: "/lettings/properties" },
     { title: "Tenants Guide", href: "/lettings/tenants-guide" },
     { title: "Landlords Guide", href: "/lettings/landlords-guide" },
+    { title: "Rental Yield Calculator", href: "/tools/yield-calculator" },
   ],
   About: [
     { title: "Why Us", href: "/why-us" },
