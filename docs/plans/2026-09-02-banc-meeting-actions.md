@@ -176,8 +176,60 @@ from baseline, production build compiles.
 4. Start Batch 2.
 
 ### Batch 2 — Data correctness (Thu)
-10. **Exclude withdrawn / historic listings** from the Expert Agent import: filter on the feed's status/withdrawn fields so only live for sale / to let (+ recent under offer / let agreed) show. Audit the current 353 rows and archive the rest.
-11. **Schedule the Expert Agent sync** (launchd on the Mac mini) so listings and search columns stay fresh automatically.
+10. ~~**Exclude withdrawn / historic listings** from the Expert Agent import~~ — **done 2026-09-03 (`946e948`).** See below.
+11. **Schedule the Expert Agent sync** — the workflow already exists and is already running; it has never once succeeded. See below.
+
+**10 — what was actually wrong (2026-09-03).** Not withdrawn listings: the
+feed contains none. The feed's real shape, read live off the FTP:
+
+| department | feed priority | count | mapped to | published? |
+|---|---|---|---|---|
+| Sales | On Market | 43 | for_sale | yes |
+| Sales | Under Offer | 17 | under_offer | yes |
+| Sales | **Sold STC** | **237** | under_offer | **yes** |
+| Lettings | Available to Let | 1 | to_let | yes |
+| Lettings | **Let STC** | **59** | let_agreed | **yes** |
+
+Expert Agent never advances a completed sale past "Sold STC", so the
+priority accumulates. Those 237 Sold STC carry `instructedDate` values back
+to **2017**, and the 59 Let STC back to 2020 — a nine-year archive, not live
+stock. Mapping them onto under_offer/let_agreed meant **251 of the 294
+sales listings on the site were houses that had already sold**, each with a
+live "Under Offer" badge, a detail page, JSON-LD and a place in Banc Bot's
+trusted results.
+
+Sold STC and Let STC now map to sold/let, which sit outside
+`MARKETABLE_PROPERTY_STATUSES`; `SALES_STATUSES`/`LETTINGS_STATUSES` already
+excluded those, so search, detail pages and the chatbot all drop them with
+no second filter. The rows stay in the table for any future "recently sold"
+work. Re-synced against the live feed and verified through the real
+`search_properties` RPC with the anon key:
+
+- **sales: 60** (43 for sale + 17 under offer), was 294
+- **lettings: 1**, was 60
+- 296 rows archived as sold/let; 2 rows absent from the feed correctly
+  deactivated by the reconcile step
+
+**⚠ Client question this raises — lettings has exactly one available
+property.** That is the truth of the feed, and it is a thin lettings page
+for a launch. Ask Nitesh whether Banc genuinely has one property available
+to let right now, or whether their Expert Agent statuses need cleaning up
+(properties still sitting at "Let STC" that are actually available). This
+is a CRM-side answer, not a website change.
+
+**11 — the sync is already scheduled and has never worked.**
+`.github/workflows/sync-expert-agent.yml` runs hourly at :17 on `main` and
+is live on GitHub now. Every run fails, 8 for 8 since 1 Sep, because **none
+of the repository secrets were ever set** — the log shows every env var
+empty and the script exiting on `supabaseAdmin not configured
+(SUPABASE_SERVICE_ROLE_KEY)`. `gh secret list` returns nothing. So no
+launchd job is needed; what is needed is six repo secrets:
+`EXPERT_AGENT_FTP_URL`, `EXPERT_AGENT_FTP_USER`, `EXPERT_AGENT_FTP_PASS`,
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY` — all present in `.env.local`. Until they are
+set, listings only move when the sync is run by hand, and the site's "last
+updated" freshness stamp stays blank (`crm_sync_runs` was empty until the
+manual run on 3 Sep).
 
 ### Batch 3 — Search & sort (Fri)
 12. **Sort options:** price low→high, high→low, newest first (surface in the results header and mobile drawer).
