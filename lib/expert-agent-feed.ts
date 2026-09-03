@@ -153,11 +153,19 @@ export function parseExpertAgentFeed(xml: string): ExpertAgentFeed {
   return { agencyName: text(agency["@_name"]), properties };
 }
 
+// "Sold STC" and "Let STC" are completed business, not live stock. Expert
+// Agent never advances them to plain "Sold"/"Let", so they accumulate: the
+// 3 Sep 2026 feed carried 237 Sold STC instructed as far back as 2017 and 59
+// Let STC back to 2020, against 43 genuinely on the market. Mapping them to
+// under_offer/let_agreed published that entire nine-year archive as available
+// property. They map to sold/let, which sit outside
+// MARKETABLE_PROPERTY_STATUSES, so search, detail pages and Banc Bot all drop
+// them while the rows stay for any future "recently sold" work.
 const SALES_STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
   "on market": "for_sale",
   "under offer": "under_offer",
   "sold": "sold",
-  "sold stc": "under_offer",
+  "sold stc": "sold",
   "withdrawn": "withdrawn",
 };
 
@@ -165,10 +173,10 @@ const LETTINGS_STATUS_BY_PRIORITY: Record<string, DbProperty["status"]> = {
   "on market": "to_let",
   "under offer": "let_agreed",
   "sold": "let",
-  "sold stc": "let_agreed",
+  "sold stc": "let",
   "withdrawn": "withdrawn",
   "available to let": "to_let",
-  "let stc": "let_agreed",
+  "let stc": "let",
   "let": "let",
 };
 

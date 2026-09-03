@@ -104,11 +104,11 @@ test("maps lettings departments and priorities to lettings statuses", () => {
   assert.equal(row.status, "to_let");
 });
 
-test("maps Let STC to let_agreed and Sold STC to under_offer", () => {
+test("maps Sold STC and Let STC to completed statuses, not marketable ones", () => {
   const a = xml.replace("<priority>On Market</priority>", "<priority>Sold STC</priority>");
-  assert.equal(toDbProperty(parseExpertAgentFeed(a).properties[0]).status, "under_offer");
+  assert.equal(toDbProperty(parseExpertAgentFeed(a).properties[0]).status, "sold");
   const b = xml.replace("<priority>Under Offer</priority>", "<priority>Let STC</priority>");
-  assert.equal(toDbProperty(parseExpertAgentFeed(b).properties[1]).status, "let_agreed");
+  assert.equal(toDbProperty(parseExpertAgentFeed(b).properties[1]).status, "let");
 });
 
 test("keeps every supported priority inside its department status vocabulary", () => {
@@ -117,12 +117,13 @@ test("keeps every supported priority inside its department status vocabulary", (
     { property: sales, priority: "On Market", expected: "for_sale" },
     { property: sales, priority: "Under Offer", expected: "under_offer" },
     { property: sales, priority: "Sold", expected: "sold" },
-    { property: sales, priority: "Sold STC", expected: "under_offer" },
+    { property: sales, priority: "Sold STC", expected: "sold" },
     { property: sales, priority: "Withdrawn", expected: "withdrawn" },
     { property: lettings, priority: "Available to Let", expected: "to_let" },
     { property: lettings, priority: "On Market", expected: "to_let" },
     { property: lettings, priority: "Under Offer", expected: "let_agreed" },
-    { property: lettings, priority: "Let STC", expected: "let_agreed" },
+    { property: lettings, priority: "Let STC", expected: "let" },
+    { property: lettings, priority: "Sold STC", expected: "let" },
     { property: lettings, priority: "Let", expected: "let" },
     { property: lettings, priority: "Withdrawn", expected: "withdrawn" },
   ] as const;
