@@ -156,23 +156,15 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
 
   assert.match(heroSource, /src="\/banc-logo-blue\.png"/);
   assert.doesNotMatch(heroSource, /banc-logo-white-clear\.png/);
-  assert.match(heroSource, /Local independent property specialists/);
+  // The copy carries an explicit line break at mobile sizes, so match the
+  // words rather than one contiguous string.
+  assert.match(heroSource, /Local independent[\s\S]{0,160}property specialists/);
   // The site's label voice: a tracked uppercase eyebrow at the same scale
   // SectionHeader uses, not body copy.
-  const tagline = heroSource.match(
-    /className="([^"]+)"\s*>\s*Local independent property specialists/,
-  );
+  const tagline = heroSource.match(/<p className="(banc-tagline-reveal [^"]+)"/);
   assert.ok(tagline, "the hero must render the site tagline under the lockup");
   const classes = tagline[1]?.split(/\s+/) ?? [];
-  for (const token of [
-    "uppercase",
-    "font-medium",
-    // One line from 320px up — below 360px the larger size orphans the last
-    // word onto a second line.
-    "text-[9px]",
-    "min-[360px]:text-[10px]",
-    "sm:text-[13px]",
-  ]) {
+  for (const token of ["uppercase", "font-medium", "text-[14px]", "md:text-[18px]"]) {
     assert.ok(classes.includes(token), `the tagline must carry the ${token} class`);
   }
   assert.ok(
@@ -181,7 +173,7 @@ test("carries the brand lockup and tagline in the hero, in Banc blue", () => {
   );
   // The reveal itself is covered by hero-tagline-reveal.test.ts.
   // The tagline belongs to the hero lockup, not to the header bar.
-  assert.doesNotMatch(headerSource, /Local independent property specialists/);
+  assert.doesNotMatch(headerSource, /Local independent/);
 });
 
 test("names the conversational agent Banc Bot everywhere a visitor sees it", () => {

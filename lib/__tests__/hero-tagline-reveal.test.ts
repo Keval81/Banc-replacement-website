@@ -12,10 +12,9 @@ const cssSource = readFileSync(join(root, "app", "globals.css"), "utf8");
 // values into the server-rendered inline style, so a page that does not
 // hydrate — reproduced in WebKit — leaves the text at opacity 0 forever.
 test("reveals the hero tagline from CSS, not from an inline initial state", () => {
-  const tagline = heroSource.slice(
-    Math.max(0, heroSource.indexOf("Local independent property specialists") - 1200),
-    heroSource.indexOf("Local independent property specialists"),
-  );
+  const at = heroSource.indexOf("banc-tagline-reveal");
+  assert.ok(at > 0, "the hero must render the tagline reveal");
+  const tagline = heroSource.slice(Math.max(0, at - 1200), at + 500);
 
   assert.doesNotMatch(
     tagline,

@@ -269,10 +269,14 @@ export default function Hero() {
           <div className="mt-4 flex items-center gap-3 sm:mt-5 sm:gap-4">
             <span
               aria-hidden="true"
-              className="banc-rule-draw hidden h-px w-14 flex-none bg-white/50 sm:block sm:w-16"
+              className="banc-rule-draw hidden h-px w-14 flex-none bg-white/50 md:block md:w-16"
             />
-            <p className="banc-tagline-reveal text-[9px] font-medium uppercase text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] min-[360px]:text-[10px] sm:text-[13px]">
-              Local independent property specialists
+            {/* The break is explicit rather than left to the wrap: at mobile
+                sizes the line otherwise strands "specialists" on its own. */}
+            <p className="banc-tagline-reveal text-[14px] font-medium uppercase leading-[1.5] text-white/85 [text-shadow:0_1px_6px_rgba(0,0,0,0.85)] md:text-[18px]">
+              Local independent
+              <br className="md:hidden" />{" "}
+              property specialists
             </p>
           </div>
 
