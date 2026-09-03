@@ -87,7 +87,38 @@ Still open: the OpenAI account that key belongs to bills for all live
 traffic from launch. Decide whether that sits with Digital Inroads or with
 Banc before the 13th.
 
-## Where this stopped (2026-09-02, end of session)
+## Where this stopped (2026-09-03, end of session)
+
+25 commits on `main`, **local only — still nothing pushed or deployed.**
+460 tests pass, `tsc --noEmit` clean, ESLint unchanged from baseline.
+
+Since the 2 Sep session: Batch 1's nine items, five revisions from SanSan's
+review, the Banc Bot outage (see above), and the chat-continuity fix —
+following a listing link out of the chat used to land on a page with no
+assistant on it and a destroyed thread; the overlay policy now covers
+property pages, `lib/property-chat-session.ts` keeps the thread in
+sessionStorage, and the launcher holds a raised offset to lg so it clears
+the sticky enquiry bar.
+
+**Pick up here, in order:**
+
+1. ⚠ **Check the hero in real Safari** (detail below — still unverified, and
+   still the one thing that could be a launch blocker).
+2. Push and cut a preview deploy for Nitesh; book the end-of-week review
+   call. Vercel already holds the working OpenAI key and model, so Banc Bot
+   will work on the preview.
+3. Chase **N3 (DNS access)** — the only outstanding input that can miss the
+   13 Sep launch — then N1 and N2.
+4. Start Batch 2.
+
+**Decisions still owed by the client / SanSan**
+
+- Which OpenAI account carries the key: Banc's live traffic bills its owner
+  from launch day, three provider calls per turn.
+- One property card (BPGC1116) still shows both a title and an address
+  line, because its address is the only place the street appears.
+
+## Where this stopped (2026-09-02, earlier session)
 
 Batch 1 and the review pass are complete on `main`, **local only — nothing
 pushed or deployed.** 453 tests pass, `tsc --noEmit` clean, ESLint unchanged
