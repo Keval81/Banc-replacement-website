@@ -14,7 +14,9 @@ export const expertAgentAdapter: PropertySourceAdapter<FeedProperty> = {
       ...base,
       source_system: "expert_agent",
       source_id: record.reference,
-      source_updated_at: undefined,
+      // The feed's instructedDate, not the sync time: last_synced_at is
+      // identical across every row and so cannot order anything.
+      source_updated_at: base.source_updated_at,
       last_synced_at: syncedAt,
       is_active: true,
       search_property_type: normalizePropertyType(base.property_type),

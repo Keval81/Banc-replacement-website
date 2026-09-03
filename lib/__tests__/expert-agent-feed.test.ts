@@ -180,3 +180,21 @@ test("derives the band from PEA_ four-digit filenames too", () => {
   const noise = xml.replace("EPC_80827980.png", "Picture1.png");
   assert.equal(toDbProperty(parseExpertAgentFeed(noise).properties[0]).epc_rating, undefined);
 });
+
+test("parses instructedDate into an ISO listing date, and tolerates its absence", () => {
+  const [sales, lettings] = parseExpertAgentFeed(xml).properties;
+  assert.equal(sales.instructedAt, "2021-01-16T15:09:00.000Z");
+  assert.equal(lettings.instructedAt, undefined);
+});
+
+test("carries the listing date onto the row as source_updated_at", () => {
+  const [sales, lettings] = parseExpertAgentFeed(xml).properties;
+  assert.equal(toDbProperty(sales).source_updated_at, "2021-01-16T15:09:00.000Z");
+  assert.equal(toDbProperty(lettings).source_updated_at, undefined);
+});
+
+test("reads a day-first instructedDate rather than a month-first one", () => {
+  // 13/02 is only a valid date read day-first; a month-first reader yields NaN.
+  const feed = xml.replace("16/01/2021 15:09:00", "13/02/2022 09:30:00");
+  assert.equal(parseExpertAgentFeed(feed).properties[0].instructedAt, "2022-02-13T09:30:00.000Z");
+});

@@ -4,6 +4,7 @@
 <branch name="Cuffley">
 <properties>
 <property reference="692778d6-40f8-4760-b6e8-8729d19cf5c1">
+  <instructedDate>16/01/2021 15:09:00</instructedDate>
   <department>Residential Sales</department>
   <propertyofweek>No</propertyofweek>
   <price_text>Offers over £350,000.00</price_text>

@@ -80,7 +80,8 @@ export const FEATURE_OPTIONS: readonly SearchOption<SearchFeature>[] = [
 ] as const;
 
 export const SORT_OPTIONS: readonly SearchOption<PropertySort>[] = [
-  { value: "default", label: "Default" },
+  // The canonical order is newest-listed first, so it is named for what it does.
+  { value: "default", label: "Newest first" },
   { value: "price_asc", label: "Price: Low to High" },
   { value: "price_desc", label: "Price: High to Low" },
 ] as const;

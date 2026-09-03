@@ -21,6 +21,8 @@ export interface FeedProperty {
   reference: string;
   branch: string;
   department: string;
+  /** Feed's instructedDate as ISO, when present — the date the property was listed. */
+  instructedAt?: string;
   propertyOfWeek: boolean;
   priceText: string;
   numericPrice: number;
@@ -77,6 +79,20 @@ function joinAddress(parts: string[]): string {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// instructedDate is "dd/mm/yyyy hh:mm:ss" and carries no timezone. Read
+// day-first (a month-first reader turns 13/02 into an invalid date) and treat
+// as UTC — it is only ever used to order listings, never displayed.
+function instructedAt(value: string): string | undefined {
+  const m = value.match(/^(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/);
+  if (!m) return undefined;
+  const [, day, month, year, hour = "00", minute = "00", second = "00"] = m;
+  const at = new Date(
+    Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second)),
+  );
+  if (Number.isNaN(at.getTime()) || at.getUTCDate() !== Number(day)) return undefined;
+  return at.toISOString();
+}
+
 function mapProperty(raw: any, branch: string): FeedProperty {
   const houseNumber = text(raw.house_number);
   const street = text(raw.street);
@@ -96,6 +112,7 @@ function mapProperty(raw: any, branch: string): FeedProperty {
 
   return {
     reference: text(raw["@_reference"]),
+    instructedAt: instructedAt(text(raw.instructedDate)),
     branch,
     department: text(raw.department),
     propertyOfWeek: text(raw.propertyofweek).toLowerCase() === "yes",
@@ -209,7 +226,6 @@ export function toDbProperty(
   | "updated_at"
   | "source_system"
   | "source_id"
-  | "source_updated_at"
   | "last_synced_at"
   | "is_active"
   | "search_property_type"
@@ -225,6 +241,7 @@ export function toDbProperty(
   return {
     department: lettings ? "lettings" : "sales",
     expert_agent_id: p.reference,
+    source_updated_at: p.instructedAt,
     title: p.advertHeading || joinAddress([p.address]),
     address: p.address,
     postcode: p.postcode,

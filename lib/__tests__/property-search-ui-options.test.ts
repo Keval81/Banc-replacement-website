@@ -212,3 +212,23 @@ test("active Task 7 controls reserve cyan for decorative pale fills", () => {
   assert.equal(outlineButton.includes("text-banc-dark-deep"), true);
   assert.equal(outlineButton.includes("hover:border-banc-focus"), true);
 });
+
+test("offers newest first alongside the two price sorts", () => {
+  assert.deepEqual(
+    SORT_OPTIONS.map((option) => option.value),
+    ["default", "price_asc", "price_desc"],
+  );
+  // The canonical order already runs newest-listed first, so it is named for
+  // what it does rather than sitting next to a duplicate "newest" option.
+  assert.equal(SORT_OPTIONS[0].label, "Newest first");
+});
+
+test("the results header carries the sort control, not just the filters panel", () => {
+  const source = readFileSync(
+    new URL("../../components/property/ActiveFiltersView.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /SORT_OPTIONS\.map/);
+  assert.match(source, /onFilterChange\(\{ sort:/);
+  assert.match(source, /htmlFor="results-sort"/);
+});

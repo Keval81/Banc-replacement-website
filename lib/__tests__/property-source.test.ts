@@ -60,3 +60,13 @@ test("maps Expert Agent data to CRM-neutral source metadata", () => {
   assert.equal(row.search_tenure, "freehold");
   assert.ok(row.search_features.includes("garden"));
 });
+
+test("keeps the feed's listing date so results can sort newest first", () => {
+  const record = parseExpertAgentFeed(xml).properties[0];
+  const row = expertAgentAdapter.map(record, {
+    syncedAt: "2026-08-27T09:00:00.000Z",
+  });
+
+  // Not last_synced_at: every row shares that, so it cannot order anything.
+  assert.equal(row.source_updated_at, "2021-01-16T15:09:00.000Z");
+});
