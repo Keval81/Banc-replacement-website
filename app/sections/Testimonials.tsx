@@ -1,101 +1,70 @@
-"use client";
-
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Carousel } from "@/components/Carousel";
+import { surfaceFor } from "@/lib/carousel-surfaces";
+import { BANC_REVIEWS } from "@/lib/reviews";
+import Link from "next/link";
 
-// Real Google reviews, presented as typographic pull-quotes — no stock faces
-// attached to real reviewers (see DESIGN.md).
-const testimonials = [
-  {
-    quote:
-      "We have just sold our house through Banc Property Group and it was such a positive experience. I cannot speak highly enough of Andrew who couldn't have been more helpful. We achieved the asking price very quickly.",
-    name: "Dawn",
-    location: "Leefe Way, Cuffley",
-  },
-  {
-    quote:
-      "Andrew, Nitesh and Vicky sold my house quickly and efficiently. Very professional friendly team supported me through the process. I am a happy, satisfied customer and can highly recommend Banc estate agents.",
-    name: "Iwona",
-    location: "Chestnut Close, Oakwood",
-  },
-  {
-    quote:
-      "The entire team were extremely helpful finding a rental property. The process was made extremely smooth, paperwork was simple, clear and concise and I was able to move in very quickly.",
-    name: "James",
-    location: "Myles Court, Goffs Oak",
-  },
-];
-
+/**
+ * Real Google reviews, presented as typographic pull-quotes on colour-backed
+ * cards — no stock faces attached to real reviewers (see DESIGN.md).
+ *
+ * This used to rotate one quote at a time on a 7-second timer, which showed
+ * three of the thirteen reviews and moved the copy out from under anyone still
+ * reading it. The carousel shows them all and only moves when asked.
+ */
 export default function Testimonials() {
-  const [active, setActive] = useState(0);
-
-  const handleNext = useCallback(() => {
-    setActive((prev) => (prev + 1) % testimonials.length);
-  }, []);
-
-  const handlePrev = useCallback(() => {
-    setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(handleNext, 7000);
-    return () => clearInterval(interval);
-  }, [handleNext]);
-
-  const t = testimonials[active];
-
   return (
     <section className="bg-white py-20 lg:py-28">
       <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-10">
-        <SectionHeader number="04" label="Clients" title="In their words" />
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <SectionHeader number="04" label="Clients" title="In their words" />
+        </div>
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_auto]">
-          <div className="min-h-[180px] max-w-3xl">
-            <AnimatePresence mode="wait">
-              <motion.figure
-                key={active}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.45 }}
+        <Carousel
+          label="Client reviews"
+          className="mt-14"
+          slideClassName="basis-[85%] sm:basis-[60%] lg:basis-[40%] xl:basis-[31%]"
+        >
+          {BANC_REVIEWS.map((review, index) => {
+            const surface = surfaceFor(index);
+            return (
+              <figure
+                key={`${review.name}-${review.location}`}
+                className={`banc-lift flex h-full flex-col rounded-[10px] border p-7 ${surface.background} ${surface.border}`}
               >
-                <blockquote className="font-serif text-2xl font-light leading-snug text-banc-dark sm:text-3xl">
-                  &ldquo;{t.quote}&rdquo;
+                <blockquote
+                  className={`font-serif text-xl font-light leading-snug ${surface.ink}`}
+                >
+                  &ldquo;{review.text}&rdquo;
                 </blockquote>
-                <figcaption className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-1 border-t border-banc-dark/15 pt-4">
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-dark">
-                    {t.name}
+                <figcaption
+                  className={`mt-6 flex flex-wrap items-baseline gap-x-5 gap-y-1 border-t pt-4 ${surface.border}`}
+                >
+                  <span className={`text-[11px] uppercase tracking-[0.18em] ${surface.ink}`}>
+                    {review.name}
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
-                    {t.location}
+                  <span
+                    className={`text-[11px] uppercase tracking-[0.18em] ${surface.mutedInk}`}
+                  >
+                    {review.location}
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
+                  <span
+                    className={`text-[11px] uppercase tracking-[0.18em] ${surface.mutedInk}`}
+                  >
                     Google review &middot; 5.0
                   </span>
                 </figcaption>
-              </motion.figure>
-            </AnimatePresence>
-          </div>
+              </figure>
+            );
+          })}
+        </Carousel>
 
-          <div className="flex items-start gap-3">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous testimonial"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-banc-dark/20 text-banc-dark transition-colors hover:border-banc-dark"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next testimonial"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-banc-dark/20 text-banc-dark transition-colors hover:border-banc-dark"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
+        <Link
+          href="/reviews"
+          className="mt-10 inline-flex min-h-11 items-center gap-2 border-b border-banc-dark text-sm font-semibold uppercase tracking-[0.14em] text-banc-dark transition-colors hover:text-banc-focus"
+        >
+          Read all client reviews
+        </Link>
       </div>
     </section>
   );

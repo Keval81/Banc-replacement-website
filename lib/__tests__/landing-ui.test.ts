@@ -373,3 +373,24 @@ test("keeps the Featured Listings section visible while data loads or is unavail
   assert.doesNotMatch(source, /catch\(\(\)\s*=>\s*\{\}\)/);
   assert.doesNotMatch(source, /if \(listings\.length === 0\) return null/);
 });
+
+test("the featured slideshow's Enquire button lands on a target that exists", () => {
+  const featured = readFileSync(
+    join(import.meta.dirname, "..", "..", "app", "sections", "FeaturedListings.tsx"),
+    "utf8",
+  );
+  const contactActions = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "property-detail", "PropertyContactActions.tsx"),
+    "utf8",
+  );
+
+  // Each slide carries the price and an Enquire call to action.
+  assert.match(featured, /\{listing\.price\}/);
+  assert.match(featured, />\s*Enquire\s*</);
+
+  // An #enquire link is only worth shipping if something answers to it.
+  const anchors = featured.match(/#enquire/g) ?? [];
+  if (anchors.length > 0) {
+    assert.match(contactActions, /id="enquire"/);
+  }
+});

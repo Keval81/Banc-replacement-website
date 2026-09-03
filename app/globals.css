@@ -362,4 +362,32 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   }
 }
 
+/* Carousel track: still a real scroll container, just without the chrome. */
+.banc-carousel-track {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.banc-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* The hover lift DESIGN.md allows: movement and a hairline, never a shadow. */
+.banc-lift {
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+}
+@media (hover: hover) {
+  .banc-lift:hover {
+    transform: translateY(-4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .banc-lift,
+  .banc-lift:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
 /* Cache bust: Fri Feb 27 16:40:00 GMT 2026 */

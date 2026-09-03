@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
-import PropertyCard from "@/components/PropertyCard";
+import Image from "next/image";
 import { SectionHeader } from "@/components/SectionHeader";
+import { Carousel } from "@/components/Carousel";
+import { buildPropertyHref } from "@/lib/property-view";
 import {
-  FEATURED_LISTINGS_MOBILE_LIMIT,
   INITIAL_FEATURED_LISTINGS_STATE,
   loadFeaturedListings,
   type FeaturedListingsState,
@@ -89,32 +89,68 @@ export default function FeaturedListings() {
         )}
 
         {state.status === "ready" && state.listings.length > 0 && (
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.15 } },
-            }}
-            className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
+          <Carousel
+            label="Featured homes"
+            className="mt-12"
+            slideClassName="basis-[88%] sm:basis-[68%] lg:basis-[48%] xl:basis-[40%]"
           >
-            {state.listings.map((listing, index) => (
-              <motion.div
-                key={listing.id}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  show: { opacity: 1, y: 0 },
-                }}
-                // Desktop shows up to 8; phones stop at 6.
-                className={
-                  index >= FEATURED_LISTINGS_MOBILE_LIMIT ? "hidden sm:block" : undefined
-                }
-              >
-                <PropertyCard {...listing} />
-              </motion.div>
-            ))}
-          </motion.div>
+            {state.listings.map((listing, index) => {
+              const href = buildPropertyHref(listing.department, listing.id);
+              const image = listing.images[0];
+              return (
+                <article key={listing.id} className="banc-lift flex h-full flex-col">
+                  <Link
+                    href={href}
+                    className="group relative block overflow-hidden rounded-[10px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                  >
+                    <div className="relative aspect-[4/3] bg-banc-grey-pale">
+                      {image && (
+                        <Image
+                          src={image}
+                          alt={listing.title}
+                          fill
+                          sizes="(min-width: 1280px) 40vw, (min-width: 640px) 68vw, 88vw"
+                          className="object-cover"
+                          priority={index === 0}
+                        />
+                      )}
+                      {/* A scrim, which DESIGN.md allows over photography, so the
+                          price stays legible whatever the image behind it. */}
+                      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent" />
+                      <p className="absolute bottom-4 left-4 rounded-full bg-banc-dark-deep/85 px-4 py-1.5 text-base font-semibold text-white">
+                        {listing.price}
+                      </p>
+                    </div>
+                  </Link>
+
+                  <div className="mt-5 flex flex-1 flex-col">
+                    <h3 className="font-serif text-xl font-light leading-snug text-banc-dark">
+                      <Link href={href} className="hover:text-banc-focus">
+                        {listing.title}
+                      </Link>
+                    </h3>
+                    <p className="mt-1 text-sm text-banc-muted-readable">
+                      {listing.address}
+                    </p>
+                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                      <Link
+                        href={`${href}#enquire`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-banc-focus px-6 text-sm font-medium text-white transition-colors hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                      >
+                        Enquire
+                      </Link>
+                      <Link
+                        href={href}
+                        className="inline-flex min-h-11 items-center border-b border-banc-dark text-sm font-semibold uppercase tracking-[0.14em] text-banc-dark transition-colors hover:text-banc-focus"
+                      >
+                        View home
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </Carousel>
         )}
       </div>
     </section>

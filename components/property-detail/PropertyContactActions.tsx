@@ -16,7 +16,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
   const tourUrl = getSafeExternalUrl(property.virtualTourUrl);
 
   return (
-    <aside className="hidden lg:block" aria-label="Property enquiry">
+    <aside id="enquire" className="hidden lg:block" aria-label="Property enquiry">
       <div className="sticky top-[calc(env(safe-area-inset-top)+6rem)] rounded-3xl border border-banc-grey/20 bg-banc-grey-pale p-6 shadow-[0_24px_60px_-36px_rgba(16,34,56,0.35)]">
         <p className="font-serif text-2xl text-banc-dark">Arrange your viewing</p>
         <p className="mt-2 text-sm leading-6 text-banc-muted-readable">

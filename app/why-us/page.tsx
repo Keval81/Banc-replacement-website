@@ -3,6 +3,8 @@ import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Carousel } from "@/components/Carousel";
+import { surfaceFor } from "@/lib/carousel-surfaces";
 import {
   ArrowRight,
   Award,
@@ -286,33 +288,32 @@ export default function WhyUsPage() {
             </p>
           </div>
 
-          {/* Differentiators grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {differentiators.map((item, index) => (
-              <div
-                key={item.title}
-                className="group relative bg-white rounded-2xl p-6 border border-banc-line/30 hover:border-banc-sky/50 hover:shadow-xl hover:shadow-banc-sky/5 transition-all duration-300"
-              >
-                {/* Icon */}
-                <div className="w-14 h-14 rounded-xl bg-banc-sky/10 flex items-center justify-center mb-4 group-hover:bg-banc-sky/20 transition-colors">
-                  <item.icon className="h-7 w-7 text-banc-focus" />
-                </div>
-                
-                {/* Content */}
-                <h3 className="text-lg font-semibold text-banc-dark-deep mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-banc-muted-readable leading-relaxed">
-                  {item.description}
-                </p>
-                
-                {/* Number indicator */}
-                <div className="absolute bottom-4 right-4 text-6xl font-bold text-banc-grey-pale group-hover:text-banc-sky/10 transition-colors">
-                  {String(index + 1).padStart(2, '0')}
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Colour-backed carousel cards, one surface per card in rotation. */}
+          <Carousel label="What we do differently">
+            {differentiators.map((item, index) => {
+              const surface = surfaceFor(index);
+              return (
+                <article
+                  key={item.title}
+                  className={`banc-lift relative flex h-full flex-col overflow-hidden rounded-[10px] border p-6 ${surface.background} ${surface.border}`}
+                >
+                  <div
+                    aria-hidden="true"
+                    className={`mb-5 text-[11px] uppercase tracking-[0.18em] ${surface.mutedInk}`}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </div>
+                  <item.icon className={`mb-4 h-7 w-7 ${surface.ink}`} aria-hidden="true" />
+                  <h3 className={`text-lg font-semibold ${surface.ink}`}>
+                    {item.title}
+                  </h3>
+                  <p className={`mt-2 text-sm leading-relaxed ${surface.mutedInk}`}>
+                    {item.description}
+                  </p>
+                </article>
+              );
+            })}
+          </Carousel>
         </div>
       </section>
 
