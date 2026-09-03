@@ -56,6 +56,37 @@
 Remaining follow-up: one card (BPGC1116) still prints both lines, because
 its address is the only place the street appears. Left as is.
 
+## Banc Bot restored (2026-09-03)
+
+The assistant had been answering "temporarily unavailable" everywhere,
+including on Preview and Production, because the stored `OPENAI_API_KEY`
+was revoked — the same key sat in both Vercel environments and both were
+rejected with `401 invalid_api_key`. No key was ever committed to the repo,
+so it was rotated or revoked upstream, not leaked.
+
+A new key is in `.env.local` and in Vercel for Preview and Production. The
+configured `OPENAI_CHAT_MODEL` had also stopped resolving and is now
+**`gpt-4.1`**, which is a functional requirement rather than a preference:
+
+- The model must support the Responses API with strict `json_schema`
+  structured output. Verified working against the live account: gpt-4.1,
+  gpt-4.1-mini, gpt-4o-mini, gpt-5, gpt-5-mini.
+- **gpt-4.1-mini fails the intent layer's `clear` operation.** Asked for a
+  3 bed, then a pool, then "just search for any with pool", it keeps
+  bedrooms pinned at 3/3 and returns nothing — reproduced 2/2. gpt-4.1
+  handles it 6/6 across phrasings, including accepting the assistant's own
+  suggestion ("yes").
+- The gpt-5 models work but spend 300-560 reasoning tokens per call and run
+  2-4x slower; the handler makes up to three calls per turn, so that is
+  12-17s per reply.
+
+So dropping to a cheaper model silently degrades comprehension rather than
+just quality. `.env.example` records the constraint.
+
+Still open: the OpenAI account that key belongs to bills for all live
+traffic from launch. Decide whether that sits with Digital Inroads or with
+Banc before the 13th.
+
 ## Where this stopped (2026-09-02, end of session)
 
 Batch 1 and the review pass are complete on `main`, **local only — nothing
