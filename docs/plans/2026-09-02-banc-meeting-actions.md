@@ -232,8 +232,33 @@ updated" freshness stamp stays blank (`crm_sync_runs` was empty until the
 manual run on 3 Sep).
 
 ### Batch 3 — Search & sort (Fri)
-12. **Sort options:** price low→high, high→low, newest first (surface in the results header and mobile drawer).
-13. **Filter UX:** clear close/apply/clear-all behaviour on the filter panel and drawer.
+12. ~~**Sort options**~~ — **done 2026-09-03 (`a0d14e3`).**
+13. ~~**Filter UX**~~ — **done 2026-09-03 (`cfdc018`).**
+
+**12 — newest first could not have worked.** The two price sorts were
+already wired end to end, but the adapter wrote `source_updated_at` as
+`undefined`, so the canonical ordering fell through to `created_at` — the
+row's insertion time, identical across a bulk sync and unrelated to when a
+property was listed. The feed's `instructedDate`, the actual listing date,
+was parsed nowhere. It is now read day-first (a month-first reader turns
+13/02 into an invalid date) and carried to `source_updated_at`, so the
+canonical order genuinely runs newest-listed first and is labelled for what
+it does rather than sitting beside a duplicate "newest" option. Verified
+against the live RPC: 29 Aug, 27 Aug, 25 Aug, 22 Aug, 18 Aug. The sort
+control moved to the results header beside the count; the mobile drawer
+already carried it.
+
+**13 — the desktop filter panel had no way out.** It was rendered without
+`onClose` or `onSearch`, and both the close button and the footer were
+gated on `isMobile`, so neither existed on desktop: the only way to dismiss
+it was to find the Filters toggle again, and its header scrolled out of
+reach inside the 600px scroll box, taking Clear all with it. Filters apply
+live (`useSearchFilters` debounces at 300ms), so the panel needed an exit
+rather than an apply — it now has the drawer's sticky header, close control
+and apply-and-close footer. Its own Sort by drops on desktop, where the
+results header carries it, and stays in the drawer, which has no results
+header. Driven in Chrome to confirm: close button present, footer reads
+"Show 60 results", no duplicate sort, and the panel closes.
 14. **Radius search:** "This area only / 0.5 / 1 / 3 / 5 miles" — geocode the typed location (postcodes.io for postcodes, Google Geocoding for place names), then distance filter in the search RPC.
 
 ### Batch 4 — Lead capture (Fri–Mon)
