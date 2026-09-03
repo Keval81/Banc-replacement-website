@@ -13,6 +13,7 @@ export type PublicPropertyStatus =
   | "to_let"
   | "let_agreed";
 export type PropertySort = "default" | "price_asc" | "price_desc";
+export type SearchRadius = 0.5 | 1 | 3 | 5;
 
 export interface PropertySearchQuery {
   department: PropertyDepartment;
@@ -22,6 +23,8 @@ export interface PropertySearchQuery {
   minBedrooms?: number;
   maxBedrooms?: number;
   minBathrooms?: number;
+  /** Miles around the geocoded location; only meaningful with a location. */
+  radius?: SearchRadius;
   propertyTypes: SearchPropertyType[];
   tenures: SearchTenure[];
   features: SearchFeature[];

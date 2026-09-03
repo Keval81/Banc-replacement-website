@@ -6,6 +6,7 @@ import {
 import type {
   PropertyDepartment,
   PropertySort,
+  SearchRadius,
 } from "./types.ts";
 
 interface SearchOption<TValue extends string | number> {
@@ -86,6 +87,16 @@ export const SORT_OPTIONS: readonly SearchOption<PropertySort>[] = [
   { value: "price_desc", label: "Price: High to Low" },
 ] as const;
 
+// "" is this-area-only: the text match with no centre. Kept as a value rather
+// than a null so it round-trips through a <select> unchanged.
+export const RADIUS_OPTIONS: readonly { value: "" | SearchRadius; label: string }[] = [
+  { value: "", label: "This area only" },
+  { value: 0.5, label: "Within \u00bd mile" },
+  { value: 1, label: "Within 1 mile" },
+  { value: 3, label: "Within 3 miles" },
+  { value: 5, label: "Within 5 miles" },
+] as const;
+
 export const BEDROOM_OPTIONS = [0, 1, 2, 3, 4, 5, 6].map((value) => ({
   value,
   label: value === 0 ? "Studio+" : `${value}+`,
@@ -97,7 +108,6 @@ export const BATHROOM_OPTIONS = [1, 2, 3, 4, 5].map((value) => ({
 }));
 
 export const UNSUPPORTED_FILTER_KEYS = [
-  "radius",
   "maxBedrooms",
   "maxBathrooms",
   "popular",

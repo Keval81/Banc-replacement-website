@@ -171,6 +171,9 @@ test("maps every validated query field to the search RPC and reads dataset fresh
         p_sort: "price_asc",
         p_limit: 12,
         p_offset: 12,
+        p_centre_lat: null,
+        p_centre_lng: null,
+        p_radius_miles: null,
       },
     },
   ]);
@@ -213,6 +216,9 @@ test("passes explicit nulls and zero offset for omitted optional filters", async
     p_sort: "default",
     p_limit: 24,
     p_offset: 0,
+    p_centre_lat: null,
+    p_centre_lng: null,
+    p_radius_miles: null,
   });
 });
 

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SEARCH_FEATURES, SEARCH_PROPERTY_TYPES, SEARCH_TENURES, type SearchFeature, type SearchPropertyType, type SearchTenure } from "@/lib/crm/property-source";
 import { getMinimumOnlyBedroomPatch } from "@/lib/property-search/navigation";
-import { BATHROOM_OPTIONS, BEDROOM_OPTIONS, FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice, getPriceOptions, toggleCanonicalOption } from "@/lib/property-search/ui-options";
+import { BATHROOM_OPTIONS, BEDROOM_OPTIONS, FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, RADIUS_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice, getPriceOptions, toggleCanonicalOption } from "@/lib/property-search/ui-options";
 import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
 import { searchThenClose } from "@/lib/property-search/search-ui-actions";
 import { cn } from "@/lib/utils";
@@ -93,6 +93,15 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
         <FilterSection title="Location" icon={MapPin}>
           <Label htmlFor="advanced-location" className="sr-only">Area, town or postcode</Label>
           <div className="relative"><MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" /><Input id="advanced-location" type="text" placeholder="Enter area, town or postcode" value={filters.location ?? ""} onChange={(event) => onFilterChange({ location: event.target.value || undefined })} className="h-12 bg-banc-grey-pale pl-10 pr-12 text-base placeholder:text-banc-muted-readable focus:bg-white focus-visible:ring-banc-focus" />{filters.location && <button type="button" onClick={() => onFilterChange({ location: undefined })} className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus" aria-label="Clear location"><X className="h-4 w-4 text-banc-muted-readable" /></button>}</div>
+          {/* A radius needs a centre, so it only becomes usable once a
+              location is typed; the location is geocoded per search. */}
+          <Label htmlFor="search-radius" className="mb-1.5 mt-3 block text-xs text-banc-muted-readable">Search radius</Label>
+          <div className="relative">
+            <select id="search-radius" value={filters.radius ?? ""} disabled={!filters.location} onChange={(event) => onFilterChange({ radius: event.target.value === "" ? undefined : Number(event.target.value) as PropertySearchFilters["radius"] })} className="min-h-11 w-full appearance-none rounded-xl border border-banc-line bg-banc-grey-pale px-4 pr-10 text-base text-banc-dark-deep focus:outline-none focus:ring-2 focus:ring-banc-focus disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm">
+              {RADIUS_OPTIONS.map((option) => <option key={String(option.value)} value={option.value}>{option.label}</option>)}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
+          </div>
         </FilterSection>
 
         <FilterSection title={department === "sales" ? "Price range" : "Monthly rent"} icon={Building2}>

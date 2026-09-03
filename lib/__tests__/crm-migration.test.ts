@@ -7,6 +7,10 @@ const sql = readFileSync(
   join(process.cwd(), "supabase/migrations/202608270001_crm_property_search.sql"),
   "utf8",
 );
+const radiusSql = readFileSync(
+  join(process.cwd(), "supabase/migrations/202609030001_radius_search.sql"),
+  "utf8",
+);
 const exactBedroomSql = readFileSync(
   join(process.cwd(), "supabase/migrations/202608280001_exact_bedroom_search.sql"),
   "utf8",
@@ -83,4 +87,31 @@ test("exact bedroom migration adds the canonical upper-bedroom bound to search",
     /revoke execute on function public\.search_properties[\s\S]*from public/i,
   );
   assert.match(exactBedroomSql, /grant execute on function public\.search_properties/i);
+});
+
+test("the radius migration adds a centre and filters on distance", () => {
+  assert.match(radiusSql, /p_centre_lat double precision default null/i);
+  assert.match(radiusSql, /p_centre_lng double precision default null/i);
+  assert.match(radiusSql, /p_radius_miles double precision default null/i);
+  // Haversine in miles: 2R where R = 3958.7613.
+  assert.match(radiusSql, /7917\.5226 \* asin\(sqrt\(/);
+});
+
+test("the radius migration replaces the old signature rather than overloading it", () => {
+  // Two live overloads would make PostgREST pick by argument shape, so an
+  // older caller could silently keep hitting the pre-radius function.
+  assert.match(radiusSql, /drop function if exists public\.search_properties\(/i);
+  assert.match(radiusSql, /^begin;/m);
+  assert.match(radiusSql, /^commit;/m);
+});
+
+test("a live centre replaces the text match instead of narrowing it", () => {
+  // "Within 3 miles of Cuffley" must include streets whose address never
+  // says Cuffley, so the LIKE predicate stands down when a centre is active.
+  assert.match(radiusSql, /and \(\s*c\.active\s*or p_location is null/);
+  assert.match(radiusSql, /and \(\s*not c\.active/);
+});
+
+test("properties without coordinates drop out of a radius search, not into it", () => {
+  assert.match(radiusSql, /p\.latitude is not null\s*and p\.longitude is not null/);
 });

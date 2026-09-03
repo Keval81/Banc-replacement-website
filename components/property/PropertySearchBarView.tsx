@@ -36,6 +36,7 @@ function countFilters(filters: PropertySearchFilters): number {
     Number(filters.minPrice !== undefined) + Number(filters.maxPrice !== undefined) +
     Number(filters.minBedrooms !== undefined) + Number(filters.minBathrooms !== undefined) +
     filters.propertyTypes.length + filters.tenures.length + filters.features.length +
+    Number(filters.radius !== undefined) +
     Number(filters.sort !== "default");
 }
 

@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { CrmSourceSystem } from "../crm/property-source.ts";
 import type { DbProperty } from "../supabase.ts";
+import { geocodeSearchLocation, type GeoPoint } from "./geocode.ts";
 import { POSTGRES_SIGNED_INTEGER_MAX } from "./query.ts";
 import type {
   PropertySearchQuery,
@@ -94,13 +95,26 @@ export class SupabasePropertySearchRepository
 {
   private readonly client: SupabaseClient;
   private readonly sourceSystem: CrmSourceSystem;
+  private readonly geocode: (
+    location: string,
+    signal?: AbortSignal,
+  ) => Promise<GeoPoint | null>;
 
   constructor(
     client: SupabaseClient,
     sourceSystem: CrmSourceSystem = "expert_agent",
+    // Resolving the centre lives here rather than in the service so the
+    // repository interface stays a plain (query, signal) call for every
+    // caller, the chatbot's portfolio search included.
+    options: {
+      geocode?: (location: string, signal?: AbortSignal) => Promise<GeoPoint | null>;
+    } = {},
   ) {
     this.client = client;
     this.sourceSystem = sourceSystem;
+    this.geocode =
+      options.geocode ??
+      ((location, signal) => geocodeSearchLocation(location, { signal }));
   }
 
   async search(
@@ -117,6 +131,14 @@ export class SupabasePropertySearchRepository
       throw new Error("Property search query is outside supported pagination bounds");
     }
 
+    // A radius is only honoured once the location resolves to a point; if the
+    // lookup fails the search widens to the text match rather than returning
+    // an empty page.
+    const centre =
+      query.radius !== undefined && query.location !== undefined
+        ? await this.geocode(query.location, signal)
+        : null;
+
     const rpcQuery = this.client.rpc("search_properties", {
       p_department: query.department,
       p_location: query.location ?? null,
@@ -132,6 +154,9 @@ export class SupabasePropertySearchRepository
       p_sort: query.sort,
       p_limit: query.pageSize,
       p_offset: offset,
+      p_centre_lat: centre?.latitude ?? null,
+      p_centre_lng: centre?.longitude ?? null,
+      p_radius_miles: centre === null ? null : query.radius ?? null,
     });
     const { data, error } = await (signal === undefined
       ? rpcQuery

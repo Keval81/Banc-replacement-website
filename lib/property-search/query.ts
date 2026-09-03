@@ -15,6 +15,9 @@ import type {
 const SALES_STATUSES = ["for_sale", "under_offer"] as const;
 const LETTINGS_STATUSES = ["to_let", "let_agreed"] as const;
 const PROPERTY_SORTS = ["default", "price_asc", "price_desc"] as const;
+// The radii Nitesh asked for on 2 Sep. A closed set, not a free number: the
+// search centre is geocoded per request, so an open range invites abuse.
+export const SEARCH_RADII = [0.5, 1, 3, 5] as const;
 
 export const POSTGRES_SIGNED_INTEGER_MAX = 2_147_483_647;
 export const MAX_PROPERTY_SEARCH_PRICE = Number.MAX_SAFE_INTEGER;
@@ -115,6 +118,7 @@ const commonQueryShape = {
   minBedrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
   maxBedrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
   minBathrooms: optionalBoundedIntegerSchema(POSTGRES_SIGNED_INTEGER_MAX),
+  radius: z.union([z.literal(0.5), z.literal(1), z.literal(3), z.literal(5)]).optional(),
   propertyTypes: propertyTypesSchema,
   tenures: tenuresSchema,
   features: featuresSchema,
@@ -207,6 +211,14 @@ function parseLocation(raw: string | null): string | undefined {
   return location.length > 0 && location.length <= 120 ? location : undefined;
 }
 
+// A radius is meaningless without a centre, so it only survives alongside a
+// location.
+function parseRadius(params: URLSearchParams, location: string | undefined) {
+  if (location === undefined) return undefined;
+  const raw = Number(params.get("radius"));
+  return SEARCH_RADII.find((value) => value === raw);
+}
+
 function parseSort(params: URLSearchParams): PropertySort {
   if (params.has("sort")) {
     const sort = params.get("sort");
@@ -256,6 +268,7 @@ export function parsePropertySearchParams(
     selectedParam(params, "minBathrooms", ["minBaths"]),
     { min: 0, max: POSTGRES_SIGNED_INTEGER_MAX },
   );
+  const radius = parseRadius(params, location);
   const page =
     parseInteger(params.get("page"), { min: 1, max: MAX_PROPERTY_SEARCH_PAGE }) ??
     defaults.page;
@@ -273,6 +286,7 @@ export function parsePropertySearchParams(
     ...(minBedrooms !== undefined ? { minBedrooms } : {}),
     ...(maxBedrooms !== undefined ? { maxBedrooms } : {}),
     ...(minBathrooms !== undefined ? { minBathrooms } : {}),
+    ...(radius !== undefined ? { radius } : {}),
     propertyTypes: parseAllowedList(
       selectedParam(params, "propertyTypes", ["propertyType"]),
       SEARCH_PROPERTY_TYPES,
@@ -324,6 +338,7 @@ export function serializePropertySearchQuery(query: PropertySearchQuery): URLSea
   if (validated.minBathrooms !== undefined) {
     params.set("minBathrooms", String(validated.minBathrooms));
   }
+  if (validated.radius !== undefined) params.set("radius", String(validated.radius));
   setList(params, "propertyTypes", validated.propertyTypes, SEARCH_PROPERTY_TYPES);
   setList(params, "tenures", validated.tenures, SEARCH_TENURES);
   setList(params, "features", validated.features, SEARCH_FEATURES);

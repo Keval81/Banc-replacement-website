@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronDown, RotateCcw, SlidersHorizontal, X } from "lucide-react";
-import { FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice } from "@/lib/property-search/ui-options";
+import { FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, RADIUS_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice } from "@/lib/property-search/ui-options";
 import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
 import { cn } from "@/lib/utils";
 
@@ -16,8 +16,8 @@ export interface ActiveFiltersProps {
   className?: string;
 }
 
-function optionLabel<T extends string>(options: readonly { value: T; label: string }[], value: T): string {
-  return options.find((option) => option.value === value)?.label ?? value;
+function optionLabel<T extends string | number>(options: readonly { value: T; label: string }[], value: T): string {
+  return options.find((option) => option.value === value)?.label ?? String(value);
 }
 
 function getBedroomChipLabel(filters: Pick<PropertySearchFilters, "minBedrooms" | "maxBedrooms">): string | null {
@@ -43,6 +43,7 @@ export default function ActiveFilters({ department, filters, onFilterChange, onC
     for (const value of filters.propertyTypes) result.push({ id: `type-${value}`, label: optionLabel(PROPERTY_TYPE_OPTIONS, value), remove: () => onFilterChange({ propertyTypes: filters.propertyTypes.filter((item) => item !== value) }) });
     for (const value of filters.tenures) result.push({ id: `tenure-${value}`, label: optionLabel(TENURE_OPTIONS, value), remove: () => onFilterChange({ tenures: filters.tenures.filter((item) => item !== value) }) });
     for (const value of filters.features) result.push({ id: `feature-${value}`, label: optionLabel(FEATURE_OPTIONS, value), remove: () => onFilterChange({ features: filters.features.filter((item) => item !== value) }) });
+    if (filters.radius !== undefined) result.push({ id: "radius", label: optionLabel(RADIUS_OPTIONS, filters.radius), remove: () => onFilterChange({ radius: undefined }) });
     if (filters.sort !== "default") result.push({ id: "sort", label: `Sort: ${optionLabel(SORT_OPTIONS, filters.sort)}`, remove: () => onFilterChange({ sort: "default" }) });
     return result;
   }, [department, filters, onFilterChange]);

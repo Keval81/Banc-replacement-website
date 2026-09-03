@@ -32,7 +32,9 @@ test("exposes only the supported sort options", () => {
     SORT_OPTIONS.map((option) => option.value),
     ["default", "price_asc", "price_desc"],
   );
-  assert.equal(UNSUPPORTED_FILTER_KEYS.includes("radius"), true);
+  // radius left this list on 3 Sep — it is now geocoded and filtered in the
+  // search RPC, so the UI is allowed to offer it.
+  assert.equal(UNSUPPORTED_FILTER_KEYS.includes("radius" as never), false);
   const sortValues = SORT_OPTIONS.map((option) => String(option.value));
   assert.equal(sortValues.includes("popular"), false);
   assert.equal(sortValues.includes("reduced"), false);
@@ -77,7 +79,6 @@ test("scoped property controls do not render unsupported controls", () => {
     .join("\n");
 
   for (const unsupported of [
-    "Search radius",
     "Maximum bedrooms",
     "Maximum bathrooms",
     "Newest Listed",
