@@ -193,11 +193,11 @@ export default function RegisterForm() {
                 </Button>
               )}
               {currentStep < 4 ? (
-                <Button onClick={handleNext} className="flex-1 bg-banc-sky">
+                <Button onClick={handleNext} className="flex-1 bg-banc-focus">
                   Continue
                 </Button>
               ) : (
-                <Button onClick={handleSubmit} className="flex-1 bg-banc-sky">
+                <Button onClick={handleSubmit} className="flex-1 bg-banc-focus">
                   Create Account
                 </Button>
               )}

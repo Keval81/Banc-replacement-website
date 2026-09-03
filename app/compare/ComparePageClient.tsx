@@ -73,7 +73,7 @@ export default function ComparePage() {
                 You can compare up to 3 properties at once.
               </p>
               <Link href="/search">
-                <Button className="bg-banc-sky hover:bg-banc-sky-dark">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover">
                   Browse Properties
                 </Button>
               </Link>
@@ -90,7 +90,7 @@ export default function ComparePage() {
                 You have 1 property selected. Add at least one more property to see a comparison.
               </p>
               <Link href="/search">
-                <Button className="bg-banc-sky hover:bg-banc-sky-dark">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover">
                   <Plus className="w-4 h-4 mr-2" />
                   Add Another Property
                 </Button>
@@ -128,7 +128,7 @@ export default function ComparePage() {
                     </Button>
                   </Link>
                   <Link href="/contact">
-                    <Button className="bg-banc-sky hover:bg-banc-sky-dark">
+                    <Button className="bg-banc-focus hover:bg-banc-focus-hover">
                       Contact Us
                     </Button>
                   </Link>

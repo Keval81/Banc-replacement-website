@@ -207,7 +207,7 @@ export default function Footer() {
                 <Button 
                   type="submit" 
                   disabled={status === 'loading' || status === 'success'}
-                  className="bg-banc-sky hover:bg-banc-sky/90 whitespace-nowrap"
+                  className="bg-banc-focus hover:bg-banc-sky/90 whitespace-nowrap"
                 >
                   {status === 'loading' ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

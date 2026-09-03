@@ -125,6 +125,29 @@ for (const file of files) {
     ts.isTemplateTail(node);
 
   const visit = (node) => {
+    // A <Button> given a solid sky fill inherits `text-white` from the default
+    // variant, so the white ink is in a different string entirely and the
+    // same-string rule below never sees it. Unless the call site also sets its
+    // own text colour, this is white on banc-sky at 1.96:1.
+    const opening = ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)
+      ? node
+      : null;
+    if (opening && opening.tagName.getText() === "Button") {
+      const classes = classTextOf(opening);
+      if (SOLID_SKY_FILL.test(classes) && !/(?:^|[\s"'`])text-\S/.test(classes)) {
+        for (const attr of opening.attributes.properties) {
+          if (!ts.isJsxAttribute(attr) || attr.name.getText() !== "className") continue;
+          const value = attr.initializer;
+          if (!value) continue;
+          for (const [from, to] of FILL_SWAPS) {
+            if (classPattern(from).test(value.getText())) {
+              edits.push({ start: value.getStart(), end: value.getEnd(), from, to });
+            }
+          }
+        }
+      }
+    }
+
     if (carriesClasses(node)) {
       const text = node.getText();
 
@@ -155,17 +178,30 @@ for (const file of files) {
 
   if (!edits.length) continue;
 
+  // Several swaps can land on the same className node. Apply them together,
+  // once per node: replacing one at a time leaves the next edit holding an
+  // offset that the first replacement has already shifted.
+  const byRange = new Map();
+  for (const edit of edits) {
+    const key = `${edit.start}:${edit.end}`;
+    if (!byRange.has(key)) {
+      byRange.set(key, { start: edit.start, end: edit.end, swaps: [] });
+    }
+    byRange.get(key).swaps.push([edit.from, edit.to]);
+  }
+
   let out = source;
-  for (const edit of edits.sort((a, b) => b.start - a.start)) {
-    const slice = out.slice(edit.start, edit.end);
-    const replaced = slice.replace(
-      classPattern(edit.from),
-      (_, lead) => `${lead}${edit.to}`
-    );
+  for (const range of [...byRange.values()].sort((a, b) => b.start - a.start)) {
+    const slice = out.slice(range.start, range.end);
+    let replaced = slice;
+    for (const [from, to] of range.swaps) {
+      const hits = replaced.match(classPattern(from))?.length ?? 0;
+      if (!hits) continue;
+      replaced = replaced.replace(classPattern(from), (_, lead) => `${lead}${to}`);
+      tally.set(from, (tally.get(from) ?? 0) + hits);
+    }
     if (replaced === slice) continue;
-    const hits = slice.match(classPattern(edit.from))?.length ?? 0;
-    tally.set(edit.from, (tally.get(edit.from) ?? 0) + hits);
-    out = out.slice(0, edit.start) + replaced + out.slice(edit.end);
+    out = out.slice(0, range.start) + replaced + out.slice(range.end);
   }
 
   if (out !== source) {

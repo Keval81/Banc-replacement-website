@@ -227,7 +227,7 @@ export default function AlertsPage() {
               </Link>
               <Button 
                 onClick={() => setShowCreateModal(true)}
-                className="bg-banc-sky hover:bg-banc-sky-dark"
+                className="bg-banc-focus hover:bg-banc-focus-hover"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create Alert
@@ -289,7 +289,7 @@ export default function AlertsPage() {
                 </Link>
                 <Button 
                   onClick={() => setShowCreateModal(true)}
-                  className="bg-banc-sky hover:bg-banc-sky-dark"
+                  className="bg-banc-focus hover:bg-banc-focus-hover"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create Alert
@@ -725,7 +725,7 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
             <Button type="button" variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
-            <Button type="submit" className="flex-1 bg-banc-sky hover:bg-banc-sky-dark">
+            <Button type="submit" className="flex-1 bg-banc-focus hover:bg-banc-focus-hover">
               <Bell className="w-4 h-4 mr-2" />
               Create Alert
             </Button>

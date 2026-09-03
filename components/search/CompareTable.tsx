@@ -31,7 +31,7 @@ export default function CompareTable({ className }: CompareTableProps) {
       <div className="text-center py-16">
         <p className="text-banc-muted-readable mb-4">No properties selected for comparison</p>
         <Link href="/search">
-          <Button className="bg-banc-sky hover:bg-banc-sky-dark">
+          <Button className="bg-banc-focus hover:bg-banc-focus-hover">
             Browse Properties
           </Button>
         </Link>
@@ -213,7 +213,7 @@ export default function CompareTable({ className }: CompareTableProps) {
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
                 <Link href={`/sales/properties/${property.id}`}>
-                  <Button className="w-full bg-banc-sky hover:bg-banc-sky-dark">
+                  <Button className="w-full bg-banc-focus hover:bg-banc-focus-hover">
                     View Property
                   </Button>
                 </Link>
