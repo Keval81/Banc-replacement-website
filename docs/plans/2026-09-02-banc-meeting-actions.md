@@ -307,7 +307,53 @@ Now covered by a regression test.
 18. **Life Magazine + alerts prominence:** move the "Stay updated" block up the homepage and pair it with the magazine.
 
 ### Batch 5 — Content & new pages (Mon–Tue)
-19. **Stamp Duty calculator** page under Sales menu; **Rental Yield calculator** under Lettings menu.
+19. ~~**Stamp Duty calculator** under Sales; **Rental Yield calculator** under Lettings~~ — **done 2026-09-03 (`6bdbc39`, `19627fd`).**
+
+**19 — both calculators already existed** (`app/tools/stamp-duty`,
+`app/tools/yield-calculator`, backed by `calculateStampDuty` /
+`calculateYield`). They were only ever linked from the footer; they now sit
+in the Sales and Lettings menus.
+
+**A broken duplicate went with it.** `/tools/valuation` was a second
+valuation form competing with `/valuation` for the same intent, and barely
+readable: 13 elements below AA against its dark panel, the worst being the
+"Property Address" label at **1.23:1**, near-black on near-black. It was
+still carded on the tools hub and still in the sitemap, so it would have
+been indexed against the real page. Now a permanent redirect to
+`/valuation`.
+
+**The tools section was a dark island in a light site.** Every tool page
+wrapped its content in a full-height `bg-banc-dark-deep`, inherited from an
+earlier design, plus a full-page photo wash, gradient hover overlays and a
+different accent colour per tool (green, blue, purple, pink). Fine while
+they were footer-only; not once they are in the main nav. Restyled per
+DESIGN.md — light canvas, white cards on hairlines, no gradients (the hero
+scrim over photography stays, which the contract allows), and one accent at
+a time, with the four rainbow pills becoming the museum-label eyebrow.
+
+Two things the move exposed, both worth remembering:
+
+- **`banc-sky` #4AC8E8 is the dark-background accent.** On the light canvas
+  it reads at **1.8:1**. Accent text and filled buttons now take
+  `banc-focus` #0B6F89 (**5.2:1**) — the token the rest of the site already
+  uses for exactly this. The tools' filled buttons had been white on cyan,
+  1.96:1.
+- **The hub's photo wash covered the whole page**, not just the hero, so
+  once the ink went dark the entire page sat on muddy grey. An automated
+  contrast pass *missed this* — it resolves the nearest opaque ancestor and
+  never sees a composited photo overlay. Only the screenshot caught it.
+
+Also listed the catchment checker on the hub; it was in the footer and the
+sitemap but missing from the tools page itself.
+
+Mechanical parts ran through `scripts/codemod-tools-light.mjs`, which
+guards class strings on filled buttons so their white ink survives.
+Verified in Chrome on production across all six pages.
+
+**Worth knowing: the cyan-on-light problem is site-wide.** Measured the
+same way, untouched pages carry 20-25 elements below AA (`/lettings` "Our
+Services" at 1.96:1, `/why-us` "What Sets Us Apart" at 2.92:1) against 2 on
+the restyled tools pages. Not fixed here — flagging it as its own pass.
 20. **Maintenance reporting page** (how to report, hours, WhatsApp number N6, acknowledgement copy) + "Report a maintenance issue" link in the Lettings menu — mock-up first for Nitesh to review.
 21. **CMP logo + certificate** in the footer (N4).
 22. **Team page** with cartoon/animated headshots + bios and an office group photo (N5).
