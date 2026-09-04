@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
@@ -21,14 +23,17 @@ export function PropertyJourneySelector({
       data-placement={dataPlacement}
       className={`grid grid-cols-2 gap-2 ${className}`}
     >
-      {landingUi.heroActions.map((action) => {
+      {landingUi.heroActions.map((action, index) => {
         const isPrimary = action.tone === "primary";
 
         return (
           <Link
             key={action.href}
             href={action.href}
-            className={`group relative flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-[15px] border px-4 py-3 shadow-[0_14px_36px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep motion-reduce:transition-none ${
+            style={
+              { "--banc-action-delay": `${3.9 + index * 0.7}s` } as CSSProperties
+            }
+            className={`banc-action-reveal group relative flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-[15px] border px-4 py-3 shadow-[0_14px_36px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep motion-reduce:transition-none ${
               isPrimary
                 ? "border-white/55 bg-banc-cream/95 text-banc-dark-deep hover:-translate-y-0.5 hover:bg-white"
                 : "border-white/30 bg-banc-dark-deep/68 text-white hover:-translate-y-0.5 hover:border-white/50 hover:bg-banc-dark-deep/82"

@@ -362,6 +362,39 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   }
 }
 
+/* The paired Sales / Lettings buttons enter after the tagline has finished, one
+   then the other. Same pure-CSS approach as the tagline and for the same
+   reason: framer-motion writes its `initial` into the SSR inline style, so a
+   stalled client bundle would leave the two main calls to action permanently
+   at opacity 0. A CSS animation cannot fail that way.
+
+   Timing runs off the tagline, which starts at 2s and lasts 1.8s. The first
+   button follows at 3.9s, the second at 4.6s — a 0.7s hold between them, long
+   enough to read as deliberate rather than as a list appearing. */
+@keyframes banc-action-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.banc-action-reveal {
+  animation: banc-action-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) var(--banc-action-delay, 3.9s);
+  animation-fill-mode: backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banc-action-reveal {
+    animation: none;
+  }
+}
+
 /* Carousel track: still a real scroll container, just without the chrome. */
 .banc-carousel-track {
   scrollbar-width: none;

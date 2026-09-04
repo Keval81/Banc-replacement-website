@@ -447,3 +447,36 @@ test("every hero asset the landing page names exists on disk", () => {
     );
   }
 });
+
+test("the hero calls to action reveal after the tagline, one then the other", () => {
+  const css = readFileSync(join(import.meta.dirname, "..", "..", "app", "globals.css"), "utf8");
+  const selector = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "PropertyJourneySelector.tsx"),
+    "utf8",
+  );
+
+  // framer-motion writes its `initial` into the SSR inline style, which is how
+  // the tagline once shipped permanently invisible in an engine where the
+  // client bundle never ran. These are the two main calls to action on the
+  // site, so the reveal has to be CSS, which cannot fail that way.
+  assert.doesNotMatch(selector, /framer-motion/);
+  assert.match(selector, /banc-action-reveal/);
+  assert.match(css, /@keyframes banc-action-reveal/);
+
+  // The tagline starts at 2s and runs 1.8s. The buttons must not start before
+  // it lands, or they arrive underneath it instead of after it.
+  const taglineDelay = Number(
+    css.match(/animation: banc-tagline-reveal ([\d.]+)s[^;]*?\s([\d.]+)s;/)?.[2],
+  );
+  const taglineDuration = Number(
+    css.match(/animation: banc-tagline-reveal ([\d.]+)s/)?.[1],
+  );
+  const [, first, step] = selector.match(/\$\{([\d.]+) \+ index \* ([\d.]+)\}s/) ?? [];
+  assert.ok(
+    Number(first) >= taglineDelay + taglineDuration,
+    `buttons start at ${first}s, before the tagline finishes at ${taglineDelay + taglineDuration}s`,
+  );
+  assert.ok(Number(step) >= 0.5, `${step}s between the two buttons reads as a list, not a beat`);
+
+  assert.match(css, /prefers-reduced-motion[\s\S]*?\.banc-action-reveal[\s\S]*?animation: none/);
+});
