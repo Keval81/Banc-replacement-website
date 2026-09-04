@@ -1,20 +1,99 @@
 # Banc website — actions from the 2 Sep 2026 meeting (Keval / Nitesh)
 
-**Launch deadline:** Saturday 13 September 2026 (old site goes offline). Review call: end of this week.
+**Launch deadline:** Saturday 13 September 2026 (old site goes offline).
 **Source:** Gemini notes + transcript, "Banc Website - 2026/09/02 16:00 BST".
 
-## 0. Inputs we need from Nitesh (blocking items marked ⚠)
+---
 
-| # | Item | Blocks |
-|---|------|--------|
-| ⚠ N1 | The three area phone numbers (Cuffley, Brookmans Park, + third area) — Nitesh says already emailed | Header phone dropdown |
-| ⚠ N2 | Sales and lettings enquiry email addresses | Viewing requests, valuation leads, contact routing |
-| ⚠ N3 | DNS / domain access from the previous developer (Keval drafts the email, Nitesh sends) | Go-live on bancproperty.com |
-| N4 | CMP (Client Money Protection) logo + certificate PDF | Footer compliance |
-| N5 | Team photos + bios (for cartoon/animated treatment) | Team page |
-| N6 | Maintenance WhatsApp number (Nitesh getting a phone this weekend) | Maintenance page / menu link |
-| N7 | Exact brand blue (hex or a file using it) — otherwise we use the site's `banc-sky` #4AC8E8 | Logo recolour |
-| N8 | Any verified stats for a ticker (optional — parked until Street) | — |
+# STATUS — 4 September 2026 · 9 days to launch
+
+## Where the build stands
+
+**17 of the 27 pre-launch items are built**, plus a run of substantial work
+that was not in the original plan at all (see the last row). Of the 10 open
+items, 5 are waiting on an input from Nitesh or Keval and 5 can be built
+now.
+
+| Batch | Items | State |
+|---|---|---|
+| 1 · Quick wins | 1–9 | ✅ done, plus five review revisions |
+| 2 · Data correctness | 10 | ✅ done — 251 already-sold houses removed from live stock |
+| | 11 | ⛔ **blocked on Keval** — hourly sync live but **14 runs, 14 failures**, no repo secrets set |
+| 3 · Search & sort | 12–14 | ✅ done — newest-first, filter panel exit, radius search |
+| 4 · Lead capture | 15–17 | ⏸ **needs N2** (or can be built behind a constant now) |
+| | 18 | 🔨 **buildable now** — no input needed |
+| 5 · Content & pages | 19, 23, 24, 25 | ✅ done — calculators in menus, tools restyle, 3 carousels |
+| | 20, 21, 22, 26 | ⏸ **needs N6 / N4 / N5 / footage** |
+| | 27 | 🔨 low-priority polish, no input needed |
+| 6 · Launch | 28–29 | ⏸ **needs N3** — DNS cut-over + final QA |
+| Extra (not in the original plan) | — | ✅ Banc Bot outage fixed, chat continuity, Safari hero cleared, **site-wide contrast pass: 488 AA failures → 0** (the 12 that still register are measurement artifacts, each checked by eye) |
+
+## ⛔ Outstanding WITH KEVAL — nobody else can clear these
+
+| # | Action | Why it matters | Effort |
+|---|---|---|---|
+| K1 | **Set the 6 GitHub repo secrets** (command below). The `gh secret set` loop is refused by the agent's permission classifier, so it has to be run by hand. | The hourly Expert Agent sync has failed **14/14 runs**. Until this is done, listings only move when the sync is run manually, and the site's "last updated" stamp stays blank. | 1 min |
+| K2 | **Push the 6 local commits and cut a preview for Nitesh.** `main` is the production branch and auto-deploys, so this publishes to the client's live site. | Nitesh cannot review any of the last two sessions' work — the contrast pass, the carousels — until it is deployed. | 5 min |
+| K3 | **Decide whose OpenAI account carries the Banc Bot key.** | Live traffic bills that account's owner from launch day, at up to three provider calls per visitor turn. Commercial point, not technical. | decision |
+| K4 | **Send Nitesh the input chase** (N1–N6 below) and the DNS email draft in §3. | N3 is the only item that can miss the 13 Sep launch. | 10 min |
+
+### K1 — the command, ready to paste
+
+All six values are already in `.env.local`; this reads them straight out of it.
+
+```bash
+cd ~/Projects/banc-replacement-website
+for k in EXPERT_AGENT_FTP_URL EXPERT_AGENT_FTP_USER EXPERT_AGENT_FTP_PASS \
+         NEXT_PUBLIC_SUPABASE_URL NEXT_PUBLIC_SUPABASE_ANON_KEY SUPABASE_SERVICE_ROLE_KEY; do
+  grep -m1 "^$k=" .env.local | cut -d= -f2- | tr -d '"' | gh secret set "$k"
+done
+gh secret list        # expect six rows
+gh run list --workflow=sync-expert-agent.yml --limit 1   # next :17 run should pass
+```
+
+## ⏸ Outstanding WITH BANC (Nitesh) — chase these
+
+| # | Input | Blocks | Priority |
+|---|---|---|---|
+| ⚠ **N3** | **DNS / domain access from the previous developer.** Keval has drafted the email (§3); Nitesh sends it. | Go-live on bancproperty.com | 🔴 **The only input that can miss the launch date.** Needs to be in hand by Mon 8 Sep to leave a safe window. |
+| ⚠ N1 | The area phone numbers — Cuffley, Brookmans Park and the third area. Nitesh believes these were already emailed; they have not arrived. | Header phone dropdown | 🟠 Only Cuffley and Mayfair are live. Drops straight into `BANC_PHONE_LINES`, one-line change. |
+| ⚠ N2 | Sales and lettings enquiry email addresses. | Viewing requests, valuation leads, contact routing (Batch 4) | 🟠 Everything currently routes to the generic `info@bancproperty.com`. |
+| N4 | CMP (Client Money Protection) logo + certificate PDF. | Footer compliance (item 21) | 🟡 Compliance — wants to be right at launch. |
+| N5 | Team photos + short bios. | Team page (item 22) | 🟡 |
+| N6 | Maintenance WhatsApp number (Nitesh was getting a phone). | Maintenance page + Lettings menu link (item 20) | 🟡 |
+| N7 | Exact brand blue, if one exists in the logo files or letterhead. | Logo recolour | 🟢 Optional — the site's own `banc-sky` is in use and looks right. |
+| N8 | Verified stats for a ticker (98% of asking price, etc). | — | 🟢 Parked until the move to Street. |
+| **N9 · NEW** | **Drone / slow-motion footage for the featured homes slideshow.** Requested at the meeting; the slideshow is built without it and works fine as stills. | Item 25 polish | 🟢 Needs either real footage or a stock budget. |
+| **N10 · NEW** | **Lettings has exactly ONE available property.** That is the honest truth of the Expert Agent feed. Is that right, or are properties sitting at "Let STC" in the CRM that are actually available? | A one-property lettings page at launch | 🟠 **CRM answer, not a website change.** Worth resolving before launch. |
+
+## 🔨 Buildable now, with no input from anyone
+
+1. **Item 18** — move the "Stay updated" block up the homepage and pair it with Life Magazine.
+2. **Items 15–17** (lead capture) — can be built behind a config constant the way `BANC_PHONE_LINES` already handles N1, so N2's addresses drop in later without a rebuild.
+3. **Item 27** — subtle spring animation on property photos (low priority).
+4. **Site-wide mobile QA pass** — part of item 29, does not need to wait for launch week.
+
+## Decisions already taken that Nitesh should see on the preview
+
+- **Filled CTAs moved from bright cyan to deep teal** (`banc-focus`), matching the /tools pages. White on cyan was 1.96:1 — below the legal accessibility floor.
+- **Cyan CTA bands keep their colour but take dark ink.**
+- **The homepage review section shows all 12 real Google reviews** as a carousel, replacing a 7-second rotator that showed 3.
+- **`/tools/valuation` was deleted** (permanent redirect to `/valuation`) — it was a second, broken valuation form competing with the real one.
+
+---
+
+## 0. Inputs we need from Nitesh (original list, kept for the record)
+
+| # | Item | Blocks | Status |
+|---|------|--------|--------|
+| ⚠ N1 | The three area phone numbers (Cuffley, Brookmans Park, + third area) — Nitesh says already emailed | Header phone dropdown | ⏸ still outstanding |
+| ⚠ N2 | Sales and lettings enquiry email addresses | Viewing requests, valuation leads, contact routing | ⏸ still outstanding |
+| ⚠ N3 | DNS / domain access from the previous developer (Keval drafts the email, Nitesh sends) | Go-live on bancproperty.com | ⏸ still outstanding — **critical path** |
+| N4 | CMP (Client Money Protection) logo + certificate PDF | Footer compliance | ⏸ still outstanding |
+| N5 | Team photos + bios (for cartoon/animated treatment) | Team page | ⏸ still outstanding |
+| N6 | Maintenance WhatsApp number (Nitesh getting a phone this weekend) | Maintenance page / menu link | ⏸ still outstanding |
+| N7 | Exact brand blue (hex or a file using it) — otherwise we use the site's `banc-sky` #4AC8E8 | Logo recolour | 🟢 not needed — site blue in use |
+| N8 | Any verified stats for a ticker (optional — parked until Street) | — | 🟢 parked |
 
 ## 1. Build plan by batch
 
@@ -175,7 +254,7 @@ from baseline, production build compiles.
    Batch 4 needs).
 4. Start Batch 2.
 
-### Batch 2 — Data correctness (Thu)
+### Batch 2 — Data correctness (Thu) — item 10 ✅ done, item 11 ⛔ blocked on Keval
 10. ~~**Exclude withdrawn / historic listings** from the Expert Agent import~~ — **done 2026-09-03 (`946e948`).** See below.
 11. **Schedule the Expert Agent sync** — the workflow already exists and is already running; it has never once succeeded. See below.
 
@@ -231,7 +310,7 @@ set, listings only move when the sync is run by hand, and the site's "last
 updated" freshness stamp stays blank (`crm_sync_runs` was empty until the
 manual run on 3 Sep).
 
-### Batch 3 — Search & sort (Fri)
+### Batch 3 — Search & sort (Fri) — ✅ done
 12. ~~**Sort options**~~ — **done 2026-09-03 (`a0d14e3`).**
 13. ~~**Filter UX**~~ — **done 2026-09-03 (`cfdc018`).**
 
@@ -300,13 +379,17 @@ and returned 37, while the control silently read "This area only" and no
 chip appeared. Caught by driving the real page in Chrome, not by the suite.
 Now covered by a regression test.
 
-### Batch 4 — Lead capture (Fri–Mon)
+### Batch 4 — Lead capture (Fri–Mon) — ⏸ not started
+
+15–17 need N2, but can be built now behind a config constant the way
+`BANC_PHONE_LINES` already handles N1, so the addresses drop in later
+without a rebuild. **18 needs nothing and is the next thing to build.**
 15. **Viewing request:** preferred date + time fields; email to the sales or lettings inbox (N2) with name, contact details, property and preferred slot. Calendar sync deferred to Street.
 16. **Unified instant valuation flow:** postcode → address dropdown → property details (type, beds, timeframe) → name, address, phone, email → show estimate range + "someone will be in touch" → email the team the full lead. Remove the separate "Request a valuation" form and fix the "can't get back to the homepage" bug.
 17. **Subscribe to alerts:** rename Sign in / Register to "Subscribe to alerts" capturing criteria (area, type, beds, budget) and contact details; email the team for now, automate on Street.
 18. **Life Magazine + alerts prominence:** move the "Stay updated" block up the homepage and pair it with the magazine.
 
-### Batch 5 — Content & new pages (Mon–Tue)
+### Batch 5 — Content & new pages (Mon–Tue) — 19, 23, 24, 25 ✅ done; 20, 21, 22, 26 ⏸ waiting on inputs
 19. ~~**Stamp Duty calculator** under Sales; **Rental Yield calculator** under Lettings~~ — **done 2026-09-03 (`6bdbc39`, `19627fd`).**
 
 **19 — both calculators already existed** (`app/tools/stamp-duty`,
@@ -388,17 +471,17 @@ three advance, prev disabled at start and enabled after. Contrast
 re-measured on `/`, `/why-us`, `/reviews`, `/track-record` — zero failures.
 Mobile checked at 390px, no horizontal page overflow.
 
-20. **Maintenance reporting page** (how to report, hours, WhatsApp number N6, acknowledgement copy) + "Report a maintenance issue" link in the Lettings menu — mock-up first for Nitesh to review.
-21. **CMP logo + certificate** in the footer (N4).
-22. **Team page** with cartoon/animated headshots + bios and an office group photo (N5).
+20. ⏸ **NEEDS N6.** **Maintenance reporting page** (how to report, hours, WhatsApp number N6, acknowledgement copy) + "Report a maintenance issue" link in the Lettings menu — mock-up first for Nitesh to review.
+21. ⏸ **NEEDS N4.** **CMP logo + certificate** in the footer.
+22. ⏸ **NEEDS N5.** **Team page** with cartoon/animated headshots + bios and an office group photo (N5).
 23. **About / Track record carousels** — colour-backed carousel cards (Bespoke, Marketing, Open all hours…) instead of plain text blocks.
 24. **Google reviews carousel** with a subtle hover-lift on each card.
 25. **Homepage featured slideshow:** price tag + "Enquire" button on each slide; drone-style slow motion where footage exists; refresh cadence.
-26. **Replace hero clips featuring real people** with generic footage (needs replacement assets or stock).
-27. **Explore subtle spring animation** on property photos (low priority).
+26. ⏸ **NEEDS ASSETS (N9).** **Replace hero clips featuring real people** with generic footage (needs replacement assets or stock).
+27. 🔨 **Buildable now.** **Explore subtle spring animation** on property photos (low priority).
 
-### Batch 6 — Launch (Wed 10 – Sat 13 Sep)
-28. DNS cut-over: add bancproperty.com + www to the Vercel project, set A/CNAME records at the registrar (N3), verify SSL, set `NEXT_PUBLIC_SITE_URL`, submit sitemap to Search Console, 301s from old URLs.
+### Batch 6 — Launch (Wed 10 – Sat 13 Sep) — ⏸ 28 gated on N3
+28. ⚠ **GATED ON N3 — the critical path.** DNS cut-over: add bancproperty.com + www to the Vercel project, set A/CNAME records at the registrar (N3), verify SSL, set `NEXT_PUBLIC_SITE_URL`, submit sitemap to Search Console, 301s from old URLs.
 29. Final QA pass on mobile and desktop; review call with Nitesh.
 
 ### Parked until the move to Street
@@ -453,4 +536,4 @@ I'll have the first batch (logo, Banc Bot, privacy changes to addresses, tabs, E
 Cheers,
 Keval
 
-*Last updated: 2026-09-03*
+*Last updated: 2026-09-04*
