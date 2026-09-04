@@ -4,11 +4,16 @@ Cut-over **Wednesday 10 September**. Old site retires Sat 13.
 
 ## Where the work is
 
-**14 commits on `main`, local only — nothing pushed.** Nitesh has seen none
-of: the contrast pass, the three carousels, the legacy redirect map, the
-working lead capture, or the hero film with the people removed. This is the
-single biggest risk to the date: if he reviews late and wants changes there
-is no room left.
+**Everything is pushed and deployed.** The 13 commits that were sitting
+local went up alongside the claymation team page, which was merged into
+`main` at `7fd1f05` — so this session's contrast pass, carousels, redirect
+map, lead capture and hero film are all live, interleaved with the other
+agent's work. Only this handoff document is unpushed.
+
+**The merge is clean, checked rather than assumed:** `tsc` passes, 514
+tests pass, the production build compiles, and the new `/the-team` measures
+**0 contrast failures and 0px mobile overflow** — the two things every new
+surface in this session failed on first pass.
 
 ## QA sweep — started, NOT finished
 
@@ -69,12 +74,12 @@ and 390.
 SanSan has GPT adding a claymation treatment to the team page, to be
 deployed soon. Two consequences:
 
-- **Push the 14 local commits before that lands**, or the merge gets
-  unpleasant — `main` is the production branch and auto-deploys.
-- **Re-run the contrast audit and the mobile check on `/the-team`
-  afterwards.** Every new surface this session has produced failed AA on
-  first pass, and the two lead-capture pages failed because they were
-  written with hardcoded hex that the token codemod cannot see.
+- ~~Push before it lands~~ — done; the merge happened cleanly.
+- ~~Re-run contrast and mobile on `/the-team`~~ — done, both clean.
+- **Still worth watching:** the two lead-capture pages failed AA because
+  they were written with hardcoded hex, which the token codemod cannot see.
+  Any further work from another agent should be measured the same way
+  rather than trusted.
 
 ## Still outstanding on the build
 
