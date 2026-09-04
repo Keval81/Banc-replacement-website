@@ -1,6 +1,9 @@
 import { SoldPriceRecord, SoldPriceStats, AreaStatistics } from '@/lib/types/data';
 
-const LAND_REGISTRY_API_URL = 'https://landregistry.data.gov.uk/data/ppi';
+// The /data/ppi/sparql path returns 400 for every request, so the query below
+// never once succeeded and every call fell through to the fallback.
+const LAND_REGISTRY_QUERY_URL =
+  'https://landregistry.data.gov.uk/landregistry/query';
 
 // Cache for 24 hours
 const CACHE_DURATION = 24 * 60 * 60 * 1000;
@@ -82,7 +85,7 @@ export async function fetchSoldPrices(postcode: string): Promise<SoldPriceRecord
       LIMIT 100
     `;
 
-    const response = await fetch(`${LAND_REGISTRY_API_URL}/sparql`, {
+    const response = await fetch(LAND_REGISTRY_QUERY_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -112,9 +115,11 @@ export async function fetchSoldPrices(postcode: string): Promise<SoldPriceRecord
     setCachedData(cacheKey, records);
     return records;
   } catch (error) {
+    // Never answer with invented sales. An estate agent publishing fabricated
+    // sold prices is a great deal worse than a page that says it cannot reach
+    // the register right now.
     console.error('Error fetching sold prices:', error);
-    // Return mock data as fallback
-    return getMockSoldPrices(postcode);
+    throw error instanceof Error ? error : new Error('Sold price lookup failed');
   }
 }
 
@@ -180,7 +185,7 @@ export async function fetchSoldPriceStats(postcode: string): Promise<SoldPriceSt
     return stats;
   } catch (error) {
     console.error('Error calculating price stats:', error);
-    return getMockPriceStats();
+    throw error instanceof Error ? error : new Error('Land Registry lookup failed');
   }
 }
 
@@ -217,122 +222,26 @@ export async function fetchAreaStatistics(postcode: string): Promise<AreaStatist
     return areaStats;
   } catch (error) {
     console.error('Error fetching area statistics:', error);
-    return getMockAreaStatistics(postcode);
+    throw error instanceof Error ? error : new Error('Land Registry lookup failed');
   }
 }
 
-// Mock data for development/fallback
-function getMockSoldPrices(postcode: string): SoldPriceRecord[] {
-  const basePrice = 450000 + Math.random() * 200000;
-  const now = new Date();
-  
-  return [
-    {
-      id: '1',
-      address: '12 High Street',
-      postcode,
-      price: Math.round(basePrice),
-      priceFormatted: formatPrice(Math.round(basePrice)),
-      date: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-      propertyType: 'terraced',
-      tenure: 'freehold',
-      newBuild: false,
-    },
-    {
-      id: '2',
-      address: '45 Main Road',
-      postcode,
-      price: Math.round(basePrice * 1.1),
-      priceFormatted: formatPrice(Math.round(basePrice * 1.1)),
-      date: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-      propertyType: 'semi-detached',
-      tenure: 'freehold',
-      newBuild: false,
-    },
-    {
-      id: '3',
-      address: '8 Park Avenue',
-      postcode,
-      price: Math.round(basePrice * 0.95),
-      priceFormatted: formatPrice(Math.round(basePrice * 0.95)),
-      date: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-      propertyType: 'flat',
-      tenure: 'leasehold',
-      newBuild: false,
-    },
-    {
-      id: '4',
-      address: '23 Elm Close',
-      postcode,
-      price: Math.round(basePrice * 1.25),
-      priceFormatted: formatPrice(Math.round(basePrice * 1.25)),
-      date: new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000).toISOString(),
-      propertyType: 'detached',
-      tenure: 'freehold',
-      newBuild: true,
-    },
-    {
-      id: '5',
-      address: '7 Church Lane',
-      postcode,
-      price: Math.round(basePrice * 0.85),
-      priceFormatted: formatPrice(Math.round(basePrice * 0.85)),
-      date: new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000).toISOString(),
-      propertyType: 'terraced',
-      tenure: 'freehold',
-      newBuild: false,
-    },
-  ];
-}
 
-function getMockPriceStats(): SoldPriceStats {
-  return {
-    averagePrice: 525000,
-    medianPrice: 510000,
-    priceChangePercent: 3.5,
-    salesCount12Months: 47,
-    salesCount6Months: 23,
-    pricePerSqft: 525,
-  };
-}
 
-function getMockAreaStatistics(postcode: string): AreaStatistics {
-  return {
-    postcode,
-    averagePrice: 525000,
-    medianPrice: 510000,
-    pricePerSqft: 525,
-    salesCount12Months: 47,
-    avgTimeOnMarket: 42,
-    priceChange1Year: 3.5,
-    priceChange3Years: 12.8,
-    priceChange5Years: 24.2,
-    propertyTypeBreakdown: {
-      'terraced': 15,
-      'semi-detached': 12,
-      'detached': 8,
-      'flat': 12,
-    },
-  };
-}
+
+
+
 
 // Search by street name
-export async function searchSoldPricesByStreet(street: string, postcode?: string): Promise<SoldPriceRecord[]> {
-  const cacheKey = getCacheKey('sold-prices-street', `${street}:${postcode || ''}`);
-  const cached = getCachedData<SoldPriceRecord[]>(cacheKey);
-  if (cached) return cached;
-
-  try {
-    // Filter mock data by street name
-    const mockData = getMockSoldPrices(postcode || 'SW1A 1AA');
-    const filtered = mockData.filter(r => 
-      r.address.toLowerCase().includes(street.toLowerCase())
-    );
-    
-    setCachedData(cacheKey, filtered);
-    return filtered;
-  } catch (error) {
-    console.error('Error searching sold prices:', error);
-    return [];
-  }
+export async function searchSoldPricesByStreet(
+  street: string,
+  postcode?: string,
+): Promise<SoldPriceRecord[]> {
+  // This never had a real implementation — it filtered the mock generator and
+  // returned the result as though it came from the register. Until the street
+  // query is written against the live endpoint it answers with nothing rather
+  // than with something invented.
+  void street;
+  void postcode;
+  return [];
 }
