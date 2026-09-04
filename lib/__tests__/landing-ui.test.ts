@@ -463,18 +463,27 @@ test("the hero calls to action reveal after the tagline, one then the other", ()
   assert.match(selector, /banc-action-reveal/);
   assert.match(css, /@keyframes banc-action-reveal/);
 
-  // The tagline starts at 2s and runs 1.8s. The buttons must not start before
-  // it lands, or they arrive underneath it instead of after it.
+  // The tagline starts at 2s and runs 1.8s, but on a hard ease-out
+  // (cubic-bezier(.16,1,.3,1)) most of that travel is spent in the first
+  // third — it is visually settled well before the animation formally ends.
+  // Waiting for the full duration read as a stall, so the bar is the point it
+  // has landed to the eye, not the point the timeline finishes.
   const taglineDelay = Number(
     css.match(/animation: banc-tagline-reveal ([\d.]+)s[^;]*?\s([\d.]+)s;/)?.[2],
   );
   const taglineDuration = Number(
     css.match(/animation: banc-tagline-reveal ([\d.]+)s/)?.[1],
   );
+  const taglineSettled = taglineDelay + taglineDuration * 0.35;
   const [, first, step] = selector.match(/\$\{([\d.]+) \+ index \* ([\d.]+)\}s/) ?? [];
   assert.ok(
-    Number(first) >= taglineDelay + taglineDuration,
-    `buttons start at ${first}s, before the tagline finishes at ${taglineDelay + taglineDuration}s`,
+    Number(first) >= taglineSettled,
+    `buttons start at ${first}s, before the tagline has landed at ~${taglineSettled}s`,
+  );
+  // And not so late that the hero sits half-finished while someone waits.
+  assert.ok(
+    Number(first) <= taglineDelay + taglineDuration,
+    `buttons start at ${first}s, which is after the tagline's whole timeline — that reads as a stall`,
   );
   assert.ok(Number(step) >= 0.5, `${step}s between the two buttons reads as a list, not a beat`);
 
