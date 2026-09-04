@@ -5,7 +5,14 @@
 
 ---
 
-# STATUS — 4 September 2026 · 9 days to launch
+# STATUS — 4 September 2026 · cut over Wed 10 Sep
+
+> **DNS is no longer a blocker (4 Sep).** James at Cove Studios holds
+> bancproperty.com in his hosting and has offered to update the records
+> himself. We are taking that option rather than transferring the domain.
+> **Go-live moves forward to Wednesday 10 September** — three working days
+> before the old site retires on the 13th, so the switch has margin either
+> side instead of landing on a Saturday.
 
 ## Where the build stands
 
@@ -494,24 +501,79 @@ Mobile checked at 390px, no horizontal page overflow.
 - Advise Nitesh to ask Street for a data import template / bridging call rather than manual entry.
 - Book the end-of-week review call.
 
-## 3. Draft — email for Nitesh to send to the previous web developer / domain host
+## 3. DNS cut-over — RESOLVED 4 Sep, records confirmed
 
-Subject: bancproperty.com — DNS access needed before 13 September
+**Cove Studios (James) holds the domain and will edit the records.** We are
+not transferring it: the domain carries Banc's live email, a transfer can
+take up to five days, and option 3 changes the smallest possible surface.
 
-Hi [name],
+**Measured live on 4 Sep, so we know exactly what is there:**
 
-We're launching a new Banc Property Group website on 13 September, the day our current site goes offline, and we need to point the bancproperty.com domain at the new hosting before then.
+| Record | Current | Action |
+|---|---|---|
+| `A` @ (bancproperty.com) | `35.246.9.164` (Google Cloud — **does not respond, the apex is dead today**) | **change to `76.76.21.21`** |
+| `www` | `CNAME` → `live.webdadi.net` (Webdadi, behind Cloudflare) | **replace with `A` → `76.76.21.21`** — a name cannot hold both |
+| `MX` | `hermes.hosts.co.uk`, `athena.hosts.co.uk` (both priority 30) | **do not touch** |
+| `TXT` | `v=spf1 include:spf.hosts.co.uk ~all` | **do not touch** |
+| `CAA` | none present | nothing to do — SSL will issue |
+| `NS` | `ns0/ns1/ns2.phase8.net` | **unchanged** — we are not moving nameservers |
 
-Could you help with the following?
+`76.76.21.21` is the value Vercel returned for this project after both
+domains were added to it (`vercel domains inspect`), not a value copied from
+documentation — the docs list several and only the project knows which
+applies.
 
-1. Confirm where the domain bancproperty.com is registered (e.g. GoDaddy, 123-reg, Namecheap) and who holds the account.
-2. Either transfer the registrar account / domain into our own account (Nitesh, nitesh@bancproperty.com), or give us access to manage the DNS records for bancproperty.com.
-3. If you'd prefer to make the changes yourself, please set the following records on the day we confirm (we will send the exact values): an A record for bancproperty.com and a CNAME for www pointing to our new host (Vercel). Existing MX / email records must be left unchanged.
-4. Confirm whether the current hosting / email is tied to the domain in any way we should know about before switching.
+**Both domains are now added to the Vercel project `banc-website`.** One
+dashboard step remains: set `bancproperty.com` as the primary domain so
+`www` redirects to it, matching the canonical origin in `lib/site.ts`.
 
-Ideally we'd like access by Monday 8 September so the switch itself can be done in an afternoon with a fallback if anything needs reverting.
+**Old-site URL inventory captured 4 Sep** —
+`docs/audits/2026-09-04-old-site-url-inventory.json`, 372 URLs recovered
+from the Wayback index because Cloudflare 403s both curl and headless
+Chrome on the live site. 53 are real pages needing 301s; 308 are individual
+`/property/...` listings that can fold into the search page. **This could
+not have been recovered after the old site went offline.**
 
-Many thanks,
+### Draft — Nitesh's reply to James at Cove Studios
+
+Subject: bancproperty.com — DNS records for the new site (go-live Wed 10 Sep)
+
+Hi James,
+
+Thanks, that's really helpful — and yes, option 3 please. Given the email is attached to the domain we'd rather not move it, so if you're happy to update the records at your end that's the simplest and safest route for everyone.
+
+Here is exactly what needs to change. It is two records, and nothing else should be touched.
+
+CHANGE — the A record for the domain itself
+    Name:     @  (bancproperty.com)
+    Current:  35.246.9.164
+    New:      76.76.21.21
+
+REPLACE — the www record
+    Name:     www
+    Current:  CNAME  ->  live.webdadi.net
+    New:      A record  ->  76.76.21.21
+    (The CNAME needs removing, as one name can't hold both.)
+
+PLEASE LEAVE EXACTLY AS THEY ARE — everything else on the domain, in particular:
+    MX:   hermes.hosts.co.uk and athena.hosts.co.uk (both priority 30)
+    TXT:  v=spf1 include:spf.hosts.co.uk ~all
+    ...along with any other TXT records or subdomains.
+
+Email must be completely unaffected by this — that's the one thing we really don't want to disturb.
+
+Two small asks:
+
+1. Could you drop the TTL on those two records to 300 seconds the day before, on Tuesday 9th? It means the change takes effect in minutes rather than hours, and can be put back just as quickly if anything looks wrong.
+
+2. Could you send over the full current record list? Our developer would like to check nothing else is pointing at the existing site before we switch.
+
+We'd like to make the change on the morning of Wednesday 10 September, if that suits you. That's deliberately a few days ahead of the 13th so there are working days either side if anything needs adjusting, rather than doing it on a Saturday.
+
+One thing worth flagging while you're in there: bancproperty.com without the www doesn't currently resolve to anything — it times out, and only the www version works. After this change both will work properly.
+
+Thanks again for making this straightforward.
+
 Nitesh
 Banc Property Group
 
