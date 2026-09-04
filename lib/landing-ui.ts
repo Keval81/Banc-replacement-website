@@ -105,14 +105,18 @@ const sharedActions = {
     },
   ],
   heroActionPresentation: "editorial-paired-actions",
+  // The film Nitesh asked to change: half of hero-first-day's eight shots
+  // featured people. These are the same shots with only the property footage
+  // kept — aerials, the houses, the pool at dusk — so nothing on the landing
+  // page is a stock family.
   heroVideo: {
     desktop: {
-      src: "/videos/hero-first-day.mp4",
+      src: "/videos/hero-properties.mp4",
       width: 1440,
       height: 810,
     },
     mobile: {
-      src: "/videos/hero-first-day-mobile-safe.mp4",
+      src: "/videos/hero-properties-mobile.mp4",
       width: 608,
       height: 1316,
       preserveFullComposition: true,

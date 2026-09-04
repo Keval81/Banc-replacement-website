@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -126,7 +126,7 @@ test("uses a full-composition mobile film that does not crop a tall phone viewpo
     assert.ok(ui.heroVideo, "landing UI must define mobile film framing");
     const mobileVideo = ui.heroVideo.mobile;
 
-    assert.equal(mobileVideo.src, "/videos/hero-first-day-mobile-safe.mp4");
+    assert.equal(mobileVideo.src, "/videos/hero-properties-mobile.mp4");
     assert.equal(mobileVideo.preserveFullComposition, true);
     assert.ok(
       mobileVideo.width / mobileVideo.height <= 390 / 844,
@@ -392,5 +392,21 @@ test("the featured slideshow's Enquire button lands on a target that exists", ()
   const anchors = featured.match(/#enquire/g) ?? [];
   if (anchors.length > 0) {
     assert.match(contactActions, /id="enquire"/);
+  }
+});
+
+test("the hero film shows property, not people", () => {
+  // Nitesh asked for the people to come out of the landing page footage. The
+  // clips that replaced them are cut from the same source, keeping only the
+  // shots with no one in them, so this guards against the old file — where
+  // four of the eight shots were stock families — being wired back in.
+  const ui = getLandingUi("aker");
+  for (const variant of [ui.heroVideo.desktop, ui.heroVideo.mobile]) {
+    assert.match(variant.src, /^\/videos\/hero-properties/);
+    assert.doesNotMatch(variant.src, /first-day/);
+    assert.ok(
+      existsSync(join(import.meta.dirname, "..", "..", "public", variant.src)),
+      `${variant.src} is referenced but not in public/`,
+    );
   }
 });
