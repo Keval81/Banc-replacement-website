@@ -167,7 +167,7 @@ export default function Hero() {
             loop
             playsInline
             preload="auto"
-            poster="/videos/hero-cut-poster.jpg"
+            poster={landingUi.heroVideo.poster}
             aria-hidden="true"
           >
             <source media="(max-width: 640px)" src={landingUi.heroVideo.mobile.src} />

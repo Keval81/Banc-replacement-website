@@ -410,3 +410,26 @@ test("the hero film shows property, not people", () => {
     );
   }
 });
+
+// The hero poster is the first frame anyone sees. It sat on hero-cut-poster.jpg
+// long after the hero itself moved to hero-properties.mp4, so the page opened on
+// a frame of the old cut — the one item 26 removed the people from — and then
+// cut to different footage the moment the video decoded.
+test("the hero poster is a frame of the hero that actually plays", () => {
+  for (const variant of ["classic", "aker"] as const) {
+    const { heroVideo } = getLandingUi(variant);
+    const stem = heroVideo.desktop.src.replace(/\.mp4$/, "");
+    assert.equal(heroVideo.poster, `${stem}-poster.jpg`, variant);
+  }
+});
+
+test("every hero asset the landing page names exists on disk", () => {
+  const root = join(import.meta.dirname, "..", "..");
+  const { heroVideo } = getLandingUi("classic");
+  for (const asset of [heroVideo.poster, heroVideo.desktop.src, heroVideo.mobile.src]) {
+    assert.ok(
+      existsSync(join(root, "public", asset)),
+      `${asset} is referenced by the hero but is not in public/`,
+    );
+  }
+});

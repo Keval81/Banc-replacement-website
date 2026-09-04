@@ -123,14 +123,20 @@ export default function LoginForm() {
                 />
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* No password reset exists yet — there is no token, no expiry and
+                  no reset mail — so the link only led to a 404. Until the flow
+                  is built, the office resets accounts by hand. */}
+              <div className="flex items-center justify-between gap-4">
                 <label className="flex items-center">
                   <input type="checkbox" className="rounded border-white/20 bg-white/5 text-banc-gold-dark" />
                   <span className="ml-2 text-sm text-white/60">Remember me</span>
                 </label>
-                <Link href="/forgot-password" className="text-sm text-banc-gold-dark hover:text-banc-gold">
-                  Forgot password?
-                </Link>
+                <p className="text-sm text-white/60">
+                  Forgotten your password?{" "}
+                  <Link href="/contact" className="text-banc-gold hover:text-white underline underline-offset-4">
+                    Ask the team
+                  </Link>
+                </p>
               </div>
 
               <Button

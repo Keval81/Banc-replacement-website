@@ -38,6 +38,10 @@ export type MobileWhatsappPanelPlacement =
 export type ChatLauncherClearance = "standard" | "clears-sticky-actions";
 
 interface HeroVideo {
+  // The poster is the first thing anyone sees, before a byte of video has
+  // decoded. It has to be a frame of the clip that actually plays — a stale
+  // poster shows the previous cut and then jumps.
+  poster: string;
   desktop: {
     src: string;
     width: number;
@@ -110,6 +114,7 @@ const sharedActions = {
   // kept — aerials, the houses, the pool at dusk — so nothing on the landing
   // page is a stock family.
   heroVideo: {
+    poster: "/videos/hero-properties-poster.jpg",
     desktop: {
       src: "/videos/hero-properties.mp4",
       width: 1440,

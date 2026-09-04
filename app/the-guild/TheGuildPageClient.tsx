@@ -210,7 +210,10 @@ export default function TheGuildPage() {
       </section>
 
       {/* Introduction Section */}
-      <section className="py-24 lg:py-32">
+      {/* overflow-hidden: the decorative glow below sits at -right-8 (32px)
+          inside a px-6 (24px) container, so on a phone it pushed the document
+          8px wider than the viewport and the whole page scrolled sideways. */}
+      <section className="overflow-hidden py-24 lg:py-32">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12">
           <div className="grid gap-16 lg:grid-cols-2 items-center">
             {/* Image Side */}

@@ -73,28 +73,29 @@
       "form_factor": "wide"
     }
   ],
-  "categories": ["real estate", "business", "lifestyle"],
+  "categories": [
+    "real estate",
+    "business",
+    "lifestyle"
+  ],
   "shortcuts": [
     {
       "name": "Search Properties",
       "short_name": "Search",
       "description": "Search for properties to buy or rent",
-      "url": "/sales/properties",
-      "icons": [{ "src": "/icons/search-96x96.png", "sizes": "96x96" }]
+      "url": "/sales/properties"
     },
     {
       "name": "Request Valuation",
       "short_name": "Valuation",
       "description": "Get a free property valuation",
-      "url": "/valuation",
-      "icons": [{ "src": "/icons/valuation-96x96.png", "sizes": "96x96" }]
+      "url": "/valuation"
     },
     {
       "name": "Contact Us",
       "short_name": "Contact",
       "description": "Get in touch with our team",
-      "url": "/contact",
-      "icons": [{ "src": "/icons/contact-96x96.png", "sizes": "96x96" }]
+      "url": "/contact"
     }
   ],
   "related_applications": [],
