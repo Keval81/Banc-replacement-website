@@ -9,19 +9,21 @@ import {
   TEAM_HERO_MEDIA,
 } from "../team-media.ts";
 
-test("maps each Banc team member to the matching clay portrait", () => {
-  assert.deepEqual(getTeamPortrait("Nitesh Bheda"), {
-    src: "/images/team/nitesh-bheda-clay.jpg",
-  });
-  assert.deepEqual(getTeamPortrait("Andrew Crump"), {
-    src: "/images/team/andrew-crump-clay.jpg",
-  });
-  assert.deepEqual(getTeamPortrait("Vicki Glashier"), {
-    src: "/images/team/vicki-glashier-clay.jpg",
-  });
-  assert.deepEqual(getTeamPortrait("Kay Stanley"), {
-    src: "/images/team/kay-stanley-clay.jpg",
-  });
+test("maps each Banc team member to a dedicated clay headshot", () => {
+  const expectedPortraits = {
+    "Nitesh Bheda": "/images/team/nitesh-bheda-headshot-clay.jpg",
+    "Andrew Crump": "/images/team/andrew-crump-headshot-clay.jpg",
+    "Vicki Glashier": "/images/team/vicki-glashier-headshot-clay.jpg",
+    "Kay Stanley": "/images/team/kay-stanley-headshot-clay.jpg",
+  } as const;
+
+  for (const [name, src] of Object.entries(expectedPortraits)) {
+    assert.deepEqual(getTeamPortrait(name as keyof typeof expectedPortraits), { src });
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), "public", src)),
+      `missing Team headshot asset: ${src}`,
+    );
+  }
 });
 
 test("ships responsive local hero media for both motion preferences", () => {

@@ -17,16 +17,16 @@ export const TEAM_HERO_MEDIA = {
 
 const TEAM_PORTRAITS: Record<TeamMemberName, TeamPortrait> = {
   "Nitesh Bheda": {
-    src: "/images/team/nitesh-bheda-clay.jpg",
+    src: "/images/team/nitesh-bheda-headshot-clay.jpg",
   },
   "Andrew Crump": {
-    src: "/images/team/andrew-crump-clay.jpg",
+    src: "/images/team/andrew-crump-headshot-clay.jpg",
   },
   "Vicki Glashier": {
-    src: "/images/team/vicki-glashier-clay.jpg",
+    src: "/images/team/vicki-glashier-headshot-clay.jpg",
   },
   "Kay Stanley": {
-    src: "/images/team/kay-stanley-clay.jpg",
+    src: "/images/team/kay-stanley-headshot-clay.jpg",
   },
 };
 
