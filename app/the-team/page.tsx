@@ -3,6 +3,7 @@ import Image from "next/image";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { TeamHeroMedia } from "@/components/team/TeamHeroMedia";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -90,31 +91,7 @@ export default function TeamPage() {
       
       {/* Hero Section */}
       <section className="relative min-h-[76svh] overflow-hidden bg-banc-dark-deep lg:min-h-[82svh]">
-        <Image
-          src="/images/team/banc-team-clay.jpg"
-          alt="The Banc Property Group team outside the Cuffley office, recreated in clay"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <video
-          className="absolute inset-0 hidden h-full w-full object-cover motion-safe:block motion-reduce:hidden"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster="/images/team/banc-team-clay.jpg"
-          aria-hidden="true"
-        >
-          <source
-            src="/videos/team/banc-team-clay-portrait.mp4"
-            type="video/mp4"
-            media="(max-width: 767px)"
-          />
-          <source src="/videos/team/banc-team-clay-landscape.mp4" type="video/mp4" />
-        </video>
+        <TeamHeroMedia />
         <div className="absolute inset-0 bg-black/45" />
 
         <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-end px-6 pb-16 pt-32 lg:min-h-[82svh] lg:px-10 lg:pb-20">
