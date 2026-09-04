@@ -108,7 +108,7 @@ export default function TeamPage() {
 
         {/* items-start, not items-end: the clay figures stand in the lower half of
             the frame, so a bottom-anchored title sat straight on top of them. */}
-        <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-start px-6 pb-16 pt-24 lg:min-h-[92svh] lg:px-10 lg:pt-32">
+        <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-start px-6 pb-16 pt-20 lg:min-h-[92svh] lg:px-10 lg:pt-24">
           <div className="max-w-4xl">
             <p className="mb-5 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-white/75">
               <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />
@@ -121,13 +121,13 @@ export default function TeamPage() {
                   invisible if the bundle never runs. */}
               <span
                 className="banc-line-reveal block"
-                style={{ "--banc-line-delay": "0.3s" } as CSSProperties}
+                style={{ "--banc-line-delay": "0.7s" } as CSSProperties}
               >
                 Property is personal.
               </span>
               <span
                 className="banc-line-reveal block text-banc-sky"
-                style={{ "--banc-line-delay": "0.95s" } as CSSProperties}
+                style={{ "--banc-line-delay": "1.5s" } as CSSProperties}
               >
                 So are we.
               </span>

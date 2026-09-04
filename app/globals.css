@@ -402,7 +402,11 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
 /* A headline that arrives a line at a time, sharing the keyframe the hero
    actions use. Used on the team page, where "Property is personal." lands
    first and "So are we." follows in Banc Sky after a beat — the pause is the
-   point, so it is set per line rather than as one animation on the block. */
+   point, so it is set per line rather than as one animation on the block.
+   The team page holds longer than the homepage does (0.7s and 1.5s against
+   2.9s/3.4s there) because there is no hero film fading up to wait for: the
+   clay is on screen from the first frame, so the delay is doing the work of
+   letting the picture register before the words arrive. */
 .banc-line-reveal {
   animation: banc-action-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) var(--banc-line-delay, 0s);
   animation-fill-mode: backwards;
