@@ -126,7 +126,7 @@ test("uses a full-composition mobile film that does not crop a tall phone viewpo
     assert.ok(ui.heroVideo, "landing UI must define mobile film framing");
     const mobileVideo = ui.heroVideo.mobile;
 
-    assert.equal(mobileVideo.src, "/videos/hero-properties-mobile.mp4");
+    assert.match(mobileVideo.src, /^\/videos\/hero-properties.*-mobile\.mp4$/);
     assert.equal(mobileVideo.preserveFullComposition, true);
     assert.ok(
       mobileVideo.width / mobileVideo.height <= 390 / 844,
@@ -395,19 +395,33 @@ test("the featured slideshow's Enquire button lands on a target that exists", ()
   }
 });
 
-test("the hero film shows property, not people", () => {
-  // Nitesh asked for the people to come out of the landing page footage. The
-  // clips that replaced them are cut from the same source, keeping only the
-  // shots with no one in them, so this guards against the old file — where
-  // four of the eight shots were stock families — being wired back in.
+test("the hero film never points back at the stock-family footage", () => {
+  // This started life as "shows property, not people": Nitesh asked for the
+  // people to come out, and four of the eight shots in hero-first-day.mp4 were
+  // stock families. The brief has since moved on — the hero is deliberately
+  // property and people alternating again — but the specific files that were
+  // rejected still sit in public/videos, so the guard is against those, not
+  // against people as such.
+  const REJECTED = /hero-first-day|hero-cut|hero-descent|hero[123]\.m4v/;
   const ui = getLandingUi("aker");
   for (const variant of [ui.heroVideo.desktop, ui.heroVideo.mobile]) {
     assert.match(variant.src, /^\/videos\/hero-properties/);
-    assert.doesNotMatch(variant.src, /first-day/);
+    assert.doesNotMatch(variant.src, REJECTED, `${variant.src} was rejected footage`);
     assert.ok(
       existsSync(join(import.meta.dirname, "..", "..", "public", variant.src)),
       `${variant.src} is referenced but not in public/`,
     );
+  }
+});
+
+test("the hero is played at the speed it was cut for", () => {
+  // The previous film cut at about a second a shot and was played at 0.6x to
+  // let it breathe. This one is already timed — six beats of roughly 2.5s, its
+  // property shots motion-interpolated up from ~1s — so replaying it slowed
+  // would stretch every beat past four seconds and turn the reactions into
+  // slow motion.
+  for (const variant of ["classic", "aker"] as const) {
+    assert.equal(getLandingUi(variant).heroVideo.playbackRate, 1, variant);
   }
 });
 

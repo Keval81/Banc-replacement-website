@@ -79,7 +79,7 @@ export default function Hero() {
 
     try {
       video.muted = true;
-      video.playbackRate = 0.60;
+      video.playbackRate = landingUi.heroVideo.playbackRate;
       await video.play();
       setCanAutoplay(true);
     } catch {

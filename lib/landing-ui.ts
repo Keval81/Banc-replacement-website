@@ -42,6 +42,12 @@ interface HeroVideo {
   // decoded. It has to be a frame of the clip that actually plays — a stale
   // poster shows the previous cut and then jumps.
   poster: string;
+  // The old hero cut at roughly a second a shot, so it was played at 0.6x to
+  // make it breathe. This cut is already timed — six beats of about 2.5s, with
+  // the property shots motion-interpolated up from ~1s — so slowing it again
+  // would stretch every beat past four seconds and turn the reactions into
+  // slow motion.
+  playbackRate: number;
   desktop: {
     src: string;
     width: number;
@@ -114,14 +120,15 @@ const sharedActions = {
   // kept — aerials, the houses, the pool at dusk — so nothing on the landing
   // page is a stock family.
   heroVideo: {
-    poster: "/videos/hero-properties-poster.jpg",
+    poster: "/videos/hero-properties-2026-09-poster.jpg",
+    playbackRate: 1,
     desktop: {
-      src: "/videos/hero-properties.mp4",
+      src: "/videos/hero-properties-2026-09.mp4",
       width: 1440,
       height: 810,
     },
     mobile: {
-      src: "/videos/hero-properties-mobile.mp4",
+      src: "/videos/hero-properties-2026-09-mobile.mp4",
       width: 608,
       height: 1316,
       preserveFullComposition: true,
