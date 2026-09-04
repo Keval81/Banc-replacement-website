@@ -31,7 +31,7 @@ export function PropertyJourneySelector({
             key={action.href}
             href={action.href}
             style={
-              { "--banc-action-delay": `${3.35 + index * 0.6}s` } as CSSProperties
+              { "--banc-action-delay": `${2.9 + index * 0.5}s` } as CSSProperties
             }
             className={`banc-action-reveal group relative flex min-h-16 items-center justify-between gap-3 overflow-hidden rounded-[15px] border px-4 py-3 shadow-[0_14px_36px_rgba(0,0,0,0.24)] backdrop-blur-xl transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep motion-reduce:transition-none ${
               isPrimary

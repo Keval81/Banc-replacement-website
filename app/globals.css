@@ -371,8 +371,10 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
    Timing runs off the tagline, which starts at 2s and lasts 1.8s — but its
    easing is a hard ease-out, so it is visually settled by roughly 2.6s and the
    rest of that 1.8s is the last few percent. Waiting for the full duration read
-   as a stall. The first button now follows at 3.35s and the second at 3.95s: a
-   0.6s hold, still long enough to read as two deliberate beats. */
+   as a stall. The first button follows at 2.9s and the second at 3.4s — a 0.5s
+   hold, still two beats rather than a pair arriving together. The buttons sit
+   ABOVE the mark, so this is the last thing to land in a column that fills from
+   the bottom up. */
 @keyframes banc-action-reveal {
   from {
     opacity: 0;

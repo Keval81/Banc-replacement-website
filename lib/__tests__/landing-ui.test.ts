@@ -279,7 +279,18 @@ test("renders the shared editorial property actions at both hero breakpoints", (
     "utf8",
   );
 
-  assert.equal((heroSource.match(/<PropertyJourneySelector/g) ?? []).length, 2);
+  // This used to require two instances — one hidden below sm, one hidden above
+  // it — because the actions sat top-right on desktop and under the tagline on
+  // a phone. They now sit above the mark at every width, so ONE instance serves
+  // both and the guarantee gets stronger: there is nothing to fall out of sync,
+  // and no breakpoint at which the actions can be hidden.
+  const instances = heroSource.match(/<PropertyJourneySelector[\s\S]*?\/>/g) ?? [];
+  assert.equal(instances.length, 1, "the hero should render one shared action row");
+  assert.doesNotMatch(
+    instances[0],
+    /\b(hidden|sm:hidden|md:hidden|lg:hidden)\b/,
+    "the actions must not be hidden at any breakpoint",
+  );
   assert.match(selectorSource, /aria-label="Browse Banc properties"/);
   assert.match(selectorSource, /min-h-16/);
   assert.match(selectorSource, /gap-2/);

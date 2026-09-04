@@ -198,8 +198,6 @@ export default function Hero() {
             transition={{ delay: 0.25, duration: 0.7 }}
             className="hidden w-full max-w-sm flex-col gap-3 sm:flex lg:items-end"
           >
-            <PropertyJourneySelector className="hidden w-full sm:grid" />
-
             <div className="hidden w-full rounded-[10px] bg-banc-dark/90 p-5 sm:block">
               <AnimatePresence mode="wait">
                 <motion.div
@@ -240,8 +238,18 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.9, ease: "easeOut" }}
-          className="space-y-5 pb-40 sm:space-y-0 sm:pb-0"
+          className="space-y-5 pb-20 sm:space-y-0 sm:pb-0"
         >
+          {/* The actions sit above the mark. From sm up they take the lockup's
+              own measure, so the buttons, the mark, the rule and the tagline
+              share one left edge and one width. On a phone that measure is
+              281px, which splits into two columns too narrow to hold "BUY A
+              HOME" on one line — so there they run full width instead. */}
+          <PropertyJourneySelector
+            data-placement={landingUi.mobileHeroActionPlacement}
+            className="mb-7 w-full sm:mb-8 sm:w-[min(72vw,560px)]"
+          />
+
           <h1 className="m-0">
             <span className="sr-only">
               Banc Property Group — estate agents in Cuffley and Hertfordshire
@@ -281,11 +289,6 @@ export default function Hero() {
               property specialists
             </p>
           </div>
-
-          <PropertyJourneySelector
-            data-placement={landingUi.mobileHeroActionPlacement}
-            className="mx-auto w-full max-w-md sm:hidden"
-          />
         </motion.div>
       </div>
     </section>
