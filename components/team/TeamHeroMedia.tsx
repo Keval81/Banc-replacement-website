@@ -32,11 +32,15 @@ export function TeamHeroMedia() {
       <div
         role="img"
         aria-label="The Banc Property Group team outside the Cuffley office, recreated in clay"
-        className="team-hero-fallback absolute inset-0 bg-cover bg-center"
+        className="team-hero-fallback absolute inset-0 origin-[center_24%] scale-[1.28] bg-cover bg-center md:origin-center md:scale-100"
       />
       {shouldRenderTeamHeroVideo(prefersReducedMotion) && (
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          // The portrait cut is framed wide — the whole two-storey building and a
+          // deep apron of pavement — so on a phone the team end up tiny. Scaling
+          // in about the shopfront fixes that without a second encode; from md up
+          // the landscape cut plays untouched.
+          className="absolute inset-0 h-full w-full origin-[center_24%] scale-[1.28] object-cover md:origin-center md:scale-100"
           autoPlay
           muted
           loop

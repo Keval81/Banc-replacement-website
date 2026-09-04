@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import type { Metadata } from "next";
 import Image from "next/image";
 import { withPageDefaults } from "@/lib/seo";
@@ -90,19 +92,45 @@ export default function TeamPage() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-[76svh] overflow-hidden bg-banc-dark-deep lg:min-h-[82svh]">
+      {/* The film is 16:9 and object-cover crops whatever the container does not
+          match. At 76svh the box was ~2.1:1, so nearly a fifth of the landscape
+          frame was cut top and bottom. A taller box brings the ratio closer to the
+          film's and crops less away — the team sit further back without touching
+          the footage. Desktop only: the portrait cut is already nearly all visible
+          on a phone, and going taller there just adds empty pavement. */}
+      <section className="relative min-h-[76svh] overflow-hidden bg-banc-dark-deep lg:min-h-[92svh]">
         <TeamHeroMedia />
-        <div className="absolute inset-0 bg-black/45" />
+        {/* A flat 45% wash dimmed the clay as much as it helped the words. This
+            weights the darkness where the copy actually sits — top-left — and
+            lets the figures below keep their colour. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/45 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
 
-        <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-end px-6 pb-16 pt-32 lg:min-h-[82svh] lg:px-10 lg:pb-20">
+        {/* items-start, not items-end: the clay figures stand in the lower half of
+            the frame, so a bottom-anchored title sat straight on top of them. */}
+        <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-start px-6 pb-16 pt-24 lg:min-h-[92svh] lg:px-10 lg:pt-32">
           <div className="max-w-4xl">
             <p className="mb-5 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-white/75">
               <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />
               Our people
             </p>
             <h1 className="font-serif text-5xl font-light leading-[0.98] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
-              Property is personal.
-              <span className="block text-banc-sky">So are we.</span>
+              {/* Two beats, not one line that wraps: the pause between them is
+                  the whole point. CSS rather than framer-motion, which inlines
+                  opacity:0 into the SSR markup and would strand the page title
+                  invisible if the bundle never runs. */}
+              <span
+                className="banc-line-reveal block"
+                style={{ "--banc-line-delay": "0.3s" } as CSSProperties}
+              >
+                Property is personal.
+              </span>
+              <span
+                className="banc-line-reveal block text-banc-sky"
+                style={{ "--banc-line-delay": "0.95s" } as CSSProperties}
+              >
+                So are we.
+              </span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
               Four local specialists, decades of shared experience, and one standard:

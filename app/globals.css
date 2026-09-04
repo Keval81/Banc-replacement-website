@@ -399,6 +399,21 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
   }
 }
 
+/* A headline that arrives a line at a time, sharing the keyframe the hero
+   actions use. Used on the team page, where "Property is personal." lands
+   first and "So are we." follows in Banc Sky after a beat — the pause is the
+   point, so it is set per line rather than as one animation on the block. */
+.banc-line-reveal {
+  animation: banc-action-reveal 1s cubic-bezier(0.16, 1, 0.3, 1) var(--banc-line-delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banc-line-reveal {
+    animation: none;
+  }
+}
+
 /* Carousel track: still a real scroll container, just without the chrome. */
 .banc-carousel-track {
   scrollbar-width: none;
