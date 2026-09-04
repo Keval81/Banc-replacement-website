@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { TeamHeroMedia } from "@/components/team/TeamHeroMedia";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
 import { BANC_CONTACT } from "@/lib/banc-contact";
+import { getTeamPortrait } from "@/lib/team-media";
 
 export const metadata: Metadata = withPageDefaults("/the-team", {
   title: "Meet The Team | Banc Property Group",
@@ -26,6 +29,7 @@ const team = [
       "Having lived in the local area and raising a young family I feel well placed to highlight all the wonderful activities and amenities the area has to offer.",
       "Outside of work, I have two beautiful children and a very patient better half who motivates me each day and keeps me grounded and busy! I'm a huge United and sports fan, albeit more armchair these days since my 'knee injury'! I love going to live music events, family days out and catching up with the latest sports news on Talk sport and enjoy good food followed by a good movie or better still the latest box sets."
     ],
+    portrait: getTeamPortrait("Nitesh Bheda"),
     initials: "NB",
     phone: BANC_CONTACT.displayPhone,
     mobile: "07850 082541",
@@ -41,6 +45,7 @@ const team = [
       "In the winter I love nothing more than hitting the Italian Aosta region on my snow board and enjoy the odd glass of red wine, and in the summer I love to visit our family apartment in the sunny Mediterranean of Menorca. My family have been in Cuffley nearly 50 years, and I started my education at Cuffley JMI School where I have many happy memories.",
       "I also head up Banc Premier Homes being your dedicated point of contact from viewings right through to completion. I have vast experience in selling some of the finest homes locally, we can offer bespoke exclusive marketing to tailor each and every prestigious home."
     ],
+    portrait: getTeamPortrait("Andrew Crump"),
     initials: "AC",
     phone: BANC_CONTACT.displayPhone,
     mobile: "07565 543153",
@@ -55,6 +60,7 @@ const team = [
       "I have several years' experience in office administration and personal assistant roles and am delighted to have joined the BANC team 5 years ago. As the Office Manager my role is varied and fulfilling.",
       "I am involved in bringing properties to market, liaising with clients in those initial stages, and ensuring the smooth operation of the Cuffley office. I also work with our Managing Directors to support the drive for growth and development of Banc Property Group and strive for greatness."
     ],
+    portrait: getTeamPortrait("Vicki Glashier"),
     initials: "VG",
     phone: BANC_CONTACT.displayPhone,
     email: "vicki@bancproperty.com",
@@ -70,6 +76,7 @@ const team = [
       "Weekends, I love to watch rugby with my partner as we are season ticket holders for Saracens Rugby Team.",
       "It's a pleasure working at Banc who are the best local Estate Agents based on performance and board presence."
     ],
+    portrait: getTeamPortrait("Kay Stanley"),
     initials: "KS",
     phone: BANC_CONTACT.displayPhone,
     email: "kay@bancproperty.com",
@@ -83,106 +90,69 @@ export default function TeamPage() {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative bg-banc-dark-deep py-24 lg:py-36 overflow-hidden">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
-        </div>
-        {/* Decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-        </div>
-        
-        {/* Grid pattern overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }}
-        />
-        
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8">
-              <Users className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">Our People</span>
-            </div>
-            
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
-              Meet The Team
-            </h1>
-            <div className="mt-6 flex items-center justify-center gap-3">
-              <div className="h-px w-12 bg-banc-sky" />
-              <p className="text-lg text-white/70 font-medium">
-                Meet the awesome team at Banc
-              </p>
-              <div className="h-px w-12 bg-banc-sky" />
-            </div>
-            <p className="mt-6 text-white/60 max-w-2xl mx-auto leading-relaxed">
-              Our experienced professionals bring decades of combined expertise in property, 
-              combining local knowledge with a passion for exceptional service.
+      <section className="relative min-h-[76svh] overflow-hidden bg-banc-dark-deep lg:min-h-[82svh]">
+        <TeamHeroMedia />
+        <div className="absolute inset-0 bg-black/45" />
+
+        <div className="relative mx-auto flex min-h-[76svh] max-w-7xl items-end px-6 pb-16 pt-32 lg:min-h-[82svh] lg:px-10 lg:pb-20">
+          <div className="max-w-4xl">
+            <p className="mb-5 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-white/75">
+              <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />
+              Our people
             </p>
+            <h1 className="font-serif text-5xl font-light leading-[0.98] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
+              Property is personal.
+              <span className="block text-banc-sky">So are we.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+              Four local specialists, decades of shared experience, and one standard:
+              treat every move as if it were our own.
+            </p>
+            <a
+              href="#team-roster"
+              className="mt-8 inline-flex min-h-11 items-center gap-2 border-b border-white/50 text-sm font-medium text-white transition-colors duration-200 hover:border-banc-sky hover:text-banc-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-4 focus-visible:ring-offset-banc-dark-deep"
+            >
+              Meet the team
+              <ArrowRight className="h-4 w-4 rotate-90" aria-hidden="true" />
+            </a>
           </div>
-        </div>
-        
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-          <span className="text-xs text-white/40 uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-8 bg-gradient-to-b from-banc-sky to-transparent" />
         </div>
       </section>
 
       {/* Team Members Section - Alternating Layout */}
-      <section className="py-20 lg:py-28">
+      <section id="team-roster" className="scroll-mt-24 py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
+          <div className="mb-16 max-w-2xl border-l border-banc-sky pl-5 lg:mb-24">
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-banc-muted-readable">
+              The people behind the move
+            </p>
+            <h2 className="mt-3 font-serif text-4xl font-light tracking-tight text-banc-dark-deep sm:text-5xl">
+              Local knowledge, individual care.
+            </h2>
+          </div>
           <div className="space-y-24 lg:space-y-32">
             {team.map((member, index) => (
               <article 
                 key={member.name}
                 className={`relative flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-start group`}
               >
-                {/* Visual connector line for desktop */}
-                <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-gradient-to-b from-transparent via-banc-line to-transparent" 
-                  style={{ height: index === team.length - 1 ? '50%' : 'calc(100% + 8rem)' }}
-                />
-                
-                {/* Number indicator */}
-                <div className="hidden lg:flex absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white border-2 border-banc-sky items-center justify-center z-10 shadow-lg">
-                  <span className="text-lg font-bold text-banc-focus">0{index + 1}</span>
-                </div>
-                
                 {/* Photo Column */}
                 <div className="w-full lg:w-2/5">
-                  <div className="relative">
-                    {/* Decorative frame */}
-                    <div className={`absolute -inset-4 border-2 border-banc-sky/20 rounded-3xl ${index % 2 === 0 ? '-rotate-2' : 'rotate-2'} transition-transform duration-500 group-hover:rotate-0`} />
-                    
-                    {/* Monogram container — real headshots to follow from the client */}
-                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-banc-dark-deep">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-banc-sky/10 rounded-full blur-3xl" />
-                        <span
-                          aria-hidden="true"
-                          className="relative text-8xl font-bold tracking-tight text-banc-sky transition-transform duration-700 group-hover:scale-105"
-                        >
-                          {member.initials}
-                        </span>
-                      </div>
-
-                      {/* Role badge */}
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-banc-focus text-white text-xs font-semibold uppercase tracking-wider">
-                          {member.role}
-                        </div>
-                      </div>
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] border border-banc-line bg-banc-dark-deep">
+                    <Image
+                      src={member.portrait.src}
+                      alt={`Claymation portrait of ${member.name}, ${member.role} at Banc Property Group`}
+                      fill
+                      sizes="(min-width: 1024px) 34vw, 100vw"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between bg-banc-dark-deep/90 px-5 py-4 text-white">
+                      <span className="text-xs font-medium uppercase tracking-[0.15em]">
+                        {member.role}
+                      </span>
+                      <span className="text-xs text-white/60" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")} / {String(team.length).padStart(2, "0")}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -190,18 +160,18 @@ export default function TeamPage() {
                 {/* Content Column */}
                 <div className="w-full lg:w-3/5 flex flex-col justify-center">
                   {/* Name and Location */}
-                  <div className="mb-6">
-                    <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-2">
+                  <div className="mb-5">
+                    <h2 className="font-serif text-4xl font-light tracking-tight text-banc-dark-deep lg:text-5xl">
                       {member.name}
                     </h2>
-                    <div className="flex items-center gap-2 text-banc-muted-readable">
+                    <div className="mt-3 flex items-center gap-2 text-banc-muted-readable">
                       <MapPin className="h-4 w-4 text-banc-focus" />
                       <span className="text-sm">{member.location}</span>
                     </div>
                   </div>
                   
                   {/* Decorative line */}
-                  <div className="w-16 h-1 bg-banc-sky rounded-full mb-6" />
+                  <div className="mb-6 h-px w-16 bg-banc-sky" />
                   
                   {/* Bio paragraphs */}
                   <div className="space-y-4 text-banc-dark-mid leading-relaxed">
