@@ -26,12 +26,12 @@ test("maps each Banc team member to a dedicated clay headshot", () => {
   }
 });
 
-test("ships responsive local hero media for both motion preferences", () => {
+test("ships responsive seamless hero media for both motion preferences", () => {
   assert.deepEqual(TEAM_HERO_MEDIA, {
     landscapeImage: "/images/team/banc-team-clay.jpg",
     portraitImage: "/images/team/banc-team-clay-portrait.jpg",
-    landscapeVideo: "/videos/team/banc-team-clay-landscape.mp4",
-    portraitVideo: "/videos/team/banc-team-clay-portrait.mp4",
+    landscapeVideo: "/videos/team/banc-team-clay-landscape-seamless.mp4",
+    portraitVideo: "/videos/team/banc-team-clay-portrait-seamless.mp4",
   });
   assert.equal(shouldRenderTeamHeroVideo(true), false);
   assert.equal(shouldRenderTeamHeroVideo(false), true);

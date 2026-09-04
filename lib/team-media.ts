@@ -11,8 +11,8 @@ export interface TeamPortrait {
 export const TEAM_HERO_MEDIA = {
   landscapeImage: "/images/team/banc-team-clay.jpg",
   portraitImage: "/images/team/banc-team-clay-portrait.jpg",
-  landscapeVideo: "/videos/team/banc-team-clay-landscape.mp4",
-  portraitVideo: "/videos/team/banc-team-clay-portrait.mp4",
+  landscapeVideo: "/videos/team/banc-team-clay-landscape-seamless.mp4",
+  portraitVideo: "/videos/team/banc-team-clay-portrait-seamless.mp4",
 } as const;
 
 const TEAM_PORTRAITS: Record<TeamMemberName, TeamPortrait> = {
