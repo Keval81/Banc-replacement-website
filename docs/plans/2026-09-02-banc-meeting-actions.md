@@ -546,6 +546,27 @@ which is **not** either Banc office (`1 Station Road, Cuffley EN6 4HU` /
 was Banc's; it is not the business address. Nitesh should confirm what it
 actually is.
 
+**Confirmed by WHOIS (4 Sep):** registrar is Register SPA (register.it,
+Namesco's parent), created 2016-02-13, **expires 2027-02-13 — about five
+months away**. The domain also carries `clientTransferProhibited`,
+`clientUpdateProhibited` and `clientDeleteProhibited`, so it is locked
+against both transfer and registrant edits until Cove/Namesco lift them.
+That makes the transfer option James offered slower than it sounded, and is
+further reason the two-record edit was the right call.
+
+**The renewal is the live risk, and it is closer than it looks.** With no
+registrant email on record, the February 2027 renewal notice goes to
+whoever Namesco holds on the account — James — not to Nitesh. That is fine
+while the relationship is good and is exactly how domains lapse when one
+ends. Raise it with Nitesh alongside the launch rather than parking it:
+confirm auto-renew is on and who is billed, then either move the domain to
+a Banc-owned account or at minimum get Nitesh's email onto the registrant
+record. Both need Cove to lift the locks first.
+
+The address itself is explained: `56 Northfield Road` is Nitesh's previous
+home address, so the domain is genuinely his — the record is stale, not
+disputed.
+
 This is an ownership-of-your-own-domain problem, not a launch problem — it
 has presumably been like this for years and nothing about the 10th changes
 it. **Deliberately not fixing it before launch:** editing registrant
