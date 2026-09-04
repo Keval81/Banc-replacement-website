@@ -208,8 +208,10 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // Was pointing at /tools/valuation, which is itself a redirect to
+        // /valuation — a two-hop chain that dilutes the signal for no reason.
         source: "/instant-valuation",
-        destination: "/tools/valuation",
+        destination: "/valuation",
         permanent: true,
       },
       {
@@ -250,6 +252,116 @@ const nextConfig: NextConfig = {
       {
         source: "/sales/stamp-duty",
         destination: "/tools/stamp-duty",
+        permanent: true,
+      },
+
+      // --- Webdadi URL shapes, recovered from the Wayback index on 4 Sep
+      // 2026 before the old site goes offline. Cloudflare 403s both curl and
+      // headless Chrome on the live site, so this was the only way to
+      // enumerate them. Inventory:
+      // docs/audits/2026-09-04-old-site-url-inventory.json
+      {
+        source: "/contact-us",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        // The old site listed sold stock under a status filter; the new site
+        // gives it a page of its own.
+        source: "/buy/property-for-sale/status/sold",
+        destination: "/sold-prices",
+        permanent: true,
+      },
+      {
+        source: "/buy/property-for-sale",
+        destination: "/sales/properties",
+        permanent: true,
+      },
+      {
+        // Branch and status filters keyed by Webdadi UUIDs that mean nothing
+        // to this site.
+        source: "/buy/property-for-sale/:rest*",
+        destination: "/sales/properties",
+        permanent: true,
+      },
+      {
+        source: "/let/property-to-let",
+        destination: "/lettings/properties",
+        permanent: true,
+      },
+      {
+        source: "/let/property-to-let/:rest*",
+        destination: "/lettings/properties",
+        permanent: true,
+      },
+      {
+        // The old site used both the singular and plural spelling, and the
+        // Wayback index holds a capitalised variant too. Next matches paths
+        // case-sensitively, so each spelling needs its own rule.
+        source: "/offices/estate-agent/cuffley",
+        destination: "/offices/cuffley",
+        permanent: true,
+      },
+      {
+        source: "/offices/estate-agent/mayfair",
+        destination: "/offices/mayfair",
+        permanent: true,
+      },
+      {
+        source: "/offices/estate-agents/Cuffley",
+        destination: "/offices/cuffley",
+        permanent: true,
+      },
+      {
+        // Old tag pages have no equivalent; the categories differ, so sending
+        // them to a named category risks a 404 where the index cannot.
+        source: "/blog/tags/:tag*",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/rss",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        // A post that existed on the old site and has no equivalent here, so
+        // it would 404 for anyone arriving from a search result. The original
+        // copy is recoverable from the Wayback capture if it is worth
+        // republishing under the same slug — this only stops the 404.
+        source: "/blog/five-things-you-should-know-before-buying-a-property",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/sitemap",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+
+      // Individual listings. The old ids are Webdadi's and map to nothing
+      // here, but the town sits at a fixed position in the path, so the three
+      // that account for the bulk of them land on a search of that town
+      // rather than a generic list. Everything else falls through to the
+      // catch-all below. Order matters: Next takes the first match.
+      {
+        source: "/property/:id/:area/cuffley/:rest*",
+        destination: "/sales/properties?location=Cuffley",
+        permanent: true,
+      },
+      {
+        source: "/property/:id/:area/cheshunt/:rest*",
+        destination: "/sales/properties?location=Cheshunt",
+        permanent: true,
+      },
+      {
+        source: "/property/:id/:area/goffs-oak/:rest*",
+        destination: "/sales/properties?location=Goffs%20Oak",
+        permanent: true,
+      },
+      {
+        source: "/property/:id/:rest*",
+        destination: "/sales/properties",
         permanent: true,
       },
     ];
