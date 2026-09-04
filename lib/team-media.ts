@@ -23,10 +23,10 @@ const TEAM_PORTRAITS: Record<TeamMemberName, TeamPortrait> = {
     src: "/images/team/andrew-crump-headshot-clay.jpg",
   },
   "Vicki Glashier": {
-    src: "/images/team/vicki-glashier-headshot-clay.jpg",
+    src: "/images/team/vicki-glashier-headshot-source-clay.jpg",
   },
   "Kay Stanley": {
-    src: "/images/team/kay-stanley-headshot-clay.jpg",
+    src: "/images/team/kay-stanley-headshot-source-clay.jpg",
   },
 };
 

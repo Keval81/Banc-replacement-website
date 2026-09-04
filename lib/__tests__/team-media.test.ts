@@ -13,8 +13,8 @@ test("maps each Banc team member to a dedicated clay headshot", () => {
   const expectedPortraits = {
     "Nitesh Bheda": "/images/team/nitesh-bheda-headshot-clay.jpg",
     "Andrew Crump": "/images/team/andrew-crump-headshot-clay.jpg",
-    "Vicki Glashier": "/images/team/vicki-glashier-headshot-clay.jpg",
-    "Kay Stanley": "/images/team/kay-stanley-headshot-clay.jpg",
+    "Vicki Glashier": "/images/team/vicki-glashier-headshot-source-clay.jpg",
+    "Kay Stanley": "/images/team/kay-stanley-headshot-source-clay.jpg",
   } as const;
 
   for (const [name, src] of Object.entries(expectedPortraits)) {
