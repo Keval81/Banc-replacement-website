@@ -509,14 +509,49 @@ take up to five days, and option 3 changes the smallest possible surface.
 
 **Measured live on 4 Sep, so we know exactly what is there:**
 
-| Record | Current | Action |
+**Confirmed against Cove's own control panel (screenshots, 4 Sep).** The
+panel numbers the rows, so the change is row 1 and row 6 and nothing else:
+
+| Row | Host | Type | Current value | Action |
+|---|---|---|---|---|
+| 1 | *(blank = apex)* | `A` | `35.246.9.164` — Google Cloud, **does not respond; the bare domain is dead today** | **change to `76.76.21.21`** |
+| 2 | `autoconfig` | `CNAME` | `autoconfig.hosts.co.uk` | **leave — mail client auto-setup** |
+| 3 | `ftp` | `CNAME` | `cd1973.ftp.tb-hosting.com` | leave — FTP at the old host; dead weight after migration but harmless |
+| 4 | `imap` | `CNAME` | `imap.namesco.net` | **leave — incoming mail** |
+| 5 | `pop3` | `CNAME` | `pop3.namesco.net` | **leave — incoming mail** |
+| 6 | `www` | `CNAME` | `live.webdadi.net` — Webdadi, behind Cloudflare | **change Type to `A`, value `76.76.21.21`** — a name cannot hold a CNAME and an A |
+| 7 | *(blank)* | `TXT` | `192.168.1.73` | leave — a private RFC1918 address, meaningless publicly. Junk, but not ours to remove |
+| 8 | *(blank)* | `TXT` | `v=spf1 include:spf.hosts.co.uk ~all` | **leave — SPF, breaks outbound mail if touched** |
+| 9 | — | `A` | *(empty)* | the panel's blank "add" row, not a record |
+
+Held elsewhere in the panel and confirmed by `dig`, so out of the blast radius:
+
+| Record | Value | Action |
 |---|---|---|
-| `A` @ (bancproperty.com) | `35.246.9.164` (Google Cloud — **does not respond, the apex is dead today**) | **change to `76.76.21.21`** |
-| `www` | `CNAME` → `live.webdadi.net` (Webdadi, behind Cloudflare) | **replace with `A` → `76.76.21.21`** — a name cannot hold both |
 | `MX` | `hermes.hosts.co.uk`, `athena.hosts.co.uk` (both priority 30) | **do not touch** |
-| `TXT` | `v=spf1 include:spf.hosts.co.uk ~all` | **do not touch** |
 | `CAA` | none present | nothing to do — SSL will issue |
 | `NS` | `ns0/ns1/ns2.phase8.net` | **unchanged** — we are not moving nameservers |
+
+**The email side is wider than MX and SPF.** Rows 2, 4 and 5 are mail
+infrastructure too (`autoconfig`, `imap`, `pop3` → Namesco/hosts.co.uk).
+The sent email covered them only as "any other subdomains"; the follow-up
+below names them, because that is how a well-meant tidy-up gets avoided.
+
+### ⚠ Registrant record is effectively empty
+
+Cove's panel shows **no registrant name, company, email, telephone or
+mobile** — only an address, `56 Northfield Road, Waltham Cross EN8 7RF`,
+which is **not** either Banc office (`1 Station Road, Cuffley EN6 4HU` /
+`121 Park Lane, Mayfair W1K 7AG` per `lib/schema-org.ts`). James assumed it
+was Banc's; it is not the business address. Nitesh should confirm what it
+actually is.
+
+This is an ownership-of-your-own-domain problem, not a launch problem — it
+has presumably been like this for years and nothing about the 10th changes
+it. **Deliberately not fixing it before launch:** editing registrant
+details on a `.com` can trigger ICANN's 60-day transfer lock, which would
+block the post-launch move into a Banc-owned account. Correct sequence is
+transfer first, then fix the details in the new account. October job.
 
 `76.76.21.21` is the value Vercel returned for this project after both
 domains were added to it (`vercel domains inspect`), not a value copied from
