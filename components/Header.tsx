@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, User, Heart, LogOut } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, User, Heart, LogOut, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
@@ -312,10 +312,10 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                 </Button>
               </div>
             ) : (
-              <Link href="/login">
+              <Link href="/#alerts">
                 <Button variant="ghost" size="sm" className="text-white/80 hover:bg-white/5 hover:text-white">
-                  <User className="mr-2 h-4 w-4" />
-                  Sign In
+                  <Bell className="mr-2 h-4 w-4" aria-hidden="true" />
+                  Subscribe to alerts
                 </Button>
               </Link>
             )}
@@ -442,15 +442,14 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                     </div>
                   </div>
                 ) : (
-                  <div className="my-4 flex gap-2">
-                    <Link href="/login" onClick={() => setMobileOpen(false)} className="flex-1">
-                      <Button variant="outline" className="w-full border-white/20 bg-transparent text-white hover:bg-white/5">
-                        Sign In
-                      </Button>
-                    </Link>
-                    <Link href="/register" onClick={() => setMobileOpen(false)} className="flex-1">
+                  <div className="my-4">
+                    {/* Registering used to mean creating an account, which is a
+                        lot to ask of someone who only wants to hear about new
+                        homes. */}
+                    <Link href="/#alerts" onClick={() => setMobileOpen(false)}>
                       <Button className="w-full bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
-                        Register
+                        <Bell className="mr-2 h-4 w-4" aria-hidden="true" />
+                        Subscribe to alerts
                       </Button>
                     </Link>
                   </div>

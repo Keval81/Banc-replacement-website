@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { enquiryInboxFor } from "@/lib/banc-contact";
 import { sendEmail, emailTemplates } from "@/lib/email";
 import {
   createPublicFormRateLimiter,
@@ -23,6 +24,9 @@ const contactSchema = z.object({
     message: "You must agree to be contacted",
   }),
   website: z.string().max(0).optional(), // honeypot
+  // Set by property enquiries so the lead reaches the team that can act on
+  // it. Absent on the general contact form, which still goes to the office.
+  department: z.enum(["sales", "lettings"]).optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -61,7 +65,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, email, phone, subject, message } = result.data;
+    const { name, email, phone, subject, message, department } = result.data;
 
     // Store submission in database
     const submission = await db.contact.create({
@@ -81,9 +85,16 @@ export async function POST(request: NextRequest) {
       ...emailTemplates.contactConfirmation({ name, subject }),
     });
 
+    // Route to the team that can act on it. A property enquiry names its
+    // department; the general contact form does not, and still goes to the
+    // office inbox.
+    const notificationInbox = department
+      ? enquiryInboxFor(department)
+      : process.env.ADMIN_EMAIL || "office@bancproperty.com";
+
     // Send notification email to admin
     const adminEmailResult = await sendEmail({
-      to: process.env.ADMIN_EMAIL || "office@bancproperty.com",
+      to: notificationInbox,
       from: process.env.FROM_EMAIL || "noreply@bancproperty.com",
       ...emailTemplates.contactNotification({
         name,

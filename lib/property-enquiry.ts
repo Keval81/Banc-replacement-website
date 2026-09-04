@@ -13,6 +13,9 @@ export interface ContactEnquiryPayload {
   message: string;
   consent: true;
   website: "";
+  // Which team can actually act on this. Without it every enquiry lands in
+  // one tray whatever it is about.
+  department?: "sales" | "lettings";
 }
 
 export type EnquiryProperty = Pick<
@@ -89,6 +92,7 @@ export function buildViewingEnquiry(
     message: lines.join("\n"),
     consent: true,
     website: "",
+    department: property.department,
   };
 }
 

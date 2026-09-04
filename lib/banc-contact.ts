@@ -31,3 +31,24 @@ export const BANC_PHONE_LINES: readonly BancPhoneLine[] = [
     callHref: BANC_MAYFAIR_CONTACT.callHref,
   },
 ] as const;
+
+export type BancDepartment = "sales" | "lettings";
+
+// Where viewing requests and property enquiries land. Nitesh still owes the
+// real sales and lettings addresses (N2 in the 2026-09-02 action plan); until
+// they arrive these route to the general office inbox, which is where they
+// were already going. Replacing the two values here is the only change
+// needed — a test forbids placeholders, so a stand-in cannot ship.
+export const BANC_ENQUIRY_INBOXES: Record<BancDepartment, string> = {
+  sales: "sales@bancproperty.com",
+  lettings: "lettings@bancproperty.com",
+} as const;
+
+export function enquiryInboxFor(department: BancDepartment): string {
+  return BANC_ENQUIRY_INBOXES[department];
+}
+
+// The Guild-published magazine. The footer linked this directly; the homepage
+// alerts block needs the same URL, so it lives in one place now.
+export const LIFE_MAGAZINE_URL =
+  "https://pageturner.guildproperty.co.uk/bancp1";

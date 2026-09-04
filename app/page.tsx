@@ -10,6 +10,7 @@ import PropertySearch from "@/app/sections/PropertySearch";
 import FeaturedListings from "@/app/sections/FeaturedListings";
 import Services from "@/app/sections/Services";
 import Testimonials from "@/app/sections/Testimonials";
+import PropertyAlerts from "@/app/sections/PropertyAlerts";
 // GoogleReviews removed — covered by Testimonials section
 // Partner logos moved to Footer
 
@@ -82,6 +83,7 @@ export default function Home() {
               cards ("No Image / £0") until the AI feed has real data — see
               DESIGN.md "no empty-state cards on the public homepage". */}
           <Services />
+          <PropertyAlerts />
           <Testimonials />
           {/* SoldBanner removed: its sold prices/addresses are seeded mock
               data presented as fact — misrepresentation risk on a live agency

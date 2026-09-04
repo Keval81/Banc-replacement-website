@@ -356,45 +356,31 @@ test("copies the link when native sharing fails for a non-cancellation reason", 
 });
 
 test("builds department-appropriate lead actions with complete property context", () => {
+  // The primary action used to be a mailto: link. It needed a configured mail
+  // client, captured no date or time, and left no record of the lead — so it
+  // now opens the booking page, which asks for all of that and confirms back.
   const cases = [
     {
       department: "sales" as const,
       id: "BPGC/1479",
-      label: "Sales",
-      canonicalUrl: "https://bancproperty.com/sales/properties/BPGC%2F1479",
+      // Ids carry slashes and spaces, so the path segment has to be encoded or
+      // the route resolves to something else entirely.
+      href: "/book-viewing/BPGC%2F1479",
       teamLabel: "Call the sales team",
     },
     {
       department: "lettings" as const,
       id: "BPGC 1607",
-      label: "Lettings",
-      canonicalUrl: "https://bancproperty.com/lettings/properties/BPGC%201607",
+      href: "/book-viewing/BPGC%201607",
       teamLabel: "Call the lettings team",
     },
   ];
 
   for (const item of cases) {
     const actions = buildPropertyLeadActions(item.department, item.id);
-    const mailto = new URL(actions.primaryHref);
 
-    assert.equal(mailto.protocol, "mailto:");
-    assert.equal(mailto.pathname, "info@bancproperty.com");
-    assert.equal(
-      mailto.searchParams.get("subject"),
-      `Viewing request — ${item.label} — ${item.id}`
-    );
-    assert.equal(
-      mailto.searchParams.get("body"),
-      [
-        "Hello Banc Property Group,",
-        "",
-        `I would like to arrange a viewing for this ${item.department} property.`,
-        "",
-        `Department: ${item.label}`,
-        `Reference: ${item.id}`,
-        `Property: ${item.canonicalUrl}`,
-      ].join("\n")
-    );
+    assert.doesNotMatch(actions.primaryHref, /^mailto:/);
+    assert.equal(actions.primaryHref, item.href);
     assert.equal(actions.primaryLabel, "Request a viewing");
     assert.equal(actions.secondaryHref, "tel:01707877781");
     assert.equal(actions.secondaryLabel, item.teamLabel);

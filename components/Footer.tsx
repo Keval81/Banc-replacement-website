@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { BANC_CONTACT } from "@/lib/banc-contact";
+import { BANC_CONTACT, LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
 
 const footerLinks = {
   about: [
@@ -40,7 +40,7 @@ const footerLinks = {
     { name: "Buying Guide", href: "/sales/buyers-guide" },
     { name: "Selling Guide", href: "/sales/sellers-guide" },
     { name: "Lettings Fees", href: "/lettings/fees" },
-    { name: "Life Magazine", href: "https://pageturner.guildproperty.co.uk/bancp1" },
+    { name: "Life Magazine", href: LIFE_MAGAZINE_URL },
   ],
   legal: [
     { name: "Privacy Policy", href: "/privacy" },

@@ -96,8 +96,8 @@ export default function BookViewingPage() {
           role="status"
           aria-live="polite"
         >
-          <Loader2 className="mb-4 h-10 w-10 animate-spin text-[#4AC8E8] motion-reduce:animate-none" aria-hidden="true" />
-          <p className="text-[#8A8880]">Loading property…</p>
+          <Loader2 className="mb-4 h-10 w-10 animate-spin text-banc-focus motion-reduce:animate-none" aria-hidden="true" />
+          <p className="text-banc-muted-readable">Loading property…</p>
         </div>
       </div>
     );
@@ -111,17 +111,17 @@ export default function BookViewingPage() {
             <h1 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
               We couldn&apos;t find that property
             </h1>
-            <p className="text-[#8A8880] mb-6">
+            <p className="text-banc-muted-readable mb-6">
               It may have been sold, let or withdrawn from the market. You can
               browse our current listings or call the office on{" "}
-              <a href={BANC_CONTACT.callHref} className="text-[#4AC8E8] hover:underline">
+              <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">
                 {BANC_CONTACT.displayPhone}
               </a>
               .
             </p>
             <Link
               href="/sales/properties"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
             >
               Browse properties
             </Link>
@@ -146,7 +146,7 @@ export default function BookViewingPage() {
             <h2 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
               Viewing request sent
             </h2>
-            <p className="text-[#8A8880] mb-6">
+            <p className="text-banc-muted-readable mb-6">
               We&apos;ve received your request to view{" "}
               <strong>{property.title}</strong> on{" "}
               <strong>
@@ -159,7 +159,7 @@ export default function BookViewingPage() {
               at <strong>{getSelectedTime()}</strong>.
             </p>
             <div className="bg-[#F4F3F1] rounded-lg p-4 mb-6">
-              <p className="text-sm text-[#8A8880]">
+              <p className="text-sm text-banc-muted-readable">
                 You&apos;ll receive a confirmation email shortly. Our team will
                 contact you to confirm the appointment time.
               </p>
@@ -167,7 +167,7 @@ export default function BookViewingPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href={propertyHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#4AC8E8] text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
               >
                 Back to the property
               </Link>
@@ -190,7 +190,7 @@ export default function BookViewingPage() {
         {/* Back Link */}
         <Link
           href={propertyHref}
-          className="inline-flex items-center gap-2 text-[#8A8880] hover:text-[#4AC8E8] transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-banc-muted-readable hover:text-banc-focus transition-colors mb-6"
         >
           <ChevronLeft className="w-4 h-4" aria-hidden="true" />
           Back to property
@@ -201,7 +201,7 @@ export default function BookViewingPage() {
           <h1 className="text-3xl font-heading font-bold text-[#1A1917]">
             Book a Viewing
           </h1>
-          <p className="text-[#8A8880] mt-2">
+          <p className="text-banc-muted-readable mt-2">
             Select your preferred date and time to view this property
           </p>
         </div>
@@ -225,14 +225,14 @@ export default function BookViewingPage() {
                 <h2 className="font-heading font-semibold text-[#1A1917]">
                   {property.title}
                 </h2>
-                <p className="text-[#8A8880] text-sm">{property.address}</p>
+                <p className="text-banc-muted-readable text-sm">{property.address}</p>
                 {property.postcode ? (
-                  <p className="text-[#8A8880] text-sm">{property.postcode}</p>
+                  <p className="text-banc-muted-readable text-sm">{property.postcode}</p>
                 ) : null}
-                <p className="text-xl font-bold text-[#4AC8E8] mt-2">
+                <p className="text-xl font-bold text-banc-focus mt-2">
                   {property.price}
                 </p>
-                <div className="flex items-center gap-4 mt-3 text-sm text-[#8A8880]">
+                <div className="flex items-center gap-4 mt-3 text-sm text-banc-muted-readable">
                   <span className="flex items-center gap-1">
                     <Bed className="w-4 h-4" aria-hidden="true" />
                     {property.stats.beds} beds
@@ -244,17 +244,17 @@ export default function BookViewingPage() {
                 </div>
                 <Link
                   href={propertyHref}
-                  className="text-sm text-[#4AC8E8] hover:underline mt-3 inline-block"
+                  className="text-sm text-banc-focus hover:underline mt-3 inline-block"
                 >
                   View full details →
                 </Link>
 
                 {/* Office Info */}
                 <div className="mt-5 pt-5 border-t border-[#E0DFDC]">
-                  <p className="text-sm text-[#8A8880] mb-2">Your agent</p>
+                  <p className="text-sm text-banc-muted-readable mb-2">Your agent</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
-                      <Home className="w-5 h-5 text-[#4AC8E8]" aria-hidden="true" />
+                      <Home className="w-5 h-5 text-banc-focus" aria-hidden="true" />
                     </div>
                     <div>
                       <p className="font-medium text-[#1A1917]">
@@ -262,7 +262,7 @@ export default function BookViewingPage() {
                       </p>
                       <a
                         href={BANC_CONTACT.callHref}
-                        className="text-sm text-[#8A8880] hover:text-[#4AC8E8]"
+                        className="text-sm text-banc-muted-readable hover:text-banc-focus"
                       >
                         {BANC_CONTACT.displayPhone}
                       </a>
@@ -278,7 +278,7 @@ export default function BookViewingPage() {
             {/* Step 1: Calendar */}
             <div>
               <h2 className="text-lg font-semibold text-[#1A1917] mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 bg-[#4AC8E8] text-white rounded-full flex items-center justify-center text-sm">
+                <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
                   1
                 </span>
                 Select a Date
@@ -294,7 +294,7 @@ export default function BookViewingPage() {
             {selectedDate && (
               <div>
                 <h2 className="text-lg font-semibold text-[#1A1917] mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 bg-[#4AC8E8] text-white rounded-full flex items-center justify-center text-sm">
+                  <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
                     2
                   </span>
                   Select a Preferred Time
@@ -312,7 +312,7 @@ export default function BookViewingPage() {
             {selectedDate && (
               <div>
                 <h2 className="text-lg font-semibold text-[#1A1917] mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 bg-[#4AC8E8] text-white rounded-full flex items-center justify-center text-sm">
+                  <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
                     3
                   </span>
                   Your Details

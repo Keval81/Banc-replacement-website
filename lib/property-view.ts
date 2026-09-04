@@ -43,28 +43,13 @@ export function buildPropertyLeadActions(
   department: DbProperty["department"],
   id: string
 ): PropertyLeadActions {
-  const departmentLabel = department === "lettings" ? "Lettings" : "Sales";
-  const canonicalUrl = new URL(
-    buildPropertyHref(department, id),
-    "https://bancproperty.com"
-  ).toString();
-  const viewingSubject = encodeURIComponent(
-    `Viewing request — ${departmentLabel} — ${id}`
-  );
-  const viewingBody = encodeURIComponent(
-    [
-      "Hello Banc Property Group,",
-      "",
-      `I would like to arrange a viewing for this ${department} property.`,
-      "",
-      `Department: ${departmentLabel}`,
-      `Reference: ${id}`,
-      `Property: ${canonicalUrl}`,
-    ].join("\n")
-  );
-
+  // This used to be a mailto: link to the general inbox. That needs a
+  // configured mail client, which many visitors on a phone or webmail do not
+  // have — for them the button did nothing — and it captured no date, no
+  // time, and no record of the lead. /book-viewing already asks for all of
+  // that and confirms back to the enquirer; it simply was not linked to.
   return {
-    primaryHref: `mailto:info@bancproperty.com?subject=${viewingSubject}&body=${viewingBody}`,
+    primaryHref: `/book-viewing/${encodeURIComponent(id)}`,
     primaryLabel: "Request a viewing",
     secondaryHref: BANC_CONTACT.callHref,
     secondaryLabel: department === "lettings" ? "Call the lettings team" : "Call the sales team",
