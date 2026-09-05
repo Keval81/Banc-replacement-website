@@ -24,6 +24,7 @@
   --banc-cream:        #F6F2EA;
 
   /* Font families */
+  --font-display:      'Playfair Display', Georgia, serif;
   --font-serif:        'Source Serif 4', Georgia, serif;
   --font-sans:         'DM Sans', -apple-system, sans-serif;
 
@@ -78,6 +79,7 @@
   --color-banc-teal: var(--banc-teal);
   --color-banc-cream: var(--banc-cream);
   --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
   --font-serif: 'Source Serif 4', Georgia, serif;
   --font-heading: 'DM Sans', -apple-system, sans-serif;
 }
@@ -91,9 +93,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Heading styles — Source Serif 4 for display/H1, DM Sans for H2+ */
+/* Heading styles — Playfair Display for display/H1, DM Sans for H2+.
+   NOTE: these rules are UNLAYERED, so they beat Tailwind's utilities layer
+   whatever the specificity. A `font-serif` class on a heading does nothing. */
 h1 {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 500;
 }
 

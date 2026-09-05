@@ -154,7 +154,7 @@ export default function ValuationPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-8 text-center"
           >
-            <h1 className="mb-3 text-3xl font-semibold text-banc-dark font-serif lg:text-4xl">
+            <h1 className="mb-3 font-display text-3xl font-semibold text-banc-dark lg:text-4xl">
               Request a Free Valuation
             </h1>
             <p className="text-banc-muted-readable">

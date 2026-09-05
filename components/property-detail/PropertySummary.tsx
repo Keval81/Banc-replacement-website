@@ -109,7 +109,7 @@ export function PropertySummary({ property }: PropertySummaryProps): React.React
       )}
       <div className="mt-3 flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 id="property-title" className="font-serif text-3xl leading-tight text-banc-dark sm:text-4xl">
+          <h1 id="property-title" className="font-display text-3xl leading-tight text-banc-dark sm:text-4xl">
             {property.title}
           </h1>
           {location && <p className="mt-2 text-sm text-banc-muted-readable sm:text-base">{location}</p>}

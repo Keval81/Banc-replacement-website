@@ -114,7 +114,7 @@ export default function TeamPage() {
               <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />
               Our people
             </p>
-            <h1 className="font-serif text-5xl font-light leading-[0.98] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
+            <h1 className="font-display text-5xl font-light leading-[0.98] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
               {/* Two beats, not one line that wraps: the pause between them is
                   the whole point. CSS rather than framer-motion, which inlines
                   opacity:0 into the SSR markup and would strand the page title

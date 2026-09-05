@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Serif_4, DM_Sans } from "next/font/google";
+import { Source_Serif_4, Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { CookieProvider } from "@/hooks/useCookies";
 import { ComparisonProvider } from "@/app/hooks/usePropertyComparison";
@@ -17,6 +17,16 @@ const sourceSerif4 = Source_Serif_4({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
   variable: "--font-serif",
+  display: "swap",
+});
+
+// The brand guide specifies Playfair Display for display type. It is scoped to
+// h1 and the font-display utility only: its thick/thin contrast is the whole
+// point at 72px and a liability at 19px, where Source Serif 4 still serves.
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -68,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${sourceSerif4.variable} ${dmSans.variable}`}>
+    <html lang="en-GB" className={`${sourceSerif4.variable} ${playfairDisplay.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
         <a
           href="#main-content"
