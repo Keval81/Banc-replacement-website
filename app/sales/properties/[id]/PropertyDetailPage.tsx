@@ -196,7 +196,7 @@ function DetailBody({
               className="mt-16 border-t border-banc-grey/15 pt-12"
               aria-labelledby="similar-properties-heading"
             >
-              <h2 id="similar-properties-heading" className="font-serif text-3xl text-banc-dark">
+              <h2 id="similar-properties-heading" className="text-3xl text-banc-dark">
                 Similar homes
               </h2>
               <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

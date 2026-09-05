@@ -41,7 +41,7 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
     <div className="space-y-10">
       {features.length > 0 && (
         <section aria-labelledby="at-a-glance-heading">
-          <h2 id="at-a-glance-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
+          <h2 id="at-a-glance-heading" className="text-2xl text-banc-dark sm:text-3xl">
             At a glance
           </h2>
           <ul className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
@@ -61,7 +61,7 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
 
       {paragraphs.length > 0 && (
         <section aria-labelledby="about-property-heading">
-          <h2 id="about-property-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
+          <h2 id="about-property-heading" className="text-2xl text-banc-dark sm:text-3xl">
             About this property
           </h2>
           <div className="mt-5 max-w-[72ch] space-y-4 text-base leading-7 text-banc-muted-readable">
@@ -76,7 +76,7 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
         <section aria-labelledby="energy-performance-heading">
           <h2
             id="energy-performance-heading"
-            className="font-serif text-2xl text-banc-dark sm:text-3xl"
+            className="text-2xl text-banc-dark sm:text-3xl"
           >
             Energy performance
           </h2>
@@ -91,7 +91,7 @@ export function PropertyOverview({ property }: PropertyOverviewProps): React.Rea
 
       {rooms.length > 0 && (
         <section aria-labelledby="room-dimensions-heading">
-          <h2 id="room-dimensions-heading" className="font-serif text-2xl text-banc-dark sm:text-3xl">
+          <h2 id="room-dimensions-heading" className="text-2xl text-banc-dark sm:text-3xl">
             Room dimensions
           </h2>
           <dl className="mt-5 divide-y divide-banc-grey/20 border-y border-banc-grey/20">

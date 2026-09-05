@@ -414,7 +414,7 @@ export default function ContactPageClient() {
               <Send className="h-4 w-4" />
               Request a Call
             </p>
-            <h2 className="text-4xl font-semibold text-white lg:text-5xl">
+            <h2 className="font-display text-4xl font-semibold text-white lg:text-5xl">
               Call Me Back
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">

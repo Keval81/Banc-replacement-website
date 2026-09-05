@@ -53,7 +53,7 @@ export default function SoldBanner() {
     <section className="bg-banc-grey-pale py-10 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 mb-6">
         <p className="text-sm uppercase tracking-[0.3em] text-banc-muted-readable mb-2">Track Record</p>
-        <h2 className="text-2xl font-medium text-banc-dark sm:text-3xl font-serif">
+        <h2 className="text-2xl font-medium text-banc-dark sm:text-3xl">
           Recently Sold
         </h2>
       </div>

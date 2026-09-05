@@ -18,7 +18,7 @@ export function SectionHeader({ number, label, title, dark = false }: SectionHea
         <span className={`text-[11px] uppercase tracking-[0.18em] ${mut}`}>{label}</span>
       </div>
       <h2
-        className={`mt-4 font-serif font-light leading-[1.02] tracking-[-0.02em] ${ink}`}
+        className={`mt-4 font-display font-light leading-[1.02] tracking-[-0.02em] ${ink}`}
         style={{ fontSize: "clamp(38px, 5.5vw, 72px)" }}
       >
         {title}

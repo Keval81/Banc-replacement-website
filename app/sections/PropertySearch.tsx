@@ -70,7 +70,7 @@ export default function PropertySearch() {
                 Search
               </p>
               <h2
-                className="font-serif font-light leading-[1.05] tracking-[-0.02em] text-banc-dark"
+                className="font-display font-light leading-[1.05] tracking-[-0.02em] text-banc-dark"
                 style={{ fontSize: "clamp(28px, 3.5vw, 44px)" }}
               >
                 Find your next property

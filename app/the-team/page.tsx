@@ -154,7 +154,7 @@ export default function TeamPage() {
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-banc-muted-readable">
               The people behind the move
             </p>
-            <h2 className="mt-3 font-serif text-4xl font-light tracking-tight text-banc-dark-deep sm:text-5xl">
+            <h2 className="mt-3 font-display text-4xl font-light tracking-tight text-banc-dark-deep sm:text-5xl">
               Local knowledge, individual care.
             </h2>
           </div>
@@ -189,7 +189,7 @@ export default function TeamPage() {
                 <div className="w-full lg:w-3/5 flex flex-col justify-center">
                   {/* Name and Location */}
                   <div className="mb-5">
-                    <h2 className="font-serif text-4xl font-light tracking-tight text-banc-dark-deep lg:text-5xl">
+                    <h2 className="font-display text-4xl font-light tracking-tight text-banc-dark-deep lg:text-5xl">
                       {member.name}
                     </h2>
                     <div className="mt-3 flex items-center gap-2 text-banc-muted-readable">
@@ -269,7 +269,7 @@ export default function TeamPage() {
                 <span className="text-sm font-medium text-banc-focus">Careers</span>
               </div>
               
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep leading-tight">
+              <h2 className="font-display text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep leading-tight">
                 Looking To Join A <span className="text-banc-focus">Young Dynamic</span> Property Company?
               </h2>
               

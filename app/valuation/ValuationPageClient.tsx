@@ -469,7 +469,7 @@ export default function ValuationPage() {
                   <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/10">
                     <CheckCircle className="h-10 w-10 text-banc-focus" />
                   </div>
-                  <h2 className="mb-4 text-2xl font-semibold text-banc-dark font-serif lg:text-3xl">
+                  <h2 className="mb-4 text-2xl font-semibold text-banc-dark lg:text-3xl">
                     Thank You!
                   </h2>
                   <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">

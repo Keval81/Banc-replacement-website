@@ -124,7 +124,7 @@ export default function FeaturedListings() {
                   </Link>
 
                   <div className="mt-5 flex flex-1 flex-col">
-                    <h3 className="font-serif text-xl font-light leading-snug text-banc-dark">
+                    <h3 className="text-xl font-light leading-snug text-banc-dark">
                       <Link href={href} className="hover:text-banc-focus">
                         {listing.title}
                       </Link>

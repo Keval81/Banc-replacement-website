@@ -106,6 +106,18 @@ h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
+/* Display-scale headings opt back into the display face. This rule has to live
+   HERE, unlayered and alongside the rule it overrides — a `font-display` class
+   alone would lose, because Tailwind's utilities layer is beaten by any
+   unlayered declaration whatever the specificity. Deliberately font-family
+   only: the weight above stays pinned at 500, since every heading on the site
+   authors font-light and has been rendering 500 since launch. */
+h2.font-display,
+h3.font-display,
+h4.font-display {
+  font-family: var(--font-display);
+}
+
 /* Smooth scrolling - disable on mobile to prevent bounce */
 html {
   scroll-behavior: smooth;

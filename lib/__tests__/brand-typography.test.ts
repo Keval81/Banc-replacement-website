@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { execFileSync } from "node:child_process";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -52,22 +51,54 @@ test("puts the display face on h1 and nothing smaller", () => {
   );
 });
 
-test("leaves no h1 claiming a serif class the cascade ignores", () => {
+test("lets the display utility win on headings despite the unlayered base rules", () => {
+  assert.match(
+    globals,
+    /h2\.font-display[^{]*\{[^}]*font-family:\s*var\(--font-display\)/,
+    "no unlayered rule exists to let font-display apply to a heading",
+  );
+});
+
+test("keeps heading weight pinned, so no heading silently lightens", () => {
+  // Every serif heading on the site authors `font-light` and renders 500,
+  // because this rule outranks the utility. Moving these rules into a layer
+  // would drop the whole site's headings from 500 to 300 in one go — so the
+  // weight declaration stays exactly where it is.
+  assert.match(
+    globals,
+    /h2,\s*h3,\s*h4,\s*h5,\s*h6\s*\{[^}]*font-weight:\s*500/,
+    "the heading weight rule has moved or changed; check every heading before accepting this",
+  );
+});
+
+test("leaves no heading claiming a serif class the cascade ignores", () => {
   // These base rules are unlayered, and unlayered CSS beats Tailwind's
   // utilities layer whatever the specificity — so `font-serif` on a heading is
   // decoration that never applies. Keeping it would mislead the next reader.
-  // git grep exits 1 when it matches nothing, which is the passing case here.
-  let hits = "";
-  try {
-    hits = execFileSync(
-      "git",
-      ["grep", "-nE", "<h1[^>]*font-serif", "--", "app", "components"],
-      { cwd: ROOT, encoding: "utf8" },
-    ).trim();
-  } catch (error) {
-    const status = (error as { status?: number }).status;
-    if (status !== 1) throw error;
-  }
+  // The scan spans newlines on purpose: JSX routinely puts the tag and its
+  // className on separate lines, and a line-based grep walks straight past them.
+  const offenders: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name !== "node_modules" && !entry.name.startsWith(".")) walk(full);
+      } else if (entry.name.endsWith(".tsx")) {
+        const source = readFileSync(full, "utf8");
+        for (const match of source.matchAll(/<h[1-6]([\s][^>]*)?>/g)) {
+          if (match[0].includes("font-serif")) {
+            const line = source.slice(0, match.index).split("\n").length;
+            offenders.push(`${full.replace(ROOT + "/", "")}:${line}`);
+          }
+        }
+      }
+    }
+  };
+  for (const dir of ["app", "components"]) walk(join(ROOT, dir));
 
-  assert.equal(hits, "", `h1 elements still carry an inert font-serif class:\n${hits}`);
+  assert.deepEqual(
+    offenders,
+    [],
+    `heading elements still carry an inert font-serif class:\n${offenders.join("\n")}`,
+  );
 });

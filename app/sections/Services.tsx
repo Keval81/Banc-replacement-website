@@ -89,7 +89,7 @@ export default function Services() {
                     {service.number}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-serif text-2xl font-light text-white">
+                    <h3 className="text-2xl font-light text-white">
                       {service.title}
                       {service.premier && (
                         <span className="ml-3 align-middle text-[10px] uppercase tracking-[0.18em] text-banc-gold">
