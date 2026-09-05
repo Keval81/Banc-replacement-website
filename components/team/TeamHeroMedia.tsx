@@ -1,7 +1,11 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { TEAM_HERO_MEDIA, shouldRenderTeamHeroVideo } from "@/lib/team-media";
+import {
+  TEAM_HERO_FRAMING,
+  TEAM_HERO_MEDIA,
+  shouldRenderTeamHeroVideo,
+} from "@/lib/team-media";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -32,15 +36,17 @@ export function TeamHeroMedia() {
       <div
         role="img"
         aria-label="The Banc Property Group team outside the Cuffley office, recreated in clay"
-        className="team-hero-fallback absolute inset-0 origin-[center_24%] scale-[1.28] bg-cover bg-center md:origin-center md:scale-100"
+        className="team-hero-frame team-hero-fallback absolute inset-0 bg-cover bg-center"
       />
       {shouldRenderTeamHeroVideo(prefersReducedMotion) && (
         <video
           // The portrait cut is framed wide — the whole two-storey building and a
-          // deep apron of pavement — so on a phone the team end up tiny. Scaling
-          // in about the shopfront fixes that without a second encode; from md up
-          // the landscape cut plays untouched.
-          className="absolute inset-0 h-full w-full origin-[center_24%] scale-[1.28] object-cover md:origin-center md:scale-100"
+          // deep apron of pavement — so on a phone the team end up tiny. The
+          // mobile framing in lib/team-media.ts scales about the TOP edge, which
+          // spends the crop on that empty pavement and drops the figures below
+          // the hero copy instead of behind it. From md up the landscape cut
+          // plays untouched.
+          className="team-hero-frame absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
           loop
@@ -64,6 +70,12 @@ export function TeamHeroMedia() {
         @media (max-width: 767px) {
           .team-hero-fallback {
             background-image: url("${TEAM_HERO_MEDIA.portraitImage}");
+          }
+
+          .team-hero-frame {
+            transform-origin: ${TEAM_HERO_FRAMING.mobile.originX * 100}%
+              ${TEAM_HERO_FRAMING.mobile.originY * 100}%;
+            transform: scale(${TEAM_HERO_FRAMING.mobile.scale});
           }
         }
       `}</style>
