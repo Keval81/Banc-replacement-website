@@ -203,10 +203,6 @@ export default function SoldPricesPage() {
                         {stats.priceChangePercent >= 0 ? '+' : ''}{stats.priceChangePercent}%
                       </span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-banc-muted-readable">Price per sq ft</span>
-                      <span className="font-semibold text-banc-dark">£{stats.pricePerSqft}</span>
-                    </div>
                   </div>
                 </div>
 

@@ -6,7 +6,6 @@ import {
   TrendingUp, 
   TrendingDown, 
   Home, 
-  Clock,
   PoundSterling,
   BarChart3,
   Loader2,
@@ -63,12 +62,8 @@ export function AreaStats({ postcode: initialPostcode, className = "", compact =
         postcode,
         averagePrice: avg,
         medianPrice: median,
-        pricePerSqft: Math.round(avg / 1000),
         salesCount12Months: data.stats?.salesCount12Months || 0,
-        avgTimeOnMarket: 42,
         priceChange1Year: data.stats?.priceChangePercent || 0,
-        priceChange3Years: (data.stats?.priceChangePercent || 0) * 2.5,
-        priceChange5Years: (data.stats?.priceChangePercent || 0) * 4,
         propertyTypeBreakdown: breakdown,
       };
 
@@ -194,23 +189,11 @@ export function AreaStats({ postcode: initialPostcode, className = "", compact =
           {/* Price Changes */}
           <div className="space-y-3 mb-6">
             <h4 className="text-sm font-medium text-banc-dark-mid">Price Changes</h4>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <div className="text-center p-3 bg-banc-grey-pale rounded-lg">
                 <p className="text-xs text-banc-muted-readable mb-1">1 Year</p>
                 <p className={`text-lg font-bold ${stats.priceChange1Year >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                   {formatPercent(stats.priceChange1Year)}
-                </p>
-              </div>
-              <div className="text-center p-3 bg-banc-grey-pale rounded-lg">
-                <p className="text-xs text-banc-muted-readable mb-1">3 Years</p>
-                <p className={`text-lg font-bold ${stats.priceChange3Years >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatPercent(stats.priceChange3Years)}
-                </p>
-              </div>
-              <div className="text-center p-3 bg-banc-grey-pale rounded-lg">
-                <p className="text-xs text-banc-muted-readable mb-1">5 Years</p>
-                <p className={`text-lg font-bold ${stats.priceChange5Years >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatPercent(stats.priceChange5Years)}
                 </p>
               </div>
             </div>
@@ -219,26 +202,12 @@ export function AreaStats({ postcode: initialPostcode, className = "", compact =
           {/* Market Stats */}
           <div className="space-y-3 mb-6">
             <h4 className="text-sm font-medium text-banc-dark-mid">Market Activity</h4>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <div className="flex items-center gap-2 p-3 bg-banc-grey-pale rounded-lg">
                 <Home className="h-4 w-4 text-banc-muted-readable" />
                 <div>
                   <p className="text-lg font-bold">{stats.salesCount12Months}</p>
                   <p className="text-xs text-banc-muted-readable">Sales (12m)</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-banc-grey-pale rounded-lg">
-                <Clock className="h-4 w-4 text-banc-muted-readable" />
-                <div>
-                  <p className="text-lg font-bold">{stats.avgTimeOnMarket}</p>
-                  <p className="text-xs text-banc-muted-readable">Days to sell</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-3 bg-banc-grey-pale rounded-lg">
-                <PoundSterling className="h-4 w-4 text-banc-muted-readable" />
-                <div>
-                  <p className="text-lg font-bold">£{stats.pricePerSqft}</p>
-                  <p className="text-xs text-banc-muted-readable">/ sq ft</p>
                 </div>
               </div>
             </div>

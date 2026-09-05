@@ -53,3 +53,21 @@ test("the register is queried at an endpoint that answers", () => {
   assert.doesNotMatch(source, /['"`][^'"`\n]*data\/ppi\/sparql[^'"`\n]*['"`]/);
   assert.match(source, /landregistry\.data\.gov\.uk\/landregistry\/query/);
 });
+
+test("names the vocabulary the register actually publishes addresses in", () => {
+  // The endpoint answered 200 with zero bindings for every postcode, which
+  // reads like "no data" but was a namespace typo: postcodes hang off
+  // def/common, not data/common. Probing a real transaction shows
+  // <http://landregistry.data.gov.uk/def/common/postcode>, and with the prefix
+  // corrected, EN6 4HY returns sales through May 2026.
+  assert.doesNotMatch(
+    source,
+    /PREFIX\s+lrcommon:\s*<[^>]*\/data\/common\/>/,
+    "lrcommon points at data/common, where no address predicates exist — every query silently returns nothing",
+  );
+  assert.match(
+    source,
+    /PREFIX\s+lrcommon:\s*<http:\/\/landregistry\.data\.gov\.uk\/def\/common\/>/,
+    "lrcommon must resolve to def/common, the namespace the register publishes postcodes in",
+  );
+});

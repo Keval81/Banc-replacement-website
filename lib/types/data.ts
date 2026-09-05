@@ -16,7 +16,6 @@ export interface SoldPriceStats {
   priceChangePercent: number;
   salesCount12Months: number;
   salesCount6Months: number;
-  pricePerSqft: number;
 }
 
 export interface School {
@@ -126,12 +125,8 @@ export interface AreaStatistics {
   postcode: string;
   averagePrice: number;
   medianPrice: number;
-  pricePerSqft: number;
   salesCount12Months: number;
-  avgTimeOnMarket: number; // days
   priceChange1Year: number; // percentage
-  priceChange3Years: number; // percentage
-  priceChange5Years: number; // percentage
   propertyTypeBreakdown: Record<string, number>;
 }
 
