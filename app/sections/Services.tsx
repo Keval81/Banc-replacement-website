@@ -3,7 +3,9 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { AmbientVideo } from "@/components/AmbientVideo";
 import { SectionHeader } from "@/components/SectionHeader";
+import { getServiceFilm } from "@/lib/owned-film";
 
 const services = [
   {
@@ -52,7 +54,9 @@ export default function Services() {
         <SectionHeader number="03" label="What we do" title="Four ways we work" dark />
 
         <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
-          {services.map((service, index) => (
+          {services.map((service, index) => {
+            const film = getServiceFilm(service.href);
+            return (
             <motion.div
               key={service.title}
               initial={{ opacity: 0, y: 20 }}
@@ -62,13 +66,23 @@ export default function Services() {
             >
               <Link href={service.href} className="group block">
                 <div className="relative h-64 overflow-hidden rounded-[10px] sm:h-80">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  />
+                  {/* Banc's own footage where it exists; Property Management keeps
+                      its still until the wider stock sweep replaces it. */}
+                  {film ? (
+                    <AmbientVideo
+                      film={film}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  ) : (
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  )}
                 </div>
                 <div className="mt-5 flex items-baseline gap-4 border-t border-white/15 pt-4">
                   <span className="font-mono text-[11px] tracking-[0.14em] text-white/50">
@@ -93,7 +107,8 @@ export default function Services() {
                 </div>
               </Link>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

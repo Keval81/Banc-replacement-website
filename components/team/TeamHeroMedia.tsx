@@ -1,35 +1,14 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
   TEAM_HERO_FRAMING,
   TEAM_HERO_MEDIA,
   shouldRenderTeamHeroVideo,
 } from "@/lib/team-media";
 
-const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-
-function subscribeToReducedMotion(onChange: () => void): () => void {
-  const mediaQuery = window.matchMedia(REDUCED_MOTION_QUERY);
-  mediaQuery.addEventListener("change", onChange);
-
-  return () => mediaQuery.removeEventListener("change", onChange);
-}
-
-function getReducedMotionPreference(): boolean {
-  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
-}
-
-function getServerReducedMotionPreference(): boolean {
-  return true;
-}
-
 export function TeamHeroMedia() {
-  const prefersReducedMotion = useSyncExternalStore(
-    subscribeToReducedMotion,
-    getReducedMotionPreference,
-    getServerReducedMotionPreference,
-  );
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <div className="absolute inset-0">
