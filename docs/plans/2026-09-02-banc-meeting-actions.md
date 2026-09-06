@@ -655,3 +655,86 @@ Cheers,
 Keval
 
 *Last updated: 2026-09-04*
+
+## 5. Cove's reply (6 Sep) — one word to correct before Wednesday
+
+James confirmed all three asks: TTL dropped **Tuesday 9th morning** (he'll
+email when done), records changed **Wednesday 10th morning**, and Namesco
+confirm **nothing else points at the domain**. Current record list attached
+(`DNS Records.png`).
+
+**The timing works — verified, not assumed.** Every record on the zone
+currently carries **TTL 21600 (6 hours)**, apex `A` and `www` `CNAME`
+included (`dig @8.8.8.8`, 6 Sep). Dropping them Tuesday morning means the
+old 6-hour value has fully aged out of every resolver by Tuesday evening, so
+Wednesday morning's change propagates on the new 300s TTL. A Tuesday
+afternoon drop would still just about work; the morning is comfortable.
+
+### ⚠ "Adding the 2 new records" is the wrong verb — and it matters
+
+Both changes are **replacements**, not additions. If James adds rather than
+replaces:
+
+- **Apex:** `A 35.246.9.164` and `A 76.76.21.21` side by side is valid DNS —
+  resolvers round-robin between them, so roughly **half of all visitors land
+  on a host that does not respond at all**. It would look like an
+  intermittent outage, which is the hardest kind to diagnose under launch
+  pressure. The old `A` must be edited or deleted.
+- **`www`:** a name cannot hold a `CNAME` and an `A`. The
+  `CNAME -> live.webdadi.net` has to be **removed**, not left alongside.
+  Some panels reject the combination outright; others accept it silently and
+  serve whichever they feel like.
+
+This is worth one short email rather than assuming he means "change" — he is
+working by hand in a panel where row 1 and row 6 already have values in them.
+
+### Our side — one dashboard step still open
+
+Both domains are on the Vercel project and verified, but **neither is set as
+primary**: the API shows `redirect: null` on both `bancproperty.com` and
+`www.bancproperty.com` (6 Sep). Left as-is, `www` serves a full duplicate of
+the site instead of redirecting, against the canonical apex in `lib/site.ts`.
+Set `bancproperty.com` primary (`www` → 308) **before** Wednesday.
+
+### What Wednesday looks like, so nobody panics
+
+1. James edits both records; they go live within ~5 minutes on the 300s TTL.
+2. Vercel issues the SSL certificate only *after* the domain resolves to it —
+   expect a **short window where HTTPS errors**. Normal. Minutes, not hours.
+3. The `.vercel.app` SSO wall (`all_except_custom_domains`) stops applying to
+   the custom domain, so this is also the moment Nitesh can finally review.
+4. **Rollback is the two old values back in** — live in ~5 minutes at the
+   lowered TTL. The old site stays up at `live.webdadi.net` until the 13th,
+   so there is a real fallback, not just a theoretical one.
+
+### Draft — Nitesh's follow-up to James
+
+Subject: Re: bancproperty.com — DNS records (go-live Wed 10 Sep)
+
+Hi James,
+
+That's great, thank you — Tuesday 9th for the TTL and Wednesday 10th morning for the records is exactly right. And thanks for checking with Namesco and sending the records over.
+
+One thing to clarify, as it's the only part that could bite us: both of these are changes to existing records rather than new records added alongside them.
+
+    1) The A record for bancproperty.com itself
+       Change the existing value 35.246.9.164 to 76.76.21.21
+       (If the old one is left in place as well, traffic will split between
+       the two and roughly half of visitors will hit the old address, which
+       doesn't respond.)
+
+    2) The www record
+       Currently: CNAME -> live.webdadi.net
+       Needs to become: A -> 76.76.21.21
+       The CNAME needs deleting, as one name can't hold both a CNAME and an A.
+
+So it ends up as two records changed, not two added — nothing else on the domain touched. In particular please leave the MX records, the SPF TXT record, and the autoconfig / imap / pop3 entries exactly as they are, as those are all email.
+
+Also, when you drop the TTLs on Tuesday, could you do it on both of those two records specifically? They're currently on 6 hours, so lowering them the day before gives us plenty of margin.
+
+Thanks again — much appreciated.
+
+Nitesh
+Banc Property Group
+
+*Last updated: 2026-09-06*
