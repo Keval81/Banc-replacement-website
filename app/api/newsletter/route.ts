@@ -3,6 +3,9 @@ import { createHash } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { normaliseNewsletterEmail, verifyUnsubscribeToken } from '@/lib/newsletter-token';
+import { officeInbox } from '@/lib/banc-contact';
+import { deliverEnquiry } from '@/lib/enquiry-delivery';
+import { buildNewsletterEnquiry } from '@/lib/newsletter-enquiry';
 
 export const runtime = 'nodejs';
 
@@ -120,10 +123,24 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    // Try Mailchimp first
-    const mailchimpSuccess = await addToMailchimp(subscription);
+    // The sign-up reaching the office is what makes it real. Until there is a
+    // list to put people on, it goes to the inbox as an enquiry — the same path
+    // the homepage alerts block takes — and nothing is reported as subscribed
+    // unless that email actually left.
+    const delivery = await deliverEnquiry(buildNewsletterEnquiry(subscription, officeInbox()));
+    if (!delivery.ok) {
+      console.error('[Newsletter API] sign-up not delivered:', delivery.reason);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'We could not save your sign-up just now. Please try again, or email the office and we will add you.',
+        },
+        { status: delivery.reason === 'mail-not-configured' ? 503 : 502 }
+      );
+    }
 
-    // Store locally either way
+    // Mailchimp, when it is configured, on top — never instead.
+    const mailchimpSuccess = await addToMailchimp(subscription);
     subscribers.set(normalizedEmail, subscription);
 
     return NextResponse.json({

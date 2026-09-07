@@ -3,6 +3,8 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
+import { BANC_CONTACT } from "../banc-contact.ts";
+
 import { getLandingOverlayPolicy, getLandingUi } from "../landing-ui.ts";
 
 test("keeps both landing variants focused on sales and lettings", () => {
@@ -258,8 +260,8 @@ test("offers assistant and WhatsApp choices from the landing-page help launcher"
       alt: "",
     },
     whatsappLabel: "Chat on WhatsApp",
-    whatsappHref:
-      "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
+    // Empty until NEXT_PUBLIC_BANC_WHATSAPP_NUMBER is set — the launcher hides the row.
+    whatsappHref: BANC_CONTACT.whatsappHref,
   });
 });
 

@@ -333,6 +333,7 @@ export default function PropertyChatbot({
                     </span>
                     {landingContactLauncher.assistantLabel}
                   </button>
+                  {landingContactLauncher.whatsappHref && (
                   <a
                     href={landingContactLauncher.whatsappHref}
                     target="_blank"
@@ -344,6 +345,7 @@ export default function PropertyChatbot({
                     </span>
                     {landingContactLauncher.whatsappLabel}
                   </a>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -568,6 +570,7 @@ export default function PropertyChatbot({
                             <Phone className="h-3.5 w-3.5" aria-hidden="true" />
                             Call Banc
                           </a>
+                          {messageView.handoff.whatsappHref && (
                           <a
                             href={messageView.handoff.whatsappHref}
                             target="_blank"
@@ -577,6 +580,7 @@ export default function PropertyChatbot({
                             <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
                             WhatsApp Banc
                           </a>
+                          )}
                         </div>
                       )}
                     </div>

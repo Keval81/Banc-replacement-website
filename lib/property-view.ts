@@ -37,6 +37,9 @@ export interface PropertyLeadActions {
   primaryLabel: string;
   secondaryHref: string;
   secondaryLabel: string;
+  /** /make-offer for this listing. Agreed with Nitesh on 7 Sep: offers arrive as an email to the team. */
+  offerHref: string;
+  offerLabel: string;
 }
 
 export function buildPropertyLeadActions(
@@ -53,6 +56,8 @@ export function buildPropertyLeadActions(
     primaryLabel: "Request a viewing",
     secondaryHref: BANC_CONTACT.callHref,
     secondaryLabel: department === "lettings" ? "Call the lettings team" : "Call the sales team",
+    offerHref: `/make-offer/${encodeURIComponent(id)}`,
+    offerLabel: "Make an offer",
   };
 }
 

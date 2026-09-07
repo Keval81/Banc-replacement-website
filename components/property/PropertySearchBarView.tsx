@@ -11,6 +11,7 @@ import { submitPropertyLocation } from "@/lib/property-search/search-ui-actions"
 import { cn } from "@/lib/utils";
 import ActiveFilters from "./ActiveFiltersView";
 import AdvancedSearch from "./AdvancedSearchView";
+import { RADIUS_OPTIONS } from "@/lib/property-search/ui-options";
 import MobileFilterDrawer, { MobileFilterButton } from "./MobileFilterDrawer";
 import QuickFilters from "./QuickFiltersView";
 
@@ -84,6 +85,22 @@ export default function PropertySearchBar({ department, filters, onFilterChange,
                 <MapPin className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
                 <Input id="property-location" type="text" placeholder="Search by area, town or postcode…" value={locationInput} onChange={(event) => { locationInputRef.current = event.target.value; setLocationInput(event.target.value); }} className="h-12 bg-banc-grey-pale pl-12 pr-12 text-base placeholder:text-banc-muted-readable focus:bg-white focus:border-banc-focus focus:ring-banc-focus focus-visible:ring-banc-focus" />
                 {locationInput && <button type="button" onClick={() => { locationInputRef.current = ""; setLocationInput(""); onFilterChange({ location: undefined }); }} aria-label="Clear location" className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-colors duration-200 hover:bg-banc-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"><X className="h-4 w-4 text-banc-muted-readable" /></button>}
+              </div>
+              {/* Radius next to the postcode, not inside Filters — Nitesh, 7 Sep:
+                  "people may not click on it". Needs a centre, so it wakes up
+                  once there is something in the location box. */}
+              <div className="min-w-0 lg:w-56">
+                <label htmlFor="property-radius" className="sr-only">Search radius</label>
+                <select
+                  id="property-radius"
+                  value={filters.radius ?? ""}
+                  disabled={!locationInput.trim()}
+                  onChange={(event) => onFilterChange({ radius: event.target.value === "" ? undefined : (Number(event.target.value) as PropertySearchFilters["radius"]) })}
+                  className="h-12 w-full appearance-none rounded-[var(--radius-md)] border border-banc-line bg-banc-grey-pale px-4 pr-10 text-base text-banc-dark-deep focus:border-banc-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-banc-focus disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+                  aria-label="Search radius"
+                >
+                  {RADIUS_OPTIONS.map((option) => <option key={String(option.value)} value={option.value}>{option.label}</option>)}
+                </select>
               </div>
               <div className="flex min-w-0 flex-wrap items-center gap-3">
                 <MobileFilterButton onClick={() => setMobileFiltersOpen(true)} activeFilterCount={countFilters(filters)} className="lg:hidden" />

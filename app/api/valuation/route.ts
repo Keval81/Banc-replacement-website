@@ -3,7 +3,9 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { emailTemplates } from "@/lib/email";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
-import { valuationInbox } from "@/lib/banc-contact";
+import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
+import { fetchSoldPricesBySector } from "@/lib/api/landRegistry";
+import { estimateFromSales, lookupPostcodeDistrict, postcodeSector, type ValuationEstimate } from "@/lib/valuation-estimate";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -26,8 +28,32 @@ const valuationSchema = z.object({
   bedrooms: z.string().trim().max(10).optional(),
   timeframe: z.string().trim().max(60).optional(),
   message: z.string().trim().max(5000).optional(),
+  // "sell" or "let" — the form asks first. Lettings go to the lettings team and
+  // get no online figure; there is no public source of rental comparables.
+  department: z.enum(["sales", "lettings"]).default("sales"),
   website: z.string().max(0).optional(), // honeypot
 });
+
+/**
+ * An indicative range from the register, or nothing. A slow or empty register
+ * never blocks the lead — the estimate is a courtesy, the call is the product.
+ */
+async function estimateFor(postcode: string, propertyType: string | undefined): Promise<ValuationEstimate | null> {
+  const sector = postcodeSector(postcode);
+  if (!sector) return null;
+  try {
+    const district = await lookupPostcodeDistrict(postcode);
+    if (!district) return null;
+    const sales = await Promise.race([
+      fetchSoldPricesBySector(sector, district),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("register timed out")), 9000)),
+    ]);
+    return estimateFromSales(sales, { propertyType, sector });
+  } catch (error) {
+    console.error("[Valuation API] no estimate:", error instanceof Error ? error.message : error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -84,7 +110,8 @@ export async function POST(request: NextRequest) {
 
     // The valuation lead reaching the team is the job; the applicant's
     // confirmation is a courtesy and never fails the request on its own.
-    const inbox = valuationInbox();
+    const inbox = data.department === "lettings" ? enquiryInboxFor("lettings") : valuationInbox();
+    const estimate = data.department === "sales" ? await estimateFor(data.postcode, data.propertyType) : null;
     const delivery = await deliverEnquiry({
       team: {
         to: inbox,
@@ -100,6 +127,8 @@ export async function POST(request: NextRequest) {
           bedrooms: data.bedrooms || "Not specified",
           timeframe: data.timeframe || "Not specified",
           message: data.message,
+          department: data.department,
+          estimate,
         }),
       },
       customer: {
@@ -108,6 +137,8 @@ export async function POST(request: NextRequest) {
         ...emailTemplates.valuationConfirmation({
           firstName: data.firstName,
           address: data.address,
+          department: data.department,
+          estimate,
         }),
       },
     });
@@ -146,6 +177,8 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "Your valuation request has been submitted successfully",
+        estimate,
+        department: data.department,
         data: {
           id: valuationRequest.id,
           confirmationSent: delivery.confirmationSent,

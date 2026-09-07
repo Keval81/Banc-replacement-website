@@ -9,9 +9,12 @@ const workflow = readFileSync(
 );
 const envExample = readFileSync(join(process.cwd(), ".env.example"), "utf8");
 
-test("runs the real Expert Agent sync hourly and manually", () => {
+test("runs the real Expert Agent sync twice a day and manually", () => {
   assert.match(workflow, /workflow_dispatch:/);
-  assert.match(workflow, /cron: ['"]17 \* \* \* \*['"]/);
+  // Lunchtime and end of day UK time, as agreed with Nitesh on 7 Sep.
+  assert.match(workflow, /cron: ['"]30 11 \* \* \*['"]/);
+  assert.match(workflow, /cron: ['"]30 17 \* \* \*['"]/);
+  assert.doesNotMatch(workflow, /cron: ['"]17 \* \* \* \*['"]/);
   assert.match(
     workflow,
     /node --experimental-strip-types scripts\/sync-expert-agent\.ts/,

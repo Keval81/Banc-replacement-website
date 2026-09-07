@@ -193,15 +193,11 @@ function signOff(): string {
   </td></tr>`;
 }
 
-/** Sits directly above the sign-off: the logo's own device, and any fine print. */
+/** Sits directly above the sign-off: a hairline and any fine print. The "Property Group"
+ *  device that used to sit here read as a stray label under the picture (Nitesh, 7 Sep). */
 function customerFoot(extra = ""): string {
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #E0DFDC;">
-  <tr><td align="center" style="padding:20px 0 22px;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;"><tr>
-      <td style="width:34px;height:1px;background:#4AC8E8;font-size:0;line-height:0;">&nbsp;</td>
-      <td style="padding:0 12px;${SANS}font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#0A6078;font-weight:500;">Property Group</td>
-      <td style="width:34px;height:1px;background:#4AC8E8;font-size:0;line-height:0;">&nbsp;</td>
-    </tr></table>
+  <tr><td align="center" style="padding:${extra ? "18px 0 20px" : "10px 0 12px"};">
     ${extra}
   </td></tr></table>`;
 }
@@ -245,6 +241,29 @@ const button = (href: string, label: string) =>
     <td style="background:#0A6078;"><a href="${esc(href)}" style="display:inline-block;padding:13px 28px;${SANS}font-size:15px;font-weight:500;color:#FFFFFF;text-decoration:none;">${esc(label)}</a></td>
   </tr></table>`;
 
+/** What the valuation form showed the customer — the same range goes to the team. */
+export interface ValuationEstimateSummary {
+  low: number;
+  high: number;
+  sampleSize: number;
+  basis: "type" | "area";
+  sector: string;
+  monthsBack: number;
+}
+
+const formatEstimateRange = (e: ValuationEstimateSummary) =>
+  `£${e.low.toLocaleString("en-GB")} – £${e.high.toLocaleString("en-GB")}`;
+
+/** The range, with the caveat Nitesh asked for on 7 Sep: it is an estimate, and the call gives the real figure. */
+function estimateBlock(e: ValuationEstimateSummary): string {
+  const years = e.monthsBack >= 24 ? "two years" : `${e.monthsBack} months`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background:#E8F8FC;margin:0 0 24px;"><tr><td style="padding:18px 20px;">
+    <p style="${SANS}font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#0A6078;margin:0 0 6px;">Indicative estimate</p>
+    <p style="${DISPLAY}font-size:26px;line-height:1.2;color:#2C2A27;margin:0 0 8px;">${formatEstimateRange(e)}</p>
+    <p style="${SANS}font-size:13px;line-height:1.65;color:#3D3B37;margin:0;">Based on ${e.sampleSize} sales of ${e.basis === "type" ? "similar homes" : "homes of all types"} in ${esc(e.sector)} over the last ${years}, from HM Land Registry. Please keep in mind this is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.</p>
+  </td></tr></table>`;
+}
+
 export const emailTemplates = {
   contactConfirmation: (data: { name: string; subject: string; message?: string }) => {
     const first = data.name.split(" ")[0] || "there";
@@ -256,7 +275,7 @@ export const emailTemplates = {
         [
           h1(`Thanks, ${first} — we've got it`),
           p(
-            `Someone from the team will come back to you within one working day. If it's urgent, the Cuffley office is open 9am–6pm on <strong style="color:#2C2A27;">${PHONE}</strong>.`,
+            `Someone from the team will come back to you within one working day. If it's urgent, the Cuffley office is open 9am–5:30pm on <strong style="color:#2C2A27;">${PHONE}</strong>.`,
             16,
           ),
           h2("What you sent us"),
@@ -295,33 +314,56 @@ export const emailTemplates = {
     ),
   }),
 
-  valuationConfirmation: (data: { firstName: string; address: string }) => ({
-    subject: `Your valuation request — ${data.address}`,
-    html: shell(
-      `One of the directors will call you within one working day.`,
-      "Valuation request received",
-      [
-        h1(`Thank you, ${data.firstName}`),
-        p(
-          `We have your request for <strong style="color:#2C2A27;">${esc(data.address)}</strong>. One of the directors will call you within one working day.`,
-          16,
-        ),
-        h2("What a Banc valuation involves"),
-        `<ol style="${SANS}font-size:15px;line-height:1.75;color:#3D3B37;margin:0 0 16px;padding-left:20px;">
+  valuationConfirmation: (data: {
+    firstName: string;
+    address: string;
+    department?: "sales" | "lettings";
+    estimate?: ValuationEstimateSummary | null;
+  }) => {
+    const lettings = data.department === "lettings";
+    const estimate = !lettings && data.estimate ? data.estimate : null;
+    return {
+      subject: lettings
+        ? `Your rental valuation request — ${data.address}`
+        : `Your valuation request — ${data.address}`,
+      html: shell(
+        estimate
+          ? `An indicative range for ${data.address}, and a director will call within one working day.`
+          : `One of the directors will call you within one working day.`,
+        lettings ? "Rental valuation request received" : "Valuation request received",
+        [
+          h1(`Thank you, ${data.firstName}`),
+          p(
+            lettings
+              ? `We have your request for a rental appraisal of <strong style="color:#2C2A27;">${esc(data.address)}</strong>. One of the directors will call you within one working day to talk through what it could let for and how we would manage it.`
+              : `We have your request for <strong style="color:#2C2A27;">${esc(data.address)}</strong>. One of the directors will call you within one working day.`,
+            16,
+          ),
+          estimate ? estimateBlock(estimate) : "",
+          h2(lettings ? "What a Banc rental appraisal involves" : "What a Banc valuation involves"),
+          lettings
+            ? `<ol style="${SANS}font-size:15px;line-height:1.75;color:#3D3B37;margin:0 0 16px;padding-left:20px;">
+          <li style="margin-bottom:8px;">A visit at a time that suits you — usually about 30 minutes.</li>
+          <li style="margin-bottom:8px;">A rent figure based on what is genuinely letting nearby, not what's advertised.</li>
+          <li style="margin-bottom:8px;">Straight advice on presentation, compliance and what tenants in this area look for.</li>
+          <li>A written summary afterwards. No obligation.</li>
+        </ol>`
+            : `<ol style="${SANS}font-size:15px;line-height:1.75;color:#3D3B37;margin:0 0 16px;padding-left:20px;">
           <li style="margin-bottom:8px;">A visit at a time that suits you — usually about 45 minutes.</li>
           <li style="margin-bottom:8px;">A figure based on what has genuinely sold nearby, not what's listed.</li>
           <li style="margin-bottom:8px;">Honest advice on presentation: what's worth doing before marketing, and what isn't.</li>
           <li>A written summary afterwards. No obligation, and no pressure to instruct us.</li>
         </ol>`,
-        p(
-          `If you'd rather talk it through first, call the Cuffley office on <strong style="color:#2C2A27;">${PHONE}</strong> and ask for Nitesh or Andrew.`,
-        ),
-        button("https://bancproperty.com/track-record", "See what we've sold locally"),
-      ].join(""),
-      customerFoot(),
-      true,
-    ),
-  }),
+          p(
+            `If you'd rather talk it through first, call the Cuffley office on <strong style="color:#2C2A27;">${PHONE}</strong> and ask for Nitesh or Andrew.`,
+          ),
+          lettings ? "" : button("https://bancproperty.com/track-record", "See what we've sold locally"),
+        ].join(""),
+        customerFoot(),
+        true,
+      ),
+    };
+  },
 
   valuationNotification: (data: {
     firstName: string;
@@ -334,21 +376,27 @@ export const emailTemplates = {
     bedrooms: string;
     timeframe: string;
     message?: string;
+    department?: "sales" | "lettings";
+    estimate?: ValuationEstimateSummary | null;
   }) => {
     const name = `${data.firstName} ${data.lastName}`.trim();
+    const lettings = data.department === "lettings";
+    const estimate = !lettings && data.estimate ? data.estimate : null;
     return {
-      subject: `Valuation — ${data.address}, ${data.postcode} — ${data.timeframe}`,
+      subject: `${lettings ? "Rental valuation" : "Valuation"} — ${data.address}, ${data.postcode} — ${data.timeframe}`,
       html: shell(
         `${name} · ${data.phone}`,
-        "New valuation request",
+        lettings ? "New rental valuation request" : "New valuation request",
         [
           h1(name),
           facts([
             ["Address", `${data.address}, ${data.postcode}`],
             ["Property", `${data.propertyType} · ${data.bedrooms} bed`],
+            ["Wants to", lettings ? "Let" : "Sell"],
             ["Timeframe", data.timeframe],
             ["Phone", data.phone],
             ["Email", data.email],
+            ["Shown online", estimate ? `${formatEstimateRange(estimate)} (${estimate.sampleSize} sales, ${estimate.sector})` : lettings ? "No figure — rental" : "No figure — not enough recent sales"],
           ]),
           data.message ? h2("Anything else we should know") + quote(data.message) : "",
         ].join(""),

@@ -25,6 +25,17 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 
+interface ValuationEstimateView {
+  low: number;
+  high: number;
+  sampleSize: number;
+  basis: "type" | "area";
+  sector: string;
+  monthsBack: number;
+}
+
+const gbp = (n: number) => `£${n.toLocaleString("en-GB")}`;
+
 const propertyTypes = [
   "Detached House",
   "Semi-Detached House",
@@ -68,13 +79,16 @@ export default function ValuationPage() {
     bedrooms: "",
     timeframe: "",
     message: "",
+    department: "sales" as "sales" | "lettings",
   });
   const [consent, setConsent] = useState(false);
+  const [estimate, setEstimate] = useState<ValuationEstimateView | null>(null);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setError(null);
   };
+  const isLettings = formData.department === "lettings";
 
   const validateStep = (step: number): boolean => {
     switch (step) {
@@ -130,6 +144,7 @@ export default function ValuationPage() {
       const data = await response.json();
 
       if (data.success) {
+        setEstimate(data.estimate ?? null);
         setCurrentStep(4);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
@@ -248,6 +263,31 @@ export default function ValuationPage() {
                   </div>
 
                   <div className="space-y-4">
+                    <fieldset className="space-y-2">
+                      <legend className="block text-sm font-medium text-banc-dark">I&apos;d like to *</legend>
+                      <div className="grid grid-cols-2 gap-3 max-w-sm">
+                        {([
+                          { value: "sales", label: "Sell", hint: "Instant estimate, then a visit" },
+                          { value: "lettings", label: "Let", hint: "Rental appraisal by the lettings team" },
+                        ] as const).map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => handleChange("department", option.value)}
+                            aria-pressed={formData.department === option.value}
+                            className={`rounded-lg border px-4 py-3 text-left transition-colors ${
+                              formData.department === option.value
+                                ? "border-banc-focus bg-banc-sky/10 text-banc-dark"
+                                : "border-banc-line bg-white text-banc-muted-readable hover:border-banc-focus"
+                            }`}
+                          >
+                            <span className="block text-base font-medium">{option.label}</span>
+                            <span className="block text-xs">{option.hint}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </fieldset>
+
                     <div className="space-y-2">
                       <label htmlFor="address" className="block text-sm font-medium text-banc-dark">
                         Property Address *
@@ -334,7 +374,7 @@ export default function ValuationPage() {
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-banc-dark">
                         <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
-                        Looking to sell in...
+                        {isLettings ? "Looking to let in..." : "Looking to sell in..."}
                       </label>
                       <NativeSelect
                         value={formData.timeframe}
@@ -470,24 +510,48 @@ export default function ValuationPage() {
                     <CheckCircle className="h-10 w-10 text-banc-focus" />
                   </div>
                   <h2 className="mb-4 text-2xl font-semibold text-banc-dark lg:text-3xl">
-                    Thank You!
+                    {isLettings ? "Thank you — we'll call about the rent" : estimate ? "Here's your indicative estimate" : "Thank you!"}
                   </h2>
+
+                  {estimate && !isLettings && (
+                    <div className="mx-auto mb-6 max-w-md rounded-xl border border-banc-focus/20 bg-banc-sky/10 p-6 text-left">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Indicative estimate</p>
+                      <p className="mt-2 font-display text-3xl text-banc-dark">
+                        {gbp(estimate.low)} – {gbp(estimate.high)}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-banc-muted-readable">
+                        Based on {estimate.sampleSize} sales of {estimate.basis === "type" ? "similar homes" : "homes of all types"} in {estimate.sector} over the last {estimate.monthsBack >= 24 ? "two years" : `${estimate.monthsBack} months`}, from HM Land Registry. Please keep in mind this is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.
+                      </p>
+                    </div>
+                  )}
+
                   <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">
-                    Your valuation request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.
+                    Your {isLettings ? "rental appraisal" : "valuation"} request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.
                   </p>
                   <p className="mb-8 text-banc-muted-readable max-w-md mx-auto">
-                    One of our property experts will contact you within 24 hours to arrange your free, no-obligation valuation.
+                    {isLettings
+                      ? "One of the directors will call you within one working day to talk through what it could let for."
+                      : estimate
+                        ? "One of the directors will call you within one working day with an accurate figure."
+                        : "We couldn't reach enough recent sales for an instant figure. One of the directors will call you within one working day to arrange your free, no-obligation valuation."}
                   </p>
 
                   <div className="rounded-xl bg-banc-grey-pale p-6 mb-8 max-w-sm mx-auto text-left">
                     <h3 className="text-sm font-semibold text-banc-dark mb-3">What happens next?</h3>
                     <ul className="space-y-2">
-                      {[
-                        "We review your property details",
-                        "A local expert calls to book a visit",
-                        "We provide a detailed market appraisal",
-                        "You decide — no obligation",
-                      ].map((item, i) => (
+                      {(isLettings
+                        ? [
+                            "The lettings team review your property details",
+                            "A director calls to book a visit",
+                            "We give you a rent figure and a plan for letting it",
+                            "You decide — no obligation",
+                          ]
+                        : [
+                            "We review your property details",
+                            "A local expert calls to book a visit",
+                            "We provide a detailed market appraisal",
+                            "You decide — no obligation",
+                          ]).map((item, i) => (
                         <li key={i} className="flex items-start gap-2 text-sm text-banc-muted-readable">
                           <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-focus" />
                           {item}

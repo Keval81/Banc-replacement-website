@@ -83,7 +83,8 @@ export interface ConversationPlan {
 
 export interface TrustedHandoff {
   callHref: `tel:${string}`;
-  whatsappHref: `https://wa.me/${string}`;
+  /** wa.me link, or empty when Banc has no WhatsApp number configured — the UI hides the control. */
+  whatsappHref: string;
   propertyId?: string;
 }
 

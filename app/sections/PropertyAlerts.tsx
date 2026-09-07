@@ -189,8 +189,19 @@ export default function PropertyAlerts() {
             )}
           </div>
 
-          <aside className="flex flex-col justify-between rounded-[10px] border border-banc-line bg-white p-8">
-            <div>
+          <aside className="relative flex flex-col justify-between overflow-hidden rounded-[10px] border border-banc-line bg-white p-8">
+            {/* The current issue's cover sits behind the copy — Nitesh, 7 Sep:
+                "put an image behind that of the magazine". A white wash keeps
+                the text legible over it; the cover stays visible on the right. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -right-6 top-8 bottom-0 w-[44%] rotate-[4deg] rounded-[6px] bg-[url('/images/life-magazine-cover.jpg')] bg-cover bg-top shadow-[0_18px_40px_-20px_rgba(16,34,56,0.45)]"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white from-45% via-white/85 via-60% to-white/0"
+            />
+            <div className="relative max-w-[58%]">
               <p className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
                 Life Magazine
               </p>
@@ -206,7 +217,7 @@ export default function PropertyAlerts() {
               href={LIFE_MAGAZINE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-8 inline-flex min-h-11 items-center gap-2 self-start border-b border-banc-dark text-sm font-semibold uppercase tracking-[0.14em] text-banc-dark transition-colors hover:text-banc-focus"
+              className="relative mt-8 inline-flex min-h-11 items-center gap-2 self-start border-b border-banc-dark text-sm font-semibold uppercase tracking-[0.14em] text-banc-dark transition-colors hover:text-banc-focus"
             >
               Read this issue
             </a>

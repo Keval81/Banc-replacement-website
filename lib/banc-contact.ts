@@ -1,8 +1,20 @@
+// WhatsApp needs a mobile, and Nitesh is still getting one (7 Sep). Until the
+// number is set in the environment every WhatsApp surface stays hidden — the
+// old default pointed wa.me at the Cuffley landline, which cannot receive it.
+const WHATSAPP_MESSAGE = "Hi, I'm interested in a property I saw on your website.";
+
+export const BANC_WHATSAPP_NUMBER: string | null = (() => {
+  const digits = (process.env.NEXT_PUBLIC_BANC_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+  return digits.length >= 10 ? digits : null;
+})();
+
 export const BANC_CONTACT = {
   displayPhone: "01707 877781",
   callHref: "tel:01707877781",
-  whatsappHref:
-    "https://wa.me/447707877781?text=Hi%2C%20I'm%20interested%20in%20a%20property%20I%20saw%20on%20your%20website.",
+  /** Empty when there is no WhatsApp number — callers hide the control. */
+  whatsappHref: BANC_WHATSAPP_NUMBER
+    ? `https://wa.me/${BANC_WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`
+    : "",
 } as const;
 
 export const BANC_MAYFAIR_CONTACT = {

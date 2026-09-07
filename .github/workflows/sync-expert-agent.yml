@@ -3,7 +3,11 @@ name: Sync Expert Agent properties
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 * * * *'
+    # Twice a day, as agreed with Nitesh on 7 Sep: a listing added in the morning is
+    # on by lunchtime, one added in the afternoon by the end of the day. Times are
+    # UTC; 11:30Z / 17:30Z are 12:30 / 18:30 BST.
+    - cron: '30 11 * * *'
+    - cron: '30 17 * * *'
 
 concurrency:
   group: expert-agent-property-sync

@@ -34,6 +34,12 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
         >
           {actions.secondaryLabel}
         </a>
+        <a
+          href={actions.offerHref}
+          className="mt-3 flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-5 font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+        >
+          {actions.offerLabel}
+        </a>
         {(brochureUrl || tourUrl) && (
           <div className="mt-6 space-y-3 border-t border-banc-grey/20 pt-5">
             {brochureUrl && (
@@ -80,18 +86,24 @@ export function PropertyMobileActions({ property }: PropertyContactActionsProps)
       className="safe-area-pb fixed inset-x-0 bottom-0 z-40 border-t border-banc-grey/20 bg-white lg:hidden"
       aria-label="Property enquiry actions"
     >
-      <div className="mx-auto grid max-w-lg grid-cols-2 gap-3 py-3 pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)]">
+      <div className="mx-auto grid max-w-lg grid-cols-3 gap-2 py-3 pl-[calc(env(safe-area-inset-left)+1rem)] pr-[calc(env(safe-area-inset-right)+1rem)]">
         <a
           href={actions.primaryHref}
-          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-banc-sky px-4 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-banc-sky px-2 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
-          {actions.primaryLabel}
+          Book a viewing
         </a>
         <a
           href={actions.secondaryHref}
-          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-4 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-2 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
-          {actions.secondaryLabel}
+          Call us
+        </a>
+        <a
+          href={actions.offerHref}
+          className="flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-banc-dark/20 px-2 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+        >
+          Make an offer
         </a>
       </div>
     </aside>

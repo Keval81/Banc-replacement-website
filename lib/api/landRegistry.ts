@@ -96,6 +96,64 @@ export async function fetchSoldPrices(postcode: string): Promise<SoldPriceRecord
   }
 }
 
+// Every sale in a postcode sector ("EN6 4") over the last two years — the
+// pool a valuation estimate draws on. A single postcode rarely has three
+// comparable sales in that window; a sector nearly always does.
+//
+// The district is not decoration: without it the register scans every
+// postcode in the country for the prefix (21s, measured 7 Sep); with it the
+// same query answers in ~350ms. postcodes.io supplies the district name.
+export async function fetchSoldPricesBySector(sector: string, district: string, monthsBack = 24): Promise<SoldPriceRecord[]> {
+  const normalised = sector.trim().toUpperCase().replace(/\s+/g, ' ');
+  const districtName = district.trim().toUpperCase();
+  if (!/^[A-Z]{1,2}\d[A-Z\d]? \d$/.test(normalised) || !districtName) return [];
+  const cacheKey = getCacheKey('sold-prices-sector', `${normalised}:${districtName}:${monthsBack}`);
+  const cached = getCachedData<SoldPriceRecord[]>(cacheKey);
+  if (cached) return cached;
+
+  const since = new Date();
+  since.setUTCMonth(since.getUTCMonth() - monthsBack);
+  const sinceIso = since.toISOString().slice(0, 10);
+  const sparqlQuery = `
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
+    PREFIX lrcommon: <http://landregistry.data.gov.uk/def/common/>
+
+    SELECT ?item ?price ?date ?paon ?saon ?street ?town ?postcode ?propertyType ?estateType ?newBuild
+    WHERE {
+      ?item lrppi:pricePaid ?price ;
+            lrppi:transactionDate ?date ;
+            lrppi:propertyAddress ?address .
+      ?address lrcommon:postcode ?postcode ;
+               lrcommon:district "${districtName.replace(/"/g, '')}" .
+      FILTER(STRSTARTS(STR(?postcode), "${normalised}"))
+      FILTER(?date >= "${sinceIso}"^^xsd:date)
+      OPTIONAL { ?address lrcommon:paon ?paon }
+      OPTIONAL { ?address lrcommon:saon ?saon }
+      OPTIONAL { ?address lrcommon:street ?street }
+      OPTIONAL { ?address lrcommon:town ?town }
+      OPTIONAL { ?item lrppi:propertyType ?propertyType }
+      OPTIONAL { ?item lrppi:estateType ?estateType }
+      OPTIONAL { ?item lrppi:newBuild ?newBuild }
+    }
+    ORDER BY DESC(?date)
+    LIMIT 400
+  `;
+  const response = await fetch(LAND_REGISTRY_QUERY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+    body: `query=${encodeURIComponent(sparqlQuery)}`,
+  });
+  if (!response.ok) throw new Error(`Land Registry API error: ${response.status}`);
+  const data = await response.json();
+  const records: SoldPriceRecord[] = (data.results?.bindings ?? []).map(
+    (binding: Record<string, { value: string } | undefined>, index: number) =>
+      mapSoldPriceBinding(binding, binding.postcode?.value ?? normalised, index) as SoldPriceRecord,
+  );
+  setCachedData(cacheKey, records);
+  return records;
+}
+
 // Fetch statistics for a postcode
 export async function fetchSoldPriceStats(postcode: string): Promise<SoldPriceStats> {
   const cacheKey = getCacheKey('sold-price-stats', postcode);
