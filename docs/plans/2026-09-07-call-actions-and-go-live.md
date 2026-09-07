@@ -83,6 +83,21 @@ mailboxes.
 **A real lead arrived at 16:20** ("7 Mount Drive, AL2 2NP", valuation, within 1
 month) while the forms still pointed at Keval's inbox — forward it to Nitesh.
 
+## Fees — caught by SanSan at 19:50 (`7dfce24`)
+
+The old site carried two PDFs, "Fees to Landlords" and "Fees to Tenants" (plus the
+complaints procedure and the CMP certificate). The new tenants' guide had **invented
+figures** — £100 variation, £100 change of sharer, £15/hr. The published schedule says
+£50 per change per person, £20 admin for keys/fobs + cost, £30/hr call-outs, 3% over
+base on rent 14+ days late, inventory from £100 only if the tenant requests it. Both
+pages now say that; `lib/__tests__/cmp-certificate.test.ts` refuses the old figures.
+All four PDFs live in `public/documents/` and are linked from `/lettings/fees` (hero),
+both guides and `/complaints`. `/valuation?intent=let` opens on the lettings option.
+
+**For Nitesh:** the schedule charges an inventory "if requested by the tenant" — a
+Tenant Fees Act grey area; the page mirrors the schedule and no longer lists inventory
+fees as banned, but someone should check that line with the Guild.
+
 ## Keval — tomorrow morning
 
 1. ~~Inboxes~~ done tonight. ~~Forms tested~~ done tonight — get Nitesh's confirmation.
