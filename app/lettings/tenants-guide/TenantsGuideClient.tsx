@@ -52,9 +52,23 @@ const sections = TENANT_GUIDE_SECTIONS.map((section, index) => {
   };
 });
 
-const tenantFees = TENANT_FEES.map((fee, index) => ({
+// Icons by what the fee is about, not by position — a positional array
+// handed `undefined` to React the moment the schedule grew past seven rows,
+// which took the whole page down at build time (7 Sep).
+const feeIcon = (title: string) => {
+  const t = title.toLowerCase();
+  if (t.includes("holding")) return Wallet;
+  if (t.includes("security deposit")) return ShieldCheck;
+  if (t.includes("late") || t.includes("rent")) return Clock;
+  if (t.includes("key")) return Key;
+  if (t.includes("amendment") || t.includes("inventory") || t.includes("set-up")) return FileCheck;
+  if (t.includes("call-out")) return Users;
+  return Home;
+};
+
+const tenantFees = TENANT_FEES.map((fee) => ({
   ...fee,
-  icon: [Wallet, ShieldCheck, Clock, Key, FileCheck, Users, Home][index],
+  icon: feeIcon(fee.title),
 }));
 
 export default function TenantsGuideClient() {
