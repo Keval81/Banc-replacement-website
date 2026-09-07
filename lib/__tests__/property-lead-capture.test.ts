@@ -87,3 +87,21 @@ test("a viewing enquiry carries the department that has to answer it", async () 
   assert.match(payload.message, /Preferred date: 2026-09-12/);
   assert.match(payload.message, /Preferred time: 10:00/);
 });
+
+// Nitesh supplies the real inbox addresses; they must be droppable in without a
+// rebuild, the way BANC_PHONE_LINES was always meant to handle the phone lines.
+test("the real inbox addresses can be set from the environment", () => {
+  const previous = process.env.BANC_SALES_INBOX;
+  process.env.BANC_SALES_INBOX = "residential@bancproperty.com";
+  try {
+    assert.equal(enquiryInboxFor("sales"), "residential@bancproperty.com");
+    assert.equal(
+      enquiryInboxFor("lettings"),
+      BANC_ENQUIRY_INBOXES.lettings,
+      "overriding one department must not move the other",
+    );
+  } finally {
+    if (previous === undefined) delete process.env.BANC_SALES_INBOX;
+    else process.env.BANC_SALES_INBOX = previous;
+  }
+});

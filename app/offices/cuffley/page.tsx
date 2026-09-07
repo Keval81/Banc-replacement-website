@@ -61,28 +61,28 @@ const teamMembers = [
   {
     name: "Nitesh Bheda",
     role: "Director",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/nitesh-bheda-headshot-clay.jpg",
     phone: "07850 082541",
     email: "nitesh@bancproperty.com"
   },
   {
     name: "Andrew Crump",
     role: "Director",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/andrew-crump-headshot-clay.jpg",
     phone: "07565 543153",
     email: "andrew@bancproperty.com"
   },
   {
     name: "Vicki Glashier",
     role: "Office Manager",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/vicki-glashier-headshot-source-clay.jpg",
     phone: BANC_CONTACT.displayPhone,
     email: "vicki@bancproperty.com"
   },
   {
     name: "Kay Stanley",
     role: "Sales Progressor",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/kay-stanley-headshot-source-clay.jpg",
     phone: BANC_CONTACT.displayPhone,
     email: "kay@bancproperty.com"
   }

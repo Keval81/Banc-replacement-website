@@ -60,14 +60,14 @@ const teamMembers = [
   {
     name: "Nitesh Bheda",
     role: "Director - London",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/nitesh-bheda-headshot-clay.jpg",
     phone: "07850 082541",
     email: "nitesh@bancproperty.com"
   },
   {
     name: "Andrew Crump",
     role: "Director - Premier Homes",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
+    image: "/images/team/andrew-crump-headshot-clay.jpg",
     phone: "07565 543153",
     email: "andrew@bancproperty.com"
   }
