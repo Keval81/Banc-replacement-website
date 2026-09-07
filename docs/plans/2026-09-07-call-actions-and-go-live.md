@@ -159,6 +159,15 @@ Vercel, or issue a share link. Note for after launch: `lib/property-search/http.
 turns *any* repository error into a bare 503 with no log line, which is why
 this took an hour to see — log the underlying error.
 
+**Team hero on phones (23:15).** Keval: the mobile clay clip's "1 Station Road"
+sign wobbles, and it lands too zoomed in. The 4 Sep sign freeze was landscape
+only; the portrait clip was left alone. Phones now keep the portrait still
+(no film below md), the zoom is stepped by phone height (1.285 on a 667px
+phone → none above 930px; iPhone 14 gets 1.1) in a CSS module that reaches the
+first paint, and the homepage hero switches to its portrait poster on phones.
+604 tests, tsc, eslint, build green; rendered check at 375×667, 390×844,
+1440×900. Preview (Vercel login needed): https://banc-website-b8ssb5uju-digital-inroads.vercel.app
+
 Checklist (tick on the phone, not in DevTools):
 
 1. Low Power Mode **off**: homepage hero starts by itself; scroll — the four
