@@ -463,3 +463,15 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
 }
 
 /* Cache bust: Fri Feb 27 16:40:00 GMT 2026 */
+
+/* The hero's still while its film is not playing (iOS Low Power Mode). The
+   <video poster> attribute cannot change per viewport, so the still lives on
+   the wrapper: portrait on phones, landscape above, both fed from landingUi. */
+.hero-poster {
+  background-image: var(--hero-poster);
+}
+@media (max-width: 640px) {
+  .hero-poster {
+    background-image: var(--hero-poster-mobile);
+  }
+}

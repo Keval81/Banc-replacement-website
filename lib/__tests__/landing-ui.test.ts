@@ -502,3 +502,15 @@ test("the hero calls to action reveal after the tagline, one then the other", ()
 
   assert.match(css, /prefers-reduced-motion[\s\S]*?\.banc-action-reveal[\s\S]*?animation: none/);
 });
+
+test("gives the mobile film its own portrait poster, so a phone that refuses autoplay is not shown the landscape still zoomed in", () => {
+  for (const variant of ["classic", "aker"] as const) {
+    const { mobile, poster } = getLandingUi(variant).heroVideo;
+    assert.equal(mobile.poster, "/videos/hero-properties-2026-09-mobile-poster.jpg");
+    assert.notEqual(mobile.poster, poster);
+    assert.ok(
+      existsSync(join(process.cwd(), "public", mobile.poster)),
+      `missing mobile hero poster: ${mobile.poster}`,
+    );
+  }
+});

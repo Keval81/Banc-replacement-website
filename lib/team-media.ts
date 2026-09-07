@@ -8,12 +8,16 @@ export interface TeamPortrait {
   src: string;
 }
 
+// Phones keep the portrait still: the portrait cut's "No. 1" sign drifts with
+// the generator's camera push (the 4 Sep freeze fixed the landscape cut only),
+// and Keval read the moving sign as a wobble. The film plays from md up.
 export const TEAM_HERO_MEDIA = {
   landscapeImage: "/images/team/banc-team-clay.jpg",
   portraitImage: "/images/team/banc-team-clay-portrait.jpg",
   landscapeVideo: "/videos/team/banc-team-clay-landscape-seamless.mp4",
-  portraitVideo: "/videos/team/banc-team-clay-portrait-seamless.mp4",
 } as const;
+
+export const TEAM_HERO_FILM_MEDIA_QUERY = "(min-width: 768px)";
 
 export interface Size {
   width: number;
@@ -65,25 +69,44 @@ export const TEAM_HERO_BOTTOM_NAV_PX = 68;
 // Scaling about the TOP edge, not the middle: the figures stand mid-frame with
 // a third of the film as empty pavement beneath them, so cropping from the
 // bottom is what pushes them down clear of the copy while keeping the roof.
-// A full-height hero is what makes the three constraints — below the copy,
-// above the nav, still large enough to read — simultaneously satisfiable on a
-// 667px phone, where they otherwise contradict each other.
-export const TEAM_HERO_FRAMING: { mobile: HeroFraming } = {
-  mobile: {
-    minHeightSvh: 100,
-    // The hero starts below the 56px header, so a plain 100svh box would end
-    // 56px past the bottom of the screen and hide the figures' feet there.
-    headerOffsetPx: 56,
-    scale: 1.285,
-    originX: 0.5,
-    originY: 0,
-  },
-};
+// The zoom is only what the copy block forces on that height of phone — on an
+// iPhone 14 the flat 1.285 read as "too zoomed in", and there it is barely
+// needed. Steps, not a formula, because the stylesheet has to say the same
+// numbers in media queries (see TeamHeroMedia.module.css and its test).
+const TEAM_HERO_MOBILE_BASE = {
+  minHeightSvh: 100,
+  // The hero starts below the 56px header, so a plain 100svh box would end
+  // 56px past the bottom of the screen and hide the figures' feet there.
+  headerOffsetPx: 56,
+  originX: 0.5,
+  originY: 0,
+} as const;
+
+export const TEAM_HERO_MOBILE_FRAMING_STEPS: readonly {
+  maxViewportHeight: number;
+  scale: number;
+}[] = [
+  // Each step is the smallest zoom at which the shortest phone in its band
+  // still clears the copy block, keeps the figures 170px tall and stays above
+  // the bottom nav (see team-hero-framing.test.ts).
+  { maxViewportHeight: 700, scale: 1.285 },
+  { maxViewportHeight: 760, scale: 1.26 },
+  { maxViewportHeight: 820, scale: 1.19 },
+  { maxViewportHeight: 870, scale: 1.1 },
+  { maxViewportHeight: 930, scale: 1.03 },
+];
+
+export function getMobileFraming(viewport: Size): HeroFraming {
+  const step = TEAM_HERO_MOBILE_FRAMING_STEPS.find(
+    (candidate) => viewport.height <= candidate.maxViewportHeight,
+  );
+  return { ...TEAM_HERO_MOBILE_BASE, scale: step?.scale ?? 1 };
+}
 
 /** The hero box as it actually lands on screen, header and all. */
 export function getHeroBox(
   viewport: Size,
-  framing: HeroFraming = TEAM_HERO_FRAMING.mobile,
+  framing: HeroFraming = getMobileFraming(viewport),
 ): Size {
   return {
     width: viewport.width,

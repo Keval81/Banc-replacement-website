@@ -1,21 +1,30 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import fs from "node:fs";
+import path from "node:path";
+
 import {
   TEAM_HERO_BOTTOM_NAV_PX,
   TEAM_HERO_COPY_BLOCK_PX,
-  TEAM_HERO_FRAMING,
+  TEAM_HERO_MOBILE_FRAMING_STEPS,
   TEAM_HERO_SOURCE,
   TEAM_HERO_SUBJECT,
   getHeroBox,
+  getMobileFraming,
   getSubjectScreenBox,
   getVisibleSourceWindow,
 } from "../team-media.ts";
 
-// Phones the site actually sees, smallest first. 88svh of each is the hero box.
+// Phones the site actually sees, smallest first. 100svh minus the header is
+// the hero box.
 const PHONES = [
   { name: "iPhone SE / mini", width: 375, height: 667 },
+  { name: "iPhone 8 Plus", width: 414, height: 736 },
+  { name: "iPhone 13 mini", width: 375, height: 812 },
   { name: "iPhone 14", width: 390, height: 844 },
+  { name: "iPhone 14 Pro", width: 393, height: 852 },
+  { name: "iPhone XR / 11", width: 414, height: 896 },
   { name: "iPhone 14 Pro Max", width: 430, height: 932 },
 ] as const;
 
@@ -36,7 +45,7 @@ test("keeps all four clay figures inside the mobile hero on every phone", () => 
     const window = getVisibleSourceWindow({
       source: TEAM_HERO_SOURCE.portrait,
       container: heroBox(phone),
-      framing: TEAM_HERO_FRAMING.mobile,
+      framing: getMobileFraming(phone),
     });
 
     assert.ok(
@@ -57,7 +66,7 @@ test("keeps the clay figures large enough to read on every phone", () => {
     const box = getSubjectScreenBox({
       source: TEAM_HERO_SOURCE.portrait,
       container: heroBox(phone),
-      framing: TEAM_HERO_FRAMING.mobile,
+      framing: getMobileFraming(phone),
       subject: TEAM_HERO_SUBJECT,
     });
 
@@ -74,7 +83,7 @@ test("drops the clay figures below the hero copy on every phone", () => {
     const box = getSubjectScreenBox({
       source: TEAM_HERO_SOURCE.portrait,
       container: hero,
-      framing: TEAM_HERO_FRAMING.mobile,
+      framing: getMobileFraming(phone),
       subject: TEAM_HERO_SUBJECT,
     });
 
@@ -91,7 +100,7 @@ test("keeps the clay figures above the fixed mobile bottom navigation", () => {
     const box = getSubjectScreenBox({
       source: TEAM_HERO_SOURCE.portrait,
       container: hero,
-      framing: TEAM_HERO_FRAMING.mobile,
+      framing: getMobileFraming(phone),
       subject: TEAM_HERO_SUBJECT,
     });
     const floor = hero.height - TEAM_HERO_BOTTOM_NAV_PX;
@@ -101,4 +110,31 @@ test("keeps the clay figures above the fixed mobile bottom navigation", () => {
       `${phone.name}: figures run ${(box.bottom - floor).toFixed(0)}px under the bottom navigation`,
     );
   }
+});
+
+test("zooms the still only as far as the copy block forces, and not at all on tall phones", () => {
+  // Keval on an iPhone 14: the 1.285 zoom read as "too zoomed in". The copy
+  // block only forces a zoom on short phones, so tall ones get (almost) none.
+  assert.equal(getMobileFraming({ width: 375, height: 667 }).scale, 1.285);
+  assert.ok(getMobileFraming({ width: 390, height: 844 }).scale <= 1.1);
+  assert.equal(getMobileFraming({ width: 430, height: 932 }).scale, 1);
+  for (let i = 1; i < TEAM_HERO_MOBILE_FRAMING_STEPS.length; i++) {
+    assert.ok(
+      TEAM_HERO_MOBILE_FRAMING_STEPS[i].scale < TEAM_HERO_MOBILE_FRAMING_STEPS[i - 1].scale,
+      "steps must zoom less as phones get taller",
+    );
+  }
+});
+
+test("ships the mobile framing steps in the server-rendered stylesheet, not a client-injected style tag", () => {
+  const css = fs.readFileSync(
+    path.join(process.cwd(), "components/team/TeamHeroMedia.module.css"),
+    "utf8",
+  );
+  for (const step of TEAM_HERO_MOBILE_FRAMING_STEPS) {
+    assert.ok(css.includes(`(max-height: ${step.maxViewportHeight}px)`), `css lacks the ${step.maxViewportHeight}px step`);
+    assert.ok(css.includes(`scale(${step.scale})`), `css lacks scale(${step.scale})`);
+  }
+  assert.ok(css.includes("banc-team-clay-portrait.jpg"), "phones keep the portrait still");
+  assert.ok(css.includes("banc-team-clay.jpg"), "wider screens get the landscape still under the film");
 });

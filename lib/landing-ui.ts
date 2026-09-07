@@ -58,6 +58,7 @@ interface HeroVideo {
     width: number;
     height: number;
     preserveFullComposition: boolean;
+      poster: string;
   };
 }
 
@@ -132,6 +133,7 @@ const sharedActions = {
       width: 608,
       height: 1316,
       preserveFullComposition: true,
+      poster: "/videos/hero-properties-2026-09-mobile-poster.jpg",
     },
   },
   valuationAction: {

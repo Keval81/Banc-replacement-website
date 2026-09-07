@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, type CSSProperties } from "react";
 import { playWhenAllowed } from "@/lib/media-autoplay";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -150,7 +150,13 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: isLoaded ? 1 : 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0 h-full w-full"
+          className="hero-poster absolute inset-0 h-full w-full bg-cover bg-center"
+          style={
+            {
+              "--hero-poster": `url(${landingUi.heroVideo.poster})`,
+              "--hero-poster-mobile": `url(${landingUi.heroVideo.mobile.poster})`,
+            } as CSSProperties
+          }
         >
           <video
             ref={videoRef}
@@ -160,7 +166,6 @@ export default function Hero() {
             loop
             playsInline
             preload="auto"
-            poster={landingUi.heroVideo.poster}
             aria-hidden="true"
           >
             <source media="(max-width: 640px)" src={landingUi.heroVideo.mobile.src} />

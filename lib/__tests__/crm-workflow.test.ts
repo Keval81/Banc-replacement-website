@@ -9,12 +9,15 @@ const workflow = readFileSync(
 );
 const envExample = readFileSync(join(process.cwd(), ".env.example"), "utf8");
 
-test("runs the real Expert Agent sync twice a day and manually", () => {
+test("runs the real Expert Agent sync hourly and manually", () => {
   assert.match(workflow, /workflow_dispatch:/);
-  // Lunchtime and end of day UK time, as agreed with Nitesh on 7 Sep.
-  assert.match(workflow, /cron: ['"]30 11 \* \* \*['"]/);
-  assert.match(workflow, /cron: ['"]30 17 \* \* \*['"]/);
-  assert.doesNotMatch(workflow, /cron: ['"]17 \* \* \* \*['"]/);
+  // Hourly, not twice a day: GitHub fires scheduled workflows best-effort and
+  // on 7 Sep dropped both 11:30Z and 17:30Z slots, so two listings sat in the
+  // export until a manual run. Hourly at :17 actually delivers every 2-5 h,
+  // which is what keeps the "lunchtime / end of day" promise to Nitesh.
+  assert.match(workflow, /cron: ['"]17 \* \* \* \*['"]/);
+  assert.doesNotMatch(workflow, /cron: ['"]30 11 \* \* \*['"]/);
+  assert.doesNotMatch(workflow, /cron: ['"]30 17 \* \* \*['"]/);
   assert.match(
     workflow,
     /node --experimental-strip-types scripts\/sync-expert-agent\.ts/,
