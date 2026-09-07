@@ -146,6 +146,19 @@ Four copy/routing decisions for Keval before launch (label canon, Subscribe to
 alerts → homepage anchor, Saved → login wall, card Enquire modality); six items
 parked for after go-live. Site repo has 8 modified files, none committed.
 
+**Preview environment had wrong Supabase keys (22:30).** Keval saw "no
+properties" on the preview link: `/api/properties` answered 503 there while
+production served 61 for sale / 2 to let. Cause: Vercel *Preview* env carried a
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` Supabase rejects ("Invalid API key", set 1 Sep)
+and a service-role/URL pair the search repository could not use; production
+env was correct throughout. Fixed by resetting the three preview values to the
+validated ones from `.env.local` (anon = the project's `sb_publishable_XgCB…`
+key) and redeploying preview `banc-website-2d2806kg0`. Not yet verified from
+outside: share-link creation was blocked this session — open it signed in to
+Vercel, or issue a share link. Note for after launch: `lib/property-search/http.ts`
+turns *any* repository error into a bare 503 with no log line, which is why
+this took an hour to see — log the underlying error.
+
 Checklist (tick on the phone, not in DevTools):
 
 1. Low Power Mode **off**: homepage hero starts by itself; scroll — the four
