@@ -159,17 +159,17 @@ Vercel, or issue a share link. Note for after launch: `lib/property-search/http.
 turns *any* repository error into a bare 503 with no log line, which is why
 this took an hour to see — log the underlying error.
 
-**Team hero on phones (23:15, revised 23:50).** Keval: the mobile clay clip's
-"1 Station Road" sign wobbles, and it lands too zoomed in. The 4 Sep sign
-freeze was landscape only; the portrait clip was left alone. Keval wants film
-on phones, so the portrait cut got the same fix: the "No. 1" panel from frame
-one composited over every frame with a feathered edge
-(`banc-team-clay-portrait-seamless-signfixed.mp4`; panel SSIM vs frame 0
-0.61 → 0.99). The zoom is stepped by phone height (1.285 on a 667px phone →
-none above 930px; iPhone 14 gets 1.1) in a CSS module that reaches the first
-paint, and the homepage hero switches to its portrait poster on phones.
-604 tests, tsc, eslint, build green; rendered at 375×667, 390×844, 1440×900.
-Preview (Vercel login needed): https://banc-website-fpyqo48v8-digital-inroads.vercel.app
+**Team hero on phones (23:15, final 00:20).** Keval: the mobile clay clip's
+"1 Station Road" sign wobbles, and it lands too zoomed in. Sign: the portrait
+cut now carries the 4 Sep freeze too — panel from frame one composited over
+every frame with a feathered edge (`banc-team-clay-portrait-seamless-signfixed.mp4`,
+panel SSIM vs frame 0 0.61 → 0.99). Zoom: gone. The height-stepped version
+picked SE values on an iPhone 14 because Safari's small viewport there is
+~664px, not 844; instead the hero runs at least 770px tall on phones, so the
+figures start below the copy at cover scale. Framing CSS is a module (first
+paint, no jump); the homepage hero switches to its portrait poster on phones.
+605 tests, tsc, eslint, build green; rendered at 390×664, 375×548, 390×750.
+Preview (Vercel login needed): https://banc-website-3jq5bj3re-digital-inroads.vercel.app
 
 Checklist (tick on the phone, not in DevTools):
 
