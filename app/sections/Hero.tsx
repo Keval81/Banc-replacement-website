@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { playWhenAllowed } from "@/lib/media-autoplay";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { PropertyJourneySelector } from "@/components/PropertyJourneySelector";
@@ -49,7 +50,6 @@ const fallbackReviews: Review[] = [
 export default function Hero() {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [canAutoplay, setCanAutoplay] = useState(true);
   const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
   const [currentReview, setCurrentReview] = useState(0);
   const [totalReviews, setTotalReviews] = useState(51);
@@ -72,20 +72,20 @@ export default function Hero() {
       });
   }, []);
 
-  // Start video playback
-  const startPlayback = useCallback(async () => {
+  // Start playback; if the device refuses autoplay (iOS Low Power Mode), the
+  // first touch, scroll or key anywhere on the page starts the film instead.
+  const stopWaitingForGesture = useRef<() => void>(() => {});
+  const startPlayback = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    try {
-      video.muted = true;
-      video.playbackRate = landingUi.heroVideo.playbackRate;
-      await video.play();
-      setCanAutoplay(true);
-    } catch {
-      setCanAutoplay(false);
-    }
+    video.muted = true;
+    video.playbackRate = landingUi.heroVideo.playbackRate;
+    stopWaitingForGesture.current();
+    stopWaitingForGesture.current = playWhenAllowed({ video, gestureTarget: document });
   }, []);
+
+  useEffect(() => () => stopWaitingForGesture.current(), []);
 
   // Handle video end - advance to next
   const handleVideoEnd = useCallback(() => {
@@ -137,18 +137,11 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [reviews.length]);
 
-  const handleInteraction = () => {
-    if (!canAutoplay) {
-      startPlayback();
-    }
-  };
-
   const activeReview = reviews[currentReview];
 
   return (
     <section
       className="relative min-h-screen h-screen w-full overflow-hidden bg-banc-dark-deep text-white"
-      onClick={handleInteraction}
     >
       {/* Video background (mechanism unchanged) */}
       <div className="absolute inset-0 h-screen w-full overflow-hidden">
@@ -179,15 +172,6 @@ export default function Hero() {
 
       {/* Legibility scrim */}
       <div className="absolute inset-0 z-[3] bg-banc-dark-deep/45" />
-
-      {!canAutoplay && (
-        <button
-          className="absolute bottom-36 left-1/2 z-30 -translate-x-1/2 rounded-full border border-white/40 px-6 py-3 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-          onClick={startPlayback}
-        >
-          Play film
-        </button>
-      )}
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-screen h-screen w-full max-w-[1400px] flex-col justify-between px-5 pb-12 pt-20 lg:px-10 lg:pb-12 lg:pt-28">

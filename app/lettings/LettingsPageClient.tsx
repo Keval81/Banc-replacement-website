@@ -50,7 +50,7 @@ const serviceCards = [
   {
     title: "Yield Calculator",
     description: "Find out your gross rental yield.",
-    href: "/lettings/yield-calculator",
+    href: "/tools/yield-calculator",
     icon: TrendingUp,
   },
 ];

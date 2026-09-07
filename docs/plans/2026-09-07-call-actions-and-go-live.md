@@ -105,6 +105,65 @@ fees as banned, but someone should check that line with the Guild.
 3. WhatsApp mobile, if it comes → `NEXT_PUBLIC_BANC_WHATSAPP_NUMBER` in Vercel, redeploy.
 4. `dig` the TTL; confirm production is the final build.
 
+## Real-device pass — before James touches DNS (7 Sep evening / 8 Sep morning)
+
+Tonight's QA was headless Chrome, 14 routes × 2 viewports. Nothing has been
+tapped on a real phone yet. Keval's iPhone in Safari + one Android in Chrome,
+on the share link (`?_vercel_share=…`, valid to 8 Sep 16:44), then repeated on
+bancproperty.com once DNS answers.
+
+Two reports from Keval 7 Sep ~20:00, both investigated, neither a code defect:
+
+- **"This website has been blocked from automatically starting a call."** Keval's
+  iPhone, tapping the area lines in the menu drawer (screenshot 7 Sep 18:54).
+  Every `tel:` link on the site is a plain `<a href="tel:…">` — no click
+  handler, no script navigation, no click-tracking interceptor, no service
+  worker fetch handler, no GA tag on this deploy. The alert is Safari's own
+  anti-robodial rule: cancel the Call sheet three times in a row on one site
+  and Safari shows this instead of the sheet; "Allow Call" resets it. Testing
+  several numbers and cancelling each is exactly that pattern. Not a defect;
+  visitors who tap a number to actually call never see it. Sources: Apple
+  Community thread 250267236; tilda.cc/en/answers/a/website-call-blocked-en.
+- **Videos on mobile sit behind a play button.** Keval's screenshot shows a
+  yellow battery: Low Power Mode, in which iOS refuses autoplay for every
+  website. The hero (`app/sections/Hero.tsx`) used to render its own "Play film"
+  button when `play()` was refused. Every clip is H.264 High, yuv420p, no audio,
+  moov at byte 36 — all playable. **Changed 7 Sep ~21:00 (uncommitted):**
+  `lib/media-autoplay.ts` `playWhenAllowed()` tries `play()` and, if refused,
+  retries on the first touchend / pointerup / keydown anywhere on the page —
+  so a scroll starts the film. Wired into the hero, the ambient cards and the
+  team hero; the "Play film" button is gone (the poster is the still). 4 new
+  tests, 601 pass, `tsc` + eslint clean, `next build` 97/97. Preview deploy
+  `banc-website-qa2i6bzuw` for the phone check.
+
+**Navigation audit (21:30):** `docs/audits/2026-09-07-navigation-audit.md`,
+phone-readable at https://claude.ai/code/artifact/fd04eae6-20f9-43a0-b804-002b81665052.
+64 routes × 2 viewports, 106 destinations. Four wrong destinations fixed
+tonight (`/sales` Book Your Valuation → `/valuation`; sellers' guide View Sold
+Properties → `/sold-prices`; `/lettings` yield link → `/tools/yield-calculator`;
+FAQ Find Our Office → `/offices`), verified on preview `banc-website-cy2j225as`.
+Four copy/routing decisions for Keval before launch (label canon, Subscribe to
+alerts → homepage anchor, Saved → login wall, card Enquire modality); six items
+parked for after go-live. Site repo has 8 modified files, none committed.
+
+Checklist (tick on the phone, not in DevTools):
+
+1. Low Power Mode **off**: homepage hero starts by itself; scroll — the four
+   ambient cards play; `/the-team` hero plays.
+2. Low Power Mode **on**: poster shows, no button; the first scroll or tap
+   anywhere starts the hero, and the ambient cards start as they come into view
+   after that first touch.
+3. Bottom nav **Call** → dialler shows 01707 877781; `/offices` Mayfair number
+   → 020 3368 8972; an email link opens Mail; WhatsApp once the env var is set.
+4. Search → open a listing → swipe the gallery → Book viewing → Make an offer
+   → both emails land (sales@ / lettings@).
+5. Valuation → estimate shows → email lands with the caveat.
+6. Banc Bot: opens, keyboard does not cover the input, closes.
+7. Map embed loads on `/contact` and a listing; Street View opens a new tab.
+8. Rotate to landscape and back: no horizontal scroll, bottom nav clears the
+   home indicator.
+9. `/portal/landlord` and `/portal/vendor` render.
+
 ## Tuesday 2pm–3pm
 
 James edits rows 1 and 6 → Nitesh forwards "done" → verify: dig both hosts →

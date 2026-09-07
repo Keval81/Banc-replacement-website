@@ -208,7 +208,7 @@ export default function SalesPageClient() {
           <p className="mt-2 text-sm text-banc-dark-deep/90 lg:mt-3 lg:text-lg">
             Get a free, no-obligation valuation from our expert team.
           </p>
-          <Link href="/contact">
+          <Link href="/valuation">
             <Button className="mt-5 bg-white px-6 py-5 text-sm text-banc-focus hover:bg-white/90 active:bg-white/90 lg:mt-6 lg:px-8 lg:py-6 lg:text-base">
               Book Your Valuation
               <ArrowRight className="ml-2 h-4 w-4" />

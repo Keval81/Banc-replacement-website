@@ -187,7 +187,7 @@ export default function FAQPage() {
             </a>
             
             {/* Visit */}
-            <Link href="/contact" className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:border-banc-sky/50 transition-colors group">
+            <Link href="/offices" className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:border-banc-sky/50 transition-colors group">
               <div className="w-14 h-14 rounded-xl bg-banc-sky/20 flex items-center justify-center mx-auto mb-4">
                 <Building className="h-7 w-7 text-banc-sky" />
               </div>

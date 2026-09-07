@@ -264,7 +264,7 @@ export default function SellersGuidePage() {
                 Book Free Valuation
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Link href="/sales/properties">
+              <Link href="/sold-prices">
                 <Button
                   variant="outline"
                   className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base font-medium rounded-full transition-all duration-300"

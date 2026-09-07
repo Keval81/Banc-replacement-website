@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { playWhenAllowed } from "@/lib/media-autoplay";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
   TEAM_HERO_FRAMING,
@@ -9,6 +11,14 @@ import {
 
 export function TeamHeroMedia() {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const showVideo = shouldRenderTeamHeroVideo(prefersReducedMotion);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!showVideo || !video) return;
+    return playWhenAllowed({ video, gestureTarget: document });
+  }, [showVideo]);
 
   return (
     <div className="absolute inset-0">
@@ -17,8 +27,9 @@ export function TeamHeroMedia() {
         aria-label="The Banc Property Group team outside the Cuffley office, recreated in clay"
         className="team-hero-frame team-hero-fallback absolute inset-0 bg-cover bg-center"
       />
-      {shouldRenderTeamHeroVideo(prefersReducedMotion) && (
+      {showVideo && (
         <video
+          ref={videoRef}
           // The portrait cut is framed wide — the whole two-storey building and a
           // deep apron of pavement — so on a phone the team end up tiny. The
           // mobile framing in lib/team-media.ts scales about the TOP edge, which

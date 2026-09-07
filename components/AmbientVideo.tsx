@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { playWhenAllowed } from "@/lib/media-autoplay";
 import { shouldPlayAmbientVideo, type OwnedFilm } from "@/lib/owned-film";
 
 interface AmbientVideoProps {
@@ -30,6 +31,7 @@ export function AmbientVideo({
   const prefersReducedMotion = usePrefersReducedMotion();
   const [inView, setInView] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const element = containerRef.current;
@@ -46,6 +48,12 @@ export function AmbientVideo({
 
   const playing = shouldPlayAmbientVideo({ prefersReducedMotion, inView });
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!playing || !video) return;
+    return playWhenAllowed({ video, gestureTarget: document });
+  }, [playing]);
+
   return (
     <div ref={containerRef} className={`relative h-full w-full ${className}`}>
       <Image
@@ -58,6 +66,7 @@ export function AmbientVideo({
       />
       {playing && (
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           width={film.width}
           height={film.height}
