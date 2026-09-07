@@ -61,12 +61,33 @@ MX, SPF TXT, autoconfig, imap, pop3, ftp, NS: untouched.
 - Lettings requests get no figure (no public rent comparables) and route to the
   lettings inbox as a rental appraisal.
 
+## Nitesh's inputs — received 17:45, wired the same evening (`a630a9a`)
+
+| Input | Value | Where it went |
+|---|---|---|
+| Inboxes | sales@ · lettings@ · info@bancproperty.com | Vercel prod env: `BANC_SALES_INBOX`, `BANC_LETTINGS_INBOX`, `BANC_OFFICE_INBOX`, `BANC_VALUATIONS_INBOX`=sales@ |
+| Area lines | Cuffley & Northaw 01707 877781 · Brookmans Park & Potters Bar 01707 907186 · Goffs Oak & Cheshunt 01992 919085 | `BANC_PHONE_LINES` — header menu |
+| CMP certificate | `public/documents/cmp-membership-certificate.pdf` | Footer accreditation strip, text chip → PDF. **Logo due 8 Sep morning** — swap the chip for the image |
+| Contact page | Clay shopfront on the hero, map first on mobile | `app/contact/ContactPageClient.tsx` |
+
+**Routing as it stands** — viewing → sales@ or lettings@ by the listing's department ·
+contact form → info@ · alerts block → sales@/lettings@ by buy/rent · valuation → sales@ ·
+rental valuation → lettings@ · offer → sales@/lettings@ by listing · newsletter → info@.
+
+**Tested 18:13 on production, one of each** — Resend reports every one `delivered`
+to the Banc mailboxes (hermes/athena.hosts.co.uk accepted them). The very first
+contact-form test landed on the old address because a warm function still held the
+previous env; the re-send went to info@. Nitesh to confirm they are visible in the
+mailboxes.
+
+**A real lead arrived at 16:20** ("7 Mount Drive, AL2 2NP", valuation, within 1
+month) while the forms still pointed at Keval's inbox — forward it to Nitesh.
+
 ## Keval — tomorrow morning
 
-1. Put the three inboxes into Vercel (`BANC_SALES_INBOX`, `BANC_LETTINGS_INBOX`,
-   `BANC_OFFICE_INBOX`, and `BANC_VALUATIONS_INBOX` = sales). No rebuild.
-2. Test every form into the real inboxes and confirm with Nitesh each landed.
-3. Area numbers → `BANC_PHONE_LINES`; CMP badge + PDF → footer; WhatsApp → env.
+1. ~~Inboxes~~ done tonight. ~~Forms tested~~ done tonight — get Nitesh's confirmation.
+2. CMP logo → replace the footer text chip with the image (same PDF link).
+3. WhatsApp mobile, if it comes → `NEXT_PUBLIC_BANC_WHATSAPP_NUMBER` in Vercel, redeploy.
 4. `dig` the TTL; confirm production is the final build.
 
 ## Tuesday 2pm–3pm
