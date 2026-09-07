@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { CMP_CERTIFICATE_URL } from "@/lib/banc-contact";
 import { Instagram, Youtube, Facebook, Phone, Mail, MapPin, Loader2, Check } from "lucide-react";
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -250,6 +251,18 @@ export default function Footer() {
                 className={`${logo.w} h-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300`}
               />
             ))}
+            {/* Client Money Protection — the certificate is the thing that
+                matters for compliance, so it links straight to the PDF. The
+                scheme's logo replaces this text chip once Nitesh sends it
+                (due the morning of 8 Sep). */}
+            <a
+              href={CMP_CERTIFICATE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-2 rounded-md border border-banc-line px-3 text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable transition-colors hover:border-banc-focus hover:text-banc-focus"
+            >
+              <span className="text-banc-focus">CMP</span> Client Money Protected · certificate
+            </a>
           </div>
         </div>
       </div>

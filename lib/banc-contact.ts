@@ -32,13 +32,23 @@ export interface BancPhoneLine {
 //
 // Mayfair was dropped from this menu on Nitesh's instruction (7 Sep) — the
 // number itself stays on the Mayfair office page and the offices index, it is
-// simply no longer offered as an area line. Two further landlines are due from
-// him; each is one entry here and needs nothing else.
+// simply no longer offered as an area line. The two further landlines arrived
+// from him on the evening of 7 Sep.
 export const BANC_PHONE_LINES: readonly BancPhoneLine[] = [
   {
-    area: "Cuffley",
+    area: "Cuffley & Northaw",
     displayPhone: BANC_CONTACT.displayPhone,
     callHref: BANC_CONTACT.callHref,
+  },
+  {
+    area: "Brookmans Park & Potters Bar",
+    displayPhone: "01707 907186",
+    callHref: "tel:01707907186",
+  },
+  {
+    area: "Goffs Oak & Cheshunt",
+    displayPhone: "01992 919085",
+    callHref: "tel:01992919085",
   },
 ] as const;
 
@@ -83,3 +93,6 @@ export function officeInbox(): string {
 // alerts block needs the same URL, so it lives in one place now.
 export const LIFE_MAGAZINE_URL =
   "https://pageturner.guildproperty.co.uk/bancp1";
+
+/** Banc's Client Money Protection membership certificate, as sent by Nitesh on 7 Sep. */
+export const CMP_CERTIFICATE_URL = "/documents/cmp-membership-certificate.pdf";

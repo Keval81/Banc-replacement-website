@@ -101,15 +101,18 @@ export default function ContactPageClient() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-banc-dark-deep py-28 lg:py-36">
-        {/* Hero Background Image */}
+      <section className="relative overflow-hidden bg-banc-dark-deep py-20 lg:py-24">
+        {/* The team outside the Cuffley office — the same claymation shopfront
+            the emails open with. Nitesh asked for it here on 7 Sep; it replaces
+            a stock photograph of somewhere else. Kept brighter than the old
+            wash so the shop actually reads. */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
+            src="/images/team/banc-team-clay.jpg"
             alt=""
-            className="w-full h-full object-cover opacity-40"
+            className="h-full w-full object-cover object-[center_35%] opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/85 via-banc-dark-deep/50 to-banc-dark-deep/20" />
         </div>
         {/* Background gradient accent */}
         <div className="absolute inset-0 bg-gradient-to-br from-banc-sky-dark/30 via-transparent to-transparent" />
@@ -162,8 +165,9 @@ export default function ContactPageClient() {
         </div>
       </section>
 
-      {/* Contact Info & Map Section */}
-      <section className="py-24 lg:py-32">
+      {/* Contact Info & Map Section — the map sits directly under the hero and
+          comes first on a phone (Nitesh, 7 Sep: "move the map further up"). */}
+      <section className="pb-24 pt-12 lg:pb-32 lg:pt-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Contact Card */}
@@ -272,7 +276,7 @@ export default function ContactPageClient() {
 
             {/* Google Maps Embed */}
             <motion.div
-              className="group relative overflow-hidden rounded-3xl shadow-xl shadow-banc-dark-deep/5"
+              className="group relative order-first overflow-hidden rounded-3xl shadow-xl shadow-banc-dark-deep/5 lg:order-none"
               variants={scaleIn}
               initial="initial"
               whileInView="whileInView"

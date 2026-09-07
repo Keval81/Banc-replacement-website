@@ -127,6 +127,9 @@ export function buildOfferEnquiry(
     message: lines.join("\n"),
     consent: true,
     website: "",
+    // Offers reach the team that can act on them — sales, or lettings for a
+    // rental — not the general tray (Nitesh, 7 Sep call, 00:57).
+    department: property.department,
   };
 }
 
