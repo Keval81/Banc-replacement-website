@@ -135,6 +135,7 @@ test("ships the mobile framing steps in the server-rendered stylesheet, not a cl
     assert.ok(css.includes(`(max-height: ${step.maxViewportHeight}px)`), `css lacks the ${step.maxViewportHeight}px step`);
     assert.ok(css.includes(`scale(${step.scale})`), `css lacks scale(${step.scale})`);
   }
-  assert.ok(css.includes("banc-team-clay-portrait.jpg"), "phones keep the portrait still");
+  assert.ok(css.includes("banc-team-clay-portrait.jpg"), "phones keep the portrait still under the film");
+  assert.ok(!css.includes("display: none"), "phones play the film too — nothing hides it");
   assert.ok(css.includes("banc-team-clay.jpg"), "wider screens get the landscape still under the film");
 });

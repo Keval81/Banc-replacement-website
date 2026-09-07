@@ -8,16 +8,17 @@ export interface TeamPortrait {
   src: string;
 }
 
-// Phones keep the portrait still: the portrait cut's "No. 1" sign drifts with
-// the generator's camera push (the 4 Sep freeze fixed the landscape cut only),
-// and Keval read the moving sign as a wobble. The film plays from md up.
+// The phone cut is the portrait clip with its "No. 1" sign frozen from frame
+// one and composited back with a feathered edge (the 4 Sep fix did the same
+// for the landscape cut; the portrait's sign was left drifting with the camera
+// push and read as a wobble). Measured: panel SSIM against frame 0 went from
+// 0.61 mean / 0.37 min to 0.99 / 0.98.
 export const TEAM_HERO_MEDIA = {
   landscapeImage: "/images/team/banc-team-clay.jpg",
   portraitImage: "/images/team/banc-team-clay-portrait.jpg",
   landscapeVideo: "/videos/team/banc-team-clay-landscape-seamless.mp4",
+  portraitVideo: "/videos/team/banc-team-clay-portrait-seamless-signfixed.mp4",
 } as const;
-
-export const TEAM_HERO_FILM_MEDIA_QUERY = "(min-width: 768px)";
 
 export interface Size {
   width: number;

@@ -6,7 +6,6 @@ import test from "node:test";
 import {
   getTeamPortrait,
   shouldRenderTeamHeroVideo,
-  TEAM_HERO_FILM_MEDIA_QUERY,
   TEAM_HERO_MEDIA,
 } from "../team-media.ts";
 
@@ -27,13 +26,13 @@ test("maps each Banc team member to a dedicated clay headshot", () => {
   }
 });
 
-test("plays the film only from tablet width up; phones keep the still, whose sign does not move", () => {
+test("plays the clay film on every width; the phone cut carries the frozen sign", () => {
   assert.deepEqual(TEAM_HERO_MEDIA, {
     landscapeImage: "/images/team/banc-team-clay.jpg",
     portraitImage: "/images/team/banc-team-clay-portrait.jpg",
     landscapeVideo: "/videos/team/banc-team-clay-landscape-seamless.mp4",
+    portraitVideo: "/videos/team/banc-team-clay-portrait-seamless-signfixed.mp4",
   });
-  assert.equal(TEAM_HERO_FILM_MEDIA_QUERY, "(min-width: 768px)");
   assert.equal(shouldRenderTeamHeroVideo(true), false);
   assert.equal(shouldRenderTeamHeroVideo(false), true);
 

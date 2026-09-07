@@ -3,11 +3,7 @@
 import { useEffect, useRef } from "react";
 import { playWhenAllowed } from "@/lib/media-autoplay";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import {
-  TEAM_HERO_FILM_MEDIA_QUERY,
-  TEAM_HERO_MEDIA,
-  shouldRenderTeamHeroVideo,
-} from "@/lib/team-media";
+import { TEAM_HERO_MEDIA, shouldRenderTeamHeroVideo } from "@/lib/team-media";
 import styles from "./TeamHeroMedia.module.css";
 
 export function TeamHeroMedia() {
@@ -40,10 +36,11 @@ export function TeamHeroMedia() {
           aria-hidden="true"
         >
           <source
-            src={TEAM_HERO_MEDIA.landscapeVideo}
+            src={TEAM_HERO_MEDIA.portraitVideo}
             type="video/mp4"
-            media={TEAM_HERO_FILM_MEDIA_QUERY}
+            media="(max-width: 767px)"
           />
+          <source src={TEAM_HERO_MEDIA.landscapeVideo} type="video/mp4" />
         </video>
       )}
     </div>

@@ -8,9 +8,6 @@
   .fallback {
     background-image: url("/images/team/banc-team-clay-portrait.jpg");
   }
-  .film {
-    display: none;
-  }
   .frame {
     transform-origin: 50% 0;
   }
