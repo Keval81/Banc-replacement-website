@@ -140,14 +140,19 @@ export interface TenantFee {
   description: string;
 }
 
+// Mirrors Banc's published "Fees to Tenants" schedule (public/documents/fees-to-tenants.pdf),
+// taken from the old site on 7 Sep 2026. The figures that were here before — £100
+// variation, £15/hr, £100 change of sharer — were not Banc's and are gone.
 export const TENANT_FEES = [
-  { title: "Holding Deposit", amount: "One week's rent", description: "To reserve the property. This will be withheld if you withdraw, fail Right to Rent checks, provide false or misleading information, or fail to sign the tenancy agreement." },
-  { title: "Security Deposit", amount: "5 weeks (<£50k) / 6 weeks (>£50k)", description: "Covered under the Tenant Fees Act 2019. This covers damages or defaults by the tenant during the tenancy. Protected in a government-approved scheme." },
-  { title: "Unpaid Rent Interest", amount: "3% above BoE base rate", description: "Interest charged on unpaid rent from the due date, applicable only after the rent has been outstanding for 14 days or more." },
-  { title: "Lost Keys / Security Device", amount: "Actual cost + £15/hr", description: "Cost of replacement keys or security devices, plus £15 per hour for any additional time required to facilitate the replacement." },
-  { title: "Variation of Contract", amount: "£100 (incl. VAT)", description: "Fee payable when a tenant requests a change to the tenancy agreement terms, such as adding a permitted occupier or amending clauses." },
-  { title: "Change of Sharer", amount: "£100 per replacement (incl. VAT)", description: "Fee for adding or changing a tenant on the agreement. Covers new tenant referencing, Right to Rent checks, and associated paperwork." },
-  { title: "Early Termination", amount: "Landlord's re-letting costs", description: "Should you wish to terminate your tenancy early, you will be liable for the landlord's reasonable costs in re-letting the property, plus all rent due until the new tenancy begins." },
+  { title: "Holding Deposit", amount: "One week's rent", description: "Holds the property for 14 days. Withheld if you withdraw, fail Right to Rent checks, give false or misleading information, or do not sign the tenancy agreement in time." },
+  { title: "Security Deposit", amount: "Up to five weeks' rent", description: "Six weeks where the annual rent is over £50,000. Protected in a government-authorised scheme and returned at the end of the tenancy, subject to the condition of the property." },
+  { title: "Set-up, referencing and additional tenant", amount: "£0", description: "Referencing for up to two tenants — identity, immigration and visa checks, credit checks, employer and landlord references — plus negotiating and arranging the tenancy agreement. No charge to the tenant." },
+  { title: "Inventory and Schedule of Condition", amount: "From £100 (inc VAT), if requested by you", description: "Preparing the inventory, explaining how appliances work and taking meter readings. Dependent on the size of the property." },
+  { title: "Amendment Fee", amount: "£50 (inc VAT) per change, per person", description: "Contract negotiation, amending terms and updating your tenancy agreement during the tenancy. Changes you request are capped at £50, or reasonable costs if higher." },
+  { title: "Early Termination", amount: "Landlord's loss or agent's reasonable costs", description: "Where you ask to leave early. This cannot exceed the financial loss the landlord suffers or the reasonable costs the agent has incurred in agreeing it." },
+  { title: "Lost Keys or Security Devices", amount: "£20 admin (keys), £20 admin (fobs) + replacement cost", description: "Plus the cost of a locksmith should the locks need to be changed." },
+  { title: "Call-outs caused by the tenant", amount: "£30 per hour (inc VAT) + costs", description: "Where your actions result in the agent or a nominated contractor attending the property, time to put it right is charged at the prevailing rate plus any actual costs." },
+  { title: "Late Rent", amount: "3% above Bank of England base rate", description: "Only where written into the tenancy agreement, and only on rent more than 14 days overdue, for each day it stays outstanding." },
 ] as const satisfies readonly TenantFee[];
 
 export const TENANTS_GUIDE = {

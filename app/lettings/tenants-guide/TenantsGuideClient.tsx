@@ -28,6 +28,7 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { TENANT_FEES, TENANT_GUIDE_SECTIONS } from "@/lib/banc-content/tenants-guide";
+import { FEES_TO_TENANTS_URL } from "@/lib/banc-contact";
 
 const sectionVisuals = [
   { icon: Calculator, highlightIcons: [Wallet, Clock, ShieldCheck] },
@@ -333,6 +334,7 @@ export default function TenantsGuideClient() {
             viewport={{ once: true }}
             className="mt-10 text-center text-sm text-white/50 max-w-2xl mx-auto"
           >
+            <a href={FEES_TO_TENANTS_URL} target="_blank" rel="noopener noreferrer" className="mr-2 inline-flex min-h-11 items-center font-semibold text-banc-sky underline underline-offset-4 hover:text-white">Download the full Fees to Tenants schedule (PDF)</a>
             All fees are inclusive of VAT where applicable. These fees are accurate as of the Tenant Fees Act 2019. 
             For any questions about fees or charges, please contact our lettings team who will be happy to help.
           </motion.p>

@@ -96,3 +96,8 @@ export const LIFE_MAGAZINE_URL =
 
 /** Banc's Client Money Protection membership certificate, as sent by Nitesh on 7 Sep. */
 export const CMP_CERTIFICATE_URL = "/documents/cmp-membership-certificate.pdf";
+
+/** The published fee schedules and complaints procedure, carried over from the old site on 7 Sep 2026. */
+export const FEES_TO_LANDLORDS_URL = "/documents/fees-to-landlords.pdf";
+export const FEES_TO_TENANTS_URL = "/documents/fees-to-tenants.pdf";
+export const COMPLAINTS_PROCEDURE_URL = "/documents/complaints-procedure.pdf";

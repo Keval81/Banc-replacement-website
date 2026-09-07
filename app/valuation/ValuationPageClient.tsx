@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +83,16 @@ export default function ValuationPage() {
   });
   const [consent, setConsent] = useState(false);
   const [estimate, setEstimate] = useState<ValuationEstimateView | null>(null);
+
+  // The landlords' guide links here as /valuation?intent=let. Read once on
+  // mount rather than through useSearchParams, which would force a Suspense
+  // boundary around a page that is otherwise fine to render statically.
+  useEffect(() => {
+    const intent = new URLSearchParams(window.location.search).get("intent");
+    if (intent === "let" || intent === "lettings") {
+      setFormData((prev) => ({ ...prev, department: "lettings" }));
+    }
+  }, []);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

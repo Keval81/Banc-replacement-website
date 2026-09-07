@@ -21,7 +21,7 @@ import {
   ChevronDown
 } from "lucide-react";
 import Link from "next/link";
-import { BANC_CONTACT } from "@/lib/banc-contact";
+import { BANC_CONTACT, COMPLAINTS_PROCEDURE_URL } from "@/lib/banc-contact";
 
 export const metadata: Metadata = withPageDefaults("/complaints", {
   title: "Complaints Procedure | Banc Property Group",
@@ -137,7 +137,11 @@ export default function ComplaintsPage() {
               <p className="text-lg text-banc-muted-readable mb-8">
                 We take all complaints seriously and are committed to dealing with them promptly, 
                 fairly, and confidentially. Our complaints procedure is designed to be simple 
-                and straightforward.
+                and straightforward.{" "}
+                <a href={COMPLAINTS_PROCEDURE_URL} target="_blank" rel="noopener noreferrer" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
+                  Download the full procedure (PDF)
+                </a>
+                .
               </p>
               
               <div className="space-y-4">

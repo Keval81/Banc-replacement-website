@@ -18,7 +18,7 @@ import {
   Phone
 } from "lucide-react";
 import Link from "next/link";
-import { BANC_CONTACT } from "@/lib/banc-contact";
+import { BANC_CONTACT, FEES_TO_LANDLORDS_URL, FEES_TO_TENANTS_URL } from "@/lib/banc-contact";
 
 export const metadata: Metadata = withPageDefaults("/lettings/fees", {
   title: "Lettings Fees | Banc Property Group",
@@ -28,7 +28,8 @@ export const metadata: Metadata = withPageDefaults("/lettings/fees", {
 
 export const revalidate = 3600;
 
-// Tenant fees - compliant with Tenant Fees Act 2019
+// Tenant fees — Banc's published schedule (public/documents/fees-to-tenants.pdf),
+// taken from the old site on 7 Sep 2026, within the Tenant Fees Act 2019.
 const tenantFees = {
   permitted: [
     {
@@ -51,41 +52,52 @@ const tenantFees = {
       note: "Returned at end of tenancy, subject to property condition"
     },
     {
-      name: "Rent",
-      amount: "As advertised",
-      description: "Monthly rental payments as specified in your tenancy agreement.",
+      name: "Set-up, referencing and additional tenant",
+      amount: "£0",
+      description: "Referencing for up to two tenants, contract negotiation and arranging the tenancy. No charge to the tenant.",
       refundable: false
     },
     {
-      name: "Utilities",
-      amount: "Variable",
-      description: "Gas, electricity, water, and sewerage charges.",
+      name: "Inventory and Schedule of Condition",
+      amount: "From £100 (inc VAT), if requested by the tenant",
+      description: "Dependent on the size of the property and outbuildings.",
       refundable: false
     },
     {
-      name: "Council Tax",
-      amount: "Variable",
-      description: "Payable to the local authority.",
+      name: "Amendment Fee",
+      amount: "£50 (inc VAT) per change, per person",
+      description: "Amending terms and updating the tenancy agreement during the tenancy. Tenant-requested changes are capped at £50, or reasonable costs if higher.",
       refundable: false
     },
     {
-      name: "TV Licence",
-      amount: "Annual fee",
-      description: "Required if you watch or record live TV.",
+      name: "Lost Keys or Security Devices",
+      amount: "£20 admin (keys), £20 admin (fobs) + replacement cost",
+      description: "Plus the cost of a locksmith should the locks need to be changed.",
       refundable: false
     },
     {
-      name: "Communication Services",
-      amount: "Variable",
-      description: "Telephone, broadband, satellite/cable TV installation and subscription.",
+      name: "Call-outs caused by the tenant",
+      amount: "£30 per hour (inc VAT) + costs",
+      description: "Where the tenant's actions result in the agent or a contractor attending the property.",
       refundable: false
-    }
+    },
+    {
+      name: "Late Rent",
+      amount: "3% above Bank of England base rate",
+      description: "Only where written into the tenancy agreement, on rent more than 14 days overdue.",
+      refundable: false
+    },
+    {
+      name: "Early Termination",
+      amount: "Landlord's loss or agent's reasonable costs",
+      description: "Where requested by the tenant; cannot exceed the landlord's financial loss or the agent's reasonable costs.",
+      refundable: false
+    },
   ],
   banned: [
     "Application/Administration fees",
     "Referencing fees",
     "Check-in/check-out fees",
-    "Inventory fees",
     "Renewal fees",
     "Professional cleaning fees (as a requirement)",
     "Pet fees/deposits (separate from general deposit)"
@@ -180,6 +192,15 @@ export default function LettingsFeesPage() {
               Complete transparency on all fees and charges. We believe in being 
               upfront about costs so there are no surprises.
             </p>
+            {/* The two published schedules, as on the old site. */}
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-6 text-base font-semibold text-banc-dark-deep transition-colors hover:bg-white/90">
+                Fees to landlords (PDF)
+              </a>
+              <a href={FEES_TO_TENANTS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl border-2 border-white px-6 text-base font-semibold text-white transition-colors hover:bg-white/10">
+                Fees to tenants (PDF)
+              </a>
+            </div>
           </div>
         </div>
       </section>

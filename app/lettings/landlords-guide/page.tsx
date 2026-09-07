@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { FEES_TO_LANDLORDS_URL } from "@/lib/banc-contact";
+import Link from "next/link";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -118,16 +120,23 @@ export default function LandlordsGuidePage() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
-                Book Free Valuation
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-6 text-base"
-              >
-                Download Guide
-              </Button>
+              {/* Both of these went nowhere until 7 Sep. The valuation opens on
+                  the lettings option; the guide button is the published fee
+                  schedule, which is what the old site's "download" was. */}
+              <Link href="/valuation?intent=let">
+                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
+                  Book Free Rental Valuation
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-6 text-base"
+                >
+                  Fees to landlords (PDF)
+                </Button>
+              </a>
             </div>
           </div>
         </div>
