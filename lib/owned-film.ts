@@ -36,7 +36,7 @@ const beat = (
 export const OWNED_FILMS = {
   keysHandover: beat(
     "card-keys",
-    "A couple stand on the lawn outside their new home, keys held up",
+    "A couple embrace on the lawn outside the home they have just bought",
   ),
   movingIn: beat(
     "card-moving",
