@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { enquiryInboxFor } from "@/lib/banc-contact";
-import { sendEmail, emailTemplates } from "@/lib/email";
+import { enquiryInboxFor, officeInbox } from "@/lib/banc-contact";
+import { emailTemplates } from "@/lib/email";
+import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -78,32 +79,38 @@ export async function POST(request: NextRequest) {
       status: "new",
     });
 
-    // Send confirmation email to user
-    const userEmailResult = await sendEmail({
-      to: email,
-      from: process.env.FROM_EMAIL || "noreply@bancproperty.com",
-      ...emailTemplates.contactConfirmation({ name, subject }),
-    });
-
     // Route to the team that can act on it. A property enquiry names its
     // department; the general contact form does not, and still goes to the
     // office inbox.
-    const notificationInbox = department
-      ? enquiryInboxFor(department)
-      : process.env.ADMIN_EMAIL || "office@bancproperty.com";
+    const notificationInbox = department ? enquiryInboxFor(department) : officeInbox();
 
-    // Send notification email to admin
-    const adminEmailResult = await sendEmail({
-      to: notificationInbox,
-      from: process.env.FROM_EMAIL || "noreply@bancproperty.com",
-      ...emailTemplates.contactNotification({
-        name,
-        email,
-        phone,
-        subject,
-        message,
-      }),
+    // The lead reaching the team is the job. If it cannot be delivered the
+    // visitor is told, rather than shown a confirmation that isn't true.
+    const delivery = await deliverEnquiry({
+      team: {
+        to: notificationInbox,
+        replyTo: email,
+        ...emailTemplates.contactNotification({ name, email, phone, subject, message }),
+      },
+      customer: {
+        to: email,
+        replyTo: notificationInbox,
+        ...emailTemplates.contactConfirmation({ name, subject }),
+      },
     });
+
+    if (!delivery.ok) {
+      const unreachable = delivery.reason === "mail-not-configured";
+      console.error("[Contact API] enquiry not delivered:", delivery.reason, submission.id);
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "We could not send your message just now. Please call us on 01707 877781 and we will pick it up straight away.",
+        },
+        { status: unreachable ? 503 : 502 }
+      );
+    }
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {
@@ -129,7 +136,7 @@ export async function POST(request: NextRequest) {
         message: "Your message has been sent successfully",
         data: {
           id: submission.id,
-          emailSent: userEmailResult.success && adminEmailResult.success,
+          confirmationSent: delivery.confirmationSent,
         },
       },
       { status: 200 }

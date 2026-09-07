@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { sendEmail, emailTemplates } from "@/lib/email";
+import { emailTemplates } from "@/lib/email";
+import { deliverEnquiry } from "@/lib/enquiry-delivery";
+import { valuationInbox } from "@/lib/banc-contact";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -80,33 +82,47 @@ export async function POST(request: NextRequest) {
       status: "new",
     });
 
-    // Send confirmation email to user
-    const userEmailResult = await sendEmail({
-      to: data.email,
-      from: process.env.FROM_EMAIL || "noreply@bancproperty.com",
-      ...emailTemplates.valuationConfirmation({
-        firstName: data.firstName,
-        address: data.address,
-      }),
+    // The valuation lead reaching the team is the job; the applicant's
+    // confirmation is a courtesy and never fails the request on its own.
+    const inbox = valuationInbox();
+    const delivery = await deliverEnquiry({
+      team: {
+        to: inbox,
+        replyTo: data.email,
+        ...emailTemplates.valuationNotification({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          address: data.address,
+          postcode: data.postcode,
+          propertyType: data.propertyType || "Not specified",
+          bedrooms: data.bedrooms || "Not specified",
+          timeframe: data.timeframe || "Not specified",
+          message: data.message,
+        }),
+      },
+      customer: {
+        to: data.email,
+        replyTo: inbox,
+        ...emailTemplates.valuationConfirmation({
+          firstName: data.firstName,
+          address: data.address,
+        }),
+      },
     });
 
-    // Send notification email to valuations team
-    const adminEmailResult = await sendEmail({
-      to: process.env.VALUATIONS_EMAIL || "valuations@bancproperty.com",
-      from: process.env.FROM_EMAIL || "noreply@bancproperty.com",
-      ...emailTemplates.valuationNotification({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        postcode: data.postcode,
-        propertyType: data.propertyType || "Not specified",
-        bedrooms: data.bedrooms || "Not specified",
-        timeframe: data.timeframe || "Not specified",
-        message: data.message,
-      }),
-    });
+    if (!delivery.ok) {
+      console.error("[Valuation API] lead not delivered:", delivery.reason, valuationRequest.id);
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "We could not send your request just now. Please call us on 01707 877781 and we will book it in for you.",
+        },
+        { status: delivery.reason === "mail-not-configured" ? 503 : 502 }
+      );
+    }
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {
@@ -132,7 +148,7 @@ export async function POST(request: NextRequest) {
         message: "Your valuation request has been submitted successfully",
         data: {
           id: valuationRequest.id,
-          emailSent: userEmailResult.success && adminEmailResult.success,
+          confirmationSent: delivery.confirmationSent,
         },
       },
       { status: 200 }

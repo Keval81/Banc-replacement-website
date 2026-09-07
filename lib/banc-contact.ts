@@ -16,19 +16,17 @@ export interface BancPhoneLine {
   callHref: string;
 }
 
-// Area lines offered by the header phone menu. Brookmans Park and the third
-// area are still pending from Nitesh (N1 in the 2026-09-02 action plan);
-// adding an entry here is the only change needed to surface them.
+// Area lines offered by the header phone menu.
+//
+// Mayfair was dropped from this menu on Nitesh's instruction (7 Sep) — the
+// number itself stays on the Mayfair office page and the offices index, it is
+// simply no longer offered as an area line. Two further landlines are due from
+// him; each is one entry here and needs nothing else.
 export const BANC_PHONE_LINES: readonly BancPhoneLine[] = [
   {
     area: "Cuffley",
     displayPhone: BANC_CONTACT.displayPhone,
     callHref: BANC_CONTACT.callHref,
-  },
-  {
-    area: "Mayfair",
-    displayPhone: BANC_MAYFAIR_CONTACT.displayPhone,
-    callHref: BANC_MAYFAIR_CONTACT.callHref,
   },
 ] as const;
 
@@ -44,8 +42,29 @@ export const BANC_ENQUIRY_INBOXES: Record<BancDepartment, string> = {
   lettings: "lettings@bancproperty.com",
 } as const;
 
+// Environment overrides so Nitesh's real addresses drop in from Vercel without
+// a rebuild — the values above stay as the fallback and the guard test still
+// forbids a placeholder shipping in them.
+const INBOX_ENV_KEYS: Record<BancDepartment, string> = {
+  sales: "BANC_SALES_INBOX",
+  lettings: "BANC_LETTINGS_INBOX",
+} as const;
+
 export function enquiryInboxFor(department: BancDepartment): string {
-  return BANC_ENQUIRY_INBOXES[department];
+  const override = process.env[INBOX_ENV_KEYS[department]]?.trim();
+  return override && override.includes("@") ? override : BANC_ENQUIRY_INBOXES[department];
+}
+
+/** Where valuation leads land. Its own line because it may be a separate tray. */
+export function valuationInbox(): string {
+  const override = process.env.BANC_VALUATIONS_INBOX?.trim();
+  return override && override.includes("@") ? override : "valuations@bancproperty.com";
+}
+
+/** The general office tray, for anything with no department attached. */
+export function officeInbox(): string {
+  const override = process.env.BANC_OFFICE_INBOX?.trim();
+  return override && override.includes("@") ? override : "info@bancproperty.com";
 }
 
 // The Guild-published magazine. The footer linked this directly; the homepage
