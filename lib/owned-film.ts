@@ -34,33 +34,33 @@ const beat = (
 });
 
 export const OWNED_FILMS = {
-  keysHandover: beat(
-    "card-keys",
-    "A couple stand on the lawn outside their new home, keys held up",
+  walkIn: beat(
+    "beat1-walkin",
+    "A woman stops dead in the doorway of a home she has just walked into, hand to her mouth, and turns to her partner",
   ),
-  movingIn: beat(
-    "card-moving",
-    "A family carry boxes and a plant from the van to their new front door",
+  kidsGarden: beat(
+    "beat2-kids",
+    "Two children run out across a striped English lawn with their arms wide",
   ),
-  premierElevation: beat(
-    "card-premier",
-    "A large brick house at dusk, its driveway sweeping past a clipped lawn",
+  eldersGardenRoom: beat(
+    "beat3-elders",
+    "An older couple stand in a glazed garden room; she looks up at the roof and her hand finds his",
   ),
   maintenanceCall: beat(
     "beat4-maintenance",
-    "An engineer knocks at the door of a red-brick house and is welcomed in",
+    "An engineer lifts a tool bag from his van on the driveway of a red-brick Hertfordshire house and walks to the door",
   ),
 } as const satisfies Record<string, OwnedFilm>;
 
 /**
- * Keyed by the service card's href. All four cards carry Banc's own footage as
- * of 7 September — Property Management was the last one on a hotlinked
- * American stock kitchen.
+ * Keyed by the service card's href. All four cards now carry Banc's own
+ * footage — Property Management was the last one on a hotlinked American stock
+ * kitchen, and has its own clip as of 7 September.
  */
 export const SERVICE_FILMS: Record<string, OwnedFilm> = {
-  "/sales": OWNED_FILMS.keysHandover,
-  "/lettings": OWNED_FILMS.movingIn,
-  "/premier-homes": OWNED_FILMS.premierElevation,
+  "/sales": OWNED_FILMS.walkIn,
+  "/lettings": OWNED_FILMS.kidsGarden,
+  "/premier-homes": OWNED_FILMS.eldersGardenRoom,
   "/lettings/landlords-guide": OWNED_FILMS.maintenanceCall,
 };
 
