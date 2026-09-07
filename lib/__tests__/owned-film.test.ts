@@ -41,9 +41,13 @@ test("serves every film from Banc's own footage, never a stock host", () => {
   }
 });
 
-test("gives three of the four service cards a film and leaves the fourth a still", () => {
+test("every service card now carries its own film", () => {
+  // Property Management was the last card on a hotlinked American stock
+  // kitchen. It has its own footage now — an engineer arriving at a
+  // Hertfordshire house — so all four cards are Banc's own material.
   assert.deepEqual(Object.keys(SERVICE_FILMS).sort(), [
     "/lettings",
+    "/lettings/landlords-guide",
     "/premier-homes",
     "/sales",
   ]);
@@ -51,7 +55,7 @@ test("gives three of the four service cards a film and leaves the fourth a still
   assert.ok(getServiceFilm("/sales"));
   assert.ok(getServiceFilm("/lettings"));
   assert.ok(getServiceFilm("/premier-homes"));
-  assert.equal(getServiceFilm("/lettings/landlords-guide"), undefined);
+  assert.ok(getServiceFilm("/lettings/landlords-guide"));
 });
 
 test("ships no film the site does not actually use", () => {

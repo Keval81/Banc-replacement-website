@@ -120,10 +120,10 @@ const sharedActions = {
   // kept — aerials, the houses, the pool at dusk — so nothing on the landing
   // page is a stock family.
   heroVideo: {
-    poster: "/videos/hero-properties-2026-09-poster.jpg",
+    poster: "/videos/hero-properties-first-poster.jpg",
     playbackRate: 1,
     desktop: {
-      src: "/videos/hero-properties-2026-09.mp4",
+      src: "/videos/hero-properties-first.mp4",
       width: 1440,
       height: 810,
     },

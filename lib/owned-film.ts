@@ -46,17 +46,22 @@ export const OWNED_FILMS = {
     "beat3-elders",
     "An older couple stand in a glazed garden room; she looks up at the roof and her hand finds his",
   ),
+  maintenanceCall: beat(
+    "beat4-maintenance",
+    "An engineer lifts a tool bag from his van on the driveway of a red-brick Hertfordshire house and walks to the door",
+  ),
 } as const satisfies Record<string, OwnedFilm>;
 
 /**
- * Keyed by the service card's href. Property Management is deliberately absent:
- * there are three emotional beats and four cards, and it keeps its still until
- * the wider stock-imagery sweep replaces it with a British one.
+ * Keyed by the service card's href. All four cards now carry Banc's own
+ * footage — Property Management was the last one on a hotlinked American stock
+ * kitchen, and has its own clip as of 7 September.
  */
 export const SERVICE_FILMS: Record<string, OwnedFilm> = {
   "/sales": OWNED_FILMS.walkIn,
   "/lettings": OWNED_FILMS.kidsGarden,
   "/premier-homes": OWNED_FILMS.eldersGardenRoom,
+  "/lettings/landlords-guide": OWNED_FILMS.maintenanceCall,
 };
 
 export function getServiceFilm(href: string): OwnedFilm | undefined {
