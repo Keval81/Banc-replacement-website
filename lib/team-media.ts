@@ -67,13 +67,11 @@ export const TEAM_HERO_COPY_BLOCK_PX = 355;
 // the figures' feet have to clear it, not merely fit the hero box.
 export const TEAM_HERO_BOTTOM_NAV_PX = 68;
 
-// Scaling about the TOP edge, not the middle: the figures stand mid-frame with
-// a third of the film as empty pavement beneath them, so cropping from the
-// bottom is what pushes them down clear of the copy while keeping the roof.
-// The zoom is only what the copy block forces on that height of phone — on an
-// iPhone 14 the flat 1.285 read as "too zoomed in", and there it is barely
-// needed. Steps, not a formula, because the stylesheet has to say the same
-// numbers in media queries (see TeamHeroMedia.module.css and its test).
+// No zoom on phones. Safari's small viewport on an iPhone 14 is about 664px,
+// so height-stepped zooms picked the values meant for an SE and Keval read it
+// as "too zoomed in", twice. Instead the hero runs at least 770px tall: at
+// cover scale the four figures then start below the 355px copy block on
+// every phone, and a short phone simply scrolls the hero.
 const TEAM_HERO_MOBILE_BASE = {
   minHeightSvh: 100,
   // The hero starts below the 56px header, so a plain 100svh box would end
@@ -83,25 +81,10 @@ const TEAM_HERO_MOBILE_BASE = {
   originY: 0,
 } as const;
 
-export const TEAM_HERO_MOBILE_FRAMING_STEPS: readonly {
-  maxViewportHeight: number;
-  scale: number;
-}[] = [
-  // Each step is the smallest zoom at which the shortest phone in its band
-  // still clears the copy block, keeps the figures 170px tall and stays above
-  // the bottom nav (see team-hero-framing.test.ts).
-  { maxViewportHeight: 700, scale: 1.285 },
-  { maxViewportHeight: 760, scale: 1.26 },
-  { maxViewportHeight: 820, scale: 1.19 },
-  { maxViewportHeight: 870, scale: 1.1 },
-  { maxViewportHeight: 930, scale: 1.03 },
-];
+export const TEAM_HERO_MOBILE_MIN_HEIGHT_PX = 770;
 
-export function getMobileFraming(viewport: Size): HeroFraming {
-  const step = TEAM_HERO_MOBILE_FRAMING_STEPS.find(
-    (candidate) => viewport.height <= candidate.maxViewportHeight,
-  );
-  return { ...TEAM_HERO_MOBILE_BASE, scale: step?.scale ?? 1 };
+export function getMobileFraming(_viewport: Size): HeroFraming {
+  return { ...TEAM_HERO_MOBILE_BASE, scale: 1 };
 }
 
 /** The hero box as it actually lands on screen, header and all. */
@@ -109,10 +92,11 @@ export function getHeroBox(
   viewport: Size,
   framing: HeroFraming = getMobileFraming(viewport),
 ): Size {
+  const fromViewport =
+    (framing.minHeightSvh / 100) * viewport.height - framing.headerOffsetPx;
   return {
     width: viewport.width,
-    height:
-      (framing.minHeightSvh / 100) * viewport.height - framing.headerOffsetPx,
+    height: Math.max(fromViewport, TEAM_HERO_MOBILE_MIN_HEIGHT_PX),
   };
 }
 

@@ -98,7 +98,7 @@ export default function TeamPage() {
           film's and crops less away — the team sit further back without touching
           the footage. Desktop only: the portrait cut is already nearly all visible
           on a phone, and going taller there just adds empty pavement. */}
-      <section className="relative min-h-[calc(100svh-3.5rem)] overflow-hidden bg-banc-dark-deep lg:min-h-[92svh]">
+      <section className="relative min-h-[max(calc(100svh-3.5rem),770px)] overflow-hidden bg-banc-dark-deep lg:min-h-[92svh]">
         <TeamHeroMedia />
         {/* A flat 45% wash dimmed the clay as much as it helped the words. This
             weights the darkness where the copy actually sits — top-left — and
@@ -108,7 +108,7 @@ export default function TeamPage() {
 
         {/* items-start, not items-end: the clay figures stand in the lower half of
             the frame, so a bottom-anchored title sat straight on top of them. */}
-        <div className="relative mx-auto flex min-h-[calc(100svh-3.5rem)] max-w-7xl items-start px-6 pb-16 pt-4 lg:min-h-[92svh] lg:px-10 lg:pt-24">
+        <div className="relative mx-auto flex min-h-[max(calc(100svh-3.5rem),770px)] max-w-7xl items-start px-6 pb-16 pt-4 lg:min-h-[92svh] lg:px-10 lg:pt-24">
           <div className="max-w-4xl">
             <p className="mb-3 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-white/75 lg:mb-5">
               <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />

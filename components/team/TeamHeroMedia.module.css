@@ -1,5 +1,6 @@
 /* Server-rendered on purpose: a <style jsx> block reaches the page only after
-   hydration, so phones first painted the still unscaled and then jumped. */
+   hydration, so phones first painted the still and then jumped. No transform
+   on phones — the hero runs taller instead (lib/team-media.ts). */
 .fallback {
   background-image: url("/images/team/banc-team-clay.jpg");
 }
@@ -7,35 +8,5 @@
 @media (max-width: 767px) {
   .fallback {
     background-image: url("/images/team/banc-team-clay-portrait.jpg");
-  }
-  .frame {
-    transform-origin: 50% 0;
-  }
-}
-
-/* Same numbers as TEAM_HERO_MOBILE_FRAMING_STEPS; later rules win on shorter phones. */
-@media (max-width: 767px) and (max-height: 930px) {
-  .frame {
-    transform: scale(1.03);
-  }
-}
-@media (max-width: 767px) and (max-height: 870px) {
-  .frame {
-    transform: scale(1.1);
-  }
-}
-@media (max-width: 767px) and (max-height: 820px) {
-  .frame {
-    transform: scale(1.19);
-  }
-}
-@media (max-width: 767px) and (max-height: 760px) {
-  .frame {
-    transform: scale(1.26);
-  }
-}
-@media (max-width: 767px) and (max-height: 700px) {
-  .frame {
-    transform: scale(1.285);
   }
 }
