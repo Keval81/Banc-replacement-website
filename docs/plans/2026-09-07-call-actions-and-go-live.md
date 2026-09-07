@@ -36,7 +36,7 @@ MX, SPF TXT, autoconfig, imap, pop3, ftp, NS: untouched.
 |---|---|
 | Office hours 9–5:30 in customer emails; drop the "Property Group" footer line (00:54) | ✅ |
 | Newsletter sign-up → office inbox like alerts (00:58) | ✅ honest failure if the send fails |
-| CRM sync twice a day, lunchtime + end of day (00:27) | ✅ 11:30Z / 17:30Z |
+| CRM sync twice a day, lunchtime + end of day (00:27) | ⚠️ 11:30Z / 17:30Z never fired on 7 Sep (GitHub drops scheduled slots); manual run 18:37Z brought in BPGC1951 + BPGC1765; schedule back to hourly `17 * * * *` in `8d4371a`+1, needs the push |
 | "Make an offer" on every listing (00:57) | ✅ desktop panel + 3-up mobile rail |
 | Radius on the main search bar, not in Filters (00:29) | ✅ |
 | Magazine cover behind "Read this issue" (00:30) | ✅ cover from the Guild page-turner |

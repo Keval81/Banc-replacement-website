@@ -3,12 +3,13 @@ name: Sync Expert Agent properties
 on:
   workflow_dispatch:
   schedule:
-    # Twice a day, as agreed with Nitesh on 7 Sep: a listing added in the morning is
-    # on by lunchtime, one added in the afternoon by the end of the day. Times are
-    # UTC; 11:30Z / 17:30Z are 12:30 / 18:30 BST.
-    - cron: '30 11 * * *'
-    - cron: '30 17 * * *'
-
+    # GitHub runs scheduled workflows best-effort and drops most slots: the hourly
+    # ":17" schedule actually fired every 2-5 hours, and the twice-a-day schedule
+    # set on 7 Sep fired zero times that day — two listings Nitesh added at 13:45
+    # sat in the export until a manual run at 18:37. Hourly gives the agreed
+    # "lunchtime / end of day" promise many chances instead of two; the sync is
+    # an idempotent upsert, so extra runs cost nothing.
+    - cron: '17 * * * *'
 concurrency:
   group: expert-agent-property-sync
   cancel-in-progress: false
