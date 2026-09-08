@@ -3,13 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CMP_CERTIFICATE_URL } from "@/lib/banc-contact";
-import { Instagram, Youtube, Facebook, Phone, Mail, MapPin, Loader2, Check } from "lucide-react";
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Instagram, Youtube, Facebook, Phone, Mail, MapPin } from "lucide-react";
 import { BANC_CONTACT, LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
-import { subscribeToNewsletter } from "@/lib/newsletter-subscribe";
 
 const footerLinks = {
   about: [
@@ -53,26 +48,6 @@ const footerLinks = {
 };
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
-  const [statusMessage, setStatusMessage] = useState('');
-
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setStatus('loading');
-    const result = await subscribeToNewsletter(email);
-    setStatusMessage(result.message);
-    if (!result.ok) {
-      setStatus('error');
-      return;
-    }
-    setStatus('success');
-    setEmail('');
-    setTimeout(() => setStatus('idle'), 5000);
-  };
 
   return (
     <footer className="bg-banc-dark-deep text-white">
@@ -194,44 +169,8 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
-            <p className="text-banc-grey text-sm mb-4">
-              Get the latest properties and market news delivered to your inbox.
-            </p>
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="bg-white/10 border-white/20 text-white placeholder:text-banc-grey"
-                />
-                <Button 
-                  type="submit" 
-                  disabled={status === 'loading' || status === 'success'}
-                  className="bg-banc-focus hover:bg-banc-sky/90 whitespace-nowrap"
-                >
-                  {status === 'loading' ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : status === 'success' ? (
-                    <Check className="h-4 w-4" />
-                  ) : (
-                    'Subscribe'
-                  )}
-                </Button>
-              </div>
-              {status === 'success' && (
-                <p className="text-green-400 text-sm" role="status">{statusMessage}</p>
-              )}
-              {status === 'error' && (
-                <p className="text-red-300 text-sm" role="alert">{statusMessage}</p>
-              )}
-            </form>
-          </div>
+          {/* Newsletter sign-up hidden until Banc are ready to send one. The
+              form and its API are wired and tested; only the entry point is off. */}
         </div>
       </div>
 

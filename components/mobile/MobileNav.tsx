@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { 
   Home, 
   Search, 
-  Heart, 
   Phone,
   MessageSquare
 } from "lucide-react";
@@ -32,12 +31,7 @@ const navItems = [
     icon: Search,
     exact: false 
   },
-  { 
-    name: "Saved", 
-    href: "/favorites", 
-    icon: Heart,
-    exact: false 
-  },
+
   { 
     name: "Contact", 
     href: "/contact", 

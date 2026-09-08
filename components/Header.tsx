@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, Phone, User, Heart, LogOut, Bell } from "lucide-react";
+import { Menu, X, ChevronDown, Phone, User, LogOut, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
@@ -242,6 +242,25 @@ export default function Header({ transparent = false }: { transparent?: boolean 
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
+            {/* Social, with the phone sitting alongside them. */}
+            {landingUi.mobileSocialActions.length > 0 && (
+              <div
+                className="flex items-center gap-1"
+                aria-label="Banc Property Group social media"
+              >
+                {landingUi.mobileSocialActions.map((action) => (
+                  <SocialIconLink
+                    key={`desktop-${action.brand}`}
+                    href={action.href}
+                    label={action.label}
+                    iconSrc={action.iconSrc}
+                    imageLoading={action.imageLoading}
+                    presentation={landingUi.mobileSocialPresentation}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Phone — one line per area */}
             <div className="relative" ref={phoneMenuRef}>
               <button
@@ -286,14 +305,8 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               </AnimatePresence>
             </div>
             
-            {/* Favorites */}
-            <Link 
-              href="/favorites" 
-              className="flex h-11 w-11 items-center justify-center rounded-full text-white/70 hover:text-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-              aria-label="Favorites"
-            >
-              <Heart className="h-5 w-5" aria-hidden="true" />
-            </Link>
+            {/* Saved properties sit behind a login, and the account area is not
+                in use yet — the entry point returns when it is. */}
 
             {/* Auth */}
             {isAuthenticated ? (
