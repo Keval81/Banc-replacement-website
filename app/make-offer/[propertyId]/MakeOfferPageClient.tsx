@@ -8,12 +8,13 @@ import { useParams } from "next/navigation";
 import OfferForm from "@/components/offers/OfferForm";
 import { useLiveProperty } from "@/hooks/useLiveProperty";
 import { BANC_CONTACT } from "@/lib/banc-contact";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { buildOfferEnquiry, submitContactEnquiry } from "@/lib/property-enquiry";
 import { buildPropertyHref } from "@/lib/property-view";
 import { OfferSubmission } from "@/types/portal";
 import {
   ChevronLeft,
-  Home,
   Bed,
   Bath,
   Square,
@@ -62,7 +63,7 @@ export default function MakeOfferPage() {
 
   if (propertyState.phase === "loading") {
     return (
-      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
         <div
           className="max-w-6xl mx-auto flex min-h-[50vh] flex-col items-center justify-center"
           role="status"
@@ -77,10 +78,10 @@ export default function MakeOfferPage() {
 
   if (propertyState.phase === "notfound") {
     return (
-      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center">
-            <h1 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
+          <div className="bg-white rounded-xl border border-banc-line p-8 text-center">
+            <h1 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
               We couldn&apos;t find that property
             </h1>
             <p className="text-banc-muted-readable mb-6">
@@ -93,7 +94,7 @@ export default function MakeOfferPage() {
             </p>
             <Link
               href="/sales/properties"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
             >
               Browse properties
             </Link>
@@ -109,13 +110,13 @@ export default function MakeOfferPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
+      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-[#E0DFDC] p-8 text-center" role="status">
+          <div className="bg-white rounded-xl border border-banc-line p-8 text-center" role="status">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-green-600" aria-hidden="true" />
             </div>
-            <h2 className="text-2xl font-heading font-bold text-[#1A1917] mb-3">
+            <h2 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
               Offer sent to our team
             </h2>
             <p className="text-banc-muted-readable mb-6">
@@ -125,7 +126,7 @@ export default function MakeOfferPage() {
               </strong>{" "}
               for <strong>{property.title}</strong> has been received.
             </p>
-            <div className="bg-[#F4F3F1] rounded-lg p-4 mb-6">
+            <div className="bg-banc-grey-pale rounded-lg p-4 mb-6">
               <p className="text-sm text-banc-muted-readable">
                 We&apos;ll pass your offer to the vendor and come back to you by
                 phone or email. You&apos;ll receive a confirmation email shortly.
@@ -141,13 +142,13 @@ export default function MakeOfferPage() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href={propertyHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-[#1A9BBF] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
               >
                 Back to the property
               </Link>
               <Link
                 href="/sales/properties"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#E0DFDC] text-[#1A1917] rounded-lg font-medium hover:bg-[#F4F3F1] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-banc-line text-banc-dark-deep rounded-lg font-medium hover:bg-banc-grey-pale transition-colors"
               >
                 Browse More Properties
               </Link>
@@ -159,33 +160,38 @@ export default function MakeOfferPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F3F1] py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Back Link */}
-        <Link
-          href={propertyHref}
-          className="inline-flex items-center gap-2 text-banc-muted-readable hover:text-banc-focus transition-colors mb-6"
-        >
-          <ChevronLeft className="w-4 h-4" aria-hidden="true" />
-          Back to property
-        </Link>
-
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-heading font-bold text-[#1A1917]">
+    <div className="min-h-screen bg-banc-grey-pale">
+      <Header />
+      {/* Banc opener: the same dark band, sky eyebrow and display heading the
+          rest of the site uses, so the enquiry pages read as part of it. */}
+      <section className="bg-banc-dark-deep">
+        <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10 lg:py-14">
+          <Link
+            href={propertyHref}
+            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-banc-sky"
+          >
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+            Back to the property
+          </Link>
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-banc-sky">
+            Put your offer forward
+          </p>
+          <h1 className="font-display text-3xl font-light leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl lg:text-5xl">
             Make an Offer
           </h1>
-          <p className="text-banc-muted-readable mt-2">
-            Submit your offer for this property. Our team will present it to
-            the vendor and come back to you.
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70">
+            We present every offer to the vendor with the financial position
+            behind it, then come back to you — usually within one working day.
           </p>
         </div>
+      </section>
 
+      <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-[#E0DFDC] overflow-hidden sticky top-4">
-              <div className="relative h-48 w-full bg-[#F4F3F1]">
+            <div className="bg-white rounded-xl border border-banc-line overflow-hidden sticky top-4">
+              <div className="relative h-48 w-full bg-banc-grey-pale">
                 {heroImage ? (
                   <Image
                     src={heroImage}
@@ -197,7 +203,7 @@ export default function MakeOfferPage() {
                 ) : null}
               </div>
               <div className="p-5">
-                <h2 className="font-heading font-semibold text-[#1A1917]">
+                <h2 className="font-heading font-semibold text-banc-dark-deep">
                   {property.title}
                 </h2>
                 <p className="text-banc-muted-readable text-sm">{property.address}</p>
@@ -211,7 +217,7 @@ export default function MakeOfferPage() {
                   {property.priceQualifier || "Asking Price"}
                 </p>
 
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#E0DFDC] text-sm text-banc-muted-readable">
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-banc-line text-sm text-banc-muted-readable">
                   <span className="flex items-center gap-1">
                     <Bed className="w-4 h-4" aria-hidden="true" />
                     {property.stats.beds}
@@ -230,7 +236,7 @@ export default function MakeOfferPage() {
                   )}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
+                <div className="mt-4 pt-4 border-t border-banc-line">
                   <p className="text-sm text-banc-muted-readable line-clamp-3">
                     {property.summary}
                   </p>
@@ -241,35 +247,14 @@ export default function MakeOfferPage() {
                     View full details →
                   </Link>
                 </div>
-
-                {/* Office Info */}
-                <div className="mt-4 pt-4 border-t border-[#E0DFDC]">
-                  <p className="text-sm text-banc-muted-readable mb-2">Listing agent</p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#4AC8E8]/10 rounded-full flex items-center justify-center">
-                      <Home className="w-5 h-5 text-banc-focus" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-[#1A1917]">
-                        Banc Property Group
-                      </p>
-                      <a
-                        href={BANC_CONTACT.callHref}
-                        className="text-sm text-banc-muted-readable hover:text-banc-focus"
-                      >
-                        {BANC_CONTACT.displayPhone}
-                      </a>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
           {/* Right Column - Offer Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl border border-[#E0DFDC] p-6">
-              <h2 className="text-xl font-heading font-semibold text-[#1A1917] mb-6">
+            <div className="bg-white rounded-xl border border-banc-line p-6">
+              <h2 className="text-xl font-heading font-semibold text-banc-dark-deep mb-6">
                 Your Offer Details
               </h2>
               {submitError && (
@@ -324,6 +309,7 @@ export default function MakeOfferPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
