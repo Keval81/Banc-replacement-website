@@ -76,6 +76,13 @@ export function getSafeExternalUrl(value: string): string | null {
   }
 }
 
+// Embedded on an https page, an http image is mixed content: Chrome upgrades it,
+// Safari does not. Every Expert Agent media host answers https, so upgrade here.
+export function getSafeEmbeddedImageUrl(value: string): string | null {
+  const safeUrl = getSafeExternalUrl(value);
+  return safeUrl ? safeUrl.replace(/^http:/, "https:") : null;
+}
+
 export function getSafePropertyImageUrl(value: string): string | null {
   try {
     const url = new URL(value.trim());

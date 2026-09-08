@@ -2,7 +2,7 @@ import { PropertyEpcViewer } from "@/components/property-detail/PropertyEpcViewe
 import {
   cleanDescriptionParagraphs,
   getDisplayFact,
-  getSafeExternalUrl,
+  getSafeEmbeddedImageUrl,
 } from "@/lib/property-detail-view";
 import type { LivePropertyDetail } from "@/lib/property-view";
 
@@ -11,7 +11,7 @@ interface PropertyOverviewProps {
 }
 
 export function PropertyOverview({ property }: PropertyOverviewProps): React.ReactElement {
-  const epcImageUrl = getSafeExternalUrl(property.epcImageUrl);
+  const epcImageUrl = getSafeEmbeddedImageUrl(property.epcImageUrl);
   const features = property.features
     .map(getDisplayFact)
     .filter((feature): feature is string => feature !== null);

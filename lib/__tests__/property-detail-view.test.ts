@@ -9,6 +9,7 @@ import {
   getNextPropertyMediaMode,
   getPropertyResultsBackLink,
   getPropertyPhotoPresentation,
+  getSafeEmbeddedImageUrl,
   getSafeExternalUrl,
   getSafePropertyImageUrl,
   PROPERTY_IMAGE_REMOTE_PATTERNS,
@@ -109,6 +110,16 @@ test("accepts only absolute http and https media URLs", () => {
   assert.equal(getSafeExternalUrl("javascript:alert(1)"), null);
   assert.equal(getSafeExternalUrl("/relative.pdf"), null);
   assert.equal(getSafeExternalUrl("not a url"), null);
+});
+
+test("upgrades an http certificate image to https so it loads on the secure site", () => {
+  assert.equal(
+    getSafeEmbeddedImageUrl("http://med01.expertagent.co.uk/in4glestates/{ABC}/HIPS/PEA_7079.png"),
+    "https://med01.expertagent.co.uk/in4glestates/%7BABC%7D/HIPS/PEA_7079.png"
+  );
+  assert.equal(getSafeEmbeddedImageUrl(" https://example.com/epc.png "), "https://example.com/epc.png");
+  assert.equal(getSafeEmbeddedImageUrl("javascript:alert(1)"), null);
+  assert.equal(getSafeEmbeddedImageUrl(""), null);
 });
 
 test("accepts only property image hosts configured for Next Image", () => {
