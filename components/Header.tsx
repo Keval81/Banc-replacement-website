@@ -53,13 +53,6 @@ const dropdowns = {
   ],
 } as const;
 
-const mobileAdditionalLinks = [
-  { title: "Premier Homes", href: "/premier-homes" },
-  { title: "Reviews", href: "/reviews" },
-  { title: "Land & New Homes", href: "/land-new-homes" },
-  { title: "Become a Partner", href: "/become-partner" },
-];
-
 export default function Header({ transparent = false }: { transparent?: boolean } = {}) {
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -526,18 +519,6 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                       </div>
                     );
                   })}
-                  
-                  {/* Additional Links */}
-                  {mobileAdditionalLinks.map((link) => (
-                    <Link
-                      key={link.title}
-                      href={link.href}
-                      className="border-b border-white/10 py-3.5 text-base text-white/80"
-                      onClick={closeMenuForNavigation}
-                    >
-                      {link.title}
-                    </Link>
-                  ))}
                 </nav>
 
                 {/* Address */}

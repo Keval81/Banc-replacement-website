@@ -160,8 +160,9 @@ export default function BookViewingPage() {
             </p>
             <div className="bg-[#F4F3F1] rounded-lg p-4 mb-6">
               <p className="text-sm text-banc-muted-readable">
-                You&apos;ll receive a confirmation email shortly. Our team will
-                contact you to confirm the appointment time.
+                This is your preferred slot, not a confirmed appointment. One of
+                the team will come back to you to arrange it, and we&apos;ve
+                emailed you a copy of what you sent.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -199,10 +200,11 @@ export default function BookViewingPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-heading font-bold text-[#1A1917]">
-            Book a Viewing
+            Request a Viewing
           </h1>
           <p className="text-banc-muted-readable mt-2">
-            Select your preferred date and time to view this property
+            Tell us the date and time that suit you. Nothing is booked until one
+            of the team confirms it with you.
           </p>
         </div>
 
@@ -281,7 +283,7 @@ export default function BookViewingPage() {
                 <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
                   1
                 </span>
-                Select a Date
+                Choose a Preferred Date
               </h2>
               <CalendarPicker
                 selectedDate={selectedDate}
@@ -297,7 +299,7 @@ export default function BookViewingPage() {
                   <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
                     2
                   </span>
-                  Select a Preferred Time
+                  Choose a Preferred Time
                 </h2>
                 <TimeSlots
                   slots={PREFERRED_SLOTS}

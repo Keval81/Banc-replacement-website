@@ -83,6 +83,12 @@ export function buildViewingEnquiry(
   ];
   const requests = input.specialRequests?.trim();
   if (requests) lines.push("", `Special requests: ${requests}`);
+  // Said plainly to both sides: the slot is a preference, not a booking. The
+  // office holds no calendar, so nothing is reserved until someone calls back.
+  lines.push(
+    "",
+    "This is a preferred date and time, not a confirmed appointment — the viewing is not confirmed until a member of the team comes back to arrange it.",
+  );
 
   return {
     name: input.name.trim(),

@@ -32,6 +32,8 @@ interface MobileFilterDrawerProps {
 // Main Component
 // ============================================
 
+export const FILTER_DRAWER_BODY_CLASS = "filter-drawer-open";
+
 export default function MobileFilterDrawer({
   isOpen,
   onClose,
@@ -49,6 +51,15 @@ export default function MobileFilterDrawer({
   React.useLayoutEffect(() => {
     onCloseRef.current = onClose;
   });
+
+  // The chat launcher is a separate fixed layer that painted over the drawer's
+  // "Show results" button and swallowed the tap. Marking the body lets one rule
+  // in globals.css stand it down while the drawer is open.
+  React.useEffect(() => {
+    if (!isOpen) return;
+    document.body.classList.add(FILTER_DRAWER_BODY_CLASS);
+    return () => document.body.classList.remove(FILTER_DRAWER_BODY_CLASS);
+  }, [isOpen]);
 
   React.useEffect(() => {
     if (!isOpen) return;

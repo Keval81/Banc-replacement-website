@@ -99,3 +99,27 @@ test("submitContactEnquiry posts JSON and reports success or the API error", asy
   }, payload);
   assert.equal(crashed.ok, false);
 });
+
+test("a viewing enquiry says plainly that the date is a request until the team confirms", () => {
+  const payload = buildViewingEnquiry(
+    {
+      id: "BPGC1951",
+      title: "Georges Wood Road, Brookmans Park",
+      address: "Georges Wood Road, Brookmans Park, Hertfordshire",
+      postcode: "AL9",
+      department: "sales",
+      price: "£1,000,000",
+    },
+    {
+      name: "Jane Doe",
+      email: "jane@example.com",
+      phone: "01707 877781",
+      date: "Tuesday 15 September 2026",
+      time: "10:00 AM",
+    },
+  );
+
+  assert.match(payload.message, /preferred date and time/i);
+  assert.match(payload.message, /not confirmed until/i);
+  assert.match(payload.subject, /^Viewing request/);
+});

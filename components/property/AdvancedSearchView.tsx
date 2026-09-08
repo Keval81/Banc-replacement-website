@@ -11,6 +11,7 @@ import { getMinimumOnlyBedroomPatch } from "@/lib/property-search/navigation";
 import { BATHROOM_OPTIONS, BEDROOM_OPTIONS, FEATURE_OPTIONS, PROPERTY_TYPE_OPTIONS, RADIUS_OPTIONS, SORT_OPTIONS, TENURE_OPTIONS, formatSearchPrice, getPriceOptions, toggleCanonicalOption } from "@/lib/property-search/ui-options";
 import type { PropertyDepartment, PropertySearchFilters } from "@/lib/property-search/types";
 import { searchThenClose } from "@/lib/property-search/search-ui-actions";
+import { getFilterCtaState } from "@/lib/property-search/filter-cta";
 import { cn } from "@/lib/utils";
 
 export interface AdvancedSearchProps {
@@ -67,6 +68,12 @@ function NumberChips({ label, options, value, onChange }: { label: string; optio
 
 export default function AdvancedSearch({ department, filters, onFilterChange, onClearFilters, hasActiveFilters, isMobile = false, onClose, isLoading = false, resultCount, onSearch }: AdvancedSearchProps) {
   const priceOptions = getPriceOptions(department);
+  // Keep the last count so a recount does not blank the button (see filter-cta).
+  const [lastKnownCount, setLastKnownCount] = React.useState<number | undefined>(resultCount);
+  React.useEffect(() => {
+    if (resultCount !== undefined) setLastKnownCount(resultCount);
+  }, [resultCount]);
+  const cta = getFilterCtaState({ isLoading, resultCount, lastKnownCount });
   return (
     <div className={cn("flex h-full min-w-0 flex-col bg-white", !isMobile && "rounded-2xl border border-banc-line shadow-sm")}>
       <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-banc-line bg-white px-5 py-4">
@@ -116,7 +123,15 @@ export default function AdvancedSearch({ department, filters, onFilterChange, on
         <FilterSection title="Features & amenities" icon={TreePine}><OptionList<SearchFeature> name="feature" options={FEATURE_OPTIONS} selected={filters.features} canonicalOrder={SEARCH_FEATURES} onChange={(features) => onFilterChange({ features })} /></FilterSection>
       </div>
 
-      <footer className="sticky bottom-0 space-y-2 border-t border-banc-line bg-white p-4"><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} disabled={isLoading} className="h-12 w-full bg-banc-focus text-base font-semibold text-white hover:bg-banc-focus-hover focus-visible:ring-banc-focus">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Loading…</> : `Show ${resultCount !== undefined ? resultCount : ""} results`}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full border-banc-muted-readable text-base text-banc-dark-deep hover:border-banc-focus focus-visible:ring-banc-focus">Clear all filters</Button>}</footer>
+      <footer
+        className={cn(
+          "sticky bottom-0 space-y-2 border-t border-banc-line bg-white p-4",
+          // The drawer runs to the bottom of the screen, where the fixed mobile
+          // bar sits on top of it — "Clear all filters" was entirely behind the
+          // bar and untappable, so an over-filtered search had no way out.
+          isMobile && "pb-[calc(1rem+4.25rem+env(safe-area-inset-bottom))]",
+        )}
+      ><Button type="button" onClick={() => searchThenClose(onSearch, onClose)} aria-busy={isLoading} className={cn("h-12 w-full text-base font-semibold focus-visible:ring-banc-focus", cta.tone === "primary" ? "bg-banc-focus text-white hover:bg-banc-focus-hover" : "border border-banc-line bg-banc-grey-pale text-banc-dark-deep hover:border-banc-focus")}>{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}{cta.label}</Button>{hasActiveFilters && <Button type="button" variant="outline" onClick={onClearFilters} className="h-12 w-full border-banc-muted-readable text-base text-banc-dark-deep hover:border-banc-focus focus-visible:ring-banc-focus">Clear all filters</Button>}</footer>
     </div>
   );
 }

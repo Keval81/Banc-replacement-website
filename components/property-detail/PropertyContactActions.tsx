@@ -91,7 +91,7 @@ export function PropertyMobileActions({ property }: PropertyContactActionsProps)
           href={actions.primaryHref}
           className="flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-banc-sky px-2 text-center text-sm font-medium text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
         >
-          Book a viewing
+          Request a viewing
         </a>
         <a
           href={actions.secondaryHref}

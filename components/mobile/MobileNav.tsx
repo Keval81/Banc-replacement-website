@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -51,8 +53,19 @@ const navItems = [
   },
 ];
 
+export const MOBILE_BOTTOM_NAV_BODY_CLASS = "has-mobile-bottom-nav";
+
 export function MobileBottomNav({ className }: MobileBottomNavProps) {
   const pathname = usePathname();
+
+  // The bar is fixed, so it sits over whatever the page ends with — the last
+  // row of the viewing calendar was half-hidden behind it. Marking the body
+  // while the bar is mounted lets one rule in globals.css reserve the space,
+  // and routes without the bar keep their own spacing.
+  React.useEffect(() => {
+    document.body.classList.add(MOBILE_BOTTOM_NAV_BODY_CLASS);
+    return () => document.body.classList.remove(MOBILE_BOTTOM_NAV_BODY_CLASS);
+  }, []);
 
   return (
     <nav 

@@ -274,7 +274,7 @@ export default function BookingForm({
           ) : (
             <>
               <Check className="w-5 h-5" />
-              Confirm Booking Request
+              Send viewing request
             </>
           )}
         </button>

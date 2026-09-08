@@ -19,7 +19,7 @@ export const faqCategories: FaqCategory[] = [
     questions: [
       {
         question: "How do I arrange a property viewing?",
-        answer: "You can arrange a viewing by calling us on 01707 877781, emailing info@bancproperty.com, or using the 'Book Viewing' button on any property listing. We offer flexible viewing times including evenings and weekends to suit your schedule."
+        answer: "You can arrange a viewing by calling us on 01707 877781, emailing info@bancproperty.com, or using the 'Request a viewing' button on any property listing. We offer flexible viewing times including evenings and weekends to suit your schedule."
       },
       {
         question: "What are your opening hours?",

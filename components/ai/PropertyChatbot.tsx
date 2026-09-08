@@ -250,6 +250,7 @@ export default function PropertyChatbot({
       <AnimatePresence>
         {!isOpen && (
           <div
+            data-chat-launcher
             className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
               clearsStickyActions
                 ? "bottom-[calc(9rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"

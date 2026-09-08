@@ -171,6 +171,22 @@ a:focus-visible {
 }
 
 /* Safe area support for mobile */
+/* A full-screen filter drawer owns the screen: the chat launcher sits on its
+   own fixed layer and was covering (and swallowing taps on) the drawer's
+   primary button. */
+body.filter-drawer-open [data-chat-launcher] {
+  display: none;
+}
+
+/* The fixed mobile bar is 68px plus the iOS home indicator. Without this the
+   page's last element sits behind it — the viewing calendar's final week was
+   half-covered and untappable. Only applies while the bar is on screen. */
+@media (max-width: 1023px) {
+  body.has-mobile-bottom-nav #main-content {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
+  }
+}
+
 @supports (padding-bottom: env(safe-area-inset-bottom)) {
   .safe-area-pb {
     padding-bottom: env(safe-area-inset-bottom);
