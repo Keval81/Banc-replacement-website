@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
 import { getLandingUi } from "@/lib/landing-ui";
-import { BANC_PHONE_LINES } from "@/lib/banc-contact";
+import { BANC_CONTACT, BANC_PHONE_LINES } from "@/lib/banc-contact";
 import { lockBodyScroll, type ReleaseScrollLock } from "@/lib/scroll-lock";
 import {
   MODAL_FOCUSABLE_SELECTOR,
@@ -161,7 +161,16 @@ export default function Header({ transparent = false }: { transparent?: boolean 
         <div className="mx-auto flex h-14 w-full max-w-7xl items-center justify-between px-4 lg:h-[72px] lg:px-8">
           {/* Logo (hidden on the transparent hero header — the hero carries the lockup) */}
           {transparent && !landingUi.showLandingHeaderLogo ? (
-            <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group social media">
+            <div className="flex items-center gap-1 lg:hidden" aria-label="Banc Property Group contact and social">
+              {/* Calling is the thing most visitors want, so it sits with the
+                  social icons rather than being buried in the drawer. */}
+              <a
+                href={BANC_CONTACT.callHref}
+                aria-label={`Call Banc Property Group on ${BANC_CONTACT.displayPhone}`}
+                className="flex h-11 w-11 items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+              >
+                <Phone className="h-5 w-5" aria-hidden="true" />
+              </a>
               {landingUi.mobileSocialActions.map((action) => (
                 <SocialIconLink
                   key={action.brand}
@@ -242,25 +251,6 @@ export default function Header({ transparent = false }: { transparent?: boolean 
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
-            {/* Social, with the phone sitting alongside them. */}
-            {landingUi.mobileSocialActions.length > 0 && (
-              <div
-                className="flex items-center gap-1"
-                aria-label="Banc Property Group social media"
-              >
-                {landingUi.mobileSocialActions.map((action) => (
-                  <SocialIconLink
-                    key={`desktop-${action.brand}`}
-                    href={action.href}
-                    label={action.label}
-                    iconSrc={action.iconSrc}
-                    imageLoading={action.imageLoading}
-                    presentation={landingUi.mobileSocialPresentation}
-                  />
-                ))}
-              </div>
-            )}
-
             {/* Phone — one line per area */}
             <div className="relative" ref={phoneMenuRef}>
               <button
