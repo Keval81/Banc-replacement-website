@@ -10,6 +10,7 @@ import { SocialIconLink } from "@/components/ui/social-icon";
 import { cn } from "@/lib/utils";
 import { getLandingUi } from "@/lib/landing-ui";
 import { BANC_PHONE_LINES } from "@/lib/banc-contact";
+import { lockBodyScroll, type ReleaseScrollLock } from "@/lib/scroll-lock";
 import {
   MODAL_FOCUSABLE_SELECTOR,
   startModalFocusLifecycle,
@@ -69,6 +70,8 @@ export default function Header({ transparent = false }: { transparent?: boolean 
   const mobileMenuRef = React.useRef<HTMLDivElement>(null);
   const mobileToggleRef = React.useRef<HTMLButtonElement>(null);
   const phoneMenuRef = React.useRef<HTMLDivElement>(null);
+  const releaseScrollLockRef = React.useRef<ReleaseScrollLock | null>(null);
+  const headerRef = React.useRef<HTMLElement>(null);
 
   // Escape or a click outside dismisses the area-phone menu.
   React.useEffect(() => {
@@ -118,36 +121,43 @@ export default function Header({ transparent = false }: { transparent?: boolean 
     });
   }, [mobileOpen]);
 
-  // Lock body scroll when mobile menu is open
+  // Pin the page while the mobile menu is open; release (and only then
+  // scroll) when it closes or the header unmounts. Nothing runs on a plain
+  // mount, so a new page always starts where the router put it.
   React.useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    if (mobileOpen) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.dataset.scrollY = String(scrollY);
-    } else {
-      const scrollY = document.body.dataset.scrollY || '0';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0'));
-    }
-    
+    if (!mobileOpen) return;
+
+    const headerElement = headerRef.current;
+    const release = lockBodyScroll({
+      getScrollY: () => window.scrollY,
+      setBodyStyle: ({ position, top, width }) => {
+        document.body.style.position = position;
+        document.body.style.top = top;
+        document.body.style.width = width;
+      },
+      scrollTo: (y) => window.scrollTo(0, y),
+    });
+    releaseScrollLockRef.current = release;
+
     return () => {
-      const scrollY = document.body.dataset.scrollY || '0';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0'));
+      // Closing on this page restores the position; unmounting (the page is
+      // being replaced) must not scroll the old position into the next page.
+      release({ restoreScroll: headerElement?.isConnected ?? false });
+      releaseScrollLockRef.current = null;
     };
   }, [mobileOpen]);
+
+  // A tapped link leaves this page: unpin without scrolling the old position
+  // back, and let the router put the next page at its top.
+  const closeMenuForNavigation = () => {
+    releaseScrollLockRef.current?.({ restoreScroll: false });
+    setMobileOpen(false);
+  };
 
   return (
     <>
       <header
+        ref={headerRef}
         className={cn(
           "safe-area-header fixed left-0 right-0 top-0 z-50",
           transparent
@@ -386,7 +396,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                 <div className="my-4 flex items-center gap-2">
                   <Link
                     href={landingUi.valuationAction.href}
-                    onClick={() => setMobileOpen(false)}
+                    onClick={closeMenuForNavigation}
                     className="flex-1"
                   >
                     <Button className="h-11 w-full bg-banc-sky text-sm text-banc-dark hover:bg-banc-sky-mid">
@@ -446,7 +456,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                     {/* Registering used to mean creating an account, which is a
                         lot to ask of someone who only wants to hear about new
                         homes. */}
-                    <Link href="/#alerts" onClick={() => setMobileOpen(false)}>
+                    <Link href="/#alerts" onClick={closeMenuForNavigation}>
                       <Button className="w-full bg-banc-sky text-banc-dark hover:bg-banc-sky-mid">
                         <Bell className="mr-2 h-4 w-4" aria-hidden="true" />
                         Subscribe to alerts
@@ -467,7 +477,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                           <Link
                             href={item.href}
                             className="flex-1 py-4 text-base text-white font-medium min-h-[56px] flex items-center"
-                            onClick={() => !hasDropdown && setMobileOpen(false)}
+                            onClick={closeMenuForNavigation}
                           >
                             {item.name}
                           </Link>
@@ -504,7 +514,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                                 key={link.title}
                                 href={link.href}
                                 className="flex items-center gap-3 py-3.5 text-sm text-white/70 hover:text-white transition-colors min-h-[48px]"
-                                onClick={() => setMobileOpen(false)}
+                                onClick={closeMenuForNavigation}
                                 style={{ animationDelay: `${index * 50}ms` }}
                               >
                                 <span className="w-1.5 h-1.5 rounded-full bg-banc-sky" />
@@ -523,7 +533,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
                       key={link.title}
                       href={link.href}
                       className="border-b border-white/10 py-3.5 text-base text-white/80"
-                      onClick={() => setMobileOpen(false)}
+                      onClick={closeMenuForNavigation}
                     >
                       {link.title}
                     </Link>
