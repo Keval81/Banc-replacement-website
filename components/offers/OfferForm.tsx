@@ -427,8 +427,9 @@ export default function OfferForm({
           Proof of Funds (Optional)
         </label>
         <p className="text-sm text-banc-muted-readable mb-3">
-          Upload bank statement or mortgage agreement in principle to strengthen
-          your offer
+          Name the document you can provide — a bank statement or a mortgage
+          agreement in principle strengthens your offer. The file stays on your
+          device; we tell the team it is ready and they will ask you for it.
         </p>
 
         <div className="border-2 border-dashed border-banc-line rounded-lg p-6 text-center">
@@ -456,7 +457,7 @@ export default function OfferForm({
             <label className="cursor-pointer">
               <Upload className="w-8 h-8 text-banc-muted-readable mx-auto mb-2" />
               <p className="text-sm text-banc-dark-deep">
-                Click to upload or drag and drop
+                Choose the file to name for the team
               </p>
               <p className="text-xs text-banc-muted-readable mt-1">
                 PDF, JPG, PNG up to 10MB

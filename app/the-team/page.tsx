@@ -332,7 +332,7 @@ export default function TeamPage() {
                 
                 <SimpleEnquiryForm
                   fields={APPLICATION_FIELDS}
-                  subject="Career enquiry — {name}"
+                  subject="Career enquiry"
                   intro="Career enquiry from the Meet the Team page."
                   submitLabel="Submit Application"
                   successTitle="Application received"
