@@ -5,6 +5,7 @@ import test from "node:test";
 
 import {
   getTeamHeroVideoSource,
+  isTeamHeroVideoUsable,
   getTeamPortrait,
   shouldRenderTeamHeroVideo,
   TEAM_HERO_MEDIA,
@@ -51,4 +52,11 @@ test("a phone gets the portrait clip and nothing else to fall through to", () =>
 
 test("wider viewports get the landscape clip", () => {
   assert.equal(getTeamHeroVideoSource(false), TEAM_HERO_MEDIA.landscapeVideo);
+});
+
+test("a clip that failed to load is not rendered again, so no black error panel covers the still", () => {
+  const clip = TEAM_HERO_MEDIA.portraitVideo;
+  assert.equal(isTeamHeroVideoUsable(clip, null), true);
+  assert.equal(isTeamHeroVideoUsable(clip, clip), false);
+  assert.equal(isTeamHeroVideoUsable(TEAM_HERO_MEDIA.landscapeVideo, clip), true);
 });

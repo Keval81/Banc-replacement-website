@@ -218,6 +218,13 @@ export function getTeamHeroVideoSource(isPhoneViewport: boolean): string {
   return isPhoneViewport ? TEAM_HERO_MEDIA.portraitVideo : TEAM_HERO_MEDIA.landscapeVideo;
 }
 
+// A clip that errored must come out of the tree: Safari paints a failed
+// <video> as a black panel with a "cannot play" glyph, straight over the
+// headline. Without the element the server-rendered still shows instead.
+export function isTeamHeroVideoUsable(videoSrc: string, failedSrc: string | null): boolean {
+  return failedSrc !== videoSrc;
+}
+
 export function shouldRenderTeamHeroVideo(prefersReducedMotion: boolean): boolean {
   return !prefersReducedMotion;
 }

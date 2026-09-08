@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { playWhenAllowed } from "@/lib/media-autoplay";
 import { useIsPhoneViewport } from "@/hooks/useIsPhoneViewport";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { getTeamHeroVideoSource, shouldRenderTeamHeroVideo } from "@/lib/team-media";
+import {
+  getTeamHeroVideoSource,
+  isTeamHeroVideoUsable,
+  shouldRenderTeamHeroVideo,
+} from "@/lib/team-media";
 import styles from "./TeamHeroMedia.module.css";
 
 export function TeamHeroMedia() {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const showVideo = shouldRenderTeamHeroVideo(prefersReducedMotion);
   const videoSrc = getTeamHeroVideoSource(useIsPhoneViewport());
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const showVideo =
+    shouldRenderTeamHeroVideo(prefersReducedMotion) && isTeamHeroVideoUsable(videoSrc, failedSrc);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -31,6 +37,7 @@ export function TeamHeroMedia() {
           key={videoSrc}
           ref={videoRef}
           src={videoSrc}
+          onError={() => setFailedSrc(videoSrc)}
           className="absolute inset-0 h-full w-full object-cover"
           autoPlay
           muted
