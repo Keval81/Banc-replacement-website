@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
+import { RecentlyLetStrip } from "@/components/property/RecentlyLetStrip";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Loader2, Home } from "lucide-react";
 import PropertySearchBar from "@/components/property/PropertySearchBarView";
@@ -255,6 +256,8 @@ function LettingsPropertiesPageContent() {
           </Button>
         </div>
       </section>
+
+      <RecentlyLetStrip />
 
       <Footer />
     </div>
