@@ -48,7 +48,7 @@ const differentiators = [
   {
     icon: Clock,
     title: "Open All Hours",
-    description: "On the phone or email 24/7, and the office is open 9am to 6pm Monday to Saturday. Viewings and valuations arranged at your convenience — we don't miss an opportunity to get you moved."
+    description: "On the phone or email 24/7, and the office is open 9am to 5:30pm Monday to Saturday. Viewings and valuations arranged at your convenience — we don't miss an opportunity to get you moved."
   },
   {
     icon: Shield,

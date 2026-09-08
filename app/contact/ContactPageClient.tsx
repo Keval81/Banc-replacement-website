@@ -53,6 +53,7 @@ export default function ContactPageClient() {
     subject: "General Enquiry",
     message: "I would like to request a call back",
     consent: false,
+    website: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -87,6 +88,7 @@ export default function ContactPageClient() {
           subject: "General Enquiry",
           message: "I would like to request a call back",
           consent: false,
+          website: "",
         });
       } else {
         error(data.error || "Something went wrong. Please try again.");
@@ -533,6 +535,8 @@ export default function ContactPageClient() {
                   <textarea
                     id="message"
                     rows={5}
+                    required
+                    minLength={10}
                     value={formData.message}
                     onChange={handleChange}
                     className="w-full resize-none rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
@@ -544,6 +548,17 @@ export default function ContactPageClient() {
                 </div>
               </div>
 
+              {/* Honeypot: hidden from people, filled by bots; the API rejects any value. */}
+              <input
+                id="website"
+                type="text"
+                value={formData.website}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-px w-px opacity-0"
+              />
               {/* Privacy Checkbox */}
               <div className="flex items-start gap-4 md:col-span-2">
                 <div className="relative flex items-center">

@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
       customer: {
         to: email,
         replyTo: notificationInbox,
-        ...emailTemplates.contactConfirmation({ name, subject }),
+        ...emailTemplates.contactConfirmation({ name, subject, message }),
       },
     });
 

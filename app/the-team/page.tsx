@@ -5,14 +5,26 @@ import Image from "next/image";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
+import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { TeamHeroMedia } from "@/components/team/TeamHeroMedia";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 import { getTeamPortrait } from "@/lib/team-media";
+
+const APPLICATION_FIELDS: SimpleEnquiryField[] = [
+  { name: "name", label: "Full Name", type: "text", placeholder: "John Smith", required: true },
+  { name: "phone", label: "Phone Number", type: "tel", placeholder: BANC_CONTACT.displayPhone, span: "half" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "john@example.com", required: true, span: "half" },
+  {
+    name: "message",
+    label: "Your Message",
+    type: "textarea",
+    rows: 5,
+    placeholder: "Tell us about yourself, your experience, and why you'd like to join the Banc team...",
+    required: true,
+  },
+];
 
 export const metadata: Metadata = withPageDefaults("/the-team", {
   title: "Meet The Team | Banc Property Group",
@@ -318,89 +330,22 @@ export default function TeamPage() {
                   <p className="text-banc-muted-readable text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
                 </div>
                 
-                <form className="space-y-6">
-                  {/* Name */}
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                      Full Name <span className="text-banc-focus">*</span>
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="John Smith"
-                      className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
-                      required
-                    />
-                  </div>
-                  
-                  {/* Phone & Email Row */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                        Phone Number
-                      </label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder={BANC_CONTACT.displayPhone}
-                        className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                        Email Address <span className="text-banc-focus">*</span>
-                      </label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        className="w-full h-12 bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Message */}
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-banc-dark-mid mb-2">
-                      Your Message <span className="text-banc-focus">*</span>
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="Tell us about yourself, your experience, and why you'd like to join the Banc team..."
-                      rows={5}
-                      className="w-full bg-white border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 rounded-xl transition-all resize-none"
-                      required
-                    />
-                  </div>
-                  
-                  {/* Privacy Checkbox */}
-                  <div className="flex items-start gap-3 p-4 bg-white rounded-xl border border-banc-line/50">
-                    <Checkbox 
-                      id="privacy" 
-                      name="privacy"
-                      required
-                      className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky rounded"
-                    />
-                    <label htmlFor="privacy" className="text-sm text-banc-muted-readable leading-relaxed cursor-pointer">
-                      Please tick this box if you are happy for us to contact you via phone and email. 
-                      You can view our full <a href="/privacy" className="text-banc-focus hover:underline">privacy policy</a> on our website.
-                    </label>
-                  </div>
-                  
-                  {/* Submit Button */}
-                  <Button 
-                    type="submit"
-                    className="w-full h-14 bg-banc-focus hover:bg-banc-focus-hover text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30"
-                  >
-                    Submit Application
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </Button>
-                </form>
+                <SimpleEnquiryForm
+                  fields={APPLICATION_FIELDS}
+                  subject="Career enquiry — {name}"
+                  intro="Career enquiry from the Meet the Team page."
+                  submitLabel="Submit Application"
+                  successTitle="Application received"
+                  successBody="Thank you for your interest in joining Banc. One of the team will be in touch."
+                  classNames={{
+                    form: "space-y-6",
+                    input: "w-full bg-white focus:ring-2 rounded-xl transition-all",
+                    textarea: "w-full bg-white focus:ring-2 rounded-xl transition-all",
+                    consent: "bg-white border border-banc-line/50",
+                    submit:
+                      "h-14 text-base rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30",
+                  }}
+                />
               </div>
               
               {/* Decorative element */}

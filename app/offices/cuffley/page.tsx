@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
+import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { 
   MapPin, 
   Phone, 
@@ -13,7 +12,6 @@ import {
   Clock, 
   Car, 
   Train,
-  ArrowRight,
   Users,
   Navigation,
   Star,
@@ -48,6 +46,32 @@ const officeStructuredData = [
     { name: "Offices", path: "/offices" },
     { name: BANC_OFFICES.cuffley.title, path: "/offices/cuffley" },
   ]),
+];
+
+const APPOINTMENT_FIELDS: SimpleEnquiryField[] = [
+  { name: "firstName", label: "First Name", type: "text", placeholder: "John", required: true, span: "half" },
+  { name: "lastName", label: "Last Name", type: "text", placeholder: "Smith", required: true, span: "half" },
+  { name: "phone", label: "Phone Number", type: "tel", placeholder: BANC_CONTACT.displayPhone, required: true, span: "half" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "john@example.com", required: true, span: "half" },
+  { name: "propertyAddress", label: "Property Address (if applicable)", type: "text", placeholder: "1 Station Road, Cuffley, EN6 4HU" },
+  {
+    name: "discuss",
+    label: "What would you like to discuss?",
+    type: "select",
+    placeholder: "Select a service...",
+    required: true,
+    options: [
+      "Free Property Valuation",
+      "Selling My Property",
+      "Letting My Property",
+      "Buying a Property",
+      "Renting a Property",
+      "Property Management",
+      "Other",
+    ],
+  },
+  { name: "preferredTime", label: "Preferred Date & Time", type: "datetime-local" },
+  { name: "message", label: "Additional Message", type: "textarea", placeholder: "Tell us more about your requirements..." },
 ];
 
 export const metadata: Metadata = withPageDefaults("/offices/cuffley", {
@@ -407,106 +431,14 @@ export default function CuffleyOfficePage() {
             <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
               <h3 className="text-xl font-semibold text-banc-dark-deep mb-6">Request an Appointment</h3>
               
-              <form className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">First Name *</label>
-                    <Input 
-                      placeholder="John"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Last Name *</label>
-                    <Input 
-                      placeholder="Smith"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Phone Number *</label>
-                    <Input 
-                      type="tel"
-                      placeholder={BANC_CONTACT.displayPhone}
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Email Address *</label>
-                    <Input 
-                      type="email"
-                      placeholder="john@example.com"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Property Address (if applicable)</label>
-                  <Input 
-                    placeholder="1 Station Road, Cuffley, EN6 4HU"
-                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">What would you like to discuss? *</label>
-                  <select 
-                    className="w-full h-12 px-4 rounded-lg border border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 bg-white text-banc-dark-mid"
-                    required
-                  >
-                    <option value="">Select a service...</option>
-                    <option value="valuation">Free Property Valuation</option>
-                    <option value="selling">Selling My Property</option>
-                    <option value="letting">Letting My Property</option>
-                    <option value="buying">Buying a Property</option>
-                    <option value="renting">Renting a Property</option>
-                    <option value="management">Property Management</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Preferred Date & Time</label>
-                  <Input 
-                    type="datetime-local"
-                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Additional Message</label>
-                  <Textarea 
-                    placeholder="Tell us more about your requirements..."
-                    rows={4}
-                    className="border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none"
-                  />
-                </div>
-                
-                <div className="flex items-start gap-3 p-4 bg-banc-grey-pale rounded-xl">
-                  <Checkbox 
-                    id="privacy-cuffley"
-                    required
-                    className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
-                  />
-                  <label htmlFor="privacy-cuffley" className="text-sm text-banc-muted-readable leading-relaxed">
-                    I agree to Banc Property Group contacting me about my enquiry. 
-                    Read our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
-                  </label>
-                </div>
-                
-                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
-                  Request Appointment
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
+              <SimpleEnquiryForm
+                fields={APPOINTMENT_FIELDS}
+                subject="Appointment request — Cuffley office — {discuss}"
+                intro="Appointment request from the Cuffley office page."
+                submitLabel="Request Appointment"
+                successTitle="Request received"
+                successBody="Thank you. The Cuffley office will be in touch to confirm a time that suits you."
+              />
             </div>
           </div>
         </div>

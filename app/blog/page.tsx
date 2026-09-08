@@ -6,8 +6,8 @@ import { withPageDefaults } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
+import { NewsletterSignupBox } from "@/components/NewsletterSignupBox";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { getAllPosts, getFeaturedPosts, getAllCategories, formatDate } from "@/lib/blog";
 import { ArrowRight, Calendar, Clock, User, Tag } from "lucide-react";
 
@@ -204,16 +204,7 @@ export default function BlogPage() {
               <p className="mt-3 text-sm text-white/70">
                 Subscribe to our newsletter for the latest market news, tips, and exclusive property alerts.
               </p>
-              <form className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 rounded-lg bg-white/10 px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-banc-sky"
-                />
-                <Button className="bg-banc-focus px-6 py-3 text-sm font-semibold text-white hover:bg-banc-sky-dark">
-                  Subscribe
-                </Button>
-              </form>
+              <NewsletterSignupBox />
             </div>
           </section>
         </main>

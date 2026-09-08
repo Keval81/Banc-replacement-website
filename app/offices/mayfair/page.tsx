@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
+import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { 
   MapPin, 
   Phone, 
@@ -47,6 +46,27 @@ const officeStructuredData = [
     { name: "Offices", path: "/offices" },
     { name: BANC_OFFICES.mayfair.title, path: "/offices/mayfair" },
   ]),
+];
+
+const CONSULTATION_FIELDS: SimpleEnquiryField[] = [
+  { name: "firstName", label: "First Name", type: "text", placeholder: "John", required: true, span: "half" },
+  { name: "lastName", label: "Last Name", type: "text", placeholder: "Smith", required: true, span: "half" },
+  { name: "phone", label: "Phone Number", type: "tel", placeholder: "+44 20 7123 4567", required: true, span: "half" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "john@example.com", required: true, span: "half" },
+  { name: "propertyAddress", label: "Property Address", type: "text", placeholder: "Property address or area of interest" },
+  {
+    name: "propertyValue",
+    label: "Estimated Property Value",
+    type: "select",
+    placeholder: "Select value range...",
+    options: ["£1,000,000 - £2,000,000", "£2,000,000 - £3,000,000", "£3,000,000 - £5,000,000", "£5,000,000+"],
+  },
+  {
+    name: "message",
+    label: "Message",
+    type: "textarea",
+    placeholder: "Please provide any additional details about your requirements...",
+  },
 ];
 
 export const metadata: Metadata = withPageDefaults("/offices/mayfair", {
@@ -467,95 +487,14 @@ export default function MayfairOfficePage() {
                 All enquiries are treated with the strictest confidence.
               </p>
               
-              <form className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">First Name *</label>
-                    <Input 
-                      placeholder="John"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Last Name *</label>
-                    <Input 
-                      placeholder="Smith"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Phone Number *</label>
-                    <Input 
-                      type="tel"
-                      placeholder="+44 20 7123 4567"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Email Address *</label>
-                    <Input 
-                      type="email"
-                      placeholder="john@example.com"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Property Address</label>
-                  <Input 
-                    placeholder="Property address or area of interest"
-                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Estimated Property Value</label>
-                  <select 
-                    className="w-full h-12 px-4 rounded-lg border border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 bg-white text-banc-dark-mid"
-                  >
-                    <option value="">Select value range...</option>
-                    <option value="1m-2m">£1,000,000 - £2,000,000</option>
-                    <option value="2m-3m">£2,000,000 - £3,000,000</option>
-                    <option value="3m-5m">£3,000,000 - £5,000,000</option>
-                    <option value="5m+">£5,000,000+</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Message</label>
-                  <Textarea 
-                    placeholder="Please provide any additional details about your requirements..."
-                    rows={4}
-                    className="border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none"
-                  />
-                </div>
-                
-                <div className="flex items-start gap-3 p-4 bg-banc-grey-pale rounded-xl">
-                  <Checkbox 
-                    id="privacy-mayfair"
-                    required
-                    className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
-                  />
-                  <label htmlFor="privacy-mayfair" className="text-sm text-banc-muted-readable leading-relaxed">
-                    I agree to Banc Property Group contacting me about my enquiry. 
-                    All information will be treated confidentially. 
-                    Read our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
-                  </label>
-                </div>
-                
-                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
-                  Request Private Consultation
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
+              <SimpleEnquiryForm
+                fields={CONSULTATION_FIELDS}
+                subject="Private consultation request — Mayfair office"
+                intro="Private consultation request from the Mayfair office page."
+                submitLabel="Request Private Consultation"
+                successTitle="Request received"
+                successBody="Thank you. The Mayfair office will be in touch, in confidence, to arrange your consultation."
+              />
             </div>
           </div>
         </div>

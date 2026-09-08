@@ -2,26 +2,53 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
+import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { 
   AlertCircle,
   Clock,
   Mail,
   Phone,
   FileText,
-  ArrowRight,
   Shield,
   Scale,
   Check,
   MessageSquare,
   Building2,
-  ChevronDown
 } from "lucide-react";
 import Link from "next/link";
 import { BANC_CONTACT, COMPLAINTS_PROCEDURE_URL } from "@/lib/banc-contact";
+
+const COMPLAINT_FIELDS: SimpleEnquiryField[] = [
+  { name: "firstName", label: "First Name", type: "text", placeholder: "John", required: true, span: "half" },
+  { name: "lastName", label: "Last Name", type: "text", placeholder: "Smith", required: true, span: "half" },
+  { name: "email", label: "Email Address", type: "email", placeholder: "john@example.com", required: true, span: "half" },
+  { name: "phone", label: "Phone Number", type: "tel", placeholder: BANC_CONTACT.displayPhone, span: "half" },
+  { name: "propertyAddress", label: "Property Address (if applicable)", type: "text", placeholder: "1 Station Road, Cuffley, EN6 4HU" },
+  {
+    name: "nature",
+    label: "Nature of Complaint",
+    type: "select",
+    placeholder: "Select...",
+    required: true,
+    options: ["Quality of Service", "Communication Issues", "Fees or Charges", "Maintenance/Repairs", "Staff Conduct", "Other"],
+  },
+  {
+    name: "details",
+    label: "Details of Complaint",
+    type: "textarea",
+    rows: 5,
+    placeholder: "Please provide as much detail as possible about your complaint...",
+    required: true,
+  },
+  {
+    name: "resolution",
+    label: "What would you like us to do?",
+    type: "textarea",
+    rows: 3,
+    placeholder: "How would you like us to resolve this matter?",
+  },
+];
 
 export const metadata: Metadata = withPageDefaults("/complaints", {
   title: "Complaints Procedure | Banc Property Group",
@@ -330,109 +357,20 @@ export default function ComplaintsPage() {
                 Use this form to submit your complaint. We&apos;ll respond within 3 working days.
               </p>
               
-              <form className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">First Name *</label>
-                    <Input 
-                      placeholder="John"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Last Name *</label>
-                    <Input 
-                      placeholder="Smith"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Email Address *</label>
-                    <Input 
-                      type="email"
-                      placeholder="john@example.com"
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-banc-dark-mid mb-2">Phone Number</label>
-                    <Input 
-                      type="tel"
-                      placeholder={BANC_CONTACT.displayPhone}
-                      className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Property Address (if applicable)</label>
-                  <Input 
-                    placeholder="1 Station Road, Cuffley, EN6 4HU"
-                    className="h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Nature of Complaint *</label>
-                  <div className="relative">
-                    <select 
-                      className="w-full min-h-[48px] px-4 py-3 rounded-xl border border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 bg-white text-banc-dark-mid appearance-none cursor-pointer transition-colors hover:border-banc-sky/50"
-                      required
-                    >
-                      <option value="">Select...</option>
-                      <option value="service">Quality of Service</option>
-                      <option value="communication">Communication Issues</option>
-                      <option value="fees">Fees or Charges</option>
-                      <option value="maintenance">Maintenance/Repairs</option>
-                      <option value="staff">Staff Conduct</option>
-                      <option value="other">Other</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-banc-muted-readable pointer-events-none" />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">Details of Complaint *</label>
-                  <Textarea 
-                    placeholder="Please provide as much detail as possible about your complaint..."
-                    rows={5}
-                    className="border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-banc-dark-mid mb-2">What would you like us to do?</label>
-                  <Textarea 
-                    placeholder="How would you like us to resolve this matter?"
-                    rows={3}
-                    className="border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none"
-                  />
-                </div>
-                
-                <div className="flex items-start gap-3 p-4 bg-banc-grey-pale rounded-xl">
-                  <Checkbox 
-                    id="privacy-complaint"
-                    required
-                    className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
-                  />
-                  <label htmlFor="privacy-complaint" className="text-sm text-banc-muted-readable leading-relaxed">
-                    I understand that my personal information will be used to investigate this complaint 
+              <SimpleEnquiryForm
+                fields={COMPLAINT_FIELDS}
+                subject="Complaint — {nature}"
+                intro="Complaint submitted through the website complaints form."
+                submitLabel="Submit Complaint"
+                successTitle="Complaint received"
+                successBody="Thank you. We take every complaint seriously and will respond within 3 working days."
+                consentLabel={
+                  <>
+                    I understand that my personal information will be used to investigate this complaint
                     in accordance with our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
-                  </label>
-                </div>
-                
-                <Button type="submit" className="w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold">
-                  Submit Complaint
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
+                  </>
+                }
+              />
             </div>
           </div>
         </div>

@@ -41,7 +41,7 @@ export const BANC_OFFICES = {
     addressLines: ["1 Station Road", "Cuffley", "EN6 4HU"],
     phone: BANC_CONTACT,
     email: BANC_EMAIL,
-    openingHours: ["Monday to Saturday: 9am to 6pm", "Sunday: Closed"],
+    openingHours: ["Monday to Saturday: 9am to 5:30pm", "Sunday: Closed"],
     aliases: ["contact Banc", "Cuffley office", "opening hours", "phone number"],
   },
   mayfair: {

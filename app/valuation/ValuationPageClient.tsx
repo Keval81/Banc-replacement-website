@@ -80,6 +80,7 @@ export default function ValuationPage() {
     timeframe: "",
     message: "",
     department: "sales" as "sales" | "lettings",
+    website: "",
   });
   const [consent, setConsent] = useState(false);
   const [estimate, setEstimate] = useState<ValuationEstimateView | null>(null);
@@ -474,6 +475,17 @@ export default function ValuationPage() {
                       />
                     </div>
 
+                    {/* Honeypot: hidden from people, filled by bots; the API rejects any value. */}
+                    <input
+                      id="website"
+                      type="text"
+                      value={formData.website}
+                      onChange={(e) => handleChange("website", e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute -left-[9999px] h-px w-px opacity-0"
+                    />
                     <div className="space-y-2">
                       <label htmlFor="message" className="block text-sm font-medium text-banc-dark">
                         <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />

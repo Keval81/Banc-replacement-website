@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BANC_CONTACT, LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
+import { subscribeToNewsletter } from "@/lib/newsletter-subscribe";
 
 const footerLinks = {
   about: [
@@ -55,18 +56,22 @@ export default function Footer() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
+  const [statusMessage, setStatusMessage] = useState('');
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setStatus('loading');
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const result = await subscribeToNewsletter(email);
+    setStatusMessage(result.message);
+    if (!result.ok) {
+      setStatus('error');
+      return;
+    }
     setStatus('success');
     setEmail('');
-    
-    // Reset after 3 seconds
-    setTimeout(() => setStatus('idle'), 3000);
+    setTimeout(() => setStatus('idle'), 5000);
   };
 
   return (
@@ -220,7 +225,10 @@ export default function Footer() {
                 </Button>
               </div>
               {status === 'success' && (
-                <p className="text-green-400 text-sm">Thanks for subscribing!</p>
+                <p className="text-green-400 text-sm" role="status">{statusMessage}</p>
+              )}
+              {status === 'error' && (
+                <p className="text-red-300 text-sm" role="alert">{statusMessage}</p>
               )}
             </form>
           </div>
