@@ -219,6 +219,24 @@ const nextConfig: NextConfig = {
         destination: "/area-guides",
         permanent: true,
       },
+      // Three guides the old sitemap published that the new site never
+      // built. Each goes to the guide that covers the same ground so the
+      // wildcard below cannot 308 an indexed URL into a 404.
+      {
+        source: "/area-guide/crews-hill",
+        destination: "/area-guides/enfield",
+        permanent: true,
+      },
+      {
+        source: "/area-guide/little-heath",
+        destination: "/area-guides/potters-bar",
+        permanent: true,
+      },
+      {
+        source: "/area-guide/west-chesnut",
+        destination: "/area-guides/cheshunt",
+        permanent: true,
+      },
       {
         source: "/area-guide/:slug",
         destination: "/area-guides/:slug",

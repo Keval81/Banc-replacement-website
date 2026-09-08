@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { execSync } from "node:child_process";
 import test from "node:test";
+import { areaGuides } from "../area-guides.ts";
 
 const root = join(import.meta.dirname, "..", "..");
 const config = readFileSync(join(root, "next.config.ts"), "utf8");
@@ -107,4 +108,27 @@ test("the old site's URL inventory is kept, because it cannot be recaptured", ()
       file.includes("old-site-url-inventory"),
     ),
   );
+});
+
+test("a wildcard redirect never lands a legacy URL on a route that does not exist", () => {
+  // /area-guide/:slug -> /area-guides/:slug is only a redirect when the guide
+  // exists on the new site. The old sitemap published three slugs the new site
+  // never built, and a 308 into a 404 loses the ranking the rule was meant to keep.
+  const wildcard = redirects.filter((r) => r.source.includes(":"));
+  const dead = legacyPaths.flatMap((pathname) => {
+    const explicit = redirects.some((r) => r.source === pathname);
+    if (explicit || routeExists(pathname)) return [];
+    return wildcard.flatMap(({ source, destination }) => {
+      const pattern = new RegExp(`^${source.replace(/:[A-Za-z]+/g, "([^/]+)")}$`);
+      const match = pathname.match(pattern);
+      if (!match) return [];
+      const target = destination.replace(/:[A-Za-z]+/g, () => match[1]).split("?")[0];
+      const guide = target.match(/^\/area-guides\/([^/]+)$/);
+      const exists = guide
+        ? areaGuides.some((g) => g.slug === guide[1])
+        : routeExists(target) || redirects.some((r) => r.source === target);
+      return exists ? [] : [`${pathname} -> ${target}`];
+    });
+  });
+  assert.deepEqual(dead, []);
 });
