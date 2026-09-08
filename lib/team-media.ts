@@ -204,6 +204,20 @@ export function getTeamPortrait(name: TeamMemberName): TeamPortrait {
   return TEAM_PORTRAITS[name];
 }
 
+// The phone breakpoint the hero uses for its clip. Kept here so the hook and
+// the CSS module's still (max-width: 767px) agree.
+export const TEAM_HERO_PHONE_QUERY = "(max-width: 767px)";
+
+// One clip per viewport, chosen in code. A <source media> list looked right but
+// Safari treats a failed fetch as "try the next source": on 8 Sep a phone whose
+// portrait request stalled played the landscape cut covered over a 440x774
+// box, which is the sign across the screen and three giant figures. With a
+// single src there is nothing to fall through to, and a failed clip leaves
+// the still underneath, which is the same framing.
+export function getTeamHeroVideoSource(isPhoneViewport: boolean): string {
+  return isPhoneViewport ? TEAM_HERO_MEDIA.portraitVideo : TEAM_HERO_MEDIA.landscapeVideo;
+}
+
 export function shouldRenderTeamHeroVideo(prefersReducedMotion: boolean): boolean {
   return !prefersReducedMotion;
 }

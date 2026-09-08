@@ -4,6 +4,7 @@ import path from "node:path";
 import test from "node:test";
 
 import {
+  getTeamHeroVideoSource,
   getTeamPortrait,
   shouldRenderTeamHeroVideo,
   TEAM_HERO_MEDIA,
@@ -42,4 +43,12 @@ test("plays the clay film on every width; the phone cut carries the frozen sign"
       `missing Team hero asset: ${source}`,
     );
   }
+});
+
+test("a phone gets the portrait clip and nothing else to fall through to", () => {
+  assert.equal(getTeamHeroVideoSource(true), TEAM_HERO_MEDIA.portraitVideo);
+});
+
+test("wider viewports get the landscape clip", () => {
+  assert.equal(getTeamHeroVideoSource(false), TEAM_HERO_MEDIA.landscapeVideo);
 });
