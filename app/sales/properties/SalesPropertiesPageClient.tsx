@@ -181,7 +181,7 @@ function SalesPropertiesPageContent() {
                       ? "grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
                       : viewMode === "list"
                         ? "flex flex-col gap-6"
-                        : "h-[600px] overflow-hidden rounded-2xl bg-banc-grey-pale"
+                        : "h-[calc(100vh-9rem)] min-h-[520px] overflow-hidden rounded-2xl bg-banc-grey-pale"
                   }
                 >
                   {viewMode === "map" ? (

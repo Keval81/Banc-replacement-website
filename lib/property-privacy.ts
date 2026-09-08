@@ -91,5 +91,7 @@ export function toAreaCoordinate(value: number | undefined): number | undefined 
   return Math.round(value * AREA_COORDINATE_PRECISION) / AREA_COORDINATE_PRECISION;
 }
 
-// At this zoom a Google or OSM frame shows the neighbourhood, not the roof.
-export const AREA_MAP_ZOOM = 14;
+// At this zoom a Google or OSM frame shows the streets around the property —
+// close enough to place it in its neighbourhood, still short of the rooftop
+// detail (18+) that would identify the individual plot.
+export const AREA_MAP_ZOOM = 16;

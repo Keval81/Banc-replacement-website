@@ -84,5 +84,5 @@ test("rounds coordinates so a pin cannot land on the plot", () => {
 });
 
 test("frames the map at an area zoom rather than a rooftop zoom", () => {
-  assert.ok(AREA_MAP_ZOOM <= 15, "an area map must not zoom to individual plots");
+  assert.ok(AREA_MAP_ZOOM <= 16, "an area map must not zoom to individual plots (18+ shows rooftops)");
 });

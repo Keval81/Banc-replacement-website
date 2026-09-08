@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { GoogleMap, useJsApiLoader, MarkerF, InfoWindowF } from "@react-google-maps/api";
 import { getPropertyMapPoints } from "@/lib/property-map-view";
+import { AREA_MAP_ZOOM } from "@/lib/property-privacy";
 import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 
 type MapProperty = Pick<
@@ -25,20 +26,37 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
     [properties]
   );
 
-  const onLoad = React.useCallback(
+  const mapRef = React.useRef<google.maps.Map | null>(null);
+
+  // Frame every pin. Run it again whenever the results change — filtering used
+  // to leave the map on the previous set's framing.
+  const frameToPoints = React.useCallback(
     (map: google.maps.Map) => {
       if (points.length === 0) return;
       if (points.length === 1) {
         map.setCenter(points[0].position);
-        map.setZoom(14);
+        map.setZoom(AREA_MAP_ZOOM);
         return;
       }
       const bounds = new google.maps.LatLngBounds();
       points.forEach((p) => bounds.extend(p.position));
-      map.fitBounds(bounds, 80);
+      map.fitBounds(bounds, 64);
     },
     [points]
   );
+
+  const onLoad = React.useCallback(
+    (map: google.maps.Map) => {
+      mapRef.current = map;
+      map.setMapTypeId(google.maps.MapTypeId.HYBRID);
+      frameToPoints(map);
+    },
+    [frameToPoints]
+  );
+
+  React.useEffect(() => {
+    if (mapRef.current) frameToPoints(mapRef.current);
+  }, [frameToPoints]);
 
   if (points.length === 0) {
     return (
@@ -73,12 +91,21 @@ export default function PropertyMap({ properties }: { properties: MapProperty[] 
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={points[0].position}
-        zoom={11}
+        zoom={AREA_MAP_ZOOM}
         onLoad={onLoad}
         options={{
+          // Satellite with labels, matching the map on every listing page.
+          mapTypeId: "hybrid",
+          // Below this the world tile repeats and the same pins appear three
+          // times across the map, which is what made it unreadable.
+          minZoom: 9,
+          maxZoom: 18,
           streetViewControl: false,
           mapTypeControl: false,
-          fullscreenControl: false,
+          fullscreenControl: true,
+          zoomControl: true,
+          gestureHandling: "greedy",
+          keyboardShortcuts: false,
         }}
       >
         {points.map((p) => (
