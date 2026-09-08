@@ -366,7 +366,7 @@ export default function PropertyChatbot({
               className={
                 usesUnifiedHelp
                   ? "flex h-12 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full border border-white/20 bg-banc-dark-deep px-4 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:bg-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-2"
-                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-banc-dark-deep text-white shadow-lg transition-colors duration-200 hover:bg-banc-dark"
+                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-banc-cream text-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 motion-reduce:transition-none"
               }
               aria-label={
                 usesUnifiedHelp
@@ -385,7 +385,7 @@ export default function PropertyChatbot({
                 )
               ) : (
                 <span
-                  className="h-12 w-12 overflow-hidden rounded-full bg-banc-cream"
+                  className="h-14 w-14 overflow-hidden rounded-full bg-banc-cream"
                   aria-hidden="true"
                 >
                   <Image

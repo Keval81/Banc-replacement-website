@@ -180,37 +180,46 @@ export default function Footer() {
           <p className="text-center text-[10px] font-medium uppercase tracking-[0.25em] text-banc-grey/60 mb-6">
             Accredited &amp; Trusted Partners
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-14">
+          {/* One height for every mark, so a wide lockup and a square badge
+              read as the same weight on the row. */}
+          <ul className="mx-auto grid max-w-md list-none grid-cols-3 items-center justify-items-center gap-x-4 gap-y-7 md:flex md:max-w-none md:flex-wrap md:justify-center md:gap-x-12">
             {[
-              { src: "/partners/rightmove.png", alt: "Rightmove", w: "w-[130px] md:w-[160px]" },
-              { src: "/zoopla_logo-01.jpg", alt: "Zoopla", w: "w-[100px] md:w-[130px]" },
-              { src: "/TheGuild_Logo_RGB.jpg", alt: "The Guild of Property Professionals", w: "w-[70px] md:w-[90px]" },
-              { src: "/propertymark.jpg", alt: "The Property Ombudsman", w: "w-[110px] md:w-[140px]" },
-              { src: "/9_long_member_rgb.png", alt: "OnTheMarket", w: "w-[130px] md:w-[160px]" },
-              { src: "/tpo-tsi.jpg", alt: "TPO & TSI Approved", w: "w-[120px] md:w-[150px]" },
+              { src: "/partners/rightmove.png", alt: "Rightmove" },
+              { src: "/zoopla_logo-01.jpg", alt: "Zoopla" },
+              { src: "/9_long_member_rgb.png", alt: "OnTheMarket" },
+              { src: "/TheGuild_Logo_RGB.jpg", alt: "The Guild of Property Professionals" },
+              { src: "/tpo-tsi.jpg", alt: "The Property Ombudsman and TSI approved" },
             ].map((logo) => (
-              <Image
-                key={logo.alt}
-                src={logo.src}
-                alt={logo.alt}
-                width={200}
-                height={80}
-                className={`${logo.w} h-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300`}
-              />
+              <li key={logo.alt} className="flex h-9 items-center justify-center md:h-11">
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  width={320}
+                  height={120}
+                  className="h-full w-auto max-w-[130px] object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100 md:max-w-[160px]"
+                />
+              </li>
             ))}
-            {/* Client Money Protection — the certificate is the thing that
-                matters for compliance, so it links straight to the PDF. The
-                scheme's logo replaces this text chip once Nitesh sends it
-                (due the morning of 8 Sep). */}
-            <a
-              href={CMP_CERTIFICATE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center gap-2 rounded-md border border-banc-line px-3 text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable transition-colors hover:border-banc-focus hover:text-banc-focus"
-            >
-              <span className="text-banc-focus">CMP</span> Client Money Protected · certificate
-            </a>
-          </div>
+            {/* Client Money Protection — the certificate is what matters for
+                compliance, so the mark links straight to the PDF. */}
+            <li className="flex h-9 items-center justify-center md:h-11">
+              <a
+                href={CMP_CERTIFICATE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Client Money Protect — view our membership certificate"
+                className="flex h-full items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
+              >
+                <Image
+                  src="/partners/cmp-client-money-protect.png"
+                  alt="Client Money Protect"
+                  width={320}
+                  height={120}
+                  className="h-full w-auto max-w-[130px] object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100 md:max-w-[160px]"
+                />
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 

@@ -167,9 +167,24 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               <a
                 href={BANC_CONTACT.callHref}
                 aria-label={`Call Banc Property Group on ${BANC_CONTACT.displayPhone}`}
-                className="flex h-11 w-11 items-center justify-center rounded-full text-banc-sky transition-colors duration-200 hover:bg-white/5 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                // Sized from the same tokens as the social icons beside it —
+                // a 32px mark in a 48px target — so the row lines up.
+                style={{
+                  width: landingUi.mobileSocialPresentation.touchTargetSize,
+                  height: landingUi.mobileSocialPresentation.touchTargetSize,
+                }}
+                className="flex shrink-0 items-center justify-center rounded-full text-banc-sky transition-transform duration-200 hover:scale-105 hover:text-banc-sky-mid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky active:scale-95 motion-reduce:transition-none"
               >
-                <Phone className="h-5 w-5" aria-hidden="true" />
+                <Phone
+                  aria-hidden="true"
+                  fill="currentColor"
+                  strokeWidth={1.5}
+                  style={{
+                    width: landingUi.mobileSocialPresentation.iconSize,
+                    height: landingUi.mobileSocialPresentation.iconSize,
+                  }}
+                  className="drop-shadow-[0_3px_10px_rgba(0,0,0,0.28)]"
+                />
               </a>
               {landingUi.mobileSocialActions.map((action) => (
                 <SocialIconLink
