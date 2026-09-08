@@ -147,11 +147,10 @@ export default function CuffleyOfficePage() {
       <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0">
-          {/* The team outside the Cuffley office — the same claymation
-              shopfront as the contact page and the emails, in place of a
-              stock photograph of somewhere else. */}
+          {/* The claymation Cuffley shopfront without the team figures —
+              Nitesh asked for the empty shop on this page (8 Sep). */}
           <img
-            src="/images/team/banc-team-clay.jpg"
+            src="/images/team/banc-shopfront-clay.jpg"
             alt=""
             className="h-full w-full object-cover object-[center_35%] opacity-70"
           />

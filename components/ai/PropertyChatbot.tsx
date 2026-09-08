@@ -366,7 +366,7 @@ export default function PropertyChatbot({
               className={
                 usesUnifiedHelp
                   ? "flex h-12 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-banc-dark-deep px-4 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:bg-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-2"
-                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-banc-cream text-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 motion-reduce:transition-none"
+                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-white text-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 motion-reduce:transition-none"
               }
               aria-label={
                 usesUnifiedHelp
@@ -384,18 +384,14 @@ export default function PropertyChatbot({
                   <CircleHelp className="h-5 w-5" aria-hidden="true" />
                 )
               ) : (
-                <span
-                  className="h-14 w-14 overflow-hidden rounded-full bg-banc-cream"
+                <Image
+                  src={landingContactLauncher.assistantAvatar.src}
+                  alt={landingContactLauncher.assistantAvatar.alt}
+                  width={56}
+                  height={56}
+                  className="h-full w-full scale-[1.04] object-cover"
                   aria-hidden="true"
-                >
-                  <Image
-                    src={landingContactLauncher.assistantAvatar.src}
-                    alt={landingContactLauncher.assistantAvatar.alt}
-                    width={48}
-                    height={48}
-                    className="h-full w-full object-cover"
-                  />
-                </span>
+                />
               )}
               {usesUnifiedHelp ? (
                 <span>{landingContactLauncher.label}</span>
