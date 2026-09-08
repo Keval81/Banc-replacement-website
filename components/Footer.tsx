@@ -180,42 +180,45 @@ export default function Footer() {
           <p className="text-center text-[10px] font-medium uppercase tracking-[0.25em] text-banc-grey/60 mb-6">
             Accredited &amp; Trusted Partners
           </p>
-          {/* One height for every mark, so a wide lockup and a square badge
-              read as the same weight on the row. */}
-          <ul className="mx-auto grid max-w-md list-none grid-cols-3 items-center justify-items-center gap-x-4 gap-y-7 md:flex md:max-w-none md:flex-wrap md:justify-center md:gap-x-12">
+          {/* Each mark is trimmed to its own artwork (the supplied files carried
+              up to 89% white padding, which is why Rightmove and Zoopla looked
+              tiny next to the rest) and then sized by optical weight rather
+              than raw height, so a square badge and a wide lockup read as the
+              same size. */}
+          <ul className="mx-auto grid max-w-sm list-none grid-cols-2 items-center justify-items-center gap-x-6 gap-y-8 md:flex md:max-w-none md:flex-wrap md:justify-center md:gap-x-10 lg:gap-x-14">
             {[
-              { src: "/partners/rightmove.png", alt: "Rightmove" },
-              { src: "/zoopla_logo-01.jpg", alt: "Zoopla" },
-              { src: "/9_long_member_rgb.png", alt: "OnTheMarket" },
-              { src: "/TheGuild_Logo_RGB.jpg", alt: "The Guild of Property Professionals" },
-              { src: "/tpo-tsi.jpg", alt: "The Property Ombudsman and TSI approved" },
+              { src: "/partners/trimmed/rightmove.png", alt: "Rightmove", h: "h-[25px] md:h-[33px]" },
+              { src: "/partners/trimmed/zoopla.png", alt: "Zoopla", h: "h-[30px] md:h-[39px]" },
+              { src: "/partners/trimmed/onthemarket.png", alt: "OnTheMarket", h: "h-[23px] md:h-[30px]" },
+              { src: "/partners/trimmed/guild.png", alt: "The Guild of Property Professionals", h: "h-[35px] md:h-[46px]" },
+              { src: "/partners/trimmed/tpo-tsi.png", alt: "The Property Ombudsman and TSI Approved Code", h: "h-[25px] md:h-[33px]" },
             ].map((logo) => (
-              <li key={logo.alt} className="flex h-9 items-center justify-center md:h-11">
+              <li key={logo.alt} className="flex h-12 w-full items-center justify-center md:h-14 md:w-auto">
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={320}
                   height={120}
-                  className="h-full w-auto max-w-[130px] object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100 md:max-w-[160px]"
+                  className={`${logo.h} w-auto max-w-full object-contain opacity-80 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0`}
                 />
               </li>
             ))}
             {/* Client Money Protection — the certificate is what matters for
                 compliance, so the mark links straight to the PDF. */}
-            <li className="flex h-9 items-center justify-center md:h-11">
+            <li className="flex h-12 w-full items-center justify-center md:h-14 md:w-auto">
               <a
                 href={CMP_CERTIFICATE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Client Money Protect — view our membership certificate"
-                className="flex h-full items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
+                className="flex items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
               >
                 <Image
-                  src="/partners/cmp-client-money-protect.png"
+                  src="/partners/trimmed/cmp.png"
                   alt="Client Money Protect"
                   width={320}
                   height={120}
-                  className="h-full w-auto max-w-[130px] object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100 md:max-w-[160px]"
+                  className="h-[24px] w-auto max-w-full object-contain opacity-80 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 md:h-[32px]"
                 />
               </a>
             </li>

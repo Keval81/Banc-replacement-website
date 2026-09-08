@@ -177,8 +177,7 @@ export default function Header({ transparent = false }: { transparent?: boolean 
               >
                 <Phone
                   aria-hidden="true"
-                  fill="currentColor"
-                  strokeWidth={1.5}
+                  strokeWidth={1.75}
                   style={{
                     width: landingUi.mobileSocialPresentation.iconSize,
                     height: landingUi.mobileSocialPresentation.iconSize,
