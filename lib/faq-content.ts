@@ -23,7 +23,7 @@ export const faqCategories: FaqCategory[] = [
       },
       {
         question: "What are your opening hours?",
-        answer: "Our Cuffley office is open Monday to Friday 9:00 AM - 6:00 PM, and Saturday 9:00 AM - 4:00 PM. We're closed on Sundays. Our Mayfair office operates by appointment. We also offer evening appointments by arrangement."
+        answer: "Our Cuffley office is open Monday to Saturday 9:00 AM - 5:30 PM. We're closed on Sundays. Our Mayfair office operates by appointment. We also offer evening appointments by arrangement."
       },
       {
         question: "Which areas do you cover?",

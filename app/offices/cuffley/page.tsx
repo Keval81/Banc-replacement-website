@@ -114,12 +114,12 @@ const teamMembers = [
 
 // Opening hours
 const openingHours = [
-  { day: "Monday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Tuesday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Wednesday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Thursday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Friday", hours: "9:00 AM - 6:00 PM" },
-  { day: "Saturday", hours: "9:00 AM - 6:00 PM" },
+  { day: "Monday", hours: "9:00 AM - 5:30 PM" },
+  { day: "Tuesday", hours: "9:00 AM - 5:30 PM" },
+  { day: "Wednesday", hours: "9:00 AM - 5:30 PM" },
+  { day: "Thursday", hours: "9:00 AM - 5:30 PM" },
+  { day: "Friday", hours: "9:00 AM - 5:30 PM" },
+  { day: "Saturday", hours: "9:00 AM - 5:30 PM" },
   { day: "Sunday", hours: "Closed" },
 ];
 
@@ -147,13 +147,15 @@ export default function CuffleyOfficePage() {
       <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0">
-          <Image 
-            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
-            alt="Cuffley Office"
-            fill
-            className="object-cover opacity-20"
+          {/* The team outside the Cuffley office — the same claymation
+              shopfront as the contact page and the emails, in place of a
+              stock photograph of somewhere else. */}
+          <img
+            src="/images/team/banc-team-clay.jpg"
+            alt=""
+            className="h-full w-full object-cover object-[center_35%] opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep via-banc-dark-deep/90 to-banc-dark-deep/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/85 via-banc-dark-deep/50 to-banc-dark-deep/20" />
         </div>
         
         <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
