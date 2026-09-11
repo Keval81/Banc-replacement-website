@@ -91,6 +91,7 @@ function SalesPropertiesPageContent() {
       </section>
 
       <section
+        id="property-results"
         className="px-4 py-8 sm:px-6 sm:py-12 lg:px-10"
         aria-busy={isLoading}
       >

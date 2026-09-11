@@ -62,6 +62,22 @@ export function useSearchFilters({
   const [controller] = React.useState<PropertySearchUrlController>(() =>
     createPropertySearchUrlController(query, {
       replace: (href) => router.replace(href, { scroll: false }),
+      // Filter edits keep their position (scroll: false above) because the URL
+      // updates mid-typing. A page change is a new set of results, so it goes
+      // back to the top of the list — not the top of the document, which would
+      // put the hero back in view and make people scroll past it again.
+      onPageNavigate: () => {
+        const results = document.getElementById("property-results");
+        const top = results
+          ? results.getBoundingClientRect().top + window.scrollY - 80
+          : 0;
+        window.scrollTo({
+          top: Math.max(top, 0),
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "auto"
+            : "smooth",
+        });
+      },
       schedule: (callback, delay) => window.setTimeout(callback, delay),
       cancel: (timer) => window.clearTimeout(timer),
       debounceMs,

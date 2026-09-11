@@ -11,10 +11,12 @@ function createHarness(
   let nextTimer = 1;
   const timers = new Map<number, () => void>();
   const replacements: string[] = [];
+  const pageNavigations: number[] = [];
   const controller = createPropertySearchUrlController(
     initialQuery,
     {
       replace: (href) => replacements.push(href),
+      onPageNavigate: () => pageNavigations.push(replacements.length),
       schedule: (callback) => {
         const id = nextTimer++;
         timers.set(id, callback);
@@ -28,6 +30,7 @@ function createHarness(
   return {
     controller,
     replacements,
+    pageNavigations,
     runTimers() {
       const callbacks = [...timers.values()];
       timers.clear();
@@ -153,4 +156,38 @@ test("acknowledging a coalesced replace clears it and every older destination", 
     "/sales/properties?location=Mayfair",
     "/sales/properties?location=Cuffley",
   ]);
+});
+
+test("moving to another page of results announces a page navigation, so the view can be taken back to the top", () => {
+  const { controller, replacements, pageNavigations } = createHarness();
+
+  controller.setPage(2);
+
+  assert.equal(replacements.length, 1, "the page change navigates");
+  assert.deepEqual(
+    pageNavigations,
+    [1],
+    "and announces itself once, after the navigation",
+  );
+});
+
+test("editing a filter never announces a page navigation — the page must not jump while someone is still typing", () => {
+  const { controller, pageNavigations, runTimers } = createHarness();
+
+  controller.patchFilters({ location: "Cuffley" });
+  runTimers();
+  controller.clearFilters();
+  runTimers();
+  controller.submit();
+
+  assert.deepEqual(pageNavigations, []);
+});
+
+test("a page change that does not move anywhere announces nothing", () => {
+  const { controller, replacements, pageNavigations } = createHarness();
+
+  controller.setPage(1);
+
+  assert.deepEqual(replacements, [], "page 1 is already the current page");
+  assert.deepEqual(pageNavigations, []);
 });

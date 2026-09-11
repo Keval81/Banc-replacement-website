@@ -22,6 +22,10 @@ interface PropertySearchUrlControllerDependencies<TTimer> {
   cancel: (timer: TTimer) => void;
   debounceMs: number;
   onChange?: (snapshot: PropertySearchUrlSnapshot) => void;
+  // Fired only when a page change actually navigates. Filter edits are
+  // deliberately excluded: the URL updates while someone is still typing, and
+  // moving the view then would yank the page out from under them.
+  onPageNavigate?: () => void;
 }
 
 export interface PropertySearchUrlController {
@@ -57,7 +61,10 @@ export function createPropertySearchUrlController<TTimer>(
     timer = undefined;
   };
 
-  const navigate = (query: PropertySearchQuery) => {
+  const navigate = (
+    query: PropertySearchQuery,
+    reason: "filters" | "page" = "filters",
+  ) => {
     cancelTimer();
     const href = buildPropertyResultsHref(query);
     if (
@@ -68,6 +75,9 @@ export function createPropertySearchUrlController<TTimer>(
     }
     selfAuthoredHrefs.push(href);
     dependencies.replace(href);
+    if (reason === "page") {
+      dependencies.onPageNavigate?.();
+    }
   };
 
   const scheduleDraft = () => {
@@ -112,7 +122,7 @@ export function createPropertySearchUrlController<TTimer>(
       });
       snapshot = { ...snapshot, draftQuery };
       notify();
-      navigate(draftQuery);
+      navigate(draftQuery, "page");
     },
     recoverOutOfRangePage: (requestedQuery, page) => {
       const requestedHref = buildPropertyResultsHref(requestedQuery);
@@ -129,6 +139,9 @@ export function createPropertySearchUrlController<TTimer>(
       });
       snapshot = { ...snapshot, draftQuery };
       notify();
+      // Deliberately not a "page" navigation: recovery is triggered by results
+      // arriving after a filter edit, so moving the view here would jump the
+      // page while someone is still working the filters.
       navigate(draftQuery);
     },
     acceptUrl: (query) => {
