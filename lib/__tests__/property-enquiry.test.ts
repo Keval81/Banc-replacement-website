@@ -100,6 +100,30 @@ test("submitContactEnquiry posts JSON and reports success or the API error", asy
   assert.equal(crashed.ok, false);
 });
 
+test("submitContactEnquiry tells the visitor which field the server rejected instead of 'Validation failed'", async () => {
+  const payload = buildViewingEnquiry(property, {
+    name: "J",
+    email: "jane@example.com",
+    phone: "07700 900123",
+    date: "2026-09-10",
+    time: "10:30",
+  });
+
+  const rejected = await submitContactEnquiry(
+    async () => ({
+      ok: false,
+      json: async () => ({
+        success: false,
+        error: "Validation failed",
+        details: [{ path: ["name"], message: "Please enter your full name" }],
+      }),
+    }),
+    payload,
+  );
+
+  assert.deepEqual(rejected, { ok: false, error: "Please enter your full name" });
+});
+
 test("a viewing enquiry says plainly that the date is a request until the team confirms", () => {
   const payload = buildViewingEnquiry(
     {

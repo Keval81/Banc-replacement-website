@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BANC_CONTACT } from "@/lib/banc-contact";
+import { describeSubmitError } from "@/lib/lead-form-rules";
 import {
   buildSimpleEnquiryPayload,
   type SimpleEnquiryField,
@@ -74,25 +75,8 @@ function groupRows(fields: readonly SimpleEnquiryField[]): SimpleEnquiryField[][
 
 /** The server explains delivery failures itself (with the office number); validation issues list their own messages. */
 async function readServerError(response: Response): Promise<string> {
-  try {
-    const data: unknown = await response.json();
-    if (!data || typeof data !== "object") return FALLBACK_ERROR;
-    const { error, details } = data as { error?: unknown; details?: unknown };
-    const issues = Array.isArray(details)
-      ? details
-          .map((issue) =>
-            issue && typeof issue === "object" && typeof (issue as { message?: unknown }).message === "string"
-              ? (issue as { message: string }).message
-              : ""
-          )
-          .filter(Boolean)
-      : [];
-    if (issues.length) return issues.join(" ");
-    if (typeof error === "string" && error) return error;
-  } catch {
-    // Not a JSON body; fall through to the generic message.
-  }
-  return FALLBACK_ERROR;
+  const data: unknown = await response.json().catch(() => null);
+  return describeSubmitError(data, FALLBACK_ERROR);
 }
 
 /**

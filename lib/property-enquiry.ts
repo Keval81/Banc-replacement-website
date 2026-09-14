@@ -3,6 +3,7 @@
 // exactly: name, email, phone?, subject, message, consent, website (honeypot,
 // must stay empty).
 
+import { describeSubmitError } from "./lead-form-rules.ts";
 import { buildPropertyHref, type LivePropertyDetail } from "./property-view.ts";
 
 export interface ContactEnquiryPayload {
@@ -174,13 +175,7 @@ export async function submitContactEnquiry(
       (data as { success?: unknown }).success === true;
     if (success) return { ok: true };
 
-    const error =
-      typeof data === "object" &&
-      data !== null &&
-      typeof (data as { error?: unknown }).error === "string"
-        ? (data as { error: string }).error
-        : GENERIC_ERROR;
-    return { ok: false, error };
+    return { ok: false, error: describeSubmitError(data, GENERIC_ERROR) };
   } catch {
     return { ok: false, error: GENERIC_ERROR };
   }

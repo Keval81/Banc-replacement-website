@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { db } from "@/lib/db";
 import { emailTemplates } from "@/lib/email";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
 import { fetchSoldPricesBySector } from "@/lib/api/landRegistry";
+import { valuationRequestSchema } from "@/lib/lead-form-rules";
 import { estimateFromSales, lookupPostcodeDistrict, postcodeSector, type ValuationEstimate } from "@/lib/valuation-estimate";
 import {
   createPublicFormRateLimiter,
@@ -15,24 +15,6 @@ import {
 export const runtime = "nodejs";
 
 const limiter = createPublicFormRateLimiter();
-
-// Validation schema (bounded lengths; unknown fields are stripped)
-const valuationSchema = z.object({
-  firstName: z.string().trim().min(2, "First name must be at least 2 characters").max(80),
-  lastName: z.string().trim().min(2, "Last name must be at least 2 characters").max(80),
-  email: z.string().trim().email("Please enter a valid email address").max(254),
-  phone: z.string().trim().min(10, "Please enter a valid phone number").max(30),
-  address: z.string().trim().min(5, "Please enter the property address").max(300),
-  postcode: z.string().trim().min(5, "Please enter a valid postcode").max(10),
-  propertyType: z.string().trim().max(60).optional(),
-  bedrooms: z.string().trim().max(10).optional(),
-  timeframe: z.string().trim().max(60).optional(),
-  message: z.string().trim().max(5000).optional(),
-  // "sell" or "let" — the form asks first. Lettings go to the lettings team and
-  // get no online figure; there is no public source of rental comparables.
-  department: z.enum(["sales", "lettings"]).default("sales"),
-  website: z.string().max(0).optional(), // honeypot
-});
 
 /**
  * An indicative range from the register, or nothing. A slow or empty register
@@ -79,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate input
-    const result = valuationSchema.safeParse(body);
+    const result = valuationRequestSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
         {
@@ -96,7 +78,7 @@ export async function POST(request: NextRequest) {
     // Store request in database
     const valuationRequest = await db.valuation.create({
       firstName: data.firstName,
-      lastName: data.lastName,
+      lastName: data.lastName ?? "",
       email: data.email,
       phone: data.phone,
       address: data.address,
@@ -118,7 +100,7 @@ export async function POST(request: NextRequest) {
         replyTo: data.email,
         ...emailTemplates.valuationNotification({
           firstName: data.firstName,
-          lastName: data.lastName,
+          lastName: data.lastName ?? "",
           email: data.email,
           phone: data.phone,
           address: data.address,

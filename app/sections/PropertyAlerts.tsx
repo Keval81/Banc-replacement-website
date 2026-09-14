@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { SectionHeader } from "@/components/SectionHeader";
 import { LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
+import { describeSubmitError } from "@/lib/lead-form-rules";
 
 const AREAS = [
   "Cuffley",
@@ -69,7 +70,10 @@ export default function PropertyAlerts() {
           department: looking === "rent" ? "lettings" : "sales",
         }),
       });
-      if (!response.ok) throw new Error("That didn't send. Please try again, or call the office.");
+      if (!response.ok) {
+        const body: unknown = await response.json().catch(() => null);
+        throw new Error(describeSubmitError(body, "That didn't send. Please try again, or call the office."));
+      }
       setStatus("sent");
     } catch (cause) {
       setStatus("error");

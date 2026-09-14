@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { db } from "@/lib/db";
 import { enquiryInboxFor, officeInbox } from "@/lib/banc-contact";
 import { emailTemplates } from "@/lib/email";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
+import { contactEnquirySchema } from "@/lib/lead-form-rules";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -13,22 +13,6 @@ import {
 export const runtime = "nodejs";
 
 const limiter = createPublicFormRateLimiter();
-
-// Validation schema (bounded lengths; unknown fields are stripped)
-const contactSchema = z.object({
-  name: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
-  email: z.string().trim().email("Please enter a valid email address").max(254),
-  phone: z.string().trim().max(30).optional(),
-  subject: z.string().trim().min(1, "Please select a subject").max(120),
-  message: z.string().trim().min(10, "Message must be at least 10 characters").max(5000),
-  consent: z.boolean().refine((val) => val === true, {
-    message: "You must agree to be contacted",
-  }),
-  website: z.string().max(0).optional(), // honeypot
-  // Set by property enquiries so the lead reaches the team that can act on
-  // it. Absent on the general contact form, which still goes to the office.
-  department: z.enum(["sales", "lettings"]).optional(),
-});
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate input
-    const result = contactSchema.safeParse(body);
+    const result = contactEnquirySchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
         {

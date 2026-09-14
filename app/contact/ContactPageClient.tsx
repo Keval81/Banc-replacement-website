@@ -6,6 +6,7 @@ import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, Loader2, ChevronDo
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/Toast";
 import { trackCallClick } from "@/lib/callTracking";
+import { checkContactEnquiry, describeSubmitError } from "@/lib/lead-form-rules";
 import {
   BANC_CONTACT_DETAILS,
   BANC_OFFICES,
@@ -67,6 +68,11 @@ export default function ContactPageClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const problem = checkContactEnquiry(formData);
+    if (problem) {
+      error(problem);
+      return;
+    }
     setIsSubmitting(true);
 
     try {
@@ -91,7 +97,7 @@ export default function ContactPageClient() {
           website: "",
         });
       } else {
-        error(data.error || "Something went wrong. Please try again.");
+        error(describeSubmitError(data, "Something went wrong. Please try again, or call us on 01707 877781."));
       }
     } catch {
       error("Failed to send message. Please try again later.");

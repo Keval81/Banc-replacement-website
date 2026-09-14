@@ -24,6 +24,7 @@ import {
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BANC_CONTACT } from "@/lib/banc-contact";
+import { checkValuationStep, describeSubmitError } from "@/lib/lead-form-rules";
 
 interface ValuationEstimateView {
   low: number;
@@ -103,17 +104,20 @@ export default function ValuationPage() {
 
   const validateStep = (step: number): boolean => {
     switch (step) {
-      case 1:
-        if (!formData.address.trim() || !formData.postcode.trim()) {
-          setError("Please enter your property address and postcode.");
+      case 1: {
+        const problem = checkValuationStep("address", formData);
+        if (problem) {
+          setError(problem);
           return false;
         }
         return true;
+      }
       case 2:
         return true; // Property details are optional
-      case 3:
-        if (!formData.firstName.trim() || !formData.email.trim() || !formData.phone.trim()) {
-          setError("Please fill in your name, email, and phone number.");
+      case 3: {
+        const problem = checkValuationStep("contact", formData);
+        if (problem) {
+          setError(problem);
           return false;
         }
         if (!consent) {
@@ -121,6 +125,7 @@ export default function ValuationPage() {
           return false;
         }
         return true;
+      }
       default:
         return true;
     }
@@ -159,7 +164,9 @@ export default function ValuationPage() {
         setCurrentStep(4);
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(
+          describeSubmitError(data, `Something went wrong. Please try again, or call us on ${BANC_CONTACT.displayPhone}.`),
+        );
       }
     } catch {
       setError("Failed to submit request. Please try again later.");

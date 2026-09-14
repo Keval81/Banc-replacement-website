@@ -32,8 +32,8 @@ export default function BookingForm({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+    if (formData.name.trim().length < 2) {
+      newErrors.name = "Please enter your full name";
     }
 
     if (!formData.email.trim()) {
