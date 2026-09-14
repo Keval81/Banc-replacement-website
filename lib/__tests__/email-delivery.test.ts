@@ -81,7 +81,7 @@ test("sends through Resend with the sender, recipient and reply-to set", async (
   const result = await withEnv(
     {
       RESEND_API_KEY: "re_live_key",
-      CONTACT_FROM: "Banc Property Group <banc@digitalinroads.com>",
+      CONTACT_FROM: "Banc Property Group <info@bancproperty.com>",
     },
     () => sendEmail(message, fetcher),
   );
@@ -91,7 +91,7 @@ test("sends through Resend with the sender, recipient and reply-to set", async (
   const [call] = calls;
   assert.equal(call.url, "https://api.resend.com/emails");
   assert.equal(call.auth, "Bearer re_live_key");
-  assert.equal(call.payload.from, "Banc Property Group <banc@digitalinroads.com>");
+  assert.equal(call.payload.from, "Banc Property Group <info@bancproperty.com>");
   assert.deepEqual(call.payload.to, ["sales@bancproperty.com"]);
   assert.equal(
     call.payload.reply_to,
@@ -133,5 +133,5 @@ test("the sender falls back to a verified Digital Inroads address", async () => 
 
   const from = String(calls[0].payload.from);
   assert.match(from, /^Banc Property Group </, "the display name must read as Banc");
-  assert.match(from, /@digitalinroads\.com>$/, "and the address must be on a verified domain");
+  assert.match(from, /@bancproperty\.com>$/, "and the address must be on Banc's own verified domain");
 });

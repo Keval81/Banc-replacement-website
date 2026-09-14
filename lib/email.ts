@@ -1,15 +1,19 @@
 // Transactional mail for Banc Property Group, sent through Resend.
 //
-// Until bancproperty.com carries its own authentication records, mail goes out
-// on the Digital Inroads verified domain with Banc's name on the front and
-// reply-to pointing at whoever should be replied to. That is the arrangement
-// Your Panacea has run on since July; swapping CONTACT_FROM to a Banc address
-// is the only change needed once James adds the records.
+// Mail goes out on bancproperty.com, which carries its own Resend
+// authentication records (DKIM at resend._domainkey, the send/rsend CNAMEs),
+// with reply-to pointing at whoever should be replied to. Receiving is
+// deliberately NOT enabled on the domain — Banc's real mailboxes are at
+// hosts.co.uk and competing MX on the root would take them down.
+//
+// The Digital Inroads address this replaced was a temporary arrangement while
+// bancproperty.com was unverified; nothing should send as DI again.
 //
 // Env: RESEND_API_KEY (required — without it nothing sends and every caller is
-// told so), plus optional CONTACT_FROM.
+// told so), plus optional CONTACT_FROM. CONTACT_FROM must stay on a verified
+// domain: an unset or wrong value silently falls back to DEFAULT_FROM.
 
-const DEFAULT_FROM = "Banc Property Group <banc@digitalinroads.com>";
+const DEFAULT_FROM = "Banc Property Group <info@bancproperty.com>";
 
 export type MailFailure = "mail-not-configured" | "mail-send-failed";
 
