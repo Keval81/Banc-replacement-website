@@ -111,6 +111,16 @@ test("maps Sold STC and Let STC to completed statuses, not marketable ones", () 
   assert.equal(toDbProperty(parseExpertAgentFeed(b).properties[1]).status, "let");
 });
 
+test("keeps a hand-picked Sold STC sale on the market as under offer", () => {
+  const [sales] = parseExpertAgentFeed(xml).properties;
+  const picked = { ...sales, priority: "Sold STC", reference: "BPGC1828" };
+  const shown = new Set(["BPGC1828"]);
+
+  assert.equal(toDbProperty(picked, shown).status, "under_offer");
+  assert.equal(toDbProperty({ ...picked, reference: "BPGC0001" }, shown).status, "sold");
+  assert.equal(toDbProperty({ ...picked, priority: "Sold" }, shown).status, "sold");
+});
+
 test("keeps every supported priority inside its department status vocabulary", () => {
   const [sales, lettings] = parseExpertAgentFeed(xml).properties;
   const cases = [

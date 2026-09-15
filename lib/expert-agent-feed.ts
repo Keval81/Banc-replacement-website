@@ -5,6 +5,7 @@
 
 import { XMLParser } from "fast-xml-parser";
 import type { DbProperty } from "./supabase";
+import { SOLD_STC_SHOWN_ON_SITE } from "./sold-stc-shown.ts";
 
 export interface FeedRoom {
   name: string;
@@ -218,7 +219,8 @@ function epcRatingFromImage(url: string): string | undefined {
 }
 
 export function toDbProperty(
-  p: FeedProperty
+  p: FeedProperty,
+  soldStcShown: ReadonlySet<string> = SOLD_STC_SHOWN_ON_SITE,
 ): Omit<
   DbProperty,
   | "id"
@@ -238,6 +240,11 @@ export function toDbProperty(
   const statusByPriority = lettings
     ? LETTINGS_STATUS_BY_PRIORITY
     : SALES_STATUS_BY_PRIORITY;
+  const priority = p.priority.toLowerCase();
+  const status =
+    !lettings && priority === "sold stc" && soldStcShown.has(p.reference)
+      ? "under_offer"
+      : statusByPriority[priority] ?? fallback;
   return {
     department: lettings ? "lettings" : "sales",
     expert_agent_id: p.reference,
@@ -247,7 +254,7 @@ export function toDbProperty(
     postcode: p.postcode,
     price: p.numericPrice,
     price_qualifier: p.priceText || undefined,
-    status: statusByPriority[p.priority.toLowerCase()] ?? fallback,
+    status,
     property_type: [p.propertyStyle, p.propertyType].filter(Boolean).join(" "),
     bedrooms: p.bedrooms,
     bathrooms: p.bathrooms,

@@ -3,6 +3,7 @@
 
 import type { DbProperty } from "./supabase";
 import { BANC_CONTACT } from "./banc-contact.ts";
+import { SOLD_STC_SHOWN_ON_SITE } from "./sold-stc-shown.ts";
 import {
   deriveSearchFeatures,
   normalizePropertyType,
@@ -250,9 +251,15 @@ export function categorisePropertyType(raw: string): SearchPropertyType {
   return normalizePropertyType(raw);
 }
 
-export function dbToCard(p: DbProperty): PropertyCardData {
+export function dbToCard(
+  p: DbProperty,
+  soldStcShown: ReadonlySet<string> = SOLD_STC_SHOWN_ON_SITE,
+): PropertyCardData {
   const pounds = `£${Math.round(p.price).toLocaleString("en-GB")}`;
-  const tag = TAG_BY_STATUS[p.status];
+  const tag =
+    p.status === "under_offer" && p.expert_agent_id && soldStcShown.has(p.expert_agent_id)
+      ? "Sold STC"
+      : TAG_BY_STATUS[p.status];
   const images = p.images
     .map(getSafePropertyImageUrl)
     .filter((url): url is string => url !== null);

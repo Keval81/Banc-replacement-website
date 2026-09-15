@@ -66,7 +66,7 @@ export async function loadPropertyDetail(id: string): Promise<PropertyDetailLoad
     status: "ok",
     data: {
       property: dbToDetail(data),
-      similar: ((similarRows ?? []) as DbProperty[]).map(dbToCard),
+      similar: ((similarRows ?? []) as DbProperty[]).map((row) => dbToCard(row)),
     },
   };
 }

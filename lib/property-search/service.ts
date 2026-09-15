@@ -18,7 +18,7 @@ export function createPropertySearchService(
 
     return {
       query,
-      properties: result.rows.map(dbToCard),
+      properties: result.rows.map((row) => dbToCard(row)),
       total: result.total,
       page: query.page,
       pageSize: query.pageSize,

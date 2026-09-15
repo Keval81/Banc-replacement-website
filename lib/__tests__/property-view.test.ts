@@ -104,6 +104,15 @@ test("derives tags from status", () => {
   );
 });
 
+test("labels a hand-picked Sold STC sale as Sold STC rather than Under Offer", () => {
+  const shown = new Set(["BPGC1479"]);
+  assert.deepEqual(dbToCard({ ...base, status: "under_offer" }, shown).tags, ["Sold STC"]);
+  assert.deepEqual(
+    dbToCard({ ...base, status: "under_offer", expert_agent_id: "BPGC0001" }, shown).tags,
+    ["Under Offer"],
+  );
+});
+
 test("maps stats and uses the first paragraph as summary", () => {
   const c = dbToCard(base);
   assert.deepEqual(c.stats, { beds: 6, baths: 4 });
