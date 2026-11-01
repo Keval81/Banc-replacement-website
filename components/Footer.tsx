@@ -245,6 +245,24 @@ export default function Footer() {
               ))}
             </div>
           </div>
+          <div className="mt-6 flex justify-center md:justify-start">
+            <a
+              href="https://digitalinroads.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Made in partnership with Digital Inroads"
+              className="inline-flex flex-col items-center gap-2 rounded-sm sm:flex-row text-[11px] uppercase tracking-[0.1em] text-banc-grey opacity-85 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
+            >
+              <span>Made in partnership with</span>
+              <Image
+                src="/digital-inroads-logo.svg"
+                alt="Digital Inroads"
+                width={128}
+                height={24}
+                className="h-6 w-auto opacity-90"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
