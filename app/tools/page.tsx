@@ -5,7 +5,6 @@ import {
   Calculator,
   PoundSterling,
   TrendingUp,
-  MapPin,
   Percent,
   ArrowRight,
 } from "lucide-react";
@@ -55,15 +54,6 @@ const tools = [
       "Calculate gross and net rental yields for buy-to-let investments. Include mortgage costs for ROI analysis.",
     icon: Percent,
     href: "/tools/yield-calculator",
-    iconColor: "text-banc-focus",
-  },
-  {
-    id: "catchment",
-    title: "School Catchment Checker",
-    description:
-      "See which schools a postcode falls within, with distances and Ofsted ratings for the area.",
-    icon: MapPin,
-    href: "/tools/catchment-checker",
     iconColor: "text-banc-focus",
   },
 ];

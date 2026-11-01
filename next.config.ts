@@ -157,6 +157,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        // Hidden until the schools lookup is fixed: when it fails, the
+        // checker shows placeholder schools rather than an error.
+        source: "/tools/catchment-checker",
+        destination: "/tools",
+        permanent: false,
+      },
+      {
         source: "/about",
         destination: "/why-us",
         permanent: true,

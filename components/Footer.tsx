@@ -33,7 +33,6 @@ const footerLinks = {
     { name: "Mortgage Calculator", href: "/tools/mortgage-calculator" },
     { name: "Yield Calculator", href: "/tools/yield-calculator" },
     { name: "Affordability Calculator", href: "/tools/affordability" },
-    { name: "Catchment Checker", href: "/tools/catchment-checker" },
     { name: "Buying Guide", href: "/sales/buyers-guide" },
     { name: "Selling Guide", href: "/sales/sellers-guide" },
     { name: "Lettings Fees", href: "/lettings/fees" },
