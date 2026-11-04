@@ -112,6 +112,7 @@ export default function RootLayout({
 
                   <CookieConsent />
                   <GoogleAnalytics />
+                  <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
                 </ComparisonProvider>
               </CookieProvider>
             </ToastProvider>
