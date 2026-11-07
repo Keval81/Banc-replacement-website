@@ -46,6 +46,11 @@ export const valuationRequestSchema = z.object({
   // "sell" or "let" — the form asks first. Lettings go to the lettings team and
   // get no online figure; there is no public source of rental comparables.
   department: z.enum(["sales", "lettings"]).default("sales"),
+  // Set when the visitor picks their home from the postcode's address list, so
+  // the estimate can find this exact home's own past sale.
+  paon: z.string().trim().max(80).optional(),
+  saon: z.string().trim().max(80).optional(),
+  majorWork: z.boolean().optional(),
   website: z.string().max(0).optional(), // honeypot
 });
 

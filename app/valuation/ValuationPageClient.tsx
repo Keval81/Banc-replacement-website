@@ -26,16 +26,14 @@ import Footer from "@/components/Footer";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 import { checkValuationStep, describeSubmitError } from "@/lib/lead-form-rules";
 
-interface ValuationEstimateView {
-  low: number;
-  high: number;
-  sampleSize: number;
-  basis: "type" | "area";
-  sector: string;
-  monthsBack: number;
-}
+import { describeBasis, headlineFor, type InstantEstimate } from "@/lib/valuation/present";
+
+type AddressOption = { paon: string; saon: string; label: string };
+const NOT_LISTED = "not-listed";
 
 const gbp = (n: number) => `£${n.toLocaleString("en-GB")}`;
+const monthYear = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
 
 const propertyTypes = [
   "Detached House",
@@ -81,10 +79,54 @@ export default function ValuationPage() {
     timeframe: "",
     message: "",
     department: "sales" as "sales" | "lettings",
+    paon: "",
+    saon: "",
     website: "",
   });
   const [consent, setConsent] = useState(false);
-  const [estimate, setEstimate] = useState<ValuationEstimateView | null>(null);
+  const [majorWork, setMajorWork] = useState<boolean | null>(null);
+  const [estimate, setEstimate] = useState<InstantEstimate | null>(null);
+  const [addresses, setAddresses] = useState<AddressOption[]>([]);
+  const [picked, setPicked] = useState("");
+
+  // A full postcode loads the addresses the register knows there, so the
+  // estimate can start from this exact home's own last sale.
+  useEffect(() => {
+    const compact = formData.postcode.replace(/\s+/g, "").toUpperCase();
+    if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(compact)) {
+      setAddresses([]);
+      return;
+    }
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/valuation/addresses?postcode=${compact}`, { signal: controller.signal });
+        const body = (await res.json()) as { addresses?: AddressOption[] };
+        setAddresses(res.ok ? (body.addresses ?? []) : []);
+      } catch (lookupError) {
+        if (!controller.signal.aborted) {
+          console.error("[Valuation] address list unavailable:", lookupError);
+          setAddresses([]);
+        }
+      }
+    }, 350);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [formData.postcode]);
+
+  const pickAddress = (value: string) => {
+    setPicked(value);
+    setError(null);
+    const choice = value === NOT_LISTED || value === "" ? null : addresses.at(Number(value));
+    setFormData((prev) => ({
+      ...prev,
+      paon: choice?.paon ?? "",
+      saon: choice?.saon ?? "",
+      address: choice ? choice.label : value === NOT_LISTED ? "" : prev.address,
+    }));
+  };
 
   // The landlords' guide links here as /valuation?intent=let. Read once on
   // mount rather than through useSearchParams, which would force a Suspense
@@ -105,6 +147,10 @@ export default function ValuationPage() {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1: {
+        if (addresses.length > 0 && picked === "") {
+          setError("Please choose your address, or pick “My address isn’t listed”.");
+          return false;
+        }
         const problem = checkValuationStep("address", formData);
         if (problem) {
           setError(problem);
@@ -154,7 +200,7 @@ export default function ValuationPage() {
       const response = await fetch("/api/valuation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ...(majorWork === null ? {} : { majorWork }) }),
       });
 
       const data = await response.json();
@@ -307,30 +353,54 @@ export default function ValuationPage() {
                     </fieldset>
 
                     <div className="space-y-2">
-                      <label htmlFor="address" className="block text-sm font-medium text-banc-dark">
-                        Property Address *
-                      </label>
-                      <Textarea
-                        id="address"
-                        value={formData.address}
-                        onChange={(e) => handleChange("address", e.target.value)}
-                        className="min-h-[100px]"
-                        placeholder="123 Station Road, Cuffley, Hertfordshire..."
-                      />
-                    </div>
-
-                    <div className="space-y-2">
                       <label htmlFor="postcode" className="block text-sm font-medium text-banc-dark">
                         Postcode *
                       </label>
                       <Input
                         id="postcode"
                         value={formData.postcode}
-                        onChange={(e) => handleChange("postcode", e.target.value)}
+                        onChange={(e) => {
+                          handleChange("postcode", e.target.value);
+                          setPicked("");
+                          setFormData((prev) => ({ ...prev, paon: "", saon: "" }));
+                        }}
                         placeholder="EN6 4HU"
                         className="max-w-xs"
+                        autoComplete="postal-code"
                       />
                     </div>
+
+                    {addresses.length > 0 && (
+                      <div className="space-y-2">
+                        <label htmlFor="address-pick" className="block text-sm font-medium text-banc-dark">
+                          Choose your address *
+                        </label>
+                        <NativeSelect id="address-pick" value={picked} onChange={(e) => pickAddress(e.target.value)}>
+                          <option value="">Select your address</option>
+                          {addresses.map((a, i) => (
+                            <option key={`${a.saon}|${a.paon}`} value={String(i)}>
+                              {a.label}
+                            </option>
+                          ))}
+                          <option value={NOT_LISTED}>My address isn&apos;t listed</option>
+                        </NativeSelect>
+                      </div>
+                    )}
+
+                    {(addresses.length === 0 || picked === NOT_LISTED) && (
+                      <div className="space-y-2">
+                        <label htmlFor="address" className="block text-sm font-medium text-banc-dark">
+                          Property Address *
+                        </label>
+                        <Textarea
+                          id="address"
+                          value={formData.address}
+                          onChange={(e) => handleChange("address", e.target.value)}
+                          className="min-h-[100px]"
+                          placeholder="123 Station Road, Cuffley, Hertfordshire..."
+                        />
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}
@@ -388,6 +458,37 @@ export default function ValuationPage() {
                         ))}
                       </div>
                     </div>
+
+                    {!isLettings && (
+                      <fieldset className="space-y-2">
+                        <legend className="block text-sm font-medium text-banc-dark">
+                          Have you extended, converted the loft or fully refurbished since you bought?
+                        </legend>
+                        <div className="flex gap-2">
+                          {([
+                            { value: true, label: "Yes" },
+                            { value: false, label: "No" },
+                          ] as const).map((option) => (
+                            <button
+                              key={option.label}
+                              type="button"
+                              onClick={() => setMajorWork(option.value)}
+                              aria-pressed={majorWork === option.value}
+                              className={`rounded-[6px] border px-5 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer min-h-[44px] ${
+                                majorWork === option.value
+                                  ? "border-banc-sky bg-banc-focus text-white"
+                                  : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                        <p className="text-xs text-banc-muted-readable">
+                          Public records can&apos;t see improvements, so a yes tells the director to look closely.
+                        </p>
+                      </fieldset>
+                    )}
 
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-banc-dark">
@@ -542,17 +643,56 @@ export default function ValuationPage() {
                     {isLettings ? "Thank you — we'll call about the rent" : estimate ? "Here's your indicative estimate" : "Thank you!"}
                   </h2>
 
-                  {estimate && !isLettings && (
-                    <div className="mx-auto mb-6 max-w-md rounded-xl border border-banc-focus/20 bg-banc-sky/10 p-6 text-left">
-                      <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Indicative estimate</p>
-                      <p className="mt-2 font-display text-3xl text-banc-dark">
-                        {gbp(estimate.low)} – {gbp(estimate.high)}
-                      </p>
-                      <p className="mt-3 text-sm leading-relaxed text-banc-muted-readable">
-                        Based on {estimate.sampleSize} sales of {estimate.basis === "type" ? "similar homes" : "homes of all types"} in {estimate.sector} over the last {estimate.monthsBack >= 24 ? "two years" : `${estimate.monthsBack} months`}, from HM Land Registry. Please keep in mind this is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.
-                      </p>
-                    </div>
-                  )}
+                  {estimate && !isLettings && (() => {
+                    const h = headlineFor(estimate);
+                    return (
+                      <div className="mx-auto mb-6 max-w-md rounded-xl border border-banc-focus/20 bg-banc-sky/10 p-6 text-left">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Instant estimate</p>
+                          <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-banc-focus">{h.label}</span>
+                        </div>
+                        {h.figure ? (
+                          <>
+                            <p className="mt-2 font-display text-4xl text-banc-dark">{h.figure}</p>
+                            <p className="mt-1 text-sm text-banc-muted-readable">Likely range {h.range}</p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="mt-2 font-display text-3xl text-banc-dark">{h.range}</p>
+                            <p className="mt-1 text-sm text-banc-muted-readable">
+                              Public records can&apos;t pin this one down, so a director needs to see it.
+                            </p>
+                          </>
+                        )}
+                        <p className="mt-3 text-sm leading-relaxed text-banc-muted-readable">{describeBasis(estimate)}</p>
+                        {(estimate.ownSale || estimate.comparables.length > 0) && (
+                          <ul className="mt-4 space-y-1.5 border-t border-banc-focus/15 pt-3 text-sm">
+                            {estimate.ownSale && (
+                              <li className="flex items-start justify-between gap-3 text-banc-dark">
+                                <span>
+                                  <span className="block font-medium">Your home</span>
+                                  <span className="block text-xs text-banc-muted-readable">Sold {monthYear(estimate.ownSale.date)}</span>
+                                </span>
+                                <span className="tabular-nums">{gbp(estimate.ownSale.price)}</span>
+                              </li>
+                            )}
+                            {estimate.comparables.slice(0, 4).map((c) => (
+                              <li key={`${c.address}|${c.date}`} className="flex items-start justify-between gap-3 text-banc-dark">
+                                <span className="min-w-0">
+                                  <span className="block">{c.address.toLowerCase().replace(/\b[a-z]/g, (l) => l.toUpperCase())}</span>
+                                  <span className="block text-xs text-banc-muted-readable">Sold {monthYear(c.date)}</span>
+                                </span>
+                                <span className="tabular-nums">{gbp(c.price)}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <p className="mt-3 text-xs leading-relaxed text-banc-muted-readable">
+                          Sold prices as registered. This is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.
+                        </p>
+                      </div>
+                    );
+                  })()}
 
                   <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">
                     Your {isLettings ? "rental appraisal" : "valuation"} request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.

@@ -13,6 +13,8 @@
 // told so), plus optional CONTACT_FROM. CONTACT_FROM must stay on a verified
 // domain: an unset or wrong value silently falls back to DEFAULT_FROM.
 
+import { describeBasis, headlineFor, type InstantEstimate } from "./valuation/present.ts";
+
 const DEFAULT_FROM = "Banc Property Group <info@bancproperty.com>";
 
 export type MailFailure = "mail-not-configured" | "mail-send-failed";
@@ -245,26 +247,23 @@ const button = (href: string, label: string) =>
     <td style="background:#0A6078;"><a href="${esc(href)}" style="display:inline-block;padding:13px 28px;${SANS}font-size:15px;font-weight:500;color:#FFFFFF;text-decoration:none;">${esc(label)}</a></td>
   </tr></table>`;
 
-/** What the valuation form showed the customer — the same range goes to the team. */
-export interface ValuationEstimateSummary {
-  low: number;
-  high: number;
-  sampleSize: number;
-  basis: "type" | "area";
-  sector: string;
-  monthsBack: number;
-}
+/** What the valuation form showed the customer — the same figure goes to the team. */
+export type ValuationEstimateSummary = InstantEstimate;
 
-const formatEstimateRange = (e: ValuationEstimateSummary) =>
-  `£${e.low.toLocaleString("en-GB")} – £${e.high.toLocaleString("en-GB")}`;
+const teamEstimateLine = (e: ValuationEstimateSummary) => {
+  const h = headlineFor(e);
+  const confidence = h.label.replace(" confidence", "").toLowerCase();
+  return `${h.figure ? `${h.figure} (${h.range})` : h.range}, ${confidence} confidence, ${e.comparableCount} sales`;
+};
 
-/** The range, with the caveat Nitesh asked for on 7 Sep: it is an estimate, and the call gives the real figure. */
+/** The figure first, then the range, with the caveat Nitesh asked for on 7 Sep: it is an estimate, and the call gives the real figure. */
 function estimateBlock(e: ValuationEstimateSummary): string {
-  const years = e.monthsBack >= 24 ? "two years" : `${e.monthsBack} months`;
+  const h = headlineFor(e);
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;background:#E8F8FC;margin:0 0 24px;"><tr><td style="padding:18px 20px;">
-    <p style="${SANS}font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#0A6078;margin:0 0 6px;">Indicative estimate</p>
-    <p style="${DISPLAY}font-size:26px;line-height:1.2;color:#2C2A27;margin:0 0 8px;">${formatEstimateRange(e)}</p>
-    <p style="${SANS}font-size:13px;line-height:1.65;color:#3D3B37;margin:0;">Based on ${e.sampleSize} sales of ${e.basis === "type" ? "similar homes" : "homes of all types"} in ${esc(e.sector)} over the last ${years}, from HM Land Registry. Please keep in mind this is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.</p>
+    <p style="${SANS}font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#0A6078;margin:0 0 6px;">Instant estimate · ${esc(h.label)}</p>
+    ${h.figure ? `<p style="${DISPLAY}font-size:28px;line-height:1.2;color:#2C2A27;margin:0 0 4px;">${esc(h.figure)}</p>` : ""}
+    <p style="${h.figure ? `${SANS}font-size:14px;color:#3D3B37;` : `${DISPLAY}font-size:26px;color:#2C2A27;`}line-height:1.3;margin:0 0 8px;">${h.figure ? "Likely range " : ""}${esc(h.range)}</p>
+    <p style="${SANS}font-size:13px;line-height:1.65;color:#3D3B37;margin:0;">${esc(describeBasis(e))} Please keep in mind this is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.</p>
   </td></tr></table>`;
 }
 
@@ -382,6 +381,7 @@ export const emailTemplates = {
     message?: string;
     department?: "sales" | "lettings";
     estimate?: ValuationEstimateSummary | null;
+    majorWork?: boolean;
   }) => {
     const name = `${data.firstName} ${data.lastName}`.trim();
     const lettings = data.department === "lettings";
@@ -397,10 +397,11 @@ export const emailTemplates = {
             ["Address", `${data.address}, ${data.postcode}`],
             ["Property", `${data.propertyType} · ${data.bedrooms} bed`],
             ["Wants to", lettings ? "Let" : "Sell"],
+            ...(data.majorWork ? ([["Work since bought", "Yes — extended, loft or full refurbishment"]] as [string, string][]) : []),
             ["Timeframe", data.timeframe],
             ["Phone", data.phone],
             ["Email", data.email],
-            ["Shown online", estimate ? `${formatEstimateRange(estimate)} (${estimate.sampleSize} sales, ${estimate.sector})` : lettings ? "No figure — rental" : "No figure — not enough recent sales"],
+            ["Shown online", estimate ? teamEstimateLine(estimate) : lettings ? "No figure — rental" : "No figure — not enough recent sales"],
           ]),
           data.message ? h2("Anything else we should know") + quote(data.message) : "",
         ].join(""),

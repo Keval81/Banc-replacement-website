@@ -4,9 +4,8 @@ import { emailTemplates } from "@/lib/email";
 import { reportFormEvent } from "@/lib/portal-events";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
-import { fetchSoldPricesBySector } from "@/lib/api/landRegistry";
 import { valuationRequestSchema } from "@/lib/lead-form-rules";
-import { estimateFromSales, lookupOutcodeDistricts, postcodeSector, type ValuationEstimate } from "@/lib/valuation-estimate";
+import { houseNumberFrom, runInstantValuation, type InstantEstimate } from "@/lib/valuation/instant";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -18,21 +17,28 @@ export const runtime = "nodejs";
 const limiter = createPublicFormRateLimiter();
 
 /**
- * An indicative range from the register, or nothing. A slow or empty register
- * never blocks the lead — the estimate is a courtesy, the call is the product.
+ * The instant estimate, or nothing. A slow or empty register never blocks the
+ * lead — the estimate is a courtesy, the call is the product.
  */
-async function estimateFor(postcode: string, propertyType: string | undefined): Promise<ValuationEstimate | null> {
-  const sector = postcodeSector(postcode);
-  if (!sector) return null;
+async function estimateFor(data: {
+  postcode: string;
+  address: string;
+  propertyType?: string;
+  paon?: string;
+  saon?: string;
+  majorWork?: boolean;
+}): Promise<InstantEstimate | null> {
   try {
-    const districts = await lookupOutcodeDistricts(postcode);
-    if (districts.length === 0) return null;
-    const perDistrict = await Promise.race([
-      Promise.all(districts.map((district) => fetchSoldPricesBySector(sector, district))),
+    return await Promise.race([
+      runInstantValuation({
+        postcode: data.postcode,
+        paon: data.paon || houseNumberFrom(data.address),
+        saon: data.saon ?? "",
+        propertyType: data.propertyType,
+        majorWork: data.majorWork ?? false,
+      }),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("register timed out")), 9000)),
     ]);
-    const sales = perDistrict.flat();
-    return estimateFromSales(sales, { propertyType, sector });
   } catch (error) {
     console.error("[Valuation API] no estimate:", error instanceof Error ? error.message : error);
     return null;
@@ -95,7 +101,7 @@ export async function POST(request: NextRequest) {
     // The valuation lead reaching the team is the job; the applicant's
     // confirmation is a courtesy and never fails the request on its own.
     const inbox = data.department === "lettings" ? enquiryInboxFor("lettings") : valuationInbox();
-    const estimate = data.department === "sales" ? await estimateFor(data.postcode, data.propertyType) : null;
+    const estimate = data.department === "sales" ? await estimateFor(data) : null;
     const delivery = await deliverEnquiry({
       team: {
         to: inbox,
@@ -113,6 +119,7 @@ export async function POST(request: NextRequest) {
           message: data.message,
           department: data.department,
           estimate,
+          majorWork: data.majorWork,
         }),
       },
       customer: {

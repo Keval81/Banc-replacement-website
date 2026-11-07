@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { indexMonthAsOf, parseHpiRows, parseSaleRow, regionSlug } from "../valuation/register.ts";
+import { fetchSectorSales, indexMonthAsOf, parseHpiRows, parseSaleRow, regionSlug } from "../valuation/register.ts";
 
 test("turns a register row into a sale, keeping the repossession and new-build flags", () => {
   const sale = parseSaleRow({
@@ -47,4 +47,16 @@ test("uses the latest index month that would have been published by the valuatio
   const series = { "2026-06": {}, "2026-07": {}, "2026-08": {} } as never;
   assert.equal(indexMonthAsOf(series, new Date("2026-11-07T00:00:00Z")), "2026-08");
   assert.equal(indexMonthAsOf(series, new Date("2026-09-15T00:00:00Z")), "2026-07");
+});
+
+test("a sector search matches its postcodes, and an outcode search can't spill into a longer outcode", async () => {
+  const sent: string[] = [];
+  const fetcher = (async (_url: string, init: RequestInit) => {
+    sent.push(decodeURIComponent(String(init.body)));
+    return new Response(JSON.stringify({ results: { bindings: [] } }));
+  }) as unknown as typeof fetch;
+  await fetchSectorSales("EN7 6", "BROXBOURNE", "2021-01-01", fetcher);
+  await fetchSectorSales("N1", "ISLINGTON", "2021-01-01", fetcher);
+  assert.match(sent[0]!, /STRSTARTS\(STR\(\?postcode\), "EN7 6"\)/);
+  assert.match(sent[1]!, /STRSTARTS\(STR\(\?postcode\), "N1 "\)/);
 });

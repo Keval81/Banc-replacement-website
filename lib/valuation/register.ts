@@ -99,14 +99,17 @@ SELECT ?price ?date ?paon ?saon ?street ?postcode ?district ?type ?cat ?nb WHERE
   return rows.map(parseSaleRow).filter((s): s is Sale => s !== null);
 }
 
-/** A sector's sales since a date, in one council (the register's district index keeps this fast). */
+/** A sector's ("EN7 6") or outcode's ("EN7") sales since a date, in one council (the district keeps this fast). */
 export async function fetchSectorSales(sector: string, district: string, sinceIso: string, fetcher: Fetch = fetch): Promise<Sale[]> {
+  const area = sector.trim().toUpperCase().replace(/\s+/g, " ");
+  // A sector is followed directly by the unit letters ("EN7 6AB"); an outcode by a space, so "N1" never matches "N10".
+  const prefix = /\s\d$/.test(area) ? area : `${area} `;
   const rows = await query(
     `${PREFIXES}
 SELECT ?price ?date ?paon ?saon ?street ?postcode ?district ?type ?cat ?nb WHERE {
   ?item lrppi:pricePaid ?price ; lrppi:transactionDate ?date ; lrppi:propertyAddress ?addr .
   ?addr lrcommon:postcode ?postcode ; lrcommon:district "${clean(district.toUpperCase())}" .
-  FILTER(STRSTARTS(STR(?postcode), "${clean(sector.toUpperCase())} "))
+  FILTER(STRSTARTS(STR(?postcode), "${clean(prefix)}"))
   FILTER(?date >= "${clean(sinceIso)}"^^xsd:date)
   ${SALE_FIELDS}
 }
