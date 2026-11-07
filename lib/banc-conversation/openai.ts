@@ -908,10 +908,21 @@ function responseCandidatesForResult(result: SanitizedOperationResult): string[]
         "All clear — what kind of property would you like to search for now?",
       ];
     case "contact":
+      if (result.reason === "valuation") {
+        return [
+          "You can get an instant estimate for your home with the valuation form below, and one of the directors will follow up.",
+          "The valuation form below gives you an instant estimate, then a director will be in touch to firm it up.",
+        ];
+      }
+      if (result.reason === "viewing" || result.reason === "offer") {
+        return [
+          "The form below sends your request straight to the Banc team, who will get back to you.",
+          "You can send that to the Banc team with the form below, and they will be in touch.",
+        ];
+      }
       return [
-        "The Banc team can help with your enquiry. Would you like their contact options?",
-        "That’s something the Banc team can help with directly. Would you like the contact options?",
-        "I can connect you with the Banc team for that. Would you prefer to call or message?",
+        "The Banc team can help with that. Send them a message with the form below and they will get back to you.",
+        "That’s one for the Banc team. The form below reaches them directly.",
       ];
     case "clarification_required":
       return [result.question];

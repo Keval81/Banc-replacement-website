@@ -15,6 +15,7 @@ export interface PropertyChatMessage {
   properties?: PropertyCardData[];
   sources?: Array<{ title: string; href: string }>;
   handoff?: { callHref: string; whatsappHref: string };
+  form?: { title: string; href: string };
   action?: ConversationAction;
   timestamp: Date;
 }
@@ -23,6 +24,7 @@ export interface PropertyChatMessageView {
   properties: PropertyCardData[];
   sources: Array<{ title: string; href: string }>;
   handoff?: { callHref: string; whatsappHref: string };
+  form?: { title: string; href: string };
 }
 
 interface RunPropertyChatTurnOptions {
@@ -98,6 +100,7 @@ export function getPropertyChatMessageView(
     properties: message.properties === undefined ? [] : [...message.properties],
     sources: message.sources?.map((source) => ({ ...source })) ?? [],
     handoff: message.handoff === undefined ? undefined : { ...message.handoff },
+    form: message.form === undefined ? undefined : { ...message.form },
   };
 }
 
@@ -145,6 +148,7 @@ export async function runPropertyChatTurn({
       properties: response.properties,
       sources: response.sources?.map((source) => ({ ...source })),
       handoff: response.handoff === undefined ? undefined : { ...response.handoff },
+      form: response.form === undefined ? undefined : { ...response.form },
       action: response.action,
       timestamp: now(),
     });

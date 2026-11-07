@@ -967,7 +967,7 @@ test("returns model_unavailable when the provider payload is not a response obje
 
   assert.deepEqual(result, {
     status: "ok",
-    response: "The Banc team can help with your enquiry. Would you like their contact options?",
+    response: "The form below sends your request straight to the Banc team, who will get back to you.",
     providerCalls: 1,
   });
 });

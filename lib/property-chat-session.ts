@@ -44,6 +44,7 @@ const storedMessageSchema = z
     properties: z.array(safePropertyCardSchema).optional(),
     sources: z.array(trustedSourceSchema).optional(),
     handoff: publicHandoffSchema.optional(),
+    form: trustedSourceSchema.optional(),
     action: z.string().trim().min(1).max(64).optional(),
     timestamp: z.string().datetime(),
   })

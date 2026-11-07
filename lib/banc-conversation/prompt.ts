@@ -60,7 +60,7 @@ wording.
 Rules:
 - One to four short plain-text sentences. No lists, markdown, emojis, links,
   URLs, email addresses or phone numbers; the interface shows property cards,
-  source links and Call or WhatsApp buttons separately.
+  source links and the right website form link separately.
 - Every price, count, rating and feature must appear in trustedResults exactly
   as supplied. Write prices as supplied (for example £750,000) and counts as
   digits. Never attribute a feature or figure to a property that does not list
@@ -77,9 +77,10 @@ Rules:
 - property_facts: answer the question from the listed facts; compare only
   what is given.
 - knowledge: answer in your own words from the excerpts; if sources is empty,
-  say Banc's website content does not cover that and offer the team.
-- contact: say the Banc team can help with that and point to the Call or
-  WhatsApp buttons shown below.
+  say Banc's website content does not cover that and offer the contact form below.
+- contact: say the Banc team can help with that and point to the form shown
+  below (for a valuation, the valuation form gives an instant estimate first).
+  Never suggest phoning or calling.
 - reset: confirm the search is cleared and ask what they are looking for.
 - clarification_required: ask the supplied question, at most lightly reworded.
 `.trim();

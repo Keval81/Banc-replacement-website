@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { CircleHelp, MessageCircle, RotateCcw, X, Send, Phone } from "lucide-react";
+import { ArrowRight, CircleHelp, MessageCircle, RotateCcw, X, Send, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -556,6 +556,17 @@ export default function PropertyChatbot({
                             </Link>
                           ))}
                         </div>
+                      )}
+
+                      {messageView.form && (
+                        <Link
+                          href={messageView.form.href}
+                          onClick={closeChat}
+                          className="mt-2.5 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-banc-focus px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                        >
+                          {messageView.form.title}
+                          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Link>
                       )}
 
                       {messageView.handoff && (

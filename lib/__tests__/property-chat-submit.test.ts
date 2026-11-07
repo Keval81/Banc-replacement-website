@@ -261,3 +261,18 @@ test("shows the server's rate-limit copy instead of the generic connection error
   assert.match(assistant[0] ?? "", /trouble connecting/);
   assert.doesNotMatch(assistant[0] ?? "", /SECRET/);
 });
+
+test("carries the trusted form link into the assistant message and its view", async () => {
+  const harness = createTurnHarness({
+    response: "The valuation form below gives you an instant estimate.",
+    action: "contact_team",
+    form: { title: "Get your instant valuation", href: "/valuation" },
+    context: emptyConversationState,
+  });
+
+  await harness.submit("What's my house worth?");
+
+  const assistantMessage = harness.messages[1];
+  assert.deepEqual(assistantMessage?.form, { title: "Get your instant valuation", href: "/valuation" });
+  assert.deepEqual(getPropertyChatMessageView(assistantMessage!).form, { title: "Get your instant valuation", href: "/valuation" });
+});

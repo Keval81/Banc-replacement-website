@@ -1,3 +1,4 @@
+import { contactForm, formFor } from "./forms.ts";
 import {
   createInitialConversationState,
   parseConversationPlan,
@@ -9,7 +10,6 @@ import {
   type ConversationResponse,
   type PropertyConversationState,
 } from "./contracts.ts";
-import { BANC_CONTACT } from "../banc-contact.ts";
 import type {
   ActivePropertySummary,
   ConversationModel,
@@ -304,14 +304,7 @@ function successfulResponse(
       : {
           sources: knowledge.sources.map(({ title, href }) => ({ title, href })),
         }),
-    ...(contact === undefined
-      ? {}
-      : {
-          handoff: {
-            callHref: contact.handoff.callHref,
-            whatsappHref: contact.handoff.whatsappHref,
-          },
-        }),
+    ...(contact === undefined ? {} : { form: formFor(contact.reason, contact.handoff.propertyId) }),
     context: finalResult.state,
   };
 }
@@ -326,15 +319,7 @@ function completedKnowledgeFallback(
   if (knowledge === undefined) return null;
 
   const response = successfulResponse(knowledgeFallbackCopy(knowledge), results);
-  return knowledge.sources.length === 0
-    ? {
-        ...response,
-        handoff: {
-          callHref: BANC_CONTACT.callHref,
-          whatsappHref: BANC_CONTACT.whatsappHref,
-        },
-      }
-    : response;
+  return knowledge.sources.length === 0 ? { ...response, form: contactForm() } : response;
 }
 
 async function describeActiveProperties(

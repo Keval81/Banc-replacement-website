@@ -100,6 +100,8 @@ export interface ConversationResponse {
   properties?: PropertyCardData[];
   sources?: Array<{ title: string; href: string }>;
   handoff?: { callHref: string; whatsappHref: string };
+  /** The website form that handles a contact request (valuation, viewing, offer, message). */
+  form?: { title: string; href: string };
   context: PropertyConversationState;
 }
 
@@ -424,6 +426,7 @@ export const conversationResponseSchema = z
       .transform((sources) => sources.map((source) => ({ ...source })))
       .optional(),
     handoff: publicHandoffSchema.optional(),
+    form: trustedSourceSchema.optional(),
     context: propertyConversationStateSchema,
   })
   .strict();

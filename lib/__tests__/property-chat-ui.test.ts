@@ -41,3 +41,9 @@ test("keeps accessible mobile action and conversation lifecycle controls", () =>
   assert.match(chatbotSource, /restoreFocus: \(\) => helpTriggerRef\.current\?\.focus\(\)/);
   assert.match(chatbotSource, /messagesEndRef\.current\?\.scrollIntoView/);
 });
+
+test("renders the trusted form link as the chat's call to action", () => {
+  assert.match(chatbotSource, /messageView\.form &&/);
+  assert.match(chatbotSource, /href=\{messageView\.form\.href\}/);
+  assert.match(chatbotSource, /\{messageView\.form\.title\}/);
+});
