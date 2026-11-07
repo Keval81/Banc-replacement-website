@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { emailTemplates } from "@/lib/email";
+import { reportFormEvent } from "@/lib/portal-events";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
 import { fetchSoldPricesBySector } from "@/lib/api/landRegistry";
@@ -136,6 +137,8 @@ export async function POST(request: NextRequest) {
         { status: delivery.reason === "mail-not-configured" ? 503 : 502 }
       );
     }
+
+    after(() => reportFormEvent({ kind: "valuation" }));
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {

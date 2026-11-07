@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { enquiryInboxFor, officeInbox } from "@/lib/banc-contact";
 import { emailTemplates } from "@/lib/email";
+import { classifyContactSubject, reportFormEvent } from "@/lib/portal-events";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { contactEnquirySchema } from "@/lib/lead-form-rules";
 import {
@@ -95,6 +96,8 @@ export async function POST(request: NextRequest) {
         { status: unreachable ? 503 : 502 }
       );
     }
+
+    after(() => reportFormEvent(classifyContactSubject(subject)));
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {
