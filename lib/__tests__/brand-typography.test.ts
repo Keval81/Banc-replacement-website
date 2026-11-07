@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -8,16 +8,10 @@ const globals = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
 const layout = readFileSync(join(ROOT, "app", "layout.tsx"), "utf8");
 
 test("loads Playfair Display as the display face the brand guide specifies", () => {
-  assert.match(
-    layout,
-    /Playfair_Display/,
-    "layout.tsx does not load Playfair Display",
-  );
-  assert.match(
-    layout,
-    /variable:\s*"--font-display"/,
-    "Playfair Display is not bound to the --font-display token",
-  );
+  const face = /@font-face\s*{[^}]*font-family:\s*"Playfair Display"[^}]*url\("\/fonts\/([^"]+)"\)/.exec(globals);
+  assert.ok(face, "globals.css does not declare a Playfair Display @font-face");
+  assert.ok(existsSync(join(ROOT, "public", "fonts", face[1]!)), `the Playfair Display file public/fonts/${face[1]} is missing`);
+  assert.match(layout, /\/fonts\/playfair-display\.woff2/, "layout.tsx does not preload Playfair Display");
 });
 
 test("defines the display token everywhere Tailwind and plain CSS read it", () => {
