@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Serif_4, Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { CookieProvider } from "@/hooks/useCookies";
 import { ComparisonProvider } from "@/app/hooks/usePropertyComparison";
@@ -13,29 +12,10 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Script from "next/script";
 // SoldBanner moved to homepage as a section
 
-const sourceSerif4 = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-// The brand guide specifies Playfair Display for display type. It is scoped to
-// h1 and the font-display utility only: its thick/thin contrast is the whole
-// point at 72px and a liability at 19px, where Source Serif 4 still serves.
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-sans",
-  display: "swap",
-});
+// Fonts are self-hosted from public/fonts and declared by their real family names in
+// globals.css, which the stylesheets already use. next/font/google failed about 1 build
+// in 3 here and on Vercel ("queries have exactly one entry", 7 Nov 2026).
+const PRELOAD_FONTS = ["/fonts/dm-sans.woff2", "/fonts/playfair-display.woff2", "/fonts/source-serif-4.woff2"];
 
 export const metadata: Metadata = {
   title: "Banc Property Services | Premium Estate Agency",
@@ -78,7 +58,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB" className={`${sourceSerif4.variable} ${playfairDisplay.variable} ${dmSans.variable}`}>
+    <html lang="en-GB">
+      <head>
+        {PRELOAD_FONTS.map((href) => (
+          <link key={href} rel="preload" href={href} as="font" type="font/woff2" crossOrigin="anonymous" />
+        ))}
+      </head>
       <body className="font-sans antialiased">
         <a
           href="#main-content"

@@ -1,5 +1,28 @@
 @import "tailwindcss";
 
+/* Brand fonts, self-hosted: Google Fonts' latin variable files (fetched 7 Nov 2026). */
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans.woff2") format("woff2");
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("/fonts/playfair-display.woff2") format("woff2");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/fonts/source-serif-4.woff2") format("woff2");
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Banc Brand Colours — Design System Tokens */
   --banc-sky:          #4AC8E8;
