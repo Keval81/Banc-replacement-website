@@ -2,7 +2,7 @@ import { after, NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { enquiryInboxFor, officeInbox } from "@/lib/banc-contact";
 import { emailTemplates } from "@/lib/email";
-import { classifyContactSubject, reportFormEvent } from "@/lib/portal-events";
+import { classifyContactSubject, reportFormEvent, viaFromReferer } from "@/lib/portal-events";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { contactEnquirySchema } from "@/lib/lead-form-rules";
 import {
@@ -97,7 +97,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    after(() => reportFormEvent(classifyContactSubject(subject)));
+    const via = viaFromReferer(request.headers.get("referer"));
+    after(() => reportFormEvent({ ...classifyContactSubject(subject), ...(via ? { via } : {}) }));
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {

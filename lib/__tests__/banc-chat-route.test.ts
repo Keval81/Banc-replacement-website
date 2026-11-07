@@ -176,3 +176,27 @@ test("POST rejects oversized bodies and converts handler exceptions into 503 wit
     requestId: "c5e8db87-4694-4446-84bb-e386845cbf33",
   }]);
 });
+
+test("POST tells the usage counter about each answered turn, and never about a rejected one", async () => {
+  const turns: Array<[number, string | undefined]> = [];
+  const POST = createBancChatPost({
+    createConversationHandler: () => async () => ({ ...validResponse, form: { title: "Get your instant valuation", href: "/valuation?from=bot" } }),
+    createRequestId: () => "c5e8db87-4694-4446-84bb-e386845cbf33",
+    onTurn: (request, response) => turns.push([request.history.length, response.form?.href]),
+  });
+  assert.equal((await POST(jsonRequest(validRequest))).status, 200);
+  assert.equal((await POST(jsonRequest({ message: "" }))).status, 400);
+  assert.deepEqual(turns, [[0, "/valuation?from=bot"]]);
+});
+
+test("a counter that throws never breaks the chat reply", async () => {
+  const POST = createBancChatPost({
+    createConversationHandler: () => async () => validResponse,
+    createRequestId: () => "c5e8db87-4694-4446-84bb-e386845cbf33",
+    onTurn: () => {
+      throw new Error("counter down");
+    },
+    logger: () => undefined,
+  });
+  assert.equal((await POST(jsonRequest(validRequest))).status, 200);
+});

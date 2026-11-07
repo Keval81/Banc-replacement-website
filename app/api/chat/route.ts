@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { after } from "next/server";
 
 import {
   createBancChatPost,
@@ -7,7 +8,9 @@ import {
   createConversationTools,
   createOpenAIConversationModel,
   createPropertyPortfolio,
+  chatUsageEvents,
 } from "@/lib/banc-conversation";
+import { reportFormEvent } from "@/lib/portal-events";
 import { APPROVED_BANC_DOCUMENTS } from "@/lib/banc-content/approved-content";
 import {
   lookupPropertyFacts,
@@ -29,4 +32,8 @@ export const POST = createBancChatPost({
     return createBancConversationHandler({ model, tools, portfolio });
   },
   createRequestId: randomUUID,
+  onTurn: (request, response) => {
+    const events = chatUsageEvents(request, response);
+    if (events.length > 0) after(() => Promise.all(events.map((event) => reportFormEvent(event))));
+  },
 });

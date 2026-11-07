@@ -605,7 +605,7 @@ test("retains fixed contact controls when deadline blocks supporting work after 
   assert.deepEqual(response.sources, []);
   assert.equal(response.context.topic, "banc_knowledge");
   assert.equal(response.handoff, undefined);
-  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact" });
+  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact?from=bot" });
   assert.deepEqual(started, ["search_banc_knowledge"]);
   assert.equal(model.responseInputs.length, 0);
 });
@@ -678,7 +678,7 @@ test("returns an honest no-source answer when optional knowledge response writin
   assert.deepEqual(response.sources, []);
   assert.equal(response.context.topic, "banc_knowledge");
   assert.equal(response.handoff, undefined);
-  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact" });
+  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact?from=bot" });
   assert.equal(model.responseInputs.length, 0);
 });
 
@@ -710,7 +710,7 @@ test("resets search state and signposts a viewing to the property's own form, no
   const contact = await contactSetup.handler(requestFor("Book a viewing", activeState()));
   assert.equal(contact.action, "contact_team");
   assert.equal(contact.handoff, undefined);
-  assert.deepEqual(contact.form, { title: "Book a viewing", href: "/book-viewing/EA-1" });
+  assert.deepEqual(contact.form, { title: "Book a viewing", href: "/book-viewing/EA-1?from=bot" });
 });
 
 test("sends a valuation request to the valuation form, never the phone", async () => {
@@ -719,7 +719,7 @@ test("sends a valuation request to the valuation form, never the phone", async (
   const response = await handler(requestFor("How much is my house worth?"));
   assert.equal(response.action, "contact_team");
   assert.equal(response.handoff, undefined);
-  assert.deepEqual(response.form, { title: "Get your instant valuation", href: "/valuation" });
+  assert.deepEqual(response.form, { title: "Get your instant valuation", href: "/valuation?from=bot" });
 });
 
 test("sends a request to speak to someone to the contact form", async () => {
@@ -727,7 +727,7 @@ test("sends a request to speak to someone to the contact form", async () => {
   model.planResults.push(plan({ type: "contact_banc", reason: "human" }));
   const response = await handler(requestFor("Can I talk to someone?"));
   assert.equal(response.handoff, undefined);
-  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact" });
+  assert.deepEqual(response.form, { title: "Send Banc a message", href: "/contact?from=bot" });
 });
 
 test("keeps zero results as a normal outcome even when response writing fails", async () => {

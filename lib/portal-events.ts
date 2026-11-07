@@ -4,7 +4,11 @@
 import { ENQUIRY_SUBJECTS } from "./property-enquiry.ts";
 
 export type FormEventKind = "contact" | "valuation" | "viewing" | "offer";
-export type FormEvent = { kind: FormEventKind; property?: string };
+export type FormEvent = { kind: FormEventKind; property?: string; via?: "bot" };
+export type PortalEvent =
+  | FormEvent
+  | { kind: "chat_started" }
+  | { kind: "chat_handoff"; detail: "valuation" | "viewing" | "offer" | "contact" };
 
 type PortalDeps = {
   url: string | undefined;
@@ -24,7 +28,7 @@ export function classifyContactSubject(subject: string): FormEvent {
 }
 
 export async function reportFormEvent(
-  event: FormEvent,
+  event: PortalEvent,
   deps: PortalDeps = { url: process.env.PORTAL_INGEST_URL, token: process.env.PORTAL_INGEST_TOKEN, fetch },
 ): Promise<boolean> {
   if (!deps.url || !deps.token) return false;
@@ -41,5 +45,15 @@ export async function reportFormEvent(
   } catch (error) {
     console.error(`[Portal events] ${event.kind} count not sent to the portal:`, error);
     return false;
+  }
+}
+
+/** "bot" when the form's page was opened from a Banc Bot link (?from=bot), read from the request's Referer. */
+export function viaFromReferer(referer: string | null): "bot" | undefined {
+  if (!referer) return undefined;
+  try {
+    return new URL(referer).searchParams.get("from") === "bot" ? "bot" : undefined;
+  } catch {
+    return undefined;
   }
 }

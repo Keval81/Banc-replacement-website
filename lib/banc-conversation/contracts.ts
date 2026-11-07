@@ -393,6 +393,17 @@ export const trustedSourceSchema = z
   })
   .strict();
 
+/** A form the chatbot links to: a site path, optionally tagged ?from=bot and nothing else. */
+export const trustedFormLinkSchema = z
+  .object({
+    title: z.string().trim().min(1).max(240),
+    href: z
+      .string()
+      .trim()
+      .regex(/^\/(?!\/)[A-Za-z0-9/_-]+(?:\?from=bot)?$/),
+  })
+  .strict();
+
 export const publicHandoffSchema = z
   .object({
     callHref: z.literal(BANC_CONTACT.callHref),
@@ -426,7 +437,7 @@ export const conversationResponseSchema = z
       .transform((sources) => sources.map((source) => ({ ...source })))
       .optional(),
     handoff: publicHandoffSchema.optional(),
-    form: trustedSourceSchema.optional(),
+    form: trustedFormLinkSchema.optional(),
     context: propertyConversationStateSchema,
   })
   .strict();

@@ -1,7 +1,7 @@
 import { after, NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { emailTemplates } from "@/lib/email";
-import { reportFormEvent } from "@/lib/portal-events";
+import { reportFormEvent, viaFromReferer } from "@/lib/portal-events";
 import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
 import { valuationRequestSchema } from "@/lib/lead-form-rules";
@@ -146,7 +146,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    after(() => reportFormEvent({ kind: "valuation" }));
+    const via = viaFromReferer(request.headers.get("referer"));
+    after(() => reportFormEvent({ kind: "valuation", ...(via ? { via } : {}) }));
 
     // Send webhook to CRM if configured
     if (process.env.CRM_WEBHOOK_URL) {

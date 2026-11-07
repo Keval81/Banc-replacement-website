@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { classifyContactSubject, reportFormEvent } from "../portal-events.ts";
+import { classifyContactSubject, reportFormEvent, viaFromReferer } from "../portal-events.ts";
 
 test("a viewing request names its listing", () => {
   assert.deepEqual(classifyContactSubject("Viewing request — BPGC1986"), { kind: "viewing", property: "BPGC1986" });
@@ -59,4 +59,13 @@ test("does nothing when the portal isn't configured", async () => {
   );
   assert.equal(ok, false);
   assert.equal(called, false);
+});
+
+test("a form sent from a page the chatbot linked to is marked as reached via the bot", () => {
+  assert.equal(viaFromReferer("https://bancproperty.com/valuation?from=bot"), "bot");
+  assert.equal(viaFromReferer("https://bancproperty.com/book-viewing/BPGC1986?from=bot"), "bot");
+  assert.equal(viaFromReferer("https://bancproperty.com/valuation"), undefined);
+  assert.equal(viaFromReferer("https://bancproperty.com/valuation?from=bot-ish"), undefined);
+  assert.equal(viaFromReferer(null), undefined);
+  assert.equal(viaFromReferer("not a url"), undefined);
 });

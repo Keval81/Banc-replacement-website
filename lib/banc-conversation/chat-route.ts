@@ -2,6 +2,7 @@ import {
   parseConversationRequest,
   parseConversationResponse,
   type ConversationRequest,
+  type ConversationResponse,
 } from "./contracts.ts";
 import {
   clientKeyFromRequest,
@@ -19,7 +20,9 @@ interface BancChatPostDependencies {
   createRequestId: () => string;
   rateLimiter?: RateLimiter;
   clientKey?: (request: Request) => string;
-  logger?: (event: { category: "handler_error"; requestId: string }) => void;
+  logger?: (event: { category: "handler_error" | "usage_count_error"; requestId: string }) => void;
+  /** Called after each answered turn (e.g. to count usage). Its failures never reach the visitor. */
+  onTurn?: (request: ConversationRequest, response: ConversationResponse) => void;
 }
 
 /** Generous ceiling: message (2k) + 20 history messages (2k each) + context. */
@@ -34,6 +37,7 @@ export function createBancChatPost({
   rateLimiter = createInMemoryRateLimiter(),
   clientKey = clientKeyFromRequest,
   logger = (event) => console.error(event),
+  onTurn,
 }: BancChatPostDependencies) {
   const handleConversation = createConversationHandler();
 
@@ -98,6 +102,18 @@ export function createBancChatPost({
         { error: "Conversation service unavailable." },
         { status: 503 },
       );
+    }
+
+    if (onTurn) {
+      try {
+        onTurn(chatRequest, response);
+      } catch {
+        try {
+          logger({ category: "usage_count_error", requestId });
+        } catch {
+          // Diagnostics must never break the response path.
+        }
+      }
     }
 
     return Response.json(response, {
