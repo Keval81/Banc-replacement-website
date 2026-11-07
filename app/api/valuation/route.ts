@@ -6,7 +6,7 @@ import { deliverEnquiry } from "@/lib/enquiry-delivery";
 import { enquiryInboxFor, valuationInbox } from "@/lib/banc-contact";
 import { fetchSoldPricesBySector } from "@/lib/api/landRegistry";
 import { valuationRequestSchema } from "@/lib/lead-form-rules";
-import { estimateFromSales, lookupPostcodeDistrict, postcodeSector, type ValuationEstimate } from "@/lib/valuation-estimate";
+import { estimateFromSales, lookupOutcodeDistricts, postcodeSector, type ValuationEstimate } from "@/lib/valuation-estimate";
 import {
   createPublicFormRateLimiter,
   isHoneypotTripped,
@@ -25,12 +25,13 @@ async function estimateFor(postcode: string, propertyType: string | undefined): 
   const sector = postcodeSector(postcode);
   if (!sector) return null;
   try {
-    const district = await lookupPostcodeDistrict(postcode);
-    if (!district) return null;
-    const sales = await Promise.race([
-      fetchSoldPricesBySector(sector, district),
+    const districts = await lookupOutcodeDistricts(postcode);
+    if (districts.length === 0) return null;
+    const perDistrict = await Promise.race([
+      Promise.all(districts.map((district) => fetchSoldPricesBySector(sector, district))),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("register timed out")), 9000)),
     ]);
+    const sales = perDistrict.flat();
     return estimateFromSales(sales, { propertyType, sector });
   } catch (error) {
     console.error("[Valuation API] no estimate:", error instanceof Error ? error.message : error);

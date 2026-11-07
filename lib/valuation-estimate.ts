@@ -8,7 +8,7 @@ export interface ValuationEstimate {
   high: number;
   /** How many sales the range rests on. */
   sampleSize: number;
-  /** "type" = same property type in the sector; "area" = every type, because the type alone was too thin. */
+  /** "type" = same property type in the sector; "area" = every type, only for types the register can't name (bungalows). */
   basis: "type" | "area";
   /** The postcode sector the sales came from, e.g. "EN6 4". */
   sector: string;
@@ -70,14 +70,17 @@ export function estimateFromSales(
   });
   const type = options.propertyType ? registerTypeFor(options.propertyType) : null;
   const sameType = type ? recent.filter((s) => s.propertyType === type) : [];
-  const pool = sameType.length >= MIN_SAMPLE ? sameType : recent;
+  // A known type priced off other types is how a detached owner was shown a flat's price (EN6 4,
+  // 7 Nov): when the type is thin there is no figure, and the director's call does the job.
+  if (type && sameType.length < MIN_SAMPLE) return null;
+  const pool = type ? sameType : recent;
   if (pool.length < MIN_SAMPLE) return null;
   const { q1, q3 } = quartiles(pool.map((s) => s.price));
   return {
     low: roundTo5k(q1),
     high: roundTo5k(q3),
     sampleSize: pool.length,
-    basis: sameType.length >= MIN_SAMPLE ? "type" : "area",
+    basis: type ? "type" : "area",
     sector: options.sector ?? postcodeSector(pool[0].postcode) ?? "",
     monthsBack: MONTHS_BACK,
   };
@@ -88,22 +91,24 @@ export function formatEstimate(e: ValuationEstimate): string {
   return `${gbp(e.low)} – ${gbp(e.high)}`;
 }
 
-/** The local-authority district the register files a postcode under, from postcodes.io — no key needed. */
-export async function lookupPostcodeDistrict(
-  postcode: string,
-  fetcher: typeof fetch = fetch,
-): Promise<string | null> {
+/** Every council an outcode spans ("EN6" covers four), from postcodes.io. A sector such as EN6 4 can sit across
+ *  two of them, and the register files each sale under one, so the search must ask each. */
+export async function lookupOutcodeDistricts(postcode: string, fetcher: typeof fetch = fetch): Promise<string[]> {
   const compact = postcode.replace(/\s+/g, "").toUpperCase();
-  if (!/^[A-Z]{1,2}\d[A-Z\d]?\d[A-Z]{2}$/.test(compact)) return null;
+  const m = compact.match(/^([A-Z]{1,2}\d[A-Z\d]?)\d[A-Z]{2}$/);
+  if (!m) return [];
   try {
-    const res = await fetcher(`https://api.postcodes.io/postcodes/${encodeURIComponent(compact)}`, {
-      signal: AbortSignal.timeout(4000),
-    });
-    if (!res.ok) return null;
-    const body = (await res.json()) as { result?: { admin_district?: string | null } };
-    const district = body.result?.admin_district?.trim();
-    return district ? district.toUpperCase() : null;
-  } catch {
-    return null;
+    const res = await fetcher(`https://api.postcodes.io/outcodes/${m[1]}`, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) {
+      console.error(`[Valuation] council lookup for ${m[1]} failed: HTTP ${res.status}`);
+      return [];
+    }
+    const body = (await res.json()) as { result?: { admin_district?: (string | null)[] | null } };
+    return (body.result?.admin_district ?? [])
+      .filter((d): d is string => typeof d === "string" && d.trim() !== "")
+      .map((d) => d.trim().toUpperCase());
+  } catch (error) {
+    console.error(`[Valuation] council lookup for ${m[1]} failed:`, error);
+    return [];
   }
 }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { estimateFromSales, postcodeSector, registerTypeFor } from "../valuation-estimate.ts";
+import { estimateFromSales, lookupOutcodeDistricts, postcodeSector, registerTypeFor } from "../valuation-estimate.ts";
 import type { SoldPriceRecord } from "../types/data.ts";
 
 const sale = (price: number, propertyType: SoldPriceRecord["propertyType"], monthsAgo: number): SoldPriceRecord => {
@@ -41,12 +41,32 @@ test("gives a range from the middle half of recent sales of the same type", () =
   assert.equal(e.basis, "type");
 });
 
-test("falls back to every type in the area when the type has too few sales, and says so", () => {
+test("never prices a known house type off other types: too few detached sales means no figure", () => {
   const sales = [sale(500_000, "terraced", 1), sale(520_000, "terraced", 2), sale(700_000, "semi-detached", 3), sale(750_000, "semi-detached", 4), sale(300_000, "flat", 2)];
-  const e = estimateFromSales(sales, { propertyType: "detached", now: new Date("2026-09-07T00:00:00Z") });
+  assert.equal(estimateFromSales(sales, { propertyType: "detached", now: new Date("2026-09-07T00:00:00Z") }), null);
+});
+
+test("a type the register can't name (bungalow) still takes the whole area, and says so", () => {
+  const sales = [sale(500_000, "terraced", 1), sale(520_000, "terraced", 2), sale(700_000, "semi-detached", 3)];
+  const e = estimateFromSales(sales, { propertyType: "Bungalow", now: new Date("2026-09-07T00:00:00Z") });
   assert.ok(e);
   assert.equal(e.basis, "area");
-  assert.equal(e.sampleSize, 5);
+});
+
+test("finds every council a postcode area spans, so split sectors like EN6 4 search both sides", async () => {
+  const asked: string[] = [];
+  const fetcher = (async (url: string) => {
+    asked.push(String(url));
+    return new Response(JSON.stringify({ result: { admin_district: ["Broxbourne", "Hertsmere", "Welwyn Hatfield"] } }));
+  }) as unknown as typeof fetch;
+  assert.deepEqual(await lookupOutcodeDistricts("en6 4ab", fetcher), ["BROXBOURNE", "HERTSMERE", "WELWYN HATFIELD"]);
+  assert.match(asked[0]!, /\/outcodes\/EN6$/);
+});
+
+test("no councils when the postcode is malformed or the lookup fails", async () => {
+  const failing = (async () => new Response("", { status: 500 })) as unknown as typeof fetch;
+  assert.deepEqual(await lookupOutcodeDistricts("EN6 4AB", failing), []);
+  assert.deepEqual(await lookupOutcodeDistricts("nope", failing), []);
 });
 
 test("refuses to estimate from fewer than three sales, or from stale ones", () => {
