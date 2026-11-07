@@ -62,13 +62,23 @@ export function indexMonthAsOf(series: HpiSeries, asOf: Date): string | null {
   return months.at(-1) ?? null;
 }
 
+const RETRY_AFTER_MS = 700;
+const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function query(sparql: string, fetcher: Fetch): Promise<Row[]> {
-  const response = await fetcher(QUERY_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
-    body: `query=${encodeURIComponent(sparql)}`,
-    signal: AbortSignal.timeout(TIMEOUT_MS),
-  });
+  const send = () =>
+    fetcher(QUERY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+      body: `query=${encodeURIComponent(sparql)}`,
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+  let response = await send();
+  // The register throttles bursts (HTTP 429, seen live 7 Nov); one short wait usually clears it.
+  if (response.status === 429) {
+    await pause(RETRY_AFTER_MS);
+    response = await send();
+  }
   if (!response.ok) throw new Error(`Land Registry query failed: HTTP ${response.status}`);
   const body = (await response.json()) as { results?: { bindings?: Row[] } };
   return body.results?.bindings ?? [];
@@ -133,4 +143,78 @@ SELECT ?month ?det ?semi ?ter ?flat ?all WHERE {
     fetcher,
   );
   return parseHpiRows(rows);
+}
+
+/** Every name a council may be filed under. postcodes.io says "Westminster" or "Bristol, City of";
+ *  the register and the index say "CITY OF WESTMINSTER" and "CITY OF BRISTOL". */
+export function districtVariants(name: string): string[] {
+  const n = name.trim().toUpperCase().replace(/\s+/g, " ");
+  const out = [n];
+  const city = /^(.*), CITY OF$/.exec(n);
+  const county = /^(.*), COUNTY OF$/.exec(n);
+  if (city) out.push(`CITY OF ${city[1]}`);
+  else if (county) out.push(county[1]!);
+  else if (!n.startsWith("CITY OF ")) out.push(`CITY OF ${n}`);
+  return out;
+}
+
+const literalList = (names: string[]) => names.map((n) => `"${clean(n)}"`).join(" ");
+
+/** A sector's (or outcode's) sales since a date, across every council it spans, in one query. */
+export async function fetchAreaSales(area: string, districts: string[], sinceIso: string, fetcher: Fetch = fetch): Promise<Sale[]> {
+  const a = area.trim().toUpperCase().replace(/\s+/g, " ");
+  const prefix = /\s\d$/.test(a) ? a : `${a} `;
+  const names = [...new Set(districts.flatMap(districtVariants))];
+  if (names.length === 0) return [];
+  const rows = await query(
+    `${PREFIXES}
+SELECT ?price ?date ?paon ?saon ?street ?postcode ?district ?type ?cat ?nb WHERE {
+  VALUES ?district { ${literalList(names)} }
+  ?item lrppi:pricePaid ?price ; lrppi:transactionDate ?date ; lrppi:propertyAddress ?addr .
+  ?addr lrcommon:postcode ?postcode ; lrcommon:district ?district .
+  FILTER(STRSTARTS(STR(?postcode), "${clean(prefix)}"))
+  FILTER(?date >= "${clean(sinceIso)}"^^xsd:date)
+  OPTIONAL { ?addr lrcommon:paon ?paon } OPTIONAL { ?addr lrcommon:saon ?saon }
+  OPTIONAL { ?addr lrcommon:street ?street }
+  OPTIONAL { ?item lrppi:propertyType ?type } OPTIONAL { ?item lrppi:transactionCategory ?cat }
+  OPTIONAL { ?item lrppi:newBuild ?nb }
+}
+LIMIT 6000`,
+    fetcher,
+  );
+  return rows.map(parseSaleRow).filter((s): s is Sale => s !== null);
+}
+
+/** Several councils' UK HPI in one query, keyed by every name each council goes by. */
+export async function fetchHpiForDistricts(districts: string[], fetcher: Fetch = fetch): Promise<Record<string, HpiSeries>> {
+  const names = [...new Set(districts.flatMap(districtVariants))];
+  if (names.length === 0) return {};
+  const regionFor = new Map(names.map((n) => [regionSlug(n), n]));
+  const rows = await query(
+    `PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>
+SELECT ?region ?month ?det ?semi ?ter ?flat ?all WHERE {
+  VALUES ?region { ${[...regionFor.keys()].map((slug) => `<http://landregistry.data.gov.uk/id/region/${slug}>`).join(" ")} }
+  ?obs ukhpi:refRegion ?region ; ukhpi:refMonth ?month .
+  OPTIONAL { ?obs ukhpi:housePriceIndexDetached ?det } OPTIONAL { ?obs ukhpi:housePriceIndexSemiDetached ?semi }
+  OPTIONAL { ?obs ukhpi:housePriceIndexTerraced ?ter } OPTIONAL { ?obs ukhpi:housePriceIndexFlatMaisonette ?flat }
+  OPTIONAL { ?obs ukhpi:housePriceIndex ?all }
+  FILTER(?month >= "2010-01"^^xsd:gYearMonth)
+}`,
+    fetcher,
+  );
+  const bySlug = new Map<string, Row[]>();
+  for (const row of rows) {
+    const slug = val(row, "region").split("/").pop() ?? "";
+    bySlug.set(slug, [...(bySlug.get(slug) ?? []), row]);
+  }
+  const out: Record<string, HpiSeries> = {};
+  for (const district of districts) {
+    const variants = districtVariants(district);
+    const found = variants.map((v) => bySlug.get(regionSlug(v))).find((r) => r && r.length > 0);
+    if (!found) continue;
+    const series = parseHpiRows(found);
+    for (const v of variants) out[v] = series;
+  }
+  return out;
 }

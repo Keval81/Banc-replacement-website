@@ -5,7 +5,7 @@
  */
 import { lookupOutcodeDistricts, postcodeSector, registerTypeFor } from "../valuation-estimate.ts";
 import { estimateHome, type HpiSeries, type Sale } from "./engine.ts";
-import { fetchHpi, fetchPostcodeHistory, fetchSectorSales } from "./register.ts";
+import { fetchAreaSales, fetchHpiForDistricts, fetchPostcodeHistory } from "./register.ts";
 
 export { describeBasis, headlineFor, type InstantEstimate } from "./present.ts";
 import type { InstantEstimate } from "./present.ts";
@@ -49,26 +49,30 @@ export function houseNumberFrom(address: string): string | null {
 export type InstantDeps = {
   districts: (postcode: string) => Promise<string[]>;
   history: (postcode: string) => Promise<Sale[]>;
-  sectorSales: (sector: string, district: string, sinceIso: string) => Promise<Sale[]>;
-  hpi: (district: string) => Promise<HpiSeries>;
+  /** One query for the whole sector, every council it spans. */
+  areaSales: (sector: string, districts: string[], sinceIso: string) => Promise<Sale[]>;
+  /** Price index for several councils, keyed by every name each goes by. */
+  hpi: (districts: string[]) => Promise<Record<string, HpiSeries>>;
 };
 
 const DAY_MS = 86_400_000;
+const DIRECTOR_LED_OUTCODE = /^W1[A-Z]?$/;
 const HPI_TTL_MS = 12 * 60 * 60 * 1000;
-const hpiCache = new Map<string, { at: number; series: HpiSeries }>();
+const hpiCache = new Map<string, { at: number; hpi: Record<string, HpiSeries> }>();
 
-async function cachedHpi(district: string): Promise<HpiSeries> {
-  const hit = hpiCache.get(district);
-  if (hit && Date.now() - hit.at < HPI_TTL_MS) return hit.series;
-  const series = await fetchHpi(district);
-  hpiCache.set(district, { at: Date.now(), series });
-  return series;
+async function cachedHpi(districts: string[]): Promise<Record<string, HpiSeries>> {
+  const key = [...districts].map((d) => d.toUpperCase()).sort().join("|");
+  const hit = hpiCache.get(key);
+  if (hit && Date.now() - hit.at < HPI_TTL_MS) return hit.hpi;
+  const hpi = await fetchHpiForDistricts(districts);
+  hpiCache.set(key, { at: Date.now(), hpi });
+  return hpi;
 }
 
 export const liveDeps: InstantDeps = {
   districts: (postcode) => lookupOutcodeDistricts(postcode),
   history: (postcode) => fetchPostcodeHistory(postcode),
-  sectorSales: (sector, district, sinceIso) => fetchSectorSales(sector, district, sinceIso),
+  areaSales: (sector, districts, sinceIso) => fetchAreaSales(sector, districts, sinceIso),
   hpi: cachedHpi,
 };
 
@@ -84,13 +88,10 @@ export async function runInstantValuation(
 
   const [districts, history] = await Promise.all([deps.districts(postcode), deps.history(postcode)]);
   if (districts.length === 0) return null;
-  const [sectorSales, series] = await Promise.all([
-    Promise.all(districts.map((d) => deps.sectorSales(sector, d, sinceIso))),
-    Promise.all(districts.map(async (d) => [d, await deps.hpi(d)] as const)),
-  ]);
-  const hpi = Object.fromEntries(series);
-  const homeDistrict = history.find((s) => s.district)?.district ?? districts[0]!;
-  const homeSeries = hpi[homeDistrict] ?? hpi[districts[0]!];
+  const homeDistrict = history.find((s) => s.district)?.district ?? districts[0]!.toUpperCase();
+  const councils = [...new Set([...districts, homeDistrict])];
+  const [comps, hpi] = await Promise.all([deps.areaSales(sector, councils, sinceIso), deps.hpi(councils)]);
+  const homeSeries = hpi[homeDistrict.toUpperCase()] ?? Object.values(hpi)[0];
   const indexMonth = homeSeries ? Object.keys(homeSeries).sort().at(-1) : undefined;
   if (!indexMonth) return null;
 
@@ -100,10 +101,11 @@ export async function runInstantValuation(
       saon: input.saon,
       postcode,
       type: input.propertyType ? registerTypeFor(input.propertyType) : null,
-      majorWork: input.majorWork,
+      // Prime central London prices turn on things public records can't see (Banc's Mayfair office): director-led.
+      majorWork: input.majorWork || DIRECTOR_LED_OUTCODE.test(postcode.split(" ")[0] ?? ""),
     },
     history,
-    comps: sectorSales.flat(),
+    comps,
     hpi,
     homeDistrict,
     asOf,

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { fetchSectorSales, indexMonthAsOf, parseHpiRows, parseSaleRow, regionSlug } from "../valuation/register.ts";
+import { districtVariants, fetchAreaSales, fetchHpiForDistricts, fetchSectorSales, indexMonthAsOf, parseHpiRows, parseSaleRow, regionSlug } from "../valuation/register.ts";
 
 test("turns a register row into a sale, keeping the repossession and new-build flags", () => {
   const sale = parseSaleRow({
@@ -59,4 +59,47 @@ test("a sector search matches its postcodes, and an outcode search can't spill i
   await fetchSectorSales("N1", "ISLINGTON", "2021-01-01", fetcher);
   assert.match(sent[0]!, /STRSTARTS\(STR\(\?postcode\), "EN7 6"\)/);
   assert.match(sent[1]!, /STRSTARTS\(STR\(\?postcode\), "N1 "\)/);
+});
+
+test("searches every spelling a council goes by, since postcodes.io and the register name some differently", () => {
+  assert.deepEqual(districtVariants("Westminster"), ["WESTMINSTER", "CITY OF WESTMINSTER"]);
+  assert.deepEqual(districtVariants("Bristol, City of"), ["BRISTOL, CITY OF", "CITY OF BRISTOL"]);
+  assert.deepEqual(districtVariants("Herefordshire, County of"), ["HEREFORDSHIRE, COUNTY OF", "HEREFORDSHIRE"]);
+});
+
+test("fetches a sector's sales across all its councils in one query", async () => {
+  const sent: string[] = [];
+  const fetcher = (async (_url: string, init: RequestInit) => {
+    sent.push(decodeURIComponent(String(init.body)));
+    return new Response(JSON.stringify({ results: { bindings: [] } }));
+  }) as unknown as typeof fetch;
+  await fetchAreaSales("SW1A 1", ["Westminster", "Camden"], "2021-01-01", fetcher);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0]!, /VALUES \?district \{ "WESTMINSTER" "CITY OF WESTMINSTER" "CAMDEN" "CITY OF CAMDEN" \}/);
+});
+
+test("waits and retries once when the register says too many requests", async () => {
+  let calls = 0;
+  const fetcher = (async () => {
+    calls += 1;
+    return calls === 1 ? new Response("", { status: 429 }) : new Response(JSON.stringify({ results: { bindings: [] } }));
+  }) as unknown as typeof fetch;
+  assert.deepEqual(await fetchAreaSales("EN6 4", ["Hertsmere"], "2021-01-01", fetcher), []);
+  assert.equal(calls, 2);
+});
+
+test("reads several councils' price index from one query, filed under every spelling", async () => {
+  const fetcher = (async () =>
+    new Response(
+      JSON.stringify({
+        results: {
+          bindings: [
+            { region: { value: "http://landregistry.data.gov.uk/id/region/city-of-westminster" }, month: { value: "2026-08" }, all: { value: "100" } },
+          ],
+        },
+      }),
+    )) as unknown as typeof fetch;
+  const hpi = await fetchHpiForDistricts(["Westminster"], fetcher);
+  assert.equal(hpi["WESTMINSTER"]?.["2026-08"]?.all, 100);
+  assert.equal(hpi["CITY OF WESTMINSTER"]?.["2026-08"]?.all, 100);
 });
