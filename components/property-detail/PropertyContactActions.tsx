@@ -5,13 +5,23 @@ import * as React from "react";
 import { useCookies } from "@/hooks/useCookies";
 import { getSafeExternalUrl } from "@/lib/property-detail-view";
 import { buildPropertyLeadActions, type LivePropertyDetail } from "@/lib/property-view";
+import { withBotTag } from "@/lib/portal-events";
+
+// A visitor who opened this home from Banc Bot (?from=bot) keeps the tag on the viewing and offer
+// forms, so a form sent from here still counts as reached via the bot on Banc's dashboard.
+function useBotTaggedActions(property: LivePropertyDetail) {
+  const [search, setSearch] = React.useState("");
+  React.useEffect(() => setSearch(window.location.search), []);
+  const actions = buildPropertyLeadActions(property.department, property.id);
+  return { ...actions, primaryHref: withBotTag(actions.primaryHref, search), offerHref: withBotTag(actions.offerHref, search) };
+}
 
 interface PropertyContactActionsProps {
   property: LivePropertyDetail;
 }
 
 export function PropertyContactPanel({ property }: PropertyContactActionsProps): React.ReactElement {
-  const actions = buildPropertyLeadActions(property.department, property.id);
+  const actions = useBotTaggedActions(property);
   const brochureUrl = getSafeExternalUrl(property.brochureUrl);
   const tourUrl = getSafeExternalUrl(property.virtualTourUrl);
 
@@ -72,7 +82,7 @@ export function PropertyContactPanel({ property }: PropertyContactActionsProps):
 export function PropertyMobileActions({ property }: PropertyContactActionsProps): React.ReactElement | null {
   const [isReady, setIsReady] = React.useState(false);
   const { hasConsented } = useCookies();
-  const actions = buildPropertyLeadActions(property.department, property.id);
+  const actions = useBotTaggedActions(property);
 
   React.useEffect(() => {
     const frame = window.requestAnimationFrame(() => setIsReady(true));

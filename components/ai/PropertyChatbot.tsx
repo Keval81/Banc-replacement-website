@@ -80,6 +80,17 @@ interface PropertyChatbotProps {
   launcherClearance?: ChatLauncherClearance;
 }
 
+// Count-only: tells Banc's dashboard a property was opened from the chat. sendBeacon survives the
+// navigation that follows the tap; a failure is silent by design (it must never block the visitor).
+function reportPropertyOpened(propertyId: string): void {
+  try {
+    const body = new Blob([JSON.stringify({ kind: "chat_property_open", property: propertyId })], { type: "application/json" });
+    navigator.sendBeacon?.("/api/chat/usage", body);
+  } catch {
+    // Counting is best-effort; the visitor's navigation always wins.
+  }
+}
+
 export default function PropertyChatbot({
   mobileContactControlPlacement = "standard",
   showProactivePrompt = true,
@@ -504,11 +515,14 @@ export default function PropertyChatbot({
                             return (
                               <Link
                                 key={property.id}
-                                href={buildPropertyHref(
+                                href={`${buildPropertyHref(
                                   property.department,
                                   property.id,
-                                )}
-                                onClick={closeChat}
+                                )}?from=bot`}
+                                onClick={() => {
+                                  reportPropertyOpened(property.id);
+                                  closeChat();
+                                }}
                                 className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
                               >
                                 <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">

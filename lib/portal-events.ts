@@ -8,6 +8,8 @@ export type FormEvent = { kind: FormEventKind; property?: string; via?: "bot" };
 export type PortalEvent =
   | FormEvent
   | { kind: "chat_started" }
+  | { kind: "chat_results" }
+  | { kind: "chat_property_open"; property: string }
   | { kind: "chat_handoff"; detail: "valuation" | "viewing" | "offer" | "contact" };
 
 type PortalDeps = {
@@ -56,4 +58,10 @@ export function viaFromReferer(referer: string | null): "bot" | undefined {
   } catch {
     return undefined;
   }
+}
+
+/** Keeps "this visitor came from Banc Bot" on a site link when the current page carries ?from=bot. */
+export function withBotTag(href: string, currentSearch: string): string {
+  if (!href.startsWith("/")) return href;
+  return new URLSearchParams(currentSearch).get("from") === "bot" ? `${href}${href.includes("?") ? "&" : "?"}from=bot` : href;
 }
