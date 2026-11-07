@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { Sale } from "../valuation/engine.ts";
-import { addressesFromHistory, describeBasis, headlineFor, houseNumberFrom, runInstantValuation, type InstantEstimate } from "../valuation/instant.ts";
+import { addressesFromHistory, describeBasis, headlineFor, homeSaleNote, houseNumberFrom, runInstantValuation, type InstantEstimate } from "../valuation/instant.ts";
 
 const estimate = (over: Partial<InstantEstimate> = {}): InstantEstimate => ({
   figure: 650_000,
@@ -11,6 +11,7 @@ const estimate = (over: Partial<InstantEstimate> = {}): InstantEstimate => ({
   confidence: "high",
   comparableCount: 12,
   ownSale: { date: "2015-06-23", price: 259_995, indexed: 640_000 },
+  homeLastSale: { date: "2015-06-23", price: 259_995, used: true },
   comparables: [],
   indexMonth: "2026-08",
   ...over,
@@ -92,4 +93,9 @@ test("Mayfair (W1) is always director-led: a range only, never a single figure",
   );
   assert.equal(e?.confidence, "low");
   assert.equal(headlineFor(e!).figure, null);
+});
+
+test("names the home's own sale row plainly, used or not", () => {
+  assert.equal(homeSaleNote({ date: "2025-01-10", price: 347_500, used: true }), "Your home · sold Jan 2025");
+  assert.equal(homeSaleNote({ date: "2006-12-01", price: 320_000, used: false }), "Your home · last sold Dec 2006, too long ago to rely on");
 });

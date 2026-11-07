@@ -172,3 +172,18 @@ test("prefers comparables in the same postcode and street over the wider sector"
   assert.ok(e.figure < 560_000, `figure ${e.figure} should lean to the same-street sales`);
   assert.equal(e.comparables[0]!.postcode, "EN7 6AB");
 });
+
+test("still reports the home's last recorded sale when it is too old to use, so the result can say so", () => {
+  const e = estimateHome({
+    home: { paon: "7", saon: "", postcode: "EN7 6AB", type: "terraced", majorWork: false },
+    history: [sale({ paon: "7", price: 195_000, date: "2003-05-02" }), sale({ paon: "7", price: 320_000, date: "2006-12-01" })],
+    comps: comps(10),
+    hpi: HPI,
+    homeDistrict: "BROXBOURNE",
+    asOf: AS_OF,
+    indexMonth: "2026-08",
+  });
+  assert.ok(e);
+  assert.equal(e.ownSale, null);
+  assert.deepEqual(e.homeLastSale, { date: "2006-12-01", price: 320_000, used: false });
+});

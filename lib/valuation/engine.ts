@@ -51,6 +51,8 @@ export type Estimate = {
   high: number;
   confidence: Confidence;
   ownSale: (Comparable & { yearsAgo: number }) | null;
+  /** The home's latest registered sale, whether or not it was recent enough to use. */
+  homeLastSale: { date: string; price: number; used: boolean } | null;
   comparableCount: number;
   /** The most relevant comparables, closest first, for the result page. */
   comparables: Comparable[];
@@ -110,6 +112,9 @@ export function estimateHome(input: EstimateInput): Estimate | null {
 
   const own = input.history
     .filter((s) => isHome(s) && s.standard && s.date < asOfDay && monthsBetween(s.date, asOf) / 12 <= OWN_SALE_MAX_YEARS)
+    .sort((a, b) => b.date.localeCompare(a.date))[0];
+  const lastRecorded = input.history
+    .filter((s) => isHome(s) && s.date < asOfDay)
     .sort((a, b) => b.date.localeCompare(a.date))[0];
   const ownSeries = seriesFor(input.homeDistrict);
   const ownIndexed = own && ownSeries ? indexPrice(own.price, own.date, indexMonth, key, ownSeries) : null;
@@ -181,6 +186,9 @@ export function estimateHome(input: EstimateInput): Estimate | null {
     high: roundTo5k(figure * (1 + band)),
     confidence,
     ownSale,
+    homeLastSale: lastRecorded
+      ? { date: lastRecorded.date, price: lastRecorded.price, used: Boolean(ownSale && ownSale.date === lastRecorded.date) }
+      : null,
     comparableCount: kept.length,
     comparables,
     indexMonth,

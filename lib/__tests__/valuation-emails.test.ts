@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { emailTemplates } from "../email.ts";
 
-const estimate = { figure: 1_000_000, low: 900_000, high: 1_100_000, confidence: "high" as const, comparableCount: 12, ownSale: { date: "2019-05-01", price: 820_000, indexed: 990_000 }, comparables: [], indexMonth: "2026-08" };
+const estimate = { figure: 1_000_000, low: 900_000, high: 1_100_000, confidence: "high" as const, comparableCount: 12, ownSale: { date: "2019-05-01", price: 820_000, indexed: 990_000 }, homeLastSale: { date: "2019-05-01", price: 820_000, used: true }, comparables: [], indexMonth: "2026-08" };
 
 test("a sales valuation confirmation leads with the figure, then the range and confidence, with the caveat Nitesh asked for", () => {
   const mail = emailTemplates.valuationConfirmation({ firstName: "David", address: "14 The Ridgeway, Cuffley", department: "sales", estimate });

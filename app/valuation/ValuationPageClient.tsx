@@ -26,7 +26,7 @@ import Footer from "@/components/Footer";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 import { checkValuationStep, describeSubmitError } from "@/lib/lead-form-rules";
 
-import { describeBasis, headlineFor, type InstantEstimate } from "@/lib/valuation/present";
+import { describeBasis, headlineFor, homeSaleNote, type InstantEstimate } from "@/lib/valuation/present";
 
 type AddressOption = { paon: string; saon: string; label: string };
 const NOT_LISTED = "not-listed";
@@ -665,27 +665,27 @@ export default function ValuationPage() {
                           </>
                         )}
                         <p className="mt-3 text-sm leading-relaxed text-banc-muted-readable">{describeBasis(estimate)}</p>
-                        {(estimate.ownSale || estimate.comparables.length > 0) && (
-                          <ul className="mt-4 space-y-1.5 border-t border-banc-focus/15 pt-3 text-sm">
-                            {estimate.ownSale && (
-                              <li className="flex items-start justify-between gap-3 text-banc-dark">
-                                <span>
-                                  <span className="block font-medium">Your home</span>
-                                  <span className="block text-xs text-banc-muted-readable">Sold {monthYear(estimate.ownSale.date)}</span>
-                                </span>
-                                <span className="tabular-nums">{gbp(estimate.ownSale.price)}</span>
-                              </li>
-                            )}
-                            {estimate.comparables.slice(0, 4).map((c) => (
-                              <li key={`${c.address}|${c.date}`} className="flex items-start justify-between gap-3 text-banc-dark">
-                                <span className="min-w-0">
-                                  <span className="block">{c.address.toLowerCase().replace(/\b[a-z]/g, (l) => l.toUpperCase())}</span>
-                                  <span className="block text-xs text-banc-muted-readable">Sold {monthYear(c.date)}</span>
-                                </span>
-                                <span className="tabular-nums">{gbp(c.price)}</span>
-                              </li>
-                            ))}
-                          </ul>
+                        {estimate.homeLastSale && (
+                          <div className="mt-4 flex items-start justify-between gap-3 border-t border-banc-focus/15 pt-3 text-sm text-banc-dark">
+                            <span className="font-medium">{homeSaleNote(estimate.homeLastSale)}</span>
+                            <span className="tabular-nums">{gbp(estimate.homeLastSale.price)}</span>
+                          </div>
+                        )}
+                        {estimate.comparables.length > 0 && (
+                          <div className="mt-4 border-t border-banc-focus/15 pt-3">
+                            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Similar sales nearby</p>
+                            <ul className="mt-2 space-y-1.5 text-sm">
+                              {estimate.comparables.slice(0, 4).map((c) => (
+                                <li key={`${c.address}|${c.date}`} className="flex items-start justify-between gap-3 text-banc-dark">
+                                  <span className="min-w-0">
+                                    <span className="block">{c.address.toLowerCase().replace(/\b[a-z]/g, (l) => l.toUpperCase())}</span>
+                                    <span className="block text-xs text-banc-muted-readable">Sold {monthYear(c.date)}</span>
+                                  </span>
+                                  <span className="tabular-nums">{gbp(c.price)}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
                         <p className="mt-3 text-xs leading-relaxed text-banc-muted-readable">
                           Sold prices as registered. This is an estimate from public records, not a valuation of your home — one of the directors will call to give you an accurate figure.

@@ -7,7 +7,7 @@ import { lookupOutcodeDistricts, postcodeSector, registerTypeFor } from "../valu
 import { estimateHome, type HpiSeries, type Sale } from "./engine.ts";
 import { fetchAreaSales, fetchHpiForDistricts, fetchPostcodeHistory } from "./register.ts";
 
-export { describeBasis, headlineFor, type InstantEstimate } from "./present.ts";
+export { describeBasis, headlineFor, homeSaleNote, type InstantEstimate } from "./present.ts";
 import type { InstantEstimate } from "./present.ts";
 
 export type AddressOption = { paon: string; saon: string; label: string };

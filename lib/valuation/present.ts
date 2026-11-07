@@ -8,6 +8,7 @@ export type InstantEstimate = {
   confidence: Confidence;
   comparableCount: number;
   ownSale: { date: string; price: number; indexed: number } | null;
+  homeLastSale: { date: string; price: number; used: boolean } | null;
   comparables: Comparable[];
   indexMonth: string;
 };
@@ -35,3 +36,10 @@ export function describeBasis(e: InstantEstimate): string {
   return `Based on ${sales}, brought up to today with the UK House Price Index, from HM Land Registry.`;
 }
 
+
+const monthYear = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
+
+export function homeSaleNote(sale: { date: string; price: number; used: boolean }): string {
+  return sale.used ? `Your home · sold ${monthYear(sale.date)}` : `Your home · last sold ${monthYear(sale.date)}, too long ago to rely on`;
+}
