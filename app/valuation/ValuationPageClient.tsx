@@ -143,6 +143,10 @@ export default function ValuationPage() {
     setError(null);
   };
   const isLettings = formData.department === "lettings";
+  const postcodeShown = formData.postcode.trim().toUpperCase();
+  const fullAddress = [formData.address.trim().replace(/\s*\n\s*/g, ", "), postcodeShown]
+    .filter((part, i, parts) => part && !(i === 1 && parts[0]!.toUpperCase().includes(postcodeShown)))
+    .join(", ");
 
   const validateStep = (step: number): boolean => {
     switch (step) {
@@ -651,6 +655,7 @@ export default function ValuationPage() {
                           <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Instant estimate</p>
                           <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-banc-focus">{h.label}</span>
                         </div>
+                        <p className="mt-2 text-sm font-medium text-banc-dark">{fullAddress}</p>
                         {h.figure ? (
                           <>
                             <p className="mt-2 font-display text-4xl text-banc-dark">{h.figure}</p>
@@ -695,7 +700,7 @@ export default function ValuationPage() {
                   })()}
 
                   <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">
-                    Your {isLettings ? "rental appraisal" : "valuation"} request for <span className="font-medium text-banc-dark">{formData.postcode}</span> has been received.
+                    Your {isLettings ? "rental appraisal" : "valuation"} request for <span className="font-medium text-banc-dark">{fullAddress}</span> has been received.
                   </p>
                   <p className="mb-8 text-banc-muted-readable max-w-md mx-auto">
                     {isLettings
