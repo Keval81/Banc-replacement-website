@@ -187,3 +187,54 @@ test("still reports the home's last recorded sale when it is too old to use, so 
   assert.equal(e.ownSale, null);
   assert.deepEqual(e.homeLastSale, { date: "2006-12-01", price: 320_000, used: false });
 });
+
+const sizedInput = (homeArea: number | undefined, sales: Sale[]) => ({
+  home: { paon: "9", saon: "", postcode: "EN7 6AB", type: "terraced" as const, majorWork: false, area: homeArea },
+  history: [],
+  comps: sales,
+  hpi: HPI,
+  homeDistrict: "BROXBOURNE",
+  asOf: AS_OF,
+  indexMonth: "2026-08",
+});
+
+test("prices a larger home above its smaller neighbours, but by less than its extra floor area", () => {
+  // Ten 100 m² homes sold at the index month for £400k; this home is 150 m², half as big again.
+  // Price rises with the square root of size (back-test, Nov 2026): 400k × √1.5 ≈ 490k, not 600k.
+  const e = estimateHome(sizedInput(150, comps(10, { price: 400_000, date: "2026-08-10", area: 100 })));
+  assert.equal(e?.figure, 490_000);
+});
+
+test("trusts comparables of a similar size over much larger or smaller ones", () => {
+  // Five 100 m² homes at £400k and six 200 m² homes at £800k. For a 100 m² home the big ones
+  // scale to ~£566k each and outnumber the like-for-like sales; similarity weighting must overrule them.
+  const sales = [
+    ...comps(5, { price: 400_000, date: "2026-08-10", area: 100 }),
+    ...comps(6, { price: 800_000, date: "2026-08-10", area: 200 }).map((s, i) => ({ ...s, paon: String(300 + i) })),
+  ];
+  const e = estimateHome(sizedInput(100, sales));
+  assert.equal(e?.figure, 400_000);
+});
+
+test("falls back to comparable prices when fewer than 3 comparables have a floor area", () => {
+  const sales = [
+    ...comps(2, { price: 400_000, date: "2026-08-10", area: 100 }),
+    ...comps(8, { price: 400_000, date: "2026-08-10" }).map((s, i) => ({ ...s, paon: String(200 + i) })),
+  ];
+  const e = estimateHome(sizedInput(150, sales));
+  assert.equal(e?.figure, 400_000);
+});
+
+test("ignores floor areas when this home's own area is unknown", () => {
+  const e = estimateHome(sizedInput(undefined, comps(10, { price: 400_000, date: "2026-08-10", area: 100 })));
+  assert.equal(e?.figure, 400_000);
+});
+
+test("gives a narrower range when floor areas were used, because the back-test earned it", () => {
+  const sales = comps(10, { price: 400_000, date: "2026-08-10", area: 100 });
+  const sizedEstimate = estimateHome(sizedInput(100, sales));
+  const unsized = estimateHome(sizedInput(undefined, sales));
+  assert.equal(sizedEstimate?.confidence, "medium");
+  assert.deepEqual([sizedEstimate?.low, sizedEstimate?.high, sizedEstimate?.usedFloorArea], [350_000, 450_000, true]);
+  assert.deepEqual([unsized?.low, unsized?.high, unsized?.usedFloorArea], [330_000, 470_000, false]);
+});

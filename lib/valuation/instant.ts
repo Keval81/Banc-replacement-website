@@ -5,6 +5,7 @@
  */
 import { lookupOutcodeDistricts, postcodeSector, registerTypeFor } from "../valuation-estimate.ts";
 import { estimateHome, type HpiSeries, type Sale } from "./engine.ts";
+import { lookupHomeArea, withKnownAreas } from "./floor-areas.ts";
 import { fetchAreaSales, fetchHpiForDistricts, fetchPostcodeHistory } from "./register.ts";
 
 export { describeBasis, headlineFor, homeSaleNote, type InstantEstimate } from "./present.ts";
@@ -53,10 +54,15 @@ export type InstantDeps = {
   areaSales: (sector: string, districts: string[], sinceIso: string) => Promise<Sale[]>;
   /** Price index for several councils, keyed by every name each goes by. */
   hpi: (districts: string[]) => Promise<Record<string, HpiSeries>>;
+  /** Adds a floor area to each sale that has one on record. */
+  compAreas?: (sales: Sale[]) => Sale[];
+  /** This home's floor area in m², from its energy certificate. */
+  homeArea?: (home: { postcode: string; paon: string; saon: string }) => Promise<number | null>;
 };
 
 const DAY_MS = 86_400_000;
 const DIRECTOR_LED_OUTCODE = /^W1[A-Z]?$/;
+const HOME_AREA_TIMEOUT_MS = 4000;
 const HPI_TTL_MS = 12 * 60 * 60 * 1000;
 const hpiCache = new Map<string, { at: number; hpi: Record<string, HpiSeries> }>();
 
@@ -74,6 +80,8 @@ export const liveDeps: InstantDeps = {
   history: (postcode) => fetchPostcodeHistory(postcode),
   areaSales: (sector, districts, sinceIso) => fetchAreaSales(sector, districts, sinceIso),
   hpi: cachedHpi,
+  compAreas: withKnownAreas,
+  homeArea: lookupHomeArea,
 };
 
 export async function runInstantValuation(
@@ -90,7 +98,21 @@ export async function runInstantValuation(
   if (districts.length === 0) return null;
   const homeDistrict = history.find((s) => s.district)?.district ?? districts[0]!.toUpperCase();
   const councils = [...new Set([...districts, homeDistrict])];
-  const [comps, hpi] = await Promise.all([deps.areaSales(sector, councils, sinceIso), deps.hpi(councils)]);
+  // The floor area sharpens the estimate; a slow or failing register never costs the visitor their figure.
+  const homeArea = async () => {
+    if (!deps.homeArea || !input.paon) return null;
+    try {
+      return await Promise.race([
+        deps.homeArea({ postcode, paon: input.paon, saon: input.saon }),
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), HOME_AREA_TIMEOUT_MS)),
+      ]);
+    } catch (error) {
+      console.error("[Valuation] no floor area:", error instanceof Error ? error.message : error);
+      return null;
+    }
+  };
+  const [rawComps, hpi, area] = await Promise.all([deps.areaSales(sector, councils, sinceIso), deps.hpi(councils), homeArea()]);
+  const comps = deps.compAreas ? deps.compAreas(rawComps) : rawComps;
   const homeSeries = hpi[homeDistrict.toUpperCase()] ?? Object.values(hpi)[0];
   const indexMonth = homeSeries ? Object.keys(homeSeries).sort().at(-1) : undefined;
   if (!indexMonth) return null;
@@ -103,6 +125,7 @@ export async function runInstantValuation(
       type: input.propertyType ? registerTypeFor(input.propertyType) : null,
       // Prime central London prices turn on things public records can't see (Banc's Mayfair office): director-led.
       majorWork: input.majorWork || DIRECTOR_LED_OUTCODE.test(postcode.split(" ")[0] ?? ""),
+      area: area ?? undefined,
     },
     history,
     comps,
@@ -113,5 +136,9 @@ export async function runInstantValuation(
   });
   if (!estimate) return null;
   const { ownSale, ...rest } = estimate;
-  return { ...rest, ownSale: ownSale ? { date: ownSale.date, price: ownSale.price, indexed: ownSale.indexed } : null };
+  return {
+    ...rest,
+    floorArea: rest.usedFloorArea ? area : null,
+    ownSale: ownSale ? { date: ownSale.date, price: ownSale.price, indexed: ownSale.indexed } : null,
+  };
 }

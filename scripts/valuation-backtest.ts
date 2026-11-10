@@ -9,14 +9,18 @@
  * old method (middle half of the sector's last 24 months, same type) runs on the
  * same homes for comparison.
  */
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { estimateHome, TUNING, type Confidence, type HomeType, type HpiSeries, type Sale } from "../lib/valuation/engine.ts";
+import { fetchFloorArea, fetchPostcodeCertificates, matchCertificate } from "../lib/valuation/epc.ts";
 import { fetchHpi, fetchPostcodeHistory, fetchSectorSales, indexMonthAsOf } from "../lib/valuation/register.ts";
 
 const args = process.argv.slice(2);
 const outIndex = args.indexOf("--out");
 const outPath = outIndex >= 0 ? args[outIndex + 1] : null;
-const outcodes = args.filter((a, i) => !a.startsWith("--") && (outIndex < 0 || i !== outIndex + 1));
+const outcodes = args.filter((a) => /^[A-Z]{1,2}\d[A-Z\d]?$/.test(a));
+// --epc <cache.json>: also value every home with floor areas from the energy certificate register.
+const epcIndex = args.indexOf("--epc");
+const epcCachePath = epcIndex >= 0 ? args[epcIndex + 1] : null;
 const grid = args.includes("--grid");
 if (outcodes.length === 0) outcodes.push("EN6", "EN7", "EN8");
 
@@ -35,6 +39,39 @@ async function pool<T, R>(items: T[], size: number, work: (item: T) => Promise<R
     }),
   );
   return results;
+}
+
+const homeKey = (s: { postcode: string; saon: string; paon: string }) => `${s.postcode}|${s.saon}|${s.paon}`.toUpperCase();
+
+/** Floor area per home (null = no certificate found), cached on disk so a re-run costs nothing. */
+async function loadAreas(sales: Sale[], cachePath: string): Promise<Record<string, number | null>> {
+  const token = process.env.EPC_API_TOKEN;
+  if (!token) throw new Error("EPC_API_TOKEN is not set; run with node --env-file=.env.local");
+  const areas: Record<string, number | null> = existsSync(cachePath) ? JSON.parse(readFileSync(cachePath, "utf8")) : {};
+  const byPostcode = new Map<string, Sale[]>();
+  for (const s of sales) {
+    if (!s.paon || homeKey(s) in areas) continue;
+    byPostcode.set(s.postcode, [...(byPostcode.get(s.postcode) ?? []), s]);
+  }
+  // The register allows 6000 requests per 5 minutes; 4 workers pausing 250ms stay under it.
+  const pace = () => new Promise((resolve) => setTimeout(resolve, 250));
+  let done = 0;
+  await pool([...byPostcode.entries()], 4, async ([postcode, homes]) => {
+    const rows = await fetchPostcodeCertificates(postcode, token);
+    await pace();
+    for (const home of homes) {
+      if (homeKey(home) in areas) continue;
+      const match = matchCertificate(home, rows);
+      areas[homeKey(home)] = match ? await fetchFloorArea(match.certificateNumber, token) : null;
+      if (match) await pace();
+    }
+    if (++done % 200 === 0) {
+      writeFileSync(cachePath, JSON.stringify(areas));
+      console.error(`floor areas: ${done}/${byPostcode.size} postcodes`);
+    }
+  });
+  writeFileSync(cachePath, JSON.stringify(areas));
+  return areas;
 }
 
 async function districtsFor(outcode: string): Promise<string[]> {
@@ -62,6 +99,7 @@ function oldMethod(sales: Sale[], type: HomeType, asOf: Date): { low: number; hi
 }
 
 type Result = {
+  hasArea: boolean;
   type: HomeType;
   price: number;
   date: string;
@@ -85,8 +123,13 @@ async function main() {
     const districts = await districtsFor(outcode);
     for (const district of districts) {
       if (!hpi[district]) hpi[district] = await fetchHpi(district);
-      const sales = await fetchSectorSales(outcode, district, since);
-      if (sales.length >= 3000) console.error(`warning: ${outcode}/${district} hit the 3000-row cap; split by sector`);
+      // One query per sector ("EN8 0" … "EN8 9"): a whole outcode can exceed the register's 3000-row cap.
+      const sales: Sale[] = [];
+      for (let digit = 0; digit <= 9; digit++) {
+        const sector = await fetchSectorSales(`${outcode} ${digit}`, district, since);
+        if (sector.length >= 3000) throw new Error(`${outcode} ${digit}/${district} hit the 3000-row cap; results would be incomplete`);
+        sales.push(...sector);
+      }
       for (const s of sales) {
         const key = sectorOf(s.postcode);
         sectorSales.set(key, [...(sectorSales.get(key) ?? []), s]);
@@ -108,7 +151,14 @@ async function main() {
     histories.set(pc, await fetchPostcodeHistory(pc));
   });
 
-  const run = (): Result[] => tests.map((t) => {
+  if (epcCachePath) {
+    const areas = await loadAreas(all, epcCachePath);
+    for (const s of all) s.area = areas[homeKey(s)] ?? undefined;
+    const found = all.filter((s) => s.area).length;
+    console.error(`floor area found for ${found} of ${all.length} sales (${Math.round((100 * found) / all.length)}%)`);
+  }
+
+  const run = (useAreas = true): Result[] => tests.map((t) => {
     const asOf = new Date(`${t.date}T00:00:00Z`);
     const type = t.type as HomeType;
     const homeSeries = hpi[t.district];
@@ -116,7 +166,7 @@ async function main() {
     const comps = sectorSales.get(sectorOf(t.postcode)) ?? [];
     const e = indexMonth
       ? estimateHome({
-          home: { paon: t.paon, saon: t.saon, postcode: t.postcode, type, majorWork: false },
+          home: { paon: t.paon, saon: t.saon, postcode: t.postcode, type, majorWork: false, area: useAreas ? t.area : undefined },
           history: histories.get(t.postcode) ?? [],
           comps,
           hpi,
@@ -127,6 +177,7 @@ async function main() {
       : null;
     const old = oldMethod(comps, type, asOf);
     return {
+      hasArea: Boolean(t.area),
       type,
       price: t.price,
       date: t.date,
@@ -162,6 +213,51 @@ async function main() {
       const med = (xs: number[]) => `${(100 * xs.at(Math.floor(xs.length / 2))!).toFixed(1)}%`;
       console.log(`${v.name.padEnd(30)} median ${med(errors)}  within10 ${Math.round((100 * errors.filter((e) => e <= 0.1).length) / errors.length)}%  own-sale homes ${med(withOwn)}  others ${med(noOwn)}`);
     }
+    return;
+  }
+  if (epcCachePath) {
+    if (args.includes("--size-grid")) {
+      const errorsOf = (rows: Result[]) => rows.filter((r) => r.newFigure !== null).map((r) => Math.abs(r.newFigure! - r.price) / r.price).sort((x, y) => x - y);
+      const med = (xs: number[]) => (100 * xs.at(Math.floor(xs.length / 2))!).toFixed(1);
+      for (const elasticity of [0, 0.4, 0.5, 0.6, 0.7, 0.8, 1]) {
+        for (const similarity of [0, 1, 2, 4]) {
+          TUNING.sizeElasticity = elasticity;
+          TUNING.sizeSimilarity = similarity;
+          const rows = run(true);
+          const all = errorsOf(rows);
+          const byOutcode = outcodes.map((o) => `${o} ${med(errorsOf(rows.filter((r) => r.postcode.startsWith(`${o} `))))}`).join("  ");
+          console.log(`elasticity ${elasticity}  similarity ${similarity}  median ${med(all)}%  within10 ${Math.round((100 * all.filter((e) => e <= 0.1).length) / all.length)}%  p90 ${(100 * all.at(Math.floor(all.length * 0.9))!).toFixed(0)}%  own ${med(errorsOf(rows.filter((r) => r.hadOwnSale)))}  none ${med(errorsOf(rows.filter((r) => !r.hadOwnSale)))}  | ${byOutcode}`);
+        }
+      }
+      return;
+    }
+    const before = run(false);
+    const after = run(true);
+    const line = (name: string, keep: (r: Result) => boolean) => {
+      const stats = (rows: Result[]) => {
+        const errors = rows.filter((r) => r.newFigure !== null).map((r) => Math.abs(r.newFigure! - r.price) / r.price).sort((a, b) => a - b);
+        const share = (limit: number) => `${Math.round((100 * errors.filter((e) => e <= limit).length) / errors.length)}%`;
+        return errors.length === 0 ? "—" : `median ${(100 * errors.at(Math.floor(errors.length / 2))!).toFixed(1)}%  within5 ${share(0.05)}  within10 ${share(0.1)}  within20 ${share(0.2)}  p90 ${(100 * errors.at(Math.floor(errors.length * 0.9))!).toFixed(0)}%`;
+      };
+      const kept = after.map((r, i) => (keep(r) ? i : -1)).filter((i) => i >= 0);
+      console.log(`${name.padEnd(34)} n ${String(kept.length).padEnd(4)} without area: ${stats(kept.map((i) => before[i]!))}\n${"".padEnd(41)} with area:    ${stats(kept.map((i) => after[i]!))}`);
+    };
+    line("all homes", () => true);
+    line("homes with a floor area", (r) => r.hasArea);
+    line("  …and an own sale", (r) => r.hasArea && r.hadOwnSale);
+    line("  …and no own sale", (r) => r.hasArea && !r.hadOwnSale);
+    for (const t of HOME_TYPES) line(`  ${t} with a floor area`, (r) => r.hasArea && r.type === t);
+    // What half-width each confidence label's range needs to hold the real price 7 and 8 times in 10.
+    for (const [name, rows] of [["without area", before], ["with area", after]] as const) {
+      for (const c of ["high", "medium", "low"] as const) {
+        const group = rows.filter((r) => r.confidence === c);
+        const errors = group.map((r) => Math.abs(r.newFigure! - r.price) / r.price).sort((x, y) => x - y);
+        const at = (p: number) => (errors.length ? (100 * errors.at(Math.floor(errors.length * p))!).toFixed(1) : "—");
+        const held = group.filter((r) => r.price >= r.newLow! && r.price <= r.newHigh!).length;
+        console.log(`${name.padEnd(13)} ${c.padEnd(7)} n ${String(group.length).padEnd(4)} median ${at(0.5)}%  band70 ±${at(0.7)}%  band80 ±${at(0.8)}%  current range held ${errors.length ? Math.round((100 * held) / group.length) : 0}%`);
+      }
+    }
+    if (outPath) writeFileSync(outPath, JSON.stringify({ before, after }, null, 2));
     return;
   }
   const results = run();

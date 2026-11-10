@@ -25,13 +25,15 @@ export type Sale = {
   newBuild: boolean;
   /** Council the register files it under, upper case, e.g. "WELWYN HATFIELD" */
   district: string;
+  /** Total floor area in m², from the home's energy certificate, when one is on record. */
+  area?: number;
 };
 
 /** UK HPI by month ("2026-08") and property type, for one council. */
 export type HpiSeries = Record<string, Record<IndexKey, number>>;
 
 export type EstimateInput = {
-  home: { paon: string; saon: string; postcode: string; type: HomeType | null; majorWork: boolean };
+  home: { paon: string; saon: string; postcode: string; type: HomeType | null; majorWork: boolean; area?: number };
   /** Every sale in the home's full postcode, any date. */
   history: Sale[];
   /** Sales across the home's postcode sector, every council it spans. */
@@ -54,6 +56,8 @@ export type Estimate = {
   /** The home's latest registered sale, whether or not it was recent enough to use. */
   homeLastSale: { date: string; price: number; used: boolean } | null;
   comparableCount: number;
+  /** Whether comparables were scaled to this home's floor area. */
+  usedFloorArea: boolean;
   /** The most relevant comparables, closest first, for the result page. */
   comparables: Comparable[];
   indexMonth: string;
@@ -67,11 +71,17 @@ const MIN_COMPS = 3;
 // Half-widths of the range by confidence, from the EN6/7/8 back-test (750 resales, Sep 2025 – Sep 2026):
 // each label's range held the real sale price 7 times in 10. 80% would need ±12% / ±22% / ±27%.
 export const RANGE_BANDS: Record<Confidence, number> = { high: 0.1, medium: 0.17, low: 0.21 };
+// The same 7-in-10 test when floor areas were used (846 resales, Sep 2025 – Sep 2026): the estimate is closer, so the range is tighter.
+export const RANGE_BANDS_SIZED: Record<Confidence, number> = { high: 0.09, medium: 0.12, low: 0.19 };
 
 /** Weights the back-test tunes (scripts/valuation-backtest.ts --grid). */
 export const TUNING = {
   ownWeight: { within5y: 0.8, within10y: 0.7, older: 0.5 },
   tierWeight: { postcode: 8, street: 4, sector: 1 },
+  // How price scales with floor area: 1 = in proportion (£ per m²), below 1 = each extra m² adds less.
+  sizeElasticity: 0.5,
+  // How fast a comparable's weight falls as its floor area moves away from this home's (0 = not at all).
+  sizeSimilarity: 2,
 };
 
 const DAY_MS = 86_400_000;
@@ -144,13 +154,24 @@ export function estimateHome(input: EstimateInput): Estimate | null {
     if (!indexed) return [];
     const tier = norm(s.postcode) === homePostcode ? 3 : street && norm(s.street) === street && sectorOf(s.postcode) === homeSector ? 2 : 1;
     const tierWeight = tier === 3 ? TUNING.tierWeight.postcode : tier === 2 ? TUNING.tierWeight.street : TUNING.tierWeight.sector;
-    return [{ sale: s, value: indexed, tier, weight: tierWeight * recencyWeight(monthsBetween(s.date, asOf)) }];
+    return [{ sale: s, indexed, value: indexed, tier, weight: tierWeight * recencyWeight(monthsBetween(s.date, asOf)) }];
   });
 
+  // With floor areas on record, scale each comparable to this home's size, trusting similar-sized homes most.
+  const homeArea = home.area;
+  const sized = homeArea
+    ? weighted.flatMap((w) => {
+        if (!w.sale.area) return [];
+        const ratio = homeArea / w.sale.area;
+        return [{ ...w, value: w.indexed * ratio ** TUNING.sizeElasticity, weight: w.weight * Math.exp(-TUNING.sizeSimilarity * Math.abs(Math.log(ratio))) }];
+      })
+    : [];
+  const candidates = sized.length >= MIN_COMPS ? sized : weighted;
+
   // Drop sales wildly out of line with the rest (a derelict plot, a mansion on the edge of the sector).
-  const roughMedian = weighted.length > 0 ? weightedMedian(weighted) : 0;
-  const kept = weighted.filter((w) => w.value >= roughMedian * 0.6 && w.value <= roughMedian * 1.67);
-  const compFigure = kept.length >= MIN_COMPS ? weightedMedian(kept) : null;
+  const roughMedian = candidates.length > 0 ? weightedMedian(candidates) : 0;
+  const kept = candidates.filter((w) => w.value >= roughMedian * 0.6 && w.value <= roughMedian * 1.67);
+  const compFigure = kept.length >= MIN_COMPS ? Math.round(weightedMedian(kept)) : null;
 
   if (!ownSale && compFigure === null) return null;
 
@@ -174,11 +195,12 @@ export function estimateHome(input: EstimateInput): Estimate | null {
     confidence = "medium";
   }
 
-  const band = RANGE_BANDS[confidence];
+  const usedFloorArea = candidates === sized && compFigure !== null;
+  const band = (usedFloorArea ? RANGE_BANDS_SIZED : RANGE_BANDS)[confidence];
   const comparables = [...kept]
     .sort((a, b) => b.tier - a.tier || b.sale.date.localeCompare(a.sale.date))
     .slice(0, 5)
-    .map((w) => ({ address: addressOf(w.sale), postcode: w.sale.postcode, date: w.sale.date, price: w.sale.price, indexed: w.value }));
+    .map((w) => ({ address: addressOf(w.sale), postcode: w.sale.postcode, date: w.sale.date, price: w.sale.price, indexed: w.indexed }));
 
   return {
     figure: roundTo5k(figure),
@@ -190,6 +212,7 @@ export function estimateHome(input: EstimateInput): Estimate | null {
       ? { date: lastRecorded.date, price: lastRecorded.price, used: Boolean(ownSale && ownSale.date === lastRecorded.date) }
       : null,
     comparableCount: kept.length,
+    usedFloorArea,
     comparables,
     indexMonth,
   };
