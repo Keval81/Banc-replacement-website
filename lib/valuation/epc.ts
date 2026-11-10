@@ -50,10 +50,17 @@ export function parseFloorArea(certificate: Record<string, unknown>): number | n
 
 async function get(path: string, token: string, fetcher: Fetch): Promise<unknown | null> {
   for (let attempt = 0; ; attempt++) {
-    const response = await fetcher(`${API_URL}${path}`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
+    let response: Response;
+    try {
+      response = await fetcher(`${API_URL}${path}`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      });
+    } catch (error) {
+      // The register occasionally stalls on one request (seen 10 Nov 2026); one more try usually lands.
+      if (attempt < 1) continue;
+      throw error;
+    }
     if (response.status === 404) return null;
     if (response.status === 429 && attempt < 4) {
       await new Promise((resolve) => setTimeout(resolve, 5000 * (attempt + 1)));

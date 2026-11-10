@@ -53,3 +53,15 @@ test("reads a floor area in square metres and rejects implausible ones", () => {
   assert.equal(parseFloorArea({ total_floor_area: 4 }), null);
   assert.equal(parseFloorArea({}), null);
 });
+
+test("retries once when the register times out, instead of abandoning the lookup", async () => {
+  const { fetchFloorArea } = await import("../valuation/epc.ts");
+  let calls = 0;
+  const flaky = (async () => {
+    calls++;
+    if (calls === 1) throw new DOMException("The operation was aborted due to timeout", "TimeoutError");
+    return new Response(JSON.stringify({ data: { total_floor_area: 88 } }), { status: 200 });
+  }) as typeof fetch;
+  assert.equal(await fetchFloorArea("0000-0000-0000-0000-0001", "token", flaky), 88);
+  assert.equal(calls, 2);
+});
