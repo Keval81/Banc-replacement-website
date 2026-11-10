@@ -27,6 +27,7 @@ import { BANC_CONTACT } from "@/lib/banc-contact";
 import { checkValuationStep, describeSubmitError } from "@/lib/lead-form-rules";
 
 import { describeBasis, headlineFor, homeSaleNote, type InstantEstimate } from "@/lib/valuation/present";
+import { ConfidenceGauge } from "@/components/valuation/ConfidenceGauge";
 
 type AddressOption = { paon: string; saon: string; label: string };
 const NOT_LISTED = "not-listed";
@@ -651,10 +652,7 @@ export default function ValuationPage() {
                     const h = headlineFor(estimate);
                     return (
                       <div className="mx-auto mb-6 max-w-md rounded-xl border border-banc-focus/20 bg-banc-sky/10 p-6 text-left">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Instant estimate</p>
-                          <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-banc-focus">{h.label}</span>
-                        </div>
+                        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Instant estimate</p>
                         <p className="mt-2 text-sm font-medium text-banc-dark">{fullAddress}</p>
                         {h.figure ? (
                           <>
@@ -669,7 +667,10 @@ export default function ValuationPage() {
                             </p>
                           </>
                         )}
-                        <p className="mt-3 text-sm leading-relaxed text-banc-muted-readable">{describeBasis(estimate)}</p>
+                        <div className="mt-4 border-t border-banc-focus/15 pt-4">
+                          <ConfidenceGauge confidence={estimate.confidence} />
+                        </div>
+                        <p className="mt-4 text-sm leading-relaxed text-banc-muted-readable">{describeBasis(estimate)}</p>
                         {estimate.homeLastSale && (
                           <div className="mt-4 flex items-start justify-between gap-3 border-t border-banc-focus/15 pt-3 text-sm text-banc-dark">
                             <span className="font-medium">{homeSaleNote(estimate.homeLastSale)}</span>
