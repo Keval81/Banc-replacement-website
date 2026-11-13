@@ -171,9 +171,11 @@ export default function SellersGuidePage() {
         }}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button className={cn(actionPrimaryOnDark, "shadow-none")}>
-            Book Free Valuation
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <Button asChild className={cn(actionPrimaryOnDark, "shadow-none")}>
+            <Link href="/valuation">
+              Book Free Valuation
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
           <Link href="/sold-prices" className={actionSecondaryOnDark}>
             View Sold Properties
@@ -294,9 +296,11 @@ export default function SellersGuidePage() {
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button className={cn(actionPrimaryOnDark, "shadow-none")}>
-              Book Your Free Valuation
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <Button asChild className={cn(actionPrimaryOnDark, "shadow-none")}>
+              <Link href="/valuation">
+                Book Your Free Valuation
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
             </Button>
 
             <Link href="/sales/properties" className={actionSecondaryOnDark}>

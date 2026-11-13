@@ -220,12 +220,13 @@ export default function TenantsGuideClient() {
               Browse Properties
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-            <Button
+            <Button asChild
               size="lg"
               variant="outline"
-              className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}
-            >
-              Register Your Requirements
+              className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
+              <Link href="/#alerts">
+                Register Your Requirements
+              </Link>
             </Button>
           </div>
         </div>

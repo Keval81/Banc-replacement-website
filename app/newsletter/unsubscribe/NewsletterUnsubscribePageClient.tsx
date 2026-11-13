@@ -113,7 +113,7 @@ export default function NewsletterUnsubscribePage() {
         <div className="mt-6 border-t border-banc-dark/15 pt-6">
           <p className="text-sm text-banc-muted-readable">
             Having trouble?{' '}
-            <a href="mailto:info@banc.co.uk" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
+            <a href="mailto:info@bancproperty.com" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
               Contact us
             </a>
           </p>

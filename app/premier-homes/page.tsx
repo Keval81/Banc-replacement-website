@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -42,12 +43,16 @@ export default function PremierHomesPage() {
         image={{ src: "/hertfordshire-home-4.png", alt: "Luxury Premier Home", priority: true }}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button className={goldActionOnDark}>
-            Premier Valuation
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <Button asChild className={goldActionOnDark}>
+            <Link href="/valuation">
+              Premier Valuation
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
-          <Button variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
-            View Premier Properties
+          <Button asChild variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
+            <Link href="/sales/properties?minPrice=1000000">
+              View Premier Properties
+            </Link>
           </Button>
         </div>
       </PageBand>
@@ -118,9 +123,11 @@ export default function PremierHomesPage() {
             Andrew Crump heads up Banc Premier Homes — your dedicated point of contact from
             valuation right through to completion.
           </p>
-          <Button className={cn(goldActionOnDark, "mt-7")}>
-            Book Premier Valuation
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <Button asChild className={cn(goldActionOnDark, "mt-7")}>
+            <Link href="/valuation">
+              Book Premier Valuation
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
         </div>
       </section>

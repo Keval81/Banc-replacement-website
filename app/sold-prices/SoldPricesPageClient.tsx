@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, Calendar, Map, List, Loader2, AlertCircle, Building2, ChevronDown } from "lucide-react";
+import { Search, Calendar, Loader2, AlertCircle, Building2, ChevronDown } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageBand } from "@/components/PageBand";
@@ -13,8 +13,6 @@ import {
   fieldControl,
   fieldLabel,
   formPanel,
-  segmented,
-  segmentedOption,
 } from "@/components/ui/form-styles";
 
 import { SoldPriceHistory } from "@/components/data/SoldPriceHistory";
@@ -43,7 +41,6 @@ export default function SoldPricesPage() {
   const [stats, setStats] = useState<SoldPriceStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [filterType, setFilterType] = useState('all');
   const [filterDate, setFilterDate] = useState('all');
   const [sortBy, setSortBy] = useState<'date' | 'price'>('date');
@@ -244,20 +241,6 @@ export default function SoldPricesPage() {
 
                   <div className="mt-4 flex items-center justify-between gap-4">
                     <span className="text-sm text-banc-muted-readable">{filteredPrices.length} results</span>
-                    <div className={cn(segmented, "w-auto")}>
-                      <button
-                        onClick={() => setViewMode('list')}
-                        className={cn(segmentedOption(viewMode === 'list'), "inline-flex items-center justify-center px-3")}
-                      >
-                        <List className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => setViewMode('map')}
-                        className={cn(segmentedOption(viewMode === 'map'), "inline-flex items-center justify-center px-3")}
-                      >
-                        <Map className="h-4 w-4" />
-                      </button>
-                    </div>
                   </div>
                 </div>
 

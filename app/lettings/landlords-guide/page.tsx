@@ -314,9 +314,11 @@ export default function LandlordsGuidePage() {
               </p>
 
               <div className="mt-7">
-                <Button className={cn(actionPrimary, "shadow-none")}>
-                  Enquire About Insurance
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <Button asChild className={cn(actionPrimary, "shadow-none")}>
+                  <Link href="/contact">
+                    Enquire About Insurance
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </Button>
               </div>
 
@@ -350,12 +352,16 @@ export default function LandlordsGuidePage() {
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button className={cn(actionPrimaryOnDark, "shadow-none")}>
-              Book Free Valuation
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <Button asChild className={cn(actionPrimaryOnDark, "shadow-none")}>
+              <Link href="/valuation">
+                Book Free Valuation
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
             </Button>
-            <Button variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
-              Contact Lettings Team
+            <Button asChild variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
+              <Link href="/contact">
+                Contact Lettings Team
+              </Link>
             </Button>
           </div>
         </div>

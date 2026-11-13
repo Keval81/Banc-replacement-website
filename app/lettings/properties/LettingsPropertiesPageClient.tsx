@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import * as React from "react";
 import { Suspense } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -252,8 +253,10 @@ function LettingsPropertiesPageContent() {
           <p className="mt-4 text-banc-dark-deep/90">
             Register your requirements and we&apos;ll notify you when matching properties become available.
           </p>
-          <Button className="mt-6 bg-white text-banc-focus hover:bg-white/90 px-8 py-5">
-            Register as a Tenant
+          <Button asChild className="mt-6 bg-white text-banc-focus hover:bg-white/90 px-8 py-5">
+            <Link href="/#alerts">
+              Register as a Tenant
+            </Link>
           </Button>
         </div>
       </section>

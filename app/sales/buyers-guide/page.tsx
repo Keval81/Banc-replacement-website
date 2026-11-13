@@ -152,9 +152,11 @@ export default function BuyersGuidePage() {
                 stronger position when making an offer.
               </p>
               <div className="mt-7">
-                <Button variant="outline" className={cn(actionSecondary, "bg-transparent hover:bg-transparent")}>
-                  Speak to a Mortgage Adviser
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <Button asChild variant="outline" className={cn(actionSecondary, "bg-transparent hover:bg-transparent")}>
+                  <Link href="/contact">
+                    Speak to a Mortgage Adviser
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -188,8 +190,10 @@ export default function BuyersGuidePage() {
               View Properties
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-            <Button variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
-              Register with Us
+            <Button asChild variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
+              <Link href="/#alerts">
+                Register with Us
+              </Link>
             </Button>
           </div>
         </div>

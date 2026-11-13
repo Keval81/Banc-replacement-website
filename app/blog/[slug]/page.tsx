@@ -102,6 +102,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const category = getCategoryBySlug(post.category);
   const relatedPosts = getRelatedPosts(slug, 3);
   const postPath = `/blog/${post.slug}`;
+  const shareUrl = encodeURIComponent(absoluteUrl(postPath));
+  const shareTitle = encodeURIComponent(post.title);
   const breadcrumbs = [
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
@@ -222,17 +224,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               <div className="mt-8 border-t border-banc-dark/15 pt-8">
                 <p className={cn(eyebrow, "mb-4")}>Share this article</p>
                 <div className="flex flex-wrap gap-3">
-                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
-                    <Facebook className="h-4 w-4" />
-                    Facebook
+                  <Button asChild variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`} target="_blank" rel="noopener noreferrer" aria-label="Share this article on Facebook">
+                      <Facebook className="h-4 w-4" aria-hidden="true" />
+                      Facebook
+                    </a>
                   </Button>
-                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
-                    <Twitter className="h-4 w-4" />
-                    Twitter
+                  <Button asChild variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
+                    <a href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`} target="_blank" rel="noopener noreferrer" aria-label="Share this article on Twitter">
+                      <Twitter className="h-4 w-4" aria-hidden="true" />
+                      Twitter
+                    </a>
                   </Button>
-                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
-                    <Linkedin className="h-4 w-4" />
-                    LinkedIn
+                  <Button asChild variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
+                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noopener noreferrer" aria-label="Share this article on LinkedIn">
+                      <Linkedin className="h-4 w-4" aria-hidden="true" />
+                      LinkedIn
+                    </a>
                   </Button>
                 </div>
               </div>
