@@ -8,7 +8,10 @@ const chatbotSource = readFileSync(
 );
 
 test("renders trusted source links with Next Link and the validated relative href", () => {
-  assert.match(chatbotSource, /messageView\.sources\.map/);
+  assert.match(chatbotSource, /splitChatLinks\(messageView\.sources, pathname\)/);
+  assert.match(chatbotSource, /chatLinks\.sources\.map/);
+  assert.match(chatbotSource, /chatLinks\.listings\.map/);
+  assert.match(chatbotSource, /View \{listing\.title\}/);
   assert.match(
     chatbotSource,
     /<Link[\s\S]*?key=\{source\.href\}[\s\S]*?href=\{source\.href\}/,

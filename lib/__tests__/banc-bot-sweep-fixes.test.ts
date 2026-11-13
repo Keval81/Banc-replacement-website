@@ -373,7 +373,11 @@ test("a neighbouring area's guide is not used to answer about a home somewhere e
   ]);
   const response = await elsewhere.handler({ message: "Which schools are nearby?", history: [], context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1", topic: "property_detail" } });
   assert.deepEqual(elsewhere.seen, [1], "only the home's own facts reach the writer");
-  assert.equal(response.sources, undefined);
+  assert.deepEqual(
+    response.sources,
+    [{ title: "Brookside Crescent, Cuffley", href: "/sales/properties/EA-1" }],
+    "only the home's own listing is linked, never the neighbouring guide",
+  );
 
   const mixed = factsThenGuides([
     { documentId: "area-guide:northaw", title: "Northaw area guide" },

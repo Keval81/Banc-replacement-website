@@ -51,3 +51,27 @@ export function isAboutPageProperty(state: PropertyConversationState): boolean {
     state.resultPropertyIds[0] === state.focusedPropertyId &&
     state.query === undefined;
 }
+
+const LISTING_LINK = /^\/(?:sales|lettings)\/properties\/([A-Za-z0-9-]{1,64})$/;
+
+type ChatLink = { title: string; href: string };
+
+/**
+ * A reply's links are either homes it talked about or guidance it drew on.
+ * The panel shows them under different headings, and leaves out the listing
+ * the visitor is already looking at.
+ */
+export function splitChatLinks(
+  links: readonly ChatLink[],
+  pathname: string | null | undefined,
+): { listings: ChatLink[]; sources: ChatLink[] } {
+  const currentId = pagePropertyIdFromPath(pathname);
+  const listings: ChatLink[] = [];
+  const sources: ChatLink[] = [];
+  for (const link of links) {
+    const listingId = LISTING_LINK.exec(link.href)?.[1];
+    if (listingId === undefined) sources.push(link);
+    else if (listingId !== currentId) listings.push(link);
+  }
+  return { listings, sources };
+}

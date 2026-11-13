@@ -41,6 +41,7 @@ import {
   focusStateOnPageProperty,
   pagePropertyIdFromPath,
   PAGE_PROPERTY_WELCOME,
+  splitChatLinks,
 } from "@/lib/property-chat-page";
 
 const transition = {
@@ -106,7 +107,8 @@ export default function PropertyChatbot({
   // On a listing (or that home's viewing or offer form) the visitor's first
   // question is about the home in front of them, so it starts in focus. The
   // panel remounts on every route change, so this is settled at mount.
-  const pagePropertyId = pagePropertyIdFromPath(usePathname());
+  const pathname = usePathname();
+  const pagePropertyId = pagePropertyIdFromPath(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
   // The thread carried over from the previous page is adopted up front. The
@@ -507,6 +509,7 @@ export default function PropertyChatbot({
               >
                 {messages.map((message) => {
                   const messageView = getPropertyChatMessageView(message);
+                  const chatLinks = splitChatLinks(messageView.sources, pathname);
                   return (
                     <motion.div
                     key={message.id}
@@ -573,12 +576,28 @@ export default function PropertyChatbot({
                         </div>
                       )}
 
-                      {messageView.sources.length > 0 && (
+                      {chatLinks.listings.length > 0 && (
+                        <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
+                          {chatLinks.listings.map((listing) => (
+                            <Link
+                              key={listing.href}
+                              href={listing.href}
+                              onClick={closeChat}
+                              className="flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-lg border border-banc-focus/30 px-3 text-sm font-medium text-banc-focus transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                            >
+                              <span>View {listing.title}</span>
+                              <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+
+                      {chatLinks.sources.length > 0 && (
                         <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
                           <p className="text-[10px] font-semibold uppercase tracking-wide text-banc-muted-readable">
                             Sources
                           </p>
-                          {messageView.sources.map((source) => (
+                          {chatLinks.sources.map((source) => (
                             <Link
                               key={source.href}
                               href={source.href}

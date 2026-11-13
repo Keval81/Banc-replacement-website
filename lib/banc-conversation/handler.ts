@@ -25,6 +25,7 @@ import {
 const TURN_BUDGET_MS = 20_000;
 const AREA_GUIDE_ID_PREFIX = "area-guide:";
 const MAX_TRUSTED_OPERATIONS = 2;
+const MAX_RESPONSE_LINKS = 3;
 // Plan (plus one repair) and reply (plus one rewrite).
 const MAX_PROVIDER_CALLS = 4;
 const CHEAPER_REFINEMENT = /^\s*(?:make|show|find)?\s*(?:it|them)?\s*cheaper[.!?]*\s*$/i;
@@ -302,16 +303,34 @@ function successfulResponse(
       result.status === "contact",
   );
 
+  // An answer about a home always carries the way to open it and, for a
+  // single home, the next step: the reply text itself may not contain links.
+  const facts = results.find(
+    (result): result is Extract<TrustedOperationResult, { status: "property_facts" }> =>
+      result.status === "property_facts",
+  )?.facts ?? [];
+  const links = [
+    ...facts.map((fact) => ({
+      title: fact.title,
+      href: `/${fact.department}/properties/${encodeURIComponent(fact.id)}`,
+    })),
+    ...(knowledge?.sources.map(({ title, href }) => ({ title, href })) ?? []),
+  ].slice(0, MAX_RESPONSE_LINKS);
+  const onlyHome = facts.length === 1 ? facts[0] : undefined;
+  const form = contact !== undefined
+    ? formFor(contact.reason, contact.handoff.propertyId)
+    : onlyHome === undefined
+    ? undefined
+    : onlyHome.status === "for_sale" || onlyHome.status === "to_let"
+    ? formFor("viewing", onlyHome.id)
+    : contactForm();
+
   return {
     response,
     action: actionFor(primary),
     ...(properties === undefined ? {} : { properties }),
-    ...(knowledge === undefined
-      ? {}
-      : {
-          sources: knowledge.sources.map(({ title, href }) => ({ title, href })),
-        }),
-    ...(contact === undefined ? {} : { form: formFor(contact.reason, contact.handoff.propertyId) }),
+    ...(knowledge === undefined && links.length === 0 ? {} : { sources: links }),
+    ...(form === undefined ? {} : { form }),
     context: finalResult.state,
   };
 }
