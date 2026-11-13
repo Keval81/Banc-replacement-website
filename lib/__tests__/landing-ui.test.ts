@@ -200,7 +200,7 @@ test("names the conversational agent Banc Bot everywhere a visitor sees it", () 
   assert.doesNotMatch(chatbotSource, /property assistant/i);
   assert.match(chatbotSource, /I'm Banc Bot/);
   for (const label of [
-    "Ask me about any home, school or area.",
+    "I can help with any of our properties.",
     "Open Banc Bot",
     "Conversation with Banc Bot",
     "Message Banc Bot",

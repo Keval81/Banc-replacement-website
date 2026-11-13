@@ -495,7 +495,7 @@ export default function PropertyChatbot({
                       Hi, I&apos;m Banc Bot.
                     </span>
                     <span className="mt-0.5 block text-[13px] leading-snug text-banc-muted-readable">
-                      Ask me about any home, school or area.
+                      I can help with any of our properties.
                     </span>
                   </button>
                   <button
