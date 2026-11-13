@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
-import Link from "next/link";
-import { ArrowLeft, Calculator, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
 import { MortgageCalculator } from "@/components/MortgageCalculator";
 
 export const metadata: Metadata = withPageDefaults("/tools/mortgage-calculator", {
@@ -19,35 +19,19 @@ export default function MortgageCalculatorPage() {
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
-      <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
-        <div className="mx-auto max-w-4xl">
-          {/* Back Link */}
-          <Link
-            href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-banc-muted-readable transition-colors hover:text-banc-focus"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Tools
-          </Link>
-
-          {/* Header */}
-          <div className="mb-8">
-            <div className="mb-4 inline-flex items-center gap-2">
-              <Calculator className="h-4 w-4 text-banc-focus" />
-              <span className="text-xs font-medium uppercase tracking-[0.12em] text-banc-muted-readable">Mortgage Tool</span>
-            </div>
-            <h1 className="mb-4 text-4xl font-semibold text-banc-dark-deep lg:text-5xl">Mortgage Calculator</h1>
-            <p className="text-lg text-banc-muted-readable">
-              Estimate your monthly mortgage payments and see how much interest you&apos;ll pay over the
-              term. Compare different interest rates, deposit sizes, and repayment types.
-            </p>
-          </div>
-
+      <main>
+        <PageBand
+          eyebrow="Mortgage tool"
+          title="Mortgage Calculator"
+          lede="Estimate your monthly payments and the interest you will pay over the term. Compare rates, deposit sizes and repayment types."
+          back={{ href: "/tools", label: "All tools" }}
+        />
+        <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
           {/* Calculator */}
           <MortgageCalculator />
 
           {/* Info Section */}
-          <div className="mt-12 rounded-2xl border border-banc-line bg-banc-grey-pale p-6">
+          <div className="mt-12 border-t border-banc-dark/15 pt-8">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-banc-dark-deep">
               <Info className="h-5 w-5 text-banc-focus" />
               About Mortgage Calculations

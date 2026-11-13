@@ -62,4 +62,37 @@ persuading, one accent at a time. Not luxury-Mayfair, not SaaS.
 - No empty-state cards on the public homepage (the "No Image / £0" AI section
   ships hidden until it has real data).
 
-*Last updated: 2026-08-15*
+## Dark band system (approved by SanSan 2026-11-13, applies to every page)
+
+The homepage search band is the reference: `app/sections/PropertySearch.tsx`.
+Building blocks: `components/PageBand.tsx` and `components/ui/form-styles.ts`.
+
+**Page opener.** Every interior page opens with `<PageBand>`: Banc Dark Deep
+ground (a photograph behind a 75% scrim is allowed), sky eyebrow in plain
+uppercase text, light Playfair title, one short lede, left-aligned. No pill
+badges, no icons in the eyebrow, no centred text, no two-colour headings.
+
+**Sections.** Phone padding is `py-12` (48px); `lg:py-20` from desktop. Never
+`py-20`+ on phones. Headings are left-aligned with a plain eyebrow
+(`eyebrow` + `sectionHeading` from form-styles). 24–28px between a heading
+and its content. One layer: a card never sits inside another card.
+
+**Forms and calculators.** One white `formPanel` on the pale ground, or the
+controls straight on a dark band. Controls use `fieldControl` (48px tall, 10px
+radius, white, 16px text); labels use `fieldLabel`. Either/or choices use
+`segmented`; multi-choices use `choiceChip`. Pair short fields two-up only from
+`sm:`; on phones every control spans the row.
+
+**Actions.** `actionPrimary` (teal `--banc-focus`) on light surfaces,
+`actionPrimaryOnDark` (sky, dark text) on dark ones. Full width on phones.
+One primary per view. Flat: no gradients, no shadows, no gold outside Premier
+Homes. This supersedes the 999px pill rule above: actions are 10px radius.
+
+**Closing call to action.** A dark band with one sky button. Never a solid sky
+block.
+
+**Typography note.** Display face is Playfair Display (brand guidelines docx,
+March 2026), not Source Serif 4 as written above.
+
+*Last updated: 2026-11-13*
+
