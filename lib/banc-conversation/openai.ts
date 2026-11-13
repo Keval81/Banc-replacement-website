@@ -365,6 +365,12 @@ const planJsonSchema = {
       properties: { type: { enum: ["reset_conversation_search"] } },
       required: ["type"],
     },
+    showMoreResults: {
+      type: "object",
+      additionalProperties: false,
+      properties: { type: { enum: ["show_more_results"] } },
+      required: ["type"],
+    },
     contactBanc: {
       type: "object",
       additionalProperties: false,
@@ -405,6 +411,7 @@ const planJsonSchema = {
         { $ref: "#/$defs/getPropertyFacts" },
         { $ref: "#/$defs/searchBancKnowledge" },
         { $ref: "#/$defs/resetConversationSearch" },
+        { $ref: "#/$defs/showMoreResults" },
         { $ref: "#/$defs/contactBanc" },
         { $ref: "#/$defs/clarify" },
       ],
@@ -621,6 +628,8 @@ function sanitizeResults(
           status: result.status,
           total: result.total,
           requirements,
+          ...(result.shown === undefined ? {} : { shown: { from: result.shown.from, to: result.shown.to } }),
+          ...(result.allShown === true ? { allShown: true as const } : {}),
           properties: result.properties
             .slice(0, MAX_RESULT_ITEMS)
             .map((property) => ({
@@ -1011,6 +1020,10 @@ function describeTrustedResult(
       return {
         status: result.status,
         total: result.total,
+        ...(result.shown === undefined
+          ? {}
+          : { showing: `homes ${result.shown.from} to ${result.shown.to} of ${result.total}` }),
+        ...(result.allShown === true ? { allShown: true } : {}),
         activeRequirements: formatActiveRequirements(result),
         ...(result.status === "no_results"
           ? { suggestedRelaxation: zeroResultRelaxation(result) }

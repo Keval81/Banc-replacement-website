@@ -237,10 +237,22 @@ function deterministicViewingPlan(
   };
 }
 
+const MORE_ABOUT_SOMETHING = /\bmore\s+(?:about|details?|info(?:rmation)?|on)\b|\bother\s+(?:areas?|towns?|places|offices?|branch(?:es)?|questions?)\b/i;
+const MORE_RESULTS =
+  /\b(?:show|see|view|give|list|display)\b[^.?!]*\b(?:others?|rest|remaining|more|next|all)\b|\b(?:the|any|some)\s+(?:others?|rest|remaining|more)\b|\bnext\s+(?:ones?|page|few|\d+|two|three)\b|\bmore\s+(?:results|homes|houses|flats|properties|options)\b|\bwhat\s+(?:else|about the others?)\b/i;
+
+/** "Show me the other 2", "the rest", "any more?": carry on through the active search. */
+export function isMoreResultsRequest(message: string): boolean {
+  return message.length <= 80 && MORE_RESULTS.test(message) && !MORE_ABOUT_SOMETHING.test(message);
+}
+
 function deterministicSearchPlan(
   message: string,
   state: PropertyConversationState,
 ): ConversationPlan | null {
+  if (state.query !== undefined && isMoreResultsRequest(message)) {
+    return { primary: { type: "show_more_results" } };
+  }
   if (state.query === undefined || !CHEAPER_REFINEMENT.test(message)) {
     return null;
   }

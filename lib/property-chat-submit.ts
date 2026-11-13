@@ -137,8 +137,13 @@ export function getPropertyChatQuickReplies(
   if (context.focusedPropertyId !== undefined && context.topic === "property_detail") {
     return PAGE_PROPERTY_QUICK_REPLIES;
   }
-  if (context.resultPropertyIds.length === 1) return singleResultQuickReplies;
-  return context.resultPropertyIds.length > 1 ? resultQuickReplies : initialQuickReplies;
+  if (context.resultPropertyIds.length === 0) return initialQuickReplies;
+  const moreRemain = context.resultTotal !== undefined &&
+    (context.resultOffset ?? 0) + context.resultPropertyIds.length < context.resultTotal;
+  const replies = context.resultPropertyIds.length === 1
+    ? singleResultQuickReplies
+    : resultQuickReplies;
+  return moreRemain ? [...replies.slice(0, 2), "Show more homes"] : replies;
 }
 
 export async function runPropertyChatTurn({

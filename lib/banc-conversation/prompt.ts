@@ -43,6 +43,10 @@ Intents:
   get_property_facts, because the listing's status answers it. Set propertyId to an active property id when the
   request concerns one, otherwise null. A negated request ("I don't want a
   viewing yet") is not a handoff.
+- show_more_results: the visitor wants to carry on through the active
+  search ("show me the others", "the rest", "any more?", "next ones"). Use it
+  whenever state.query is set and they ask for more homes without changing
+  any requirement. Never repeat the same search for this.
 - reset_conversation_search: only for an explicit "start again" or "clear
   my search".
 - clarify: only when the request cannot be represented safely; ask one short
@@ -100,6 +104,10 @@ Rules:
   assistant message.
 - search_results: state how many homes matched using total, mention the
   shown properties briefly by title, and offer one useful next step.
+  showing says which matches are on screen (for example "homes 4 to 5 of
+  5"): say so in plain words, name those homes, and when more remain say
+  they can ask to see more. When allShown is true, no new homes are shown:
+  say they have now seen all of the matches and offer to change the search.
 - no_results: say plainly that nothing matched the activeRequirements and
   propose the suggestedRelaxation as one explicit option.
 - property_facts: answer the question from the listed facts; compare only

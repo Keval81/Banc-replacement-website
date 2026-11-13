@@ -43,6 +43,10 @@ export interface PropertyConversationState {
   resultPropertyIds: string[];
   focusedPropertyId?: string;
   resultFingerprint?: string;
+  /** How many matches come before the homes now on screen, so "show me the others" carries on. */
+  resultOffset?: number;
+  /** How many homes the active search matched in all. */
+  resultTotal?: number;
   topic: "property_search" | "property_detail" | "banc_knowledge" | "handoff";
 }
 
@@ -70,6 +74,7 @@ export type ConversationIntent =
   | { type: "get_property_facts"; propertyIds: string[] }
   | { type: "search_banc_knowledge"; query: string }
   | { type: "reset_conversation_search" }
+  | { type: "show_more_results" }
   | { type: "contact_banc"; reason: HandoffCategory; propertyId?: string }
   | { type: "clarify"; question: string };
 
@@ -223,6 +228,8 @@ export const propertyConversationStateSchema = z
     resultPropertyIds: propertyIdListSchema(),
     focusedPropertyId: propertyIdSchema.optional(),
     resultFingerprint: z.string().trim().min(1).max(240).optional(),
+    resultOffset: z.number().int().min(0).max(10_000).optional(),
+    resultTotal: z.number().int().min(0).max(10_000).optional(),
     topic: z.enum([
       "property_search",
       "property_detail",
@@ -314,6 +321,7 @@ export const conversationIntentSchema = z.discriminatedUnion("type", [
   getPropertyFactsIntentSchema,
   searchBancKnowledgeIntentSchema,
   z.object({ type: z.literal("reset_conversation_search") }).strict(),
+  z.object({ type: z.literal("show_more_results") }).strict(),
   contactBancIntentSchema,
   z
     .object({

@@ -260,6 +260,14 @@ export function createGroundingContext(
       case "search_results":
       case "no_results": {
         globalNumbers.add(String(result.total));
+        // "Here are the other 2 of the 5", "homes 4 and 5".
+        globalNumbers.add(String(result.properties.length));
+        if (result.shown !== undefined) {
+          for (let position = result.shown.from; position <= result.shown.to; position += 1) {
+            globalNumbers.add(String(position));
+          }
+          globalNumbers.add(String(result.total - result.shown.to));
+        }
         const query = result.requirements;
         for (const value of [
           query.minPrice,

@@ -860,7 +860,7 @@ test("allows conversational wording that makes no property claim", async () => {
 test("serializes large sanitized result sets as complete bounded JSON", async () => {
   const expectedResponse = "I found 500 properties matching your current requirements.";
   const { fetch, model } = createModelWithResponse(
-    "There are 500 homes matching, which is far too many to list — here are 3 to start with.",
+    "There are 500 homes matching, which is far too many to list — here are 7 to start with.",
   );
   const properties = Array.from({ length: 100 }, (_, index) => ({
     id: `EA-${index}`,
@@ -888,7 +888,7 @@ test("serializes large sanitized result sets as complete bounded JSON", async ()
 
   const result = await model.writeResponse(input, abortSignal);
 
-  // "3" is not a trusted figure for this turn, so the server wording is used.
+  // "7" is not a trusted figure for this turn (3 homes are shown), so the server wording is used.
   assert.deepEqual(result, {
     status: "ok",
     response: expectedResponse,

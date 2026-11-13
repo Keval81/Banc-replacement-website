@@ -27,6 +27,10 @@ export type TrustedOperationResult =
       state: PropertyConversationState;
       properties: PropertyCardData[];
       total: number;
+      /** Which of the matches are on screen, counted from 1. */
+      shown?: { from: number; to: number };
+      /** The visitor asked for more and there are none left to show. */
+      allShown?: true;
     }
   | {
       status: "no_results";
@@ -81,6 +85,8 @@ export type SanitizedOperationResult =
       total: number;
       requirements: PropertySearchQuery;
       properties: SanitizedProperty[];
+      shown?: { from: number; to: number };
+      allShown?: true;
     }
   | { status: "property_facts"; facts: PropertyFacts[] }
   | { status: "knowledge"; sources: SanitizedKnowledgeSource[] }
@@ -100,6 +106,9 @@ interface ConversationToolsDependencies {
 }
 
 const DEPARTMENT_QUESTION = "Are you looking to buy or rent?";
+const NOTHING_TO_SHOW_MORE_OF_QUESTION =
+  "Tell me what you're looking for, such as a 3-bed house to buy in Cuffley, and I'll show you what we have.";
+const RESULTS_PER_REPLY = 3;
 const ACTIVE_PROPERTY_QUESTION =
   "Please choose a property from the active search results.";
 const UNSUPPORTED_OPERATION_QUESTION =
@@ -287,7 +296,7 @@ export function createConversationTools({
             searchResult.total,
           );
           const properties = searchResult.properties
-            .slice(0, 3)
+            .slice(0, RESULTS_PER_REPLY)
             .map(clonePropertyCard);
           const resultPropertyIds = properties.map(({ id }) => id);
           const focusedPropertyId = state.focusedPropertyId !== undefined &&
@@ -299,6 +308,8 @@ export function createConversationTools({
             resultPropertyIds,
             ...(focusedPropertyId === undefined ? {} : { focusedPropertyId }),
             resultFingerprint,
+            resultOffset: 0,
+            resultTotal: searchResult.total,
             topic: "property_search",
           };
 
@@ -317,6 +328,50 @@ export function createConversationTools({
               ? []
               : properties,
             total: searchResult.total,
+            shown: { from: 1, to: properties.length },
+          };
+        }
+
+        case "show_more_results": {
+          if (state.query === undefined) {
+            return clarification(state, NOTHING_TO_SHOW_MORE_OF_QUESTION);
+          }
+          const offset = (state.resultOffset ?? 0) + state.resultPropertyIds.length;
+          const pageSize = state.query.pageSize;
+          const searchResult = await portfolio.search(
+            { ...state.query, page: Math.floor(offset / pageSize) + 1 },
+            signal,
+          );
+          const start = offset % pageSize;
+          const properties = searchResult.properties
+            .slice(start, start + RESULTS_PER_REPLY)
+            .map(clonePropertyCard);
+
+          if (properties.length === 0) {
+            // Nothing left: the homes already on screen stay the active ones.
+            return {
+              status: "search_results",
+              state: { ...cloneState(state), resultTotal: searchResult.total, topic: "property_search" },
+              properties: [],
+              total: searchResult.total,
+              allShown: true,
+            };
+          }
+
+          const resultPropertyIds = properties.map(({ id }) => id);
+          return {
+            status: "search_results",
+            state: {
+              query: propertySearchQuerySchema.parse(state.query),
+              resultPropertyIds,
+              resultFingerprint: createResultFingerprint(resultPropertyIds, searchResult.total),
+              resultOffset: offset,
+              resultTotal: searchResult.total,
+              topic: "property_search",
+            },
+            properties,
+            total: searchResult.total,
+            shown: { from: offset + 1, to: offset + properties.length },
           };
         }
 
@@ -440,6 +495,12 @@ export function sanitizeOperationResult(
       return {
         status: result.status,
         total: result.total,
+        ...(result.status === "search_results" && result.shown !== undefined
+          ? { shown: { ...result.shown } }
+          : {}),
+        ...(result.status === "search_results" && result.allShown === true
+          ? { allShown: true as const }
+          : {}),
         requirements: propertySearchQuerySchema.parse(result.state.query),
         properties: result.status === "search_results"
           ? result.properties.map((property) => ({
