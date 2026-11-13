@@ -223,7 +223,8 @@ export function getLandingOverlayPolicy(
 
   return {
     showMobileBottomNavigation: !isLandingPage,
-    showProactiveChatPrompt: !isLandingPage,
+    // Banc Bot's short invitation shows once per visit, on the landing page too.
+    showProactiveChatPrompt: true,
     showPushNotificationPrompt: !isLandingPage,
     showStandaloneWhatsapp: !isLandingPage,
     mobileContactControlPlacement: isLandingPage

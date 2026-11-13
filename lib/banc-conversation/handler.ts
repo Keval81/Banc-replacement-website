@@ -1,3 +1,4 @@
+import { detailsFor } from "./details.ts";
 import { contactForm, formFor } from "./forms.ts";
 import {
   createInitialConversationState,
@@ -280,6 +281,7 @@ function parseOrFallback(
 function successfulResponse(
   response: string,
   results: readonly TrustedOperationResult[],
+  details?: ConversationResponse["details"],
 ): ConversationResponse {
   const primary = results[0];
   if (primary === undefined) {
@@ -331,6 +333,7 @@ function successfulResponse(
     ...(properties === undefined ? {} : { properties }),
     ...(knowledge === undefined && links.length === 0 ? {} : { sources: links }),
     ...(form === undefined ? {} : { form }),
+    ...(details === undefined ? {} : { details }),
     context: finalResult.state,
   };
 }
@@ -593,6 +596,7 @@ export function createBancConversationHandler({
       return failureResponse("model_timeout");
     }
 
+    const details = detailsFor(request.message, results);
     const writeCall = await withinDeadline(
       deadline,
       now,
@@ -601,6 +605,9 @@ export function createBancConversationHandler({
         history: request.history,
         state,
         results: results.map(sanitizeOperationResult),
+        ...(details === undefined
+          ? {}
+          : { shownList: { title: details.title, count: details.items.length } }),
       }, signal),
     );
     if (writeCall.status === "timeout") {
@@ -656,7 +663,7 @@ export function createBancConversationHandler({
     }
 
     return parseOrFallback(
-      successfulResponse(written.response, results),
+      successfulResponse(written.response, results, details),
       trustedInitialState,
     );
   };

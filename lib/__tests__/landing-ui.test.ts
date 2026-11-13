@@ -200,7 +200,7 @@ test("names the conversational agent Banc Bot everywhere a visitor sees it", () 
   assert.doesNotMatch(chatbotSource, /property assistant/i);
   assert.match(chatbotSource, /I'm Banc Bot/);
   for (const label of [
-    "Talk to Banc Bot about any current property",
+    "Ask me about any home, school or area.",
     "Open Banc Bot",
     "Conversation with Banc Bot",
     "Message Banc Bot",
@@ -242,7 +242,7 @@ test("does not run a rotating review ticker under every page", () => {
 test("uses one help launcher instead of competing contact controls on the landing page", () => {
   assert.deepEqual(getLandingOverlayPolicy("/"), {
     showMobileBottomNavigation: false,
-    showProactiveChatPrompt: false,
+    showProactiveChatPrompt: true,
     showPushNotificationPrompt: false,
     showStandaloneWhatsapp: false,
     mobileContactControlPlacement: "unified-help",

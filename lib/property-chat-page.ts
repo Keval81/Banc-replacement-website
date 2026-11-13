@@ -17,9 +17,10 @@ export const PAGE_PROPERTY_WELCOME =
   "Hello! I'm Banc Bot. Ask me anything about this home, such as whether it is still available or what it offers, or tell me what you are looking for and I'll search our current homes.";
 
 export const PAGE_PROPERTY_QUICK_REPLIES = [
-  "Is this home still available?",
-  "Does this home have a garden and parking?",
-  "I'd like to view this home",
+  "Tell me about this home",
+  "Schools nearby",
+  "Is it available?",
+  "Book a viewing",
 ] as const;
 
 export function pagePropertyIdFromPath(pathname: string | null | undefined): string | null {

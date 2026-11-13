@@ -1,6 +1,7 @@
 import {
   parseConversationResponse,
   type ConversationAction,
+  type ConversationDetails,
   type ConversationRequest,
   type PropertyConversationState,
 } from "./banc-conversation/contracts.ts";
@@ -20,6 +21,7 @@ export interface PropertyChatMessage {
   sources?: Array<{ title: string; href: string }>;
   handoff?: { callHref: string; whatsappHref: string };
   form?: { title: string; href: string };
+  details?: ConversationDetails;
   action?: ConversationAction;
   timestamp: Date;
 }
@@ -29,6 +31,7 @@ export interface PropertyChatMessageView {
   sources: Array<{ title: string; href: string }>;
   handoff?: { callHref: string; whatsappHref: string };
   form?: { title: string; href: string };
+  details?: ConversationDetails;
 }
 
 interface RunPropertyChatTurnOptions {
@@ -44,13 +47,25 @@ interface RunPropertyChatTurnOptions {
   onLoadingChange: (isLoading: boolean) => void;
 }
 
+// Short enough to sit two to a row on a phone.
 const initialQuickReplies = [
-  "I want to buy a 3-bed in Cuffley",
+  "Homes for sale in Cuffley",
   "I'm looking to rent",
-  "I need to speak to the Banc team",
+  "What is my home worth?",
+  "Schools in Cuffley",
 ] as const;
 
-const resultQuickReplies = ["Tell me about the first property"] as const;
+const singleResultQuickReplies = [
+  "Tell me about this home",
+  "Schools nearby",
+  "Book a viewing",
+] as const;
+
+const resultQuickReplies = [
+  "Tell me about the first one",
+  "Compare the first two",
+  "Which is the cheapest?",
+] as const;
 
 const connectionErrorMessage =
   "I'm having trouble connecting. Please try again or call us at 01707 877781.";
@@ -97,6 +112,12 @@ export function createPropertyChatRequest(
   };
 }
 
+function copyDetails(details: ConversationDetails | undefined): ConversationDetails | undefined {
+  return details === undefined
+    ? undefined
+    : { title: details.title, items: details.items.map((item) => ({ ...item })) };
+}
+
 export function getPropertyChatMessageView(
   message: PropertyChatMessage,
 ): PropertyChatMessageView {
@@ -105,6 +126,7 @@ export function getPropertyChatMessageView(
     sources: message.sources?.map((source) => ({ ...source })) ?? [],
     handoff: message.handoff === undefined ? undefined : { ...message.handoff },
     form: message.form === undefined ? undefined : { ...message.form },
+    details: copyDetails(message.details),
   };
 }
 
@@ -112,9 +134,11 @@ export function getPropertyChatQuickReplies(
   context: PropertyConversationState,
 ): readonly string[] {
   if (isAboutPageProperty(context)) return PAGE_PROPERTY_QUICK_REPLIES;
-  return context.resultPropertyIds.length > 0
-    ? resultQuickReplies
-    : initialQuickReplies;
+  if (context.focusedPropertyId !== undefined && context.topic === "property_detail") {
+    return PAGE_PROPERTY_QUICK_REPLIES;
+  }
+  if (context.resultPropertyIds.length === 1) return singleResultQuickReplies;
+  return context.resultPropertyIds.length > 1 ? resultQuickReplies : initialQuickReplies;
 }
 
 export async function runPropertyChatTurn({
@@ -154,6 +178,7 @@ export async function runPropertyChatTurn({
       sources: response.sources?.map((source) => ({ ...source })),
       handoff: response.handoff === undefined ? undefined : { ...response.handoff },
       form: response.form === undefined ? undefined : { ...response.form },
+      details: copyDetails(response.details),
       action: response.action,
       timestamp: now(),
     });

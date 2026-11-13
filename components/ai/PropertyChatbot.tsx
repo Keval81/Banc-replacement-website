@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, CircleHelp, MessageCircle, RotateCcw, X, Send, Phone } from "lucide-react";
+import { ArrowRight, ArrowUp, Check, MessageCircle, RotateCcw, X, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -51,6 +50,28 @@ const transition = {
 };
 
 const landingContactLauncher = getLandingUi("aker").mobileContactLauncher;
+
+// Shown once per visit: a nudge on every page would be nagging.
+const INVITE_SEEN_KEY = "banc-bot-invite-seen";
+const INVITE_DELAY_MS = 2500;
+const INVITE_VISIBLE_MS = 9000;
+const MAX_INPUT_HEIGHT_PX = 132;
+
+function inviteAlreadySeen(): boolean {
+  try {
+    return window.sessionStorage.getItem(INVITE_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function rememberInviteSeen(): void {
+  try {
+    window.sessionStorage.setItem(INVITE_SEEN_KEY, "1");
+  } catch {
+    // Private mode can refuse storage; the invitation then simply shows again.
+  }
+}
 
 const WELCOME_MESSAGE =
   "Hello! I'm Banc Bot. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?";
@@ -110,7 +131,6 @@ export default function PropertyChatbot({
   const pathname = usePathname();
   const pagePropertyId = pagePropertyIdFromPath(pathname);
   const [isOpen, setIsOpen] = useState(false);
-  const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
   // The thread carried over from the previous page is adopted up front. The
   // panel starts closed, so the server and client agree on what is painted;
   // only what is behind the launcher differs.
@@ -132,8 +152,9 @@ export default function PropertyChatbot({
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const firstHelpOptionRef = useRef<HTMLButtonElement>(null);
+  const latestMessageRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const titleRef = useRef<HTMLParagraphElement>(null);
   const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const chatPanelRef = useRef<HTMLDivElement>(null);
   const submissionRunnerRef = useRef(createSingleFlightRunner());
@@ -142,21 +163,29 @@ export default function PropertyChatbot({
   if (messageIdRef.current === null) {
     messageIdRef.current = highestMessageIndex(messages);
   }
-  const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
+  // The landing page has no bottom navigation, so the launcher sits lower there.
+  const sitsLow = mobileContactControlPlacement === "unified-help";
   const clearsStickyActions = launcherClearance === "clears-sticky-actions";
   const quickReplies = getPropertyChatQuickReplies(conversationContext);
 
   const openChat = useCallback(() => {
-    setIsHelpMenuOpen(false);
     setShowPrompt(false);
     setPromptDismissed(true);
+    rememberInviteSeen();
     setIsOpen(true);
   }, []);
   const closeChat = useCallback(() => setIsOpen(false), []);
 
+  // A new reply is read from its first line, so the view goes to the top of
+  // it. The visitor's own message and the typing dots keep the view at the end.
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const latest = messages.at(-1);
+    if (latest?.role === "assistant" && messages.length > 1 && !isLoading) {
+      latestMessageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [messages, isLoading]);
 
   useEffect(() => {
     const panel = chatPanelRef.current;
@@ -169,7 +198,12 @@ export default function PropertyChatbot({
       getFocusableElements: () => [
         ...panel.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR),
       ],
-      getInitialFocusElement: () => inputRef.current,
+      // On a touch screen, focusing the message box would raise the keyboard
+      // over the welcome before the visitor has read it.
+      getInitialFocusElement: () =>
+        window.matchMedia("(pointer: coarse)").matches
+          ? titleRef.current
+          : inputRef.current,
       containerContains: (element) =>
         element instanceof Node && panel.contains(element),
       addKeydownListener: (listener) =>
@@ -183,27 +217,41 @@ export default function PropertyChatbot({
     });
   }, [closeChat, isOpen]);
 
+  // On a phone the panel fills the visible screen. The on-screen keyboard
+  // shrinks the visual viewport but not the layout, so the panel follows the
+  // visual viewport and the message box stays just above the keys.
   useEffect(() => {
-    if (!usesUnifiedHelp || !isHelpMenuOpen) return;
+    const panel = chatPanelRef.current;
+    const viewport = window.visualViewport;
+    if (!isOpen || panel === null || !viewport) return;
 
-    const frame = window.requestAnimationFrame(() => {
-      firstHelpOptionRef.current?.focus();
-    });
+    const fit = () => {
+      panel.style.setProperty("--chat-height", `${viewport.height}px`);
+      panel.style.setProperty("--chat-top", `${viewport.offsetTop}px`);
+    };
+    fit();
+    viewport.addEventListener("resize", fit);
+    viewport.addEventListener("scroll", fit);
+    return () => {
+      viewport.removeEventListener("resize", fit);
+      viewport.removeEventListener("scroll", fit);
+    };
+  }, [isOpen]);
 
-    return () => window.cancelAnimationFrame(frame);
-  }, [isHelpMenuOpen, usesUnifiedHelp]);
-
-  // Show prompt bubble after 8 seconds if chat hasn't been opened
+  // A short invitation, once per visit, a moment after the page settles.
   useEffect(() => {
     if (!showProactivePrompt || promptDismissed) return;
-    const timer = setTimeout(() => setShowPrompt(true), 3500);
+    const timer = setTimeout(() => {
+      if (inviteAlreadySeen()) return;
+      rememberInviteSeen();
+      setShowPrompt(true);
+    }, INVITE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [promptDismissed, showProactivePrompt]);
 
-  // Auto-hide prompt after 15 seconds
   useEffect(() => {
     if (!showPrompt) return;
-    const timer = setTimeout(() => setShowPrompt(false), 15000);
+    const timer = setTimeout(() => setShowPrompt(false), INVITE_VISIBLE_MS);
     return () => clearTimeout(timer);
   }, [showPrompt]);
 
@@ -215,6 +263,13 @@ export default function PropertyChatbot({
       state: conversationContext,
     });
   }, [messages, conversationContext]);
+
+  const resizeInput = useCallback(() => {
+    const box = inputRef.current;
+    if (box === null) return;
+    box.style.height = "auto";
+    box.style.height = `${Math.min(box.scrollHeight, MAX_INPUT_HEIGHT_PX)}px`;
+  }, []);
 
   const hasConversation = messages.length > 1;
   const startNewConversation = useCallback(() => {
@@ -240,6 +295,7 @@ export default function PropertyChatbot({
         return `property-chat-${messageIdRef.current}`;
       };
       setInput("");
+      if (inputRef.current) inputRef.current.style.height = "auto";
       await runPropertyChatTurn({
         content,
         messages,
@@ -276,9 +332,12 @@ export default function PropertyChatbot({
     });
   };
 
+  const actionLink =
+    "flex min-h-12 cursor-pointer items-center justify-between gap-3 rounded-xl px-4 text-[15px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2";
+
   return (
     <>
-      {/* Floating Button + Prompt Bubble */}
+      {/* Launcher and invitation */}
       <AnimatePresence>
         {!isOpen && (
           <div
@@ -288,154 +347,75 @@ export default function PropertyChatbot({
                 ? "bottom-[calc(9rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
                 : "sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
             } ${
-              usesUnifiedHelp
-                ? "bottom-[calc(1rem+env(safe-area-inset-bottom))] flex-col"
+              sitsLow
+                ? "bottom-[calc(1rem+env(safe-area-inset-bottom))]"
                 : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
             }`}
           >
-            {/* Speech Bubble Prompt */}
             <AnimatePresence>
               {showProactivePrompt && showPrompt && (
                 <motion.div
-                  initial={{ opacity: 0, x: 10, scale: 0.9 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: 10, scale: 0.9 }}
-                  transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-                  className="relative mb-1"
+                  initial={{ opacity: 0, x: 8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 8 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="relative mb-1.5"
                 >
                   <button
+                    type="button"
                     onClick={openChat}
-                    className="block max-w-[220px] rounded-[10px] bg-white px-4 py-3 text-left shadow-lg border border-banc-grey/15 cursor-pointer hover:shadow-xl transition-shadow duration-200"
+                    className="block max-w-[15rem] cursor-pointer rounded-2xl rounded-br-md border border-banc-grey/15 bg-white py-3 pl-4 pr-9 text-left shadow-[0_10px_30px_rgba(0,0,0,0.16)] transition-shadow duration-200 hover:shadow-[0_14px_36px_rgba(0,0,0,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
                   >
-                    <p className="text-sm font-medium text-banc-dark leading-snug">
-                      Talk to Banc Bot about any current property
-                    </p>
-                    <p className="text-xs text-banc-muted-readable mt-1">
-                      Ask about a home you&apos;re buying or renting →
-                    </p>
+                    <span className="block text-sm font-semibold leading-snug text-banc-dark">
+                      Hi, I&apos;m Banc Bot.
+                    </span>
+                    <span className="mt-0.5 block text-[13px] leading-snug text-banc-muted-readable">
+                      Ask me about any home, school or area.
+                    </span>
                   </button>
-                  {/* Close button */}
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    type="button"
+                    onClick={() => {
                       setShowPrompt(false);
                       setPromptDismissed(true);
                     }}
-                    className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-banc-grey/20 text-banc-muted-readable hover:bg-banc-grey/40 transition-colors duration-200 cursor-pointer"
+                    className="absolute right-1 top-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-banc-muted-readable transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
                     aria-label="Dismiss"
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
-                  {/* Tail pointing right toward the chat button */}
-                  <div className="absolute right-[-6px] bottom-5 h-3 w-3 rotate-45 bg-white border-r border-b border-banc-grey/15" />
                 </motion.div>
               )}
             </AnimatePresence>
 
-            <AnimatePresence>
-              {usesUnifiedHelp && isHelpMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="w-56 overflow-hidden rounded-[14px] border border-banc-grey/15 bg-white p-2 shadow-2xl"
-                  onKeyDown={(event) => {
-                    if (event.key !== "Escape") return;
-                    event.preventDefault();
-                    setIsHelpMenuOpen(false);
-                    window.requestAnimationFrame(() => {
-                      helpTriggerRef.current?.focus();
-                    });
-                  }}
-                >
-                  <button
-                    ref={firstHelpOptionRef}
-                    type="button"
-                    onClick={openChat}
-                    className="flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-left text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
-                  >
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-banc-cream ring-1 ring-banc-dark-deep/10">
-                      <Image
-                        src={landingContactLauncher.assistantAvatar.src}
-                        alt={landingContactLauncher.assistantAvatar.alt}
-                        width={32}
-                        height={32}
-                        className="h-full w-full object-cover"
-                      />
-                    </span>
-                    {landingContactLauncher.assistantLabel}
-                  </button>
-                  {landingContactLauncher.whatsappHref && (
-                  <a
-                    href={landingContactLauncher.whatsappHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 flex min-h-12 w-full cursor-pointer items-center gap-3 rounded-[10px] px-3 text-sm font-medium text-banc-dark transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]"
-                  >
-                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25D366] text-white">
-                      <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                    {landingContactLauncher.whatsappLabel}
-                  </a>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Chat Button */}
             <motion.button
               ref={helpTriggerRef}
+              type="button"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
               transition={transition}
-              onClick={() =>
-                usesUnifiedHelp
-                  ? setIsHelpMenuOpen((current) => !current)
-                  : openChat()
-              }
-              className={
-                usesUnifiedHelp
-                  ? "flex h-12 flex-shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-banc-dark-deep px-4 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(0,0,0,0.3)] transition-colors duration-200 hover:bg-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-2"
-                  : "flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-white text-white shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95 motion-reduce:transition-none"
-              }
-              aria-label={
-                usesUnifiedHelp
-                  ? isHelpMenuOpen
-                    ? "Close help options"
-                    : "Open help options"
-                  : "Open Banc Bot"
-              }
-              aria-expanded={usesUnifiedHelp ? isHelpMenuOpen : undefined}
+              onClick={openChat}
+              className="relative flex h-14 w-14 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-white shadow-[0_10px_28px_rgba(0,0,0,0.28)] ring-1 ring-banc-dark-deep/10 transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-2 active:scale-95 motion-reduce:transition-none sm:h-16 sm:w-16"
+              aria-label="Open Banc Bot"
             >
-              {usesUnifiedHelp ? (
-                isHelpMenuOpen ? (
-                  <X className="h-4 w-4" aria-hidden="true" />
-                ) : (
-                  <CircleHelp className="h-5 w-5" aria-hidden="true" />
-                )
-              ) : (
+              <span className="block h-full w-full overflow-hidden rounded-full">
                 <Image
                   src={landingContactLauncher.assistantAvatar.src}
                   alt={landingContactLauncher.assistantAvatar.alt}
-                  width={56}
-                  height={56}
+                  width={64}
+                  height={64}
                   className="h-full w-full scale-[1.04] object-cover"
                   aria-hidden="true"
                 />
-              )}
-              {usesUnifiedHelp ? (
-                <span>{landingContactLauncher.label}</span>
-              ) : (
-                <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-white" />
-              )}
+              </span>
+              <span className="absolute right-0 top-0 h-3.5 w-3.5 rounded-full bg-banc-sky ring-2 ring-white" />
             </motion.button>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Chat Panel */}
+      {/* Chat panel: the whole screen on a phone, a docked window from sm up */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -443,274 +423,328 @@ export default function PropertyChatbot({
             role="dialog"
             aria-modal="true"
             aria-labelledby="property-chat-title"
-            initial={{ opacity: 0, y: 16, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={transition}
-            className={`fixed bottom-[calc(1rem+env(safe-area-inset-bottom))] left-[calc(1rem+env(safe-area-inset-left))] right-[calc(1rem+env(safe-area-inset-right))] z-50 sm:left-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:w-[380px] ${
+            className={`fixed inset-x-0 top-[var(--chat-top,0px)] z-50 flex h-[var(--chat-height,100dvh)] flex-col overflow-hidden bg-white sm:inset-x-auto sm:top-auto sm:right-[calc(1.5rem+env(safe-area-inset-right))] sm:h-[min(42.5rem,calc(100dvh-3rem))] sm:w-[26.25rem] sm:rounded-[20px] sm:border sm:border-banc-grey/15 sm:shadow-[0_24px_70px_rgba(0,0,0,0.3)] ${
               clearsStickyActions
-                ? "sm:bottom-[calc(8rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
+                ? "sm:bottom-[calc(8rem+env(safe-area-inset-bottom))] sm:h-[min(42.5rem,calc(100dvh-9.5rem))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))] lg:h-[min(42.5rem,calc(100dvh-3rem))]"
                 : "sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
             }`}
           >
-            <div className="flex flex-col overflow-hidden rounded-[16px] border border-banc-grey/15 bg-white shadow-2xl max-h-[80dvh] sm:max-h-[520px]">
-              {/* Header */}
-              <div className="flex items-center justify-between bg-banc-dark-deep px-4 py-3 shrink-0">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-banc-cream ring-1 ring-white/20">
+            {/* Header */}
+            <div className="flex shrink-0 items-center justify-between bg-banc-dark-deep px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top))] sm:pt-3">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-banc-cream ring-1 ring-white/25">
                     <Image
                       src={landingContactLauncher.assistantAvatar.src}
                       alt={landingContactLauncher.assistantAvatar.alt}
-                      width={36}
-                      height={36}
+                      width={44}
+                      height={44}
                       className="h-full w-full object-cover"
                     />
                   </div>
-                  <div>
-                    <p
-                      id="property-chat-title"
-                      className="text-sm font-semibold text-white"
-                    >
-                      Banc Bot
-                    </p>
-                    <p className="text-[10px] text-white/50">Property help, powered by AI</p>
-                  </div>
+                  <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-banc-sky ring-2 ring-banc-dark-deep" aria-hidden="true" />
                 </div>
-                <div className="flex items-center gap-1">
-                  {hasConversation && (
-                    <button
-                      type="button"
-                      onClick={startNewConversation}
-                      disabled={isLoading}
-                      className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white disabled:opacity-40 cursor-pointer"
-                      aria-label="Start a new conversation"
-                      title="Start a new conversation"
-                    >
-                      <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  )}
-                  <button
-                    onClick={closeChat}
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
-                    aria-label="Close chat"
+                <div>
+                  <p
+                    id="property-chat-title"
+                    ref={titleRef}
+                    tabIndex={-1}
+                    // Focus lands here on touch screens so the keyboard stays down; it is not a control, so no ring.
+                    style={{ outline: "none", boxShadow: "none" }}
+                    className="text-base font-semibold leading-tight text-white"
                   >
-                    <X className="h-4 w-4" />
-                  </button>
+                    Banc Bot
+                  </p>
+                  <p className="text-xs text-white/60">Property help, powered by AI</p>
                 </div>
               </div>
+              <div className="flex items-center gap-1">
+                {hasConversation && (
+                  <button
+                    type="button"
+                    onClick={startNewConversation}
+                    disabled={isLoading}
+                    className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky disabled:opacity-40"
+                    aria-label="Start a new conversation"
+                    title="Start a new conversation"
+                  >
+                    <RotateCcw className="h-[18px] w-[18px]" aria-hidden="true" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={closeChat}
+                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
+                  aria-label="Close chat"
+                >
+                  <X className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
 
-              {/* Messages */}
-              <div
-                role="log"
-                aria-live="polite"
-                aria-busy={isLoading}
-                aria-label="Conversation with Banc Bot"
-                className="flex-1 overflow-y-auto p-4 space-y-3 bg-banc-grey-pale/50"
-              >
-                {messages.map((message) => {
-                  const messageView = getPropertyChatMessageView(message);
-                  const chatLinks = splitChatLinks(messageView.sources, pathname);
-                  return (
-                    <motion.div
+            {/* Messages */}
+            <div
+              role="log"
+              aria-live="polite"
+              aria-busy={isLoading}
+              aria-label="Conversation with Banc Bot"
+              className="flex-1 space-y-4 overflow-y-auto overscroll-contain bg-banc-grey-pale/60 px-4 py-5"
+            >
+              {messages.map((message, index) => {
+                const messageView = getPropertyChatMessageView(message);
+                const chatLinks = splitChatLinks(messageView.sources, pathname);
+                const isUser = message.role === "user";
+                const hasActions =
+                  chatLinks.listings.length > 0 ||
+                  chatLinks.sources.length > 0 ||
+                  messageView.form !== undefined ||
+                  messageView.handoff !== undefined;
+                return (
+                  <motion.div
                     key={message.id}
+                    ref={index === messages.length - 1 ? latestMessageRef : undefined}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
-                    className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                    className={`flex scroll-mt-3 flex-col gap-2.5 ${isUser ? "items-end" : "items-start"}`}
                   >
                     <div
-                      className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed ${
-                        message.role === "user"
-                          ? "bg-banc-dark-deep text-white rounded-br-sm"
-                          : "bg-white text-banc-dark border border-banc-grey/10 shadow-sm rounded-bl-sm"
+                      className={`max-w-[88%] rounded-[18px] px-4 py-3 text-[15px] leading-[1.55] ${
+                        isUser
+                          ? "rounded-br-md bg-banc-dark-deep text-white"
+                          : "rounded-bl-md border border-banc-grey/10 bg-white text-banc-dark shadow-[0_1px_2px_rgba(0,0,0,0.05)]"
                       }`}
                     >
                       {message.content}
 
-                      {/* Property cards */}
-                      {messageView.properties.length > 0 && (
-                        <div className="mt-2.5 space-y-2">
-                          {messageView.properties.map((property) => {
-                            const imageUrl = getSafePropertyImageUrl(
-                              property.images?.[0] ?? "",
-                            );
-                            return (
-                              <Link
-                                key={property.id}
-                                href={`${buildPropertyHref(
-                                  property.department,
-                                  property.id,
-                                )}?from=bot`}
-                                onClick={() => {
-                                  reportPropertyOpened(property.id);
-                                  closeChat();
-                                }}
-                                className="flex min-h-14 items-center gap-3 rounded-lg bg-banc-grey-pale p-2.5 transition-colors duration-200 hover:bg-banc-grey/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
-                              >
-                                <div className="h-10 w-14 flex-shrink-0 overflow-hidden rounded bg-banc-grey/20">
-                                  {imageUrl && (
-                                    <Image
-                                      src={imageUrl}
-                                      alt={`${property.title} thumbnail`}
-                                      width={56}
-                                      height={40}
-                                      unoptimized
-                                      className="h-full w-full object-cover"
-                                    />
-                                  )}
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <p className="truncate text-xs font-medium text-banc-dark">
-                                    {property.title}
-                                  </p>
-                                  <p className="text-[10px] text-banc-muted-readable">
-                                    {property.stats.beds} bed · {property.price}
-                                  </p>
-                                  <p className="truncate text-[10px] text-banc-muted-readable">
-                                    {property.address}
-                                  </p>
-                                </div>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {chatLinks.listings.length > 0 && (
-                        <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
-                          {chatLinks.listings.map((listing) => (
-                            <Link
-                              key={listing.href}
-                              href={listing.href}
-                              onClick={closeChat}
-                              className="flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-lg border border-banc-focus/30 px-3 text-sm font-medium text-banc-focus transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
-                            >
-                              <span>View {listing.title}</span>
-                              <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-
-                      {chatLinks.sources.length > 0 && (
-                        <div className="mt-2.5 space-y-1.5 border-t border-banc-grey/10 pt-2.5">
-                          <p className="text-[10px] font-semibold uppercase tracking-wide text-banc-muted-readable">
-                            Sources
+                      {/* Schools, key features: rows instead of a paragraph */}
+                      {messageView.details && (
+                        <div className="mt-3 border-t border-banc-grey/10 pt-3">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-banc-muted-readable">
+                            {messageView.details.title}
                           </p>
-                          {chatLinks.sources.map((source) => (
-                            <Link
-                              key={source.href}
-                              href={source.href}
-                              onClick={closeChat}
-                              className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-banc-focus underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
-                            >
-                              {source.title}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-
-                      {messageView.form && (
-                        <Link
-                          href={messageView.form.href}
-                          onClick={closeChat}
-                          className="mt-2.5 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg bg-banc-focus px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
-                        >
-                          {messageView.form.title}
-                          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                        </Link>
-                      )}
-
-                      {messageView.handoff && (
-                        <div className="mt-2.5 flex flex-col gap-2 sm:flex-row">
-                          <a
-                            href={messageView.handoff.callHref}
-                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-banc-focus px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
-                          >
-                            <Phone className="h-3.5 w-3.5" aria-hidden="true" />
-                            Call Banc
-                          </a>
-                          {messageView.handoff.whatsappHref && (
-                          <a
-                            href={messageView.handoff.whatsappHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#25D366] px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#1EAD54] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
-                          >
-                            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-                            WhatsApp Banc
-                          </a>
-                          )}
+                          <ul className="mt-1.5 divide-y divide-banc-grey/10">
+                            {messageView.details.items.map((item) => (
+                              <li
+                                key={`${item.label}-${item.note ?? ""}`}
+                                className="flex items-start justify-between gap-3 py-2 text-sm"
+                              >
+                                <span className="flex min-w-0 items-start gap-2 font-medium text-banc-dark">
+                                  {item.note === undefined && (
+                                    <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-focus" aria-hidden="true" />
+                                  )}
+                                  <span>{item.label}</span>
+                                </span>
+                                {item.note !== undefined && (
+                                  <span className="flex-shrink-0 whitespace-nowrap pt-px text-xs text-banc-muted-readable">
+                                    {item.note}
+                                  </span>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       )}
                     </div>
-                    </motion.div>
-                  );
-                })}
 
-                {isLoading && (
-                  <div className="flex justify-start" aria-label="Banc Bot is typing">
-                    <div className="rounded-2xl rounded-bl-sm bg-white border border-banc-grey/10 shadow-sm px-4 py-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="h-1.5 w-1.5 rounded-full bg-banc-grey/40 animate-pulse" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-banc-grey/40 animate-pulse [animation-delay:150ms]" />
-                        <span className="h-1.5 w-1.5 rounded-full bg-banc-grey/40 animate-pulse [animation-delay:300ms]" />
+                    {/* Property cards: swipe sideways through the matches */}
+                    {messageView.properties.length > 0 && (
+                      <div className="-mx-4 flex w-[calc(100%+2rem)] snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+                        {messageView.properties.map((property) => {
+                          const imageUrl = getSafePropertyImageUrl(
+                            property.images?.[0] ?? "",
+                          );
+                          return (
+                            <Link
+                              key={property.id}
+                              href={`${buildPropertyHref(
+                                property.department,
+                                property.id,
+                              )}?from=bot`}
+                              onClick={() => {
+                                reportPropertyOpened(property.id);
+                                closeChat();
+                              }}
+                              className="group w-[72%] flex-shrink-0 snap-start overflow-hidden rounded-2xl border border-banc-grey/15 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus sm:w-[15rem]"
+                            >
+                              <div className="aspect-[16/10] w-full overflow-hidden bg-banc-grey/20">
+                                {imageUrl && (
+                                  <Image
+                                    src={imageUrl}
+                                    alt={`${property.title} photo`}
+                                    width={480}
+                                    height={300}
+                                    unoptimized
+                                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
+                                  />
+                                )}
+                              </div>
+                              <div className="px-3.5 pb-3 pt-2.5">
+                                <p className="text-base font-semibold leading-tight text-banc-dark">
+                                  {property.price}
+                                </p>
+                                <p className="mt-1 line-clamp-2 text-sm leading-snug text-banc-dark">
+                                  {property.title}
+                                </p>
+                                <p className="mt-1.5 flex items-center justify-between text-xs text-banc-muted-readable">
+                                  <span>{property.stats.beds} bed</span>
+                                  <span className="flex items-center gap-1 font-medium text-banc-focus">
+                                    View
+                                    <ArrowRight className="h-3 w-3" aria-hidden="true" />
+                                  </span>
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
                       </div>
+                    )}
+
+                    {hasActions && (
+                      <div className="flex w-full max-w-[88%] flex-col gap-2">
+                        {messageView.form && (
+                          <Link
+                            href={messageView.form.href}
+                            onClick={closeChat}
+                            className={`${actionLink} bg-banc-focus text-white hover:bg-banc-focus-hover`}
+                          >
+                            {messageView.form.title}
+                            <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                          </Link>
+                        )}
+
+                        {chatLinks.listings.map((listing) => (
+                          <Link
+                            key={listing.href}
+                            href={listing.href}
+                            onClick={closeChat}
+                            className={`${actionLink} border border-banc-focus/30 bg-white text-banc-focus hover:bg-banc-grey-pale hover:text-banc-focus-hover`}
+                          >
+                            <span>View {listing.title}</span>
+                            <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                          </Link>
+                        ))}
+
+                        {chatLinks.sources.length > 0 && (
+                          <div className="rounded-xl border border-banc-grey/10 bg-white px-2 py-1.5">
+                            <p className="px-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-banc-muted-readable">
+                              From Banc&apos;s site
+                            </p>
+                            {chatLinks.sources.map((source) => (
+                              <Link
+                                key={source.href}
+                                href={source.href}
+                                onClick={closeChat}
+                                className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-banc-focus underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                              >
+                                {source.title}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+
+                        {messageView.handoff && (
+                          <div className="flex flex-col gap-2 sm:flex-row">
+                            <a
+                              href={messageView.handoff.callHref}
+                              className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-banc-focus px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                            >
+                              <Phone className="h-3.5 w-3.5" aria-hidden="true" />
+                              Call Banc
+                            </a>
+                            {messageView.handoff.whatsappHref && (
+                              <a
+                                href={messageView.handoff.whatsappHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#25D366] px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#1EAD54] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+                              >
+                                <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                                WhatsApp Banc
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+
+              {isLoading && (
+                <div className="flex justify-start" aria-label="Banc Bot is typing">
+                  <div className="rounded-[18px] rounded-bl-md border border-banc-grey/10 bg-white px-4 py-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+                    <div className="flex items-center gap-1.5">
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-banc-grey/50" />
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-banc-grey/50 [animation-delay:150ms]" />
+                      <span className="h-2 w-2 animate-pulse rounded-full bg-banc-grey/50 [animation-delay:300ms]" />
                     </div>
                   </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
 
-              {/* Quick Replies */}
-              <div className="flex gap-2 overflow-x-auto px-4 py-2.5 border-t border-banc-grey/10 bg-white shrink-0 scrollbar-hide">
-                {quickReplies.map((reply) => (
-                  <button
-                    key={reply}
-                    type="button"
-                    disabled={isLoading}
-                    onClick={() => {
-                      void sendMessage(reply);
-                    }}
-                    className="flex-shrink-0 rounded-full disabled:opacity-50 border border-banc-grey/20 bg-banc-grey-pale px-3 py-1.5 text-xs text-banc-dark hover:border-banc-sky hover:text-banc-sky transition-colors duration-200 cursor-pointer whitespace-nowrap"
-                  >
-                    {reply}
-                  </button>
-                ))}
-              </div>
-
-              {/* Input */}
-              <div className="flex items-center gap-2 border-t border-banc-grey/10 bg-white p-3 shrink-0">
-                <label htmlFor="property-chat-input" className="sr-only">
-                  Message Banc Bot
-                </label>
-                <Input
-                  id="property-chat-input"
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      void sendMessage();
-                    }
-                  }}
-                  placeholder="Type a message..."
-                  className="flex-1 h-10 text-sm border-banc-grey/20 focus:border-banc-sky"
-                  style={{ fontSize: "16px" }}
-                />
+            {/* Suggested next steps; out of the way once the visitor is typing */}
+            <div
+              className={`shrink-0 flex-wrap gap-2 border-t border-banc-grey/10 bg-white px-4 pb-1 pt-3 ${
+                input.trim() ? "hidden" : "flex"
+              }`}
+            >
+              {quickReplies.map((reply) => (
                 <button
+                  key={reply}
                   type="button"
+                  disabled={isLoading}
                   onClick={() => {
-                    void sendMessage();
+                    void sendMessage(reply);
                   }}
-                  disabled={isLoading || !input.trim()}
-                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[10px] bg-banc-dark-deep text-white hover:bg-banc-dark transition-colors duration-200 disabled:opacity-40 cursor-pointer"
-                  aria-label="Send message"
+                  className="min-h-9 cursor-pointer rounded-full border border-banc-grey/20 bg-banc-grey-pale px-3.5 py-1.5 text-[13px] font-medium text-banc-dark transition-colors duration-200 hover:border-banc-focus hover:text-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus disabled:opacity-50"
                 >
-                  <Send className="h-4 w-4" />
+                  {reply}
                 </button>
-              </div>
+              ))}
+            </div>
+
+            {/* Message box */}
+            <div className="flex shrink-0 items-end gap-2 bg-white px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-2.5 sm:pb-4">
+              <label htmlFor="property-chat-input" className="sr-only">
+                Message Banc Bot
+              </label>
+              <textarea
+                id="property-chat-input"
+                ref={inputRef}
+                rows={1}
+                value={input}
+                enterKeyHint="send"
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  resizeInput();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    void sendMessage();
+                  }
+                }}
+                placeholder="Ask about a home, school or area"
+                className="min-h-12 flex-1 resize-none rounded-3xl border border-banc-grey/25 bg-banc-grey-pale/70 px-4 py-3 text-base leading-6 text-banc-dark placeholder:text-banc-muted-readable transition-colors duration-200 focus:border-banc-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-banc-focus/25"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  void sendMessage();
+                }}
+                disabled={isLoading || !input.trim()}
+                className="flex h-12 w-12 flex-shrink-0 cursor-pointer items-center justify-center rounded-full bg-banc-focus text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 disabled:cursor-default disabled:bg-banc-grey/30"
+                aria-label="Send message"
+              >
+                <ArrowUp className="h-5 w-5" aria-hidden="true" />
+              </button>
             </div>
           </motion.div>
         )}

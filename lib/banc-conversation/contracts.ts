@@ -102,7 +102,14 @@ export interface ConversationResponse {
   handoff?: { callHref: string; whatsappHref: string };
   /** The website form that handles a contact request (valuation, viewing, offer, message). */
   form?: { title: string; href: string };
+  /** Items the answer is a list of (schools, key features), for the panel to lay out as rows. */
+  details?: ConversationDetails;
   context: PropertyConversationState;
+}
+
+export interface ConversationDetails {
+  title: string;
+  items: Array<{ label: string; note?: string }>;
 }
 
 export type ConversationAction = ConversationResponse["action"];
@@ -404,6 +411,24 @@ export const trustedFormLinkSchema = z
   })
   .strict();
 
+/** Server-built rows shown under a reply. Plain text only: the panel never treats them as markup or links. */
+export const trustedDetailsSchema = z
+  .object({
+    title: z.string().trim().min(1).max(80),
+    items: z
+      .array(
+        z
+          .object({
+            label: z.string().trim().min(1).max(160),
+            note: z.string().trim().min(1).max(80).optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(8),
+  })
+  .strict();
+
 export const publicHandoffSchema = z
   .object({
     callHref: z.literal(BANC_CONTACT.callHref),
@@ -438,6 +463,7 @@ export const conversationResponseSchema = z
       .optional(),
     handoff: publicHandoffSchema.optional(),
     form: trustedFormLinkSchema.optional(),
+    details: trustedDetailsSchema.optional(),
     context: propertyConversationStateSchema,
   })
   .strict();

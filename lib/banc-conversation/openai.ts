@@ -447,6 +447,8 @@ export interface IntentSelectionInput {
 
 export interface ResponseWritingInput extends IntentSelectionInput {
   results: readonly SanitizedOperationResult[];
+  /** A list the panel shows under the reply, so the writer leads into it instead of repeating it. */
+  shownList?: { title: string; count: number };
 }
 
 export type ModelFailureCategory =
@@ -1070,6 +1072,11 @@ function buildResponseInput(
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
     trustedResults: results.map(describeTrustedResult),
+    ...(input.shownList === undefined
+      ? {}
+      : {
+        interfaceShows: `A list titled "${boundedText(input.shownList.title, 80)}" with ${input.shownList.count} items is displayed directly under your reply.`,
+      }),
     ...(rejected === undefined
       ? {}
       : {

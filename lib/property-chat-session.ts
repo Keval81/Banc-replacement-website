@@ -12,6 +12,7 @@ import {
   propertyConversationStateSchema,
   publicHandoffSchema,
   safePropertyCardSchema,
+  trustedDetailsSchema,
   trustedFormLinkSchema,
   trustedSourceSchema,
   type PropertyConversationState,
@@ -46,6 +47,7 @@ const storedMessageSchema = z
     sources: z.array(trustedSourceSchema).optional(),
     handoff: publicHandoffSchema.optional(),
     form: trustedFormLinkSchema.optional(),
+    details: trustedDetailsSchema.optional(),
     action: z.string().trim().min(1).max(64).optional(),
     timestamp: z.string().datetime(),
   })
