@@ -286,6 +286,18 @@ export default function PropertyChatbot({
     return () => window.removeEventListener("popstate", stepBack);
   }, [isOpen]);
 
+  // Coming back from a home, the conversation is where it was left: at its end.
+  const wasViewingHomeRef = useRef(false);
+  useEffect(() => {
+    if (openHome !== null) {
+      wasViewingHomeRef.current = true;
+      return;
+    }
+    if (!wasViewingHomeRef.current) return;
+    wasViewingHomeRef.current = false;
+    messagesEndRef.current?.scrollIntoView({ block: "end" });
+  }, [openHome]);
+
   // A new reply is read from its first line, so the view goes to the top of
   // it. The visitor's own message and the typing dots keep the view at the end.
   useEffect(() => {
@@ -880,7 +892,7 @@ export default function PropertyChatbot({
                     void sendMessage();
                   }
                 }}
-                placeholder="Ask about a home, school or area"
+                placeholder="Ask Banc Bot anything"
                 className="min-h-12 flex-1 resize-none rounded-3xl border border-banc-grey/25 bg-banc-grey-pale/70 px-4 py-3 text-base leading-6 text-banc-dark placeholder:text-banc-muted-readable transition-colors duration-200 focus:border-banc-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-banc-focus/25"
               />
               <button

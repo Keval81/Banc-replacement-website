@@ -49,9 +49,9 @@ interface RunPropertyChatTurnOptions {
 
 // Short enough to sit two to a row on a phone.
 const initialQuickReplies = [
-  "Homes for sale in Cuffley",
+  "Buy in Cuffley",
   "I'm looking to rent",
-  "What is my home worth?",
+  "Value my home",
   "Schools in Cuffley",
 ] as const;
 
