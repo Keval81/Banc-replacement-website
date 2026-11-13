@@ -9,7 +9,7 @@ import { getServiceFilm } from "@/lib/owned-film";
 
 const services = [
   {
-    number: "1.1",
+    number: "3.1",
     title: "Residential Sales",
     description:
       "Accurate valuations, premium marketing, and one team from instruction to completion.",
@@ -18,7 +18,7 @@ const services = [
     href: "/sales",
   },
   {
-    number: "1.2",
+    number: "3.2",
     title: "Lettings",
     description:
       "Quality tenants found fast, with full management and transparent reporting.",
@@ -27,7 +27,7 @@ const services = [
     href: "/lettings",
   },
   {
-    number: "1.3",
+    number: "3.3",
     title: "Premier Homes",
     description:
       "Discreet, bespoke service for exceptional properties valued at £1 million and above.",
@@ -37,7 +37,7 @@ const services = [
     premier: true,
   },
   {
-    number: "1.4",
+    number: "3.4",
     title: "Property Management",
     description:
       "Trusted suppliers, transparent reporting, and peace of mind for landlords.",
@@ -49,11 +49,11 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="bg-banc-dark-deep py-20 lg:py-28">
-      <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-10">
+    <section id="services" className="bg-banc-dark-deep py-12 lg:py-28">
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10">
         <SectionHeader number="03" label="What we do" title="Four ways we work" dark />
 
-        <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
+        <div className="mt-7 grid gap-x-8 gap-y-10 md:grid-cols-2 lg:mt-14 lg:gap-y-14">
           {services.map((service, index) => {
             const film = getServiceFilm(service.href);
             return (
@@ -65,7 +65,7 @@ export default function Services() {
               transition={{ delay: index * 0.08 }}
             >
               <Link href={service.href} className="group block">
-                <div className="relative h-64 overflow-hidden rounded-[10px] sm:h-80">
+                <div className="relative h-52 overflow-hidden rounded-[10px] sm:h-80">
                   {/* Banc's own footage where it exists; Property Management keeps
                       its still until the wider stock sweep replaces it. */}
                   {film ? (

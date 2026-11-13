@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SectionHeader } from "@/components/SectionHeader";
 import { LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
 import { describeSubmitError } from "@/lib/lead-form-rules";
+import { actionPrimary, fieldControl, fieldLabel, segmented } from "@/components/ui/form-styles";
 
 const AREAS = [
   "Cuffley",
@@ -81,16 +82,16 @@ export default function PropertyAlerts() {
     }
   };
 
-  const field =
-    "h-11 w-full rounded-[var(--radius-md)] border border-banc-line bg-white px-3 text-sm text-banc-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus";
-  const label = "block text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable mb-2";
+  const field = fieldControl;
+  const select = `${fieldControl} appearance-none bg-[length:16px] bg-[right_1rem_center] bg-no-repeat pr-10 bg-[url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F5D57' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")]`;
+  const label = fieldLabel;
 
   return (
-    <section id="alerts" className="scroll-mt-24 bg-banc-grey-pale py-20 lg:py-28">
-      <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-10">
-        <SectionHeader number="05" label="Stay updated" title="Hear about homes first" />
+    <section id="alerts" className="scroll-mt-24 bg-banc-grey-pale py-12 lg:py-28">
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-10">
+        <SectionHeader number="04" label="Stay updated" title="Hear about homes first" />
 
-        <div className="mt-14 grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
+        <div className="mt-5 grid gap-10 lg:mt-14 lg:grid-cols-[1.35fr_1fr] lg:gap-16">
           <div>
             <p className="max-w-[60ch] text-lg text-banc-muted-readable">
               Tell us what you are looking for and we will be in touch when something
@@ -112,17 +113,19 @@ export default function PropertyAlerts() {
               <form onSubmit={handleSubmit} className="mt-8 grid gap-5">
                 <fieldset className="grid gap-2">
                   <legend className={label}>I&apos;m looking to</legend>
-                  <div className="flex gap-6">
+                  <div className={`${segmented} sm:w-fit`}>
                     {(["buy", "rent"] as const).map((option, index) => (
-                      <label key={option} className="flex items-center gap-2 text-sm text-banc-dark">
+                      <label key={option} className="cursor-pointer">
                         <input
                           type="radio"
                           name="looking"
                           value={option}
                           defaultChecked={index === 0}
-                          className="h-4 w-4 accent-banc-focus"
+                          className="peer sr-only"
                         />
-                        {option === "buy" ? "Buy" : "Rent"}
+                        <span className="flex min-h-11 items-center justify-center rounded-md px-8 text-sm font-semibold text-banc-muted-readable transition-colors duration-200 peer-checked:bg-banc-focus peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-banc-focus peer-focus-visible:ring-offset-2">
+                          {option === "buy" ? "Buy" : "Rent"}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -131,25 +134,25 @@ export default function PropertyAlerts() {
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
                     <label className={label} htmlFor="alert-area">Area</label>
-                    <select id="alert-area" name="area" className={field} defaultValue={AREAS[0]}>
+                    <select id="alert-area" name="area" className={select} defaultValue={AREAS[0]}>
                       {AREAS.map((area) => <option key={area}>{area}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className={label} htmlFor="alert-type">Property type</label>
-                    <select id="alert-type" name="propertyType" className={field} defaultValue={PROPERTY_TYPES[0]}>
+                    <select id="alert-type" name="propertyType" className={select} defaultValue={PROPERTY_TYPES[0]}>
                       {PROPERTY_TYPES.map((type) => <option key={type}>{type}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className={label} htmlFor="alert-beds">Bedrooms</label>
-                    <select id="alert-beds" name="bedrooms" className={field} defaultValue={BEDROOMS[2]}>
+                    <select id="alert-beds" name="bedrooms" className={select} defaultValue={BEDROOMS[2]}>
                       {BEDROOMS.map((beds) => <option key={beds}>{beds}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className={label} htmlFor="alert-budget">Budget</label>
-                    <select id="alert-budget" name="budget" className={field} defaultValue={BUDGETS[1]}>
+                    <select id="alert-budget" name="budget" className={select} defaultValue={BUDGETS[1]}>
                       {BUDGETS.map((budget) => <option key={budget}>{budget}</option>)}
                     </select>
                   </div>
@@ -178,7 +181,7 @@ export default function PropertyAlerts() {
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="inline-flex min-h-11 items-center justify-center rounded-full bg-banc-focus px-7 text-sm font-medium text-white transition-colors hover:bg-banc-focus-hover disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
+                    className={actionPrimary}
                   >
                     {status === "sending" ? "Sending…" : "Subscribe to alerts"}
                   </button>
@@ -193,19 +196,24 @@ export default function PropertyAlerts() {
             )}
           </div>
 
-          <aside className="relative flex flex-col justify-between overflow-hidden rounded-[10px] border border-banc-line bg-white p-8">
+          <aside className="relative flex flex-col justify-between overflow-hidden rounded-[10px] border border-banc-line bg-white p-6 lg:p-8">
+            {/* Phones: the cover sits above the copy so the heading keeps the full width. */}
+            <div
+              aria-hidden="true"
+              className="-mx-6 -mt-6 mb-6 h-44 bg-[url('/images/life-magazine-cover.jpg')] bg-cover bg-top lg:hidden"
+            />
             {/* The current issue's cover sits behind the copy — Nitesh, 7 Sep:
                 "put an image behind that of the magazine". A white wash keeps
                 the text legible over it; the cover stays visible on the right. */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -right-6 top-8 bottom-0 w-[44%] rotate-[4deg] rounded-[6px] bg-[url('/images/life-magazine-cover.jpg')] bg-cover bg-top shadow-[0_18px_40px_-20px_rgba(16,34,56,0.45)]"
+              className="pointer-events-none absolute -right-6 top-8 bottom-0 hidden w-[44%] rotate-[4deg] lg:block rounded-[6px] bg-[url('/images/life-magazine-cover.jpg')] bg-cover bg-top shadow-[0_18px_40px_-20px_rgba(16,34,56,0.45)]"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white from-45% via-white/85 via-60% to-white/0"
+              className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-white from-45% via-white/85 via-60% to-white/0 lg:block"
             />
-            <div className="relative max-w-[58%]">
+            <div className="relative lg:max-w-[58%]">
               <p className="text-[11px] uppercase tracking-[0.18em] text-banc-muted-readable">
                 Life Magazine
               </p>

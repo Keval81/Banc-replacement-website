@@ -45,7 +45,7 @@ export default function FeaturedListings() {
 
   return (
     <section id="featured" className="bg-white">
-      <div className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+      <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-28">
         <SectionHeader
           number="02"
           label="Featured"
@@ -53,7 +53,7 @@ export default function FeaturedListings() {
         />
 
         {state.status === "loading" && (
-          <div className="mt-12" role="status" aria-live="polite">
+          <div className="mt-7 lg:mt-12" role="status" aria-live="polite">
             <span className="sr-only">Loading featured homes</span>
             <div
               aria-hidden="true"
@@ -71,7 +71,7 @@ export default function FeaturedListings() {
 
         {state.status !== "loading" && state.listings.length === 0 && (
           <div
-            className="mt-12 border border-[#DEDCD7] bg-[#F8F7F5] px-6 py-12 text-center"
+            className="mt-7 border border-[#DEDCD7] bg-[#F8F7F5] px-6 py-12 text-center"
             role="status"
           >
             <p className="text-lg text-[#4F4C47]">
@@ -91,7 +91,7 @@ export default function FeaturedListings() {
         {state.status === "ready" && state.listings.length > 0 && (
           <Carousel
             label="Featured homes"
-            className="mt-12"
+            className="mt-7 lg:mt-12"
             slideClassName="basis-[88%] sm:basis-[68%] lg:basis-[48%] xl:basis-[40%]"
           >
             {state.listings.map((listing, index) => {
