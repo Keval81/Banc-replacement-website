@@ -4,6 +4,10 @@ import {
   type ConversationRequest,
   type PropertyConversationState,
 } from "./banc-conversation/contracts.ts";
+import {
+  isAboutPageProperty,
+  PAGE_PROPERTY_QUICK_REPLIES,
+} from "./property-chat-page.ts";
 import type { PropertyCardData } from "./property-view.ts";
 
 export type SingleFlightRunner = <T>(action: () => Promise<T>) => Promise<boolean>;
@@ -107,6 +111,7 @@ export function getPropertyChatMessageView(
 export function getPropertyChatQuickReplies(
   context: PropertyConversationState,
 ): readonly string[] {
+  if (isAboutPageProperty(context)) return PAGE_PROPERTY_QUICK_REPLIES;
   return context.resultPropertyIds.length > 0
     ? resultQuickReplies
     : initialQuickReplies;

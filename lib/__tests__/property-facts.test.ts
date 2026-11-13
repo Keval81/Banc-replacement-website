@@ -72,6 +72,8 @@ test("maps a canonical property row to sanitized property facts only", () => {
     epc: "C",
     sqft: 1400,
     features: ["garden", "parking"],
+    keyFeatures: ["Garden", "Parking"],
+    epcCertificate: true,
     summary: "Verified listing description.",
   });
 

@@ -147,6 +147,8 @@ function clonePropertyFacts(value: PropertyFacts): PropertyFacts {
     epc: value.epc,
     sqft: value.sqft,
     features: [...value.features],
+    ...(value.keyFeatures === undefined ? {} : { keyFeatures: [...value.keyFeatures] }),
+    ...(value.epcCertificate === undefined ? {} : { epcCertificate: value.epcCertificate }),
     summary: value.summary,
   };
 }
@@ -201,6 +203,17 @@ function clarification(
   };
 }
 
+const MAX_KNOWLEDGE_TOPICS = 2;
+
+/** A location specific enough to be about particular homes rather than an area. */
+const STREET_NAME =
+  /\b(?:road|street|lane|close|crescent|avenue|drive|way|gardens|grove|hill|rise|place|court|walk|green|mews|square|terrace|view|row|chase|end)\b/i;
+
+/** Stable order: results arrive topic by topic, so position is already the rank. */
+function rankWithinTopic(all: readonly BancKnowledgeResult[], source: BancKnowledgeResult): number {
+  return all.indexOf(source);
+}
+
 export function createConversationTools({
   portfolio,
   knowledge,
@@ -219,16 +232,47 @@ export function createConversationTools({
 
       switch (intent.type) {
         case "update_property_search": {
-          const nextState = applyPropertySearchMutation(
+          let nextState = applyPropertySearchMutation(
             state,
             intent.mutation,
             message,
           );
+          let searchResult: Awaited<ReturnType<typeof portfolio.search>> | undefined;
+          if (
+            nextState?.query === undefined &&
+            state.query === undefined &&
+            intent.mutation.location?.operation === "set" &&
+            STREET_NAME.test(intent.mutation.location.value)
+          ) {
+            // "Is Brookside Crescent still available?" names a street but not
+            // buy or rent. Rather than ask, look on both sides: when only one
+            // lists anything there, that is the answer to the question. A town
+            // ("homes in Cuffley") is on both sides, so that is still asked.
+            const matches: Array<{
+              state: PropertyConversationState;
+              result: Awaited<ReturnType<typeof portfolio.search>>;
+            }> = [];
+            for (const department of ["sales", "lettings"] as const) {
+              const candidate = applyPropertySearchMutation(
+                state,
+                { ...intent.mutation, department: { operation: "set", value: department } },
+                message,
+              );
+              if (candidate?.query === undefined) continue;
+              const result = await portfolio.search(candidate.query, signal);
+              if (result.total > 0) matches.push({ state: candidate, result });
+            }
+            const only = matches.length === 1 ? matches[0] : undefined;
+            if (only !== undefined) {
+              nextState = only.state;
+              searchResult = only.result;
+            }
+          }
           if (nextState?.query === undefined) {
             return clarification(state, DEPARTMENT_QUESTION);
           }
 
-          const searchResult = await portfolio.search(nextState.query, signal);
+          searchResult ??= await portfolio.search(nextState.query, signal);
           const orderedIds = searchResult.properties.map(({ id }) => id);
           const resultFingerprint = createResultFingerprint(
             orderedIds,
@@ -301,10 +345,28 @@ export function createConversationTools({
         }
 
         case "search_banc_knowledge": {
-          const sources = (await knowledge.search(intent.query, signal))
-            .map(cloneKnowledgeSource)
-            .filter((source): source is BancKnowledgeResult => source !== null)
-            .slice(0, 3);
+          // One message can ask two things ("what areas do you cover and when
+          // are you open?"). The search matches a page only when it carries
+          // every word, so one combined query finds nothing. The intent layer
+          // separates topics with "|" and each is searched on its own terms.
+          const topics = intent.query
+            .split("|")
+            .map((topic) => topic.trim())
+            .filter((topic) => topic.length > 0)
+            .slice(0, MAX_KNOWLEDGE_TOPICS);
+          const found: BancKnowledgeResult[] = [];
+          for (const topic of topics) {
+            for (const source of await knowledge.search(topic, signal)) {
+              const cloned = cloneKnowledgeSource(source);
+              if (cloned !== null && !found.some((seen) => seen.documentId === cloned.documentId)) {
+                found.push(cloned);
+              }
+            }
+          }
+          // With two topics, keep the best match for each before any second match.
+          const sources = topics.length > 1
+            ? [...found].sort((left, right) => rankWithinTopic(found, left) - rankWithinTopic(found, right)).slice(0, 3)
+            : found.slice(0, 3);
           return {
             status: "knowledge",
             state: stateWithTopic(state, "banc_knowledge"),

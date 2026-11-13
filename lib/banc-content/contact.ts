@@ -42,7 +42,7 @@ export const BANC_OFFICES = {
     phone: BANC_CONTACT,
     email: BANC_EMAIL,
     openingHours: ["Monday to Saturday: 9am to 5:30pm", "Sunday: Closed"],
-    aliases: ["contact Banc", "Cuffley office", "opening hours", "phone number"],
+    aliases: ["contact Banc", "Cuffley office", "opening hours", "phone number", "office address", "office location", "where is your office", "find us", "contact details", "contact number", "telephone number", "email address", "get in touch", "how to contact"],
   },
   mayfair: {
     id: "mayfair-office",
@@ -68,15 +68,14 @@ function officeSection(office: BancOfficeContact): ApprovedBancSection {
   return {
     id: office.id,
     title: office.title,
+    // One passage per detail, label and value together, so a search for
+    // "office address" returns the address and not the word "Address".
     body: [
-      "Address",
-      ...office.addressLines,
-      "Phone",
-      office.phone.displayPhone,
-      "Email",
-      office.email.displayEmail,
+      `Office address: ${office.addressLines.join(", ")}`,
+      `Office phone: ${office.phone.displayPhone}`,
+      `Office email: ${office.email.displayEmail}`,
       ...(office.openingHours.length > 0
-        ? ["Opening Hours", ...office.openingHours]
+        ? [`Office opening hours: ${office.openingHours.join("; ")}`]
         : []),
     ],
     aliases: office.aliases,

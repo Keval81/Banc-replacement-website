@@ -29,7 +29,7 @@ const EXPLICIT_VIEWING_PROPERTY_REFERENCE = /^\s*(?:please\s+)?(?:arrange|book|s
 const UNSAFE_RESPONSE_TEXT = /\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)|(?:\+?\d[\d\s().-]{7,}\d)/i;
 
 export const INTERPRETATION_CLARIFICATION =
-  "Which location, price range, bedroom requirement or property would you like help with?";
+  "Happy to help. Are you looking to buy, rent, sell or get a valuation, or is there a particular property you'd like to ask about?";
 export const MODEL_TIMEOUT_COPY =
   "The conversation took too long to complete. Please try again.";
 export const MODEL_UNAVAILABLE_COPY =
@@ -495,6 +495,19 @@ export function createBancConversationHandler({
       }
       results.push(operation.value);
       state = operation.value.state;
+    }
+
+    // A search or a property answer that also asked something the approved
+    // content does not cover is still a good answer. Dropping the empty lookup
+    // stops "I couldn't find guidance" being printed above the matching homes.
+    const firstResult = results[0];
+    if (firstResult !== undefined && firstResult.status !== "knowledge") {
+      for (let index = results.length - 1; index > 0; index -= 1) {
+        const extra = results[index];
+        if (extra?.status === "knowledge" && extra.sources.length === 0) {
+          results.splice(index, 1);
+        }
+      }
     }
 
     const primary = results[0];

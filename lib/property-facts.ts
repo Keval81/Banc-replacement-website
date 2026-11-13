@@ -20,8 +20,14 @@ export interface PropertyFacts {
   epc: string | null;
   sqft: number | null;
   features: string[];
+  /** The listing's own bullet points, as the agent wrote them. */
+  keyFeatures?: string[];
+  /** True when the listing page shows an EPC certificate, whether or not a rating is stored. */
+  epcCertificate?: boolean;
   summary: string;
 }
+
+const MAX_KEY_FEATURES = 12;
 
 const propertyIdSchema = z.string().trim().min(1).max(64);
 
@@ -42,6 +48,10 @@ export const propertyFactsSchema = z
     epc: z.string().trim().min(1).max(16).nullable(),
     sqft: z.number().finite().positive().nullable(),
     features: z.array(z.string().trim().min(1).max(64)).transform((features) => [...features]),
+    /** The listing's own bullet points, as the agent wrote them. */
+    keyFeatures: z.array(z.string().trim().min(1).max(160)).max(MAX_KEY_FEATURES).optional(),
+    /** True when the listing page shows an EPC certificate, whether or not a rating is stored. */
+    epcCertificate: z.boolean().optional(),
     summary: z.string().trim().min(1).max(2_000),
   })
   .strict();
@@ -104,6 +114,11 @@ export function mapPropertyFacts(row: DbProperty): PropertyFacts {
       ? row.sqft
       : null,
     features: [...row.search_features],
+    keyFeatures: (row.features ?? [])
+      .map((feature) => feature.replace(/\s+/g, " ").trim().slice(0, 160))
+      .filter((feature) => feature.length > 0)
+      .slice(0, MAX_KEY_FEATURES),
+    epcCertificate: typeof row.epc_image_url === "string" && row.epc_image_url.trim().length > 0,
     summary: firstParagraph(row.description),
   });
 }

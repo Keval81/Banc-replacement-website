@@ -6,6 +6,7 @@ import { areaGuides } from "../area-guides.ts";
 import { APPROVED_BANC_DOCUMENTS } from "../banc-content/approved-content.ts";
 
 const STATIC_APPROVED_ROUTES = new Set([
+  "/area-guides",
   "/contact",
   "/lettings/landlords-guide",
   "/lettings/tenants-guide",

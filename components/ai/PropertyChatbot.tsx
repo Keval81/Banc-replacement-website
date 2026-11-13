@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, CircleHelp, MessageCircle, RotateCcw, X, Send, Phone } from "lucide-react";
@@ -36,6 +37,12 @@ import {
   type MobileContactControlPlacement,
 } from "@/lib/landing-ui";
 
+import {
+  focusStateOnPageProperty,
+  pagePropertyIdFromPath,
+  PAGE_PROPERTY_WELCOME,
+} from "@/lib/property-chat-page";
+
 const transition = {
   type: "spring" as const,
   bounce: 0,
@@ -47,11 +54,11 @@ const landingContactLauncher = getLandingUi("aker").mobileContactLauncher;
 const WELCOME_MESSAGE =
   "Hello! I'm Banc Bot. I can search our current homes for sale or to rent, answer questions about a listing, or help you contact the team. What would you like to know?";
 
-function createWelcomeMessage(): PropertyChatMessage {
+function createWelcomeMessage(onPropertyPage = false): PropertyChatMessage {
   return {
     id: "welcome",
     role: "assistant",
-    content: WELCOME_MESSAGE,
+    content: onPropertyPage ? PAGE_PROPERTY_WELCOME : WELCOME_MESSAGE,
     timestamp: new Date(),
   };
 }
@@ -96,6 +103,10 @@ export default function PropertyChatbot({
   showProactivePrompt = true,
   launcherClearance = "standard",
 }: PropertyChatbotProps) {
+  // On a listing (or that home's viewing or offer form) the visitor's first
+  // question is about the home in front of them, so it starts in focus. The
+  // panel remounts on every route change, so this is settled at mount.
+  const pagePropertyId = pagePropertyIdFromPath(usePathname());
   const [isOpen, setIsOpen] = useState(false);
   const [isHelpMenuOpen, setIsHelpMenuOpen] = useState(false);
   // The thread carried over from the previous page is adopted up front. The
@@ -105,12 +116,15 @@ export default function PropertyChatbot({
     const stored = readStoredSession();
     return stored && stored.messages.length > 0
       ? stored.messages
-      : [createWelcomeMessage()];
+      : [createWelcomeMessage(pagePropertyId !== null)];
   });
   const [input, setInput] = useState("");
   const [conversationContext, setConversationContext] =
     useState<PropertyConversationState>(
-      () => readStoredSession()?.state ?? createInitialConversationState(),
+      () => {
+        const state = readStoredSession()?.state ?? createInitialConversationState();
+        return pagePropertyId === null ? state : focusStateOnPageProperty(state, pagePropertyId);
+      },
     );
   const [isLoading, setIsLoading] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
@@ -129,6 +143,7 @@ export default function PropertyChatbot({
   const usesUnifiedHelp = mobileContactControlPlacement === "unified-help";
   const clearsStickyActions = launcherClearance === "clears-sticky-actions";
   const quickReplies = getPropertyChatQuickReplies(conversationContext);
+
   const openChat = useCallback(() => {
     setIsHelpMenuOpen(false);
     setShowPrompt(false);
@@ -202,13 +217,17 @@ export default function PropertyChatbot({
   const hasConversation = messages.length > 1;
   const startNewConversation = useCallback(() => {
     if (isLoading) return;
-    setMessages([createWelcomeMessage()]);
-    setConversationContext(createInitialConversationState());
+    setMessages([createWelcomeMessage(pagePropertyId !== null)]);
+    setConversationContext(
+      pagePropertyId === null
+        ? createInitialConversationState()
+        : focusStateOnPageProperty(createInitialConversationState(), pagePropertyId),
+    );
     setInput("");
     messageIdRef.current = 0;
     if (typeof window !== "undefined") clearPropertyChatSession(window.sessionStorage);
     inputRef.current?.focus();
-  }, [isLoading]);
+  }, [isLoading, pagePropertyId]);
 
   const sendMessage = async (text: string = input) => {
     const content = text.trim();

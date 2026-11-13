@@ -120,6 +120,18 @@ const CLAIM_SYNONYMS: Record<string, readonly string[]> = {
   tour: ["virtual_tour", "video_tour", "virtual tour", "video tour"],
 };
 
+/**
+ * "The listing doesn't state the EPC rating" asserts nothing about the home,
+ * so it may name a claim word the listing does not carry. Without this the
+ * verifier rejected every honest "that isn't listed" answer and the visitor
+ * got a stock line about some other feature instead.
+ */
+const NOT_STATED_PATTERN =
+  /\b(?:not|isn['’]t|aren['’]t|doesn['’]t|don['’]t|no)\b[^.?!]*\b(?:listed|mentioned|stated|specified|given|shown|provided|included|say|says|state|states|mention|mentions|information|detail|details)\b/i;
+/** A positive assertion in the same sentence means each clause must stand on its own. */
+const POSITIVE_ASSERTION_PATTERN =
+  /\b(?:has|have|having|features?|includes?|offers?|boasts?|benefits?|comes?\s+with|there\s+(?:is|are)|(?:is|are)\s+(?:shown|available|included|provided))\b/i;
+
 interface TrustedEntity {
   /** Lower-cased names that identify this entity inside a sentence. */
   names: string[];
@@ -274,13 +286,16 @@ export function createGroundingContext(
               fact.bathrooms,
               fact.receptions,
               fact.sqft,
+              ...(fact.keyFeatures ?? []),
             ],
             texts: [
               fact.summary,
               fact.propertyType,
               fact.tenure,
               fact.epc === null ? null : `epc ${fact.epc}`,
+              fact.epcCertificate === true ? "epc certificate" : null,
               ...fact.features,
+              ...(fact.keyFeatures ?? []),
             ],
           }));
         }
@@ -435,6 +450,8 @@ export function verifyGroundedResponse(
       return { ok: false, reason: "percent" };
     }
     const isQuestion = sentence.includes("?");
+    const sentenceOnlySaysNotStated = NOT_STATED_PATTERN.test(sentence) &&
+      !POSITIVE_ASSERTION_PATTERN.test(sentence);
 
     for (const clause of scopedClauses(sentence, context)) {
       const allowedNumbers = new Set(context.globalNumbers);
@@ -449,6 +466,12 @@ export function verifyGroundedResponse(
       // Questions may float a filter ("Would you like to add parking?")
       // without asserting a fact about a property.
       if (isQuestion) continue;
+      if (
+        sentenceOnlySaysNotStated ||
+        (NOT_STATED_PATTERN.test(clause.text) && !POSITIVE_ASSERTION_PATTERN.test(clause.text))
+      ) {
+        continue;
+      }
       for (const token of claimTokens(clause.text)) {
         const justified =
           entityJustifiesToken({ tokens: context.globalTokens }, token) ||

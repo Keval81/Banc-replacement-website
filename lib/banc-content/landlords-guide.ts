@@ -81,10 +81,8 @@ export const LANDLORDS_GUIDE = {
     {
       id: "why-banc",
       title: "Why Choose Banc",
-      body: LANDLORD_BENEFITS.flatMap((feature) => [
-        feature.title,
-        feature.description,
-      ]),
+      // One passage per benefit, so a search returns the sentence and not just its heading.
+      body: LANDLORD_BENEFITS.map((feature) => `${feature.title}: ${feature.description}`),
       aliases: ["landlord services", "tenant checks", "landlord deposit protection"],
     },
     {

@@ -45,7 +45,22 @@ const AREA_GUIDE_DOCUMENTS: readonly ApprovedBancDocument[] = areaGuides.map(
   }),
 );
 
+// "What areas do you cover?" had no answer: each guide covers one place and
+// nothing listed them together. Built from the published guides, so it cannot
+// name an area the site does not have a page for.
+const AREAS_COVERED_DOCUMENT: ApprovedBancDocument = {
+  id: "areas-covered",
+  title: "Areas Banc covers",
+  sectionTitle: "Areas we cover",
+  href: "/area-guides",
+  text: `Banc Property Group is an independent sales and lettings agency based in Cuffley, Hertfordshire. The areas Banc covers are ${
+    areaGuides.map((guide) => guide.name).join(", ").replace(/, ([^,]*)$/, " and $1")
+  }.`,
+  aliases: ["areas covered", "areas we cover", "which areas", "where do you cover", "coverage area", "local areas"],
+};
+
 export const APPROVED_BANC_DOCUMENTS: readonly ApprovedBancDocument[] = [
   ...APPROVED_PAGES.flatMap(buildPageDocuments),
+  AREAS_COVERED_DOCUMENT,
   ...AREA_GUIDE_DOCUMENTS,
 ];
