@@ -24,7 +24,7 @@ import type {
 } from "../banc-conversation/openai.ts";
 import { createOpenAIConversationModel } from "../banc-conversation/openai.ts";
 import type { PropertyPortfolio } from "../banc-conversation/portfolio.ts";
-import { createConversationTools } from "../banc-conversation/tools.ts";
+import { createConversationTools, KNOWLEDGE_NOT_COVERED_COPY } from "../banc-conversation/tools.ts";
 import { createResultFingerprint } from "../banc-conversation/state-reducer.ts";
 import { createDefaultPropertySearchQuery } from "../property-search/query.ts";
 import type {
@@ -600,7 +600,7 @@ test("retains fixed contact controls when deadline blocks supporting work after 
   assert.equal(response.action, "answer");
   assert.equal(
     response.response,
-    "I couldn't find approved Banc guidance for that question. What would you like help with?",
+    KNOWLEDGE_NOT_COVERED_COPY,
   );
   assert.deepEqual(response.sources, []);
   assert.equal(response.context.topic, "banc_knowledge");
@@ -673,7 +673,7 @@ test("returns an honest no-source answer when optional knowledge response writin
   assert.equal(response.action, "answer");
   assert.equal(
     response.response,
-    "I couldn't find approved Banc guidance for that question. What would you like help with?",
+    KNOWLEDGE_NOT_COVERED_COPY,
   );
   assert.deepEqual(response.sources, []);
   assert.equal(response.context.topic, "banc_knowledge");

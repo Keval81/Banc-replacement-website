@@ -130,7 +130,7 @@ const NOT_STATED_PATTERN =
   /\b(?:not|isn['’]t|aren['’]t|doesn['’]t|don['’]t|no)\b[^.?!]*\b(?:listed|mentioned|stated|specified|given|shown|provided|included|say|says|state|states|mention|mentions|information|detail|details)\b/i;
 /** A positive assertion in the same sentence means each clause must stand on its own. */
 const POSITIVE_ASSERTION_PATTERN =
-  /\b(?:has|have|having|features?|includes?|offers?|boasts?|benefits?|comes?\s+with|there\s+(?:is|are)|(?:is|are)\s+(?:shown|available|included|provided))\b/i;
+  /\b(?:has|have|having|features?|includes?|offers?|boasts?|benefits?|comes?\s+with|there\s+(?:is|are)(?!\s+(?:no|not)\b|n['’]t)|(?:is|are)\s+(?:shown|available|included|provided))\b/i;
 
 /**
  * "If you'd like the EPC details, the Banc team can help" offers a next step;
@@ -237,6 +237,12 @@ function entityFromProperty(input: {
   return { names: names.filter((name) => name.length > 0), numbers, tokens };
 }
 
+function schoolCounts(schools: readonly string[] | undefined): number[] {
+  if (schools === undefined || schools.length === 0) return [];
+  const primaries = schools.filter((school) => school.includes("(primary,")).length;
+  return [schools.length, primaries, schools.length - primaries];
+}
+
 export function createGroundingContext(
   results: readonly SanitizedOperationResult[],
 ): GroundingContext {
@@ -295,6 +301,9 @@ export function createGroundingContext(
               fact.receptions,
               fact.sqft,
               ...(fact.keyFeatures ?? []),
+              ...(fact.nearbySchools ?? []),
+              // "five schools nearby", "three primaries" count what is listed.
+              ...schoolCounts(fact.nearbySchools),
             ],
             texts: [
               fact.summary,
@@ -304,6 +313,7 @@ export function createGroundingContext(
               fact.epcCertificate === true ? "epc certificate" : null,
               ...fact.features,
               ...(fact.keyFeatures ?? []),
+              ...(fact.nearbySchools ?? []),
             ],
           }));
         }

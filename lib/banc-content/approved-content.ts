@@ -1,4 +1,5 @@
 import { areaGuides } from "../area-guides.ts";
+import { describeSchool, LOCAL_SCHOOL_AREAS, nearestSchools } from "../local-schools.ts";
 import { BUYERS_GUIDE } from "./buyers-guide.ts";
 import { CONTACT_PAGE } from "./contact.ts";
 import { LANDLORDS_GUIDE } from "./landlords-guide.ts";
@@ -59,8 +60,50 @@ const AREAS_COVERED_DOCUMENT: ApprovedBancDocument = {
   aliases: ["areas covered", "areas we cover", "which areas", "where do you cover", "coverage area", "local areas"],
 };
 
+const MAX_SCHOOLS_TEXT_LENGTH = 480;
+
+function schoolsText(area: string, schools: readonly string[]): string {
+  return `State-funded schools nearest the centre of ${area}, by straight-line distance: ${
+    schools.join(", ").replace(/, ([^,]*)$/, " and $1")
+  }. Distances are a guide only; each school and the local council decide catchment areas and admissions.`;
+}
+
+// Schools are the first thing buyers ask about an area and the guides barely
+// mention them. Names and distances come from the Department for Education
+// register, so the bot never has to guess one.
+const AREA_SCHOOLS_DOCUMENTS: readonly ApprovedBancDocument[] = areaGuides.flatMap((guide) => {
+  const centre = LOCAL_SCHOOL_AREAS.find((area) => area.name === guide.name);
+  if (centre === undefined) return [];
+  const schools = nearestSchools(centre.lat, centre.lng);
+  if (schools.length === 0) return [];
+
+  const primaries = schools.filter((school) => school.phase === "primary").map(describeSchool);
+  const others = schools.filter((school) => school.phase !== "primary").map(describeSchool);
+  let text = schoolsText(guide.name, [...primaries, ...others]);
+  // The excerpt shown to the reply writer is capped; drop the furthest primary rather than cut a name in half.
+  if (text.length > MAX_SCHOOLS_TEXT_LENGTH) {
+    text = schoolsText(guide.name, [...primaries.slice(0, -1), ...others]);
+  }
+  return [{
+    id: `schools:${guide.slug}`,
+    title: `Schools near ${guide.name}`,
+    sectionTitle: `Nearest state-funded schools to ${guide.name}`,
+    href: `/area-guides/${guide.slug}`,
+    text,
+    aliases: [
+      `${guide.name} schools`,
+      `schools in ${guide.name}`,
+      `schools near ${guide.name}`,
+      `${guide.name} primary school`,
+      `${guide.name} secondary school`,
+      `${guide.name} catchment`,
+    ],
+  }];
+});
+
 export const APPROVED_BANC_DOCUMENTS: readonly ApprovedBancDocument[] = [
   ...APPROVED_PAGES.flatMap(buildPageDocuments),
   AREAS_COVERED_DOCUMENT,
+  ...AREA_SCHOOLS_DOCUMENTS,
   ...AREA_GUIDE_DOCUMENTS,
 ];

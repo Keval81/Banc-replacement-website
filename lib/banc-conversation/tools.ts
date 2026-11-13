@@ -130,6 +130,13 @@ function clonePropertyCard(property: PropertyCardData): PropertyCardData {
   };
 }
 
+/**
+ * Shown when nothing Banc has published answers the question. It used to end
+ * on "What would you like help with?", which left the visitor with nowhere to go.
+ */
+export const KNOWLEDGE_NOT_COVERED_COPY =
+  "That isn't something Banc's website covers, so I won't guess. The Banc team will know, and the form below reaches them. I can also help you find a home, check a listing's details or start a valuation.";
+
 function clonePropertyFacts(value: PropertyFacts): PropertyFacts {
   return {
     id: value.id,
@@ -149,6 +156,7 @@ function clonePropertyFacts(value: PropertyFacts): PropertyFacts {
     features: [...value.features],
     ...(value.keyFeatures === undefined ? {} : { keyFeatures: [...value.keyFeatures] }),
     ...(value.epcCertificate === undefined ? {} : { epcCertificate: value.epcCertificate }),
+    ...(value.nearbySchools === undefined ? {} : { nearbySchools: [...value.nearbySchools] }),
     summary: value.summary,
   };
 }

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
+import { describeNearestSchools } from "./local-schools.ts";
 import { POSTGRES_SIGNED_INTEGER_MAX } from "./property-search/query.ts";
 import type { DbProperty } from "./supabase.ts";
 
@@ -24,6 +25,11 @@ export interface PropertyFacts {
   keyFeatures?: string[];
   /** True when the listing page shows an EPC certificate, whether or not a rating is stored. */
   epcCertificate?: boolean;
+  /**
+   * Nearest state-funded schools by straight-line distance, from the
+   * Department for Education register: "Name (phase, 0.8 miles)".
+   */
+  nearbySchools?: string[];
   summary: string;
 }
 
@@ -52,6 +58,7 @@ export const propertyFactsSchema = z
     keyFeatures: z.array(z.string().trim().min(1).max(160)).max(MAX_KEY_FEATURES).optional(),
     /** True when the listing page shows an EPC certificate, whether or not a rating is stored. */
     epcCertificate: z.boolean().optional(),
+    nearbySchools: z.array(z.string().trim().min(1).max(160)).max(8).optional(),
     summary: z.string().trim().min(1).max(2_000),
   })
   .strict();
@@ -93,6 +100,10 @@ export function mapPropertyFacts(row: DbProperty): PropertyFacts {
     throw new Error("Property facts require a public property reference");
   }
 
+  const nearbySchools = typeof row.latitude === "number" && typeof row.longitude === "number"
+    ? describeNearestSchools(row.latitude, row.longitude)
+    : [];
+
   return propertyFactsSchema.parse({
     id: expertAgentId,
     title: row.title,
@@ -119,6 +130,7 @@ export function mapPropertyFacts(row: DbProperty): PropertyFacts {
       .filter((feature) => feature.length > 0)
       .slice(0, MAX_KEY_FEATURES),
     epcCertificate: typeof row.epc_image_url === "string" && row.epc_image_url.trim().length > 0,
+    ...(nearbySchools.length === 0 ? {} : { nearbySchools }),
     summary: firstParagraph(row.description),
   });
 }

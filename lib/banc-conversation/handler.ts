@@ -17,6 +17,7 @@ import type {
 } from "./openai.ts";
 import type { PropertyPortfolio } from "./portfolio.ts";
 import {
+  KNOWLEDGE_NOT_COVERED_COPY,
   sanitizeOperationResult,
   type TrustedOperationResult,
 } from "./tools.ts";
@@ -31,6 +32,10 @@ const UNSAFE_RESPONSE_TEXT = /\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([
 
 export const INTERPRETATION_CLARIFICATION =
   "Happy to help. Are you looking to buy, rent, sell or get a valuation, or is there a particular property you'd like to ask about?";
+/** "What schools are nearby?" with no area and no home open: ask where, not "buy or rent?". */
+export const SCHOOLS_AREA_CLARIFICATION =
+  "Happy to help with schools. Which area would you like them for: Cuffley, Potters Bar, Cheshunt, Northaw, Brookmans Park, Goffs Oak, Newgate Street Village, Enfield or Essendon? If you open a home on the site and ask me there, I can give the schools nearest to it.";
+const SCHOOLS_QUESTION = /\bschools?\b|\bcatchment\b/i;
 export const MODEL_TIMEOUT_COPY =
   "The conversation took too long to complete. Please try again.";
 export const MODEL_UNAVAILABLE_COPY =
@@ -250,7 +255,7 @@ function knowledgeFallbackCopy(
 ): string {
   const excerpt = result.sources[0]?.excerpt.trim();
   if (excerpt === undefined) {
-    return "I couldn't find approved Banc guidance for that question. What would you like help with?";
+    return KNOWLEDGE_NOT_COVERED_COPY;
   }
 
   const candidate = `Banc guidance says: ${excerpt}`;
@@ -537,9 +542,11 @@ export function createBancConversationHandler({
     }
     if (primary.status === "clarification_required") {
       return parseOrFallback({
-        response: selectedPlan.primary.type === "clarify"
-          ? INTERPRETATION_CLARIFICATION
-          : primary.question,
+        response: selectedPlan.primary.type !== "clarify"
+          ? primary.question
+          : SCHOOLS_QUESTION.test(request.message)
+          ? SCHOOLS_AREA_CLARIFICATION
+          : INTERPRETATION_CLARIFICATION,
         action: "clarify",
         context: primary.state,
       }, trustedInitialState);

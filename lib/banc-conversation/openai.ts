@@ -10,7 +10,7 @@ import {
   BANC_RESPONSE_INSTRUCTIONS,
 } from "./prompt.ts";
 import { verifyGroundedResponse } from "./grounding.ts";
-import type { SanitizedOperationResult } from "./tools.ts";
+import { KNOWLEDGE_NOT_COVERED_COPY, type SanitizedOperationResult } from "./tools.ts";
 import {
   SEARCH_FEATURES,
   SEARCH_PROPERTY_TYPES,
@@ -581,6 +581,13 @@ function sanitizeFacts(facts: readonly PropertyFacts[]): PropertyFacts[] {
     features: fact.features
       .slice(0, 16)
       .map((feature) => boundedText(feature, 64)),
+    ...(fact.keyFeatures === undefined
+      ? {}
+      : { keyFeatures: fact.keyFeatures.slice(0, 12).map((feature) => boundedText(feature, 160)) }),
+    ...(fact.epcCertificate === undefined ? {} : { epcCertificate: fact.epcCertificate }),
+    ...(fact.nearbySchools === undefined
+      ? {}
+      : { nearbySchools: fact.nearbySchools.slice(0, 8).map((school) => boundedText(school, 160)) }),
     summary: boundedText(fact.summary, MAX_RESULT_SUMMARY_CHARACTERS),
   }));
 }
@@ -904,7 +911,7 @@ function responseCandidatesForResult(result: SanitizedOperationResult): string[]
     case "knowledge": {
       const source = result.sources[0];
       if (source === undefined) {
-        return ["I couldn't find approved Banc guidance for that question. What would you like help with?"];
+        return [KNOWLEDGE_NOT_COVERED_COPY];
       }
       return [
         `Banc guidance says: ${source.excerpt}`,
@@ -1029,6 +1036,9 @@ function describeTrustedResult(
           sqft: fact.sqft,
           status: fact.status,
           features: fact.features,
+          ...(fact.keyFeatures === undefined ? {} : { keyFeatures: fact.keyFeatures }),
+          ...(fact.epcCertificate === undefined ? {} : { epcCertificate: fact.epcCertificate }),
+          ...(fact.nearbySchools === undefined ? {} : { nearbySchools: fact.nearbySchools }),
           summary: fact.summary,
         })),
       };

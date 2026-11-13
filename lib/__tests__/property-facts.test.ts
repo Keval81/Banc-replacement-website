@@ -54,8 +54,9 @@ function dbProperty(
 }
 
 test("maps a canonical property row to sanitized property facts only", () => {
-  const facts = mapPropertyFacts(dbProperty());
+  const { nearbySchools, ...facts } = mapPropertyFacts(dbProperty());
 
+  assert.equal(nearbySchools?.length, 5);
   assert.deepEqual(facts, {
     id: "EA-1",
     title: "Three Bedroom House",
