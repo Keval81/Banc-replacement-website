@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { CMP_CERTIFICATE_URL } from "@/lib/banc-contact";
-import { Instagram, Youtube, Facebook, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { BANC_CONTACT, LIFE_MAGAZINE_URL } from "@/lib/banc-contact";
 
 const footerLinks = {
@@ -46,6 +46,12 @@ const footerLinks = {
   ],
 };
 
+const socialLinks = [
+  { label: "Facebook", href: "https://www.facebook.com/BANCpropertygroup", iconSrc: "/icons/social/facebook.svg", width: 30, height: 30 },
+  { label: "Instagram", href: "https://instagram.com/bancproperty", iconSrc: "/icons/social/instagram.svg", width: 30, height: 30 },
+  { label: "YouTube", href: "https://www.youtube.com/channel/UCuNRAhFmoSsDzyL6sFpOGtQ", iconSrc: "/icons/social/youtube.svg", width: 38, height: 27 },
+] as const;
+
 export default function Footer() {
 
   return (
@@ -86,34 +92,26 @@ export default function Footer() {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center gap-4 mt-6">
-              <a
-                href="https://www.facebook.com/BANCpropertygroup"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href="https://instagram.com/bancproperty"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.youtube.com/channel/UCuNRAhFmoSsDzyL6sFpOGtQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-banc-sky transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-                aria-label="YouTube"
-              >
-                <Youtube className="h-5 w-5" />
-              </a>
+            <div className="mt-6 flex items-center gap-2">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-md transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep motion-reduce:transition-none"
+                >
+                  <Image
+                    src={social.iconSrc}
+                    alt=""
+                    width={social.width}
+                    height={social.height}
+                    style={{ width: social.width, height: social.height }}
+                    aria-hidden="true"
+                  />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -244,24 +242,28 @@ export default function Footer() {
               ))}
             </div>
           </div>
-          <div className="mt-6 flex justify-center md:justify-start">
-            <a
-              href="https://digitalinroads.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Made in partnership with Digital Inroads"
-              className="inline-flex flex-col items-center gap-2 rounded-sm sm:flex-row text-[11px] uppercase tracking-[0.1em] text-banc-grey opacity-85 transition-opacity hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
-            >
-              <span>Made in partnership with</span>
-              <Image
-                src="/digital-inroads-logo.svg"
-                alt="Digital Inroads"
-                width={128}
-                height={24}
-                className="h-6 w-auto opacity-90"
-              />
-            </a>
-          </div>
+        </div>
+      </div>
+
+      {/* Digital Inroads credit: its own strip so the mark is not lost among the legal links */}
+      <div className="border-t border-white/10">
+        <div className="mx-auto flex max-w-7xl justify-center px-4 py-8 sm:px-6 lg:px-8">
+          <a
+            href="https://digitalinroads.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Made in partnership with Digital Inroads"
+            className="inline-flex flex-col items-center gap-3 rounded-sm text-[11px] uppercase tracking-[0.18em] text-white/60 transition-colors hover:text-white sm:flex-row sm:gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 focus-visible:ring-offset-banc-dark-deep"
+          >
+            <span>Made in partnership with</span>
+            <Image
+              src="/digital-inroads-logo.svg"
+              alt="Digital Inroads"
+              width={192}
+              height={36}
+              className="h-9 w-auto"
+            />
+          </a>
         </div>
       </div>
     </footer>

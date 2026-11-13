@@ -514,3 +514,11 @@ button, a, input, select, textarea, [role="button"], [role="link"] {
     background-image: var(--hero-poster-mobile);
   }
 }
+
+/* Films on this site are ambient: they loop silently or show their still.
+   iOS draws a play button over a film it refused to autoplay (Low Power Mode);
+   nothing here is meant to be started by hand. */
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}

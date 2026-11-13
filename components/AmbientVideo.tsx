@@ -30,6 +30,7 @@ export function AmbientVideo({
 }: AmbientVideoProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [inView, setInView] = useState(false);
+  const [started, setStarted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -67,7 +68,10 @@ export function AmbientVideo({
       {playing && (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
+          // Invisible until it really plays: iOS Low Power Mode refuses autoplay
+          // and would otherwise paint its own play button over the still.
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${started ? "opacity-100" : "opacity-0"}`}
+          onPlaying={() => setStarted(true)}
           width={film.width}
           height={film.height}
           poster={film.poster}
