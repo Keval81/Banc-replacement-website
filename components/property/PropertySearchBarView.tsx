@@ -30,6 +30,8 @@ export interface PropertySearchBarProps {
   onViewModeChange?: (mode: ViewMode) => void;
   className?: string;
   showMapButton?: boolean;
+  /** "dark" drops the card so the bar sits straight on a dark section. */
+  tone?: "light" | "dark";
 }
 
 function countFilters(filters: PropertySearchFilters): number {
@@ -50,7 +52,8 @@ function ViewModeToggle({ mode, onChange, showMapButton }: { mode: ViewMode; onC
   return <div className="flex items-center gap-1 rounded-xl border border-banc-line bg-banc-grey-pale p-1" role="group" aria-label="Results view">{options.map((option) => { const Icon = option.icon; return <button key={option.value} type="button" onClick={() => onChange(option.value)} aria-label={`${option.label} view`} aria-pressed={mode === option.value} className={cn("flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus", mode === option.value ? "bg-white text-banc-focus shadow-sm" : "text-banc-muted-readable hover:text-banc-dark-deep")}><Icon className="h-4 w-4" /><span className="hidden sm:inline">{option.label}</span></button>; })}</div>;
 }
 
-export default function PropertySearchBar({ department, filters, onFilterChange, onClearFilters, onSearch, hasActiveFilters, isLoading = false, resultCount, viewMode = "grid", onViewModeChange, className, showMapButton = true }: PropertySearchBarProps) {
+export default function PropertySearchBar({ department, filters, onFilterChange, onClearFilters, onSearch, hasActiveFilters, isLoading = false, resultCount, viewMode = "grid", onViewModeChange, className, showMapButton = true, tone = "light" }: PropertySearchBarProps) {
+  const dark = tone === "dark";
   const [mobileFiltersOpen, setMobileFiltersOpen] = React.useState(false);
   const [showAdvancedDesktop, setShowAdvancedDesktop] = React.useState(false);
   const [locationInput, setLocationInput] = React.useState(filters.location ?? "");
@@ -77,39 +80,39 @@ export default function PropertySearchBar({ department, filters, onFilterChange,
   return (
     <>
       <div className={cn("min-w-0 overflow-hidden", className)}>
-        <div className="overflow-hidden rounded-2xl border border-banc-line bg-white shadow-sm">
-          <form onSubmit={(event) => { event.preventDefault(); commitLocationAndSearch(); }} className="p-4 lg:p-6">
-            <div className="flex min-w-0 flex-col gap-4 lg:flex-row">
+        <div className={cn(!dark && "overflow-hidden rounded-2xl border border-banc-line bg-white shadow-sm")}>
+          <form onSubmit={(event) => { event.preventDefault(); commitLocationAndSearch(); }} className={cn(!dark && "p-4 lg:p-6")}>
+            <div className="flex min-w-0 flex-col gap-3 lg:flex-row lg:gap-4">
               <div className="relative min-w-0 flex-1">
                 <label htmlFor="property-location" className="sr-only">Area, town or postcode</label>
                 <MapPin className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
-                <Input id="property-location" type="text" placeholder="Search by area, town or postcode…" value={locationInput} onChange={(event) => { locationInputRef.current = event.target.value; setLocationInput(event.target.value); }} className="h-12 bg-banc-grey-pale pl-12 pr-12 text-base placeholder:text-banc-muted-readable focus:bg-white focus:border-banc-focus focus:ring-banc-focus focus-visible:ring-banc-focus" />
+                <Input id="property-location" type="text" placeholder="Area, town or postcode" value={locationInput} onChange={(event) => { locationInputRef.current = event.target.value; setLocationInput(event.target.value); }} className={cn("h-12 pl-12 pr-12 text-base placeholder:text-banc-muted-readable focus:bg-white focus:border-banc-focus focus:ring-banc-focus focus-visible:ring-banc-focus", dark ? "border-white bg-white text-banc-dark-deep" : "bg-banc-grey-pale")} />
                 {locationInput && <button type="button" onClick={() => { locationInputRef.current = ""; setLocationInput(""); onFilterChange({ location: undefined }); }} aria-label="Clear location" className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full transition-colors duration-200 hover:bg-banc-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"><X className="h-4 w-4 text-banc-muted-readable" /></button>}
               </div>
               {/* Radius next to the postcode, not inside Filters — Nitesh, 7 Sep:
                   "people may not click on it". Needs a centre, so it wakes up
                   once there is something in the location box. */}
-              <div className="min-w-0 lg:w-56">
+              <div className="flex min-w-0 gap-3 lg:w-56">
                 <label htmlFor="property-radius" className="sr-only">Search radius</label>
                 <select
                   id="property-radius"
                   value={filters.radius ?? ""}
                   disabled={!locationInput.trim()}
                   onChange={(event) => onFilterChange({ radius: event.target.value === "" ? undefined : (Number(event.target.value) as PropertySearchFilters["radius"]) })}
-                  className="h-12 w-full appearance-none rounded-[var(--radius-md)] border border-banc-line bg-banc-grey-pale px-4 pr-10 text-base text-banc-dark-deep focus:border-banc-focus focus:bg-white focus:outline-none focus:ring-2 focus:ring-banc-focus disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+                  className={cn("h-12 w-full min-w-0 flex-1 appearance-none rounded-[var(--radius-md)] border px-4 pr-10 text-base focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm", dark ? "border-white/30 bg-transparent text-white focus:border-white focus:ring-[var(--banc-focus-dark)] [&>option]:text-banc-dark-deep" : "border-banc-line bg-banc-grey-pale text-banc-dark-deep focus:border-banc-focus focus:bg-white focus:ring-banc-focus")}
                   aria-label="Search radius"
                 >
                   {RADIUS_OPTIONS.map((option) => <option key={String(option.value)} value={option.value}>{option.label}</option>)}
                 </select>
+                <MobileFilterButton onClick={() => setMobileFiltersOpen(true)} activeFilterCount={countFilters(filters)} className={cn("h-12 shrink-0 lg:hidden", dark && "border-white/30 bg-transparent text-white hover:border-white hover:text-white")} />
               </div>
               <div className="flex min-w-0 flex-wrap items-center gap-3">
-                <MobileFilterButton onClick={() => setMobileFiltersOpen(true)} activeFilterCount={countFilters(filters)} className="lg:hidden" />
-                <button type="button" onClick={() => setShowAdvancedDesktop((open) => !open)} aria-expanded={showAdvancedDesktop} className={cn("hidden min-h-11 items-center gap-2 rounded-[var(--radius-md)] border px-4 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 lg:inline-flex", showAdvancedDesktop || hasActiveFilters ? "border-banc-focus/30 bg-banc-sky/10 text-banc-focus" : "border-banc-line bg-white text-banc-muted-readable hover:border-banc-focus hover:text-banc-focus")}><SlidersHorizontal className="h-4 w-4" />Filters{countFilters(filters) > 0 && <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-banc-focus px-1.5 text-xs font-semibold text-white">{countFilters(filters)}</span>}</button>
-                <Button type="submit" disabled={isLoading} aria-busy={isLoading} className="h-12 min-w-28 bg-banc-focus px-5 font-semibold text-white transition-colors duration-200 hover:bg-banc-focus-hover focus-visible:ring-banc-focus disabled:cursor-not-allowed disabled:opacity-70">{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Searching…</> : <><Search className="mr-2 h-4 w-4" />Search</>}</Button>
+                <button type="button" onClick={() => setShowAdvancedDesktop((open) => !open)} aria-expanded={showAdvancedDesktop} className={cn("hidden min-h-11 items-center gap-2 rounded-[var(--radius-md)] border px-4 text-sm font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 lg:inline-flex", dark ? "h-12 border-white/30 bg-transparent text-white hover:border-white" : showAdvancedDesktop || hasActiveFilters ? "border-banc-focus/30 bg-banc-sky/10 text-banc-focus" : "border-banc-line bg-white text-banc-muted-readable hover:border-banc-focus hover:text-banc-focus")}><SlidersHorizontal className="h-4 w-4" />Filters{countFilters(filters) > 0 && <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-banc-focus px-1.5 text-xs font-semibold text-white">{countFilters(filters)}</span>}</button>
+                <Button type="submit" disabled={isLoading} aria-busy={isLoading} className={cn("h-12 w-full min-w-28 px-5 font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-70 lg:w-auto", dark ? "bg-[var(--banc-focus-dark)] text-banc-dark-deep hover:bg-white focus-visible:ring-[var(--banc-focus-dark)] focus-visible:ring-offset-banc-dark-deep" : "bg-banc-focus text-white hover:bg-banc-focus-hover focus-visible:ring-banc-focus")}>{isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Searching…</> : <><Search className="mr-2 h-4 w-4" />Search</>}</Button>
               </div>
             </div>
           </form>
-          <div className="min-w-0 border-t border-banc-line px-4 pb-4 pt-4 lg:px-6 lg:pb-6"><div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center"><QuickFilters filters={filters} onFilterChange={onFilterChange} />{onViewModeChange && <div className="hidden shrink-0 lg:block"><ViewModeToggle mode={viewMode} onChange={onViewModeChange} showMapButton={showMapButton} /></div>}</div></div>
+          {!dark && <div className="min-w-0 border-t border-banc-line px-4 pb-4 pt-4 lg:px-6 lg:pb-6"><div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center"><QuickFilters filters={filters} onFilterChange={onFilterChange} />{onViewModeChange && <div className="hidden shrink-0 lg:block"><ViewModeToggle mode={viewMode} onChange={onViewModeChange} showMapButton={showMapButton} /></div>}</div></div>}
         </div>
 
         <AnimatePresence>{(hasActiveFilters || resultCount !== undefined) && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="mt-4"><ActiveFilters department={department} filters={filters} onFilterChange={onFilterChange} onClearAll={onClearFilters} resultCount={resultCount} isLoading={isLoading} /></motion.div>}</AnimatePresence>
