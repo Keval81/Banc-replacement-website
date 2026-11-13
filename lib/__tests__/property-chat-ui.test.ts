@@ -12,6 +12,22 @@ test("renders trusted source links with Next Link and the validated relative hre
   assert.match(chatbotSource, /chatLinks\.sources\.map/);
   assert.match(chatbotSource, /chatLinks\.listings\.map/);
   assert.match(chatbotSource, /View \{listing\.title\}/);
+});
+
+test("a home opens inside the panel, with a way back to the chat and to the site", () => {
+  assert.match(chatbotSource, /<ChatPropertyView/);
+  assert.match(chatbotSource, /viewHome\(property, property\.title, property\)/);
+  assert.match(chatbotSource, /viewHome\(target, listing\.title\)/);
+  assert.match(chatbotSource, /Back to site/);
+  assert.match(chatbotSource, /addEventListener\("popstate", stepBack\)/);
+  const viewSource = readFileSync(
+    new URL("../../components/ai/ChatPropertyView.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(viewSource, /Back to chat/);
+  assert.match(viewSource, /Ask Banc Bot about this home/);
+  assert.match(viewSource, /Full listing/);
+  assert.match(viewSource, /snap-x snap-mandatory/);
   assert.match(
     chatbotSource,
     /<Link[\s\S]*?key=\{source\.href\}[\s\S]*?href=\{source\.href\}/,

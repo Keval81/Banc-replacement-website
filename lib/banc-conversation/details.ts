@@ -1,5 +1,6 @@
 import { areaGuides } from "../area-guides.ts";
 import { LOCAL_SCHOOL_AREAS, nearestSchools } from "../local-schools.ts";
+import { readableLabel } from "../readable-label.ts";
 import type { ConversationDetails } from "./contracts.ts";
 import type { TrustedOperationResult } from "./tools.ts";
 
@@ -9,23 +10,6 @@ const OVERVIEW_QUESTION =
   /\bfeatures?\b|\btell me (?:more |a bit more )?about\b|\bmore (?:details?|info(?:rmation)?)\b|\bdescribe\b|\bwhat (?:makes|does) (?:it|this)\b|\bwhat is it like\b/i;
 const SCHOOL_TEXT = /^(.+) \((primary|secondary|all-through), (\d+\.\d) miles\)$/;
 const AREA_SCHOOLS_DOCUMENT = /^schools:([a-z0-9-]+)$/;
-
-const SMALL_WORDS = new Set(["a", "and", "for", "in", "of", "on", "the", "to", "with"]);
-const ACRONYMS = new Set(["WC", "EPC", "UPVC", "EV", "CCTV", "NHBC", "UK", "M25", "A10", "A1"]);
-
-/** Listings are often typed in capitals; rows read better in title case. Mixed-case text is left alone. */
-function readable(label: string): string {
-  if (/[a-z]/.test(label)) return label;
-  return label
-    .split(" ")
-    .map((word, index) => {
-      if (ACRONYMS.has(word)) return word;
-      const lower = word.toLowerCase();
-      if (index > 0 && SMALL_WORDS.has(lower)) return lower;
-      return lower.replace(/(^|-)([a-z])/g, (_match, lead: string, letter: string) => lead + letter.toUpperCase());
-    })
-    .join(" ");
-}
 
 function capitalised(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
@@ -59,7 +43,7 @@ export function detailsFor(
       if (OVERVIEW_QUESTION.test(message) && (fact.keyFeatures?.length ?? 0) >= 2) {
         return {
           title: "Key features",
-          items: fact.keyFeatures!.slice(0, MAX_ITEMS).map((label) => ({ label: readable(label) })),
+          items: fact.keyFeatures!.slice(0, MAX_ITEMS).map((label) => ({ label: readableLabel(label) })),
         };
       }
     }

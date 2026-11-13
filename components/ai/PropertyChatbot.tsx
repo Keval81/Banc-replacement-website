@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowUp, Check, MessageCircle, RotateCcw, X, Phone } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUp, Check, MessageCircle, RotateCcw, X, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -24,7 +24,14 @@ import {
   savePropertyChatSession,
   type PropertyChatSession,
 } from "@/lib/property-chat-session";
-import { buildPropertyHref } from "@/lib/property-view";
+import { ChatPropertyView } from "@/components/ai/ChatPropertyView";
+import {
+  listingFromHref,
+  parsePropertyPeek,
+  peekFromCard,
+  type PropertyPeek,
+} from "@/lib/property-chat-peek";
+import { buildPropertyHref, type PropertyCardData } from "@/lib/property-view";
 import { getSafePropertyImageUrl } from "@/lib/property-detail-view";
 import {
   MODAL_FOCUSABLE_SELECTOR,
@@ -103,6 +110,15 @@ function highestMessageIndex(messages: readonly PropertyChatMessage[]): number {
   }, 0);
 }
 
+/** A home being looked at inside the panel. `property` is null until its details arrive. */
+interface OpenHome {
+  id: string;
+  department: "sales" | "lettings";
+  title: string;
+  property: PropertyPeek | null;
+  failed: boolean;
+}
+
 interface PropertyChatbotProps {
   mobileContactControlPlacement?: MobileContactControlPlacement;
   showProactivePrompt?: boolean;
@@ -149,6 +165,7 @@ export default function PropertyChatbot({
       },
     );
   const [isLoading, setIsLoading] = useState(false);
+  const [openHome, setOpenHome] = useState<OpenHome | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [promptDismissed, setPromptDismissed] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -168,13 +185,106 @@ export default function PropertyChatbot({
   const clearsStickyActions = launcherClearance === "clears-sticky-actions";
   const quickReplies = getPropertyChatQuickReplies(conversationContext);
 
+  // On a phone the panel is the whole screen, so the phone's own back
+  // gesture has to step out of it (home view, then panel) instead of leaving
+  // the page. Each step in is recorded as a history entry to step back over.
+  const backStepsRef = useRef(0);
+  const ignoredPopsRef = useRef(0);
+  const openHomeRef = useRef(false);
+  const recordBackStep = useCallback(() => {
+    if (!window.matchMedia("(pointer: coarse)").matches) return;
+    window.history.pushState({ ...window.history.state, bancBotStep: true }, "");
+    backStepsRef.current += 1;
+  }, []);
+
   const openChat = useCallback(() => {
     setShowPrompt(false);
     setPromptDismissed(true);
     rememberInviteSeen();
     setIsOpen(true);
+    recordBackStep();
+  }, [recordBackStep]);
+
+  /** Back to the site, from wherever in the panel the visitor is. */
+  const closeChat = useCallback(() => {
+    const steps = backStepsRef.current;
+    backStepsRef.current = 0;
+    openHomeRef.current = false;
+    setOpenHome(null);
+    setIsOpen(false);
+    if (steps > 0) {
+      ignoredPopsRef.current += 1;
+      window.history.go(-steps);
+    }
   }, []);
-  const closeChat = useCallback(() => setIsOpen(false), []);
+
+  /** Following a link out of the panel: the new page takes over the history. */
+  const leaveChat = useCallback(() => {
+    backStepsRef.current = 0;
+    openHomeRef.current = false;
+    setOpenHome(null);
+    setIsOpen(false);
+  }, []);
+
+  const closeHome = useCallback(() => {
+    openHomeRef.current = false;
+    setOpenHome(null);
+    if (backStepsRef.current > 1) {
+      backStepsRef.current -= 1;
+      ignoredPopsRef.current += 1;
+      window.history.back();
+    }
+  }, []);
+
+  const viewHome = useCallback(
+    (listing: { id: string; department: "sales" | "lettings" }, title: string, card?: PropertyCardData) => {
+      openHomeRef.current = true;
+      setOpenHome({
+        ...listing,
+        title,
+        property: card === undefined ? null : peekFromCard(card),
+        failed: false,
+      });
+      recordBackStep();
+      reportPropertyOpened(listing.id);
+      void (async () => {
+        let property: PropertyPeek | null = null;
+        try {
+          const response = await fetch(`/api/properties/${encodeURIComponent(listing.id)}`);
+          property = response.ok ? parsePropertyPeek(await response.json()) : null;
+        } catch {
+          property = null;
+        }
+        setOpenHome((current) => {
+          if (current === null || current.id !== listing.id) return current;
+          // The card's photos and summary stay if the fuller record cannot be fetched.
+          if (property === null) return { ...current, failed: current.property === null };
+          return { ...current, property };
+        });
+      })();
+    },
+    [recordBackStep],
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const stepBack = () => {
+      if (ignoredPopsRef.current > 0) {
+        ignoredPopsRef.current -= 1;
+        return;
+      }
+      if (backStepsRef.current === 0) return;
+      backStepsRef.current -= 1;
+      if (openHomeRef.current) {
+        openHomeRef.current = false;
+        setOpenHome(null);
+      } else {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("popstate", stepBack);
+    return () => window.removeEventListener("popstate", stepBack);
+  }, [isOpen]);
 
   // A new reply is read from its first line, so the view goes to the top of
   // it. The visitor's own message and the typing dots keep the view at the end.
@@ -270,6 +380,21 @@ export default function PropertyChatbot({
     box.style.height = "auto";
     box.style.height = `${Math.min(box.scrollHeight, MAX_INPUT_HEIGHT_PX)}px`;
   }, []);
+
+  const askAboutOpenHome = useCallback(() => {
+    if (openHome === null) return;
+    setConversationContext((current) => focusStateOnPageProperty(current, openHome.id));
+    closeHome();
+    if (!window.matchMedia("(pointer: coarse)").matches) {
+      window.requestAnimationFrame(() => inputRef.current?.focus());
+    }
+  }, [closeHome, openHome]);
+
+  const fullListingHref = (property: { department: "sales" | "lettings"; id: string }) =>
+    `${buildPropertyHref(
+      property.department,
+      property.id,
+    )}?from=bot`;
 
   const hasConversation = messages.length > 1;
   const startNewConversation = useCallback(() => {
@@ -459,7 +584,10 @@ export default function PropertyChatbot({
                   >
                     Banc Bot
                   </p>
-                  <p className="text-xs text-white/60">Property help, powered by AI</p>
+                  <p className="text-xs text-white/60">
+                    <span className="sm:hidden">Powered by AI</span>
+                    <span className="hidden sm:inline">Property help, powered by AI</span>
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
@@ -478,14 +606,30 @@ export default function PropertyChatbot({
                 <button
                   type="button"
                   onClick={closeChat}
-                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white/70 transition-colors duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky"
-                  aria-label="Close chat"
+                  className="flex h-11 cursor-pointer items-center justify-center gap-1.5 rounded-full bg-white/10 px-3.5 text-[13px] font-medium text-white transition-colors duration-200 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky sm:w-11 sm:bg-transparent sm:px-0 sm:text-white/70 sm:hover:bg-white/10 sm:hover:text-white"
+                  aria-label="Close chat and go back to the site"
                 >
-                  <X className="h-5 w-5" aria-hidden="true" />
+                  <ArrowLeft className="h-4 w-4 sm:hidden" aria-hidden="true" />
+                  <span className="sm:hidden">Back to site</span>
+                  <X className="hidden h-5 w-5 sm:block" aria-hidden="true" />
                 </button>
               </div>
             </div>
 
+            {openHome !== null ? (
+              <ChatPropertyView
+                key={openHome.id}
+                title={openHome.title}
+                property={openHome.property}
+                failed={openHome.failed}
+                fullListingHref={fullListingHref(openHome)}
+                viewingHref={`/book-viewing/${encodeURIComponent(openHome.id)}?from=bot`}
+                onBack={closeHome}
+                onAsk={askAboutOpenHome}
+                onLeaveChat={leaveChat}
+              />
+            ) : (
+            <>
             {/* Messages */}
             <div
               role="log"
@@ -559,19 +703,13 @@ export default function PropertyChatbot({
                             property.images?.[0] ?? "",
                           );
                           return (
-                            <Link
+                            <button
                               key={property.id}
-                              href={`${buildPropertyHref(
-                                property.department,
-                                property.id,
-                              )}?from=bot`}
-                              onClick={() => {
-                                reportPropertyOpened(property.id);
-                                closeChat();
-                              }}
-                              className="group w-[72%] flex-shrink-0 snap-start overflow-hidden rounded-2xl border border-banc-grey/15 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus sm:w-[15rem]"
+                              type="button"
+                              onClick={() => viewHome(property, property.title, property)}
+                              className="group w-[72%] flex-shrink-0 cursor-pointer snap-start overflow-hidden rounded-2xl border border-banc-grey/15 bg-white text-left shadow-[0_1px_2px_rgba(0,0,0,0.05)] transition-shadow duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.12)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus sm:w-[15rem]"
                             >
-                              <div className="aspect-[16/10] w-full overflow-hidden bg-banc-grey/20">
+                              <span className="block aspect-[16/10] w-full overflow-hidden bg-banc-grey/20">
                                 {imageUrl && (
                                   <Image
                                     src={imageUrl}
@@ -582,23 +720,26 @@ export default function PropertyChatbot({
                                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
                                   />
                                 )}
-                              </div>
-                              <div className="px-3.5 pb-3 pt-2.5">
-                                <p className="text-base font-semibold leading-tight text-banc-dark">
+                              </span>
+                              <span className="block px-3.5 pb-3 pt-2.5">
+                                <span className="block text-base font-semibold leading-tight text-banc-dark">
                                   {property.price}
-                                </p>
-                                <p className="mt-1 line-clamp-2 text-sm leading-snug text-banc-dark">
+                                </span>
+                                <span className="mt-1 line-clamp-2 text-sm leading-snug text-banc-dark">
                                   {property.title}
-                                </p>
-                                <p className="mt-1.5 flex items-center justify-between text-xs text-banc-muted-readable">
-                                  <span>{property.stats.beds} bed</span>
+                                </span>
+                                <span className="mt-1.5 flex items-center justify-between text-xs text-banc-muted-readable">
+                                  <span>
+                                    {property.stats.beds} bed
+                                    {property.images.length > 1 ? ` · ${property.images.length} photos` : ""}
+                                  </span>
                                   <span className="flex items-center gap-1 font-medium text-banc-focus">
                                     View
                                     <ArrowRight className="h-3 w-3" aria-hidden="true" />
                                   </span>
-                                </p>
-                              </div>
-                            </Link>
+                                </span>
+                              </span>
+                            </button>
                           );
                         })}
                       </div>
@@ -606,28 +747,36 @@ export default function PropertyChatbot({
 
                     {hasActions && (
                       <div className="flex w-full max-w-[88%] flex-col gap-2">
+                        {/* Looking comes before booking: the home opens here, in the panel */}
+                        {chatLinks.listings.map((listing) => {
+                          const target = listingFromHref(listing.href);
+                          return target === null ? null : (
+                            <button
+                              key={listing.href}
+                              type="button"
+                              onClick={() => viewHome(target, listing.title)}
+                              className={`${actionLink} w-full bg-banc-focus text-left text-white hover:bg-banc-focus-hover`}
+                            >
+                              <span>View {listing.title}</span>
+                              <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                            </button>
+                          );
+                        })}
+
                         {messageView.form && (
                           <Link
                             href={messageView.form.href}
-                            onClick={closeChat}
-                            className={`${actionLink} bg-banc-focus text-white hover:bg-banc-focus-hover`}
+                            onClick={leaveChat}
+                            className={`${actionLink} ${
+                              chatLinks.listings.length > 0
+                                ? "border border-banc-focus/30 bg-white text-banc-focus hover:bg-banc-grey-pale hover:text-banc-focus-hover"
+                                : "bg-banc-focus text-white hover:bg-banc-focus-hover"
+                            }`}
                           >
                             {messageView.form.title}
                             <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
                           </Link>
                         )}
-
-                        {chatLinks.listings.map((listing) => (
-                          <Link
-                            key={listing.href}
-                            href={listing.href}
-                            onClick={closeChat}
-                            className={`${actionLink} border border-banc-focus/30 bg-white text-banc-focus hover:bg-banc-grey-pale hover:text-banc-focus-hover`}
-                          >
-                            <span>View {listing.title}</span>
-                            <ArrowRight className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                          </Link>
-                        ))}
 
                         {chatLinks.sources.length > 0 && (
                           <div className="rounded-xl border border-banc-grey/10 bg-white px-2 py-1.5">
@@ -638,7 +787,7 @@ export default function PropertyChatbot({
                               <Link
                                 key={source.href}
                                 href={source.href}
-                                onClick={closeChat}
+                                onClick={leaveChat}
                                 className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-sm font-medium text-banc-focus underline-offset-2 transition-colors duration-200 hover:bg-banc-grey-pale hover:text-banc-focus-hover hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
                               >
                                 {source.title}
@@ -746,6 +895,8 @@ export default function PropertyChatbot({
                 <ArrowUp className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
+            </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
