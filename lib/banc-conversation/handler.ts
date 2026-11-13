@@ -22,6 +22,7 @@ import {
 } from "./tools.ts";
 
 const TURN_BUDGET_MS = 20_000;
+const AREA_GUIDE_ID_PREFIX = "area-guide:";
 const MAX_TRUSTED_OPERATIONS = 2;
 const MAX_PROVIDER_CALLS = 3;
 const CHEAPER_REFINEMENT = /^\s*(?:make|show|find)?\s*(?:it|them)?\s*cheaper[.!?]*\s*$/i;
@@ -495,6 +496,26 @@ export function createBancConversationHandler({
       }
       results.push(operation.value);
       state = operation.value.state;
+    }
+
+    // An area guide describes one place. For a question about a particular
+    // home, a neighbouring village's guide reads as if it were about that
+    // home ("Cuffley benefits from..." quoting Newgate Street), so only a
+    // guide for the home's own area is kept.
+    const answeredHome = results[0];
+    if (answeredHome?.status === "property_facts") {
+      const places = answeredHome.facts.map((fact) => `${fact.title} ${fact.address}`.toLowerCase());
+      for (const [index, result] of results.entries()) {
+        if (result.status !== "knowledge") continue;
+        results[index] = {
+          ...result,
+          sources: result.sources.filter((source) => {
+            if (!source.documentId.startsWith(AREA_GUIDE_ID_PREFIX)) return true;
+            const area = source.title.replace(/\s+area guide$/i, "").trim().toLowerCase();
+            return area.length > 0 && places.some((place) => place.includes(area));
+          }),
+        };
+      }
     }
 
     // A search or a property answer that also asked something the approved

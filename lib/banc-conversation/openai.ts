@@ -805,6 +805,13 @@ function zeroResultRelaxation(result: SanitizedPropertySearchResult): string {
   return "broaden one requirement";
 }
 
+const STATUS_PHRASE: Record<PropertyFacts["status"], string> = {
+  for_sale: "currently for sale",
+  under_offer: "under offer",
+  to_let: "currently to let",
+  let_agreed: "let agreed",
+};
+
 function propertyFactsSentence(fact: PropertyFacts): string {
   const bedrooms = `${fact.bedrooms} ${fact.bedrooms === 1 ? "bedroom" : "bedrooms"}`;
   const bathrooms = `${fact.bathrooms} ${fact.bathrooms === 1 ? "bathroom" : "bathrooms"}`;
@@ -884,7 +891,11 @@ function responseCandidatesForResult(result: SanitizedOperationResult): string[]
       }
       const summary = propertyFactsSentence(fact);
       const detail = propertyDetailSentence(fact) ?? summary;
+      // First choice when the model's own wording is rejected. It has to read
+      // as an answer to whatever was asked, so it states what is certain and
+      // hands the rest to the team, rather than volunteering one feature.
       return [
+        `${fact.title} is ${STATUS_PHRASE[fact.status]} at ${fact.priceDisplay}, with ${fact.bedrooms} ${fact.bedrooms === 1 ? "bedroom" : "bedrooms"} and ${fact.bathrooms} ${fact.bathrooms === 1 ? "bathroom" : "bathrooms"}. For anything the listing doesn't state, the Banc team can help.`,
         detail,
         `Here’s what I can verify: ${summary}`,
         `${summary} Would you like any other verified details?`,

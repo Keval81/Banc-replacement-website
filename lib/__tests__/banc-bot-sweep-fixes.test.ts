@@ -10,6 +10,7 @@ import {
   INTERPRETATION_CLARIFICATION,
 } from "../banc-conversation/handler.ts";
 import { createBancKnowledgeSearch } from "../banc-conversation/knowledge.ts";
+import { createOpenAIConversationModel } from "../banc-conversation/openai.ts";
 import {
   BANC_INTENT_INSTRUCTIONS,
   BANC_RESPONSE_INSTRUCTIONS,
@@ -291,4 +292,94 @@ test("an offer to find out more may name the fact without that counting as a cla
     false,
     "an offer-shaped sentence cannot assert a feature",
   );
+});
+
+function modelSaying(text: string) {
+  return createOpenAIConversationModel({
+    apiKey: "test-key",
+    model: "gpt-test",
+    fetch: (async () => Response.json({
+      id: "resp_test",
+      object: "response",
+      status: "completed",
+      output: [{
+        id: "msg_test",
+        type: "message",
+        status: "completed",
+        role: "assistant",
+        content: [{ type: "output_text", text: JSON.stringify({ response: text }), annotations: [] }],
+      }],
+    })) as typeof fetch,
+  });
+}
+
+test("when the model's wording is rejected, the stand-in still answers like an agent would", async () => {
+  const result = await modelSaying("It has a swimming pool and a cinema room.").writeResponse(
+    {
+      message: "What is the EPC rating?",
+      history: [],
+      state: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1", topic: "property_detail" },
+      results: home(),
+    },
+    new AbortController().signal,
+  );
+  assert.equal(result.status, "ok");
+  if (result.status !== "ok") return;
+  assert.doesNotMatch(result.response, /features a garden/);
+  assert.match(result.response, /Brookside Crescent, Cuffley/);
+  assert.match(result.response, /for sale/);
+  assert.match(result.response, /£895,000/);
+  assert.match(result.response, /Banc team/);
+});
+
+function factsThenGuides(guides: Array<{ documentId: string; title: string }>) {
+  const state = { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1", topic: "property_detail" as const };
+  const seen: number[] = [];
+  const titles: string[][] = [];
+  const handler = createBancConversationHandler({
+    model: {
+      selectPlan: async () => ({
+        status: "ok",
+        providerCalls: 1,
+        plan: {
+          primary: { type: "get_property_facts", propertyIds: ["EA-1"] },
+          supporting: { type: "search_banc_knowledge", query: "schools" },
+        },
+      }),
+      writeResponse: async (input) => {
+        seen.push(input.results.length);
+        titles.push(input.results.flatMap((r) => r.status === "knowledge" ? r.sources.map((s) => s.title) : []));
+        return { status: "ok", providerCalls: 1, response: "The listing does not mention schools." };
+      },
+    },
+    tools: {
+      execute: async ({ intent }) => intent.type === "search_banc_knowledge"
+        ? {
+            status: "knowledge",
+            state: { ...state, topic: "banc_knowledge" },
+            sources: guides.map((guide) => ({ ...guide, href: "/area-guides/x", excerpt: "A popular primary school." })),
+          }
+        : { status: "property_facts", state, facts: (home()[0] as unknown as { facts: never[] }).facts },
+    },
+    logger: () => undefined,
+  });
+  return { handler, seen, titles };
+}
+
+test("a neighbouring area's guide is not used to answer about a home somewhere else", async () => {
+  const elsewhere = factsThenGuides([
+    { documentId: "area-guide:newgate-street-village", title: "Newgate Street Village area guide" },
+    { documentId: "area-guide:northaw", title: "Northaw area guide" },
+  ]);
+  const response = await elsewhere.handler({ message: "Which schools are nearby?", history: [], context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1", topic: "property_detail" } });
+  assert.deepEqual(elsewhere.seen, [1], "only the home's own facts reach the writer");
+  assert.equal(response.sources, undefined);
+
+  const mixed = factsThenGuides([
+    { documentId: "area-guide:northaw", title: "Northaw area guide" },
+    { documentId: "area-guide:cuffley", title: "Cuffley area guide" },
+    { documentId: "sales:buyers-guide:costs", title: "Buyers Guide" },
+  ]);
+  await mixed.handler({ message: "Which schools are nearby?", history: [], context: { resultPropertyIds: ["EA-1"], focusedPropertyId: "EA-1", topic: "property_detail" } });
+  assert.deepEqual(mixed.titles, [["Cuffley area guide", "Buyers Guide"]]);
 });
