@@ -132,6 +132,14 @@ const NOT_STATED_PATTERN =
 const POSITIVE_ASSERTION_PATTERN =
   /\b(?:has|have|having|features?|includes?|offers?|boasts?|benefits?|comes?\s+with|there\s+(?:is|are)|(?:is|are)\s+(?:shown|available|included|provided))\b/i;
 
+/**
+ * "If you'd like the EPC details, the Banc team can help" offers a next step;
+ * it says nothing about the home. One rejected closing line used to throw
+ * away an otherwise correct answer.
+ */
+const OFFER_PATTERN =
+  /^(?:if you|should you|for (?:more|further|full|specific|details)|please|to (?:find out|check|confirm|discuss))\b|\bthe banc team (?:can|could|will|would)\b|\bform below\b/i;
+
 interface TrustedEntity {
   /** Lower-cased names that identify this entity inside a sentence. */
   names: string[];
@@ -450,7 +458,8 @@ export function verifyGroundedResponse(
       return { ok: false, reason: "percent" };
     }
     const isQuestion = sentence.includes("?");
-    const sentenceOnlySaysNotStated = NOT_STATED_PATTERN.test(sentence) &&
+    const sentenceOnlySaysNotStated =
+      (NOT_STATED_PATTERN.test(sentence) || OFFER_PATTERN.test(sentence.trim())) &&
       !POSITIVE_ASSERTION_PATTERN.test(sentence);
 
     for (const clause of scopedClauses(sentence, context)) {

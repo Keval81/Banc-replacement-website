@@ -277,3 +277,18 @@ test("office answers may use the word office, and a phone request is steered to 
   );
   assert.match(BANC_RESPONSE_INSTRUCTIONS, /phone number or email[^.]*Contact/i);
 });
+
+test("an offer to find out more may name the fact without that counting as a claim", () => {
+  for (const text of [
+    "Brookside Crescent, Cuffley is currently available for sale. The EPC rating isn't listed for this property. If you would like more details or need to discuss EPC information, the Banc team can assist you using the contact form below.",
+    "The council tax band isn't listed. The Banc team can confirm the EPC rating and nearby schools if you use the form below.",
+    "For details on the EPC or the chain, please use the contact form below.",
+  ]) {
+    assert.deepEqual(verifyGroundedResponse(text, home()), { ok: true }, text);
+  }
+  assert.equal(
+    verifyGroundedResponse("If you like, Brookside Crescent, Cuffley has a swimming pool and a cinema.", home()).ok,
+    false,
+    "an offer-shaped sentence cannot assert a feature",
+  );
+});
