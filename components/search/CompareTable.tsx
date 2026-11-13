@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { actionPrimary, actionSecondary } from "@/components/ui/form-styles";
 import { 
   Bed, 
   Bath, 
@@ -28,12 +28,10 @@ export default function CompareTable({ className }: CompareTableProps) {
 
   if (comparedProperties.length === 0) {
     return (
-      <div className="text-center py-16">
-        <p className="text-banc-muted-readable mb-4">No properties selected for comparison</p>
-        <Link href="/search">
-          <Button className="bg-banc-focus hover:bg-banc-focus-hover">
-            Browse Properties
-          </Button>
+      <div className="p-5 sm:p-6">
+        <p className="mb-4 text-banc-muted-readable">No properties selected for comparison</p>
+        <Link href="/search" className={actionPrimary}>
+          Browse Properties
         </Link>
       </div>
     );
@@ -62,18 +60,18 @@ export default function CompareTable({ className }: CompareTableProps) {
                 <div className="relative">
                   <button
                     onClick={() => removeFromComparison(property.id)}
-                    className="absolute -top-2 -right-2 p-1.5 bg-banc-grey-pale hover:bg-banc-grey/20 rounded-full z-10"
+                    className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] bg-white text-banc-dark-deep transition-colors duration-200 hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus"
                   >
                     <X className="w-4 h-4" />
                   </button>
-                  <div className="aspect-[4/3] rounded-xl overflow-hidden mb-3">
+                  <div className="aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] mb-3">
                     <img
                       src={property.images[0]}
                       alt={property.title}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h3 className="font-semibold text-left line-clamp-1">
+                  <h3 className="text-left font-semibold text-banc-dark-deep line-clamp-1">
                     {property.title}
                   </h3>
                   <p className="text-sm text-banc-muted-readable text-left line-clamp-1">
@@ -86,11 +84,11 @@ export default function CompareTable({ className }: CompareTableProps) {
         </thead>
         <tbody>
           {/* Price Row */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable">Price</td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
-                <span className="text-xl font-bold text-banc-focus">
+                <span className="font-display text-2xl font-light tracking-[-0.02em] text-banc-dark-deep">
                   {property.price}
                 </span>
               </td>
@@ -98,7 +96,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Price per sqft (calculated) */}
-          <tr className="border-t bg-banc-grey-pale/50">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable">Price/sqft</td>
             {comparedProperties.map((property) => {
               const priceNum = parseInt(property.price.replace(/[^\d]/g, ""));
@@ -114,7 +112,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Property Type */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable">
               <span className="flex items-center gap-2">
                 <Home className="w-4 h-4" />
@@ -130,7 +128,7 @@ export default function CompareTable({ className }: CompareTableProps) {
 
           {/* Stats */}
           {features.map(({ icon: Icon, label, key }) => (
-            <tr key={key} className="border-t">
+            <tr key={key} className="border-t border-banc-dark/15">
               <td className="p-4 text-sm font-medium text-banc-muted-readable">
                 <span className="flex items-center gap-2">
                   <Icon className="w-4 h-4" />
@@ -143,10 +141,10 @@ export default function CompareTable({ className }: CompareTableProps) {
                   <td key={property.id} className="p-4">
                     <span className={cn(
                       "flex items-center gap-1",
-                      isBest && "text-banc-focus font-medium"
+                      isBest && "font-semibold text-banc-dark-deep"
                     )}>
                       {property.stats[key]}
-                      {isBest && <Check className="w-4 h-4" />}
+                      {isBest && <Check className="h-4 w-4 text-green-700" />}
                     </span>
                   </td>
                 );
@@ -155,7 +153,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           ))}
 
           {/* Tenure */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable">
               <span className="flex items-center gap-2">
                 <Tag className="w-4 h-4" />
@@ -170,7 +168,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Date Added */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable">
               <span className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -189,7 +187,7 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Tags */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4 text-sm font-medium text-banc-muted-readable align-top">Features</td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
@@ -197,7 +195,7 @@ export default function CompareTable({ className }: CompareTableProps) {
                   {property.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 text-xs bg-banc-grey-pale rounded-full"
+                      className="rounded-[var(--radius-sm)] border border-banc-line px-2 py-0.5 text-xs text-banc-dark-deep"
                     >
                       {tag}
                     </span>
@@ -208,14 +206,12 @@ export default function CompareTable({ className }: CompareTableProps) {
           </tr>
 
           {/* Actions */}
-          <tr className="border-t">
+          <tr className="border-t border-banc-dark/15">
             <td className="p-4"></td>
             {comparedProperties.map((property) => (
               <td key={property.id} className="p-4">
-                <Link href={`/sales/properties/${property.id}`}>
-                  <Button className="w-full bg-banc-focus hover:bg-banc-focus-hover">
-                    View Property
-                  </Button>
+                <Link href={`/sales/properties/${property.id}`} className={cn(actionSecondary, "sm:w-full")}>
+                  View Property
                 </Link>
               </td>
             ))}
@@ -224,18 +220,13 @@ export default function CompareTable({ className }: CompareTableProps) {
       </table>
 
       {/* Contact About All */}
-      <div className="mt-8 text-center">
-        <p className="text-banc-muted-readable mb-4">
+      <div className="sticky left-0 border-t border-banc-dark/15 p-4 sm:p-6">
+        <p className="mb-4 text-banc-muted-readable">
           Interested in these properties? Contact us about all {comparedProperties.length} properties
         </p>
-        <Link href="/contact">
-          <Button
-            variant="outline"
-            className="border-banc-sky text-banc-focus hover:bg-banc-sky hover:text-white"
-          >
-            <MapPin className="w-4 h-4 mr-2" />
-            Contact About These
-          </Button>
+        <Link href="/contact" className={actionSecondary}>
+          <MapPin className="h-4 w-4" />
+          Contact About These
         </Link>
       </div>
     </div>

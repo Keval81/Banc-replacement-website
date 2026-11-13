@@ -4,7 +4,16 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimaryOnDark,
+  actionSecondaryOnDark,
+  eyebrow,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { ArrowRight, Home, Users, FileText, Calculator, MapPin } from "lucide-react";
 import Link from "next/link";
 import { PropertySearchBarView } from "@/components/property";
@@ -18,6 +27,9 @@ import {
   hasActivePropertyFilters,
 } from "@/lib/property-search/query";
 import type { PropertySearchFilters } from "@/lib/property-search/types";
+
+const serviceCard =
+  "block rounded-[var(--radius-md)] border border-banc-line bg-white p-5 transition-colors duration-200 hover:border-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 lg:p-6";
 
 export default function SalesPageClient() {
   const router = useRouter();
@@ -48,48 +60,28 @@ export default function SalesPageClient() {
   return (
     <div className="bg-white text-banc-dark">
       <Header />
-      
-      {/* Hero - Mobile Optimized */}
-      <section className="relative bg-banc-dark-deep py-12 lg:py-24">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
-        </div>
-        <div className="mx-auto max-w-7xl px-4 lg:px-10">
-          <div className="max-w-3xl">
-            <p className="mb-2 text-xs uppercase tracking-[0.2em] text-banc-sky lg:mb-3 lg:text-sm">Property Sales</p>
-            <h1 className="text-2xl font-semibold text-white sm:text-3xl lg:text-5xl">
-              Selling Your Property
-            </h1>
-            <p className="mt-3 text-sm leading-relaxed text-white/70 lg:mt-4 lg:text-lg">
-              Achieve the best price for your home with our premium marketing, 
-              expert valuations, and dedicated sales team.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3 lg:mt-6">
-              <Link href="/valuation">
-                <Button className="bg-banc-focus px-5 py-5 text-sm text-white hover:bg-banc-focus-hover active:bg-banc-sky-dark lg:px-6 lg:py-6 lg:text-base">
-                  Request Valuation
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/sales/properties">
-                <Button variant="outline" className="bg-transparent border-white/30 px-5 py-5 text-sm text-white hover:bg-white/10 active:bg-white/10 lg:px-6 lg:py-6 lg:text-base">
-                  View Properties
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Property Search Section - Using New Professional Component */}
-      <section className="relative z-10 -mt-8 px-6 lg:px-10">
-        <div className="mx-auto max-w-7xl">
+      <PageBand
+        eyebrow="Property Sales"
+        title="Selling Your Property"
+        lede="Achieve the best price for your home with our premium marketing, expert valuations, and dedicated sales team."
+        image={{
+          src: "https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80",
+          alt: "",
+          priority: true,
+        }}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link href="/valuation" className={actionPrimaryOnDark}>
+            Request Valuation
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <Link href="/sales/properties" className={actionSecondaryOnDark}>
+            View Properties
+          </Link>
+        </div>
+
+        <div className="mt-8 border-t border-white/15 pt-6">
           <PropertySearchBarView
             department="sales"
             filters={filters}
@@ -99,100 +91,90 @@ export default function SalesPageClient() {
             hasActiveFilters={hasActiveFilters}
             isLoading={false}
             showMapButton={false}
+            tone="dark"
+            className="overflow-visible"
           />
         </div>
-      </section>
+      </PageBand>
 
-      {/* Services Grid - Mobile Optimized */}
-      <section className="py-10 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 lg:px-10">
+      {/* Services */}
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            <Link href="/sales/properties" className="group">
-              <div className="rounded-2xl border border-banc-line p-5 transition-all active:bg-banc-grey-pale lg:p-8 lg:hover:border-banc-sky lg:hover:shadow-lg">
-                <Home className="h-7 w-7 text-banc-focus lg:h-10 lg:w-10" />
-                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Our Properties</h3>
-                <p className="mt-1 text-sm text-banc-muted-readable lg:mt-2">
-                  Browse our portfolio of premium properties for sale.
-                </p>
-                <span className="mt-3 inline-flex items-center text-sm text-banc-focus lg:mt-4">
-                  View Properties <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
-                </span>
-              </div>
+            <Link href="/sales/properties" className={serviceCard}>
+              <Home className="h-6 w-6 text-banc-focus" aria-hidden="true" />
+              <h3 className="mt-4 text-lg font-semibold text-banc-dark-deep">Our Properties</h3>
+              <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                Browse our portfolio of premium properties for sale.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-banc-focus">
+                View Properties <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
 
-            <Link href="/sales/buyers-guide" className="group">
-              <div className="rounded-2xl border border-banc-line p-5 transition-all active:bg-banc-grey-pale lg:p-8 lg:hover:border-banc-sky lg:hover:shadow-lg">
-                <Users className="h-7 w-7 text-banc-focus lg:h-10 lg:w-10" />
-                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Buyers Guide</h3>
-                <p className="mt-1 text-sm text-banc-muted-readable lg:mt-2">
-                  Everything you need to know about buying a property.
-                </p>
-                <span className="mt-3 inline-flex items-center text-sm text-banc-focus lg:mt-4">
-                  Read Guide <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
-                </span>
-              </div>
+            <Link href="/sales/buyers-guide" className={serviceCard}>
+              <Users className="h-6 w-6 text-banc-focus" aria-hidden="true" />
+              <h3 className="mt-4 text-lg font-semibold text-banc-dark-deep">Buyers Guide</h3>
+              <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                Everything you need to know about buying a property.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-banc-focus">
+                Read Guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
 
-            <Link href="/sales/sellers-guide" className="group">
-              <div className="rounded-2xl border border-banc-line p-5 transition-all active:bg-banc-grey-pale lg:p-8 lg:hover:border-banc-sky lg:hover:shadow-lg">
-                <FileText className="h-7 w-7 text-banc-focus lg:h-10 lg:w-10" />
-                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Sellers Guide</h3>
-                <p className="mt-1 text-sm text-banc-muted-readable lg:mt-2">
-                  Expert advice on preparing and selling your home.
-                </p>
-                <span className="mt-3 inline-flex items-center text-sm text-banc-focus lg:mt-4">
-                  Read Guide <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
-                </span>
-              </div>
+            <Link href="/sales/sellers-guide" className={serviceCard}>
+              <FileText className="h-6 w-6 text-banc-focus" aria-hidden="true" />
+              <h3 className="mt-4 text-lg font-semibold text-banc-dark-deep">Sellers Guide</h3>
+              <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                Expert advice on preparing and selling your home.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-banc-focus">
+                Read Guide <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
 
-            <Link href="/tools/stamp-duty" className="group">
-              <div className="rounded-2xl border border-banc-line p-5 transition-all active:bg-banc-grey-pale lg:p-8 lg:hover:border-banc-sky lg:hover:shadow-lg">
-                <Calculator className="h-7 w-7 text-banc-focus lg:h-10 lg:w-10" />
-                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Stamp Duty</h3>
-                <p className="mt-1 text-sm text-banc-muted-readable lg:mt-2">
-                  Work out the stamp duty on your next purchase.
-                </p>
-                <span className="mt-3 inline-flex items-center text-sm text-banc-focus lg:mt-4">
-                  Calculate <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
-                </span>
-              </div>
+            <Link href="/tools/stamp-duty" className={serviceCard}>
+              <Calculator className="h-6 w-6 text-banc-focus" aria-hidden="true" />
+              <h3 className="mt-4 text-lg font-semibold text-banc-dark-deep">Stamp Duty</h3>
+              <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                Work out the stamp duty on your next purchase.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-banc-focus">
+                Calculate <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
 
-            <Link href="/area-guides" className="group sm:col-span-2 lg:col-span-1">
-              <div className="rounded-2xl border border-banc-line p-5 transition-all active:bg-banc-grey-pale lg:p-8 lg:hover:border-banc-sky lg:hover:shadow-lg">
-                <MapPin className="h-7 w-7 text-banc-focus lg:h-10 lg:w-10" />
-                <h3 className="mt-3 text-base font-semibold lg:mt-4 lg:text-xl">Area Guides</h3>
-                <p className="mt-1 text-sm text-banc-muted-readable lg:mt-2">
-                  Learn more about the local areas where we operate.
-                </p>
-                <span className="mt-3 inline-flex items-center text-sm text-banc-focus lg:mt-4">
-                  Explore Areas <ArrowRight className="ml-1 h-4 w-4 transition-transform group-active:translate-x-1 lg:group-hover:translate-x-1" />
-                </span>
-              </div>
+            <Link href="/area-guides" className={cn(serviceCard, "sm:col-span-2 lg:col-span-1")}>
+              <MapPin className="h-6 w-6 text-banc-focus" aria-hidden="true" />
+              <h3 className="mt-4 text-lg font-semibold text-banc-dark-deep">Area Guides</h3>
+              <p className="mt-1 text-sm leading-relaxed text-banc-muted-readable">
+                Learn more about the local areas where we operate.
+              </p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-banc-focus">
+                Explore Areas <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </span>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Why Choose Us */}
-      <section className="bg-banc-grey-pale py-10 lg:py-20">
-        <div className="mx-auto max-w-7xl px-4 lg:px-10">
-          <div className="mb-6 text-center lg:mb-12">
-            <p className="text-xs uppercase tracking-[0.2em] text-banc-focus lg:text-sm">Why Banc</p>
-            <h2 className="mt-2 text-xl font-semibold lg:mt-3 lg:text-4xl">The Banc Sales Advantage</h2>
-          </div>
-          
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+      <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrow}>Why Banc</p>
+          <h2 className={cn(sectionHeading, "mt-3")}>The Banc Sales Advantage</h2>
+
+          <div className="mt-7 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { title: "Local Expertise", desc: "Deep knowledge of Cuffley, Mayfair and surrounding areas" },
               { title: "Premium Marketing", desc: "Professional photography, video tours, and targeted advertising" },
               { title: "Qualified Buyers", desc: "Access to our database of pre-qualified, serious buyers" },
               { title: "Dedicated Support", desc: "Personal agent from valuation through to completion" },
             ].map((item) => (
-              <div key={item.title} className="rounded-xl bg-white p-4 text-center lg:p-6">
-                <h3 className="text-sm font-semibold lg:text-base">{item.title}</h3>
-                <p className="mt-1 text-xs text-banc-muted-readable lg:mt-2 lg:text-sm">{item.desc}</p>
+              <div key={item.title} className="border-t border-banc-dark/15 py-5">
+                <h3 className="text-base font-semibold text-banc-dark-deep">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-banc-muted-readable">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -200,19 +182,15 @@ export default function SalesPageClient() {
       </section>
 
       {/* CTA */}
-      <section className="bg-banc-sky py-10 lg:py-16">
-        <div className="mx-auto max-w-7xl px-4 text-center lg:px-10">
-          <h2 className="text-xl font-semibold text-banc-dark-deep lg:text-4xl">
-            Ready to sell your property?
-          </h2>
-          <p className="mt-2 text-sm text-banc-dark-deep/90 lg:mt-3 lg:text-lg">
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <h2 className={sectionHeadingOnDark}>Ready to sell your property?</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
             Get a free, no-obligation valuation from our expert team.
           </p>
-          <Link href="/valuation">
-            <Button className="mt-5 bg-white px-6 py-5 text-sm text-banc-focus hover:bg-white/90 active:bg-white/90 lg:mt-6 lg:px-8 lg:py-6 lg:text-base">
-              Book Your Valuation
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+          <Link href="/valuation" className={cn(actionPrimaryOnDark, "mt-7")}>
+            Book Your Valuation
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
       </section>

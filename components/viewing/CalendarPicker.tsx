@@ -110,13 +110,16 @@ export default function CalendarPicker({
     calendarDays.push(day);
   }
 
+  const monthButton =
+    "inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-banc-grey-pale focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus";
+
   return (
-    <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-banc-line bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-banc-line">
+      <div className="flex items-center justify-between border-b border-banc-line px-2 py-2">
         <button
           onClick={handlePrevMonth}
-          className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
+          className={monthButton}
           aria-label="Previous month"
         >
           <ChevronLeft className="w-5 h-5 text-banc-muted-readable" />
@@ -126,7 +129,7 @@ export default function CalendarPicker({
         </h3>
         <button
           onClick={handleNextMonth}
-          className="p-1 rounded-lg hover:bg-banc-grey-pale transition-colors"
+          className={monthButton}
           aria-label="Next month"
         >
           <ChevronRight className="w-5 h-5 text-banc-muted-readable" />
@@ -138,7 +141,7 @@ export default function CalendarPicker({
         {dayNames.map((day) => (
           <div
             key={day}
-            className="py-2 text-center text-xs font-medium text-banc-muted-readable uppercase"
+            className="grid place-items-center py-2 text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable"
           >
             {day}
           </div>
@@ -146,10 +149,10 @@ export default function CalendarPicker({
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-0">
+      <div className="grid grid-cols-7 gap-1 p-1">
         {calendarDays.map((day, index) => {
           if (day === null) {
-            return <div key={`empty-${index}`} className="aspect-square" />;
+            return <div key={`empty-${index}`} className="min-h-11 sm:h-14" />;
           }
 
           const date = new Date(
@@ -167,12 +170,13 @@ export default function CalendarPicker({
               onClick={() => handleDateClick(day)}
               disabled={disabled}
               className={`
-                aspect-square flex items-center justify-center text-sm
-                transition-colors relative
+                relative flex min-h-11 items-center justify-center rounded-md text-sm
+                transition-colors sm:h-14
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2
                 ${disabled ? "text-banc-line cursor-not-allowed" : ""}
                 ${
                   selected
-                    ? "bg-banc-focus text-white font-medium"
+                    ? "bg-banc-focus text-white font-semibold"
                     : !disabled
                     ? "hover:bg-banc-grey-pale text-banc-dark-deep"
                     : ""
@@ -182,7 +186,7 @@ export default function CalendarPicker({
               {day}
               {/* Available indicator dot */}
               {!disabled && available && !selected && (
-                <span className="absolute bottom-1 w-1 h-1 bg-banc-sky rounded-full" />
+                <span className="absolute bottom-1 w-1 h-1 bg-banc-focus rounded-full" />
               )}
             </button>
           );

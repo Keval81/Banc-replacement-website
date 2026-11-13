@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { User, Mail, Phone, MessageSquare, Check } from "lucide-react";
 import { ViewingBookingRequest } from "@/types/portal";
+import { actionPrimary, fieldControl, fieldError, fieldLabel, fieldTextarea, formPanel } from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 
 interface BookingFormProps {
   propertyId: string;
@@ -91,9 +93,11 @@ export default function BookingForm({
 
   const isComplete = selectedDate && selectedTime;
 
+  const leadingIcon = "pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable";
+
   return (
-    <div className="bg-white rounded-xl border border-banc-line overflow-hidden">
-      <div className="px-5 py-4 border-b border-banc-line">
+    <div className={formPanel}>
+      <div className="mb-6 border-b border-banc-dark/15 pb-5">
         <h3 className="font-heading font-semibold text-banc-dark-deep">
           Your Details
         </h3>
@@ -104,14 +108,14 @@ export default function BookingForm({
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="p-5 space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-banc-dark-deep mb-1.5">
-            Full Name <span className="text-red-500">*</span>
+          <label className={fieldLabel}>
+            Full Name <span className="text-red-700">*</span>
           </label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
+            <User className={leadingIcon} />
             <input
               type="text"
               name="name"
@@ -119,26 +123,21 @@ export default function BookingForm({
               onChange={handleChange}
               disabled={!isComplete || isSubmitting}
               placeholder="Enter your full name"
-              className={`
-                w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-                disabled:bg-banc-grey-pale disabled:cursor-not-allowed
-                ${errors.name ? "border-red-500" : "border-banc-line"}
-              `}
+              className={cn(fieldControl, "pl-11", errors.name && "border-red-700")}
             />
           </div>
           {errors.name && (
-            <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+            <p className={fieldError}>{errors.name}</p>
           )}
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-banc-dark-deep mb-1.5">
-            Email Address <span className="text-red-500">*</span>
+          <label className={fieldLabel}>
+            Email Address <span className="text-red-700">*</span>
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
+            <Mail className={leadingIcon} />
             <input
               type="email"
               name="email"
@@ -146,26 +145,21 @@ export default function BookingForm({
               onChange={handleChange}
               disabled={!isComplete || isSubmitting}
               placeholder="your@email.com"
-              className={`
-                w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-                disabled:bg-banc-grey-pale disabled:cursor-not-allowed
-                ${errors.email ? "border-red-500" : "border-banc-line"}
-              `}
+              className={cn(fieldControl, "pl-11", errors.email && "border-red-700")}
             />
           </div>
           {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            <p className={fieldError}>{errors.email}</p>
           )}
         </div>
 
         {/* Phone */}
         <div>
-          <label className="block text-sm font-medium text-banc-dark-deep mb-1.5">
-            Phone Number <span className="text-red-500">*</span>
+          <label className={fieldLabel}>
+            Phone Number <span className="text-red-700">*</span>
           </label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
+            <Phone className={leadingIcon} />
             <input
               type="tel"
               name="phone"
@@ -173,26 +167,21 @@ export default function BookingForm({
               onChange={handleChange}
               disabled={!isComplete || isSubmitting}
               placeholder="+44 123 456 7890"
-              className={`
-                w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white
-                focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-                disabled:bg-banc-grey-pale disabled:cursor-not-allowed
-                ${errors.phone ? "border-red-500" : "border-banc-line"}
-              `}
+              className={cn(fieldControl, "pl-11", errors.phone && "border-red-700")}
             />
           </div>
           {errors.phone && (
-            <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+            <p className={fieldError}>{errors.phone}</p>
           )}
         </div>
 
         {/* Special Requests */}
         <div>
-          <label className="block text-sm font-medium text-banc-dark-deep mb-1.5">
+          <label className={fieldLabel}>
             Special Requests (Optional)
           </label>
           <div className="relative">
-            <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-banc-muted-readable" />
+            <MessageSquare className="pointer-events-none absolute left-3.5 top-3.5 h-5 w-5 text-banc-muted-readable" />
             <textarea
               name="specialRequests"
               value={formData.specialRequests}
@@ -200,18 +189,14 @@ export default function BookingForm({
               disabled={!isComplete || isSubmitting}
               placeholder="Any special requirements or questions..."
               rows={3}
-              className="
-                w-full pl-10 pr-4 py-2.5 rounded-lg border border-banc-line bg-white
-                focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-                disabled:bg-banc-grey-pale disabled:cursor-not-allowed resize-none
-              "
+              className={cn(fieldControl, fieldTextarea, "h-auto resize-none pl-11")}
             />
           </div>
         </div>
 
         {/* Terms */}
         <div>
-          <label className="flex items-start gap-3 cursor-pointer">
+          <label className="flex min-h-11 cursor-pointer items-start gap-3">
             <input
               type="checkbox"
               checked={acceptedTerms}
@@ -222,24 +207,24 @@ export default function BookingForm({
                 }
               }}
               disabled={!isComplete || isSubmitting}
-              className="mt-1 w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
+              className="mt-0.5 h-5 w-5 shrink-0 rounded border-banc-line accent-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
             />
             <span className="text-sm text-banc-muted-readable">
               I agree to Banc Property Group&apos;s{" "}
-              <a href="/privacy" className="text-banc-focus hover:underline">
+              <a href="/privacy" className="text-banc-focus underline underline-offset-2">
                 Privacy Policy
               </a>{" "}
               and consent to being contacted regarding this viewing request.
             </span>
           </label>
           {errors.terms && (
-            <p className="mt-1 text-sm text-red-500">{errors.terms}</p>
+            <p className={fieldError}>{errors.terms}</p>
           )}
         </div>
 
         {/* Selected Date/Time Summary */}
         {isComplete && (
-          <div className="p-4 bg-banc-grey-pale rounded-lg">
+          <div className="border-t border-banc-dark/15 pt-5">
             <p className="text-sm text-banc-muted-readable">Selected Viewing:</p>
             <p className="font-medium text-banc-dark-deep">
               {selectedDate.toLocaleDateString("en-GB", {
@@ -256,15 +241,7 @@ export default function BookingForm({
         <button
           type="submit"
           disabled={!isComplete || isSubmitting}
-          className={`
-            w-full py-3 px-4 rounded-lg font-medium transition-all
-            flex items-center justify-center gap-2
-            ${
-              isComplete && !isSubmitting
-                ? "bg-banc-focus text-white hover:bg-banc-sky-dark"
-                : "bg-banc-line text-white cursor-not-allowed"
-            }
-          `}
+          className={actionPrimary}
         >
           {isSubmitting ? (
             <>
@@ -280,7 +257,7 @@ export default function BookingForm({
         </button>
 
         {!isComplete && (
-          <p className="text-center text-sm text-banc-muted-readable">
+          <p className="text-sm text-banc-muted-readable">
             Please select a date and time to continue
           </p>
         )}

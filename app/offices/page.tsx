@@ -2,22 +2,23 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
-  ArrowRight,
-  Building2,
-  Crown,
-  Navigation,
-  Users,
-  ExternalLink
-} from "lucide-react";
+import { PageBand } from "@/components/PageBand";
+import { ArrowRight, Phone } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { BANC_CONTACT, BANC_MAYFAIR_CONTACT } from "@/lib/banc-contact";
+import { cn } from "@/lib/utils";
+import {
+  actionPrimary,
+  actionPrimaryOnDark,
+  actionSecondary,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
 
 export const metadata: Metadata = withPageDefaults("/offices", {
   title: "Our Offices | Banc Property Group",
@@ -40,7 +41,6 @@ const offices = [
     features: ["Free Parking", "Near Station", "4 Team Members"],
     image: "https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=800&q=80",
     link: "/offices/cuffley",
-    icon: Building2
   },
   {
     id: "mayfair",
@@ -54,221 +54,137 @@ const offices = [
     features: ["Prime Location", "Private Consultations", "Global Network"],
     image: "https://images.unsplash.com/photo-1739545886530-bc03557aca61?auto=format&fit=crop&w=800&q=80",
     link: "/offices/mayfair",
-    icon: Crown
   }
 ];
+
+const CUFFLEY_AREAS = ["Cuffley", "Goffs Oak", "Brookmans Park", "Northaw", "Potters Bar", "Cheshunt", "Enfield", "Barnet", "Hertford"];
+const MAYFAIR_AREAS = ["Mayfair", "Belgravia", "Knightsbridge", "Kensington", "Chelsea", "Marylebone", "St James's", "Westminster"];
+
+const detailRow = "flex min-h-12 items-center justify-between gap-6 border-b border-banc-dark/15 py-2";
+const detailValue = "text-right text-sm text-banc-dark-deep";
+const detailLink = cn(
+  detailValue,
+  "inline-flex min-h-11 items-center underline-offset-4 transition-colors hover:text-banc-focus hover:underline",
+);
 
 export default function OfficesPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
-        </div>
-        {/* Background decorations */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-        </div>
-        
-        {/* Grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }}
-        />
-        
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Building2 className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">Visit Us</span>
-            </div>
-            
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
-              Our Offices
-            </h1>
-            <p className="mt-6 text-xl text-white/70 leading-relaxed">
-              Visit us at one of our two locations. Whether you&apos;re in Hertfordshire or Central London, 
-              our experienced team is ready to help with all your property needs.
-            </p>
-          </div>
-        </div>
-      </section>
+
+      <PageBand
+        eyebrow="Visit Us"
+        title="Our Offices"
+        lede={
+          <>
+            Visit us at one of our two locations. Whether you&apos;re in Hertfordshire or Central London,
+            our experienced team is ready to help with all your property needs.
+          </>
+        }
+        image={{
+          src: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1920&q=80",
+          alt: "",
+          priority: true,
+        }}
+      />
 
       {/* Offices Grid */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-8">
-            {offices.map((office) => (
-              <div 
-                key={office.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-banc-line/30 shadow-sm hover:shadow-xl transition-all duration-300"
-              >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <Image 
-                    src={office.image}
-                    alt={office.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  
-                  {/* Type badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-banc-focus text-white text-xs font-semibold">
-                      <office.icon className="h-3.5 w-3.5" />
-                      {office.type}
-                    </span>
-                  </div>
-                  
-                  {/* Title overlay */}
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h2 className="text-2xl font-semibold text-white">{office.name}</h2>
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div className="p-6">
-                  <p className="text-banc-muted-readable mb-6">
-                    {office.description}
-                  </p>
-                  
-                  {/* Contact details */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-start gap-3">
-                      <MapPin className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
-                      <span className="text-banc-dark-mid">{office.address}</span>
-                    </div>
-                    <a href={`tel:${office.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 group/item">
-                      <Phone className="h-5 w-5 text-banc-focus flex-shrink-0" />
-                      <span className="text-banc-dark-mid group-hover/item:text-banc-sky transition-colors">{office.phone}</span>
-                    </a>
-                    <a href={`mailto:${office.email}`} className="flex items-center gap-3 group/item">
-                      <Mail className="h-5 w-5 text-banc-focus flex-shrink-0" />
-                      <span className="text-banc-dark-mid group-hover/item:text-banc-sky transition-colors">{office.email}</span>
-                    </a>
-                    <div className="flex items-start gap-3">
-                      <Clock className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
-                      <span className="text-banc-dark-mid">{office.hours}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Features */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {office.features.map((feature) => (
-                      <span 
-                        key={feature}
-                        className="px-3 py-1 rounded-full bg-banc-sky/10 text-banc-focus text-sm"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  {/* CTA */}
-                  <Link href={office.link}>
-                    <Button className="w-full bg-banc-focus hover:bg-banc-focus-hover text-white group/btn">
-                      Visit Office Page
-                      <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
+      <section className={sectionPadding}>
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:gap-10">
+          {offices.map((office) => (
+            <article key={office.id}>
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[var(--radius-md)]">
+                <Image
+                  src={office.image}
+                  alt={office.name}
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="object-cover"
+                />
               </div>
-            ))}
-          </div>
+
+              <p className={cn(eyebrow, "mt-6")}>{office.type}</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>{office.name}</h2>
+              <p className="mt-4 text-banc-muted-readable">{office.description}</p>
+
+              <dl className="mt-6 border-t border-banc-dark/15">
+                <div className={detailRow}>
+                  <dt className={eyebrow}>Address</dt>
+                  <dd className={detailValue}>{office.address}</dd>
+                </div>
+                <div className={detailRow}>
+                  <dt className={eyebrow}>Phone</dt>
+                  <dd>
+                    <a href={`tel:${office.phone.replace(/\s/g, '')}`} className={detailLink}>
+                      {office.phone}
+                    </a>
+                  </dd>
+                </div>
+                <div className={detailRow}>
+                  <dt className={eyebrow}>Email</dt>
+                  <dd>
+                    <a href={`mailto:${office.email}`} className={detailLink}>
+                      {office.email}
+                    </a>
+                  </dd>
+                </div>
+                <div className={detailRow}>
+                  <dt className={eyebrow}>Hours</dt>
+                  <dd className={detailValue}>{office.hours}</dd>
+                </div>
+              </dl>
+
+              <p className="mt-4 text-sm text-banc-muted-readable">{office.features.join(" · ")}</p>
+
+              <Link href={office.link} className={cn(actionPrimary, "mt-6")}>
+                Visit Office Page
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </article>
+          ))}
         </div>
       </section>
 
       {/* Nearest Office Helper */}
-      <section className="py-20 lg:py-28 bg-banc-dark-deep">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Navigation className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">Find Your Nearest Office</span>
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-white">
-              Which Office is Right for You?
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
+      <section className={cn(sectionPadding, "border-t border-banc-dark/15")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrow}>Find Your Nearest Office</p>
+          <h2 className={cn(sectionHeading, "mt-3")}>Which Office is Right for You?</h2>
+
+          <div className="mt-7 grid gap-10 md:grid-cols-2">
             {/* Cuffley areas */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center">
-                  <Building2 className="h-6 w-6 text-banc-sky" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">Cuffley Office</h3>
-                  <p className="text-white/50">Hertfordshire & North London</p>
-                </div>
-              </div>
-              
-              <p className="text-white/60 mb-6">
-                Visit our Cuffley office if you&apos;re looking to buy, sell, let, or rent 
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="text-xl font-semibold text-banc-dark-deep">Cuffley Office</h3>
+              <p className="mt-1 text-sm text-banc-muted-readable">Hertfordshire & North London</p>
+
+              <p className="mt-4 text-banc-muted-readable">
+                Visit our Cuffley office if you&apos;re looking to buy, sell, let, or rent
                 in the following areas:
               </p>
-              
-              <div className="flex flex-wrap gap-2 mb-6">
-                {["Cuffley", "Goffs Oak", "Brookmans Park", "Northaw", "Potters Bar", "Cheshunt", "Enfield", "Barnet", "Hertford"].map((area) => (
-                  <span key={area} className="px-3 py-1 rounded-full bg-white/10 text-white/80 text-sm">
-                    {area}
-                  </span>
-                ))}
-              </div>
-              
-              <Link href="/offices/cuffley">
-                <Button variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10">
-                  Visit Cuffley Office
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+
+              <p className="mt-4 text-sm leading-relaxed text-banc-dark-deep">{CUFFLEY_AREAS.join(" · ")}</p>
+
+              <Link href="/offices/cuffley" className={cn(actionSecondary, "mt-6")}>
+                Visit Cuffley Office
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
-            
+
             {/* Mayfair areas */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center">
-                  <Crown className="h-6 w-6 text-banc-sky" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">Mayfair Office</h3>
-                  <p className="text-white/50">Prime Central London</p>
-                </div>
-              </div>
-              
-              <p className="text-white/60 mb-6">
-                Contact our Mayfair office for premium properties valued at £1 million 
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="text-xl font-semibold text-banc-dark-deep">Mayfair Office</h3>
+              <p className="mt-1 text-sm text-banc-muted-readable">Prime Central London</p>
+
+              <p className="mt-4 text-banc-muted-readable">
+                Contact our Mayfair office for premium properties valued at £1 million
                 and above in London&apos;s most prestigious areas:
               </p>
-              
-              <div className="flex flex-wrap gap-2 mb-6">
-                {["Mayfair", "Belgravia", "Knightsbridge", "Kensington", "Chelsea", "Marylebone", "St James's", "Westminster"].map((area) => (
-                  <span key={area} className="px-3 py-1 rounded-full bg-white/10 text-white/80 text-sm">
-                    {area}
-                  </span>
-                ))}
-              </div>
-              
-              <Link href="/offices/mayfair">
-                <Button variant="outline" className="bg-transparent border-white/30 text-white hover:bg-white/10">
-                  Visit Mayfair Office
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+
+              <p className="mt-4 text-sm leading-relaxed text-banc-dark-deep">{MAYFAIR_AREAS.join(" · ")}</p>
+
+              <Link href="/offices/mayfair" className={cn(actionSecondary, "mt-6")}>
+                Visit Mayfair Office
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -276,72 +192,40 @@ export default function OfficesPage() {
       </section>
 
       {/* Quick Contact Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-banc-line/30 shadow-lg">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                  <Phone className="h-4 w-4 text-banc-focus" />
-                  <span className="text-sm font-medium text-banc-focus">Get in Touch</span>
-                </div>
-                
-                <h2 className="text-3xl font-semibold text-banc-dark-deep">
-                  Can&apos;t Visit in Person?
-                </h2>
-                <p className="mt-4 text-lg text-banc-muted-readable">
-                  We&apos;re always available by phone or email. Our team is ready to answer 
-                  your questions and help you with your property needs.
-                </p>
-                
-                <div className="mt-8 flex flex-wrap gap-4">
-                  <a href={BANC_CONTACT.callHref}>
-                    <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-6">
-                      <Phone className="mr-2 h-4 w-4" />
-                      {BANC_CONTACT.displayPhone}
-                    </Button>
-                  </a>
-                  <Link href="/contact">
-                    <Button variant="outline" className="border-banc-sky text-banc-focus hover:bg-banc-sky hover:text-white px-6">
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      Contact Form
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-              
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <div className="w-14 h-14 rounded-full bg-banc-sky/20 flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <p className="text-3xl font-bold text-banc-dark-deep">4+</p>
-                  <p className="text-sm text-banc-muted-readable">Team Members</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <div className="w-14 h-14 rounded-full bg-banc-sky/20 flex items-center justify-center mx-auto mb-4">
-                    <Building2 className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <p className="text-3xl font-bold text-banc-dark-deep">2</p>
-                  <p className="text-sm text-banc-muted-readable">Office Locations</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <div className="w-14 h-14 rounded-full bg-banc-sky/20 flex items-center justify-center mx-auto mb-4">
-                    <Clock className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <p className="text-3xl font-bold text-banc-dark-deep">6</p>
-                  <p className="text-sm text-banc-muted-readable">Days Per Week</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <div className="w-14 h-14 rounded-full bg-banc-sky/20 flex items-center justify-center mx-auto mb-4">
-                    <MapPin className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <p className="text-3xl font-bold text-banc-dark-deep">20+</p>
-                  <p className="text-sm text-banc-muted-readable">Areas Covered</p>
-                </div>
-              </div>
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <p className={eyebrowOnDark}>Get in Touch</p>
+            <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Can&apos;t Visit in Person?</h2>
+            <p className="mt-4 text-white/70 lg:text-lg">
+              We&apos;re always available by phone or email. Our team is ready to answer
+              your questions and help you with your property needs.
+            </p>
+
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <a href={BANC_CONTACT.callHref} className={actionPrimaryOnDark}>
+                <Phone className="h-4 w-4" aria-hidden="true" />
+                {BANC_CONTACT.displayPhone}
+              </a>
+              <Link href="/contact" className={actionSecondaryOnDark}>
+                Contact Form
+              </Link>
             </div>
           </div>
+
+          <dl className="grid grid-cols-2 gap-x-8 self-start border-t border-white/15">
+            {[
+              { value: "4+", label: "Team Members" },
+              { value: "2", label: "Office Locations" },
+              { value: "6", label: "Days Per Week" },
+              { value: "20+", label: "Areas Covered" },
+            ].map((stat) => (
+              <div key={stat.label} className="flex flex-col-reverse border-b border-white/15 py-5">
+                <dt className="mt-1 text-sm text-white/70">{stat.label}</dt>
+                <dd className="font-display text-3xl font-light text-white">{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

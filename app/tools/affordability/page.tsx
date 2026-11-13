@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
-import Link from "next/link";
-import { ArrowLeft, TrendingUp, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
 import { AffordabilityCalculator } from "@/components/AffordabilityCalculator";
 
 export const metadata: Metadata = withPageDefaults("/tools/affordability", {
@@ -19,37 +19,19 @@ export default function AffordabilityPage() {
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
-      <main className="px-4 pb-20 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
-        <div className="mx-auto max-w-4xl">
-          {/* Back Link */}
-          <Link
-            href="/tools"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-banc-muted-readable transition-colors hover:text-banc-focus"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Tools
-          </Link>
-
-          {/* Header */}
-          <div className="mb-8">
-            <div className="mb-4 inline-flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-banc-focus" />
-              <span className="text-xs font-medium uppercase tracking-[0.12em] text-banc-muted-readable">Affordability Tool</span>
-            </div>
-            <h1 className="mb-4 text-4xl font-semibold text-banc-dark-deep lg:text-5xl">
-              Affordability Calculator
-            </h1>
-            <p className="text-lg text-banc-muted-readable">
-              Discover how much you could borrow and what your maximum property budget might be. Factor
-              in your income, deposit, and existing commitments.
-            </p>
-          </div>
-
+      <main>
+        <PageBand
+          eyebrow="Affordability tool"
+          title="Affordability Calculator"
+          lede="Discover how much you could borrow and what your maximum property budget might be. Factor in your income, deposit, and existing commitments."
+          back={{ href: "/tools", label: "All tools" }}
+        />
+        <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
           {/* Calculator */}
           <AffordabilityCalculator />
 
           {/* Info Section */}
-          <div className="mt-12 rounded-2xl border border-banc-line bg-banc-grey-pale p-6">
+          <div className="mt-12 border-t border-banc-dark/15 pt-8">
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold text-banc-dark-deep">
               <Info className="h-5 w-5 text-banc-focus" />
               Understanding Affordability

@@ -10,6 +10,14 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimaryOnDark,
+  actionSecondaryOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
 
 export const metadata: Metadata = withPageDefaults("/tools", {
   title: "Property Tools & Calculators | Banc Property Group",
@@ -64,56 +72,37 @@ export default function ToolsPage() {
       <Header />
 
       <main>
-        {/* Hero Section */}
-        <section className="relative overflow-hidden px-4 pb-16 pt-24 lg:px-10 lg:pb-24 lg:pt-32">
-          <div className="relative mx-auto max-w-7xl text-center">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-banc-sky/30 bg-banc-sky/10 px-4 py-2">
-              <Calculator className="h-4 w-4 text-banc-focus" />
-              <span className="text-sm text-banc-focus">Free Property Tools</span>
-            </div>
-
-            <h1 className="mb-6 text-4xl font-semibold leading-tight text-banc-dark-deep lg:text-6xl">
-              Property <span className="text-banc-focus">Calculators</span> & Tools
-            </h1>
-
-            <p className="mx-auto max-w-2xl text-lg text-banc-muted-readable">
-              Plan your property journey with our free calculators. From stamp duty to rental yields,
-              make informed decisions with accurate calculations.
-            </p>
-          </div>
-        </section>
+        <PageBand
+          eyebrow="Free Property Tools"
+          title="Property Calculators & Tools"
+          lede="Plan your property journey with our free calculators. From stamp duty to rental yields, make informed decisions with accurate calculations."
+        />
 
         {/* Tools Grid */}
-        <section className="px-4 pb-20 lg:px-10">
+        <section className={sectionPadding}>
           <div className="mx-auto max-w-7xl">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
               {tools.map((tool) => (
                 <Link
                   key={tool.id}
                   href={tool.href}
-                  className="group relative overflow-hidden rounded-2xl border border-banc-line bg-white p-6 transition-colors hover:border-banc-sky"
+                  className="group flex flex-col rounded-[var(--radius-md)] border border-banc-line bg-white p-5 transition-colors duration-200 hover:border-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 sm:p-6"
                 >
-                  <div className="relative">
-                    {/* Icon */}
-                    <div
-                      className={`mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-banc-grey-pale ${tool.iconColor}`}
-                    >
-                      <tool.icon className="h-7 w-7" />
-                    </div>
+                  {/* Icon */}
+                  <tool.icon className={`mb-5 h-6 w-6 ${tool.iconColor}`} aria-hidden="true" />
 
-                    {/* Content */}
-                    <h3 className="mb-2 text-xl font-semibold text-banc-dark-deep group-hover:text-banc-focus transition-colors">
-                      {tool.title}
-                    </h3>
-                    <p className="mb-4 text-sm leading-relaxed text-banc-muted-readable">
-                      {tool.description}
-                    </p>
+                  {/* Content */}
+                  <h2 className="mb-2 text-xl font-semibold text-banc-dark-deep transition-colors group-hover:text-banc-focus">
+                    {tool.title}
+                  </h2>
+                  <p className="mb-5 text-sm leading-relaxed text-banc-muted-readable">
+                    {tool.description}
+                  </p>
 
-                    {/* CTA */}
-                    <div className="flex items-center gap-2 text-sm font-medium text-banc-focus">
-                      <span>Try Calculator</span>
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </div>
+                  {/* CTA */}
+                  <div className="mt-auto flex items-center gap-2 text-sm font-semibold text-banc-focus">
+                    <span>Try Calculator</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </Link>
               ))}
@@ -122,16 +111,14 @@ export default function ToolsPage() {
         </section>
 
         {/* Why Use Our Tools Section */}
-        <section className="border-t border-banc-line bg-banc-grey-pale px-4 py-20 lg:px-10">
+        <section className={`border-t border-banc-dark/15 ${sectionPadding}`}>
           <div className="mx-auto max-w-7xl">
-            <div className="mb-12 text-center">
-              <h2 className="mb-4 text-3xl font-semibold text-banc-dark-deep">Why Use Our Tools?</h2>
-              <p className="mx-auto max-w-2xl text-banc-muted-readable">
-                Our calculators are designed to help you make informed property decisions
-              </p>
-            </div>
+            <h2 className={sectionHeading}>Why Use Our Tools?</h2>
+            <p className="mt-4 max-w-2xl text-banc-muted-readable">
+              Our calculators are designed to help you make informed property decisions
+            </p>
 
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="mt-7 grid gap-6 md:grid-cols-3 md:gap-8">
               {[
                 {
                   title: "Accurate & Up-to-Date",
@@ -149,11 +136,11 @@ export default function ToolsPage() {
                     "All our tools are completely free to use. Calculate as many scenarios as you need.",
                 },
               ].map((feature, index) => (
-                <div key={index} className="rounded-2xl border border-banc-line bg-white p-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-banc-sky/10">
-                    <span className="text-xl font-semibold text-banc-focus">{index + 1}</span>
-                  </div>
-                  <h3 className="mb-2 text-lg font-semibold text-banc-dark-deep">{feature.title}</h3>
+                <div key={index} className="border-t border-banc-dark/15 pt-6">
+                  <span className="font-mono text-[11px] tracking-[0.14em] text-banc-muted-readable">
+                    0{index + 1}
+                  </span>
+                  <h3 className="mb-2 mt-3 text-lg font-semibold text-banc-dark-deep">{feature.title}</h3>
                   <p className="text-sm leading-relaxed text-banc-muted-readable">{feature.description}</p>
                 </div>
               ))}
@@ -162,33 +149,21 @@ export default function ToolsPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="px-4 py-20 lg:px-10">
-          <div className="mx-auto max-w-4xl">
-            <div className="relative overflow-hidden rounded-3xl border border-banc-line bg-white p-8 text-center md:p-12">
-              <div className="relative">
-                <h2 className="mb-4 text-2xl font-semibold text-banc-dark-deep md:text-3xl">
-                  Need Expert Advice?
-                </h2>
-                <p className="mb-6 text-banc-muted-readable">
-                  Our calculators are a great starting point, but nothing beats speaking to an
-                  expert. Get personalised advice from our team.
-                </p>
-                <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-banc-focus px-6 py-3 font-medium text-white transition-colors hover:bg-banc-focus-hover"
-                  >
-                    Contact Us
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                  <Link
-                    href="/valuation"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-banc-line px-6 py-3 font-medium text-banc-dark-deep transition-colors hover:bg-banc-grey-pale"
-                  >
-                    Book a Valuation
-                  </Link>
-                </div>
-              </div>
+        <section className={`banc-dark-surface bg-banc-dark-deep text-white ${sectionPadding}`}>
+          <div className="mx-auto max-w-7xl">
+            <h2 className={sectionHeadingOnDark}>Need Expert Advice?</h2>
+            <p className="mt-4 max-w-2xl text-white/70">
+              Our calculators are a great starting point, but nothing beats speaking to an
+              expert. Get personalised advice from our team.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Link href="/contact" className={actionPrimaryOnDark}>
+                Contact Us
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href="/valuation" className={actionSecondaryOnDark}>
+                Book a Valuation
+              </Link>
             </div>
           </div>
         </section>

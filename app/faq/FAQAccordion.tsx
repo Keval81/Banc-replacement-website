@@ -21,51 +21,39 @@ export default function FAQAccordion({ items }: FAQAccordionProps) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="border-b border-banc-dark/15">
       {items.map((item, index) => (
         <div
           key={index}
-          className={cn(
-            "bg-white rounded-xl border border-banc-line/30 overflow-hidden transition-all duration-200",
-            openIndex === index && "border-banc-sky/50 shadow-md shadow-banc-sky/5"
-          )}
+          className="border-t border-banc-dark/15"
         >
           <button
             onClick={() => toggleItem(index)}
-            className="w-full flex items-center justify-between gap-4 p-5 text-left"
+            className="flex min-h-11 w-full items-center justify-between gap-4 py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
             aria-expanded={openIndex === index}
           >
             <span className={cn(
-              "font-semibold text-banc-dark-deep pr-4",
+              "font-semibold text-banc-dark-deep",
               openIndex === index && "text-banc-focus"
             )}>
               {item.question}
             </span>
-            <div className={cn(
-              "w-8 h-8 rounded-lg bg-banc-grey-pale flex items-center justify-center flex-shrink-0 transition-all duration-200",
-              openIndex === index && "bg-banc-sky rotate-180"
-            )}>
-              <ChevronDown className={cn(
-                "h-5 w-5 text-banc-muted-readable transition-colors",
-                openIndex === index && "text-banc-dark-deep"
-              )} />
-            </div>
+            <ChevronDown className={cn(
+              "h-5 w-5 flex-shrink-0 text-banc-muted-readable transition-transform duration-200 motion-reduce:transition-none",
+              openIndex === index && "rotate-180 text-banc-focus"
+            )} />
           </button>
           
           <div
             className={cn(
-              "grid transition-all duration-300 ease-in-out",
+              "grid transition-all duration-300 ease-in-out motion-reduce:transition-none",
               openIndex === index ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
             )}
           >
             <div className="overflow-hidden">
-              <div className="px-5 pb-5">
-                <div className="pt-2 border-t border-banc-line/20">
-                  <p className="text-banc-muted-readable leading-relaxed pt-4">
-                    {item.answer}
-                  </p>
-                </div>
-              </div>
+              <p className="max-w-3xl pb-6 leading-relaxed text-banc-muted-readable">
+                {item.answer}
+              </p>
             </div>
           </div>
         </div>

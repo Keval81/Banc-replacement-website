@@ -5,27 +5,19 @@ import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { PageBand } from "@/components/PageBand";
+import { cn } from "@/lib/utils";
 import {
-  ArrowRight,
-  Shield,
-  FileText,
-  CheckCircle,
-  Home,
-  Users,
-  Globe,
-  Wrench,
-  BadgeCheck,
-  Award,
-  Building2,
-  ClipboardCheck,
-  Phone,
-  TrendingUp,
-  Lock,
-  Hammer,
-  Sparkles,
-  Zap,
-  Scale,
-} from "lucide-react";
+  actionPrimary,
+  actionPrimaryOnDark,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { ArrowRight } from "lucide-react";
 import {
   LANDLORD_BENEFITS,
   LANDLORD_INSURANCE_PRODUCTS,
@@ -41,239 +33,111 @@ export const metadata: Metadata = withPageDefaults("/lettings/landlords-guide", 
 
 export const revalidate = 3600;
 
-const whyChooseBanc = LANDLORD_BENEFITS.map((feature, index) => ({
-  ...feature,
-  icon: [
-    Users,
-    Sparkles,
-    BadgeCheck,
-    FileText,
-    TrendingUp,
-    Globe,
-    Users,
-    ClipboardCheck,
-    FileText,
-    Shield,
-    Building2,
-    Hammer,
-  ][index],
-}));
-
-const insuranceProducts = LANDLORD_INSURANCE_PRODUCTS.map((product, index) => ({
-  ...product,
-  icon: [Building2, Shield, Home, Zap, Scale][index],
-}));
-
-const managementFeatures = LANDLORD_MANAGEMENT_FEATURES.map((feature, index) => ({
-  ...feature,
-  icon: [Home, Wrench, Shield][index],
-}));
-
 const lettingServices = LANDLORDS_GUIDE.sections[0];
 const qualityTenants = LANDLORDS_GUIDE.sections[1];
+
+const darkBand = cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white");
+const bodyCopy = "space-y-5 text-banc-muted-readable leading-relaxed lg:text-lg";
 
 export default function LandlordsGuidePage() {
   return (
     <div className="bg-white text-banc-dark-deep min-h-screen">
       <Header />
 
-      {/* Hero Section - Premium Dark with Gradient */}
-      <section className="relative bg-banc-dark-deep py-28 lg:py-36 overflow-hidden">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
+      <PageBand
+        eyebrow="Property Guild Approved"
+        title={LANDLORDS_GUIDE.title}
+        lede={lettingServices.body[0]}
+        image={{
+          src: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1920&q=80",
+          alt: "",
+          priority: true,
+        }}
+      >
+        {/* Both of these went nowhere until 7 Sep. The valuation opens on
+            the lettings option; the guide button is the published fee
+            schedule, which is what the old site's "download" was. */}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Link href="/valuation?intent=let" className={actionPrimaryOnDark}>
+            Book Free Rental Valuation
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+          <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer" className={actionSecondaryOnDark}>
+            Fees to landlords (PDF)
+          </a>
         </div>
-        {/* Subtle background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, #4AC8E8 1px, transparent 0)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-
-        {/* Cyan accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-banc-sky to-transparent" />
-
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-              <Award className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-banc-sky">
-                Property Guild Approved
-              </span>
-            </div>
-
-            <h1 className="text-5xl font-semibold text-white sm:text-6xl lg:text-7xl tracking-tight leading-[1.1]">
-              {LANDLORDS_GUIDE.title}
-            </h1>
-
-            <p className="mt-8 text-xl text-white/70 leading-relaxed max-w-2xl">
-              {lettingServices.body[0]}
-            </p>
-
-            <div className="mt-10 flex flex-wrap gap-4">
-              {/* Both of these went nowhere until 7 Sep. The valuation opens on
-                  the lettings option; the guide button is the published fee
-                  schedule, which is what the old site's "download" was. */}
-              <Link href="/valuation?intent=let">
-                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
-                  Book Free Rental Valuation
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer">
-                <Button
-                  variant="outline"
-                  className="bg-transparent border-white/30 text-white hover:bg-white/10 hover:border-white/50 px-8 py-6 text-base"
-                >
-                  Fees to landlords (PDF)
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Decorative element */}
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-banc-sky/5 rounded-full blur-3xl translate-y-1/2 translate-x-1/2" />
-      </section>
+      </PageBand>
 
       {/* Introduction & Coverage Areas */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 items-start">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Left Column - Main Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
-                Introduction
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
-                Expert Letting Services
-              </h2>
+              <p className={eyebrow}>Introduction</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Expert Letting Services</h2>
 
-              <div className="mt-8 space-y-6 text-banc-muted-readable text-lg leading-relaxed">
+              <div className={cn(bodyCopy, "mt-7")}>
                 <p>{lettingServices.body[1]}</p>
                 <p>{lettingServices.body[2]}</p>
               </div>
 
-              {/* Accreditation Badges */}
-              <div className="mt-10 flex flex-wrap gap-4">
-                <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <BadgeCheck className="h-6 w-6 text-banc-focus" />
-                  <div>
-                    <p className="text-sm font-semibold text-banc-dark-deep">
-                      Property Guild
-                    </p>
-                    <p className="text-xs text-banc-muted-readable">Approved Agent</p>
+              {/* Accreditations */}
+              <dl className="mt-8 border-t border-banc-dark/15">
+                {[
+                  { title: "Property Guild", text: "Approved Agent" },
+                  { title: "CMP Protected", text: "Client Money" },
+                  { title: "The Property Ombudsman", text: "Redress Scheme" },
+                ].map((item) => (
+                  <div key={item.title} className="flex items-baseline justify-between gap-6 border-b border-banc-dark/15 py-3">
+                    <dt className="text-sm font-semibold text-banc-dark-deep">{item.title}</dt>
+                    <dd className="text-right text-sm text-banc-muted-readable">{item.text}</dd>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <Lock className="h-6 w-6 text-banc-focus" />
-                  <div>
-                    <p className="text-sm font-semibold text-banc-dark-deep">
-                      CMP Protected
-                    </p>
-                    <p className="text-xs text-banc-muted-readable">Client Money</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 px-5 py-3 bg-banc-grey-pale rounded-xl">
-                  <Shield className="h-6 w-6 text-banc-focus" />
-                  <div>
-                    <p className="text-sm font-semibold text-banc-dark-deep">
-                      The Property Ombudsman
-                    </p>
-                    <p className="text-xs text-banc-muted-readable">Redress Scheme</p>
-                  </div>
-                </div>
-              </div>
+                ))}
+              </dl>
             </div>
 
-            {/* Right Column - Coverage Card */}
-            <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-br from-banc-sky/10 to-transparent rounded-3xl" />
-              <div className="relative bg-banc-grey-pale rounded-2xl p-8 lg:p-10">
-                <div className="h-14 w-14 rounded-xl bg-banc-sky flex items-center justify-center mb-6">
-                  <Home className="h-7 w-7 text-banc-dark-deep" />
-                </div>
+            {/* Right Column - Coverage */}
+            <div className="border-t border-banc-dark/15 pt-6 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
+              <h3 className="text-2xl font-semibold">Covering Your Area</h3>
 
-                <h3 className="text-2xl font-semibold mb-4">
-                  Covering Your Area
-                </h3>
+              <p className="mt-4 leading-relaxed text-banc-muted-readable">
+                From Apartments, Victorian cottages to Country estates, let our
+                lettings department look after your properties of every type,
+                size and style there is.
+              </p>
 
-                <p className="text-banc-muted-readable leading-relaxed">
-                  From Apartments, Victorian cottages to Country estates, let our
-                  lettings department look after your properties of every type,
-                  size and style there is.
-                </p>
+              <p className="mt-5 text-sm font-semibold text-banc-dark-deep">
+                {["Cuffley", "Goffs Oak", "Cheshunt", "Potters Bar"].join(" · ")}
+              </p>
 
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {["Cuffley", "Goffs Oak", "Cheshunt", "Potters Bar"].map(
-                    (area) => (
-                      <span
-                        key={area}
-                        className="inline-flex items-center px-4 py-2 rounded-full bg-white text-banc-dark-deep text-sm font-medium shadow-sm"
-                      >
-                        {area}
-                      </span>
-                    )
-                  )}
-                </div>
-
-                <p className="mt-6 text-banc-muted-readable leading-relaxed">
-                  We handle an impressive portfolio of rented properties
-                  throughout these areas and surrounding locations. Whether you
-                  are thinking of letting your property for the first time, or
-                  you are an experienced landlord looking for a new letting
-                  agent service, our letting team would be delighted to discuss
-                  your requirements.
-                </p>
-              </div>
+              <p className="mt-5 leading-relaxed text-banc-muted-readable">
+                We handle an impressive portfolio of rented properties
+                throughout these areas and surrounding locations. Whether you
+                are thinking of letting your property for the first time, or
+                you are an experienced landlord looking for a new letting
+                agent service, our letting team would be delighted to discuss
+                your requirements.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Premium Statistics Banner - 30% Highlight */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-banc-dark-deep" />
-        <div className="absolute inset-0 bg-gradient-to-r from-banc-sky/10 via-transparent to-banc-sky/10" />
-
-        {/* Decorative circles */}
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-banc-sky/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-banc-sky/5 rounded-full blur-3xl" />
-
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
+      {/* Statistics Banner - 30% Highlight */}
+      <section className={darkBand}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-16">
             {/* Stat Display */}
-            <div className="flex items-center gap-8">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-banc-sky/20 rounded-2xl blur-xl" />
-                <div className="relative flex items-center justify-center h-32 w-32 rounded-2xl bg-gradient-to-br from-banc-sky to-banc-sky-dark shadow-2xl shadow-banc-sky/30">
-                  <span className="text-5xl font-bold text-white">30%</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm uppercase tracking-widest text-banc-focus font-medium">
-                  Strict Referencing
-                </p>
-                <p className="text-3xl font-semibold text-white mt-1">
-                  Pass Rate
-                </p>
-                <p className="text-white/60 mt-2">
-                  Of applicants approved
-                </p>
-              </div>
+            <div>
+              <p className={eyebrowOnDark}>Strict Referencing</p>
+              <p className="mt-3 font-display text-6xl font-light leading-none text-white lg:text-7xl">30%</p>
+              <p className="mt-3 text-xl font-semibold text-white">Pass Rate</p>
+              <p className="mt-1 text-white/70">Of applicants approved</p>
             </div>
 
             {/* Description */}
-            <div className="text-white/80 text-lg leading-relaxed">
+            <div className="leading-relaxed text-white/80 lg:text-lg">
               <p>
                 Our rigorous tenant screening process ensures only the highest
                 quality tenants occupy your property. We conduct comprehensive
@@ -286,47 +150,30 @@ export default function LandlordsGuidePage() {
       </section>
 
       {/* Quality Tenants Section */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 items-center">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Image Side */}
-            <div className="relative order-2 lg:order-1">
-              <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl">
+            <figure className="order-2 lg:order-1">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-md)] lg:aspect-[5/4]">
                 <img
                   src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80"
                   alt="Quality tenants in a premium rental property"
-                  className="w-full h-full object-cover"
+                  className="h-full w-full object-cover"
                 />
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-banc-dark-deep/60 via-transparent to-transparent" />
               </div>
-
-              {/* Floating Stats Card */}
-              <div className="absolute -bottom-6 -right-6 lg:right-8 bg-white rounded-xl shadow-2xl p-6 max-w-xs">
-                <div className="flex items-center gap-4">
-                  <div className="h-14 w-14 rounded-full bg-banc-sky/10 flex items-center justify-center">
-                    <CheckCircle className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold text-banc-dark-deep">30%</p>
-                    <p className="text-sm text-banc-muted-readable">
-                      Pass strict referencing
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <figcaption className="mt-3 flex items-baseline gap-3 border-b border-banc-dark/15 pb-3">
+                <span className="text-2xl font-bold text-banc-dark-deep">30%</span>
+                <span className="text-sm text-banc-muted-readable">Pass strict referencing</span>
+              </figcaption>
+            </figure>
 
             {/* Content Side */}
             <div className="order-1 lg:order-2">
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
-                Our Priority
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
-                Quality Tenants
-              </h2>
+              <p className={eyebrow}>Our Priority</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Quality Tenants</h2>
 
-              <div className="mt-8 space-y-6 text-banc-muted-readable text-lg leading-relaxed">
+              <div className={cn(bodyCopy, "mt-7")}>
                 <p>{qualityTenants.body[0]}</p>
                 <p>
                   {qualityTenants.body[1].split(LANDLORD_TENANT_PASS_RATE)[0]}
@@ -343,19 +190,15 @@ export default function LandlordsGuidePage() {
       </section>
 
       {/* Marketing Section */}
-      <section className="py-24 bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 items-start">
+      <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
-                Marketing
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
-                It&apos;s All About The Internet!
-              </h2>
+              <p className={eyebrow}>Marketing</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>It&apos;s All About The Internet!</h2>
 
-              <p className="mt-8 text-banc-muted-readable text-lg leading-relaxed">
+              <p className="mt-7 leading-relaxed text-banc-muted-readable lg:text-lg">
                 These days people looking for rental property rely on the
                 internet, not local papers. Which is why we&apos;ll heavily
                 promote your property on our own website,{" "}
@@ -364,263 +207,154 @@ export default function LandlordsGuidePage() {
                 popular Social Media platforms.
               </p>
 
-              <div className="mt-10 flex flex-wrap gap-3">
-                {[
-                  { icon: Globe, label: "Major Property Portals" },
-                  { icon: Users, label: "Social Media" },
-                  { icon: Home, label: "bancproperty.com" },
-                ].map((item, index) => (
-                  <div
-                    key={index}
-                    className="inline-flex items-center px-5 py-3 rounded-full bg-white text-banc-dark-deep text-sm font-medium shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <item.icon className="h-4 w-4 mr-2 text-banc-focus" />
-                    {item.label}
-                  </div>
-                ))}
-              </div>
+              <p className="mt-6 text-sm font-semibold text-banc-dark-deep">
+                {["Major Property Portals", "Social Media", "bancproperty.com"].join(" · ")}
+              </p>
             </div>
 
-            {/* Right Card - Dark Theme */}
-            <div className="relative">
-              <div className="bg-banc-dark-deep rounded-2xl p-10 shadow-xl">
-                <div className="h-14 w-14 rounded-xl bg-banc-sky flex items-center justify-center mb-6">
-                  <Globe className="h-7 w-7 text-banc-dark-deep" />
-                </div>
+            {/* Right - Maximum Exposure */}
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="text-2xl font-semibold">Maximum Exposure</h3>
 
-                <h3 className="text-2xl font-semibold text-white mb-4">
-                  Maximum Exposure
-                </h3>
-
-                <ul className="space-y-4">
-                  {[
-                    "Prominent placement on bancproperty.com",
-                    "Featured on major property websites",
-                    "Social media promotion across platforms",
-                    "Pre-qualified database of waiting tenants",
-                    "Professional photography and descriptions",
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-banc-sky mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-white/70">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <ul className="mt-4">
+                {[
+                  "Prominent placement on bancproperty.com",
+                  "Featured on major property websites",
+                  "Social media promotion across platforms",
+                  "Pre-qualified database of waiting tenants",
+                  "Professional photography and descriptions",
+                ].map((item, index) => (
+                  <li key={index} className="border-b border-banc-dark/15 py-3 text-banc-muted-readable">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Property Management - Premium Dark Section */}
-      <section className="relative py-24 bg-banc-dark-deep overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-banc-sky/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-banc-sky/10 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+      {/* Property Management */}
+      <section className={darkBand}>
+        <div className="mx-auto max-w-7xl">
           {/* Header */}
-          <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.25em] text-banc-sky font-semibold">
-              Full Management
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold text-white sm:text-5xl tracking-tight">
-              Property Management Service
-            </h2>
-            <p className="mt-6 text-white/60 max-w-2xl mx-auto text-lg">
-              Managing your property can be time-consuming and demanding. With
-              our Fully Managed letting service, just sit back and let us take
-              the stress out of being a landlord.
-            </p>
-          </div>
+          <p className={eyebrowOnDark}>Full Management</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Property Management Service</h2>
+          <p className="mt-4 max-w-2xl text-white/70 lg:text-lg">
+            Managing your property can be time-consuming and demanding. With
+            our Fully Managed letting service, just sit back and let us take
+            the stress out of being a landlord.
+          </p>
 
-          {/* Feature Cards */}
-          <div className="grid gap-6 md:grid-cols-3">
-            {managementFeatures.map((item, index) => (
-              <div
-                key={index}
-                className="group bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-banc-sky/50 transition-all duration-300 hover:bg-white/10"
-              >
-                <div className="h-14 w-14 rounded-xl bg-banc-sky/20 flex items-center justify-center mb-6 group-hover:bg-banc-sky/30 transition-colors">
-                  <item.icon className="h-7 w-7 text-banc-sky" />
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  {item.title}
-                </h3>
-                <p className="text-white/60 leading-relaxed">{item.description}</p>
+          {/* Features */}
+          <div className="mt-7 grid gap-x-10 md:grid-cols-3">
+            {LANDLORD_MANAGEMENT_FEATURES.map((item, index) => (
+              <div key={index} className="border-t border-white/15 py-6">
+                <h3 className="text-xl font-semibold text-white">{item.title}</h3>
+                <p className="mt-2 leading-relaxed text-white/70">{item.description}</p>
               </div>
             ))}
           </div>
 
           {/* Dedicated Manager Highlight */}
-          <div className="mt-12 bg-gradient-to-r from-banc-sky/20 to-banc-sky/5 rounded-2xl p-10 border border-banc-sky/20">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8">
-              <div className="h-20 w-20 rounded-2xl bg-banc-sky flex items-center justify-center flex-shrink-0 shadow-lg shadow-banc-sky/25">
-                <Users className="h-10 w-10 text-banc-dark-deep" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-semibold text-white mb-3">
-                  Dedicated In-House Property Manager
-                </h3>
-                <p className="text-white/70 leading-relaxed text-lg">
-                  As part of our Fully Managed service, we provide you with your
-                  own dedicated &apos;in-house&apos; Property Manager, whose job
-                  it is to look after every aspect of your property throughout
-                  the life of the tenancy. Our landlords tell us they appreciate
-                  the continuity and accountability of having a local, single
-                  point of contact, rather than having to battle with the
-                  faceless call centres used by many agencies today.
-                </p>
-                <div className="mt-4 flex items-center gap-2 text-banc-sky">
-                  <Phone className="h-5 w-5" />
-                  <span className="font-medium">Direct line to your manager</span>
-                </div>
-              </div>
-            </div>
+          <div className="border-t border-white/15 pt-6">
+            <h3 className="text-2xl font-semibold text-white">
+              Dedicated In-House Property Manager
+            </h3>
+            <p className="mt-3 max-w-3xl leading-relaxed text-white/70 lg:text-lg">
+              As part of our Fully Managed service, we provide you with your
+              own dedicated &apos;in-house&apos; Property Manager, whose job
+              it is to look after every aspect of your property throughout
+              the life of the tenancy. Our landlords tell us they appreciate
+              the continuity and accountability of having a local, single
+              point of contact, rather than having to battle with the
+              faceless call centres used by many agencies today.
+            </p>
+            <p className="mt-4 font-medium text-white">Direct line to your manager</p>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Banc - Premium Grid */}
-      <section className="py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      {/* Why Choose Banc */}
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
           {/* Header */}
-          <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
-              Why Us
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
-              Why Choose Banc
-            </h2>
-            <p className="mt-6 text-banc-muted-readable max-w-2xl mx-auto text-lg">
-              We pride ourselves on delivering exceptional service to landlords
-              across our coverage areas
-            </p>
-          </div>
+          <p className={eyebrow}>Why Us</p>
+          <h2 className={cn(sectionHeading, "mt-3")}>Why Choose Banc</h2>
+          <p className="mt-4 max-w-2xl text-banc-muted-readable lg:text-lg">
+            We pride ourselves on delivering exceptional service to landlords
+            across our coverage areas
+          </p>
 
           {/* Feature Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {whyChooseBanc.map((item, index) => (
-              <div
-                key={index}
-                className="group relative bg-white rounded-2xl p-6 border border-banc-line/50 hover:border-banc-sky transition-all duration-300 hover:shadow-xl hover:shadow-banc-sky/5 hover:-translate-y-1"
-              >
-                {/* Cyan accent on hover */}
-                <div className="absolute inset-x-0 top-0 h-1 bg-banc-sky rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                <div className="flex items-start gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0 group-hover:bg-banc-sky/20 transition-colors">
-                    <item.icon className="h-6 w-6 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep text-lg">
-                      {item.title}
-                    </h3>
-                    <p className="mt-1 text-banc-muted-readable">{item.description}</p>
-                  </div>
-                </div>
+          <div className="mt-7 grid gap-x-10 md:grid-cols-2 lg:grid-cols-3">
+            {LANDLORD_BENEFITS.map((item, index) => (
+              <div key={index} className="border-t border-banc-dark/15 py-5">
+                <h3 className="text-lg font-semibold text-banc-dark-deep">{item.title}</h3>
+                <p className="mt-1 text-banc-muted-readable">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Insurance Products - Clean Premium Section */}
-      <section className="py-24 bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 items-center">
+      {/* Insurance Products */}
+      <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Left Content */}
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-banc-focus font-semibold">
-                Protection
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold sm:text-5xl tracking-tight">
-                Insurance Products Available
-              </h2>
+              <p className={eyebrow}>Protection</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Insurance Products Available</h2>
 
-              <p className="mt-8 text-banc-muted-readable text-lg leading-relaxed">
+              <p className="mt-7 leading-relaxed text-banc-muted-readable lg:text-lg">
                 Protect your investment with our range of landlord insurance
                 products. We offer comprehensive coverage options to give you
                 complete peace of mind.
               </p>
 
-              <div className="mt-10">
-                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-banc-sky/25">
+              <div className="mt-7">
+                <Button className={cn(actionPrimary, "shadow-none")}>
                   Enquire About Insurance
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
 
               {/* Trust indicators */}
-              <div className="mt-10 flex items-center gap-6">
-                <div className="flex items-center gap-2 text-banc-muted-readable">
-                  <Shield className="h-5 w-5 text-banc-focus" />
-                  <span className="text-sm">Fully Protected</span>
-                </div>
-                <div className="flex items-center gap-2 text-banc-muted-readable">
-                  <CheckCircle className="h-5 w-5 text-banc-focus" />
-                  <span className="text-sm">Quick Claims</span>
-                </div>
-                <div className="flex items-center gap-2 text-banc-muted-readable">
-                  <Award className="h-5 w-5 text-banc-focus" />
-                  <span className="text-sm">A-Rated Providers</span>
-                </div>
-              </div>
+              <p className="mt-6 text-sm text-banc-muted-readable">
+                {["Fully Protected", "Quick Claims", "A-Rated Providers"].join(" · ")}
+              </p>
             </div>
 
-            {/* Right - Insurance Cards */}
-            <div className="space-y-4">
-              {insuranceProducts.map((product, index) => (
-                <div
-                  key={index}
-                  className="group flex items-center gap-5 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-transparent hover:border-banc-sky/20"
-                >
-                  <div className="h-14 w-14 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0 group-hover:bg-banc-sky/20 transition-colors">
-                    <product.icon className="h-7 w-7 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep text-lg">
-                      {product.title}
-                    </h3>
-                    <p className="text-banc-muted-readable text-sm mt-0.5">
-                      {product.description}
-                    </p>
-                  </div>
-                </div>
+            {/* Right - Insurance list */}
+            <ul className="border-t border-banc-dark/15">
+              {LANDLORD_INSURANCE_PRODUCTS.map((product, index) => (
+                <li key={index} className="border-b border-banc-dark/15 py-4">
+                  <h3 className="text-lg font-semibold text-banc-dark-deep">{product.title}</h3>
+                  <p className="mt-0.5 text-sm text-banc-muted-readable">{product.description}</p>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* CTA Section - Premium Gradient */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-banc-sky to-banc-sky-dark" />
-
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-
-        <div className="relative mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <h2 className="text-4xl font-semibold text-white sm:text-5xl tracking-tight">
-            Thinking of letting your property?
-          </h2>
-          <p className="mt-6 text-xl text-white/90 max-w-2xl mx-auto">
+      {/* CTA Section */}
+      <section className={darkBand}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Get started</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Thinking of letting your property?</h2>
+          <p className="mt-4 max-w-2xl text-white/70 lg:text-lg">
             We would be delighted to hear from you. Book your free rental
             valuation or speak to our lettings team today.
           </p>
 
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button className="bg-white text-banc-focus hover:bg-white/90 px-10 py-7 text-base font-semibold transition-all duration-300 hover:shadow-xl">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <Button className={cn(actionPrimaryOnDark, "shadow-none")}>
               Book Free Valuation
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
-            <Button
-              variant="outline"
-              className="bg-transparent border-white text-white hover:bg-white/10 px-10 py-7 text-base font-semibold"
-            >
+            <Button variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
               Contact Lettings Team
             </Button>
           </div>

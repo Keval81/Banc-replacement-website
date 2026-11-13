@@ -2,19 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  Home, 
-  TrendingUp, 
-  TrendingDown, 
-  Calendar, 
-  PoundSterling,
-  MapPin,
-  Building2,
-  Loader2,
-  AlertCircle
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Calendar, Building2, Loader2, AlertCircle } from "lucide-react";
+import { actionPrimary, choiceChip, eyebrow, fieldControl } from "@/components/ui/form-styles";
 import { SoldPriceRecord, SoldPriceStats } from "@/lib/types/data";
 
 interface SoldPriceHistoryProps {
@@ -67,59 +56,52 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
   };
 
   return (
-    <div className={`bg-white rounded-lg border border-banc-grey/20 overflow-hidden ${className}`}>
+    <div className={`overflow-hidden rounded-[var(--radius-md)] border border-banc-line bg-white ${className}`}>
       {/* Header */}
-      <div className="px-5 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-banc-grey/20">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white">
-            <Home className="h-5 w-5" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-banc-dark">Sold Price History</h3>
-            <p className="text-sm text-banc-muted-readable">HM Land Registry data</p>
-          </div>
-        </div>
+      <div className="border-b border-banc-dark/15 px-5 py-5 sm:px-6">
+        <p className={eyebrow}>HM Land Registry data</p>
+        <h3 className="mt-2 text-lg font-semibold text-banc-dark-deep">Sold Price History</h3>
       </div>
 
       {/* Search */}
       {!initialPostcode && (
-        <div className="p-4 border-b border-banc-grey/20">
-          <div className="flex gap-2">
-            <Input
+        <div className="border-b border-banc-dark/15 px-5 py-5 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <input
               placeholder="Enter postcode..."
               value={postcode}
               onChange={(e) => setPostcode(e.target.value)}
-              className="flex-1"
+              className={`${fieldControl} sm:flex-1`}
             />
-            <Button onClick={fetchData} disabled={loading}>
+            <button onClick={fetchData} disabled={loading} className={actionPrimary}>
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Search'}
-            </Button>
+            </button>
           </div>
         </div>
       )}
 
       {/* Stats */}
       {stats && !loading && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 border-b border-banc-grey/20">
-          <div className="text-center">
-            <p className="text-xs text-banc-muted-readable mb-1">Average Price</p>
-            <p className="text-lg font-bold text-banc-dark">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-b border-banc-dark/15 px-5 py-5 sm:grid-cols-4 sm:px-6">
+          <div>
+            <p className="mb-1 text-xs text-banc-muted-readable">Average Price</p>
+            <p className="text-lg font-medium text-banc-dark-deep">
               {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(stats.averagePrice)}
             </p>
           </div>
-          <div className="text-center">
-            <p className="text-xs text-banc-muted-readable mb-1">Median Price</p>
-            <p className="text-lg font-bold text-banc-dark">
+          <div>
+            <p className="mb-1 text-xs text-banc-muted-readable">Median Price</p>
+            <p className="text-lg font-medium text-banc-dark-deep">
               {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(stats.medianPrice)}
             </p>
           </div>
-          <div className="text-center">
-            <p className="text-xs text-banc-muted-readable mb-1">Sales (12m)</p>
-            <p className="text-lg font-bold text-banc-dark">{stats.salesCount12Months}</p>
+          <div>
+            <p className="mb-1 text-xs text-banc-muted-readable">Sales (12m)</p>
+            <p className="text-lg font-medium text-banc-dark-deep">{stats.salesCount12Months}</p>
           </div>
-          <div className="text-center">
-            <p className="text-xs text-banc-muted-readable mb-1">Price Change</p>
-            <p className={`text-lg font-bold ${stats.priceChangePercent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <div>
+            <p className="mb-1 text-xs text-banc-muted-readable">Price Change</p>
+            <p className={`text-lg font-medium ${stats.priceChangePercent >= 0 ? 'text-green-700' : 'text-red-700'}`}>
               {stats.priceChangePercent >= 0 ? '+' : ''}{stats.priceChangePercent}%
             </p>
           </div>
@@ -128,18 +110,16 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
 
       {/* Filter */}
       {prices.length > 0 && (
-        <div className="px-4 py-3 border-b border-banc-grey/20 overflow-x-auto">
+        <div className="overflow-x-auto border-b border-banc-dark/15 px-5 py-4 sm:px-6">
           <div className="flex gap-2">
             {(['all', 'detached', 'semi-detached', 'terraced', 'flat'] as const).map((type) => (
-              <Button
+              <button
                 key={type}
-                variant={filter === type ? 'default' : 'outline'}
-                size="sm"
                 onClick={() => setFilter(type)}
-                className="text-xs capitalize"
+                className={`${choiceChip(filter === type)} flex-shrink-0 whitespace-nowrap capitalize`}
               >
                 {type === 'all' ? 'All Types' : type}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
@@ -148,51 +128,50 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
       {/* Price List */}
       <div className="max-h-96 overflow-y-auto">
         {loading ? (
-          <div className="flex items-center justify-center py-12">
+          <div className="flex items-center px-5 py-12 sm:px-6">
             <Loader2 className="h-8 w-8 animate-spin text-banc-muted-readable" />
           </div>
         ) : error ? (
-          <div className="flex items-center justify-center py-12 text-red-500">
-            <AlertCircle className="h-5 w-5 mr-2" />
+          <div className="flex items-center px-5 py-12 text-red-700 sm:px-6">
+            <AlertCircle className="mr-2 h-5 w-5 flex-shrink-0" />
             {error}
           </div>
         ) : filteredPrices.length === 0 ? (
-          <div className="text-center py-12 text-banc-muted-readable">
-            <Home className="h-12 w-12 mx-auto mb-3 text-banc-muted-readable" />
+          <div className="px-5 py-12 text-banc-muted-readable sm:px-6">
             <p>No sold prices found</p>
-            {!initialPostcode && <p className="text-sm mt-1">Enter a postcode to search</p>}
+            {!initialPostcode && <p className="mt-1 text-sm">Enter a postcode to search</p>}
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-banc-dark/15">
             {filteredPrices.map((price, index) => (
               <motion.div
                 key={price.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="px-5 py-4 hover:bg-banc-grey-pale transition-colors"
+                className="px-5 py-4 sm:px-6"
               >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-medium text-banc-dark">{price.address}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-banc-muted-readable flex items-center gap-1">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="font-medium text-banc-dark-deep">{price.address}</p>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="flex items-center gap-1 text-xs text-banc-muted-readable">
                         <Calendar className="h-3 w-3" />
                         {formatDate(price.date)}
                       </span>
-                      <span className="text-xs text-banc-muted-readable flex items-center gap-1">
+                      <span className="flex items-center gap-1 text-xs text-banc-muted-readable">
                         <Building2 className="h-3 w-3" />
                         {price.propertyType}
                       </span>
                       {price.newBuild && (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                        <span className="text-xs font-medium text-green-700">
                           New build
                         </span>
                       )}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold text-banc-dark">{price.priceFormatted}</p>
+                  <div className="flex-shrink-0 text-right">
+                    <p className="font-semibold text-banc-dark-deep">{price.priceFormatted}</p>
                     <span className="text-xs text-banc-muted-readable">{price.tenure}</span>
                   </div>
                 </div>
@@ -204,7 +183,7 @@ export function SoldPriceHistory({ postcode: initialPostcode, street, className 
 
       {/* Footer */}
       {prices.length > 0 && (
-        <div className="px-5 py-3 bg-banc-grey-pale border-t border-banc-grey/20 text-xs text-banc-muted-readable text-center">
+        <div className="border-t border-banc-dark/15 px-5 py-3 text-xs text-banc-muted-readable sm:px-6">
           Data from HM Land Registry • Updated daily
         </div>
       )}

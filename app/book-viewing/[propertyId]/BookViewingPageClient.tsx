@@ -14,12 +14,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { buildViewingEnquiry, submitContactEnquiry } from "@/lib/property-enquiry";
 import { buildPropertyHref } from "@/lib/property-view";
+import { PageBand } from "@/components/PageBand";
+import { actionPrimary, actionSecondary, formPanel } from "@/components/ui/form-styles";
 import {
   TimeSlot,
   ViewingBookingRequest,
 } from "@/types/portal";
 import {
-  ChevronLeft,
   Bed,
   Bath,
   CheckCircle,
@@ -91,9 +92,9 @@ export default function BookViewingPage() {
 
   if (propertyState.phase === "loading") {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12">
         <div
-          className="max-w-6xl mx-auto flex min-h-[50vh] flex-col items-center justify-center"
+          className="mx-auto flex min-h-[50vh] max-w-6xl flex-col items-center justify-center"
           role="status"
           aria-live="polite"
         >
@@ -106,24 +107,21 @@ export default function BookViewingPage() {
 
   if (propertyState.phase === "notfound") {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-banc-line p-8 text-center">
-            <h1 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <div className={formPanel}>
+            <h1 className="mb-3 font-display text-3xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
               We couldn&apos;t find that property
             </h1>
-            <p className="text-banc-muted-readable mb-6">
+            <p className="mb-6 text-banc-muted-readable">
               It may have been sold, let or withdrawn from the market. You can
               browse our current listings or call the office on{" "}
-              <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">
+              <a href={BANC_CONTACT.callHref} className="text-banc-focus underline underline-offset-2">
                 {BANC_CONTACT.displayPhone}
               </a>
               .
             </p>
-            <Link
-              href="/sales/properties"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
-            >
+            <Link href="/sales/properties" className={actionPrimary}>
               Browse properties
             </Link>
           </div>
@@ -138,16 +136,14 @@ export default function BookViewingPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-banc-line p-8 text-center" role="status">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-green-600" aria-hidden="true" />
-            </div>
-            <h2 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <div className={formPanel} role="status">
+            <CheckCircle className="mb-5 h-10 w-10 text-green-700" aria-hidden="true" />
+            <h2 className="mb-3 font-display text-3xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
               Viewing request sent
             </h2>
-            <p className="text-banc-muted-readable mb-6">
+            <p className="text-banc-muted-readable">
               We&apos;ve received your request to view{" "}
               <strong>{property.title}</strong> on{" "}
               <strong>
@@ -159,24 +155,16 @@ export default function BookViewingPage() {
               </strong>{" "}
               at <strong>{getSelectedTime()}</strong>.
             </p>
-            <div className="bg-banc-grey-pale rounded-lg p-4 mb-6">
-              <p className="text-sm text-banc-muted-readable">
-                This is your preferred slot, not a confirmed appointment. One of
-                the team will come back to you to arrange it, and we&apos;ve
-                emailed you a copy of what you sent.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href={propertyHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
-              >
+            <p className="mt-6 border-t border-banc-dark/15 pt-6 text-sm text-banc-muted-readable">
+              This is your preferred slot, not a confirmed appointment. One of
+              the team will come back to you to arrange it, and we&apos;ve
+              emailed you a copy of what you sent.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link href={propertyHref} className={actionPrimary}>
                 Back to the property
               </Link>
-              <Link
-                href="/sales/properties"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-banc-line text-banc-dark-deep rounded-lg font-medium hover:bg-banc-grey-pale transition-colors"
-              >
+              <Link href="/sales/properties" className={actionSecondary}>
                 Browse More Properties
               </Link>
             </div>
@@ -186,37 +174,25 @@ export default function BookViewingPage() {
     );
   }
 
+  const stepHeading =
+    "mb-6 flex items-baseline gap-3 font-display text-2xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark";
+  const stepNumber = "font-sans text-sm font-semibold tabular-nums text-banc-focus";
+
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      {/* Banc opener: the same dark band, sky eyebrow and display heading the
-          rest of the site uses, so the enquiry pages read as part of it. */}
-      <section className="bg-banc-dark-deep">
-        <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10 lg:py-14">
-          <Link
-            href={propertyHref}
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-banc-sky"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            Back to the property
-          </Link>
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-banc-sky">
-            Arrange a visit
-          </p>
-          <h1 className="font-display text-3xl font-light leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl lg:text-5xl">
-            Request a Viewing
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70">
-            Tell us the date and time that suit you. Nothing is booked until one of the team confirms it with you.
-          </p>
-        </div>
-      </section>
+      <PageBand
+        eyebrow="Arrange a visit"
+        title="Request a Viewing"
+        lede="Tell us the date and time that suit you. Nothing is booked until one of the team confirms it with you."
+        back={{ href: propertyHref, label: "Back to the property" }}
+      />
 
-      <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10">
-        <div className="grid lg:grid-cols-3 gap-6">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-banc-line overflow-hidden sticky top-4">
+            <div className="overflow-hidden rounded-[var(--radius-md)] border border-banc-line bg-white lg:sticky lg:top-28">
               <div className="relative h-48 w-full bg-banc-grey-pale">
                 {heroImage ? (
                   <Image
@@ -251,7 +227,7 @@ export default function BookViewingPage() {
                 </div>
                 <Link
                   href={propertyHref}
-                  className="text-sm text-banc-focus hover:underline mt-3 inline-block"
+                  className="mt-2 inline-flex min-h-11 items-center text-sm text-banc-focus underline-offset-2 hover:underline"
                 >
                   View full details →
                 </Link>
@@ -260,13 +236,11 @@ export default function BookViewingPage() {
           </div>
 
           {/* Right Column - Booking Form */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-12 lg:col-span-2">
             {/* Step 1: Calendar */}
             <div>
-              <h2 className="text-lg font-semibold text-banc-dark-deep mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
-                  1
-                </span>
+              <h2 className={stepHeading}>
+                <span className={stepNumber}>1</span>
                 Choose a Preferred Date
               </h2>
               <CalendarPicker
@@ -279,10 +253,8 @@ export default function BookViewingPage() {
             {/* Step 2: Time Slots */}
             {selectedDate && (
               <div>
-                <h2 className="text-lg font-semibold text-banc-dark-deep mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
-                    2
-                  </span>
+                <h2 className={stepHeading}>
+                  <span className={stepNumber}>2</span>
                   Choose a Preferred Time
                 </h2>
                 <TimeSlots
@@ -297,16 +269,14 @@ export default function BookViewingPage() {
             {/* Step 3: Contact Details */}
             {selectedDate && (
               <div>
-                <h2 className="text-lg font-semibold text-banc-dark-deep mb-4 flex items-center gap-2">
-                  <span className="w-6 h-6 bg-banc-focus text-white rounded-full flex items-center justify-center text-sm">
-                    3
-                  </span>
+                <h2 className={stepHeading}>
+                  <span className={stepNumber}>3</span>
                   Your Details
                 </h2>
                 {submitError && (
                   <div
                     role="alert"
-                    className="mb-4 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                    className="mb-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-4 text-sm text-red-800"
                   >
                     <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
                     <p>{submitError}</p>

@@ -2,22 +2,18 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { 
-  Phone, 
-  Mail, 
-  ArrowRight, 
-  Home, 
-  MapPin, 
-  Building2, 
-  Landmark, 
-  TrendingUp, 
-  Shield, 
-  Clock, 
-  Users,
-  CheckCircle2,
-  Sparkles
-} from "lucide-react";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimaryOnDark,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
+import { Phone, Mail, ArrowRight, Shield, Clock, CheckCircle2 } from "lucide-react";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 
 export const metadata: Metadata = withPageDefaults("/land-new-homes", {
@@ -33,441 +29,228 @@ export const metadata: Metadata = withPageDefaults("/land-new-homes", {
 
 export const revalidate = 3600;
 
+const contactRow =
+  "flex min-h-11 flex-col justify-center border-t border-white/15 py-4 transition-colors duration-200 hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--banc-focus-dark)]";
+
 export default function LandNewHomesPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      
-      {/* Premium Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1783858828529-6f5354095c60?w=1920&q=80"
-            alt="Modern architectural development"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/95 via-banc-dark-deep/85 to-banc-dark-deep/60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-banc-dark-deep via-transparent to-transparent" />
+
+      <PageBand
+        eyebrow="Premium Development Services"
+        title="Land & New Homes"
+        lede="Expert marketing campaigns for new property developments and land opportunities across North London and Hertfordshire. Partner with specialists who understand the developer mindset."
+        image={{
+          src: "https://images.unsplash.com/photo-1783858828529-6f5354095c60?w=1920&q=80",
+          alt: "Modern architectural development",
+          priority: true,
+        }}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a href="#contact" className={actionPrimaryOnDark}>
+            <Phone className="h-4 w-4" aria-hidden="true" />
+            Discuss Your Project
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a href="#services" className={actionSecondaryOnDark}>
+            Explore Services
+          </a>
         </div>
-        
-        {/* Animated Accent Lines */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-banc-sky/30 to-transparent" />
-          <div className="absolute top-0 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-banc-sky/20 to-transparent" />
-          <div className="absolute top-0 left-3/4 w-px h-full bg-gradient-to-b from-transparent via-banc-sky/30 to-transparent" />
-        </div>
-        
-        {/* Hero Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
-          <div className="max-w-3xl">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/30 mb-8">
-              <Sparkles className="w-4 h-4 text-banc-focus" />
-              <span className="text-sm font-medium text-banc-focus tracking-wide">Premium Development Services</span>
-            </div>
-            
-            {/* Title */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1]">
-              Land &<br />
-              <span className="text-banc-focus">New Homes</span>
-            </h1>
-            
-            {/* Description */}
-            <p className="mt-8 text-xl text-white/80 leading-relaxed max-w-2xl">
-              Expert marketing campaigns for new property developments and land opportunities 
-              across North London and Hertfordshire. Partner with specialists who understand 
-              the developer mindset.
-            </p>
-            
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Button 
-                asChild
-                size="lg"
-                className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base font-semibold rounded-full group"
-              >
-                <a href="#contact">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Discuss Your Project
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </a>
-              </Button>
-              <Button 
-                asChild
-                variant="outline" 
-                size="lg"
-                className="bg-transparent border-white/30 text-white hover:bg-white/10 px-8 py-6 text-base rounded-full"
-              >
-                <a href="#services">Explore Services</a>
-              </Button>
-            </div>
-            
-            {/* Trust Indicators */}
-            <div className="mt-12 flex flex-wrap items-center gap-8">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
-                </div>
-                <span className="text-white/70 text-sm">Bespoke Campaigns</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
-                </div>
-                <span className="text-white/70 text-sm">Local Expertise</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-banc-focus" />
-                </div>
-                <span className="text-white/70 text-sm">Proven Results</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2">
-          <span className="text-white/50 text-xs uppercase tracking-widest">Scroll</span>
-          <div className="w-px h-12 bg-gradient-to-b from-banc-sky to-transparent" />
-        </div>
-      </section>
+
+        {/* Trust Indicators */}
+        <ul className="mt-8 flex flex-col gap-x-8 gap-y-2 border-t border-white/15 pt-5 text-sm text-white/70 sm:flex-row">
+          {["Bespoke Campaigns", "Local Expertise", "Proven Results"].map((item) => (
+            <li key={item} className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[var(--banc-focus-dark)]" aria-hidden="true" />
+              {item}
+            </li>
+          ))}
+        </ul>
+      </PageBand>
 
       {/* Section 1: Land & New Homes - Image Left, Text Right */}
-      <section id="services" className="py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-16 lg:grid-cols-2 items-center">
+      <section id="services" className={cn(sectionPadding, "scroll-mt-24")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-16">
             {/* Image Side */}
-            <div className="relative group">
-              {/* Main Image */}
-              <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80"
-                  alt="Contemporary apartment development"
-                  className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-banc-dark-deep/60 via-transparent to-transparent" />
-                
-                {/* Services Overlay */}
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <Building2 className="w-6 h-6 text-banc-focus mx-auto mb-2" />
-                      <p className="text-sm font-bold text-banc-dark-deep">New Homes</p>
-                      <p className="text-xs text-banc-muted-readable">Marketing</p>
-                    </div>
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <TrendingUp className="w-6 h-6 text-banc-focus mx-auto mb-2" />
-                      <p className="text-sm font-bold text-banc-dark-deep">Land</p>
-                      <p className="text-xs text-banc-muted-readable">Acquisition</p>
-                    </div>
-                    <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 text-center shadow-lg">
-                      <Users className="w-6 h-6 text-banc-focus mx-auto mb-2" />
-                      <p className="text-sm font-bold text-banc-dark-deep">Director</p>
-                      <p className="text-xs text-banc-muted-readable">Led Service</p>
-                    </div>
-                  </div>
+            <figure>
+              <img
+                src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80"
+                alt="Contemporary apartment development"
+                className="aspect-[4/3] w-full rounded-[var(--radius-md)] object-cover"
+              />
+              <figcaption className="mt-4 grid grid-cols-3 gap-x-4 border-t border-banc-dark/15 pt-4">
+                <div>
+                  <p className="text-sm font-semibold text-banc-dark-deep">New Homes</p>
+                  <p className="text-xs text-banc-muted-readable">Marketing</p>
                 </div>
-              </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-banc-sky/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-banc-sky/10 rounded-full blur-3xl" />
-              
-              {/* Floating Badge */}
-              <div className="absolute -top-4 -right-4 bg-banc-focus text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
-                <Home className="w-4 h-4" />
-                <span className="text-sm font-semibold">New Homes</span>
-              </div>
-            </div>
-            
+                <div>
+                  <p className="text-sm font-semibold text-banc-dark-deep">Land</p>
+                  <p className="text-xs text-banc-muted-readable">Acquisition</p>
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-banc-dark-deep">Director</p>
+                  <p className="text-xs text-banc-muted-readable">Led Service</p>
+                </div>
+              </figcaption>
+            </figure>
+
             {/* Content Side */}
             <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 mb-6">
-                <Building2 className="w-4 h-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus uppercase tracking-wider">Development Services</span>
-              </div>
-              
-              <h2 className="text-4xl sm:text-5xl font-bold text-banc-dark-deep leading-tight">
-                Land & New Homes
-              </h2>
-              
-              <div className="mt-8 space-y-6 text-banc-dark-mid leading-relaxed text-lg">
+              <p className={eyebrow}>Development Services</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Land &amp; New Homes</h2>
+
+              <div className="mt-7 space-y-5 text-base leading-relaxed text-banc-dark-mid lg:text-lg">
                 <p>
-                  The directors at Banc have a wealth of experience in providing marketing 
-                  campaigns for new property developments in North London and Hertfordshire. 
-                  With years of experience in establishing bespoke campaigns for our clients, 
-                  we have the skills and local knowledge required to get the most out of your 
+                  The directors at Banc have a wealth of experience in providing marketing
+                  campaigns for new property developments in North London and Hertfordshire.
+                  With years of experience in establishing bespoke campaigns for our clients,
+                  we have the skills and local knowledge required to get the most out of your
                   new developments.
                 </p>
                 <p>
-                  We offer a comprehensive service when promoting your new home, working 
-                  closely with you to ensure your properties gain the level of exposure 
+                  We offer a comprehensive service when promoting your new home, working
+                  closely with you to ensure your properties gain the level of exposure
                   needed to create a swift and effective return on your investment.
                 </p>
                 <p>
-                  We have experience working with a wide range of clients including builders, 
-                  developers and private investors across the Hertfordshire area. Whether you 
-                  are developing a block of contemporary apartments, an individual bespoke 
-                  home or a collection of new houses, please contact us to find out how we 
+                  We have experience working with a wide range of clients including builders,
+                  developers and private investors across the Hertfordshire area. Whether you
+                  are developing a block of contemporary apartments, an individual bespoke
+                  home or a collection of new houses, please contact us to find out how we
                   can provide you with a campaign that will be tailored to your needs.
                 </p>
                 <p className="font-medium text-banc-dark-deep">
-                  In addition we can offer strategic advice right the way through from planning 
+                  In addition we can offer strategic advice right the way through from planning
                   stages to implementation of a prolific and successful campaign.
                 </p>
               </div>
-              
+
               {/* Feature List */}
-              <div className="mt-8 grid grid-cols-2 gap-4">
+              <ul className="mt-7 grid gap-x-8 sm:grid-cols-2">
                 {[
                   "Bespoke Marketing Campaigns",
                   "Strategic Planning Advice",
                   "Maximum Property Exposure",
                   "Local Market Expertise"
                 ].map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full bg-banc-sky/20 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-banc-focus" />
-                    </div>
-                    <span className="text-banc-dark-mid text-sm font-medium">{feature}</span>
-                  </div>
+                  <li key={idx} className="flex items-center gap-3 border-t border-banc-dark/15 py-3">
+                    <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-banc-focus" aria-hidden="true" />
+                    <span className="text-sm font-medium text-banc-dark-mid">{feature}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       {/* Section 2: Land Acquisition - Text Left, Image Right */}
-      <section className="py-24 lg:py-32 bg-white relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, #1A1917 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
-        </div>
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 relative">
-          <div className="grid gap-16 lg:grid-cols-2 items-center">
+      <section className={cn(sectionPadding, "bg-white")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-16">
             {/* Content Side */}
             <div className="order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 mb-6">
-                <Landmark className="w-4 h-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus uppercase tracking-wider">Land Opportunities</span>
-              </div>
-              
-              <h2 className="text-4xl sm:text-5xl font-bold text-banc-dark-deep leading-tight">
-                Land Acquisition
-              </h2>
-              
-              <div className="mt-8 space-y-6 text-banc-dark-mid leading-relaxed text-lg">
+              <p className={eyebrow}>Land Opportunities</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Land Acquisition</h2>
+
+              <div className="mt-7 space-y-5 text-base leading-relaxed text-banc-dark-mid lg:text-lg">
                 <p>
-                  We care about our local area and the people in the area. Our land department 
-                  exists to provide expert advice to those who own land and property where there 
+                  We care about our local area and the people in the area. Our land department
+                  exists to provide expert advice to those who own land and property where there
                   may be the possibility of development or redevelopment.
                 </p>
                 <p>
-                  We work hard with land owners and land buyers, helping us to build strong 
+                  We work hard with land owners and land buyers, helping us to build strong
                   long standing relationships across our local communities.
                 </p>
                 <p className="font-medium text-banc-dark-deep">
-                  If you have a property or land which you think could have development potential, 
+                  If you have a property or land which you think could have development potential,
                   we would be delighted to hear from you.
                 </p>
               </div>
-              
-              {/* Contact Highlight Box */}
-              <div className="mt-8 p-6 bg-gradient-to-r from-banc-sky/10 to-transparent rounded-2xl border-l-4 border-banc-sky">
-                <p className="text-banc-dark-mid leading-relaxed">
+
+              {/* Contact Highlight */}
+              <div className="mt-7 border-t border-banc-dark/15 pt-6">
+                <p className="leading-relaxed text-banc-dark-mid">
                   Please call <strong className="text-banc-dark-deep">Nitesh Bheda</strong> or <strong className="text-banc-dark-deep">Andrew Crump</strong> on <a href={BANC_CONTACT.callHref} className="text-banc-focus font-semibold hover:underline">{BANC_CONTACT.displayPhone}</a> alternatively email <a href="mailto:nitesh@bancproperty.com" className="text-banc-focus hover:underline">nitesh@bancproperty.com</a> or <a href="mailto:andrew@bancproperty.com" className="text-banc-focus hover:underline">andrew@bancproperty.com</a> to discuss your enquiry.
                 </p>
               </div>
-              
-              {/* Confidentiality Badge */}
-              <div className="mt-6 inline-flex items-center gap-3 px-5 py-3 bg-banc-dark-deep rounded-full">
-                <Shield className="w-5 h-5 text-banc-sky" />
-                <span className="text-white font-medium text-sm">All conversations strictly confidential & without obligation</span>
-              </div>
+
+              {/* Confidentiality note */}
+              <p className="mt-6 flex items-start gap-3 border-t border-banc-dark/15 pt-6 text-sm font-medium text-banc-dark-deep">
+                <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-banc-focus" aria-hidden="true" />
+                All conversations strictly confidential &amp; without obligation
+              </p>
             </div>
-            
+
             {/* Image Side */}
-            <div className="relative group order-1 lg:order-2">
-              {/* Main Image */}
-              <div className="relative overflow-hidden rounded-3xl shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1448630360428-65456885c650?w=1200&q=80"
-                  alt="Land development opportunity"
-                  className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-banc-dark-deep/40 via-transparent to-transparent" />
-              </div>
-              
-              {/* Decorative Elements */}
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-banc-sky/20 rounded-full blur-3xl" />
-              <div className="absolute -top-6 -right-6 w-40 h-40 bg-banc-sky/10 rounded-full blur-3xl" />
-              
-              {/* Floating Card */}
-              <div className="absolute bottom-8 -left-8 bg-white rounded-2xl shadow-xl p-6 max-w-xs">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-banc-sky/20 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-banc-focus" />
-                  </div>
-                  <span className="font-semibold text-banc-dark-deep">Local Expertise</span>
-                </div>
-                <p className="text-sm text-banc-muted-readable">Deep knowledge of North London and Hertfordshire development opportunities</p>
-              </div>
-              
-              {/* Floating Badge */}
-              <div className="absolute -top-4 -left-4 bg-banc-dark-deep text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2">
-                <Landmark className="w-4 h-4 text-banc-sky" />
-                <span className="text-sm font-semibold">Land Team</span>
-              </div>
-            </div>
+            <figure className="order-1 lg:order-2">
+              <img
+                src="https://images.unsplash.com/photo-1448630360428-65456885c650?w=1200&q=80"
+                alt="Land development opportunity"
+                className="aspect-[4/3] w-full rounded-[var(--radius-md)] object-cover"
+              />
+              <figcaption className="mt-4 border-t border-banc-dark/15 pt-4">
+                <p className="text-sm font-semibold text-banc-dark-deep">Local Expertise</p>
+                <p className="mt-1 text-sm text-banc-muted-readable">Deep knowledge of North London and Hertfordshire development opportunities</p>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
       {/* Dark Contact CTA Section */}
-      <section id="contact" className="py-24 lg:py-32 bg-banc-dark-deep relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-banc-sky/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-banc-sky/5 rounded-full blur-[120px]" />
-        </div>
-        
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }} />
-        </div>
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 relative">
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/30 mb-6">
-              <Phone className="w-4 h-4 text-banc-sky" />
-              <span className="text-sm font-medium text-banc-sky uppercase tracking-wider">Get In Touch</span>
-            </div>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
-              Contact Our Land<br />& New Homes Team
-            </h2>
-            <p className="mt-6 text-lg text-white/70 leading-relaxed">
-              Ready to discuss your development project? Our specialists are here to help 
-              maximise your investment potential.
-            </p>
-          </div>
-          
-          {/* Contact Cards Grid */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-5xl mx-auto">
-            {/* Phone Card */}
-            <a 
-              href={BANC_CONTACT.callHref} 
-              className="group relative bg-white/5 hover:bg-white/10 border border-white/10 hover:border-banc-sky/50 rounded-2xl p-6 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-banc-sky/0 to-banc-sky/0 group-hover:from-banc-sky/5 group-hover:to-transparent rounded-2xl transition-all duration-300" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-banc-sky/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Phone className="h-6 w-6 text-banc-sky" />
-                </div>
-                <p className="text-sm text-white/50 mb-1">Call Us</p>
-                <p className="text-xl font-bold text-white group-hover:text-banc-sky transition-colors">{BANC_CONTACT.displayPhone}</p>
-                <div className="mt-4 flex items-center gap-2 text-banc-sky text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Call Now</span>
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
+      <section id="contact" className={cn(sectionPadding, "banc-dark-surface scroll-mt-24 bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Get In Touch</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>
+            Contact Our Land<br />&amp; New Homes Team
+          </h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
+            Ready to discuss your development project? Our specialists are here to help
+            maximise your investment potential.
+          </p>
+
+          {/* Contact rows */}
+          <div className="mt-7 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
+            <a href={BANC_CONTACT.callHref} className={contactRow}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/70">Call Us</span>
+              <span className="mt-1 text-lg font-semibold text-white">{BANC_CONTACT.displayPhone}</span>
             </a>
-            
-            {/* Nitesh Email Card */}
-            <a 
-              href="mailto:nitesh@bancproperty.com" 
-              className="group relative bg-white/5 hover:bg-white/10 border border-white/10 hover:border-banc-sky/50 rounded-2xl p-6 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-banc-sky/0 to-banc-sky/0 group-hover:from-banc-sky/5 group-hover:to-transparent rounded-2xl transition-all duration-300" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-banc-sky/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Mail className="h-6 w-6 text-banc-sky" />
-                </div>
-                <p className="text-sm text-white/50 mb-1">Nitesh Bheda</p>
-                <p className="text-sm font-semibold text-white group-hover:text-banc-sky transition-colors truncate">nitesh@bancproperty.com</p>
-                <div className="mt-4 flex items-center gap-2 text-banc-sky text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Send Email</span>
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
+            <a href="mailto:nitesh@bancproperty.com" className={contactRow}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/70">Nitesh Bheda</span>
+              <span className="mt-1 truncate text-sm font-semibold text-white">nitesh@bancproperty.com</span>
             </a>
-            
-            {/* Andrew Email Card */}
-            <a 
-              href="mailto:andrew@bancproperty.com" 
-              className="group relative bg-white/5 hover:bg-white/10 border border-white/10 hover:border-banc-sky/50 rounded-2xl p-6 transition-all duration-300"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-banc-sky/0 to-banc-sky/0 group-hover:from-banc-sky/5 group-hover:to-transparent rounded-2xl transition-all duration-300" />
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-banc-sky/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Mail className="h-6 w-6 text-banc-sky" />
-                </div>
-                <p className="text-sm text-white/50 mb-1">Andrew Crump</p>
-                <p className="text-sm font-semibold text-white group-hover:text-banc-sky transition-colors truncate">andrew@bancproperty.com</p>
-                <div className="mt-4 flex items-center gap-2 text-banc-sky text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span>Send Email</span>
-                  <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
+            <a href="mailto:andrew@bancproperty.com" className={contactRow}>
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/70">Andrew Crump</span>
+              <span className="mt-1 truncate text-sm font-semibold text-white">andrew@bancproperty.com</span>
             </a>
-            
-            {/* Confidential Badge Card */}
-            <div className="relative bg-gradient-to-br from-banc-sky/20 to-banc-sky/5 border border-banc-sky/30 rounded-2xl p-6">
-              <div className="relative">
-                <div className="w-14 h-14 rounded-2xl bg-banc-sky/30 flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-banc-sky" />
-                </div>
-                <p className="text-sm text-white/50 mb-1">Our Promise</p>
-                <p className="text-lg font-bold text-white">Strictly Confidential</p>
-                <p className="mt-2 text-sm text-white/60">All conversations without obligation</p>
-              </div>
+            <div className="flex flex-col justify-center border-t border-white/15 py-4">
+              <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/70">Our Promise</span>
+              <span className="mt-1 text-lg font-semibold text-white">Strictly Confidential</span>
+              <span className="mt-1 text-sm text-white/70">All conversations without obligation</span>
             </div>
           </div>
-          
-          {/* Response Time Banner */}
-          <div className="mt-10 flex justify-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-white/5 rounded-full border border-white/10">
-              <Clock className="w-5 h-5 text-banc-sky" />
-              <span className="text-white/80">We aim to respond to all enquiries within <span className="text-banc-sky font-semibold">24 hours</span></span>
-            </div>
-          </div>
-          
+
+          {/* Response time */}
+          <p className="mt-6 flex items-start gap-3 text-sm text-white/80">
+            <Clock className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--banc-focus-dark)]" aria-hidden="true" />
+            <span>We aim to respond to all enquiries within <span className="font-semibold text-white">24 hours</span></span>
+          </p>
+
           {/* Main CTA Buttons */}
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Button 
-              asChild
-              size="lg"
-              className="bg-banc-focus hover:bg-banc-focus-hover text-white px-10 py-7 text-lg font-semibold rounded-full group"
-            >
-              <a href={BANC_CONTACT.callHref}>
-                <Phone className="mr-3 h-5 w-5" />
-                Call Now
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </Button>
-            <Button 
-              asChild
-              variant="outline" 
-              size="lg"
-              className="bg-transparent border-white/30 text-white hover:bg-white/10 px-10 py-7 text-lg rounded-full"
-            >
-              <a href="mailto:nitesh@bancproperty.com">
-                <Mail className="mr-3 h-5 w-5" />
-                Email Us
-              </a>
-            </Button>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href={BANC_CONTACT.callHref} className={actionPrimaryOnDark}>
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              Call Now
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href="mailto:nitesh@bancproperty.com" className={actionSecondaryOnDark}>
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Email Us
+            </a>
           </div>
         </div>
       </section>

@@ -2,7 +2,7 @@
 
 import { useId, useState, type FormEvent, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
   type SimpleEnquirySubject,
   type SimpleEnquiryValues,
 } from "@/lib/simple-enquiry";
+import { actionPrimary, fieldControl, fieldLabel, fieldTextarea } from "@/components/ui/form-styles";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -40,13 +41,12 @@ interface SimpleEnquiryFormProps {
   };
 }
 
-const LABEL_CLASS = "block text-sm font-medium text-banc-dark-mid mb-2";
-const INPUT_CLASS = "h-12 border-banc-line focus:border-banc-sky focus:ring-banc-sky/20";
-const TEXTAREA_CLASS = "border-banc-line focus:border-banc-sky focus:ring-banc-sky/20 resize-none";
-const SELECT_CLASS =
-  "w-full h-12 px-4 rounded-lg border border-banc-line focus:border-banc-sky focus:ring-2 focus:ring-banc-sky/20 bg-white text-banc-dark-mid";
-const CONSENT_CLASS = "flex items-start gap-3 p-4 bg-banc-grey-pale rounded-xl";
-const SUBMIT_CLASS = "w-full h-12 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold";
+const LABEL_CLASS = fieldLabel;
+const INPUT_CLASS = fieldControl;
+const TEXTAREA_CLASS = cn(fieldControl, fieldTextarea, "h-auto resize-none");
+const SELECT_CLASS = cn(fieldControl, "cursor-pointer appearance-none pr-11");
+const CONSENT_CLASS = "flex items-start gap-3 border-t border-banc-dark/15 pt-5";
+const SUBMIT_CLASS = cn(actionPrimary, "shadow-none");
 
 const FALLBACK_ERROR = `That didn't send. Please try again, or call us on ${BANC_CONTACT.displayPhone}.`;
 
@@ -132,7 +132,7 @@ export function SimpleEnquiryForm({
 
   if (status === "sent") {
     return (
-      <div role="status" className="rounded-xl border border-banc-line bg-banc-grey-pale p-6">
+      <div role="status" className="rounded-[var(--radius-md)] border border-banc-line bg-banc-grey-pale p-5 sm:p-6">
         <p className="text-lg font-semibold text-banc-dark-deep">{successTitle}</p>
         <p className="mt-2 text-sm leading-relaxed text-banc-muted-readable">{successBody}</p>
       </div>
@@ -168,6 +168,7 @@ export function SimpleEnquiryForm({
       return (
         <div key={field.name}>
           {label}
+          <div className="relative">
           <select
             id={id}
             name={field.name}
@@ -182,6 +183,11 @@ export function SimpleEnquiryForm({
               </option>
             ))}
           </select>
+          <ChevronDown
+            className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable"
+            aria-hidden="true"
+          />
+          </div>
         </div>
       );
     }
@@ -208,7 +214,7 @@ export function SimpleEnquiryForm({
     <form onSubmit={handleSubmit} className={cn("space-y-5", classNames?.form)}>
       {groupRows(fields).map((row) =>
         row.length === 2 ? (
-          <div key={row.map((field) => field.name).join("+")} className="grid sm:grid-cols-2 gap-4">
+          <div key={row.map((field) => field.name).join("+")} className="grid gap-5 sm:grid-cols-2 sm:gap-4">
             {row.map(renderField)}
           </div>
         ) : (
@@ -229,14 +235,14 @@ export function SimpleEnquiryForm({
           required
           checked={consent}
           onCheckedChange={(checked) => setConsent(checked === true)}
-          className="mt-0.5 border-banc-line data-[state=checked]:bg-banc-sky data-[state=checked]:border-banc-sky"
+          className="mt-0.5 h-5 w-5 border-banc-muted-readable data-[state=checked]:border-banc-focus data-[state=checked]:bg-banc-focus data-[state=checked]:text-white"
         />
         <label htmlFor={consentId} className="text-sm text-banc-muted-readable leading-relaxed cursor-pointer">
           {consentLabel ?? (
             <>
               Please tick this box if you are happy for us to contact you via phone and email. You can view
               our full{" "}
-              <Link href="/privacy" className="text-banc-focus hover:underline">
+              <Link href="/privacy" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
                 privacy policy
               </Link>{" "}
               on our website.
@@ -246,14 +252,14 @@ export function SimpleEnquiryForm({
       </div>
 
       {error && (
-        <div role="alert" className="rounded-xl border border-[#9B2C2C]/30 bg-[#9B2C2C]/5 p-4 text-sm text-[#9B2C2C]">
+        <div role="alert" className="rounded-[var(--radius-md)] border border-[#9B2C2C]/30 bg-[#9B2C2C]/5 p-4 text-sm text-[#9B2C2C]">
           {error}
         </div>
       )}
 
       <Button type="submit" disabled={status === "sending"} className={cn(SUBMIT_CLASS, classNames?.submit)}>
         {status === "sending" ? "Sending…" : submitLabel}
-        <ArrowRight className="ml-2 h-4 w-4" />
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </Button>
     </form>
   );

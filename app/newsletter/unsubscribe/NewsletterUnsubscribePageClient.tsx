@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Loader2, Check, Frown } from 'lucide-react';
+import { Loader2, Check } from 'lucide-react';
+import { PageBand } from '@/components/PageBand';
+import { actionPrimary, actionSecondary, fieldControl, fieldLabel, formPanel, sectionHeading } from '@/components/ui/form-styles';
+import { cn } from '@/lib/utils';
 
 export default function NewsletterUnsubscribePage() {
   const [email, setEmail] = useState('');
@@ -38,24 +41,22 @@ export default function NewsletterUnsubscribePage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-banc-grey-pale flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="w-8 h-8 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-banc-dark mb-3">
+      <div className="flex min-h-screen items-center bg-banc-grey-pale px-4 py-12 sm:px-6">
+        <div className={cn(formPanel, 'mx-auto w-full max-w-md')}>
+          <Check className="mb-4 h-8 w-8 text-green-700" aria-hidden="true" />
+          <h2 className={cn(sectionHeading, 'mb-3')}>
             You&apos;ve Been Unsubscribed
           </h2>
-          <p className="text-banc-muted-readable mb-6">
+          <p className="mb-6 text-banc-muted-readable">
             You have been successfully removed from our mailing list. You will no longer receive emails from us.
           </p>
-          <p className="text-sm text-banc-muted-readable mb-6">
+          <p className="mb-6 text-sm text-banc-muted-readable">
             Changed your mind?{' '}
-            <a href="/newsletter/signup" className="text-banc-teal hover:underline">
+            <a href="/newsletter/signup" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
               Subscribe again
             </a>
           </p>
-          <Button onClick={() => window.location.href = '/'} className="w-full">
+          <Button onClick={() => window.location.href = '/'} className={cn(actionPrimary, 'shadow-none sm:w-full')}>
             Back to Homepage
           </Button>
         </div>
@@ -64,23 +65,17 @@ export default function NewsletterUnsubscribePage() {
   }
 
   return (
-    <div className="min-h-screen bg-banc-grey-pale flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-banc-grey-pale rounded-full flex items-center justify-center mx-auto mb-4">
-            <Frown className="w-8 h-8 text-banc-muted-readable" />
-          </div>
-          <h1 className="text-2xl font-bold text-banc-dark mb-2">
-            Unsubscribe
-          </h1>
-          <p className="text-banc-muted-readable">
-            We&apos;re sorry to see you go. Enter your email to unsubscribe from our newsletter.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen bg-banc-grey-pale">
+      <PageBand
+        eyebrow="Newsletter"
+        title="Unsubscribe"
+        lede={<>We&apos;re sorry to see you go. Enter your email to unsubscribe from our newsletter.</>}
+      />
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+      <div className={cn(formPanel, 'max-w-xl')}>
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <Label htmlFor="email">Email Address</Label>
+            <Label htmlFor="email" className={fieldLabel}>Email Address</Label>
             <Input
               id="email"
               type="email"
@@ -88,12 +83,12 @@ export default function NewsletterUnsubscribePage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="mt-1"
+              className={fieldControl}
             />
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+            <div role="alert" className="rounded-[var(--radius-md)] bg-red-50 p-3 text-sm text-red-700">
               {error}
             </div>
           )}
@@ -101,12 +96,12 @@ export default function NewsletterUnsubscribePage() {
           <Button
             type="submit"
             variant="outline"
-            className="w-full"
+            className={cn(actionSecondary, 'sm:w-full')}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 Processing...
               </>
             ) : (
@@ -115,14 +110,15 @@ export default function NewsletterUnsubscribePage() {
           </Button>
         </form>
 
-        <div className="mt-6 pt-6 border-t text-center">
+        <div className="mt-6 border-t border-banc-dark/15 pt-6">
           <p className="text-sm text-banc-muted-readable">
             Having trouble?{' '}
-            <a href="mailto:info@banc.co.uk" className="text-banc-teal hover:underline">
+            <a href="mailto:info@banc.co.uk" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
               Contact us
             </a>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

@@ -13,6 +13,16 @@ import {
   Phone,
 } from "lucide-react";
 import { OfferSubmission, BuyerPosition, formatCurrency } from "@/types/portal";
+import {
+  actionPrimary,
+  choiceChip,
+  fieldControl,
+  fieldError,
+  fieldHelp,
+  fieldLabel,
+  fieldTextarea,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 
 interface OfferFormProps {
   propertyId: string;
@@ -161,31 +171,32 @@ export default function OfferForm({
 
   const difference = formData.amount ? formData.amount - askingPrice : 0;
 
+  // One panel (supplied by the page): groups are separated by hairlines, not nested cards.
+  const group = "border-t border-banc-dark/15 pt-6 first:border-t-0 first:pt-0";
+  const leadingIcon = "pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable";
+  const checkbox =
+    "h-5 w-5 shrink-0 rounded border-banc-line accent-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Offer Amount */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <label className="block text-sm font-medium text-banc-dark-deep mb-3">
+      <div className={group}>
+        <label className={fieldLabel}>
           Your Offer Amount
         </label>
         <div className="relative">
-          <PoundSterling className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" />
+          <PoundSterling className={leadingIcon} />
           <input
             type="text"
             value={formData.amount ? formData.amount.toLocaleString() : ""}
             onChange={(e) => handleAmountChange(e.target.value)}
             disabled={isSubmitting}
             placeholder="Enter offer amount"
-            className={`
-              w-full pl-12 pr-4 py-3 text-2xl font-semibold rounded-lg border bg-white
-              focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-              disabled:bg-banc-grey-pale disabled:cursor-not-allowed
-              ${errors.amount ? "border-red-500" : "border-banc-line"}
-            `}
+            className={cn(fieldControl, "h-14 pl-11 text-2xl font-semibold", errors.amount && "border-red-700")}
           />
         </div>
         {errors.amount && (
-          <p className="mt-2 text-sm text-red-500">{errors.amount}</p>
+          <p className={fieldError}>{errors.amount}</p>
         )}
 
         {/* Comparison to asking price */}
@@ -197,7 +208,7 @@ export default function OfferForm({
             {difference !== 0 && (
               <span
                 className={
-                  difference > 0 ? "text-green-600" : "text-amber-600"
+                  difference > 0 ? "text-green-700" : "text-amber-700"
                 }
               >
                 {difference > 0 ? "+" : ""}
@@ -220,7 +231,10 @@ export default function OfferForm({
                 }))
               }
               disabled={isSubmitting}
-              className="px-3 py-1.5 text-sm bg-banc-grey-pale hover:bg-banc-sky/10 text-banc-muted-readable hover:text-banc-sky rounded-lg transition-colors disabled:opacity-50"
+              className={cn(
+                choiceChip(formData.amount === Math.round(askingPrice * (pct / 100))),
+                "disabled:cursor-not-allowed disabled:opacity-60",
+              )}
             >
               {pct}%
             </button>
@@ -229,17 +243,17 @@ export default function OfferForm({
       </div>
 
       {/* Your Details */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <p className="block text-sm font-medium text-banc-dark-deep mb-3">
-          Your Details <span className="text-red-500">*</span>
+      <div className={group}>
+        <p className="mb-4 font-heading font-semibold text-banc-dark-deep">
+          Your Details <span className="text-red-700">*</span>
         </p>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label htmlFor="offer-name" className="block text-sm text-banc-muted-readable mb-1.5">
+            <label htmlFor="offer-name" className={fieldLabel}>
               Full name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
+              <User className={leadingIcon} aria-hidden="true" />
               <input
                 id="offer-name"
                 type="text"
@@ -249,17 +263,17 @@ export default function OfferForm({
                 onChange={handleContactChange}
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.name)}
-                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky disabled:bg-banc-grey-pale disabled:cursor-not-allowed ${errors.name ? "border-red-500" : "border-banc-line"}`}
+                className={cn(fieldControl, "pl-11", errors.name && "border-red-700")}
               />
             </div>
-            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+            {errors.name && <p className={fieldError}>{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="offer-email" className="block text-sm text-banc-muted-readable mb-1.5">
+            <label htmlFor="offer-email" className={fieldLabel}>
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
+              <Mail className={leadingIcon} aria-hidden="true" />
               <input
                 id="offer-email"
                 type="email"
@@ -269,17 +283,17 @@ export default function OfferForm({
                 onChange={handleContactChange}
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.email)}
-                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky disabled:bg-banc-grey-pale disabled:cursor-not-allowed ${errors.email ? "border-red-500" : "border-banc-line"}`}
+                className={cn(fieldControl, "pl-11", errors.email && "border-red-700")}
               />
             </div>
-            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+            {errors.email && <p className={fieldError}>{errors.email}</p>}
           </div>
           <div>
-            <label htmlFor="offer-phone" className="block text-sm text-banc-muted-readable mb-1.5">
+            <label htmlFor="offer-phone" className={fieldLabel}>
               Phone number
             </label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-banc-muted-readable" aria-hidden="true" />
+              <Phone className={leadingIcon} aria-hidden="true" />
               <input
                 id="offer-phone"
                 type="tel"
@@ -289,35 +303,33 @@ export default function OfferForm({
                 onChange={handleContactChange}
                 disabled={isSubmitting}
                 aria-invalid={Boolean(errors.phone)}
-                className={`w-full pl-10 pr-4 py-2.5 rounded-lg border bg-white focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky disabled:bg-banc-grey-pale disabled:cursor-not-allowed ${errors.phone ? "border-red-500" : "border-banc-line"}`}
+                className={cn(fieldControl, "pl-11", errors.phone && "border-red-700")}
               />
             </div>
-            {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
+            {errors.phone && <p className={fieldError}>{errors.phone}</p>}
           </div>
         </div>
       </div>
 
       {/* Buying Position */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <label className="block text-sm font-medium text-banc-dark-deep mb-3">
-          Your Buying Position <span className="text-red-500">*</span>
+      <div className={group}>
+        <label className={fieldLabel}>
+          Your Buying Position <span className="text-red-700">*</span>
         </label>
         {errors.position && (
-          <p className="mb-3 text-sm text-red-500">{errors.position}</p>
+          <p className="mb-3 text-sm text-red-700">{errors.position}</p>
         )}
         <div className="space-y-3">
           {buyerPositions.map((pos) => (
             <label
               key={pos.value}
-              className={`
-                flex items-start gap-3 p-4 rounded-lg border-2 cursor-pointer transition-all
-                ${
-                  formData.position === pos.value
-                    ? "border-banc-sky bg-banc-sky/5"
-                    : "border-banc-line hover:border-banc-sky/50"
-                }
-                ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-              `}
+              className={cn(
+                "flex min-h-11 cursor-pointer items-start gap-3 rounded-[var(--radius-md)] border p-4 transition-colors duration-200",
+                formData.position === pos.value
+                  ? "border-banc-focus ring-1 ring-banc-focus"
+                  : "border-banc-line hover:border-banc-focus",
+                isSubmitting && "cursor-not-allowed opacity-60",
+              )}
             >
               <input
                 type="radio"
@@ -328,7 +340,7 @@ export default function OfferForm({
                   setFormData((prev) => ({ ...prev, position: pos.value }))
                 }
                 disabled={isSubmitting}
-                className="mt-0.5 w-4 h-4 text-banc-focus focus:ring-banc-sky"
+                className="mt-0.5 h-5 w-5 shrink-0 accent-banc-focus focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2"
               />
               <div>
                 <span className="font-medium text-banc-dark-deep">{pos.label}</span>
@@ -340,56 +352,59 @@ export default function OfferForm({
       </div>
 
       {/* Timescale */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <label className="block text-sm font-medium text-banc-dark-deep mb-3">
-          Preferred Timescale <span className="text-red-500">*</span>
+      <div className={group}>
+        <label className={fieldLabel}>
+          Preferred Timescale <span className="text-red-700">*</span>
         </label>
         {errors.timescale && (
-          <p className="mb-3 text-sm text-red-500">{errors.timescale}</p>
+          <p className="mb-3 text-sm text-red-700">{errors.timescale}</p>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {timescales.map((time) => (
-            <label
-              key={time.value}
-              className={`
-                flex flex-col p-3 rounded-lg border-2 cursor-pointer transition-all
-                ${
-                  formData.timescale === time.value
-                    ? "border-banc-sky bg-banc-sky/5"
-                    : "border-banc-line hover:border-banc-sky/50"
-                }
-                ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}
-              `}
-            >
-              <input
-                type="radio"
-                name="timescale"
-                value={time.value}
-                checked={formData.timescale === time.value}
-                onChange={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    timescale: time.value as OfferSubmission["timescale"],
-                  }))
-                }
-                disabled={isSubmitting}
-                className="sr-only"
-              />
-              <Clock className="w-5 h-5 text-banc-focus mb-2" />
-              <span className="font-medium text-banc-dark-deep text-sm">
-                {time.label}
-              </span>
-              <span className="text-xs text-banc-muted-readable">{time.description}</span>
-            </label>
-          ))}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {timescales.map((time) => {
+            const active = formData.timescale === time.value;
+            return (
+              <label
+                key={time.value}
+                className={cn(
+                  "flex min-h-11 cursor-pointer flex-col rounded-[var(--radius-md)] border p-3 transition-colors duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-banc-focus has-[:focus-visible]:ring-offset-2",
+                  active
+                    ? "border-banc-focus bg-banc-focus text-white"
+                    : "border-banc-line bg-white hover:border-banc-focus",
+                  isSubmitting && "cursor-not-allowed opacity-60",
+                )}
+              >
+                <input
+                  type="radio"
+                  name="timescale"
+                  value={time.value}
+                  checked={formData.timescale === time.value}
+                  onChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      timescale: time.value as OfferSubmission["timescale"],
+                    }))
+                  }
+                  disabled={isSubmitting}
+                  className="sr-only"
+                />
+                <Clock className={cn("mb-2 h-5 w-5", active ? "text-white" : "text-banc-focus")} />
+                <span className={cn("text-sm font-medium", active ? "text-white" : "text-banc-dark-deep")}>
+                  {time.label}
+                </span>
+                <span className={cn("text-xs", active ? "text-white/80" : "text-banc-muted-readable")}>
+                  {time.description}
+                </span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
       {/* Additional Options */}
-      <div className="bg-white rounded-xl border border-banc-line p-5 space-y-4">
-        <h4 className="font-medium text-banc-dark-deep">Additional Information</h4>
+      <div className={group}>
+        <h4 className="mb-2 font-heading font-semibold text-banc-dark-deep">Additional Information</h4>
 
-        <label className="flex items-center gap-3 cursor-pointer">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3">
           <input
             type="checkbox"
             checked={formData.mortgageInPrinciple}
@@ -400,14 +415,14 @@ export default function OfferForm({
               }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
+            className={checkbox}
           />
           <span className="text-banc-dark-deep">
             I have a Mortgage Agreement in Principle
           </span>
         </label>
 
-        <label className="flex items-center gap-3 cursor-pointer">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3">
           <input
             type="checkbox"
             checked={formData.chainFree}
@@ -415,29 +430,29 @@ export default function OfferForm({
               setFormData((prev) => ({ ...prev, chainFree: e.target.checked }))
             }
             disabled={isSubmitting}
-            className="w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
+            className={checkbox}
           />
           <span className="text-banc-dark-deep">I am chain-free</span>
         </label>
       </div>
 
       {/* Proof of Funds Upload */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <label className="block text-sm font-medium text-banc-dark-deep mb-3">
+      <div className={group}>
+        <label className={fieldLabel}>
           Proof of Funds (Optional)
         </label>
-        <p className="text-sm text-banc-muted-readable mb-3">
+        <p className={cn(fieldHelp, "mb-4 mt-0")}>
           Name the document you can provide — a bank statement or a mortgage
           agreement in principle strengthens your offer. The file stays on your
           device; we tell the team it is ready and they will ask you for it.
         </p>
 
-        <div className="border-2 border-dashed border-banc-line rounded-lg p-6 text-center">
+        <div className="rounded-[var(--radius-md)] border border-dashed border-banc-dark/30 p-4">
           {proofOfFundsFile ? (
-            <div className="flex items-center justify-center gap-3">
-              <FileText className="w-8 h-8 text-green-500" />
-              <div className="text-left">
-                <p className="font-medium text-banc-dark-deep">
+            <div className="flex flex-wrap items-center gap-3">
+              <FileText className="h-8 w-8 shrink-0 text-green-700" />
+              <div className="min-w-0 flex-1">
+                <p className="break-words font-medium text-banc-dark-deep">
                   {proofOfFundsFile.name}
                 </p>
                 <p className="text-sm text-banc-muted-readable">
@@ -448,20 +463,22 @@ export default function OfferForm({
                 type="button"
                 onClick={() => setProofOfFundsFile(null)}
                 disabled={isSubmitting}
-                className="text-red-500 hover:text-red-700 text-sm"
+                className="inline-flex min-h-11 items-center px-2 text-sm font-medium text-red-700 underline-offset-2 hover:underline"
               >
                 Remove
               </button>
             </div>
           ) : (
-            <label className="cursor-pointer">
-              <Upload className="w-8 h-8 text-banc-muted-readable mx-auto mb-2" />
-              <p className="text-sm text-banc-dark-deep">
-                Choose the file to name for the team
-              </p>
-              <p className="text-xs text-banc-muted-readable mt-1">
-                PDF, JPG, PNG up to 10MB
-              </p>
+            <label className="flex min-h-11 cursor-pointer items-center gap-3">
+              <Upload className="h-6 w-6 shrink-0 text-banc-muted-readable" />
+              <span>
+                <span className="block text-sm font-medium text-banc-dark-deep">
+                  Choose the file to name for the team
+                </span>
+                <span className="mt-1 block text-xs text-banc-muted-readable">
+                  PDF, JPG, PNG up to 10MB
+                </span>
+              </span>
               <input
                 type="file"
                 onChange={handleFileChange}
@@ -475,8 +492,8 @@ export default function OfferForm({
       </div>
 
       {/* Additional Comments */}
-      <div className="bg-white rounded-xl border border-banc-line p-5">
-        <label className="block text-sm font-medium text-banc-dark-deep mb-3">
+      <div className={group}>
+        <label className={fieldLabel}>
           Additional Comments (Optional)
         </label>
         <textarea
@@ -490,17 +507,13 @@ export default function OfferForm({
           disabled={isSubmitting}
           placeholder="Any additional information that might support your offer..."
           rows={4}
-          className="
-            w-full px-4 py-3 rounded-lg border border-banc-line bg-white
-            focus:outline-none focus:ring-2 focus:ring-banc-sky focus:border-banc-sky
-            disabled:bg-banc-grey-pale disabled:cursor-not-allowed resize-none
-          "
+          className={cn(fieldControl, fieldTextarea, "h-auto resize-none")}
         />
       </div>
 
       {/* Terms */}
-      <div className="bg-banc-grey-pale rounded-xl p-5">
-        <label className="flex items-start gap-3 cursor-pointer">
+      <div className={group}>
+        <label className="flex min-h-11 cursor-pointer items-start gap-3">
           <input
             type="checkbox"
             checked={formData.agreedToTerms}
@@ -512,7 +525,7 @@ export default function OfferForm({
               if (errors.terms) setErrors((prev) => ({ ...prev, terms: "" }));
             }}
             disabled={isSubmitting}
-            className="mt-1 w-4 h-4 rounded border-banc-line text-banc-focus focus:ring-banc-sky"
+            className={cn(checkbox, "mt-0.5")}
           />
           <div>
             <span className="text-banc-dark-deep">
@@ -521,11 +534,11 @@ export default function OfferForm({
             </span>
             <p className="text-sm text-banc-muted-readable mt-1">
               I agree to the{" "}
-              <a href="/terms" className="text-banc-focus hover:underline">
+              <a href="/terms" className="text-banc-focus underline underline-offset-2">
                 Terms of Business
               </a>{" "}
               and{" "}
-              <a href="/privacy" className="text-banc-focus hover:underline">
+              <a href="/privacy" className="text-banc-focus underline underline-offset-2">
                 Privacy Policy
               </a>
               .
@@ -533,7 +546,7 @@ export default function OfferForm({
           </div>
         </label>
         {errors.terms && (
-          <p className="mt-2 text-sm text-red-500">{errors.terms}</p>
+          <p className={fieldError}>{errors.terms}</p>
         )}
       </div>
 
@@ -541,16 +554,7 @@ export default function OfferForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`
-          w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all
-          flex items-center justify-center gap-2
-          ${
-            isSubmitting
-              ? "bg-banc-line cursor-not-allowed"
-              : "bg-banc-sky hover:bg-banc-sky-dark"
-          }
-          text-banc-dark-deep
-        `}
+        className={actionPrimary}
       >
         {isSubmitting ? (
           <>
@@ -565,7 +569,7 @@ export default function OfferForm({
         )}
       </button>
 
-      <p className="text-center text-sm text-banc-muted-readable">
+      <p className="text-sm text-banc-muted-readable">
         Your offer will be reviewed and the vendor will be notified within 24
         hours.
       </p>

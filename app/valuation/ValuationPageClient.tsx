@@ -9,12 +9,8 @@ import { NativeSelect } from "@/components/ui/select";
 import {
   CheckCircle,
   Home,
-  Phone,
-  Mail,
   User,
   MapPin,
-  Calendar,
-  MessageSquare,
   Loader2,
   AlertCircle,
   ArrowRight,
@@ -23,6 +19,21 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimary,
+  actionSecondary,
+  choiceChip,
+  eyebrow,
+  fieldControl,
+  fieldHelp,
+  fieldLabel,
+  fieldTextarea,
+  formPanel,
+  segmented,
+  segmentedOption,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 import { checkValuationStep, describeSubmitError } from "@/lib/lead-form-rules";
 
@@ -230,66 +241,31 @@ export default function ValuationPage() {
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
-      <main className="px-4 py-8 pb-24 lg:px-8 lg:py-12 lg:pb-12">
-        <div className="mx-auto max-w-3xl">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 text-center"
-          >
-            <h1 className="mb-3 font-display text-3xl font-semibold text-banc-dark lg:text-4xl">
-              Request a Free Valuation
-            </h1>
-            <p className="text-banc-muted-readable">
-              Discover the true value of your property in 3 simple steps
-            </p>
-          </motion.div>
-
+      <main>
+        <PageBand
+          eyebrow="Free valuation"
+          title="Request a Free Valuation"
+          lede="Discover the true value of your property in 3 simple steps"
+        />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+        <div className="max-w-3xl">
           {/* Stepper */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              {steps.map((step, index) => {
-                const StepIcon = step.icon;
-                const isActive = currentStep === step.id;
-                const isCompleted = currentStep > step.id;
-
-                return (
-                  <div key={step.id} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ${
-                          isCompleted
-                            ? "bg-banc-focus text-white"
-                            : isActive
-                            ? "bg-banc-focus text-white ring-4 ring-banc-sky/20"
-                            : "bg-white text-banc-muted-readable border border-banc-grey/30"
-                        }`}
-                      >
-                        {isCompleted ? (
-                          <Check className="h-5 w-5" />
-                        ) : (
-                          <StepIcon className="h-5 w-5" />
-                        )}
-                      </div>
-                      <span
-                        className={`mt-2 text-xs font-medium hidden sm:block ${
-                          isActive || isCompleted ? "text-banc-dark" : "text-banc-muted-readable"
-                        }`}
-                      >
-                        {step.title}
-                      </span>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={`mx-2 h-0.5 flex-1 transition-colors duration-300 ${
-                          currentStep > step.id ? "bg-banc-sky" : "bg-banc-grey/20"
-                        }`}
-                      />
-                    )}
-                  </div>
-                );
-              })}
+          <div className="mb-6">
+            <p className={eyebrow}>
+              Step {currentStep} of {steps.length} · {steps[currentStep - 1]?.title}
+            </p>
+            <div
+              className="mt-3 h-0.5 w-full bg-banc-line"
+              role="progressbar"
+              aria-label="Valuation request progress"
+              aria-valuemin={1}
+              aria-valuemax={steps.length}
+              aria-valuenow={currentStep}
+            >
+              <div
+                className="h-full bg-banc-focus transition-[width] duration-300"
+                style={{ width: `${(currentStep / steps.length) * 100}%` }}
+              />
             </div>
           </div>
 
@@ -300,7 +276,8 @@ export default function ValuationPage() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-6 flex items-center gap-3 rounded-xl bg-red-50 px-4 py-3 text-red-700"
+                role="alert"
+                className="mb-6 flex items-center gap-3 rounded-[var(--radius-md)] bg-red-50 px-4 py-3 text-red-700"
               >
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 <span className="text-sm">{error}</span>
@@ -309,7 +286,7 @@ export default function ValuationPage() {
           </AnimatePresence>
 
           {/* Step Content */}
-          <div className="rounded-2xl bg-white p-6 shadow-lg lg:p-10">
+          <div className={formPanel}>
             <AnimatePresence mode="wait">
               {/* Step 1: Address */}
               {currentStep === 1 && (
@@ -322,19 +299,18 @@ export default function ValuationPage() {
                   className="space-y-6"
                 >
                   <div>
-                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <MapPin className="h-5 w-5 text-banc-focus" />
+                    <h2 className="font-display text-2xl font-light text-banc-dark">
                       Where is your property?
                     </h2>
-                    <p className="mt-1 text-sm text-banc-muted-readable">
+                    <p className="mt-2 text-sm text-banc-muted-readable">
                       Enter the address of the property you&apos;d like valued
                     </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <fieldset className="space-y-2">
-                      <legend className="block text-sm font-medium text-banc-dark">I&apos;d like to *</legend>
-                      <div className="grid grid-cols-2 gap-3 max-w-sm">
+                  <div className="space-y-5">
+                    <fieldset>
+                      <legend className={fieldLabel}>I&apos;d like to *</legend>
+                      <div className="grid gap-3 sm:grid-cols-2">
                         {([
                           { value: "sales", label: "Sell", hint: "Instant estimate, then a visit" },
                           { value: "lettings", label: "Let", hint: "Rental appraisal by the lettings team" },
@@ -344,21 +320,27 @@ export default function ValuationPage() {
                             type="button"
                             onClick={() => handleChange("department", option.value)}
                             aria-pressed={formData.department === option.value}
-                            className={`rounded-lg border px-4 py-3 text-left transition-colors ${
+                            className={`min-h-11 rounded-[var(--radius-md)] border px-4 py-3 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-focus focus-visible:ring-offset-2 ${
                               formData.department === option.value
-                                ? "border-banc-focus bg-banc-sky/10 text-banc-dark"
-                                : "border-banc-line bg-white text-banc-muted-readable hover:border-banc-focus"
+                                ? "border-banc-focus bg-banc-focus text-white"
+                                : "border-banc-line bg-white text-banc-dark-deep hover:border-banc-focus"
                             }`}
                           >
-                            <span className="block text-base font-medium">{option.label}</span>
-                            <span className="block text-xs">{option.hint}</span>
+                            <span className="block text-base font-semibold">{option.label}</span>
+                            <span
+                              className={`mt-0.5 block text-xs ${
+                                formData.department === option.value ? "text-white/85" : "text-banc-muted-readable"
+                              }`}
+                            >
+                              {option.hint}
+                            </span>
                           </button>
                         ))}
                       </div>
                     </fieldset>
 
-                    <div className="space-y-2">
-                      <label htmlFor="postcode" className="block text-sm font-medium text-banc-dark">
+                    <div>
+                      <label htmlFor="postcode" className={fieldLabel}>
                         Postcode *
                       </label>
                       <Input
@@ -370,17 +352,22 @@ export default function ValuationPage() {
                           setFormData((prev) => ({ ...prev, paon: "", saon: "" }));
                         }}
                         placeholder="EN6 4HU"
-                        className="max-w-xs"
+                        className={cn(fieldControl, "sm:max-w-xs")}
                         autoComplete="postal-code"
                       />
                     </div>
 
                     {addresses.length > 0 && (
-                      <div className="space-y-2">
-                        <label htmlFor="address-pick" className="block text-sm font-medium text-banc-dark">
+                      <div>
+                        <label htmlFor="address-pick" className={fieldLabel}>
                           Choose your address *
                         </label>
-                        <NativeSelect id="address-pick" value={picked} onChange={(e) => pickAddress(e.target.value)}>
+                        <NativeSelect
+                          id="address-pick"
+                          value={picked}
+                          onChange={(e) => pickAddress(e.target.value)}
+                          className={cn(fieldControl, "pr-10 hover:border-banc-focus")}
+                        >
                           <option value="">Select your address</option>
                           {addresses.map((a, i) => (
                             <option key={`${a.saon}|${a.paon}`} value={String(i)}>
@@ -393,15 +380,15 @@ export default function ValuationPage() {
                     )}
 
                     {(addresses.length === 0 || picked === NOT_LISTED) && (
-                      <div className="space-y-2">
-                        <label htmlFor="address" className="block text-sm font-medium text-banc-dark">
+                      <div>
+                        <label htmlFor="address" className={fieldLabel}>
                           Property Address *
                         </label>
                         <Textarea
                           id="address"
                           value={formData.address}
                           onChange={(e) => handleChange("address", e.target.value)}
-                          className="min-h-[100px]"
+                          className={cn(fieldControl, fieldTextarea, "h-auto")}
                           placeholder="123 Station Road, Cuffley, Hertfordshire..."
                         />
                       </div>
@@ -421,21 +408,21 @@ export default function ValuationPage() {
                   className="space-y-6"
                 >
                   <div>
-                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <Home className="h-5 w-5 text-banc-focus" />
+                    <h2 className="font-display text-2xl font-light text-banc-dark">
                       Tell us about your property
                     </h2>
-                    <p className="mt-1 text-sm text-banc-muted-readable">
+                    <p className="mt-2 text-sm text-banc-muted-readable">
                       These details help us provide a more accurate valuation
                     </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-banc-dark">Property Type</label>
+                  <div className="space-y-5">
+                    <div>
+                      <label className={fieldLabel}>Property Type</label>
                       <NativeSelect
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
+                        className={cn(fieldControl, "pr-10 hover:border-banc-focus")}
                       >
                         <option value="">Select type</option>
                         {propertyTypes.map((type) => (
@@ -444,19 +431,16 @@ export default function ValuationPage() {
                       </NativeSelect>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-banc-dark">Bedrooms</label>
+                    <div>
+                      <label className={fieldLabel}>Bedrooms</label>
                       <div className="flex flex-wrap gap-2">
                         {bedrooms.map((num) => (
                           <button
                             key={num}
                             type="button"
                             onClick={() => handleChange("bedrooms", num)}
-                            className={`rounded-[6px] border px-5 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer min-h-[44px] ${
-                              formData.bedrooms === num
-                                ? "border-banc-sky bg-banc-focus text-white"
-                                : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"
-                            }`}
+                            aria-pressed={formData.bedrooms === num}
+                            className={cn(choiceChip(formData.bedrooms === num), "min-w-11")}
                           >
                             {num}
                           </button>
@@ -465,11 +449,11 @@ export default function ValuationPage() {
                     </div>
 
                     {!isLettings && (
-                      <fieldset className="space-y-2">
-                        <legend className="block text-sm font-medium text-banc-dark">
+                      <fieldset>
+                        <legend className="mb-2 block text-sm font-medium leading-relaxed text-banc-dark-deep">
                           Have you extended, converted the loft or fully refurbished since you bought?
                         </legend>
-                        <div className="flex gap-2">
+                        <div className={cn(segmented, "sm:max-w-xs")}>
                           {([
                             { value: true, label: "Yes" },
                             { value: false, label: "No" },
@@ -479,30 +463,26 @@ export default function ValuationPage() {
                               type="button"
                               onClick={() => setMajorWork(option.value)}
                               aria-pressed={majorWork === option.value}
-                              className={`rounded-[6px] border px-5 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer min-h-[44px] ${
-                                majorWork === option.value
-                                  ? "border-banc-sky bg-banc-focus text-white"
-                                  : "border-banc-grey/20 text-banc-dark hover:border-banc-sky"
-                              }`}
+                              className={segmentedOption(majorWork === option.value)}
                             >
                               {option.label}
                             </button>
                           ))}
                         </div>
-                        <p className="text-xs text-banc-muted-readable">
+                        <p className={fieldHelp}>
                           Public records can&apos;t see improvements, so a yes tells the director to look closely.
                         </p>
                       </fieldset>
                     )}
 
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-banc-dark">
-                        <Calendar className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
+                    <div>
+                      <label className={fieldLabel}>
                         {isLettings ? "Looking to let in..." : "Looking to sell in..."}
                       </label>
                       <NativeSelect
                         value={formData.timeframe}
                         onChange={(e) => handleChange("timeframe", e.target.value)}
+                        className={cn(fieldControl, "pr-10 hover:border-banc-focus")}
                       >
                         <option value="">Select timeframe</option>
                         {timeframes.map((time) => (
@@ -525,19 +505,18 @@ export default function ValuationPage() {
                   className="space-y-6"
                 >
                   <div>
-                    <h2 className="flex items-center gap-2 text-xl font-semibold text-banc-dark">
-                      <User className="h-5 w-5 text-banc-focus" />
+                    <h2 className="font-display text-2xl font-light text-banc-dark">
                       Your contact details
                     </h2>
-                    <p className="mt-1 text-sm text-banc-muted-readable">
+                    <p className="mt-2 text-sm text-banc-muted-readable">
                       We&apos;ll use these to send your valuation report
                     </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <label htmlFor="firstName" className="block text-sm font-medium text-banc-dark">
+                  <div className="space-y-5">
+                    <div className="grid gap-5 sm:grid-cols-2 sm:gap-4">
+                      <div>
+                        <label htmlFor="firstName" className={fieldLabel}>
                           First Name *
                         </label>
                         <Input
@@ -545,10 +524,11 @@ export default function ValuationPage() {
                           value={formData.firstName}
                           onChange={(e) => handleChange("firstName", e.target.value)}
                           placeholder="John"
+                          className={fieldControl}
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label htmlFor="lastName" className="block text-sm font-medium text-banc-dark">
+                      <div>
+                        <label htmlFor="lastName" className={fieldLabel}>
                           Last Name
                         </label>
                         <Input
@@ -556,13 +536,13 @@ export default function ValuationPage() {
                           value={formData.lastName}
                           onChange={(e) => handleChange("lastName", e.target.value)}
                           placeholder="Smith"
+                          className={fieldControl}
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-banc-dark">
-                        <Mail className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
+                    <div>
+                      <label htmlFor="email" className={fieldLabel}>
                         Email Address *
                       </label>
                       <Input
@@ -571,12 +551,12 @@ export default function ValuationPage() {
                         value={formData.email}
                         onChange={(e) => handleChange("email", e.target.value)}
                         placeholder="john@example.com"
+                        className={fieldControl}
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label htmlFor="phone" className="block text-sm font-medium text-banc-dark">
-                        <Phone className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
+                    <div>
+                      <label htmlFor="phone" className={fieldLabel}>
                         Phone Number *
                       </label>
                       <Input
@@ -585,6 +565,7 @@ export default function ValuationPage() {
                         value={formData.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
                         placeholder={BANC_CONTACT.displayPhone}
+                        className={fieldControl}
                       />
                     </div>
 
@@ -599,21 +580,20 @@ export default function ValuationPage() {
                       aria-hidden="true"
                       className="absolute -left-[9999px] h-px w-px opacity-0"
                     />
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="block text-sm font-medium text-banc-dark">
-                        <MessageSquare className="mb-0.5 mr-1 inline h-4 w-4 text-banc-focus" />
+                    <div>
+                      <label htmlFor="message" className={fieldLabel}>
                         Additional Information (Optional)
                       </label>
                       <Textarea
                         id="message"
                         value={formData.message}
                         onChange={(e) => handleChange("message", e.target.value)}
-                        className="min-h-[80px]"
+                        className={cn(fieldControl, fieldTextarea, "h-auto")}
                         placeholder="Anything else we should know..."
                       />
                     </div>
 
-                    <label htmlFor="consent" className="flex items-start gap-3 text-sm text-banc-muted-readable cursor-pointer">
+                    <label htmlFor="consent" className="flex min-h-11 cursor-pointer items-start gap-3 text-sm leading-relaxed text-banc-muted-readable">
                       <input
                         id="consent"
                         type="checkbox"
@@ -622,7 +602,7 @@ export default function ValuationPage() {
                           setConsent(e.target.checked);
                           setError(null);
                         }}
-                        className="mt-0.5 h-4 w-4 rounded border-banc-grey/40 accent-banc-sky"
+                        className="mt-0.5 h-5 w-5 shrink-0 rounded border-banc-line accent-[var(--banc-focus)]"
                       />
                       <span>
                         Please tick this box if you are happy for us to contact you via phone and email. *
@@ -639,47 +619,43 @@ export default function ValuationPage() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5 }}
-                  className="py-8 text-center"
                 >
-                  <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/10">
-                    <CheckCircle className="h-10 w-10 text-banc-focus" />
-                  </div>
-                  <h2 className="mb-4 text-2xl font-semibold text-banc-dark lg:text-3xl">
+                  <h2 className="mb-6 font-display text-2xl font-light text-banc-dark lg:text-3xl">
                     {isLettings ? "Thank you — we'll call about the rent" : estimate ? "Here's your indicative estimate" : "Thank you!"}
                   </h2>
 
                   {estimate && !isLettings && (() => {
                     const h = headlineFor(estimate);
                     return (
-                      <div className="mx-auto mb-6 max-w-md rounded-xl border border-banc-focus/20 bg-banc-sky/10 p-6 text-left">
-                        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Instant estimate</p>
+                      <div className="mb-6 border-y border-banc-dark/15 py-6">
+                        <p className={eyebrow}>Instant estimate</p>
                         <p className="mt-2 text-sm font-medium text-banc-dark">{fullAddress}</p>
                         {h.figure ? (
                           <>
                             <p className="mt-2 font-display text-4xl text-banc-dark">{h.figure}</p>
-                            <p className="mt-1 text-sm text-banc-muted-readable">Likely range {h.range}</p>
+                            <p className="mt-2 text-sm text-banc-muted-readable">Likely range {h.range}</p>
                           </>
                         ) : (
                           <>
                             <p className="mt-2 font-display text-3xl text-banc-dark">{h.range}</p>
-                            <p className="mt-1 text-sm text-banc-muted-readable">
+                            <p className="mt-2 text-sm text-banc-muted-readable">
                               Public records can&apos;t pin this one down, so a director needs to see it.
                             </p>
                           </>
                         )}
-                        <div className="mt-4 border-t border-banc-focus/15 pt-4">
+                        <div className="mt-4 border-t border-banc-dark/15 pt-4">
                           <ConfidenceGauge confidence={estimate.confidence} />
                         </div>
                         <p className="mt-4 text-sm leading-relaxed text-banc-muted-readable">{describeBasis(estimate)}</p>
                         {estimate.homeLastSale && (
-                          <div className="mt-4 flex items-start justify-between gap-3 border-t border-banc-focus/15 pt-3 text-sm text-banc-dark">
+                          <div className="mt-4 flex items-start justify-between gap-3 border-t border-banc-dark/15 pt-3 text-sm text-banc-dark">
                             <span className="font-medium">{homeSaleNote(estimate.homeLastSale)}</span>
                             <span className="tabular-nums">{gbp(estimate.homeLastSale.price)}</span>
                           </div>
                         )}
                         {estimate.comparables.length > 0 && (
-                          <div className="mt-4 border-t border-banc-focus/15 pt-3">
-                            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-banc-focus">Similar sales nearby</p>
+                          <div className="mt-4 border-t border-banc-dark/15 pt-3">
+                            <p className={eyebrow}>Similar sales nearby</p>
                             <ul className="mt-2 space-y-1.5 text-sm">
                               {estimate.comparables.slice(0, 4).map((c) => (
                                 <li key={`${c.address}|${c.date}`} className="flex items-start justify-between gap-3 text-banc-dark">
@@ -700,10 +676,10 @@ export default function ValuationPage() {
                     );
                   })()}
 
-                  <p className="mb-2 text-banc-muted-readable max-w-md mx-auto">
+                  <p className="mb-2 max-w-xl text-banc-muted-readable">
                     Your {isLettings ? "rental appraisal" : "valuation"} request for <span className="font-medium text-banc-dark">{fullAddress}</span> has been received.
                   </p>
-                  <p className="mb-8 text-banc-muted-readable max-w-md mx-auto">
+                  <p className="mb-6 max-w-xl text-banc-muted-readable">
                     {isLettings
                       ? "One of the directors will call you within one working day to talk through what it could let for."
                       : estimate
@@ -711,8 +687,8 @@ export default function ValuationPage() {
                         : "We couldn't reach enough recent sales for an instant figure. One of the directors will call you within one working day to arrange your free, no-obligation valuation."}
                   </p>
 
-                  <div className="rounded-xl bg-banc-grey-pale p-6 mb-8 max-w-sm mx-auto text-left">
-                    <h3 className="text-sm font-semibold text-banc-dark mb-3">What happens next?</h3>
+                  <div className="mb-8 border-t border-banc-dark/15 pt-6">
+                    <h3 className="mb-3 text-sm font-semibold text-banc-dark">What happens next?</h3>
                     <ul className="space-y-2">
                       {(isLettings
                         ? [
@@ -737,7 +713,7 @@ export default function ValuationPage() {
 
                   <Button
                     onClick={() => (window.location.href = "/")}
-                    className="bg-banc-focus px-8 py-5 text-white hover:bg-banc-sky-dark"
+                    className={cn(actionPrimary, "shadow-none")}
                   >
                     Return to Homepage
                   </Button>
@@ -747,20 +723,20 @@ export default function ValuationPage() {
 
             {/* Navigation Buttons */}
             {currentStep < 4 && (
-              <div className="mt-8 flex items-center justify-between border-t border-banc-grey/10 pt-6">
+              <div className="mt-8 flex flex-col-reverse gap-3 border-t border-banc-dark/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
                 {currentStep > 1 ? (
-                  <Button variant="ghost" onClick={prevStep} className="text-banc-muted-readable">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
+                  <Button variant="outline" onClick={prevStep} className={actionSecondary}>
+                    <ArrowLeft className="h-4 w-4" />
                     Back
                   </Button>
                 ) : (
-                  <div />
+                  <div className="hidden sm:block" />
                 )}
 
                 <Button
                   onClick={nextStep}
                   disabled={isSubmitting}
-                  className="bg-banc-focus px-8 py-5 text-white hover:bg-banc-focus-hover disabled:opacity-70"
+                  className={cn(actionPrimary, "shadow-none")}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
@@ -782,12 +758,13 @@ export default function ValuationPage() {
 
           {/* Privacy note */}
           {currentStep < 4 && (
-            <p className="mt-4 text-center text-sm text-banc-muted-readable">
+            <p className="mt-4 text-sm text-banc-muted-readable">
               By submitting, you agree to our{" "}
-              <a href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</a>.
+              <a href="/privacy" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">Privacy Policy</a>.
               We never share your details with third parties.
             </p>
           )}
+        </div>
         </div>
       </main>
 

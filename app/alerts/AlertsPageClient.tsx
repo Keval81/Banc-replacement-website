@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
@@ -30,6 +29,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimary,
+  actionPrimaryOnDark,
+  actionSecondary,
+  actionSecondaryOnDark,
+  fieldControl,
+  fieldLabel,
+  segmented,
+  segmentedOption,
+} from "@/components/ui/form-styles";
 
 interface AlertCriteria {
   minPrice?: number;
@@ -206,54 +216,40 @@ export default function AlertsPage() {
     <div className="bg-white text-banc-dark min-h-screen">
       <Header />
 
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-banc-dark-deep to-[#1a1c1f] py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-semibold text-white">
-                Property Alerts
-              </h1>
-              <p className="text-white/70 mt-2">
-                Get notified when properties matching your criteria are listed
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link href="/search">
-                <Button variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10">
-                  <Search className="w-4 h-4 mr-2" />
-                  Browse Properties
-                </Button>
-              </Link>
-              <Button 
-                onClick={() => setShowCreateModal(true)}
-                className="bg-banc-focus hover:bg-banc-focus-hover"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create Alert
-              </Button>
-            </div>
-          </div>
+      <PageBand
+        eyebrow="Your account"
+        title="Property Alerts"
+        lede="Get notified when properties matching your criteria are listed"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <button type="button" onClick={() => setShowCreateModal(true)} className={actionPrimaryOnDark}>
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Create Alert
+          </button>
+          <Link href="/search" className={actionSecondaryOnDark}>
+            <Search className="h-4 w-4" aria-hidden="true" />
+            Browse Properties
+          </Link>
         </div>
-      </section>
+      </PageBand>
 
       {/* Stats */}
       <section className="border-b border-banc-line bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl p-4 border border-banc-line">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+            <div className="rounded-[var(--radius-md)] border border-banc-line bg-white p-4">
               <p className="text-sm text-banc-muted-readable">Total Alerts</p>
               <p className="text-2xl font-semibold">{alerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-banc-line">
+            <div className="rounded-[var(--radius-md)] border border-banc-line bg-white p-4">
               <p className="text-sm text-banc-muted-readable">Active</p>
               <p className="text-2xl font-semibold text-banc-focus">{activeAlerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-banc-line">
+            <div className="rounded-[var(--radius-md)] border border-banc-line bg-white p-4">
               <p className="text-sm text-banc-muted-readable">Paused</p>
               <p className="text-2xl font-semibold text-banc-muted-readable">{pausedAlerts.length}</p>
             </div>
-            <div className="bg-white rounded-xl p-4 border border-banc-line">
+            <div className="rounded-[var(--radius-md)] border border-banc-line bg-white p-4">
               <p className="text-sm text-banc-muted-readable">Total Matches</p>
               <p className="text-2xl font-semibold text-banc-focus">
                 {alerts.reduce((sum, a) => sum + a.matchCount, 0)}
@@ -264,40 +260,35 @@ export default function AlertsPage() {
       </section>
 
       {/* Main Content */}
-      <section className="py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
+      <section className="py-12 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
           {isLoading ? (
-            <div className="flex justify-center py-16">
-              <div className="animate-spin w-8 h-8 border-2 border-banc-sky border-t-transparent rounded-full" />
+            <div className="flex justify-center py-12">
+              <div className="animate-spin w-8 h-8 border-2 border-banc-focus border-t-transparent rounded-full" />
             </div>
           ) : alerts.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center py-16 bg-banc-grey-pale rounded-2xl"
+              className="rounded-[var(--radius-md)] border border-banc-line bg-banc-grey-pale p-5 sm:p-6 lg:p-8"
             >
-              <Bell className="w-16 h-16 text-banc-muted-readable mx-auto mb-4" />
-              <h2 className="text-xl font-semibold mb-2">No alerts yet</h2>
-              <p className="text-banc-muted-readable mb-6 max-w-md mx-auto">
+              <Bell className="mb-4 h-8 w-8 text-banc-muted-readable" aria-hidden="true" />
+              <h2 className="mb-2 text-xl font-semibold">No alerts yet</h2>
+              <p className="mb-6 max-w-md text-banc-muted-readable">
                 Create a property alert to get notified when new properties matching your criteria are listed.
               </p>
-              <div className="flex justify-center gap-3">
-                <Link href="/search">
-                  <Button variant="outline">
-                    Browse Properties
-                  </Button>
-                </Link>
-                <Button 
-                  onClick={() => setShowCreateModal(true)}
-                  className="bg-banc-focus hover:bg-banc-focus-hover"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button type="button" onClick={() => setShowCreateModal(true)} className={actionPrimary}>
+                  <Plus className="h-4 w-4" aria-hidden="true" />
                   Create Alert
-                </Button>
+                </button>
+                <Link href="/search" className={actionSecondary}>
+                  Browse Properties
+                </Link>
               </div>
             </motion.div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-10">
               {/* Active Alerts */}
               {activeAlerts.length > 0 && (
                 <div>
@@ -381,19 +372,19 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
     <motion.div
       layout
       className={cn(
-        "bg-white rounded-xl border overflow-hidden transition-shadow",
+        "overflow-hidden rounded-[var(--radius-md)] border bg-white transition-colors",
         alert.isActive ? "border-banc-line" : "border-banc-grey/20",
-        isExpanded && "shadow-lg"
+        isExpanded && "border-banc-focus"
       )}
     >
       {/* Header */}
       <div 
-        className="p-4 flex items-center gap-4 cursor-pointer hover:bg-banc-grey-pale/50"
+        className="flex cursor-pointer flex-wrap items-center gap-x-4 gap-y-1 p-4 hover:bg-banc-grey-pale/50"
         onClick={onToggleExpand}
       >
         <div className={cn(
-          "w-10 h-10 rounded-full flex items-center justify-center",
-          alert.isActive ? "bg-banc-sky/10" : "bg-banc-grey-pale"
+          "hidden h-10 w-10 shrink-0 items-center justify-center rounded-full sm:flex",
+          alert.isActive ? "bg-banc-focus/10" : "bg-banc-grey-pale"
         )}>
           <Bell className={cn(
             "w-5 h-5",
@@ -403,7 +394,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
         
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold truncate">{alert.name}</h3>
-          <div className="flex items-center gap-3 text-sm text-banc-muted-readable">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-banc-muted-readable">
             <span className="flex items-center gap-1">
               <FrequencyIcon className="w-3.5 h-3.5" />
               {frequencyLabels[alert.frequency]}
@@ -419,13 +410,13 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex w-full items-center justify-end gap-1 sm:w-auto">
           <button
             onClick={(e) => { e.stopPropagation(); onToggleActive(); }}
             className={cn(
-              "p-2 rounded-full transition-colors",
+              "inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors",
               alert.isActive 
-                ? "text-banc-focus hover:bg-banc-sky/10" 
+                ? "text-banc-focus hover:bg-banc-grey-pale"
                 : "text-banc-muted-readable hover:bg-banc-grey-pale"
             )}
             title={alert.isActive ? "Pause alert" : "Resume alert"}
@@ -434,14 +425,14 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onEdit(); }}
-            className="p-2 text-banc-muted-readable hover:text-banc-grey hover:bg-banc-grey-pale rounded-full"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-banc-muted-readable hover:bg-banc-grey-pale hover:text-banc-grey"
             title="Edit alert"
           >
             <Edit2 className="w-4 h-4" />
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(); }}
-            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-red-600 hover:bg-red-50 hover:text-red-700"
             title="Delete alert"
           >
             <Trash2 className="w-4 h-4" />
@@ -461,7 +452,7 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="border-t bg-banc-grey-pale/50"
+            className="border-t border-banc-dark/15 bg-banc-grey-pale/50"
           >
             <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
               {alert.criteria.location && (
@@ -534,11 +525,9 @@ function AlertCard({ alert, isExpanded, onToggleExpand, onToggleActive, onDelete
                 ...(alert.criteria.propertyType?.length && { propertyType: alert.criteria.propertyType.join(",") }),
                 ...(alert.criteria.tenure && { tenure: alert.criteria.tenure }),
                 ...(alert.criteria.keywords && { keywords: alert.criteria.keywords }),
-              }).toString()}`}>
-                <Button variant="outline" size="sm">
-                  <Search className="w-4 h-4 mr-2" />
-                  View Matching Properties
-                </Button>
+              }).toString()}`} className={actionSecondary}>
+                <Search className="h-4 w-4" aria-hidden="true" />
+                View Matching Properties
               </Link>
             </div>
           </motion.div>
@@ -597,12 +586,12 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[var(--radius-md)] bg-white"
       >
-        <div className="p-6 border-b sticky top-0 bg-white">
+        <div className="sticky top-0 z-10 border-b border-banc-dark/15 bg-white p-5 sm:p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Create Property Alert</h2>
-            <button onClick={onClose} className="p-2 hover:bg-banc-grey-pale rounded-full">
+            <button onClick={onClose} className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-banc-grey-pale">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -611,32 +600,29 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-6">
           {/* Alert Name */}
           <div>
-            <label className="block text-sm font-medium mb-2">Alert Name</label>
+            <label className={fieldLabel}>Alert Name</label>
             <Input
               placeholder="e.g., 4 Bed Houses in Cuffley"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className={fieldControl}
             />
           </div>
 
           {/* Frequency */}
           <div>
-            <label className="block text-sm font-medium mb-2">Email Frequency</label>
-            <div className="grid grid-cols-3 gap-3">
+            <label className={fieldLabel}>Email Frequency</label>
+            <div className={segmented}>
               {(["instant", "daily", "weekly"] as const).map((freq) => (
                 <button
                   key={freq}
                   type="button"
                   onClick={() => setFormData({ ...formData, frequency: freq })}
-                  className={cn(
-                    "p-3 rounded-lg border text-sm font-medium transition-colors",
-                    formData.frequency === freq
-                      ? "border-banc-sky bg-banc-sky/10 text-banc-focus"
-                      : "border-banc-grey/20 hover:border-banc-grey/30"
-                  )}
+                  aria-pressed={formData.frequency === freq}
+                  className={segmentedOption(formData.frequency === freq)}
                 >
                   {frequencyLabels[freq]}
                 </button>
@@ -646,27 +632,26 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
 
           {/* Price Range */}
           <div>
-            <label className="block text-sm font-medium mb-2">Price Range</label>
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
+            <label className={fieldLabel}>Price Range</label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
                 <Input
                   type="number"
                   placeholder="Min"
                   value={formData.minPrice}
                   onChange={(e) => setFormData({ ...formData, minPrice: e.target.value })}
-                  className="pl-7"
+                  className={cn(fieldControl, "pl-11")}
                 />
               </div>
-              <span className="text-banc-muted-readable">-</span>
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
+              <div className="relative">
+                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-banc-muted-readable">£</span>
                 <Input
                   type="number"
                   placeholder="Max"
                   value={formData.maxPrice}
                   onChange={(e) => setFormData({ ...formData, maxPrice: e.target.value })}
-                  className="pl-7"
+                  className={cn(fieldControl, "pl-11")}
                 />
               </div>
             </div>
@@ -674,12 +659,12 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
 
           {/* Bedrooms */}
           <div>
-            <label className="block text-sm font-medium mb-2">Minimum Bedrooms</label>
+            <label className={fieldLabel}>Minimum Bedrooms</label>
             <div className="relative">
               <select
                 value={formData.beds}
                 onChange={(e) => setFormData({ ...formData, beds: e.target.value })}
-                className="w-full min-h-[48px] px-4 py-3 border border-banc-grey/20 rounded-xl focus:ring-2 focus:ring-banc-sky focus:border-banc-sky appearance-none cursor-pointer transition-colors hover:border-banc-sky/50 bg-white"
+                className={cn(fieldControl, "cursor-pointer appearance-none pr-10")}
               >
                 <option value="">Any</option>
                 <option value="1">1+</option>
@@ -688,47 +673,47 @@ function CreateAlertModal({ isOpen, onClose, onCreate }: CreateAlertModalProps) 
                 <option value="4">4+</option>
                 <option value="5">5+</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable pointer-events-none" />
+              <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
             </div>
           </div>
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium mb-2">Location</label>
+            <label className={fieldLabel}>Location</label>
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable" />
+              <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
               <Input
                 placeholder="e.g., Cuffley, Mayfair..."
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="pl-10"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           {/* Keywords */}
           <div>
-            <label className="block text-sm font-medium mb-2">Keywords</label>
+            <label className={fieldLabel}>Keywords</label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-banc-muted-readable" />
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
               <Input
                 placeholder="e.g., garden, garage, parking..."
                 value={formData.keywords}
                 onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-                className="pl-10"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+          <div className="flex flex-col-reverse gap-3 border-t border-banc-dark/15 pt-6 sm:flex-row sm:justify-end">
+            <button type="button" onClick={onClose} className={actionSecondary}>
               Cancel
-            </Button>
-            <Button type="submit" className="flex-1 bg-banc-focus hover:bg-banc-focus-hover">
-              <Bell className="w-4 h-4 mr-2" />
+            </button>
+            <button type="submit" className={actionPrimary}>
+              <Bell className="h-4 w-4" aria-hidden="true" />
               Create Alert
-            </Button>
+            </button>
           </div>
         </form>
       </motion.div>

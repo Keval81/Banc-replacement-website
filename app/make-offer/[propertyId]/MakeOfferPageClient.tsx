@@ -13,8 +13,9 @@ import Footer from "@/components/Footer";
 import { buildOfferEnquiry, submitContactEnquiry } from "@/lib/property-enquiry";
 import { buildPropertyHref } from "@/lib/property-view";
 import { OfferSubmission } from "@/types/portal";
+import { PageBand } from "@/components/PageBand";
+import { actionPrimary, actionSecondary, formPanel } from "@/components/ui/form-styles";
 import {
-  ChevronLeft,
   Bed,
   Bath,
   Square,
@@ -63,9 +64,9 @@ export default function MakeOfferPage() {
 
   if (propertyState.phase === "loading") {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12">
         <div
-          className="max-w-6xl mx-auto flex min-h-[50vh] flex-col items-center justify-center"
+          className="mx-auto flex min-h-[50vh] max-w-6xl flex-col items-center justify-center"
           role="status"
           aria-live="polite"
         >
@@ -78,24 +79,21 @@ export default function MakeOfferPage() {
 
   if (propertyState.phase === "notfound") {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-banc-line p-8 text-center">
-            <h1 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <div className={formPanel}>
+            <h1 className="mb-3 font-display text-3xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
               We couldn&apos;t find that property
             </h1>
-            <p className="text-banc-muted-readable mb-6">
+            <p className="mb-6 text-banc-muted-readable">
               It may have been sold, let or withdrawn from the market. You can
               browse our current listings or call the office on{" "}
-              <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">
+              <a href={BANC_CONTACT.callHref} className="text-banc-focus underline underline-offset-2">
                 {BANC_CONTACT.displayPhone}
               </a>
               .
             </p>
-            <Link
-              href="/sales/properties"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
-            >
+            <Link href="/sales/properties" className={actionPrimary}>
               Browse properties
             </Link>
           </div>
@@ -110,46 +108,34 @@ export default function MakeOfferPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-banc-grey-pale py-8 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-xl border border-banc-line p-8 text-center" role="status">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-green-600" aria-hidden="true" />
-            </div>
-            <h2 className="text-2xl font-heading font-bold text-banc-dark-deep mb-3">
+      <div className="min-h-screen bg-banc-grey-pale px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-2xl">
+          <div className={formPanel} role="status">
+            <CheckCircle className="mb-5 h-10 w-10 text-green-700" aria-hidden="true" />
+            <h2 className="mb-3 font-display text-3xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
               Offer sent to our team
             </h2>
-            <p className="text-banc-muted-readable mb-6">
+            <p className="text-banc-muted-readable">
               Your offer of{" "}
               <strong>
                 £{submittedAmount.toLocaleString("en-GB")}
               </strong>{" "}
               for <strong>{property.title}</strong> has been received.
             </p>
-            <div className="bg-banc-grey-pale rounded-lg p-4 mb-6">
-              <p className="text-sm text-banc-muted-readable">
-                We&apos;ll pass your offer to the vendor and come back to you by
-                phone or email. You&apos;ll receive a confirmation email shortly.
-              </p>
-            </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-amber-800">
-                <strong>Important:</strong> This offer is not legally binding
-                until contracts are exchanged. The property remains on the
-                market until an offer is accepted.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href={propertyHref}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus text-white rounded-lg font-medium hover:bg-banc-focus-hover transition-colors"
-              >
+            <p className="mt-6 border-t border-banc-dark/15 pt-6 text-sm text-banc-muted-readable">
+              We&apos;ll pass your offer to the vendor and come back to you by
+              phone or email. You&apos;ll receive a confirmation email shortly.
+            </p>
+            <p className="mt-6 border-t border-banc-dark/15 pt-6 text-sm text-banc-dark-deep">
+              <strong>Important:</strong> This offer is not legally binding
+              until contracts are exchanged. The property remains on the
+              market until an offer is accepted.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Link href={propertyHref} className={actionPrimary}>
                 Back to the property
               </Link>
-              <Link
-                href="/sales/properties"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-banc-line text-banc-dark-deep rounded-lg font-medium hover:bg-banc-grey-pale transition-colors"
-              >
+              <Link href="/sales/properties" className={actionSecondary}>
                 Browse More Properties
               </Link>
             </div>
@@ -159,38 +145,28 @@ export default function MakeOfferPage() {
     );
   }
 
+  const nextSteps = [
+    "Your offer is sent to our sales team, who present it to the vendor",
+    "The vendor reviews your offer and financial position",
+    "We come back to you by phone or email — usually within one working day",
+    "If accepted, you'll proceed to instruct solicitors",
+  ];
+
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      {/* Banc opener: the same dark band, sky eyebrow and display heading the
-          rest of the site uses, so the enquiry pages read as part of it. */}
-      <section className="bg-banc-dark-deep">
-        <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10 lg:py-14">
-          <Link
-            href={propertyHref}
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-banc-sky"
-          >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            Back to the property
-          </Link>
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-banc-sky">
-            Put your offer forward
-          </p>
-          <h1 className="font-display text-3xl font-light leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl lg:text-5xl">
-            Make an Offer
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70">
-            We present every offer to the vendor with the financial position
-            behind it, then come back to you — usually within one working day.
-          </p>
-        </div>
-      </section>
+      <PageBand
+        eyebrow="Put your offer forward"
+        title="Make an Offer"
+        lede="We present every offer to the vendor with the financial position behind it, then come back to you — usually within one working day."
+        back={{ href: propertyHref, label: "Back to the property" }}
+      />
 
-      <div className="mx-auto max-w-6xl px-4 py-10 lg:px-10">
-        <div className="grid lg:grid-cols-3 gap-6">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Left Column - Property Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl border border-banc-line overflow-hidden sticky top-4">
+            <div className="overflow-hidden rounded-[var(--radius-md)] border border-banc-line bg-white lg:sticky lg:top-28">
               <div className="relative h-48 w-full bg-banc-grey-pale">
                 {heroImage ? (
                   <Image
@@ -242,7 +218,7 @@ export default function MakeOfferPage() {
                   </p>
                   <Link
                     href={propertyHref}
-                    className="text-sm text-banc-focus hover:underline mt-2 inline-block"
+                    className="mt-1 inline-flex min-h-11 items-center text-sm text-banc-focus underline-offset-2 hover:underline"
                   >
                     View full details →
                   </Link>
@@ -253,14 +229,14 @@ export default function MakeOfferPage() {
 
           {/* Right Column - Offer Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl border border-banc-line p-6">
-              <h2 className="text-xl font-heading font-semibold text-banc-dark-deep mb-6">
+            <div className={formPanel}>
+              <h2 className="mb-6 font-display text-2xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
                 Your Offer Details
               </h2>
               {submitError && (
                 <div
                   role="alert"
-                  className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800"
+                  className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-4 text-sm text-red-800"
                 >
                   <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
                   <p>{submitError}</p>
@@ -275,35 +251,17 @@ export default function MakeOfferPage() {
             </div>
 
             {/* Info Box */}
-            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5">
-              <h3 className="font-medium text-blue-900 mb-2">
+            <div className="mt-12 border-t border-banc-dark/15 pt-8">
+              <h3 className="mb-5 font-display text-2xl font-light leading-[1.08] tracking-[-0.02em] text-banc-dark">
                 What happens next?
               </h3>
-              <ul className="space-y-2 text-sm text-blue-800">
-                <li className="flex items-start gap-2">
-                  <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
-                    1
-                  </span>
-                  Your offer is sent to our sales team, who present it to the vendor
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
-                    2
-                  </span>
-                  The vendor reviews your offer and financial position
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
-                    3
-                  </span>
-                  We come back to you by phone or email — usually within one working day
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-5 h-5 bg-blue-200 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
-                    4
-                  </span>
-                  If accepted, you&apos;ll proceed to instruct solicitors
-                </li>
+              <ul className="space-y-3 text-sm text-banc-dark-deep">
+                {nextSteps.map((step, index) => (
+                  <li key={step} className="flex items-baseline gap-3">
+                    <span className="w-4 shrink-0 font-semibold tabular-nums text-banc-focus">{index + 1}</span>
+                    {step}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

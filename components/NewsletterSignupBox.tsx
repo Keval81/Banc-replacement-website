@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { actionPrimaryOnDark, fieldControlOnDark } from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { subscribeToNewsletter } from "@/lib/newsletter-subscribe";
 
 export function NewsletterSignupBox() {
@@ -29,12 +31,12 @@ export function NewsletterSignupBox() {
           onChange={(event) => setEmail(event.target.value)}
           placeholder="Enter your email"
           aria-label="Email address"
-          className="flex-1 rounded-lg bg-white/10 px-4 py-3 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-banc-sky"
+          className={cn(fieldControlOnDark, "sm:flex-1")}
         />
         <Button
           type="submit"
           disabled={status === "loading"}
-          className="bg-banc-focus px-6 py-3 text-sm font-semibold text-white hover:bg-banc-sky-dark"
+          className={cn(actionPrimaryOnDark, "shadow-none")}
         >
           {status === "loading" ? "Sending…" : "Subscribe"}
         </Button>

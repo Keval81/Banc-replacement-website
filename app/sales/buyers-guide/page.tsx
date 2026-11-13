@@ -3,7 +3,19 @@ import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import { PageBand } from "@/components/PageBand";
+import { cn } from "@/lib/utils";
+import {
+  actionPrimaryOnDark,
+  actionSecondary,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { BUYERS_GUIDE } from "@/lib/banc-content/buyers-guide";
@@ -18,87 +30,76 @@ export const revalidate = 3600;
 const guideSteps = BUYERS_GUIDE.sections.slice(0, 6);
 const completion = BUYERS_GUIDE.sections[6];
 
+const topTip = "border-l-2 border-banc-focus pl-4";
+
 export default function BuyersGuidePage() {
   return (
     <div className="bg-white text-banc-dark">
       <Header />
 
-      {/* Hero */}
-      <section className="relative bg-banc-dark-deep py-24 lg:py-32">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep via-banc-dark-deep/95 to-transparent z-10" />
-          <Image
-            src="https://images.unsplash.com/photo-1783934108429-284d1f160ae1?auto=format&fit=crop&w=2000&q=80"
-            alt="Luxury home interior"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover opacity-40"
-          />
-        </div>
-        <div className="relative z-20 mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-banc-sky mb-4">Guide</p>
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl">
-              {BUYERS_GUIDE.title}
-            </h1>
-            <p className="mt-6 text-lg text-white/80 leading-relaxed">
-              We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover. 
-              We listen to your requirements, to your budget and to your personal story to help identify properties that meet your needs.
-            </p>
-            <p className="mt-4 text-lg text-white/70">
-              All our staff are local to the area so who better to lend a hand when looking for the best schools, 
+      <PageBand
+        eyebrow="Guide"
+        title={BUYERS_GUIDE.title}
+        lede={
+          <>
+            We love what we do. We have a passion for matching buyers with the very best homes in the areas we cover.
+            We listen to your requirements, to your budget and to your personal story to help identify properties that meet your needs.
+          </>
+        }
+        image={{
+          src: "https://images.unsplash.com/photo-1783934108429-284d1f160ae1?auto=format&fit=crop&w=2000&q=80",
+          alt: "Luxury home interior",
+          priority: true,
+        }}
+      />
+
+      {/* Introduction */}
+      <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl space-y-5 leading-relaxed text-banc-muted-readable lg:text-lg">
+            <p>
+              All our staff are local to the area so who better to lend a hand when looking for the best schools,
               transport links and the best amenities! Our local knowledge will help you source the right home for your needs.
+            </p>
+            <p>
+              Below is a brief guide to the buying process. Whether you&apos;re a first-time buyer or seasoned property investor,
+              we&apos;re here to make your journey as smooth as possible.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Introduction */}
-      <section className="py-16 bg-banc-grey-pale">
-        <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <p className="text-lg text-banc-muted-readable leading-relaxed">
-            Below is a brief guide to the buying process. Whether you&apos;re a first-time buyer or seasoned property investor,
-            we&apos;re here to make your journey as smooth as possible.
-          </p>
-        </div>
-      </section>
-
       {/* Guide Steps */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="space-y-20">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="space-y-12 lg:space-y-20">
             {guideSteps.map((step, index) => {
               const isReversed = index % 2 === 1;
               return (
-                <div key={step.title} className="grid gap-8 lg:grid-cols-2 lg:gap-16 items-center">
+                <div key={step.title} className="grid items-center gap-7 lg:grid-cols-2 lg:gap-16">
                   {/* Content Column */}
                   <div className={isReversed ? 'lg:order-2' : ''}>
-                    {/* Step Badge */}
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-4">
-                      <span className="text-xs font-semibold text-banc-focus uppercase tracking-wider">Step {index + 1} of 6</span>
-                    </div>
-                    
-                    <h2 className="text-2xl lg:text-3xl font-semibold text-banc-dark mb-4">{step.title}</h2>
-                    <p className="text-banc-muted-readable leading-relaxed mb-6">{step.body[0]}</p>
-                    
-                    {/* Top Tip Box - Consistent styling with Sellers Guide */}
-                    <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-5 rounded-r-xl">
-                      <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-banc-sky flex items-center justify-center">
-                          <Sparkles className="h-5 w-5 text-banc-dark-deep" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-banc-focus text-xs uppercase tracking-[0.2em] mb-1">Top Tip</p>
-                          <p className="text-banc-dark-mid leading-relaxed">{step.body[1]}</p>
-                        </div>
-                      </div>
+                    {/* Step marker */}
+                    <p className={cn(eyebrow, "flex items-baseline gap-3")}>
+                      <span className="font-mono text-sm font-medium text-banc-dark-deep">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      Step {index + 1} of 6
+                    </p>
+
+                    <h2 className={cn(sectionHeading, "mt-3")}>{step.title}</h2>
+                    <p className="mt-6 leading-relaxed text-banc-muted-readable">{step.body[0]}</p>
+
+                    {/* Top Tip - Consistent styling with Sellers Guide */}
+                    <div className={cn(topTip, "mt-6")}>
+                      <p className={cn(eyebrow, "mb-1")}>Top Tip</p>
+                      <p className="leading-relaxed text-banc-dark-mid">{step.body[1]}</p>
                     </div>
                   </div>
-                  
+
                   {/* Image Column */}
-                  <div className={`relative ${isReversed ? 'lg:order-1' : ''}`}>
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl shadow-banc-dark-deep/10">
+                  <div className={isReversed ? 'lg:order-1' : ''}>
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-md)]">
                       <Image
                         src={[
                           "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
@@ -114,8 +115,6 @@ export default function BuyersGuidePage() {
                         className="object-cover"
                       />
                     </div>
-                    {/* Decorative Frame */}
-                    <div className={`absolute -bottom-3 -right-3 w-full h-full border-2 border-banc-sky/20 rounded-2xl -z-10 ${isReversed ? 'lg:-left-3 lg:right-auto' : ''}`} />
                   </div>
                 </div>
               );
@@ -125,83 +124,71 @@ export default function BuyersGuidePage() {
       </section>
 
       {/* Completion Section */}
-      <section className="py-20 bg-banc-grey-pale">
-        <div className="mx-auto max-w-4xl px-6 lg:px-10 text-center">
-          <div className="w-16 h-16 mx-auto rounded-full bg-banc-sky flex items-center justify-center mb-6">
-            <Sparkles className="h-8 w-8 text-banc-dark-deep" />
-          </div>
-          <h2 className="text-3xl font-semibold text-banc-dark mb-4">{completion.title}</h2>
-          <p className="text-lg text-banc-muted-readable leading-relaxed mb-6">
-            {completion.body[0]}
-          </p>
-          <div className="bg-banc-sky/5 border-l-4 border-banc-sky p-4 rounded-r-lg inline-block text-left max-w-xl">
-            <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold text-banc-focus text-sm uppercase tracking-wider mb-1">Top Tip</p>
-                <p className="text-sm text-banc-muted-readable">{completion.body[1]}</p>
-              </div>
+      <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <h2 className={sectionHeading}>{completion.title}</h2>
+            <p className="mt-6 leading-relaxed text-banc-muted-readable lg:text-lg">
+              {completion.body[0]}
+            </p>
+            <div className={cn(topTip, "mt-6")}>
+              <p className={cn(eyebrow, "mb-1")}>Top Tip</p>
+              <p className="text-sm text-banc-muted-readable">{completion.body[1]}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Mortgage Advice */}
-      <section className="py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="rounded-2xl bg-banc-dark-deep p-8 lg:p-12">
-            <div className="grid gap-8 lg:grid-cols-2 items-center">
-              <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-banc-sky">Finance</p>
-                <h2 className="mt-4 text-3xl font-semibold text-white">Mortgage Advice</h2>
-                <p className="mt-4 text-white/70 leading-relaxed">
-                  We work with independent mortgage advisers who can help you find the best deal 
-                  for your circumstances. Getting your finances in place early puts you in a 
-                  stronger position when making an offer.
-                </p>
-                <div className="mt-6 space-y-3">
-                  <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
-                    <span>Independent whole-of-market advice</span>
-                  </div>
-                  <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
-                    <span>Agreement in principle within 24 hours</span>
-                  </div>
-                  <div className="flex items-center text-white/70">
-                    <CheckCircle className="h-5 w-5 text-banc-sky mr-3 flex-shrink-0" />
-                    <span>Access to exclusive rates</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-center lg:text-right">
-                <Button className="bg-banc-focus hover:bg-banc-focus-hover text-white px-8 py-6 text-base">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className={eyebrow}>Finance</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Mortgage Advice</h2>
+              <p className="mt-6 leading-relaxed text-banc-muted-readable">
+                We work with independent mortgage advisers who can help you find the best deal
+                for your circumstances. Getting your finances in place early puts you in a
+                stronger position when making an offer.
+              </p>
+              <div className="mt-7">
+                <Button variant="outline" className={cn(actionSecondary, "bg-transparent hover:bg-transparent")}>
                   Speak to a Mortgage Adviser
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </div>
             </div>
+            <ul className="self-start border-t border-banc-dark/15">
+              {[
+                "Independent whole-of-market advice",
+                "Agreement in principle within 24 hours",
+                "Access to exclusive rates",
+              ].map((item) => (
+                <li key={item} className="border-b border-banc-dark/15 py-4 text-banc-dark-deep">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-banc-sky py-16">
-        <div className="mx-auto max-w-7xl px-6 text-center lg:px-10">
-          <h2 className="text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Next step</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>
             Ready to start your property search?
           </h2>
-          <p className="mt-4 text-lg text-banc-dark-deep/90">
+          <p className="mt-4 text-white/70 lg:text-lg">
             Browse our portfolio of premium properties for sale.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link href="/sales/properties">
-              <Button className="bg-white text-banc-focus hover:bg-white/90 px-8 py-6 text-base font-semibold">
-                View Properties
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <Link href="/sales/properties" className={actionPrimaryOnDark}>
+              View Properties
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-            <Button variant="outline" className="bg-transparent border-2 border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold">
+            <Button variant="outline" className={cn(actionSecondaryOnDark, "bg-transparent hover:bg-transparent")}>
               Register with Us
             </Button>
           </div>

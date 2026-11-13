@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
 import ResetCookieButton from "./ResetCookieButton";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 
@@ -16,25 +17,16 @@ export default function CookiePolicyPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      <div className="h-[57px] lg:h-[94px]" />
 
-      <main className="px-4 py-16 lg:px-8 lg:py-24">
-        <div className="mx-auto max-w-4xl">
-          {/* Header */}
-          <div className="mb-12 text-center">
-            <h1 className="text-4xl font-semibold text-banc-dark-deep lg:text-5xl">
-              Cookie Policy
-            </h1>
-            <p className="mt-4 text-lg text-banc-muted-readable">
-              Last updated: February 2026
-            </p>
-          </div>
+      <main>
+        <PageBand eyebrow="Legal" title="Cookie Policy" lede="Last updated: February 2026" />
 
-          {/* Content */}
-          <div className="rounded-2xl bg-white p-8 shadow-lg lg:p-12">
-            <div className="prose prose-lg max-w-none text-banc-muted-readable">
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">1. What Are Cookies</h2>
+        {/* Content: one left-aligned reading column, sections separated by hairlines */}
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+          <div>
+            <div className="max-w-3xl text-base leading-relaxed text-banc-muted-readable">
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">1. What Are Cookies</h2>
                 <p className="mt-4">
                   Cookies are small text files that are placed on your computer or mobile device when you visit a website. 
                   They are widely used to make websites work more efficiently and provide information to the website owners.
@@ -45,8 +37,8 @@ export default function CookiePolicyPage() {
                 </p>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">2. How We Use Cookies</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">2. How We Use Cookies</h2>
                 <p className="mt-4">
                   Banc Property Group uses cookies for various purposes, including:
                 </p>
@@ -58,10 +50,10 @@ export default function CookiePolicyPage() {
                 </ul>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">3. Types of Cookies We Use</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">3. Types of Cookies We Use</h2>
                 
-                <h3 className="mt-6 text-xl font-semibold text-banc-dark-deep">3.1 Essential Cookies</h3>
+                <h3 className="mt-6 text-lg font-semibold text-banc-dark-deep">3.1 Essential Cookies</h3>
                 <p className="mt-3">
                   These cookies are necessary for the website to function and cannot be switched off in our systems. 
                   They are usually only set in response to actions made by you which amount to a request for services, 
@@ -70,24 +62,24 @@ export default function CookiePolicyPage() {
                 <div className="mt-4 overflow-x-auto">
                   <table className="w-full border-collapse text-sm">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Cookie Name</th>
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Purpose</th>
                         <th className="py-3 text-left font-semibold text-banc-dark-deep">Duration</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">banc-cookie-consent</td>
                         <td className="py-3 pr-4">Stores your cookie consent preferences</td>
                         <td className="py-3">1 year</td>
                       </tr>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">banc-cookie-preferences</td>
                         <td className="py-3 pr-4">Stores detailed cookie preference settings</td>
                         <td className="py-3">1 year</td>
                       </tr>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">session</td>
                         <td className="py-3 pr-4">Maintains your session state</td>
                         <td className="py-3">Session</td>
@@ -96,7 +88,7 @@ export default function CookiePolicyPage() {
                   </table>
                 </div>
 
-                <h3 className="mt-8 text-xl font-semibold text-banc-dark-deep">3.2 Analytics Cookies</h3>
+                <h3 className="mt-8 text-lg font-semibold text-banc-dark-deep">3.2 Analytics Cookies</h3>
                 <p className="mt-3">
                   These cookies allow us to count visits and traffic sources so we can measure and improve the 
                   performance of our site. They help us to know which pages are the most and least popular and 
@@ -105,24 +97,24 @@ export default function CookiePolicyPage() {
                 <div className="mt-4 overflow-x-auto">
                   <table className="w-full border-collapse text-sm">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Cookie Name</th>
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Purpose</th>
                         <th className="py-3 text-left font-semibold text-banc-dark-deep">Duration</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">_ga</td>
                         <td className="py-3 pr-4">Google Analytics - distinguishes users</td>
                         <td className="py-3">2 years</td>
                       </tr>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">_gid</td>
                         <td className="py-3 pr-4">Google Analytics - distinguishes users</td>
                         <td className="py-3">24 hours</td>
                       </tr>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">_gat</td>
                         <td className="py-3 pr-4">Google Analytics - throttles request rate</td>
                         <td className="py-3">1 minute</td>
@@ -131,7 +123,7 @@ export default function CookiePolicyPage() {
                   </table>
                 </div>
 
-                <h3 className="mt-8 text-xl font-semibold text-banc-dark-deep">3.3 Marketing Cookies</h3>
+                <h3 className="mt-8 text-lg font-semibold text-banc-dark-deep">3.3 Marketing Cookies</h3>
                 <p className="mt-3">
                   These cookies may be set through our site by our advertising partners. They may be used by 
                   those companies to build a profile of your interests and show you relevant adverts on other sites.
@@ -139,19 +131,19 @@ export default function CookiePolicyPage() {
                 <div className="mt-4 overflow-x-auto">
                   <table className="w-full border-collapse text-sm">
                     <thead>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Cookie Name</th>
                         <th className="py-3 pr-4 text-left font-semibold text-banc-dark-deep">Purpose</th>
                         <th className="py-3 text-left font-semibold text-banc-dark-deep">Duration</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">_fbp</td>
                         <td className="py-3 pr-4">Facebook Pixel - delivers advertisements</td>
                         <td className="py-3">3 months</td>
                       </tr>
-                      <tr className="border-b border-[#E5E5E5]">
+                      <tr className="border-b border-banc-dark/15">
                         <td className="py-3 pr-4 font-mono text-banc-dark-deep">fr</td>
                         <td className="py-3 pr-4">Facebook - advertising delivery</td>
                         <td className="py-3">3 months</td>
@@ -161,8 +153,8 @@ export default function CookiePolicyPage() {
                 </div>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">4. Third-Party Cookies</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">4. Third-Party Cookies</h2>
                 <p className="mt-4">
                   Some cookies are placed by third parties on our behalf. These third parties include:
                 </p>
@@ -178,8 +170,8 @@ export default function CookiePolicyPage() {
                 </p>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">5. Managing Your Cookie Preferences</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">5. Managing Your Cookie Preferences</h2>
                 <p className="mt-4">
                   When you first visit our website, you will see a cookie banner that allows you to:
                 </p>
@@ -197,8 +189,8 @@ export default function CookiePolicyPage() {
                 </div>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">6. How to Control Cookies in Your Browser</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">6. How to Control Cookies in Your Browser</h2>
                 <p className="mt-4">
                   Most web browsers allow you to control cookies through their settings preferences. 
                   Here are links to instructions for major browsers:
@@ -209,7 +201,7 @@ export default function CookiePolicyPage() {
                       href="https://support.google.com/chrome/answer/95647" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       Google Chrome
                     </a>
@@ -219,7 +211,7 @@ export default function CookiePolicyPage() {
                       href="https://support.mozilla.org/en-US/kb/cookies-information-websites-store-on-your-computer" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       Mozilla Firefox
                     </a>
@@ -229,7 +221,7 @@ export default function CookiePolicyPage() {
                       href="https://support.apple.com/guide/safari/manage-cookies-and-website-data-sfri11471/mac" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       Safari
                     </a>
@@ -239,7 +231,7 @@ export default function CookiePolicyPage() {
                       href="https://support.microsoft.com/en-us/help/17442/windows-internet-explorer-delete-manage-cookies" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       Microsoft Edge
                     </a>
@@ -252,8 +244,8 @@ export default function CookiePolicyPage() {
                 </p>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">7. More Information About Cookies</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">7. More Information About Cookies</h2>
                 <p className="mt-4">
                   To learn more about cookies and how to manage them, visit:
                 </p>
@@ -263,7 +255,7 @@ export default function CookiePolicyPage() {
                       href="https://www.allaboutcookies.org/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       All About Cookies
                     </a>
@@ -273,7 +265,7 @@ export default function CookiePolicyPage() {
                       href="https://www.aboutcookies.org/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       About Cookies
                     </a>
@@ -283,7 +275,7 @@ export default function CookiePolicyPage() {
                       href="https://ico.org.uk/for-the-public/online/cookies/" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-banc-focus hover:underline"
+                      className="text-banc-focus underline underline-offset-2"
                     >
                       ICO - Cookies Guidance
                     </a>
@@ -291,8 +283,8 @@ export default function CookiePolicyPage() {
                 </ul>
               </section>
 
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">8. Changes to This Cookie Policy</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">8. Changes to This Cookie Policy</h2>
                 <p className="mt-4">
                   We may update this Cookie Policy from time to time to reflect changes in technology, 
                   legislation, or our data practices. We will notify you of any significant changes by 
@@ -304,21 +296,21 @@ export default function CookiePolicyPage() {
                 </p>
               </section>
 
-              <section>
-                <h2 className="text-2xl font-semibold text-banc-dark-deep">9. Contact Us</h2>
+              <section className="border-t border-banc-dark/15 py-8 first:border-t-0 first:pt-0 pb-0">
+                <h2 className="font-display text-2xl font-light leading-[1.15] tracking-[-0.01em] text-banc-dark">9. Contact Us</h2>
                 <p className="mt-4">
                   If you have any questions about this Cookie Policy or our use of cookies, please contact us:
                 </p>
-                <div className="mt-4 rounded-xl bg-banc-grey-pale p-6">
+                <div className="mt-4 border-l border-banc-dark/15 pl-5">
                   <p className="font-semibold text-banc-dark-deep">Banc Property Group</p>
                   <p className="mt-2">1 Station Road</p>
                   <p>Cuffley, Hertfordshire</p>
                   <p>EN6 4HU</p>
                   <p className="mt-3">
-                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-focus hover:underline">info@bancproperty.com</a>
+                    Email: <a href="mailto:info@bancproperty.com" className="text-banc-focus underline underline-offset-2">info@bancproperty.com</a>
                   </p>
                   <p>
-                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-focus hover:underline">{BANC_CONTACT.displayPhone}</a>
+                    Phone: <a href={BANC_CONTACT.callHref} className="text-banc-focus underline underline-offset-2">{BANC_CONTACT.displayPhone}</a>
                   </p>
                 </div>
               </section>

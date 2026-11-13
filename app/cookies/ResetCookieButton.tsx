@@ -1,5 +1,7 @@
 "use client";
 
+import { actionPrimary } from "@/components/ui/form-styles";
+
 export default function ResetCookieButton() {
   return (
     <button
@@ -10,7 +12,7 @@ export default function ResetCookieButton() {
           window.location.reload();
         }
       }}
-      className="rounded-xl bg-banc-focus px-6 py-3 font-medium text-white transition-colors hover:bg-banc-sky-dark"
+      className={actionPrimary}
     >
       Reset Cookie Preferences
     </button>

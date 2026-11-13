@@ -5,6 +5,9 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { PageBand } from "@/components/PageBand";
+import { cn } from "@/lib/utils";
+import { actionPrimary, eyebrow, sectionHeading, sectionPadding } from "@/components/ui/form-styles";
 import { JsonLd } from "@/components/JsonLd";
 import { MdxContent } from "@/components/blog/MdxContent";
 import {
@@ -17,7 +20,7 @@ import {
 } from "@/lib/blog";
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/schema-org";
 import { absoluteUrl } from "@/lib/site";
-import { ArrowLeft, Calendar, Clock, User, Tag, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
+import { ArrowLeft, Facebook, Twitter, Linkedin } from "lucide-react";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -131,26 +134,45 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <div className="min-h-screen bg-white">
         <Header />
 
+        <PageBand
+          eyebrow="Banc Property Blog"
+          title={post.title}
+          lede={post.description}
+          back={{ href: "/blog", label: "Back to Blog" }}
+        >
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-white/70">
+            <Link
+              href={`/blog/category/${post.category}`}
+              className="inline-flex min-h-11 items-center font-medium capitalize text-white underline underline-offset-4"
+            >
+              {post.category.replace("-", " ")}
+            </Link>
+            <span>{formatDate(post.date)}</span>
+            <span>{post.readingTime}</span>
+            <span>{post.author}</span>
+          </div>
+        </PageBand>
+
         {/* Breadcrumb */}
-        <div className="bg-banc-grey-pale border-b border-banc-line">
-          <div className="mx-auto max-w-7xl px-4 lg:px-10 py-3">
+        <div className="border-b border-banc-line bg-banc-grey-pale">
+          <div className="mx-auto max-w-7xl px-4 py-1 sm:px-6 lg:px-10">
             <nav aria-label="Breadcrumb">
               <ol className="flex items-center gap-2 text-sm text-banc-muted-readable">
                 <li>
-                  <Link href="/" className="hover:text-banc-sky transition-colors">
+                  <Link href="/" className="inline-flex min-h-11 items-center transition-colors hover:text-banc-focus">
                     Home
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
                 <li>
-                  <Link href="/blog" className="hover:text-banc-sky transition-colors">
+                  <Link href="/blog" className="inline-flex min-h-11 items-center transition-colors hover:text-banc-focus">
                     Blog
                   </Link>
                 </li>
                 <li aria-hidden="true">/</li>
                 <li
                   aria-current="page"
-                  className="text-banc-dark truncate max-w-[200px] sm:max-w-[400px]"
+                  className="max-w-[200px] truncate text-banc-dark sm:max-w-[400px]"
                 >
                   {post.title}
                 </li>
@@ -159,55 +181,23 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           </div>
         </div>
 
-        {/* Article Header */}
-        <header className="mx-auto max-w-4xl px-4 pt-12 lg:px-10 lg:pt-16">
-          <div className="mb-4">
-            <Link
-              href={`/blog/category/${post.category}`}
-              className="inline-block rounded-full bg-banc-sky/10 px-3 py-1 text-sm font-medium text-banc-focus capitalize"
-            >
-              {post.category.replace("-", " ")}
-            </Link>
-          </div>
-          <h1 className="text-2xl font-bold text-banc-dark sm:text-3xl lg:text-4xl">
-            {post.title}
-          </h1>
-          <p className="mt-4 text-lg text-banc-muted-readable">{post.description}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-banc-muted-readable">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {formatDate(post.date)}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {post.readingTime}
-            </span>
-            <span className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              {post.author}
-            </span>
-          </div>
-        </header>
-
-        {/* Featured Image */}
-        <div className="mx-auto max-w-5xl px-4 mt-8 lg:px-10 lg:mt-12">
-          <div className="relative aspect-[21/9] overflow-hidden rounded-2xl">
-            <Image
-              src={post.featuredImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 1280px) 100vw, 1280px"
-            />
-          </div>
-        </div>
-
         {/* Article Content */}
-        <main className="mx-auto max-w-4xl px-4 py-12 lg:px-10 lg:py-16">
-          <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
+        <main className={sectionPadding}>
+          <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[minmax(0,48rem)_280px] lg:justify-between">
             {/* Main Content */}
-            <article className="max-w-none">
+            <article className="w-full max-w-3xl">
+              {/* Featured Image */}
+              <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-[var(--radius-md)]">
+                <Image
+                  src={post.featuredImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 768px"
+                />
+              </div>
+
               <div className="text-banc-dark-mid">
                 {post.content.trim() !== "" ? (
                   <MdxContent source={post.content} />
@@ -221,27 +211,26 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1 rounded-full bg-[#F3F4F6] px-3 py-1 text-sm text-banc-muted-readable"
+                    className="inline-flex items-center rounded-[var(--radius-md)] border border-banc-line px-3 py-1 text-sm text-banc-muted-readable"
                   >
-                    <Tag className="h-3 w-3" />
                     {tag}
                   </span>
                 ))}
               </div>
 
               {/* Share */}
-              <div className="mt-8 border-t border-banc-line pt-8">
-                <p className="mb-4 text-sm font-medium text-banc-muted-readable">Share this article</p>
-                <div className="flex gap-3">
-                  <Button variant="outline" size="sm" className="gap-2">
+              <div className="mt-8 border-t border-banc-dark/15 pt-8">
+                <p className={cn(eyebrow, "mb-4")}>Share this article</p>
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
                     <Facebook className="h-4 w-4" />
                     Facebook
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
                     <Twitter className="h-4 w-4" />
                     Twitter
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="h-11 gap-2 rounded-[var(--radius-md)] px-4">
                     <Linkedin className="h-4 w-4" />
                     LinkedIn
                   </Button>
@@ -251,16 +240,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
             {/* Sidebar */}
             <aside className="space-y-8">
-              {/* Author Card */}
+              {/* Author */}
               {author && (
-                <div className="rounded-xl border border-banc-line p-6">
-                  <p className="mb-4 text-sm font-medium text-banc-muted-readable">Written by</p>
+                <div className="border-t border-banc-dark/15 pt-6">
+                  <p className={cn(eyebrow, "mb-4")}>Written by</p>
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-full">
                       <Image
                         src={author.image}
                         alt={author.name}
                         fill
+                        sizes="64px"
                         className="object-cover"
                       />
                     </div>
@@ -274,15 +264,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               )}
 
               {/* CTA */}
-              <div className="rounded-xl bg-banc-focus p-6 text-white">
-                <h3 className="font-semibold">Looking to buy or sell?</h3>
-                <p className="mt-2 text-sm text-white/90">
+              <div className="border-t border-banc-dark/15 pt-6">
+                <h3 className="font-semibold text-banc-dark-deep">Looking to buy or sell?</h3>
+                <p className="mt-2 text-sm text-banc-muted-readable">
                   Get expert advice from our team of property professionals.
                 </p>
-                <Link href="/contact">
-                  <Button className="mt-4 w-full bg-white text-banc-focus hover:bg-white/90">
-                    Contact Us
-                  </Button>
+                <Link href="/contact" className={cn(actionPrimary, "mt-4 sm:w-full")}>
+                  Contact Us
                 </Link>
               </div>
             </aside>
@@ -291,26 +279,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
-          <section className="bg-banc-grey-pale py-12 lg:py-16">
-            <div className="mx-auto max-w-7xl px-4 lg:px-10">
-              <h2 className="mb-8 text-xl font-semibold text-banc-dark">Related Articles</h2>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <section className={cn(sectionPadding, "bg-banc-grey-pale")}>
+            <div className="mx-auto max-w-7xl">
+              <p className={eyebrow}>Keep reading</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Related Articles</h2>
+              <div className="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {relatedPosts.map((relatedPost) => (
-                  <article
-                    key={relatedPost.slug}
-                    className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md"
-                  >
-                    <Link href={`/blog/${relatedPost.slug}`}>
+                  <article key={relatedPost.slug} className="group flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-banc-line bg-white">
+                    <Link href={`/blog/${relatedPost.slug}`} className="flex flex-1 flex-col">
                       <div className="relative aspect-[16/9] overflow-hidden">
                         <Image
                           src={relatedPost.featuredImage}
                           alt={relatedPost.title}
                           fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       </div>
                       <div className="p-5">
-                        <h3 className="font-semibold text-banc-dark transition-colors group-hover:text-banc-sky">
+                        <h3 className="font-semibold text-banc-dark underline-offset-4 group-hover:underline">
                           {relatedPost.title}
                         </h3>
                         <p className="mt-2 text-sm text-banc-muted-readable line-clamp-2">
@@ -326,10 +313,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         )}
 
         {/* Back to Blog */}
-        <div className="mx-auto max-w-7xl px-4 py-8 lg:px-10">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-banc-focus hover:underline"
+            className="inline-flex min-h-11 items-center gap-2 text-banc-focus hover:underline"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Blog

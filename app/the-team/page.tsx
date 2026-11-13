@@ -8,7 +8,18 @@ import Footer from "@/components/Footer";
 import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
 import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { TeamHeroMedia } from "@/components/team/TeamHeroMedia";
-import { Phone, Mail, Smartphone, Users, ArrowRight, MapPin } from "lucide-react";
+import { Phone, Mail, Smartphone, ArrowRight, MapPin } from "lucide-react";
+import {
+  actionPrimaryOnDark,
+  actionSecondary,
+  actionSecondaryOnDark,
+  eyebrow,
+  formPanel,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { BANC_CONTACT } from "@/lib/banc-contact";
 import { getTeamPortrait } from "@/lib/team-media";
 
@@ -122,8 +133,7 @@ export default function TeamPage() {
             the frame, so a bottom-anchored title sat straight on top of them. */}
         <div className="relative mx-auto flex min-h-[max(calc(100svh-3.5rem),770px)] max-w-7xl items-start px-6 pb-16 pt-4 lg:min-h-[92svh] lg:px-10 lg:pt-24">
           <div className="max-w-4xl">
-            <p className="mb-3 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-white/75 lg:mb-5">
-              <span className="h-px w-10 bg-banc-sky" aria-hidden="true" />
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-[var(--banc-focus-dark)] lg:mb-5">
               Our people
             </p>
             <h1 className="font-display text-5xl font-light leading-[0.98] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
@@ -138,7 +148,7 @@ export default function TeamPage() {
                 Property is personal.
               </span>
               <span
-                className="banc-line-reveal block text-banc-sky"
+                className="banc-line-reveal block"
                 style={{ "--banc-line-delay": "1.5s" } as CSSProperties}
               >
                 So are we.
@@ -150,7 +160,7 @@ export default function TeamPage() {
             </p>
             <a
               href="#team-roster"
-              className="mt-8 inline-flex min-h-11 items-center gap-2 border-b border-white/50 text-sm font-medium text-white transition-colors duration-200 hover:border-banc-sky hover:text-banc-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-banc-sky focus-visible:ring-offset-4 focus-visible:ring-offset-banc-dark-deep"
+              className="mt-8 inline-flex min-h-11 items-center gap-2 border-b border-white/50 text-sm font-medium text-white transition-colors duration-200 hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--banc-focus-dark)] focus-visible:ring-offset-4 focus-visible:ring-offset-banc-dark-deep"
             >
               Meet the team
               <ArrowRight className="h-4 w-4 rotate-90" aria-hidden="true" />
@@ -160,21 +170,16 @@ export default function TeamPage() {
       </section>
 
       {/* Team Members Section - Alternating Layout */}
-      <section id="team-roster" className="scroll-mt-24 py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="mb-16 max-w-2xl border-l border-banc-sky pl-5 lg:mb-24">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-banc-muted-readable">
-              The people behind the move
-            </p>
-            <h2 className="mt-3 font-display text-4xl font-light tracking-tight text-banc-dark-deep sm:text-5xl">
-              Local knowledge, individual care.
-            </h2>
-          </div>
-          <div className="space-y-24 lg:space-y-32">
+      <section id="team-roster" className={cn(sectionPadding, "scroll-mt-24")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrow}>The people behind the move</p>
+          <h2 className={cn(sectionHeading, "mt-3")}>Local knowledge, individual care.</h2>
+
+          <div className="mt-7">
             {team.map((member, index) => (
-              <article 
+              <article
                 key={member.name}
-                className={`relative flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-10 lg:gap-16 items-start group`}
+                className={`group flex flex-col items-start gap-7 border-t border-banc-dark/15 py-10 lg:gap-16 lg:py-16 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
               >
                 {/* Photo Column */}
                 <div className="w-full lg:w-2/5">
@@ -196,63 +201,46 @@ export default function TeamPage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Content Column */}
-                <div className="w-full lg:w-3/5 flex flex-col justify-center">
-                  {/* Name and Location */}
-                  <div className="mb-5">
-                    <h2 className="font-display text-4xl font-light tracking-tight text-banc-dark-deep lg:text-5xl">
-                      {member.name}
-                    </h2>
-                    <div className="mt-3 flex items-center gap-2 text-banc-muted-readable">
-                      <MapPin className="h-4 w-4 text-banc-focus" />
-                      <span className="text-sm">{member.location}</span>
-                    </div>
+                <div className="flex w-full flex-col justify-center lg:w-3/5">
+                  <h2 className="font-display text-3xl font-light tracking-tight text-banc-dark-deep lg:text-5xl">
+                    {member.name}
+                  </h2>
+                  <div className="mt-3 flex items-center gap-2 text-banc-muted-readable">
+                    <MapPin className="h-4 w-4 text-banc-focus" aria-hidden="true" />
+                    <span className="text-sm">{member.location}</span>
                   </div>
-                  
-                  {/* Decorative line */}
-                  <div className="mb-6 h-px w-16 bg-banc-sky" />
-                  
+
                   {/* Bio paragraphs */}
-                  <div className="space-y-4 text-banc-dark-mid leading-relaxed">
+                  <div className="mt-6 space-y-4 leading-relaxed text-banc-dark-mid">
                     {member.bio.map((paragraph, pIndex) => (
                       <p key={pIndex} className="text-base lg:text-[17px]">
                         {paragraph}
                       </p>
                     ))}
                   </div>
-                  
+
                   {/* Contact Details */}
-                  <div className="mt-8 pt-6 border-t border-banc-line/50">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-banc-muted-readable mb-4">
-                      Get in Touch
-                    </p>
-                    <div className="flex flex-wrap gap-4">
+                  <div className="mt-7 border-t border-banc-dark/15 pt-6">
+                    <p className={cn(eyebrow, "mb-4")}>Get in Touch</p>
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                       {member.phone && (
-                        <a 
-                          href={`tel:${member.phone.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
-                        >
-                          <Phone className="h-4 w-4" />
-                          <span className="text-sm font-medium">{member.phone}</span>
+                        <a href={`tel:${member.phone.replace(/\s/g, '')}`} className={actionSecondary}>
+                          <Phone className="h-4 w-4" aria-hidden="true" />
+                          {member.phone}
                         </a>
                       )}
                       {member.mobile && (
-                        <a 
-                          href={`tel:${member.mobile.replace(/\s/g, '')}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
-                        >
-                          <Smartphone className="h-4 w-4" />
-                          <span className="text-sm font-medium">{member.mobile}</span>
+                        <a href={`tel:${member.mobile.replace(/\s/g, '')}`} className={actionSecondary}>
+                          <Smartphone className="h-4 w-4" aria-hidden="true" />
+                          {member.mobile}
                         </a>
                       )}
                       {member.email && (
-                        <a 
-                          href={`mailto:${member.email}`} 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-banc-line text-banc-dark-deep hover:border-banc-sky hover:text-banc-sky transition-all duration-200 shadow-sm hover:shadow-md"
-                        >
-                          <Mail className="h-4 w-4" />
-                          <span className="text-sm font-medium">{member.email}</span>
+                        <a href={`mailto:${member.email}`} className={actionSecondary}>
+                          <Mail className="h-4 w-4" aria-hidden="true" />
+                          {member.email}
                         </a>
                       )}
                     </div>
@@ -265,124 +253,73 @@ export default function TeamPage() {
       </section>
 
       {/* Join the Team Section */}
-      <section className="relative py-20 lg:py-28 bg-white overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-banc-grey-pale to-transparent" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-banc-sky/5 rounded-full blur-[100px]" />
-        </div>
-        
-        <div className="relative mx-auto max-w-6xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+      <section className={cn(sectionPadding, "border-t border-banc-dark/15")}>
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-20">
             {/* Left Column - Content */}
             <div className="lg:sticky lg:top-32">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Users className="h-4 w-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus">Careers</span>
-              </div>
-              
-              <h2 className="font-display text-3xl lg:text-4xl xl:text-5xl font-semibold text-banc-dark-deep leading-tight">
-                Looking To Join A <span className="text-banc-focus">Young Dynamic</span> Property Company?
+              <p className={eyebrow}>Careers</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
+                Looking To Join A Young Dynamic Property Company?
               </h2>
-              
-              <p className="mt-6 text-lg text-banc-muted-readable leading-relaxed">
-                Would you like to join the Banc Property Team? We&apos;re always looking for talented 
+
+              <p className="mt-4 text-base leading-relaxed text-banc-muted-readable lg:text-lg">
+                Would you like to join the Banc Property Team? We&apos;re always looking for talented
                 individuals who share our passion for exceptional property service.
               </p>
-              
-              <div className="mt-8 space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep">Growth Opportunities</h3>
-                    <p className="text-sm text-banc-muted-readable">Develop your career in a supportive environment</p>
-                  </div>
+
+              <div className="mt-7">
+                <div className="border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Growth Opportunities</h3>
+                  <p className="mt-1 text-sm text-banc-muted-readable">Develop your career in a supportive environment</p>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep">Local Expertise</h3>
-                    <p className="text-sm text-banc-muted-readable">Work in the heart of the Cuffley community</p>
-                  </div>
+                <div className="border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Local Expertise</h3>
+                  <p className="mt-1 text-sm text-banc-muted-readable">Work in the heart of the Cuffley community</p>
                 </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <ArrowRight className="h-5 w-5 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep">Great Team</h3>
-                    <p className="text-sm text-banc-muted-readable">Join a passionate and experienced team</p>
-                  </div>
+                <div className="border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Great Team</h3>
+                  <p className="mt-1 text-sm text-banc-muted-readable">Join a passionate and experienced team</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Right Column - Form */}
-            <div className="relative">
-              {/* Form card */}
-              <div className="bg-banc-grey-pale rounded-3xl p-8 lg:p-10 shadow-xl border border-banc-line/30">
-                <div className="mb-8">
-                  <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Apply Today</h3>
-                  <p className="text-banc-muted-readable text-sm">Fill out the form below and we&apos;ll be in touch soon.</p>
-                </div>
-                
-                <SimpleEnquiryForm
-                  fields={APPLICATION_FIELDS}
-                  subject="Career enquiry"
-                  intro="Career enquiry from the Meet the Team page."
-                  submitLabel="Submit Application"
-                  successTitle="Application received"
-                  successBody="Thank you for your interest in joining Banc. One of the team will be in touch."
-                  classNames={{
-                    form: "space-y-6",
-                    input: "w-full bg-white focus:ring-2 rounded-xl transition-all",
-                    textarea: "w-full bg-white focus:ring-2 rounded-xl transition-all",
-                    consent: "bg-white border border-banc-line/50",
-                    submit:
-                      "h-14 text-base rounded-xl transition-all duration-300 shadow-lg shadow-banc-sky/25 hover:shadow-xl hover:shadow-banc-sky/30",
-                  }}
-                />
+            <div className={formPanel}>
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-banc-dark-deep">Apply Today</h3>
+                <p className="mt-2 text-sm text-banc-muted-readable">Fill out the form below and we&apos;ll be in touch soon.</p>
               </div>
-              
-              {/* Decorative element */}
-              <div className="absolute -z-10 -bottom-6 -right-6 w-full h-full rounded-3xl bg-banc-sky/10" />
+
+              <SimpleEnquiryForm
+                fields={APPLICATION_FIELDS}
+                subject="Career enquiry"
+                intro="Career enquiry from the Meet the Team page."
+                submitLabel="Submit Application"
+                successTitle="Application received"
+                successBody="Thank you for your interest in joining Banc. One of the team will be in touch."
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Call to Action Banner */}
-      <section className="bg-banc-dark-deep py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 text-center lg:text-left">
-            <div>
-              <h3 className="text-xl lg:text-2xl font-semibold text-white">
-                Ready to work with our team?
-              </h3>
-              <p className="mt-2 text-white/60">
-                Get in touch today and let us help you with your property needs.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a 
-                href={BANC_CONTACT.callHref} 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-banc-focus hover:bg-banc-focus-hover text-white font-semibold rounded-xl transition-all duration-300"
-              >
-                <Phone className="h-5 w-5" />
-                {BANC_CONTACT.displayPhone}
-              </a>
-              <a 
-                href="/contact" 
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-banc-grey-pale text-banc-dark-deep font-semibold rounded-xl transition-all duration-300"
-              >
-                Contact Us
-                <ArrowRight className="h-5 w-5" />
-              </a>
-            </div>
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <h2 className={sectionHeadingOnDark}>Ready to work with our team?</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
+            Get in touch today and let us help you with your property needs.
+          </p>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href="/contact" className={actionPrimaryOnDark}>
+              Contact Us
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+            <a href={BANC_CONTACT.callHref} className={actionSecondaryOnDark}>
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              {BANC_CONTACT.displayPhone}
+            </a>
           </div>
         </div>
       </section>

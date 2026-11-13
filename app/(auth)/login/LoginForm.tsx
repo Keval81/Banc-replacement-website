@@ -9,6 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
+import { actionPrimary, fieldControl, fieldLabel, formPanel } from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -53,33 +56,25 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-banc-dark-deep via-[#1a1d21] to-[#0f1113]">
+    <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      
-      <main className="pt-24 pb-16">
-        <div className="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+
+      <main>
+        <PageBand eyebrow="Your account" title="Welcome Back" lede="Sign in to access your account" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+            className={cn(formPanel, "max-w-xl")}
           >
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-white mb-2">
-                Welcome Back
-              </h1>
-              <p className="text-white/60">
-                Sign in to access your account
-              </p>
-            </div>
-
             {accountsUnavailable && (
               <div
                 role="status"
-                className="mb-6 p-4 bg-white/10 border border-white/20 rounded-lg text-white/80 text-sm"
+                className="mb-6 rounded-[var(--radius-md)] border border-banc-line bg-banc-grey-pale p-4 text-sm text-banc-dark-deep"
               >
                 Accounts are not available yet. Please check back soon, or{" "}
-                <Link href="/contact" className="text-banc-gold-dark hover:text-banc-gold">
+                <Link href="/contact" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
                   contact us
                 </Link>{" "}
                 for help.
@@ -87,14 +82,14 @@ export default function LoginForm() {
             )}
 
             {error && (
-              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+              <div role="alert" className="mb-6 rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="email" className="text-white/80">
+                <Label htmlFor="email" className={fieldLabel}>
                   Email Address
                 </Label>
                 <Input
@@ -104,12 +99,12 @@ export default function LoginForm() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="you@example.com"
                   required
-                  className="mt-2 bg-white/5 border-white/10 text-white placeholder:text-white/30"
+                  className={fieldControl}
                 />
               </div>
 
               <div>
-                <Label htmlFor="password" className="text-white/80">
+                <Label htmlFor="password" className={fieldLabel}>
                   Password
                 </Label>
                 <Input
@@ -119,21 +114,21 @@ export default function LoginForm() {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   placeholder="••••••••"
                   required
-                  className="mt-2 bg-white/5 border-white/10 text-white placeholder:text-white/30"
+                  className={fieldControl}
                 />
               </div>
 
               {/* No password reset exists yet — there is no token, no expiry and
                   no reset mail — so the link only led to a 404. Until the flow
                   is built, the office resets accounts by hand. */}
-              <div className="flex items-center justify-between gap-4">
-                <label className="flex items-center">
-                  <input type="checkbox" className="rounded border-white/20 bg-white/5 text-banc-gold-dark" />
-                  <span className="ml-2 text-sm text-white/60">Remember me</span>
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <label className="flex min-h-11 items-center">
+                  <input type="checkbox" className="h-4 w-4 rounded border-banc-line accent-[var(--banc-focus)]" />
+                  <span className="ml-2 text-sm text-banc-muted-readable">Remember me</span>
                 </label>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-banc-muted-readable">
                   Forgotten your password?{" "}
-                  <Link href="/contact" className="text-banc-gold hover:text-white underline underline-offset-4">
+                  <Link href="/contact" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
                     Ask the team
                   </Link>
                 </p>
@@ -142,15 +137,15 @@ export default function LoginForm() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-[#C5A880] hover:bg-[#D4B88F] text-[#1C1C1C] font-semibold py-6"
+                className={cn(actionPrimary, "shadow-none sm:w-full")}
               >
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
 
-            <p className="mt-6 text-center text-white/60">
+            <p className="mt-6 border-t border-banc-dark/15 pt-6 text-sm text-banc-muted-readable">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-banc-gold-dark hover:text-banc-gold font-medium">
+              <Link href="/register" className="font-medium text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
                 Create one
               </Link>
             </p>

@@ -5,12 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PageBand } from "@/components/PageBand";
+import { actionPrimary, actionSecondary, eyebrow, fieldControl, fieldLabel, formPanel } from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 
 const steps = [
   { id: 1, title: "Account", description: "Your details" },
@@ -98,50 +100,35 @@ export default function RegisterForm() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gradient-to-br from-banc-dark-deep via-[#1a1d21] to-[#0f1113] pt-24 pb-16">
-        <div className="mx-auto max-w-lg px-4">
+      <main className="min-h-screen bg-banc-grey-pale">
+        <PageBand eyebrow="Create your account" title={steps[currentStep - 1].title} lede={steps[currentStep - 1].description} />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm"
+            className={cn(formPanel, "max-w-xl")}
           >
-            <div className="mb-8">
-              <div className="flex justify-between">
-                {steps.map((step, index) => (
-                  <div key={step.id} className="flex flex-1 items-center">
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                          step.id <= currentStep
-                            ? "bg-banc-focus text-white"
-                            : "bg-white/10 text-white/40"
-                        }`}
-                      >
-                        {step.id < currentStep ? (
-                          <Check className="h-4 w-4" />
-                        ) : (
-                          step.id
-                        )}
-                      </div>
-                    </div>
-                    {index < steps.length - 1 && (
-                      <div
-                        className={`mx-2 h-0.5 flex-1 ${
-                          step.id < currentStep ? "bg-banc-sky" : "bg-white/10"
-                        }`}
-                      />
-                    )}
-                  </div>
-                ))}
+            <div className="mb-6">
+              <p className={eyebrow}>
+                Step {currentStep} of {steps.length}
+              </p>
+              <div
+                className="mt-3 h-0.5 w-full bg-banc-line"
+                role="progressbar"
+                aria-label="Registration progress"
+                aria-valuemin={1}
+                aria-valuemax={steps.length}
+                aria-valuenow={currentStep}
+              >
+                <div
+                  className="h-full bg-banc-focus transition-[width] duration-300"
+                  style={{ width: `${(currentStep / steps.length) * 100}%` }}
+                />
               </div>
             </div>
 
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-white">{steps[currentStep - 1].title}</h1>
-            </div>
-
             {error && (
-              <div className="mb-6 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+              <div role="alert" className="mb-6 rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -154,31 +141,31 @@ export default function RegisterForm() {
                 exit={{ opacity: 0, x: -20 }}
               >
                 {currentStep === 1 && (
-                  <div className="space-y-4">
+                  <div className="space-y-5">
                     <div>
-                      <Label className="text-white/80">Full Name</Label>
+                      <Label className={fieldLabel}>Full Name</Label>
                       <Input
                         value={formData.name}
                         onChange={(e) => updateFormData("name", e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
+                        className={fieldControl}
                       />
                     </div>
                     <div>
-                      <Label className="text-white/80">Email</Label>
+                      <Label className={fieldLabel}>Email</Label>
                       <Input
                         type="email"
                         value={formData.email}
                         onChange={(e) => updateFormData("email", e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
+                        className={fieldControl}
                       />
                     </div>
                     <div>
-                      <Label className="text-white/80">Password</Label>
+                      <Label className={fieldLabel}>Password</Label>
                       <Input
                         type="password"
                         value={formData.password}
                         onChange={(e) => updateFormData("password", e.target.value)}
-                        className="bg-white/5 border-white/10 text-white"
+                        className={fieldControl}
                       />
                     </div>
                   </div>
@@ -186,18 +173,18 @@ export default function RegisterForm() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="mt-8 flex gap-3">
+            <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
               {currentStep > 1 && (
-                <Button variant="outline" onClick={handleBack} className="flex-1">
+                <Button variant="outline" onClick={handleBack} className={cn(actionSecondary, "sm:flex-1")}>
                   Back
                 </Button>
               )}
               {currentStep < 4 ? (
-                <Button onClick={handleNext} className="flex-1 bg-banc-focus">
+                <Button onClick={handleNext} className={cn(actionPrimary, "shadow-none sm:flex-1")}>
                   Continue
                 </Button>
               ) : (
-                <Button onClick={handleSubmit} className="flex-1 bg-banc-focus">
+                <Button onClick={handleSubmit} className={cn(actionPrimary, "shadow-none sm:flex-1")}>
                   Create Account
                 </Button>
               )}

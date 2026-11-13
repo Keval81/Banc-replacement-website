@@ -2,7 +2,17 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimaryOnDark,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import {
   Briefcase,
   TrendingUp,
@@ -92,90 +102,41 @@ export default function BecomePartnerPage() {
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-banc-dark-deep">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
+      <PageBand
+        eyebrow="Career Opportunity"
+        title="Become a Partner"
+        lede="Are you looking for the next step, or perhaps the first step in your estate agency career?"
+        image={{
+          src: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1920&q=80",
+          alt: "",
+          priority: true,
+        }}
+      >
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a
+            href="mailto:nitesh@bancproperty.com,andrew@bancproperty.com?subject=Partner Agent Application"
+            className={actionPrimaryOnDark}
+          >
+            Apply Now
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+          <a href="#opportunity" className={actionSecondaryOnDark}>
+            Learn More
+          </a>
         </div>
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, #4AC8E8 1px, transparent 0)`,
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-banc-sky/10 via-transparent to-transparent" />
-
-        <div className="relative mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
-          <div className="mx-auto max-w-4xl text-center">
-            {/* Eyebrow */}
-            <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-banc-sky/10 px-4 py-2 text-sm font-medium uppercase tracking-[0.2em] text-banc-sky">
-              <Sparkles className="h-4 w-4" />
-              Career Opportunity
-            </p>
-
-            {/* Main Headline */}
-            <h1 className="font-heading text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
-              Become a Partner
-            </h1>
-
-            {/* Sub-headline */}
-            <p className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-white/80 lg:text-2xl">
-              Are you looking for the next step, or perhaps the first step in your
-              estate agency career?
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <a
-                href="mailto:nitesh@bancproperty.com,andrew@bancproperty.com?subject=Partner Agent Application"
-                className="group"
-              >
-                <Button className="bg-banc-focus px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-focus-hover hover:shadow-lg hover:shadow-banc-sky/25">
-                  Apply Now
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
-              </a>
-              <a href="#opportunity">
-                <Button
-                  variant="outline"
-                  className="border-white/30 bg-transparent px-8 py-6 text-base text-white transition-all duration-300 hover:border-banc-sky hover:bg-banc-sky/10 hover:text-white"
-                >
-                  Learn More
-                </Button>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-banc-sky/50 to-transparent" />
-      </section>
+      </PageBand>
 
       {/* Introduction Section */}
-      <section id="opportunity" className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <section id="opportunity" className={cn(sectionPadding, "scroll-mt-24")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-16">
             {/* Content */}
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
-                The Opportunity
-              </p>
-              <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
+              <p className={eyebrow}>The Opportunity</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
                 Run Your Own Business with Professional Support
               </h2>
-              <div className="mt-6 space-y-4 text-lg leading-relaxed text-banc-muted-readable">
+              <div className="mt-7 space-y-4 text-base leading-relaxed text-banc-muted-readable lg:text-lg">
                 <p>
                   We are looking for local business partners in{" "}
                   <strong className="text-banc-dark-deep">North London</strong>,{" "}
@@ -191,75 +152,49 @@ export default function BecomePartnerPage() {
               </div>
             </div>
 
-            {/* Visual Card */}
-            <div className="relative">
-              <div className="relative overflow-hidden rounded-2xl bg-banc-dark-deep p-8 shadow-2xl lg:p-10">
-                {/* Decorative gradient */}
-                <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-banc-sky/20 blur-3xl" />
-                
-                <div className="relative">
-                  <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-banc-sky/20">
-                    <Briefcase className="h-7 w-7 text-banc-sky" />
-                  </div>
-                  <h3 className="font-heading text-2xl font-semibold text-white">
-                    Partner Agent Model
-                  </h3>
-                  <p className="mt-4 text-white/70">
-                    Provides a low cost and low risk entry to a business, which for
-                    the right individuals provides excellent financial rewards.
-                  </p>
-                  
-                  {/* Stats */}
-                  <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
-                    <div>
-                      <p className="font-heading text-3xl font-bold text-banc-sky">3</p>
-                      <p className="mt-1 text-sm text-white/60">Key Regions</p>
-                    </div>
-                    <div>
-                      <p className="font-heading text-3xl font-bold text-banc-sky">∞</p>
-                      <p className="mt-1 text-sm text-white/60">Earning Potential</p>
-                    </div>
-                  </div>
+            {/* Partner model */}
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="font-display text-2xl font-light text-banc-dark-deep">
+                Partner Agent Model
+              </h3>
+              <p className="mt-3 leading-relaxed text-banc-muted-readable">
+                Provides a low cost and low risk entry to a business, which for
+                the right individuals provides excellent financial rewards.
+              </p>
+
+              {/* Stats */}
+              <div className="mt-6 grid grid-cols-2 gap-x-8 border-t border-banc-dark/15 pt-5">
+                <div>
+                  <p className="font-display text-3xl font-light text-banc-dark-deep">3</p>
+                  <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">Key Regions</p>
+                </div>
+                <div>
+                  <p className="font-display text-3xl font-light text-banc-dark-deep">∞</p>
+                  <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-banc-muted-readable">Earning Potential</p>
                 </div>
               </div>
-              
-              {/* Decorative corner accent */}
-              <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl bg-banc-sky/20" />
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="bg-banc-dark-deep py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          {/* Section Header */}
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
-              Why Partner With Us
-            </p>
-            <h2 className="mt-4 font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Benefits of the Partner Model
-            </h2>
-            <p className="mt-4 text-lg text-white/60">
-              Focus on what you do best while we handle the rest
-            </p>
-          </div>
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Why Partner With Us</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Benefits of the Partner Model</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
+            Focus on what you do best while we handle the rest
+          </p>
 
-          {/* Benefits Grid */}
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-7 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition-all duration-300 hover:border-banc-sky/50 hover:bg-white/10"
-              >
-                <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-banc-sky/20 transition-colors duration-300 group-hover:bg-banc-sky">
-                  <benefit.icon className="h-6 w-6 text-banc-sky transition-colors duration-300 group-hover:text-white" />
-                </div>
-                <h3 className="font-heading text-xl font-semibold text-white">
+              <div key={index} className="border-t border-white/15 py-6">
+                <benefit.icon className="h-6 w-6 text-[var(--banc-focus-dark)]" aria-hidden="true" />
+                <h3 className="mt-4 text-lg font-semibold text-white">
                   {benefit.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">
+                <p className="mt-2 text-sm leading-relaxed text-white/70">
                   {benefit.description}
                 </p>
               </div>
@@ -269,263 +204,158 @@ export default function BecomePartnerPage() {
       </section>
 
       {/* Division of Responsibilities Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          {/* Section Header */}
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
-              How It Works
-            </p>
-            <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl lg:text-5xl">
-              What You Handle vs What We Handle
-            </h2>
-            <p className="mt-4 text-lg text-banc-muted-readable">
-              Our partner agents concentrate on the tasks that estate agents love,
-              whilst we handle the back-end operations
-            </p>
-          </div>
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrow}>How It Works</p>
+          <h2 className={cn(sectionHeading, "mt-3")}>What You Handle vs What We Handle</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-banc-muted-readable lg:text-lg">
+            Our partner agents concentrate on the tasks that estate agents love,
+            whilst we handle the back-end operations
+          </p>
 
-          {/* Comparison Grid */}
-          <div className="mt-16 grid gap-8 lg:grid-cols-2">
+          <div className="mt-7 grid gap-10 lg:grid-cols-2 lg:gap-16">
             {/* You Handle */}
-            <div className="overflow-hidden rounded-2xl border border-banc-dark-deep/10 bg-white shadow-lg">
-              <div className="bg-banc-dark-deep px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky">
-                    <Users className="h-5 w-5 text-banc-dark-deep" />
-                  </div>
-                  <h3 className="font-heading text-xl font-semibold text-white">
-                    You Handle
-                  </h3>
-                </div>
-                <p className="mt-2 text-sm text-white/60">
-                  The activities you enjoy and excel at
-                </p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-4">
-                  {youHandle.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" />
-                      <span className="text-banc-dark-mid">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="font-display text-2xl font-light text-banc-dark-deep">You Handle</h3>
+              <p className="mt-2 text-sm text-banc-muted-readable">
+                The activities you enjoy and excel at
+              </p>
+              <ul className="mt-5">
+                {youHandle.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3 border-t border-banc-dark/15 py-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" aria-hidden="true" />
+                    <span className="text-banc-dark-mid">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* We Handle */}
-            <div className="overflow-hidden rounded-2xl border border-banc-sky/20 bg-white shadow-lg shadow-banc-sky/5">
-              <div className="bg-banc-sky px-6 py-5">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white">
-                    <Shield className="h-5 w-5 text-banc-focus" />
-                  </div>
-                  <h3 className="font-heading text-xl font-semibold text-banc-dark-deep">
-                    We Handle
-                  </h3>
-                </div>
-                <p className="mt-2 text-sm text-banc-dark-deep/80">
-                  The operational and administrative burden
-                </p>
-              </div>
-              <div className="p-6">
-                <ul className="space-y-4">
-                  {weHandle.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" />
-                      <span className="text-banc-dark-mid">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="font-display text-2xl font-light text-banc-dark-deep">We Handle</h3>
+              <p className="mt-2 text-sm text-banc-muted-readable">
+                The operational and administrative burden
+              </p>
+              <ul className="mt-5">
+                {weHandle.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3 border-t border-banc-dark/15 py-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" aria-hidden="true" />
+                    <span className="text-banc-dark-mid">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       {/* Ideal Partner Traits Section */}
-      <section className="bg-banc-dark-deep py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          {/* Section Header */}
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-sky">
-              Ideal Candidate
-            </p>
-            <h2 className="mt-4 font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-              Who We Are Looking For
-            </h2>
-            <p className="mt-4 text-lg text-white/60">
-              Our business partners are exceptional individuals who share our values
-            </p>
-          </div>
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Ideal Candidate</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Who We Are Looking For</h2>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
+            Our business partners are exceptional individuals who share our values
+          </p>
 
-          {/* Traits Grid */}
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-7 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
             {partnerTraits.map((trait, index) => (
-              <div
-                key={index}
-                className="group relative overflow-hidden rounded-2xl bg-white/5 p-6 transition-all duration-300 hover:bg-white/10"
-              >
-                {/* Hover accent */}
-                <div className="absolute left-0 top-0 h-full w-1 bg-banc-sky opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                
-                <div className="flex items-start gap-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-sky/20 transition-colors duration-300 group-hover:bg-banc-sky">
-                    <trait.icon className="h-6 w-6 text-banc-sky transition-colors duration-300 group-hover:text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-lg font-semibold text-white">
-                      {trait.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-white/50">{trait.description}</p>
-                  </div>
+              <div key={index} className="flex items-start gap-4 border-t border-white/15 py-5">
+                <trait.icon className="mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--banc-focus-dark)]" aria-hidden="true" />
+                <div>
+                  <h3 className="text-lg font-semibold text-white">
+                    {trait.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-white/70">{trait.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Additional Description */}
-          <div className="mx-auto mt-12 max-w-3xl text-center">
-            <p className="text-white/60">
-              Our business partners are entrepreneurial and ambitious individuals who
-              want to live a great lifestyle, they are motivated to succeed,
-              disciplined, proactive and committed to personal development and trying
-              new methods of property marketing.
-            </p>
-          </div>
+          <p className="mt-6 max-w-3xl border-t border-white/15 pt-6 leading-relaxed text-white/70">
+            Our business partners are entrepreneurial and ambitious individuals who
+            want to live a great lifestyle, they are motivated to succeed,
+            disciplined, proactive and committed to personal development and trying
+            new methods of property marketing.
+          </p>
         </div>
       </section>
 
       {/* Regions Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            {/* Content */}
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-16">
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.3em] text-banc-focus">
-                Locations
-              </p>
-              <h2 className="mt-4 font-heading text-3xl font-semibold text-banc-dark-deep sm:text-4xl">
-                Currently Recruiting In
-              </h2>
-              <p className="mt-4 text-lg text-banc-muted-readable">
+              <p className={eyebrow}>Locations</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Currently Recruiting In</h2>
+              <p className="mt-4 text-base leading-relaxed text-banc-muted-readable lg:text-lg">
                 We are actively seeking partners in these key regions
               </p>
 
-              <div className="mt-8 space-y-4">
+              <ul className="mt-7">
                 {["North London", "Hertfordshire", "Essex"].map((region) => (
-                  <div
+                  <li
                     key={region}
-                    className="flex items-center gap-4 rounded-xl border border-banc-dark-deep/10 bg-white p-4 shadow-sm transition-all duration-300 hover:border-banc-sky/30 hover:shadow-md"
+                    className="flex items-center gap-3 border-t border-banc-dark/15 py-4"
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-banc-sky/10">
-                      <Target className="h-5 w-5 text-banc-focus" />
-                    </div>
-                    <span className="font-heading text-lg font-medium text-banc-dark-deep">
+                    <MapPin className="h-5 w-5 flex-shrink-0 text-banc-focus" />
+                    <span className="font-display text-xl font-light text-banc-dark-deep">
                       {region}
                     </span>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* Visual/Map Placeholder */}
-            <div className="relative">
-              <div className="aspect-square overflow-hidden rounded-2xl bg-banc-dark-deep p-8 lg:aspect-auto lg:h-[400px]">
-                {/* Decorative Map Background */}
-                <div className="absolute inset-0 opacity-10">
-                  <svg
-                    className="h-full w-full"
-                    viewBox="0 0 400 400"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="200" cy="200" r="150" stroke="#4AC8E8" strokeWidth="1" />
-                    <circle cx="200" cy="200" r="100" stroke="#4AC8E8" strokeWidth="1" />
-                    <circle cx="200" cy="200" r="50" stroke="#4AC8E8" strokeWidth="2" />
-                    <line x1="200" y1="0" x2="200" y2="400" stroke="#4AC8E8" strokeWidth="1" />
-                    <line x1="0" y1="200" x2="400" y2="200" stroke="#4AC8E8" strokeWidth="1" />
-                  </svg>
-                </div>
-
-                <div className="relative flex h-full flex-col items-center justify-center text-center">
-                  <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-banc-sky/20">
-                    <MapPin className="h-10 w-10 text-banc-sky" />
-                  </div>
-                  <h3 className="font-heading text-2xl font-semibold text-white">
-                    Join Our Network
-                  </h3>
-                  <p className="mx-auto mt-2 max-w-xs text-white/60">
-                    Become part of a growing team of professional estate agents
-                  </p>
-                </div>
-              </div>
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className="font-display text-2xl font-light text-banc-dark-deep">
+                Join Our Network
+              </h3>
+              <p className="mt-3 max-w-md leading-relaxed text-banc-muted-readable">
+                Become part of a growing team of professional estate agents
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact CTA Section */}
-      <section className="relative overflow-hidden bg-banc-dark-deep py-20 lg:py-28">
-        {/* Background Elements */}
-        <div className="absolute inset-0 opacity-5">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, #4AC8E8 1px, transparent 0)`,
-              backgroundSize: "32px 32px",
-            }}
-          />
-        </div>
-        <div className="absolute -left-40 -top-40 h-80 w-80 rounded-full bg-banc-sky/10 blur-3xl" />
-        <div className="absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-banc-sky/10 blur-3xl" />
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <h2 className={sectionHeadingOnDark}>Ready to Take the Next Step?</h2>
 
-        <div className="relative mx-auto max-w-4xl px-6 text-center lg:px-10">
-          <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-banc-sky/20">
-            <Mail className="h-8 w-8 text-banc-sky" />
-          </div>
-
-          <h2 className="font-heading text-3xl font-semibold text-white sm:text-4xl lg:text-5xl">
-            Ready to Take the Next Step?
-          </h2>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70">
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/70 lg:text-lg">
             If you want to find out more about this exciting opportunity, forward
             your CV and covering letter to one of our directors. All information
             provided and discussed will be dealt with in the strictest confidence.
           </p>
 
           {/* Email Buttons */}
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
               href="mailto:nitesh@bancproperty.com?subject=Partner Agent Application"
-              className="w-full sm:w-auto"
+              className={actionPrimaryOnDark}
             >
-              <Button className="w-full bg-banc-focus px-8 py-6 text-base font-medium text-white transition-all duration-300 hover:bg-banc-focus-hover hover:shadow-lg hover:shadow-banc-sky/25 sm:w-auto">
-                <Mail className="mr-2 h-5 w-5" />
-                Email Nitesh
-              </Button>
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Email Nitesh
             </a>
             <a
               href="mailto:andrew@bancproperty.com?subject=Partner Agent Application"
-              className="w-full sm:w-auto"
+              className={actionSecondaryOnDark}
             >
-              <Button className="w-full bg-white px-8 py-6 text-base font-medium text-banc-dark-deep transition-all duration-300 hover:bg-white/90 sm:w-auto">
-                <Mail className="mr-2 h-5 w-5" />
-                Email Andrew
-              </Button>
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Email Andrew
             </a>
           </div>
 
           {/* Email Addresses Display */}
-          <div className="mt-8 flex flex-col items-center gap-2 text-sm text-white/50">
+          <div className="mt-6 flex flex-col gap-1 text-sm text-white/70">
             <p>nitesh@bancproperty.com</p>
             <p>andrew@bancproperty.com</p>
           </div>
 
           {/* Privacy Note */}
-          <p className="mt-6 text-xs text-white/40">
+          <p className="mt-6 text-xs text-white/60">
             All information provided and discussed will be dealt with in the
             strictest confidence
           </p>
@@ -537,7 +367,7 @@ export default function BecomePartnerPage() {
   );
 }
 
-// Additional icon component for the map section
+// Additional icon component for the regions list
 function MapPin({ className }: { className?: string }) {
   return (
     <svg
@@ -546,6 +376,7 @@ function MapPin({ className }: { className?: string }) {
       stroke="currentColor"
       viewBox="0 0 24 24"
       xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
       <path
         strokeLinecap="round"

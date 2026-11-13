@@ -2,21 +2,19 @@ import type { Metadata } from "next";
 import { withPageDefaults } from "@/lib/seo";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { 
-  PoundSterling, 
-  Shield, 
-  FileText, 
-  Info,
-  Check,
-  AlertCircle,
-  ArrowRight,
-  Home,
-  Key,
-  Users,
-  Building2,
-  Phone
-} from "lucide-react";
+import { PageBand } from "@/components/PageBand";
+import { cn } from "@/lib/utils";
+import {
+  actionPrimaryOnDark,
+  actionSecondary,
+  actionSecondaryOnDark,
+  eyebrow,
+  eyebrowOnDark,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { ArrowRight, Phone } from "lucide-react";
 import Link from "next/link";
 import { BANC_CONTACT, FEES_TO_LANDLORDS_URL, FEES_TO_TENANTS_URL } from "@/lib/banc-contact";
 
@@ -157,181 +155,139 @@ const additionalFees = [
   { service: "Inventory", fee: "From £100 (inc VAT), dependent on property size" }
 ];
 
+const blockHeading = "text-xl font-semibold text-banc-dark-deep";
+
 export default function LettingsFeesPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
-      
-      {/* Hero Section */}
-      <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
+
+      <PageBand
+        eyebrow="Transparent Pricing"
+        title="Lettings Fees"
+        lede={
+          <>
+            Complete transparency on all fees and charges. We believe in being
+            upfront about costs so there are no surprises.
+          </>
+        }
+        image={{
+          src: "https://images.unsplash.com/photo-1625225233840-695456021cde?auto=format&fit=crop&w=1920&q=80",
+          alt: "",
+          priority: true,
+        }}
+      >
+        {/* The two published schedules, as on the old site. */}
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer" className={actionPrimaryOnDark}>
+            Fees to landlords (PDF)
+          </a>
+          <a href={FEES_TO_TENANTS_URL} target="_blank" rel="noopener noreferrer" className={actionSecondaryOnDark}>
+            Fees to tenants (PDF)
+          </a>
         </div>
-        {/* Background decorations */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-        </div>
-        
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <PoundSterling className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">Transparent Pricing</span>
-            </div>
-            
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
-              Lettings Fees
-            </h1>
-            <p className="mt-6 text-xl text-white/70 leading-relaxed">
-              Complete transparency on all fees and charges. We believe in being 
-              upfront about costs so there are no surprises.
-            </p>
-            {/* The two published schedules, as on the old site. */}
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <a href={FEES_TO_LANDLORDS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-white px-6 text-base font-semibold text-banc-dark-deep transition-colors hover:bg-white/90">
-                Fees to landlords (PDF)
-              </a>
-              <a href={FEES_TO_TENANTS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-xl border-2 border-white px-6 text-base font-semibold text-white transition-colors hover:bg-white/10">
-                Fees to tenants (PDF)
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      </PageBand>
 
       {/* Tenant Fees Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-3 gap-12">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-3">
             {/* Main content */}
             <div className="lg:col-span-2">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Users className="h-4 w-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus">For Tenants</span>
-              </div>
-              
-              <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-4">
-                Tenant Fees Explained
-              </h2>
-              
+              <p className={eyebrow}>For Tenants</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Tenant Fees Explained</h2>
+
               {/* Legal notice */}
-              <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
-                <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <Shield className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-green-800 mb-1">Tenant Fees Act 2019 Compliant</h3>
-                    <p className="text-green-700 text-sm">
-                      Under the Tenant Fees Act 2019, most fees charged to tenants are now banned. 
-                      We only charge the permitted payments outlined below. Any landlord or agent 
-                      charging banned fees may be fined up to £5,000.
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-7 rounded-[var(--radius-md)] border border-green-200 bg-green-50 p-5">
+                <h3 className="mb-1 font-semibold text-green-800">Tenant Fees Act 2019 Compliant</h3>
+                <p className="text-sm text-green-800">
+                  Under the Tenant Fees Act 2019, most fees charged to tenants are now banned.
+                  We only charge the permitted payments outlined below. Any landlord or agent
+                  charging banned fees may be fined up to £5,000.
+                </p>
               </div>
-              
-              <p className="text-lg text-banc-muted-readable mb-8">
+
+              <p className="mt-8 text-lg text-banc-muted-readable">
                 Under current legislation, we are only permitted to charge the following payments to tenants:
               </p>
-              
+
               {/* Permitted fees */}
-              <div className="space-y-6">
+              <div className="mt-6 border-b border-banc-dark/15">
                 {tenantFees.permitted.map((fee) => (
-                  <div key={fee.name} className="bg-white rounded-2xl p-6 border border-banc-line/30">
-                    <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                  <div key={fee.name} className="border-t border-banc-dark/15 py-6">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
                       <div>
                         <h3 className="text-lg font-semibold text-banc-dark-deep">{fee.name}</h3>
-                        <p className="text-banc-muted-readable mt-1">{fee.description}</p>
+                        <p className="mt-1 text-banc-muted-readable">{fee.description}</p>
                       </div>
-                      <span className="px-4 py-2 rounded-full bg-banc-sky/10 text-banc-focus font-semibold text-sm">
+                      <p className="font-bold text-banc-dark-deep sm:max-w-[16rem] sm:shrink-0 sm:text-right">
                         {fee.amount}
-                      </span>
+                      </p>
                     </div>
-                    
+
                     {fee.conditions && (
-                      <div className="mt-4 pt-4 border-t border-banc-line/30">
-                        <p className="text-sm font-medium text-banc-dark-mid mb-2">Refund conditions:</p>
+                      <div className="mt-4">
+                        <p className="mb-2 text-sm font-medium text-banc-dark-mid">Refund conditions:</p>
                         <ul className="space-y-1">
                           {fee.conditions.map((condition, index) => (
-                            <li key={index} className="text-sm text-banc-muted-readable flex items-start gap-2">
-                              <span className="text-banc-focus mt-1">•</span>
+                            <li key={index} className="flex items-start gap-2 text-sm text-banc-muted-readable">
+                              <span className="mt-1 text-banc-focus">•</span>
                               {condition}
                             </li>
                           ))}
                         </ul>
                       </div>
                     )}
-                    
+
                     {fee.note && (
-                      <div className="mt-4 pt-4 border-t border-banc-line/30">
-                        <p className="text-sm text-banc-muted-readable">{fee.note}</p>
-                      </div>
+                      <p className="mt-4 text-sm text-banc-muted-readable">{fee.note}</p>
                     )}
                   </div>
                 ))}
               </div>
             </div>
-            
+
             {/* Sidebar */}
-            <div className="space-y-6">
+            <div className="space-y-8">
               {/* Banned fees notice */}
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <AlertCircle className="h-5 w-5 text-red-600" />
-                  <h3 className="font-semibold text-red-800">Banned Fees</h3>
-                </div>
-                <p className="text-sm text-red-700 mb-4">
+              <div className="rounded-[var(--radius-md)] border border-red-200 bg-red-50 p-5">
+                <h3 className="mb-3 font-semibold text-red-800">Banned Fees</h3>
+                <p className="mb-4 text-sm text-red-800">
                   We do NOT charge tenants any of the following:
                 </p>
                 <ul className="space-y-2">
                   {tenantFees.banned.map((fee) => (
-                    <li key={fee} className="text-sm text-red-700 flex items-start gap-2">
-                      <span className="text-red-400">✕</span>
+                    <li key={fee} className="flex items-start gap-2 text-sm text-red-800">
+                      <span aria-hidden="true">✕</span>
                       {fee}
                     </li>
                   ))}
                 </ul>
               </div>
-              
+
               {/* Deposit protection info */}
-              <div className="bg-white rounded-2xl p-6 border border-banc-line/30">
-                <div className="flex items-center gap-2 mb-4">
-                  <Shield className="h-5 w-5 text-banc-focus" />
-                  <h3 className="font-semibold text-banc-dark-deep">Deposit Protection</h3>
-                </div>
-                <p className="text-sm text-banc-muted-readable mb-4">
+              <div className="border-t border-banc-dark/15 pt-6">
+                <h3 className="font-semibold text-banc-dark-deep">Deposit Protection</h3>
+                <p className="mt-3 text-sm text-banc-muted-readable">
                   Your security deposit is protected in a government-approved scheme:
                 </p>
-                <ul className="space-y-2 text-sm text-banc-muted-readable">
-                  <li className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
-                    Government-authorised tenancy deposit scheme
-                  </li>
+                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-banc-muted-readable">
+                  <li>Government-authorised tenancy deposit scheme</li>
                 </ul>
-                <p className="text-sm text-banc-muted-readable mt-4">
+                <p className="mt-4 text-sm text-banc-muted-readable">
                   You&apos;ll receive prescribed information within 30 days of payment.
                 </p>
               </div>
-              
+
               {/* CTA */}
-              <div className="bg-banc-sky rounded-2xl p-6 text-center">
-                <Home className="h-8 w-8 text-banc-dark-deep mx-auto mb-3" />
-                <h3 className="font-semibold text-banc-dark-deep mb-2">Looking to Rent?</h3>
-                <p className="text-sm text-banc-dark-deep/80 mb-4">
+              <div className="border-t border-banc-dark/15 pt-6">
+                <h3 className="font-semibold text-banc-dark-deep">Looking to Rent?</h3>
+                <p className="mt-2 text-sm text-banc-muted-readable">
                   Browse our available rental properties
                 </p>
-                <Link href="/lettings/properties">
-                  <Button className="w-full bg-white text-banc-focus hover:bg-white/90">
-                    View Properties
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <Link href="/lettings/properties" className={cn(actionSecondary, "mt-4")}>
+                  View Properties
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
             </div>
@@ -340,86 +296,54 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* Landlord Fees Section */}
-      <section className="py-20 lg:py-28 bg-banc-dark-deep">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Key className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">For Landlords</span>
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-white">
-              Landlord Service Fees
-            </h2>
-            <p className="mt-4 text-lg text-white/60">
-              Choose the level of service that works for you. All fees are transparent 
-              with no hidden charges.
-            </p>
-          </div>
-          
-          {/* Pricing cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>For Landlords</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Landlord Service Fees</h2>
+          <p className="mt-4 max-w-2xl text-white/70 lg:text-lg">
+            Choose the level of service that works for you. All fees are transparent
+            with no hidden charges.
+          </p>
+
+          {/* Pricing */}
+          <div className="mt-7 grid gap-x-10 md:grid-cols-3">
             {landlordFees.map((service) => (
-              <div 
-                key={service.name}
-                className={`relative rounded-2xl p-8 ${
-                  service.popular 
-                    ? 'bg-banc-focus text-white' 
-                    : 'bg-white/5 border border-white/10 text-white'
-                }`}
-              >
-                {service.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 rounded-full bg-white text-banc-focus text-xs font-semibold">
-                      Most Popular
-                    </span>
-                  </div>
-                )}
-                
-                <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                <p className={`text-sm mb-6 ${service.popular ? 'text-white/80' : 'text-white/60'}`}>
-                  {service.description}
-                </p>
-                
-                <div className="mb-6">
-                  <span className="text-3xl font-bold">{service.pricing}</span>
-                </div>
-                
-                <ul className="space-y-3">
+              <div key={service.name} className="border-t border-white/15 py-6">
+                {service.popular && <p className={cn(eyebrowOnDark, "mb-2")}>Most Popular</p>}
+                <h3 className="text-xl font-semibold text-white">{service.name}</h3>
+                <p className="mt-2 text-sm text-white/70">{service.description}</p>
+
+                <p className="mt-5 text-3xl font-bold text-white">{service.pricing}</p>
+
+                <ul className="mt-5 list-disc space-y-3 pl-5 text-sm text-white/75 marker:text-white/40">
                   {service.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm">
-                      <Check className={`h-4 w-4 flex-shrink-0 mt-0.5 ${service.popular ? 'text-white' : 'text-banc-sky'}`} />
-                      <span className={service.popular ? 'text-white/90' : 'text-white/70'}>
-                        {feature}
-                      </span>
-                    </li>
+                    <li key={feature}>{feature}</li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          
+
           {/* Additional fees table */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-            <h3 className="text-xl font-semibold text-white mb-6">Additional Services & Fees</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left py-3 px-4 text-white/50 text-sm font-medium">Service</th>
-                    <th className="text-right py-3 px-4 text-white/50 text-sm font-medium">Fee</th>
+          <div className="mt-10 border-t border-white/15 pt-8">
+            <h3 className="mb-4 text-xl font-semibold text-white">Additional Services & Fees</h3>
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-white/15">
+                  <th className="py-3 pr-4 text-left text-sm font-medium text-white/70">Service</th>
+                  <th className="py-3 pl-4 text-right text-sm font-medium text-white/70">Fee</th>
+                </tr>
+              </thead>
+              <tbody>
+                {additionalFees.map((item) => (
+                  <tr key={item.service} className="border-b border-white/15">
+                    <td className="py-3 pr-4 align-top text-white/85">{item.service}</td>
+                    <td className="py-3 pl-4 text-right align-top font-bold text-white">{item.fee}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {additionalFees.map((item) => (
-                    <tr key={item.service} className="border-b border-white/5 last:border-0">
-                      <td className="py-3 px-4 text-white">{item.service}</td>
-                      <td className="py-3 px-4 text-right text-banc-sky font-medium">{item.fee}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-sm text-white/50 mt-6">
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-6 text-sm text-white/70">
               * Fees are shown inclusive of VAT as published in our landlord fee schedule.
               Please contact us for a full written quotation tailored to your property.
             </p>
@@ -428,19 +352,14 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* Important Information Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-12">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Fee transparency */}
-            <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <FileText className="h-6 w-6 text-banc-focus" />
-                </div>
-                <h3 className="text-xl font-semibold text-banc-dark-deep">Fee Transparency</h3>
-              </div>
-              
-              <ul className="space-y-4">
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className={blockHeading}>Fee Transparency</h3>
+
+              <ul className="mt-5 list-disc space-y-3 pl-5 text-banc-muted-readable">
                 {[
                   "Landlord fees are shown inclusive of VAT",
                   "We will provide a written quotation before any work begins",
@@ -448,24 +367,16 @@ export default function LettingsFeesPage() {
                   "Landlord fees are deducted from rent collected",
                   "Setup fee (landlord's share): one week's rent (inc VAT), payable upon instruction"
                 ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3 text-banc-muted-readable">
-                    <Check className="h-5 w-5 text-banc-focus flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
-            
+
             {/* Cancellation policy */}
-            <div className="bg-white rounded-2xl p-8 border border-banc-line/30">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center">
-                  <Info className="h-6 w-6 text-banc-focus" />
-                </div>
-                <h3 className="text-xl font-semibold text-banc-dark-deep">Cancellation Policy</h3>
-              </div>
-              
-              <div className="space-y-4 text-banc-muted-readable">
+            <div className="border-t border-banc-dark/15 pt-6">
+              <h3 className={blockHeading}>Cancellation Policy</h3>
+
+              <div className="mt-5 space-y-4 text-banc-muted-readable">
                 <p>
                   <strong className="text-banc-dark-deep">Tenants:</strong> Once a holding deposit
                   is paid, it becomes non-refundable if you withdraw from the tenancy
@@ -490,104 +401,65 @@ export default function LettingsFeesPage() {
       </section>
 
       {/* Client Money Protection */}
-      <section className="py-20 lg:py-28 bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-banc-line/30">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                  <Shield className="h-4 w-4 text-banc-focus" />
-                  <span className="text-sm font-medium text-banc-focus">Protection</span>
-                </div>
-                
-                <h2 className="text-3xl font-semibold text-banc-dark-deep">
-                  Client Money Protection
-                </h2>
-                <p className="mt-4 text-lg text-banc-muted-readable">
-                  Banc Property Group is a member of a Client Money Protection scheme, 
-                  providing peace of mind that your money is protected.
-                </p>
-                
-                <div className="mt-8 space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-focus" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-banc-dark-deep">Client Money Protected</h3>
-                      <p className="text-sm text-banc-muted-readable">All client funds held in segregated accounts</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-focus" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-banc-dark-deep">Client Money Protect Member</h3>
-                      <p className="text-sm text-banc-muted-readable">Client money protection for landlords and tenants</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="h-5 w-5 text-banc-focus" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-banc-dark-deep">Redress Scheme</h3>
-                      <p className="text-sm text-banc-muted-readable">Member of The Property Ombudsman</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Shield className="h-10 w-10 text-banc-focus mx-auto mb-3" />
-                  <p className="font-semibold text-banc-dark-deep">Client Money Protection</p>
-                  <p className="text-sm text-banc-muted-readable">Fully Protected</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Building2 className="h-10 w-10 text-banc-focus mx-auto mb-3" />
-                  <p className="font-semibold text-banc-dark-deep">Professional Membership</p>
-                  <p className="text-sm text-banc-muted-readable">The Guild of Professional Estate Agents</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <FileText className="h-10 w-10 text-banc-focus mx-auto mb-3" />
-                  <p className="font-semibold text-banc-dark-deep">Redress Scheme</p>
-                  <p className="text-sm text-banc-muted-readable">The Property Ombudsman</p>
-                </div>
-                <div className="bg-banc-grey-pale rounded-2xl p-6 text-center">
-                  <Key className="h-10 w-10 text-banc-focus mx-auto mb-3" />
-                  <p className="font-semibold text-banc-dark-deep">Deposit Protection</p>
-                  <p className="text-sm text-banc-muted-readable">Government-authorised scheme</p>
-                </div>
-              </div>
+      <section className={cn(sectionPadding, "border-t border-banc-dark/15")}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className={eyebrow}>Protection</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>Client Money Protection</h2>
+              <p className="mt-4 text-banc-muted-readable lg:text-lg">
+                Banc Property Group is a member of a Client Money Protection scheme,
+                providing peace of mind that your money is protected.
+              </p>
+
+              <ul className="mt-7 border-t border-banc-dark/15">
+                {[
+                  { title: "Client Money Protected", text: "All client funds held in segregated accounts" },
+                  { title: "Client Money Protect Member", text: "Client money protection for landlords and tenants" },
+                  { title: "Redress Scheme", text: "Member of The Property Ombudsman" },
+                ].map((item) => (
+                  <li key={item.title} className="border-b border-banc-dark/15 py-4">
+                    <h3 className="font-semibold text-banc-dark-deep">{item.title}</h3>
+                    <p className="mt-1 text-sm text-banc-muted-readable">{item.text}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
+
+            <dl className="grid grid-cols-1 self-start border-t border-banc-dark/15 sm:grid-cols-2 sm:gap-x-8">
+              {[
+                { title: "Client Money Protection", text: "Fully Protected" },
+                { title: "Professional Membership", text: "The Guild of Professional Estate Agents" },
+                { title: "Redress Scheme", text: "The Property Ombudsman" },
+                { title: "Deposit Protection", text: "Government-authorised scheme" },
+              ].map((item) => (
+                <div key={item.title} className="border-b border-banc-dark/15 py-4">
+                  <dt className="font-semibold text-banc-dark-deep">{item.title}</dt>
+                  <dd className="mt-1 text-sm text-banc-muted-readable">{item.text}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-24 bg-banc-sky">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 text-center">
-          <h2 className="text-3xl font-semibold text-banc-dark-deep mb-4">
-            Have Questions About Fees?
-          </h2>
-          <p className="text-lg text-banc-dark-deep/90 mb-8 max-w-2xl mx-auto">
-            Our team is happy to explain any aspect of our fee structure. 
+      <section className={cn(sectionPadding, "banc-dark-surface bg-banc-dark-deep text-white")}>
+        <div className="mx-auto max-w-7xl">
+          <p className={eyebrowOnDark}>Get in touch</p>
+          <h2 className={cn(sectionHeadingOnDark, "mt-3")}>Have Questions About Fees?</h2>
+          <p className="mt-4 max-w-2xl text-white/70 lg:text-lg">
+            Our team is happy to explain any aspect of our fee structure.
             Get in touch for a no-obligation chat.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href={BANC_CONTACT.callHref}>
-              <Button className="bg-white text-banc-focus hover:bg-white/90 px-8 py-6 text-base font-semibold">
-                <Phone className="mr-2 h-5 w-5" />
-                Call {BANC_CONTACT.displayPhone}
-              </Button>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href={BANC_CONTACT.callHref} className={actionPrimaryOnDark}>
+              <Phone className="h-4 w-4" aria-hidden="true" />
+              Call {BANC_CONTACT.displayPhone}
             </a>
-            <Link href="/contact">
-              <Button variant="outline" className="bg-transparent border-white text-banc-dark-deep hover:bg-white/10 px-8 py-6 text-base font-semibold">
-                Contact Us
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+            <Link href="/contact" className={actionSecondaryOnDark}>
+              Contact Us
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>

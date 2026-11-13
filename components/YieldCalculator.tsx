@@ -1,18 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import {
-  Calculator,
-  PoundSterling,
-  TrendingUp,
-  TrendingDown,
-  Home,
-  Wrench,
-  Percent,
-  Wallet,
-  PieChart,
-  Info,
-} from "lucide-react";
+import { PoundSterling, TrendingUp, TrendingDown, Percent, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   calculateYield,
@@ -20,8 +9,23 @@ import {
   formatPercent,
   parseCurrencyInput,
 } from "@/lib/calculations";
-import { Button } from "@/components/ui/button";
+import {
+  actionPrimary,
+  actionSecondary,
+  eyebrow,
+  fieldControl,
+  fieldHelp,
+  fieldLabel,
+  formPanel,
+  segmented,
+  segmentedOption,
+} from "@/components/ui/form-styles";
 import Link from "next/link";
+
+const figure = "font-display font-light leading-none tracking-[-0.02em] text-banc-dark-deep";
+const panelHeading = "mb-4 text-lg font-semibold text-banc-dark-deep";
+const panelBlock = "mt-6 border-t border-banc-dark/15 pt-6";
+const poundIcon = "pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable";
 
 interface YieldCalculatorProps {
   className?: string;
@@ -86,42 +90,42 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
 
   if (compact) {
     return (
-      <div className={cn("rounded-xl border border-banc-line bg-white p-4", className)}>
-        <div className="space-y-3">
+      <div className={cn(formPanel, className)}>
+        <div className="space-y-5">
           <div>
-            <label className="mb-1.5 block text-xs text-banc-muted-readable">Property Price</label>
+            <label className={fieldLabel}>Property Price</label>
             <div className="relative">
-              <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
+              <PoundSterling className={poundIcon} />
               <input
                 type="text"
                 value={propertyPrice}
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £400,000"
-                className="w-full rounded-lg border border-banc-line bg-banc-grey-pale px-9 py-2 text-sm text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs text-banc-muted-readable">Monthly Rent</label>
+            <label className={fieldLabel}>Monthly Rent</label>
             <div className="relative">
-              <PoundSterling className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
+              <PoundSterling className={poundIcon} />
               <input
                 type="text"
                 value={monthlyRent}
                 onChange={formatInput(setMonthlyRent)}
                 onBlur={() => formatCurrencyDisplay(monthlyRent, setMonthlyRent)}
                 placeholder="e.g. £1,500"
-                className="w-full rounded-lg border border-banc-line bg-banc-grey-pale px-9 py-2 text-sm text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           {propertyPriceNum > 0 && monthlyRentNum > 0 && (
-            <div className="rounded-lg bg-banc-sky/10 p-3 text-center">
-              <p className="text-xs text-banc-muted-readable">Gross Yield</p>
-              <p className="text-lg font-semibold text-banc-focus">
+            <div className="border-t border-banc-dark/15 pt-5">
+              <p className={eyebrow}>Gross Yield</p>
+              <p className={cn(figure, "mt-3 text-4xl")}>
                 {formatPercent(result.grossYield)}
               </p>
             </div>
@@ -134,127 +138,100 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
   return (
     <div className={cn("space-y-6", className)}>
       {/* Input Section */}
-      <div className="rounded-2xl border border-banc-line bg-white p-6">
-        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
-          <Calculator className="h-5 w-5 text-banc-focus" />
-          Investment Details
-        </h3>
+      <div className={formPanel}>
+        <h3 className="mb-6 text-lg font-semibold text-banc-dark-deep">Investment Details</h3>
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Property Price */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
-              <Home className="h-4 w-4" />
-              Property Price / Value
-            </label>
+            <label className={fieldLabel}>Property Price / Value</label>
             <div className="relative">
-              <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
+              <PoundSterling className={poundIcon} />
               <input
                 type="text"
                 value={propertyPrice}
                 onChange={formatInput(setPropertyPrice)}
                 onBlur={() => formatCurrencyDisplay(propertyPrice, setPropertyPrice)}
                 placeholder="e.g. £400,000"
-                className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           {/* Monthly Rent */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
-              <PoundSterling className="h-4 w-4" />
-              Monthly Rent
-            </label>
+            <label className={fieldLabel}>Monthly Rent</label>
             <div className="relative">
-              <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
+              <PoundSterling className={poundIcon} />
               <input
                 type="text"
                 value={monthlyRent}
                 onChange={formatInput(setMonthlyRent)}
                 onBlur={() => formatCurrencyDisplay(monthlyRent, setMonthlyRent)}
                 placeholder="e.g. £1,500"
-                className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
           </div>
 
           {/* Annual Costs */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
-              <Wrench className="h-4 w-4" />
-              Annual Operating Costs
-            </label>
+            <label className={fieldLabel}>Annual Operating Costs</label>
             <div className="relative">
-              <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
+              <PoundSterling className={poundIcon} />
               <input
                 type="text"
                 value={annualCosts}
                 onChange={formatInput(setAnnualCosts)}
                 onBlur={() => formatCurrencyDisplay(annualCosts, setAnnualCosts)}
                 placeholder="e.g. £3,000"
-                className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                className={cn(fieldControl, "pl-11")}
               />
             </div>
-            <p className="mt-1 text-xs text-banc-muted-readable">
+            <p className={fieldHelp}>
               Maintenance, void periods, insurance, management fees
             </p>
           </div>
 
           {/* Include Mortgage Toggle */}
           <div>
-            <label className="mb-2 flex items-center gap-2 text-sm text-banc-muted-readable">
-              <Percent className="h-4 w-4" />
-              Include Mortgage?
-            </label>
-            <button
-              onClick={() => setIncludeMortgage(!includeMortgage)}
-              className={cn(
-                "flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all",
-                includeMortgage
-                  ? "border-banc-sky bg-banc-sky/10"
-                  : "border-banc-line hover:border-banc-focus"
-              )}
-            >
-              <div
-                className={cn(
-                  "flex h-6 w-11 items-center rounded-full transition-colors",
-                  includeMortgage ? "bg-banc-focus" : "bg-banc-grey-pale"
-                )}
+            <label className={fieldLabel}>Include Mortgage?</label>
+            <div className={segmented}>
+              <button
+                onClick={() => setIncludeMortgage(false)}
+                className={cn(segmentedOption(!includeMortgage), "px-2 sm:px-4")}
               >
-                <div
-                  className={cn(
-                    "h-5 w-5 rounded-full bg-white transition-transform",
-                    includeMortgage ? "translate-x-5" : "translate-x-0.5"
-                  )}
-                />
-              </div>
-              <span className={includeMortgage ? "text-banc-focus" : "text-banc-muted-readable"}>
-                {includeMortgage ? "Mortgage Included" : "Cash Purchase"}
-              </span>
-            </button>
+                Cash Purchase
+              </button>
+              <button
+                onClick={() => setIncludeMortgage(true)}
+                className={cn(segmentedOption(includeMortgage), "px-2 sm:px-4")}
+              >
+                Mortgage Included
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mortgage Details */}
         {includeMortgage && (
-          <div className="mt-6 grid gap-6 border-t border-banc-line pt-6 md:grid-cols-2">
+          <div className="mt-6 grid gap-6 border-t border-banc-dark/15 pt-6 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm text-banc-muted-readable">Mortgage Amount</label>
+              <label className={fieldLabel}>Mortgage Amount</label>
               <div className="relative">
-                <PoundSterling className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
+                <PoundSterling className={poundIcon} />
                 <input
                   type="text"
                   value={mortgageAmount}
                   onChange={formatInput(setMortgageAmount)}
                   onBlur={() => formatCurrencyDisplay(mortgageAmount, setMortgageAmount)}
                   placeholder="e.g. £300,000"
-                  className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-12 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                  className={cn(fieldControl, "pl-11")}
                 />
               </div>
             </div>
             <div>
-              <label className="mb-2 block text-sm text-banc-muted-readable">Mortgage Interest Rate</label>
+              <label className={fieldLabel}>Mortgage Interest Rate</label>
               <div className="relative">
                 <input
                   type="number"
@@ -262,9 +239,9 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
                   value={mortgageRate}
                   onChange={(e) => setMortgageRate(Number(e.target.value))}
                   placeholder="e.g. 5.5"
-                  className="w-full rounded-xl border border-banc-line bg-banc-grey-pale px-4 py-3 text-lg text-banc-dark-deep placeholder:text-banc-muted-readable focus:border-banc-sky focus:outline-none"
+                  className={cn(fieldControl, "pr-11")}
                 />
-                <Percent className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" />
+                <Percent className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-banc-muted-readable" />
               </div>
             </div>
           </div>
@@ -272,23 +249,20 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
 
         {/* Default Costs Suggestion */}
         {defaultCosts && annualCosts === "" && (
-          <div className="mt-4 rounded-xl border border-banc-sky/30 bg-banc-sky/10 p-4">
-            <p className="flex items-start gap-2 text-sm text-banc-muted-readable">
-              <Info className="h-5 w-5 flex-shrink-0 text-banc-focus" />
-              <span>
-                Based on your rent, typical annual costs would be approximately{" "}
-                <strong className="text-banc-focus">{formatCurrency(defaultCosts.total)}</strong>:
-                <br />
-                • Void allowance (5%): {formatCurrency(defaultCosts.voids)}
-                <br />
-                • Maintenance (10%): {formatCurrency(defaultCosts.maintenance)}
-                <br />• Management (10%): {formatCurrency(defaultCosts.management)}
-                <br />• Insurance: {formatCurrency(defaultCosts.insurance)}
-              </span>
+          <div className="mt-6 border-t border-banc-dark/15 pt-6">
+            <p className="text-sm leading-relaxed text-banc-muted-readable">
+              Based on your rent, typical annual costs would be approximately{" "}
+              <strong className="text-banc-dark-deep">{formatCurrency(defaultCosts.total)}</strong>:
+              <br />
+              • Void allowance (5%): {formatCurrency(defaultCosts.voids)}
+              <br />
+              • Maintenance (10%): {formatCurrency(defaultCosts.maintenance)}
+              <br />• Management (10%): {formatCurrency(defaultCosts.management)}
+              <br />• Insurance: {formatCurrency(defaultCosts.insurance)}
             </p>
             <button
               onClick={() => setAnnualCosts(formatCurrency(defaultCosts.total))}
-              className="mt-2 text-sm text-banc-focus hover:underline"
+              className={cn(actionSecondary, "mt-4")}
             >
               Use these values
             </button>
@@ -299,187 +273,177 @@ export function YieldCalculator({ className, compact = false }: YieldCalculatorP
       {/* Results Section */}
       {propertyPriceNum > 0 && monthlyRentNum > 0 && (
         <>
-          {/* Main Results */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
-              <p className="text-sm text-banc-muted-readable">Gross Yield</p>
-              <p className="my-1 text-2xl font-bold text-banc-focus">{formatPercent(result.grossYield)}</p>
-              <p className="text-xs text-banc-muted-readable">Before costs</p>
-            </div>
-            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
-              <p className="text-sm text-banc-muted-readable">Net Yield</p>
-              <p className="my-1 text-2xl font-bold text-banc-dark-deep">{formatPercent(result.netYield)}</p>
-              <p className="text-xs text-banc-muted-readable">After operating costs</p>
-            </div>
-            <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
-              <p className="text-sm text-banc-muted-readable">Annual Income</p>
-              <p className="my-1 text-2xl font-bold text-banc-dark-deep">{formatCurrency(result.netIncome)}</p>
-              <p className="text-xs text-banc-muted-readable">Net after costs</p>
-            </div>
-            {includeMortgage && result.roi !== undefined && (
-              <div className="rounded-2xl border border-banc-line bg-white p-5 text-center">
-                <p className="text-sm text-banc-muted-readable">ROI</p>
-                <p
-                  className={cn(
-                    "my-1 text-2xl font-bold",
-                    result.roi > 0 ? "text-green-400" : "text-red-400"
-                  )}
-                >
-                  {formatPercent(result.roi)}
-                </p>
-                <p className="text-xs text-banc-muted-readable">Return on investment</p>
+          <div className={formPanel}>
+            {/* Main Results */}
+            <p className={eyebrow}>Gross Yield</p>
+            <p className={cn(figure, "mt-3 text-[clamp(44px,11vw,64px)]")}>
+              {formatPercent(result.grossYield)}
+            </p>
+            <p className={fieldHelp}>Before costs</p>
+
+            <dl
+              className={cn(
+                "mt-6 grid border-t border-banc-dark/15 sm:gap-x-8",
+                includeMortgage && result.roi !== undefined ? "sm:grid-cols-3" : "sm:grid-cols-2"
+              )}
+            >
+              <div className="border-b border-banc-dark/15 py-4 sm:border-b-0 sm:pb-0">
+                <dt className="text-sm text-banc-muted-readable">Net Yield</dt>
+                <dd className="mt-1 text-xl font-medium text-banc-dark-deep">{formatPercent(result.netYield)}</dd>
+                <dd className="text-xs text-banc-muted-readable">After operating costs</dd>
+              </div>
+              <div className="border-b border-banc-dark/15 py-4 last:border-b-0 last:pb-0 sm:border-b-0 sm:pb-0">
+                <dt className="text-sm text-banc-muted-readable">Annual Income</dt>
+                <dd className="mt-1 text-xl font-medium text-banc-dark-deep">{formatCurrency(result.netIncome)}</dd>
+                <dd className="text-xs text-banc-muted-readable">Net after costs</dd>
+              </div>
+              {includeMortgage && result.roi !== undefined && (
+                <div className="pt-4">
+                  <dt className="text-sm text-banc-muted-readable">ROI</dt>
+                  <dd
+                    className={cn(
+                      "mt-1 text-xl font-medium",
+                      result.roi > 0 ? "text-green-700" : "text-red-700"
+                    )}
+                  >
+                    {formatPercent(result.roi)}
+                  </dd>
+                  <dd className="text-xs text-banc-muted-readable">Return on investment</dd>
+                </div>
+              )}
+            </dl>
+
+            {/* Cash Flow Analysis */}
+            {includeMortgage && result.cashFlow !== undefined && (
+              <div className={panelBlock}>
+                <h3 className={panelHeading}>Cash Flow Analysis</h3>
+                <dl className="grid gap-5 sm:grid-cols-3 sm:gap-x-8">
+                  <div>
+                    <dt className="text-sm text-banc-muted-readable">Monthly Rent</dt>
+                    <dd className="mt-1 text-xl font-medium text-green-700">
+                      +{formatCurrency(monthlyRentNum)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-banc-muted-readable">Monthly Costs</dt>
+                    <dd className="mt-1 text-xl font-medium text-red-700">
+                      -{formatCurrency(annualCostsNum / 12 + (mortgageAmountNum * (mortgageRate / 100)) / 12)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-banc-muted-readable">Monthly Cash Flow</dt>
+                    <dd
+                      className={cn(
+                        "mt-1 text-xl font-semibold",
+                        result.cashFlow >= 0 ? "text-green-700" : "text-red-700"
+                      )}
+                    >
+                      {result.cashFlow >= 0 ? "+" : ""}
+                      {formatCurrency(result.cashFlow / 12)}
+                    </dd>
+                  </div>
+                </dl>
               </div>
             )}
-          </div>
 
-          {/* Cash Flow Analysis */}
-          {includeMortgage && result.cashFlow !== undefined && (
-            <div className="rounded-2xl border border-banc-line bg-white p-6">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
-                <Wallet className="h-5 w-5 text-banc-focus" />
-                Cash Flow Analysis
-              </h3>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-xl bg-banc-grey-pale p-4 text-center">
-                  <p className="text-sm text-banc-muted-readable">Monthly Rent</p>
-                  <p className="my-1 text-xl font-bold text-green-400">
-                    +{formatCurrency(monthlyRentNum)}
+            {/* Yield Breakdown */}
+            <div className={panelBlock}>
+              <h3 className={panelHeading}>Income Breakdown</h3>
+              <div className="divide-y divide-banc-dark/15 border-y border-banc-dark/15">
+                <div className="flex items-center justify-between gap-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <TrendingUp className="h-5 w-5 flex-shrink-0 text-green-700" />
+                    <span className="text-banc-dark-deep">Annual Rental Income</span>
+                  </div>
+                  <p className="text-lg font-medium text-green-700">
+                    +{formatCurrency(result.annualRent)}
                   </p>
                 </div>
-                <div className="rounded-xl bg-banc-grey-pale p-4 text-center">
-                  <p className="text-sm text-banc-muted-readable">Monthly Costs</p>
-                  <p className="my-1 text-xl font-bold text-red-400">
-                    -{formatCurrency(annualCostsNum / 12 + (mortgageAmountNum * (mortgageRate / 100)) / 12)}
+                <div className="flex items-center justify-between gap-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <TrendingDown className="h-5 w-5 flex-shrink-0 text-red-700" />
+                    <span className="text-banc-dark-deep">Annual Operating Costs</span>
+                  </div>
+                  <p className="text-lg font-medium text-red-700">
+                    -{formatCurrency(result.annualCosts)}
+                  </p>
+                </div>
+                {includeMortgage && mortgageAmountNum > 0 && mortgageRate > 0 && (
+                  <div className="flex items-center justify-between gap-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <TrendingDown className="h-5 w-5 flex-shrink-0 text-red-700" />
+                      <span className="text-banc-dark-deep">Annual Mortgage Interest</span>
+                    </div>
+                    <p className="text-lg font-medium text-red-700">
+                      -{formatCurrency((mortgageAmountNum * mortgageRate) / 100)}
+                    </p>
+                  </div>
+                )}
+                <div className="flex items-center justify-between gap-4 py-4">
+                  <div className="flex items-center gap-3">
+                    <Wallet className="h-5 w-5 flex-shrink-0 text-banc-focus" />
+                    <span className="font-semibold text-banc-dark-deep">Net Annual Income</span>
+                  </div>
+                  <p className="text-lg font-semibold text-banc-dark-deep">
+                    {formatCurrency(result.netIncome)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Investment Assessment */}
+            <div className={panelBlock}>
+              <h3 className={panelHeading}>Investment Assessment</h3>
+              <div className="grid gap-5 sm:grid-cols-2 sm:gap-8">
+                <div
+                  className={cn(
+                    "border-l-2 pl-4",
+                    result.grossYield >= 8
+                      ? "border-green-600"
+                      : result.grossYield >= 5
+                      ? "border-amber-500"
+                      : "border-red-600"
+                  )}
+                >
+                  <p className="font-medium text-banc-dark-deep">Gross Yield Rating</p>
+                  <p className="mt-1 text-sm text-banc-muted-readable">
+                    {result.grossYield >= 8
+                      ? "Excellent - Strong cash flow potential"
+                      : result.grossYield >= 5
+                      ? "Good - Solid investment potential"
+                      : "Lower - May rely on capital appreciation"}
                   </p>
                 </div>
                 <div
                   className={cn(
-                    "rounded-xl p-4 text-center",
-                    result.cashFlow >= 0 ? "bg-green-500/10" : "bg-red-500/10"
+                    "border-l-2 pl-4",
+                    result.netYield >= 5
+                      ? "border-green-600"
+                      : result.netYield >= 3
+                      ? "border-amber-500"
+                      : "border-red-600"
                   )}
                 >
-                  <p className="text-sm text-banc-muted-readable">Monthly Cash Flow</p>
-                  <p
-                    className={cn(
-                      "my-1 text-xl font-bold",
-                      result.cashFlow >= 0 ? "text-green-400" : "text-red-400"
-                    )}
-                  >
-                    {result.cashFlow >= 0 ? "+" : ""}
-                    {formatCurrency(result.cashFlow / 12)}
+                  <p className="font-medium text-banc-dark-deep">Net Yield Rating</p>
+                  <p className="mt-1 text-sm text-banc-muted-readable">
+                    {result.netYield >= 5
+                      ? "Excellent - Strong returns after costs"
+                      : result.netYield >= 3
+                      ? "Good - Reasonable returns"
+                      : "Lower - Consider reducing costs or increasing rent"}
                   </p>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* Yield Breakdown */}
-          <div className="rounded-2xl border border-banc-line bg-white p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-banc-dark-deep">
-              <PieChart className="h-5 w-5 text-banc-focus" />
-              Income Breakdown
-            </h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between rounded-xl bg-banc-grey-pale p-4">
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="h-5 w-5 text-green-400" />
-                  <span className="text-banc-dark-deep">Annual Rental Income</span>
-                </div>
-                <p className="text-lg font-semibold text-green-400">
-                  +{formatCurrency(result.annualRent)}
-                </p>
-              </div>
-              <div className="flex items-center justify-between rounded-xl bg-banc-grey-pale p-4">
-                <div className="flex items-center gap-3">
-                  <TrendingDown className="h-5 w-5 text-red-400" />
-                  <span className="text-banc-dark-deep">Annual Operating Costs</span>
-                </div>
-                <p className="text-lg font-semibold text-red-400">
-                  -{formatCurrency(result.annualCosts)}
-                </p>
-              </div>
-              {includeMortgage && mortgageAmountNum > 0 && mortgageRate > 0 && (
-                <div className="flex items-center justify-between rounded-xl bg-banc-grey-pale p-4">
-                  <div className="flex items-center gap-3">
-                    <TrendingDown className="h-5 w-5 text-red-400" />
-                    <span className="text-banc-dark-deep">Annual Mortgage Interest</span>
-                  </div>
-                  <p className="text-lg font-semibold text-red-400">
-                    -{formatCurrency((mortgageAmountNum * mortgageRate) / 100)}
-                  </p>
-                </div>
-              )}
-              <div className="flex items-center justify-between rounded-xl bg-banc-sky/10 p-4">
-                <div className="flex items-center gap-3">
-                  <Wallet className="h-5 w-5 text-banc-focus" />
-                  <span className="font-medium text-banc-dark-deep">Net Annual Income</span>
-                </div>
-                <p className="text-lg font-semibold text-banc-focus">
-                  {formatCurrency(result.netIncome)}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Investment Assessment */}
-          <div className="rounded-2xl border border-banc-line bg-white p-6">
-            <h3 className="mb-4 text-lg font-semibold text-banc-dark-deep">Investment Assessment</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div
-                className={cn(
-                  "rounded-xl border p-4",
-                  result.grossYield >= 8
-                    ? "border-green-500/30 bg-green-500/10"
-                    : result.grossYield >= 5
-                    ? "border-yellow-500/30 bg-yellow-500/10"
-                    : "border-red-500/30 bg-red-500/10"
-                )}
-              >
-                <p className="font-medium text-banc-dark-deep">Gross Yield Rating</p>
-                <p className="text-sm text-banc-muted-readable">
-                  {result.grossYield >= 8
-                    ? "Excellent - Strong cash flow potential"
-                    : result.grossYield >= 5
-                    ? "Good - Solid investment potential"
-                    : "Lower - May rely on capital appreciation"}
-                </p>
-              </div>
-              <div
-                className={cn(
-                  "rounded-xl border p-4",
-                  result.netYield >= 5
-                    ? "border-green-500/30 bg-green-500/10"
-                    : result.netYield >= 3
-                    ? "border-yellow-500/30 bg-yellow-500/10"
-                    : "border-red-500/30 bg-red-500/10"
-                )}
-              >
-                <p className="font-medium text-banc-dark-deep">Net Yield Rating</p>
-                <p className="text-sm text-banc-muted-readable">
-                  {result.netYield >= 5
-                    ? "Excellent - Strong returns after costs"
-                    : result.netYield >= 3
-                    ? "Good - Reasonable returns"
-                    : "Lower - Consider reducing costs or increasing rent"}
-                </p>
               </div>
             </div>
           </div>
 
           {/* CTA */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link href="/contact">
-              <Button className="w-full bg-banc-focus text-white hover:bg-banc-focus-hover sm:w-auto">
-                Get Lettings Advice
-              </Button>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link href="/contact" className={actionPrimary}>
+              Get Lettings Advice
             </Link>
-            <Link href="/sales/properties">
-              <Button
-                variant="outline"
-                className="w-full border-banc-line text-banc-dark-deep hover:bg-banc-grey-pale sm:w-auto"
-              >
-                Browse Investment Properties
-              </Button>
+            <Link href="/sales/properties" className={actionSecondary}>
+              Browse Investment Properties
             </Link>
           </div>
         </>

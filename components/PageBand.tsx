@@ -8,10 +8,20 @@ interface PageBandProps {
   lede?: React.ReactNode;
   back?: { href: string; label: string };
   /** Photograph behind the band. The scrim keeps the text readable. */
-  image?: { src: string; alt: string; priority?: boolean };
+  image?: {
+    src: string;
+    alt: string;
+    priority?: boolean;
+    /** Tailwind object-position class, e.g. "object-[center_35%]". */
+    position?: string;
+    /** "light" keeps the photograph bright and only darkens behind the text. */
+    scrim?: "dark" | "light";
+  };
   /** Actions or a form that belongs to the opener. */
   children?: React.ReactNode;
   as?: "h1" | "h2";
+  /** Gold is for Premier Homes only. */
+  accent?: "sky" | "gold";
 }
 
 /**
@@ -19,13 +29,16 @@ interface PageBandProps {
  * title, short lede, all left-aligned. See DESIGN.md "Dark band".
  * Sits directly under the fixed header, which already supplies its own spacer.
  */
-export function PageBand({ eyebrow, title, lede, back, image, children, as: Heading = "h1" }: PageBandProps) {
+export function PageBand({ eyebrow, title, lede, back, image, children, as: Heading = "h1", accent = "sky" }: PageBandProps) {
   return (
     <section className="banc-dark-surface relative overflow-hidden bg-banc-dark-deep text-white">
       {image && (
         <>
-          <Image src={image.src} alt={image.alt} fill sizes="100vw" priority={image.priority} className="object-cover" />
-          <div className="absolute inset-0 bg-banc-dark-deep/75" aria-hidden="true" />
+          <Image src={image.src} alt={image.alt} fill sizes="100vw" priority={image.priority} className={`object-cover ${image.position ?? ""}`} />
+          <div
+            className={`absolute inset-0 ${image.scrim === "light" ? "bg-gradient-to-t from-banc-dark-deep/95 via-banc-dark-deep/70 to-banc-dark-deep/40" : "bg-banc-dark-deep/75"}`}
+            aria-hidden="true"
+          />
         </>
       )}
       <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
@@ -38,7 +51,7 @@ export function PageBand({ eyebrow, title, lede, back, image, children, as: Head
             {back.label}
           </Link>
         )}
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--banc-focus-dark)]">{eyebrow}</p>
+        <p className={`text-[11px] font-medium uppercase tracking-[0.18em] ${accent === "gold" ? "text-banc-gold" : "text-[var(--banc-focus-dark)]"}`}>{eyebrow}</p>
         <Heading
           className="mt-3 max-w-4xl font-display font-light leading-[1.05] tracking-[-0.02em] text-white"
           style={{ fontSize: "clamp(34px, 5vw, 64px)" }}

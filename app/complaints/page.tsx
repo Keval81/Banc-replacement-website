@@ -5,18 +5,15 @@ import Footer from "@/components/Footer";
 import { SimpleEnquiryForm } from "@/components/forms/SimpleEnquiryForm";
 import type { SimpleEnquiryField } from "@/lib/simple-enquiry";
 import { 
-  AlertCircle,
   Clock,
-  Mail,
-  Phone,
   FileText,
-  Shield,
-  Scale,
   Check,
   MessageSquare,
-  Building2,
 } from "lucide-react";
 import Link from "next/link";
+import { PageBand } from "@/components/PageBand";
+import { eyebrow, formPanel, sectionHeading } from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { BANC_CONTACT, COMPLAINTS_PROCEDURE_URL } from "@/lib/banc-contact";
 
 const COMPLAINT_FIELDS: SimpleEnquiryField[] = [
@@ -108,70 +105,47 @@ const redressSchemes = [
   }
 ];
 
+const SECTION = "border-t border-banc-dark/15 py-10 first:border-t-0 first:pt-0 last:pb-0";
+const TEXT_LINK = "text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover";
+
 export default function ComplaintsPage() {
   return (
     <div className="min-h-screen bg-banc-grey-pale">
       <Header />
       
-      {/* Hero Section */}
-      <section className="relative bg-banc-dark-deep py-24 lg:py-32 overflow-hidden">
-        {/* Hero Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/80 via-banc-dark-deep/60 to-banc-dark-deep/40" />
-        </div>
-        {/* Background decorations */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-banc-sky rounded-full blur-[128px]" />
-        </div>
-        
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Shield className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">Our Commitment</span>
-            </div>
-            
-            <h1 className="text-4xl font-semibold text-white sm:text-5xl lg:text-6xl tracking-tight">
-              Complaints Procedure
-            </h1>
-            <p className="mt-6 text-xl text-white/70 leading-relaxed">
-              At Banc Property Group, we pride ourselves on delivering excellent service. 
-              However, if something goes wrong, we want to know about it so we can put it right.
-            </p>
-          </div>
-        </div>
-      </section>
+      <main>
+        <PageBand
+          eyebrow="Our Commitment"
+          title="Complaints Procedure"
+          lede="At Banc Property Group, we pride ourselves on delivering excellent service. However, if something goes wrong, we want to know about it so we can put it right."
+          image={{
+            src: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1920&q=80",
+            alt: "",
+            priority: true,
+          }}
+        />
 
-      {/* Our Commitment Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Scale className="h-4 w-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus">Our Promise</span>
-              </div>
-              
-              <h2 className="text-3xl lg:text-4xl font-semibold text-banc-dark-deep mb-6">
+        {/* One left-aligned reading column, sections separated by hairlines */}
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+          <div className="max-w-3xl">
+            {/* Our Commitment Section */}
+            <section className={SECTION}>
+              <p className={eyebrow}>Our Promise</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
                 We&apos;re Committed to Fairness
               </h2>
-              
-              <p className="text-lg text-banc-muted-readable mb-8">
+
+              <p className="mt-6 text-lg text-banc-muted-readable">
                 We take all complaints seriously and are committed to dealing with them promptly, 
                 fairly, and confidentially. Our complaints procedure is designed to be simple 
                 and straightforward.{" "}
-                <a href={COMPLAINTS_PROCEDURE_URL} target="_blank" rel="noopener noreferrer" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">
+                <a href={COMPLAINTS_PROCEDURE_URL} target="_blank" rel="noopener noreferrer" className={TEXT_LINK}>
                   Download the full procedure (PDF)
                 </a>
                 .
               </p>
-              
-              <div className="space-y-4">
+
+              <div className="mt-8 space-y-4">
                 {[
                   "We will acknowledge your complaint within 3 working days",
                   "We will treat your complaint confidentially",
@@ -181,330 +155,254 @@ export default function ComplaintsPage() {
                   "If you're not satisfied, you can escalate to The Property Ombudsman"
                 ].map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-banc-sky/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="h-4 w-4 text-banc-focus" />
-                    </div>
+                    <Check className="mt-1 h-4 w-4 flex-shrink-0 text-banc-focus" />
                     <span className="text-banc-dark-mid">{item}</span>
                   </div>
                 ))}
               </div>
-            </div>
-            
-            {/* Important notice box */}
-            <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                  <AlertCircle className="h-6 w-6 text-amber-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-banc-dark-deep">Before You Complain</h3>
-              </div>
-              
-              <p className="text-banc-muted-readable mb-6">
+            </section>
+
+            {/* Important notice */}
+            <section className={SECTION}>
+              <h3 className="text-xl font-semibold text-banc-dark-deep">Before You Complain</h3>
+
+              <p className="mt-4 text-banc-muted-readable">
                 If you have an issue, we recommend trying to resolve it informally first. 
                 Often, a quick conversation can sort things out without needing a formal complaint.
               </p>
-              
-              <div className="bg-banc-grey-pale rounded-xl p-6">
-                <h4 className="font-semibold text-banc-dark-deep mb-3">Try These First:</h4>
-                <ul className="space-y-2 text-banc-muted-readable">
-                  <li className="flex items-start gap-2">
-                    <span className="text-banc-focus">1.</span>
-                    Speak to your dedicated negotiator
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-banc-focus">2.</span>
-                    Call our office on {BANC_CONTACT.displayPhone}
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-banc-focus">3.</span>
-                    Email your property manager directly
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Complaints Process Section */}
-      <section className="py-20 lg:py-28 bg-banc-dark-deep">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6">
-              <Clock className="h-4 w-4 text-banc-sky" />
-              <span className="text-sm font-medium text-white/80">The Process</span>
-            </div>
-            <h2 className="text-3xl lg:text-4xl font-semibold text-white">
-              How to Make a Complaint
-            </h2>
-            <p className="mt-4 text-lg text-white/60">
-              Our four-step process is designed to resolve your complaint as quickly as possible.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {complaintSteps.map((step) => (
-              <div key={step.step} className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-banc-sky/50 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-banc-sky/20 flex items-center justify-center">
-                    <step.icon className="h-6 w-6 text-banc-sky" />
+              <h4 className="mb-3 mt-6 font-semibold text-banc-dark-deep">Try These First:</h4>
+              <ul className="space-y-2 text-banc-muted-readable">
+                <li className="flex items-start gap-2">
+                  <span className="text-banc-focus">1.</span>
+                  Speak to your dedicated negotiator
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-banc-focus">2.</span>
+                  Call our office on {BANC_CONTACT.displayPhone}
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-banc-focus">3.</span>
+                  Email your property manager directly
+                </li>
+              </ul>
+            </section>
+
+            {/* Complaints Process Section */}
+            <section className={SECTION}>
+              <p className={eyebrow}>The Process</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
+                How to Make a Complaint
+              </h2>
+              <p className="mt-4 text-lg text-banc-muted-readable">
+                Our four-step process is designed to resolve your complaint as quickly as possible.
+              </p>
+
+              <div className="mt-7">
+                {complaintSteps.map((step) => (
+                  <div key={step.step} className="flex gap-5 border-t border-banc-dark/15 py-5">
+                    <span className="w-6 flex-shrink-0 font-display text-2xl font-light leading-none text-banc-focus">{step.step}</span>
+                    <div>
+                      <h3 className="text-lg font-semibold text-banc-dark-deep">{step.title}</h3>
+                      <p className="mt-1 text-sm text-banc-muted-readable">{step.description}</p>
+                      <p className="mt-3 text-sm font-medium text-banc-dark-deep">{step.timeframe}</p>
+                    </div>
                   </div>
-                  <span className="text-4xl font-bold text-white/10">{step.step}</span>
-                </div>
-                
-                <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-white/60 text-sm mb-4">{step.description}</p>
-                
-                <div className="flex items-center gap-2 text-banc-sky text-sm">
-                  <Clock className="h-4 w-4" />
-                  <span>{step.timeframe}</span>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </section>
 
-      {/* How to Complain Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact methods */}
-            <div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-                <Mail className="h-4 w-4 text-banc-focus" />
-                <span className="text-sm font-medium text-banc-focus">Contact Us</span>
-              </div>
-              
-              <h2 className="text-3xl font-semibold text-banc-dark-deep mb-6">
+            {/* How to Complain Section */}
+            <section className={SECTION}>
+              <p className={eyebrow}>Contact Us</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
                 How to Contact Us
               </h2>
-              
-              <p className="text-banc-muted-readable mb-8">
+
+              <p className="mt-6 text-banc-muted-readable">
                 You can make a complaint using any of the following methods. Please provide 
                 as much detail as possible to help us investigate effectively.
               </p>
-              
-              <div className="space-y-4">
-                <a href="mailto:complaints@bancproperty.com" className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30 hover:border-banc-sky/50 transition-colors group">
-                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-6 w-6 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep group-hover:text-banc-sky transition-colors">Email</h3>
-                    <p className="text-sm text-banc-muted-readable">complaints@bancproperty.com</p>
-                  </div>
+
+              <div className="mt-7">
+                <a href="mailto:complaints@bancproperty.com" className="group block border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Email</h3>
+                  <p className="text-sm text-banc-focus underline-offset-4 group-hover:underline">complaints@bancproperty.com</p>
                 </a>
-                
-                <a href={BANC_CONTACT.callHref} className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30 hover:border-banc-sky/50 transition-colors group">
-                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep group-hover:text-banc-sky transition-colors">Phone</h3>
-                    <p className="text-sm text-banc-muted-readable">{BANC_CONTACT.displayPhone}</p>
-                  </div>
+
+                <a href={BANC_CONTACT.callHref} className="group block border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Phone</h3>
+                  <p className="text-sm text-banc-focus underline-offset-4 group-hover:underline">{BANC_CONTACT.displayPhone}</p>
                 </a>
-                
-                <div className="flex items-start gap-4 p-4 bg-white rounded-xl border border-banc-line/30">
-                  <div className="w-12 h-12 rounded-xl bg-banc-sky/10 flex items-center justify-center flex-shrink-0">
-                    <Building2 className="h-6 w-6 text-banc-focus" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-banc-dark-deep">Post</h3>
-                    <p className="text-sm text-banc-muted-readable">
-                      Complaints Department<br />
-                      Banc Property Group<br />
-                      1 Station Road<br />
-                      Cuffley, EN6 4HU
-                    </p>
-                  </div>
+
+                <div className="border-t border-banc-dark/15 py-4">
+                  <h3 className="font-semibold text-banc-dark-deep">Post</h3>
+                  <p className="text-sm text-banc-muted-readable">
+                    Complaints Department<br />
+                    Banc Property Group<br />
+                    1 Station Road<br />
+                    Cuffley, EN6 4HU
+                  </p>
                 </div>
               </div>
-              
+
               {/* What to include */}
-              <div className="mt-8 bg-banc-grey-pale rounded-xl p-6">
+              <div className="border-t border-banc-dark/15 pt-6">
                 <h4 className="font-semibold text-banc-dark-deep mb-3">Please Include:</h4>
                 <ul className="space-y-2 text-sm text-banc-muted-readable">
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-banc-focus mt-0.5" />
                     Your full name and contact details
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-banc-focus mt-0.5" />
                     Property address (if applicable)
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-banc-focus mt-0.5" />
                     Details of what went wrong
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-banc-focus mt-0.5" />
                     What you&apos;d like us to do to put it right
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="h-4 w-4 text-banc-focus mt-0.5" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-banc-focus mt-0.5" />
                     Any relevant reference numbers
                   </li>
                 </ul>
               </div>
-            </div>
-            
-            {/* Complaint form */}
-            <div className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-lg">
-              <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Make a Complaint</h3>
-              <p className="text-sm text-banc-muted-readable mb-6">
-                Use this form to submit your complaint. We&apos;ll respond within 3 working days.
-              </p>
-              
-              <SimpleEnquiryForm
-                fields={COMPLAINT_FIELDS}
-                subject="Complaint — {nature}"
-                intro="Complaint submitted through the website complaints form."
-                submitLabel="Submit Complaint"
-                successTitle="Complaint received"
-                successBody="Thank you. We take every complaint seriously and will respond within 3 working days."
-                consentLabel={
-                  <>
-                    I understand that my personal information will be used to investigate this complaint
-                    in accordance with our <Link href="/privacy" className="text-banc-focus hover:underline">Privacy Policy</Link>.
-                  </>
-                }
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      {/* Redress Section */}
-      <section className="py-20 lg:py-28 bg-banc-grey-pale">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-banc-sky/10 border border-banc-sky/20 mb-6">
-              <Scale className="h-4 w-4 text-banc-focus" />
-              <span className="text-sm font-medium text-banc-focus">Independent Redress</span>
-            </div>
-            <h2 className="text-3xl font-semibold text-banc-dark-deep">
-              Independent Redress
-            </h2>
-            <p className="mt-4 text-lg text-banc-muted-readable">
-              If you&apos;re not satisfied with our final response, you can escalate your complaint 
-              to an independent redress scheme.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {redressSchemes.map((scheme) => (
-              <div key={scheme.name} className="bg-white rounded-2xl p-8 border border-banc-line/30 shadow-sm">
-                <div className="w-14 h-14 rounded-xl bg-banc-sky/10 flex items-center justify-center mb-4">
-                  <Scale className="h-7 w-7 text-banc-focus" />
-                </div>
-                <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">{scheme.name}</h3>
-                <p className="text-banc-muted-readable mb-6">{scheme.description}</p>
-                
-                <div className="space-y-3 text-sm">
-                  <a 
-                    href={`https://${scheme.website}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-banc-focus hover:underline"
-                  >
-                    <FileText className="h-4 w-4" />
-                    {scheme.website}
-                  </a>
-                  <a href={`tel:${scheme.phone.replace(/\s/g, '')}`} className="flex items-center gap-2 text-banc-dark-mid">
-                    <Phone className="h-4 w-4 text-banc-focus" />
-                    {scheme.phone}
-                  </a>
-                  <a href={`mailto:${scheme.email}`} className="flex items-center gap-2 text-banc-dark-mid">
-                    <Mail className="h-4 w-4 text-banc-focus" />
-                    {scheme.email}
-                  </a>
-                </div>
+            {/* Complaint form */}
+            <section className={SECTION}>
+              <div className={formPanel}>
+                <h3 className="text-xl font-semibold text-banc-dark-deep mb-2">Make a Complaint</h3>
+                <p className="text-sm text-banc-muted-readable mb-6">
+                  Use this form to submit your complaint. We&apos;ll respond within 3 working days.
+                </p>
+
+                <SimpleEnquiryForm
+                  fields={COMPLAINT_FIELDS}
+                  subject="Complaint — {nature}"
+                  intro="Complaint submitted through the website complaints form."
+                  submitLabel="Submit Complaint"
+                  successTitle="Complaint received"
+                  successBody="Thank you. We take every complaint seriously and will respond within 3 working days."
+                  consentLabel={
+                    <>
+                      I understand that my personal information will be used to investigate this complaint
+                      in accordance with our <Link href="/privacy" className="text-banc-focus underline underline-offset-2">Privacy Policy</Link>.
+                    </>
+                  }
+                />
               </div>
-            ))}
-          </div>
-          
-          <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl p-6 max-w-4xl mx-auto">
-            <div className="flex gap-4">
-              <AlertCircle className="h-6 w-6 text-amber-600 flex-shrink-0" />
-              <div>
-                <h4 className="font-semibold text-amber-800 mb-2">Important Note</h4>
-                <p className="text-sm text-amber-700">
+            </section>
+
+            {/* Redress Section */}
+            <section className={SECTION}>
+              <p className={eyebrow}>Independent Redress</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
+                Independent Redress
+              </h2>
+              <p className="mt-4 text-lg text-banc-muted-readable">
+                If you&apos;re not satisfied with our final response, you can escalate your complaint 
+                to an independent redress scheme.
+              </p>
+
+              <div className="mt-7">
+                {redressSchemes.map((scheme) => (
+                  <div key={scheme.name} className="border-t border-banc-dark/15 py-6">
+                    <h3 className="text-xl font-semibold text-banc-dark-deep">{scheme.name}</h3>
+                    <p className="mt-1 text-banc-muted-readable">{scheme.description}</p>
+
+                    <div className="mt-3 flex flex-col text-sm">
+                      <a 
+                        href={`https://${scheme.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center text-banc-focus underline underline-offset-4"
+                      >
+                        {scheme.website}
+                      </a>
+                      <a href={`tel:${scheme.phone.replace(/\s/g, '')}`} className="inline-flex min-h-11 items-center text-banc-dark-mid">
+                        {scheme.phone}
+                      </a>
+                      <a href={`mailto:${scheme.email}`} className="inline-flex min-h-11 items-center text-banc-dark-mid">
+                        {scheme.email}
+                      </a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-banc-dark/15 pt-6">
+                <h4 className="font-semibold text-banc-dark-deep mb-2">Important Note</h4>
+                <p className="text-sm text-banc-dark-mid">
                   You must wait until you receive our final written response (or 8 weeks from 
                   the date of your complaint if we haven&apos;t responded) before escalating to 
                   The Property Ombudsman. Their service is free for consumers.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            </section>
 
-      {/* Regulatory Info Section */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-banc-line/30">
-            <div className="grid lg:grid-cols-2 gap-12">
-              <div>
-                <h2 className="text-2xl font-semibold text-banc-dark-deep mb-4">
-                  Regulatory Information
-                </h2>
-                <p className="text-banc-muted-readable mb-6">
-                  Banc Property Group is committed to maintaining the highest professional standards. 
-                  We are members of professional bodies and subject to regulatory oversight.
-                </p>
-                
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
-                    <div>
-                      <p className="font-medium text-banc-dark-deep">Member of The Property Ombudsman</p>
-                      <p className="text-sm text-banc-muted-readable">Redress scheme membership</p>
-                    </div>
+            {/* Regulatory Info Section */}
+            <section className={SECTION}>
+              <h2 className={sectionHeading}>
+                Regulatory Information
+              </h2>
+              <p className="mt-6 text-banc-muted-readable">
+                Banc Property Group is committed to maintaining the highest professional standards. 
+                We are members of professional bodies and subject to regulatory oversight.
+              </p>
+
+              <div className="mt-6 space-y-4">
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 flex-shrink-0 text-banc-focus mt-0.5" />
+                  <div>
+                    <p className="font-medium text-banc-dark-deep">Member of The Property Ombudsman</p>
+                    <p className="text-sm text-banc-muted-readable">Redress scheme membership</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
-                    <div>
-                      <p className="font-medium text-banc-dark-deep">Propertymark Member</p>
-                      <p className="text-sm text-banc-muted-readable">Professional body membership</p>
-                    </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 flex-shrink-0 text-banc-focus mt-0.5" />
+                  <div>
+                    <p className="font-medium text-banc-dark-deep">Propertymark Member</p>
+                    <p className="text-sm text-banc-muted-readable">Professional body membership</p>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="h-5 w-5 text-banc-focus mt-0.5" />
-                    <div>
-                      <p className="font-medium text-banc-dark-deep">Client Money Protection</p>
-                      <p className="text-sm text-banc-muted-readable">All client funds fully protected</p>
-                    </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="h-5 w-5 flex-shrink-0 text-banc-focus mt-0.5" />
+                  <div>
+                    <p className="font-medium text-banc-dark-deep">Client Money Protection</p>
+                    <p className="text-sm text-banc-muted-readable">All client funds fully protected</p>
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-banc-grey-pale rounded-2xl p-6">
-                <h3 className="font-semibold text-banc-dark-deep mb-4">Our Registration Details</h3>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-muted-readable">Company Name</span>
-                    <span className="font-medium text-banc-dark-deep">Banc Property Group Ltd</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-muted-readable">Registered Address</span>
-                    <span className="font-medium text-banc-dark-deep">1 Station Road, Cuffley, EN6 4HU</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-banc-line/30">
-                    <span className="text-banc-muted-readable">Phone</span>
-                    <span className="font-medium text-banc-dark-deep">{BANC_CONTACT.displayPhone}</span>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-banc-muted-readable">Email</span>
-                    <span className="font-medium text-banc-dark-deep">info@bancproperty.com</span>
-                  </div>
+
+              <h3 className="mb-2 mt-8 font-semibold text-banc-dark-deep">Our Registration Details</h3>
+              <div className="text-sm">
+                <div className="flex justify-between gap-6 border-b border-banc-dark/15 py-3">
+                  <span className="text-banc-muted-readable">Company Name</span>
+                  <span className="text-right font-medium text-banc-dark-deep">Banc Property Group Ltd</span>
+                </div>
+                <div className="flex justify-between gap-6 border-b border-banc-dark/15 py-3">
+                  <span className="text-banc-muted-readable">Registered Address</span>
+                  <span className="text-right font-medium text-banc-dark-deep">1 Station Road, Cuffley, EN6 4HU</span>
+                </div>
+                <div className="flex justify-between gap-6 border-b border-banc-dark/15 py-3">
+                  <span className="text-banc-muted-readable">Phone</span>
+                  <span className="text-right font-medium text-banc-dark-deep">{BANC_CONTACT.displayPhone}</span>
+                </div>
+                <div className="flex justify-between gap-6 py-3">
+                  <span className="text-banc-muted-readable">Email</span>
+                  <span className="text-right font-medium text-banc-dark-deep">info@bancproperty.com</span>
                 </div>
               </div>
-            </div>
+            </section>
           </div>
         </div>
-      </section>
+      </main>
 
       <Footer />
     </div>

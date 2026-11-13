@@ -2,8 +2,22 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, MapPin, Phone, Mail, Clock, Quote, Send, Loader2, ChevronDown } from "lucide-react";
+import { ArrowRight, MapPin, Phone, Mail, Clock, Loader2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PageBand } from "@/components/PageBand";
+import {
+  actionPrimary,
+  eyebrow,
+  eyebrowOnDark,
+  fieldControl,
+  fieldLabel,
+  fieldTextarea,
+  formPanel,
+  sectionHeading,
+  sectionHeadingOnDark,
+  sectionPadding,
+} from "@/components/ui/form-styles";
+import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/Toast";
 import { trackCallClick } from "@/lib/callTracking";
 import { checkContactEnquiry, describeSubmitError } from "@/lib/lead-form-rules";
@@ -108,116 +122,62 @@ export default function ContactPageClient() {
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-banc-dark-deep py-20 lg:py-24">
-        {/* The team outside the Cuffley office — the same claymation shopfront
-            the emails open with. Nitesh asked for it here on 7 Sep; it replaces
-            a stock photograph of somewhere else. Kept brighter than the old
-            wash so the shop actually reads. */}
-        <div className="absolute inset-0">
-          <img
-            src="/images/team/banc-team-clay.jpg"
-            alt=""
-            className="h-full w-full object-cover object-[center_35%] opacity-70"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-banc-dark-deep/85 via-banc-dark-deep/50 to-banc-dark-deep/20" />
-        </div>
-        {/* Background gradient accent */}
-        <div className="absolute inset-0 bg-gradient-to-br from-banc-sky-dark/30 via-transparent to-transparent" />
-        
-        {/* Subtle grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(#4AC8E8 1px, transparent 1px), linear-gradient(90deg, #4AC8E8 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
-        
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-          <motion.div 
-            className="max-w-3xl"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.p 
-              className="mb-6 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <span className="h-px w-8 bg-banc-sky" />
-              Get in Touch
-            </motion.p>
-            
-            <motion.h1 
-              className="text-5xl font-semibold tracking-tight text-white sm:text-6xl lg:text-7xl"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              {cuffleyOffice.title}
-            </motion.h1>
-            
-            <motion.p 
-              className="mt-8 max-w-xl text-lg leading-relaxed text-white/60"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-            >
-              Your local property experts in Cuffley. Visit our office, give us a call, 
-              or request a callback — we&apos;re here to help with all your property needs.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      {/* The team outside the Cuffley office — the same claymation shopfront
+          the emails open with. Nitesh asked for it here on 7 Sep; it replaces
+          a stock photograph of somewhere else. */}
+      <PageBand
+        eyebrow="Get in Touch"
+        title={cuffleyOffice.title}
+        lede={
+          <>
+            Your local property experts in Cuffley. Visit our office, give us a call,
+            or request a callback — we&apos;re here to help with all your property needs.
+          </>
+        }
+        image={{ src: "/images/team/banc-team-clay.jpg", alt: "", priority: true, position: "object-[center_35%]", scrim: "light" }}
+      />
 
       {/* Contact Info & Map Section — the map sits directly under the hero and
           comes first on a phone (Nitesh, 7 Sep: "move the map further up"). */}
-      <section className="pb-24 pt-12 lg:pb-32 lg:pt-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
             {/* Contact Card */}
             <motion.div
-              className="relative overflow-hidden rounded-3xl bg-white p-10 shadow-xl shadow-banc-dark-deep/5 lg:p-12"
+              className={formPanel}
               variants={fadeInUp}
               initial="initial"
               whileInView="whileInView"
               viewport={fadeInUp.viewport}
               transition={fadeInUp.transition}
             >
-              {/* Decorative accent */}
-              <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-banc-sky via-banc-sky-mid to-banc-sky" />
-              
-              <h2 className="text-3xl font-semibold text-banc-dark-deep">
+              <p className={eyebrow}>Cuffley office</p>
+              <h2 className={cn(sectionHeading, "mt-3")}>
                 Visit Our Office
               </h2>
               <p className="mt-3 text-banc-muted-readable">
                 Pop in for a chat about your property requirements
               </p>
-              
-              <div className="mt-10 space-y-6">
+
+              <div className="mt-7 space-y-6">
                 {contactDetails.map((detail, index) => (
                   <motion.div
                     key={detail.label}
-                    className="group flex items-start gap-5"
+                    className="flex items-start gap-4"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-banc-grey-pale text-banc-focus transition-all duration-300 group-hover:bg-banc-sky group-hover:text-white">
-                      <detail.icon className="h-5 w-5" />
-                    </div>
+                    <detail.icon className="mt-0.5 h-5 w-5 flex-shrink-0 text-banc-focus" aria-hidden="true" />
                     <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-muted-readable">
+                      <p className={eyebrow}>
                         {detail.label}
                       </p>
                       {detail.href ? (
                         <a
                           href={detail.href}
-                          className="mt-1 inline-block text-banc-dark-deep transition-colors hover:text-banc-sky"
+                          className="mt-1 inline-block text-banc-dark-deep transition-colors hover:text-banc-focus"
                           onClick={() => detail.label === "Phone" && trackCallClick("contact_page_details")}
                         >
                           {detail.lines.map((line, i) => (
@@ -241,8 +201,8 @@ export default function ContactPageClient() {
               </div>
               
               {/* CTA Button */}
-              <motion.div 
-                className="mt-10"
+              <motion.div
+                className="mt-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -251,30 +211,30 @@ export default function ContactPageClient() {
                 <a
                   href={cuffleyOffice.phone.callHref}
                   onClick={() => trackCallClick("contact_page_cta")}
-                  className="inline-flex items-center gap-2 rounded-xl bg-banc-dark-deep px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-banc-sky hover:shadow-lg hover:shadow-banc-sky/25"
+                  className={actionPrimary}
                 >
-                  <Phone className="h-4 w-4" />
+                  <Phone className="h-4 w-4" aria-hidden="true" />
                   Call Us Now
                 </a>
               </motion.div>
 
               {/* Mayfair office */}
-              <div className="mt-10 border-t border-banc-grey-pale pt-8">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-banc-muted-readable">
+              <div className="mt-8 border-t border-banc-dark/15 pt-8">
+                <p className={eyebrow}>
                   {mayfairOffice.title}
                 </p>
-                <div className="mt-3 space-y-2 text-banc-dark-deep">
+                <div className="mt-3 text-banc-dark-deep">
                   <p className="font-medium">{mayfairOffice.addressLines[0]}</p>
                   <a
                     href={mayfairOffice.phone.callHref}
-                    className="block transition-colors hover:text-banc-sky"
+                    className="flex min-h-11 items-center transition-colors hover:text-banc-focus"
                     onClick={() => trackCallClick("contact_page_mayfair")}
                   >
                     {mayfairOffice.phone.displayPhone}
                   </a>
                   <a
                     href={mayfairOffice.email.mailtoHref}
-                    className="block transition-colors hover:text-banc-sky"
+                    className="flex min-h-11 items-center break-all transition-colors hover:text-banc-focus"
                   >
                     {mayfairOffice.email.displayEmail}
                   </a>
@@ -284,15 +244,14 @@ export default function ContactPageClient() {
 
             {/* Google Maps Embed */}
             <motion.div
-              className="group relative order-first overflow-hidden rounded-3xl shadow-xl shadow-banc-dark-deep/5 lg:order-none"
+              className="relative order-first overflow-hidden rounded-[var(--radius-md)] border border-banc-line lg:order-none"
               variants={scaleIn}
               initial="initial"
               whileInView="whileInView"
               viewport={scaleIn.viewport}
               transition={scaleIn.transition}
             >
-              {/* Map iframe with premium styling */}
-              <div className="relative h-full min-h-[500px] w-full lg:min-h-full">
+              <div className="relative h-full min-h-[360px] w-full sm:min-h-[460px] lg:min-h-full">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2463.6387380899244!2d-0.113307!3d51.70798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48763c3e3f9e3c9b%3A0x7d2e9e4c7d5e8f5a!2s1%20Station%20Rd%2C%20Cuffley%2C%20Potters%20Bar%20EN6%204HU!5e0!3m2!1sen!2suk!4v1708361600000!5m2!1sen!2suk"
                   width="100%"
@@ -304,23 +263,18 @@ export default function ContactPageClient() {
                   title="Banc Property Group Cuffley Office"
                   className="absolute inset-0"
                 />
-                
-                {/* Gradient overlay for visual polish */}
-                <div className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_40px_rgba(0,0,0,0.1)]" />
               </div>
               
               {/* Map info card overlay */}
-              <motion.div 
-                className="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/95 p-4 shadow-lg backdrop-blur-sm"
+              <motion.div
+                className="absolute bottom-4 left-4 right-4 rounded-[var(--radius-md)] border border-banc-line bg-white p-4"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-banc-sky/10 text-banc-focus">
-                    <MapPin className="h-5 w-5" />
-                  </div>
+                  <MapPin className="h-5 w-5 flex-shrink-0 text-banc-focus" aria-hidden="true" />
                   <div>
                     <p className="font-semibold text-banc-dark-deep">Banc Property Group</p>
                     <p className="text-sm text-banc-muted-readable">
@@ -335,121 +289,90 @@ export default function ContactPageClient() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="bg-banc-dark-deep py-24 lg:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10">
-          <motion.div 
-            className="mb-16 text-center"
+      <section className={cn("banc-dark-surface bg-banc-dark-deep text-white", sectionPadding)}>
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            className="mb-7"
             variants={fadeInUp}
             initial="initial"
             whileInView="whileInView"
             viewport={fadeInUp.viewport}
           >
-            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky">
-              <span className="h-px w-8 bg-banc-sky" />
-              Testimonials
-              <span className="h-px w-8 bg-banc-sky" />
-            </p>
-            <h2 className="text-4xl font-semibold text-white">
+            <p className={eyebrowOnDark}>Testimonials</p>
+            <h2 className={cn(sectionHeadingOnDark, "mt-3")}>
               What Our Clients Say
             </h2>
           </motion.div>
-          
-          <motion.div 
-            className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+
+          <motion.div
+            className="grid gap-x-10 md:grid-cols-2 lg:grid-cols-3"
             variants={staggerContainer}
             initial="initial"
             whileInView="whileInView"
             viewport={staggerContainer.viewport}
           >
             {testimonials.map((testimonial, index) => (
-              <motion.div
+              <motion.figure
                 key={index}
                 variants={scaleIn}
-                className="group relative overflow-hidden rounded-2xl bg-banc-dark-mid p-8 transition-all duration-500 hover:-translate-y-2 hover:bg-[#44474d] hover:shadow-2xl hover:shadow-black/20"
+                className="border-t border-white/15 py-6"
               >
-                {/* Quote icon with gradient */}
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-banc-sky to-banc-sky-dark text-white shadow-lg shadow-banc-sky/20">
-                  <Quote className="h-5 w-5" />
-                </div>
-                
-                {/* Testimonial text */}
-                <p className="relative text-[15px] leading-relaxed text-white/80">
+                <blockquote className="text-[15px] leading-relaxed text-white/80">
                   &ldquo;{testimonial.text}&rdquo;
-                </p>
-                
-                {/* Author */}
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-banc-sky/20 text-banc-sky font-semibold">
-                    {testimonial.author.charAt(0)}
+                </blockquote>
+                <figcaption className="mt-5">
+                  <p className="font-semibold text-white">{testimonial.author}</p>
+                  <div className="mt-1 flex gap-0.5" aria-hidden="true">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="h-4 w-4 text-[var(--banc-focus-dark)]"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
                   </div>
-                  <div>
-                    <p className="font-semibold text-white">{testimonial.author}</p>
-                    <div className="mt-1 flex gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="h-4 w-4 text-banc-sky"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Decorative gradient line */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-banc-sky to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              </motion.div>
+                </figcaption>
+              </motion.figure>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Call Me Back Form Section - Premium Dark Design */}
-      <section className="relative overflow-hidden bg-[#1a1d21] py-24 pb-32 lg:py-32">
-        {/* Background elements */}
-        <div className="absolute inset-0 bg-gradient-to-b from-banc-sky/5 to-transparent" />
-        <div className="absolute -right-40 -top-40 h-96 w-96 rounded-full bg-banc-sky/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-banc-sky-dark/10 blur-3xl" />
-        
-        <div className="relative mx-auto max-w-4xl px-6 lg:px-10">
-          <motion.div 
-            className="mb-12 text-center"
+      {/* Call Me Back Form Section */}
+      <section className={sectionPadding}>
+        <div className="mx-auto max-w-7xl">
+          <motion.div
+            className="mb-7 max-w-3xl"
             variants={fadeInUp}
             initial="initial"
             whileInView="whileInView"
             viewport={fadeInUp.viewport}
           >
-            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium uppercase tracking-[0.25em] text-banc-sky">
-              <Send className="h-4 w-4" />
-              Request a Call
-            </p>
-            <h2 className="font-display text-4xl font-semibold text-white lg:text-5xl">
+            <p className={eyebrow}>Request a Call</p>
+            <h2 className={cn(sectionHeading, "mt-3")}>
               Call Me Back
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-white/50">
+            <p className="mt-4 text-base leading-relaxed text-banc-muted-readable">
               Fill out the form below and we&apos;ll get back to you as soon as possible.
             </p>
           </motion.div>
 
-          <motion.form 
+          <motion.form
             onSubmit={handleSubmit}
-            className="relative overflow-hidden rounded-3xl bg-banc-dark-deep p-10 shadow-2xl lg:p-14"
+            className={cn(formPanel, "relative max-w-3xl overflow-hidden")}
             variants={scaleIn}
             initial="initial"
             whileInView="whileInView"
             viewport={scaleIn.viewport}
           >
-            {/* Top accent bar */}
-            <div className="absolute left-0 top-0 h-1 w-full bg-gradient-to-r from-banc-sky via-banc-sky-mid to-banc-sky" />
-            
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid gap-5 sm:grid-cols-2">
               {/* Name Field */}
-              <div className="group">
-                <label htmlFor="name" className="mb-2 block text-sm font-medium text-white/70">
-                  Name <span className="text-banc-sky">*</span>
+              <div>
+                <label htmlFor="name" className={fieldLabel}>
+                  Name <span className="text-banc-focus">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -458,19 +381,16 @@ export default function ContactPageClient() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
+                    className={fieldControl}
                     placeholder="Your full name"
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
-                  </div>
                 </div>
               </div>
 
               {/* Phone Field */}
-              <div className="group">
-                <label htmlFor="phone" className="mb-2 block text-sm font-medium text-white/70">
-                  Phone <span className="text-banc-sky">*</span>
+              <div>
+                <label htmlFor="phone" className={fieldLabel}>
+                  Phone <span className="text-banc-focus">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -479,19 +399,16 @@ export default function ContactPageClient() {
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
+                    className={fieldControl}
                     placeholder="Your phone number"
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
-                  </div>
                 </div>
               </div>
 
               {/* Email Field */}
-              <div className="group md:col-span-2">
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-white/70">
-                  Email <span className="text-banc-sky">*</span>
+              <div className="sm:col-span-2">
+                <label htmlFor="email" className={fieldLabel}>
+                  Email <span className="text-banc-focus">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -500,26 +417,23 @@ export default function ContactPageClient() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
+                    className={fieldControl}
                     placeholder="Your email address"
                   />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
-                  </div>
                 </div>
               </div>
 
               {/* Subject Field */}
-              <div className="group md:col-span-2">
-                <label htmlFor="subject" className="mb-2 block text-sm font-medium text-white/70">
-                  Subject <span className="text-banc-sky">*</span>
+              <div className="sm:col-span-2">
+                <label htmlFor="subject" className={fieldLabel}>
+                  Subject <span className="text-banc-focus">*</span>
                 </label>
                 <div className="relative">
                   <select
                     id="subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full min-h-[56px] rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white text-base transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10 appearance-none cursor-pointer hover:border-banc-sky/50"
+                    className={cn(fieldControl, "cursor-pointer appearance-none pr-11")}
                   >
                     <option value="General Enquiry">General Enquiry</option>
                     <option value="Property Valuation">Property Valuation</option>
@@ -528,13 +442,13 @@ export default function ContactPageClient() {
                     <option value="Land & New Homes">Land & New Homes</option>
                     <option value="Other">Other</option>
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 pointer-events-none" />
+                  <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-banc-muted-readable" aria-hidden="true" />
                 </div>
               </div>
 
               {/* Message Field */}
-              <div className="group md:col-span-2">
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-white/70">
+              <div className="sm:col-span-2">
+                <label htmlFor="message" className={fieldLabel}>
                   Message
                 </label>
                 <div className="relative">
@@ -545,12 +459,9 @@ export default function ContactPageClient() {
                     minLength={10}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full resize-none rounded-xl border-2 border-banc-dark-mid bg-[#1a1d21] px-4 py-4 text-white placeholder-white/30 transition-all duration-300 focus:border-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
+                    className={cn(fieldControl, fieldTextarea, "h-auto resize-none")}
                     placeholder="How can we help you?"
                   />
-                  <div className="absolute bottom-4 right-4 opacity-0 transition-opacity group-focus-within:opacity-100">
-                    <div className="h-2 w-2 rounded-full bg-banc-sky" />
-                  </div>
                 </div>
               </div>
 
@@ -566,7 +477,7 @@ export default function ContactPageClient() {
                 className="absolute -left-[9999px] h-px w-px opacity-0"
               />
               {/* Privacy Checkbox */}
-              <div className="flex items-start gap-4 md:col-span-2">
+              <div className="flex items-start gap-4 sm:col-span-2">
                 <div className="relative flex items-center">
                   <input
                     id="consent"
@@ -574,7 +485,7 @@ export default function ContactPageClient() {
                     required
                     checked={formData.consent}
                     onChange={handleChange}
-                    className="peer h-6 w-6 cursor-pointer rounded-lg border-2 border-banc-dark-mid bg-[#1a1d21] checked:border-banc-sky checked:bg-banc-sky focus:outline-none focus:ring-4 focus:ring-banc-sky/10"
+                    className="peer h-6 w-6 cursor-pointer appearance-none rounded-md border border-banc-muted-readable bg-white checked:border-banc-focus checked:bg-banc-focus focus:outline-none focus:ring-2 focus:ring-banc-focus focus:ring-offset-2"
                   />
                   <svg
                     className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 peer-checked:opacity-100"
@@ -592,20 +503,20 @@ export default function ContactPageClient() {
                     />
                   </svg>
                 </div>
-                <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-white/60">
+                <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-banc-muted-readable">
                   Please tick this box if you are happy for us to contact you via phone and email. 
-                  You can view our full <a href="/privacy" className="text-banc-sky hover:underline">privacy policy</a> on our website.
+                  You can view our full <a href="/privacy" className="text-banc-focus underline underline-offset-4 hover:text-banc-focus-hover">privacy policy</a> on our website.
                 </label>
               </div>
 
               {/* Submit Button */}
-              <div className="md:col-span-2">
+              <div className="sm:col-span-2">
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-banc-sky to-banc-sky-dark py-7 text-base font-semibold text-white transition-all duration-500 hover:shadow-lg hover:shadow-banc-sky/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                  className={cn(actionPrimary, "group shadow-none")}
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
+                  <span className="flex items-center justify-center gap-2">
                     {isSubmitting ? (
                       <>
                         <Loader2 className="h-5 w-5 animate-spin" />
@@ -618,10 +529,6 @@ export default function ContactPageClient() {
                       </>
                     )}
                   </span>
-                  {/* Hover shimmer effect */}
-                  {!isSubmitting && (
-                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
-                  )}
                 </Button>
               </div>
             </div>

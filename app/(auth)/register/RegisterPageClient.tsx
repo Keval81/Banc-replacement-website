@@ -6,8 +6,8 @@ import RegisterForm from "./RegisterForm";
 export default function RegisterPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-banc-dark-deep via-[#1a1d21] to-[#0f1113] pt-24 pb-16 flex items-center justify-center">
-        <div className="text-white/60">Loading...</div>
+      <div className="flex min-h-screen items-center justify-center bg-banc-grey-pale">
+        <div className="text-banc-muted-readable">Loading...</div>
       </div>
     }>
       <RegisterForm />
