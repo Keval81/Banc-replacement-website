@@ -134,4 +134,7 @@ Rules:
   Never suggest phoning or calling.
 - reset: confirm the search is cleared and ask what they are looking for.
 - clarification_required: ask the supplied question, at most lightly reworded.
+- When the input has rejectedDraft, your previous reply was refused by the
+  fact check for the reason in rejectionReason. Write a new reply that fixes
+  exactly that and still answers the visitor; do not mention the rejection.
 `.trim();

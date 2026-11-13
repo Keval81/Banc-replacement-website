@@ -25,7 +25,8 @@ import {
 const TURN_BUDGET_MS = 20_000;
 const AREA_GUIDE_ID_PREFIX = "area-guide:";
 const MAX_TRUSTED_OPERATIONS = 2;
-const MAX_PROVIDER_CALLS = 3;
+// Plan (plus one repair) and reply (plus one rewrite).
+const MAX_PROVIDER_CALLS = 4;
 const CHEAPER_REFINEMENT = /^\s*(?:make|show|find)?\s*(?:it|them)?\s*cheaper[.!?]*\s*$/i;
 const EXPLICIT_VIEWING_PROPERTY_REFERENCE = /^\s*(?:please\s+)?(?:arrange|book|schedule|request)(?:\s+(?:me\s+)?(?:a|the))?\s+viewing\s+for\s+(?:the\s+)?(first|1st|second|2nd|third|3rd)(?:\s+(?:one|property|listing))?[.!?]*\s*$/i;
 const UNSAFE_RESPONSE_TEXT = /\b(?:https?:\/\/|www\.|mailto:|tel:)|\[[^\]]+\]\([^)]+\)|(?:\+?\d[\d\s().-]{7,}\d)/i;

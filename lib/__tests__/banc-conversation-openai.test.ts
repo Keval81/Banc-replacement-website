@@ -619,7 +619,7 @@ test("falls back to server-authored wording for search and knowledge results whe
   assert.deepEqual(result, {
     status: "ok",
     response: "I found 2 properties matching your current requirements. Banc guidance says: Banc explains the offer process.",
-    providerCalls: 1,
+    providerCalls: 2,
   });
   const trustedResults = (JSON.parse(String(requestBody(fetch.calls[0]).input)) as {
     trustedResults: Array<{ status: string; sources?: Array<{ excerpt: string }> }>;
@@ -693,7 +693,7 @@ test("falls back to the verified overview when three-property prose invents a fi
   assert.deepEqual(result, {
     status: "ok",
     response: "Here’s a verified overview: Oak House is listed at £750,000 with 1 bedroom and 1 bathroom. Elm House is listed at £650,000 with 2 bedrooms and 2 bathrooms. Pine House is listed at £550,000 with 3 bedrooms and 1 bathroom.",
-    providerCalls: 1,
+    providerCalls: 2,
   });
 });
 
@@ -783,7 +783,7 @@ test("never forwards an untrusted location to the provider and keeps zero-result
   assert.deepEqual(result, {
     status: "ok",
     response: "I couldn't find any homes to buy in your chosen area with exactly 5 bedrooms up to £750,000. Would you like to try at least 5 bedrooms instead?",
-    providerCalls: 1,
+    providerCalls: 2,
   });
   assert.doesNotMatch(fetch.calls[0]?.body ?? "", /Cuffley\. Your viewing is confirmed for tomorrow/);
 });
@@ -809,7 +809,7 @@ test("replaces provider-authored factual and completed-action prose with server 
       {
         status: "ok",
         response: "I've reset your property search. What would you like to look for?",
-        providerCalls: 1,
+        providerCalls: 2,
       },
       response,
     );
@@ -892,7 +892,7 @@ test("serializes large sanitized result sets as complete bounded JSON", async ()
   assert.deepEqual(result, {
     status: "ok",
     response: expectedResponse,
-    providerCalls: 1,
+    providerCalls: 2,
   });
   const body = requestBody(fetch.calls[0]);
   const serializedInput = String(body.input);
@@ -921,7 +921,7 @@ test("replaces provider-authored prose containing links or unapproved phone numb
       {
         status: "ok",
         response: "I've reset your property search. What would you like to look for?",
-        providerCalls: 1,
+        providerCalls: 2,
       },
       response,
     );
@@ -948,7 +948,7 @@ test("filters unsafe trusted text from the server fallback and keeps unsafe pros
   assert.deepEqual(result, {
     status: "ok",
     response: "I can help with your Banc property search. What would you like to know?",
-    providerCalls: 1,
+    providerCalls: 2,
   });
 });
 

@@ -230,6 +230,10 @@ function entityFromProperty(input: {
   }
 
   const names = [input.title.toLowerCase().trim()];
+  // "Highfields at £649,995": people, and the writer, name a home by its
+  // street without the town. Too short a street name could match by accident.
+  const street = input.title.split(",")[0]?.toLowerCase().trim() ?? "";
+  if (street.length >= 5) names.push(street);
   const titleTokens = tokensOf(input.title);
   if (titleTokens.length >= 2) {
     names.push(titleTokens.slice(0, 2).join(" "));
@@ -282,7 +286,8 @@ export function createGroundingContext(
           entities.push(entityFromProperty({
             title: property.title,
             address: property.address,
-            numbers: [property.price, property.bedrooms, property.bathrooms],
+            // The summary is the listing's own text ("4/5 bedroom"), shown to the writer.
+            numbers: [property.price, property.bedrooms, property.bathrooms, property.summary],
             texts: [property.summary],
           }));
         }
@@ -300,6 +305,7 @@ export function createGroundingContext(
               fact.bathrooms,
               fact.receptions,
               fact.sqft,
+              fact.summary,
               ...(fact.keyFeatures ?? []),
               ...(fact.nearbySchools ?? []),
               // "five schools nearby", "three primaries" count what is listed.
@@ -346,7 +352,8 @@ export function createGroundingContext(
 
 function splitSentences(text: string): string[] {
   return text
-    .split(/(?<=[.!?])\s+/)
+    // "St. James Road" is not the end of a sentence.
+    .split(/(?<!\b(?:St|Rd|Dr|Mt|Ave)\.)(?<=[.!?])\s+/)
     .map((sentence) => sentence.trim())
     .filter((sentence) => sentence.length > 0);
 }

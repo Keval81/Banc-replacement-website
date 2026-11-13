@@ -461,10 +461,10 @@ export type ModelPlanResult =
   | { status: ModelFailureCategory; providerCalls: 0 | 1 | 2 };
 
 export type ModelResponseResult =
-  | { status: "ok"; response: string; providerCalls: 1 }
+  | { status: "ok"; response: string; providerCalls: 1 | 2 }
   | {
       status: Exclude<ModelFailureCategory, "interpretation_invalid">;
-      providerCalls: 0 | 1;
+      providerCalls: 0 | 1 | 2;
     };
 
 export interface ConversationModel {
@@ -1062,6 +1062,7 @@ function describeTrustedResult(
 function buildResponseInput(
   input: ResponseWritingInput,
   results: readonly SanitizedOperationResult[],
+  rejected?: { draft: string; reason: string },
 ): string | null {
   const currentState = sanitizeState(input.state);
   if (currentState === null) return null;
@@ -1069,6 +1070,12 @@ function buildResponseInput(
     currentMessage: boundedText(input.message, MAX_MESSAGE_CHARACTERS),
     recentHistory: sanitizeHistory(input.history),
     trustedResults: results.map(describeTrustedResult),
+    ...(rejected === undefined
+      ? {}
+      : {
+        rejectedDraft: rejected.draft,
+        rejectionReason: `${rejectionGuidance(rejected.reason)} Write a corrected reply that still answers currentMessage as fully as trustedResults allows.`,
+      }),
   });
 }
 
@@ -1231,10 +1238,34 @@ function normalizedPlanValue(value: unknown): unknown {
   return plan;
 }
 
-function parseResponseText(
+type DraftVerdict =
+  | { ok: true; text: string }
+  | { ok: false; draft: string; reason: string };
+
+/** Plain-English correction for the writer, from the verifier's reason code. */
+function rejectionGuidance(reason: string): string {
+  const [kind, detail] = reason.split(":");
+  switch (kind) {
+    case "claim":
+      return `The draft mentioned "${detail}", which trustedResults does not list for that home or topic. Leave it out, or say in its own sentence that it isn't listed.`;
+    case "number":
+      return `The draft used the number ${detail}, which is not in trustedResults. Use only figures that appear there, written as supplied.`;
+    case "too_long":
+    case "too_many_sentences":
+      return "The draft was too long. Use at most four short sentences and stay under 600 characters.";
+    case "percent":
+      return "The draft used a percentage that is not in trustedResults.";
+    case "completed_action":
+      return "The draft claimed something was booked, sent or arranged. Only the Banc team does that; point to the form instead.";
+    default:
+      return "The draft contained a link, email address, phone number or formatting. Use plain sentences only.";
+  }
+}
+
+function checkDraft(
   value: unknown,
   results: readonly SanitizedOperationResult[],
-): string | null {
+): DraftVerdict | null {
   if (
     typeof value !== "object" ||
     value === null ||
@@ -1246,8 +1277,14 @@ function parseResponseText(
   const response = Reflect.get(value, "response");
   if (typeof response !== "string") return null;
   const trimmed = response.replaceAll(/\s+/g, " ").trim();
-  if (!isSafeResponseText(trimmed)) return null;
-  return verifyGroundedResponse(trimmed, results).ok ? trimmed : null;
+  if (trimmed.length === 0) return null;
+  if (!isSafeResponseText(trimmed)) {
+    return { ok: false, draft: trimmed.slice(0, 1_000), reason: "link" };
+  }
+  const verdict = verifyGroundedResponse(trimmed, results);
+  return verdict.ok
+    ? { ok: true, text: trimmed }
+    : { ok: false, draft: trimmed.slice(0, 1_000), reason: verdict.reason };
 }
 
 function hasConfiguration(options: OpenAIConversationModelOptions): options is {
@@ -1342,31 +1379,46 @@ export function createOpenAIConversationModel(
         return { status: "model_unavailable", providerCalls: 0 };
       }
 
-      const result = await requestStructuredOutput({
-        apiKey: options.apiKey,
-        model: options.model,
-        fetcher,
-        instructions: BANC_RESPONSE_INSTRUCTIONS,
-        input: responseInput,
-        formatName: "banc_conversation_response",
-        schema: responseJsonSchema,
-        maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
-        signal,
-      });
-      if (result.status !== "ok") {
-        return { status: result.status, providerCalls: 1 };
+      const draft = (input: string) =>
+        requestStructuredOutput({
+          apiKey: options.apiKey,
+          model: options.model,
+          fetcher,
+          instructions: BANC_RESPONSE_INSTRUCTIONS,
+          input,
+          formatName: "banc_conversation_response",
+          schema: responseJsonSchema,
+          maxOutputTokens: RESPONSE_MAX_OUTPUT_TOKENS,
+          signal,
+        });
+      const serverWording = (providerCalls: 1 | 2): ModelResponseResult =>
+        serverAuthored === undefined
+          ? { status: "model_unavailable", providerCalls }
+          : { status: "ok", response: serverAuthored.text, providerCalls };
+
+      const first = await draft(responseInput);
+      if (first.status !== "ok") {
+        return { status: first.status, providerCalls: 1 };
       }
 
       // Model prose is used only when every claim in it is grounded in the
-      // trusted results; otherwise the server-authored wording is returned so
-      // a valid search or answer is never lost to an ungrounded sentence.
-      const grounded = parseResponseText(result.value, sanitizedResults);
-      if (grounded !== null) {
-        return { status: "ok", response: grounded, providerCalls: 1 };
+      // trusted results. A rejected draft gets one rewrite, told what was
+      // wrong; after that the server-authored wording is returned, so a valid
+      // search or answer is never lost to an ungrounded sentence.
+      const firstVerdict = checkDraft(first.value, sanitizedResults);
+      if (firstVerdict?.ok === true) {
+        return { status: "ok", response: firstVerdict.text, providerCalls: 1 };
       }
-      return serverAuthored === undefined
-        ? { status: "model_unavailable", providerCalls: 1 }
-        : { status: "ok", response: serverAuthored.text, providerCalls: 1 };
+      if (firstVerdict === null || signal.aborted) return serverWording(1);
+
+      const retryInput = buildResponseInput(input, sanitizedResults, firstVerdict);
+      if (retryInput === null) return serverWording(1);
+      const second = await draft(retryInput);
+      if (second.status !== "ok") return serverWording(2);
+      const secondVerdict = checkDraft(second.value, sanitizedResults);
+      return secondVerdict?.ok === true
+        ? { status: "ok", response: secondVerdict.text, providerCalls: 2 }
+        : serverWording(2);
     },
   };
 }
