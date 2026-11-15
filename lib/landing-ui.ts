@@ -119,7 +119,9 @@ const sharedActions = {
   // The landing film: aerials and houses first, then people arriving, moving
   // in and living there. The last two shots (morning coffee on the terrace,
   // friends in the kitchen at dusk) were added 15 Nov 2026 from clips SanSan
-  // generated; each is the clean first 1.4s of its clip, slowed to two seconds.
+  // generated; each is the clean opening of its clip, slowed to about three
+  // seconds, with 0.8s dissolves in, between them, and back into the first shot
+  // so the loop has no cut.
   heroVideo: {
     poster: "/videos/hero-properties-life-poster.jpg",
     playbackRate: 1,
@@ -133,7 +135,7 @@ const sharedActions = {
       width: 608,
       height: 1316,
       preserveFullComposition: true,
-      poster: "/videos/hero-properties-2026-09-mobile-poster.jpg",
+      poster: "/videos/hero-properties-life-mobile-poster.jpg",
     },
   },
   valuationAction: {

@@ -9,7 +9,7 @@ test("the landing film ends on the terrace and kitchen shots, on desktop and pho
   const landing = readFileSync(join(root, "lib", "landing-ui.ts"), "utf8");
   assert.match(landing, /src: "\/videos\/hero-properties-life\.mp4"/);
   assert.match(landing, /src: "\/videos\/hero-properties-life-mobile\.mp4"/);
-  for (const file of ["hero-properties-life.mp4", "hero-properties-life-mobile.mp4", "hero-properties-life-poster.jpg"]) {
+  for (const file of ["hero-properties-life.mp4", "hero-properties-life-mobile.mp4", "hero-properties-life-poster.jpg", "hero-properties-life-mobile-poster.jpg"]) {
     assert.ok(existsSync(join(root, "public", "videos", file)), file);
   }
   // Phones download this on first load: keep it close to the film it replaces (3.7MB).
