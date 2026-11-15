@@ -222,7 +222,9 @@ export function getLandingOverlayPolicy(
   }
 
   return {
-    showMobileBottomNavigation: !isLandingPage,
+    // The bottom bar is retired site-wide: an old design that did not read as
+    // premium. The header menu carries Home, Search, Contact and Call.
+    showMobileBottomNavigation: false,
     // Banc Bot's short invitation shows once per visit, on the landing page too.
     showProactiveChatPrompt: true,
     showPushNotificationPrompt: !isLandingPage,

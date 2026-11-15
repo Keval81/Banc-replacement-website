@@ -181,7 +181,6 @@ export default function PropertyChatbot({
     messageIdRef.current = highestMessageIndex(messages);
   }
   // The landing page has no bottom navigation, so the launcher sits lower there.
-  const sitsLow = mobileContactControlPlacement === "unified-help";
   const clearsStickyActions = launcherClearance === "clears-sticky-actions";
   const quickReplies = getPropertyChatQuickReplies(conversationContext);
 
@@ -482,11 +481,7 @@ export default function PropertyChatbot({
             className={`fixed right-[calc(1rem+env(safe-area-inset-right))] z-40 flex items-end gap-3 sm:right-[calc(1.5rem+env(safe-area-inset-right))] ${
               clearsStickyActions
                 ? "bottom-[calc(9rem+env(safe-area-inset-bottom))] lg:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
-                : "sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
-            } ${
-              sitsLow
-                ? "bottom-[calc(1rem+env(safe-area-inset-bottom))]"
-                : "bottom-[calc(9rem+env(safe-area-inset-bottom))]"
+                : "bottom-[calc(1rem+env(safe-area-inset-bottom))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
             }`}
           >
             <AnimatePresence>

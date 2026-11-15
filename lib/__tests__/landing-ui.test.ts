@@ -336,9 +336,28 @@ test("keeps Banc Bot reachable on a property page, without the other overlays", 
   );
 });
 
-test("keeps mobile navigation and proactive chat available on regular pages", () => {
+test("no page carries the old mobile bottom navigation bar", () => {
+  // SanSan, 15 Nov 2026: the Home / Search / Contact / Call bar is an old
+  // design and does not read as premium. The header menu covers all four.
+  for (const path of ["/", "/sales/properties", "/contact", "/tools/mortgage-calculator", "/sales/properties/BPGC1011"]) {
+    assert.equal(getLandingOverlayPolicy(path).showMobileBottomNavigation, false, path);
+  }
+  const root = join(import.meta.dirname, "..", "..");
+  assert.doesNotMatch(readFileSync(join(root, "components", "mobile", "SiteOverlays.tsx"), "utf8"), /MobileBottomNav/);
+  assert.doesNotMatch(readFileSync(join(root, "app", "globals.css"), "utf8"), /has-mobile-bottom-nav/);
+});
+
+test("Banc Bot's launcher sits near the bottom corner on phones now the bar is gone", () => {
+  const chatbot = readFileSync(
+    join(import.meta.dirname, "..", "..", "components", "ai", "PropertyChatbot.tsx"),
+    "utf8",
+  );
+  assert.match(chatbot, /: "bottom-\[calc\(1rem\+env\(safe-area-inset-bottom\)\)\] sm:bottom-\[calc\(1\.5rem\+env\(safe-area-inset-bottom\)\)\]"/);
+});
+
+test("keeps proactive chat available on regular pages", () => {
   assert.deepEqual(getLandingOverlayPolicy("/sales/properties"), {
-    showMobileBottomNavigation: true,
+    showMobileBottomNavigation: false,
     showProactiveChatPrompt: true,
     showPushNotificationPrompt: true,
     showStandaloneWhatsapp: true,

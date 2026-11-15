@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import PropertyChatbot from "@/components/ai/PropertyChatbot";
 import PushNotificationPrompt from "@/components/ai/PushNotificationPrompt";
 import { FloatingWhatsApp } from "@/components/mobile/FloatingWhatsApp";
-import { MobileBottomNav } from "@/components/mobile/MobileNav";
 import { getLandingOverlayPolicy } from "@/lib/landing-ui";
 import { BANC_WHATSAPP_NUMBER } from "@/lib/banc-contact";
 
@@ -16,7 +15,6 @@ export function SiteOverlays(): React.ReactElement | null {
 
   return (
     <>
-      {overlayPolicy.showMobileBottomNavigation && <MobileBottomNav />}
       {overlayPolicy.showStandaloneWhatsapp && BANC_WHATSAPP_NUMBER && (
         <FloatingWhatsApp
           phoneNumber={BANC_WHATSAPP_NUMBER}
