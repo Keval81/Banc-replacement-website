@@ -174,8 +174,23 @@ export default function ValuationPage() {
         }
         return true;
       }
-      case 2:
-        return true; // Property details are optional
+      case 2: {
+        // The estimate turns on these answers: the type sets which homes yours is
+        // compared with, and major work changes what the register can tell us.
+        if (!formData.propertyType) {
+          setError("Please choose your property type. It sets which homes we compare yours with.");
+          return false;
+        }
+        if (!formData.bedrooms) {
+          setError("Please choose the number of bedrooms.");
+          return false;
+        }
+        if (!isLettings && majorWork === null) {
+          setError("Please tell us whether the home has been extended or refurbished since you bought it.");
+          return false;
+        }
+        return true;
+      }
       case 3: {
         const problem = checkValuationStep("contact", formData);
         if (problem) {
@@ -195,6 +210,8 @@ export default function ValuationPage() {
 
   const nextStep = () => {
     if (validateStep(currentStep)) {
+      // A fixed problem should not follow the visitor onto the next step.
+      setError(null);
       if (currentStep === 3) {
         handleSubmit();
       } else {
@@ -412,14 +429,15 @@ export default function ValuationPage() {
                       Tell us about your property
                     </h2>
                     <p className="mt-2 text-sm text-banc-muted-readable">
-                      These details help us provide a more accurate valuation
+                      We need these to work out your estimate
                     </p>
                   </div>
 
                   <div className="space-y-5">
                     <div>
-                      <label className={fieldLabel}>Property Type</label>
+                      <label htmlFor="propertyType" className={fieldLabel}>Property Type *</label>
                       <NativeSelect
+                        id="propertyType"
                         value={formData.propertyType}
                         onChange={(e) => handleChange("propertyType", e.target.value)}
                         className={cn(fieldControl, "pr-10 hover:border-banc-focus")}
@@ -432,7 +450,7 @@ export default function ValuationPage() {
                     </div>
 
                     <div>
-                      <label className={fieldLabel}>Bedrooms</label>
+                      <p className={fieldLabel}>Bedrooms *</p>
                       <div className="flex flex-wrap gap-2">
                         {bedrooms.map((num) => (
                           <button
@@ -451,7 +469,7 @@ export default function ValuationPage() {
                     {!isLettings && (
                       <fieldset>
                         <legend className="mb-2 block text-sm font-medium leading-relaxed text-banc-dark-deep">
-                          Have you extended, converted the loft or fully refurbished since you bought?
+                          Have you extended, converted the loft or fully refurbished since you bought? *
                         </legend>
                         <div className={cn(segmented, "sm:max-w-xs")}>
                           {([
