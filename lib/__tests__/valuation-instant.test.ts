@@ -146,3 +146,41 @@ test("the confidence barometer reads green for high, amber for medium, red for l
   assert.match(low.caption, /too few|disagree/);
   assert.doesNotMatch(low.caption, /director/);
 });
+
+// 9 Berthold Mews, 15 Nov 2026: "Detached House" picked gave £770k at high
+// confidence; the same home with the type left blank gave a broad, low-confidence
+// range. The register already records the type at the home's own sale.
+const ownSemiSale: Sale = { ...semi("99"), date: "2021-10-29", price: 380_000 };
+const typedDeps = { ...sizedDeps(null), history: async () => [ownSemiSale] };
+const asOfNov = new Date("2026-11-07T00:00:00Z");
+
+test("a home with a sale on the register is valued the same whether or not the visitor picks its type", async () => {
+  const stated = await runInstantValuation(semiHome, typedDeps, asOfNov);
+  const blank = await runInstantValuation({ ...semiHome, propertyType: "" }, typedDeps, asOfNov);
+  assert.ok(stated && blank);
+  assert.notEqual(stated.confidence, "low");
+  assert.deepEqual(
+    [blank.figure, blank.low, blank.high, blank.confidence, blank.comparableCount],
+    [stated.figure, stated.low, stated.high, stated.confidence, stated.comparableCount],
+  );
+});
+
+test("a form type the register has no word for (Bungalow, Cottage, Other) falls back to the home's registered type", async () => {
+  const stated = await runInstantValuation(semiHome, typedDeps, asOfNov);
+  for (const propertyType of ["Bungalow", "Cottage", "Other"]) {
+    const e = await runInstantValuation({ ...semiHome, propertyType }, typedDeps, asOfNov);
+    assert.deepEqual([e?.figure, e?.confidence], [stated?.figure, stated?.confidence], propertyType);
+  }
+});
+
+test("the visitor's own choice of type still wins over the register", async () => {
+  const flatOnRegister = { ...typedDeps, history: async () => [{ ...ownSemiSale, type: "flat" as const }] };
+  const e = await runInstantValuation(semiHome, flatOnRegister, asOfNov);
+  // Ten semi-detached comparables only count if the home is treated as semi-detached.
+  assert.equal(e?.comparableCount, 10);
+});
+
+test("with no type picked and no sale on the register, the estimate stays a low-confidence range", async () => {
+  const e = await runInstantValuation({ ...semiHome, propertyType: "" }, sizedDeps(null), asOfNov);
+  assert.equal(e?.confidence, "low");
+});

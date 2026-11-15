@@ -4,7 +4,7 @@
  * wiring is testable; the engine itself is pure (engine.ts).
  */
 import { lookupOutcodeDistricts, postcodeSector, registerTypeFor } from "../valuation-estimate.ts";
-import { estimateHome, type HpiSeries, type Sale } from "./engine.ts";
+import { estimateHome, type HomeType, type HpiSeries, type Sale } from "./engine.ts";
 import { lookupHomeArea, withKnownAreas } from "./floor-areas.ts";
 import { fetchAreaSales, fetchHpiForDistricts, fetchPostcodeHistory } from "./register.ts";
 
@@ -84,6 +84,21 @@ export const liveDeps: InstantDeps = {
   homeArea: lookupHomeArea,
 };
 
+const sameText = (a: string, b: string) => a.trim().toUpperCase().replace(/\s+/g, " ") === b.trim().toUpperCase().replace(/\s+/g, " ");
+
+/**
+ * The type the register filed this home under at its most recent sale. The form's
+ * type is optional and has options the register has no word for (Bungalow, Cottage),
+ * so without this the same home was valued differently depending on a dropdown.
+ */
+function registeredType(history: Sale[], home: { postcode: string; paon: string; saon: string }): HomeType | null {
+  if (!home.paon) return null;
+  const sale = history
+    .filter((s) => s.type !== "other" && sameText(s.postcode, home.postcode) && sameText(s.paon, home.paon) && sameText(s.saon, home.saon))
+    .sort((x, y) => y.date.localeCompare(x.date))[0];
+  return sale && sale.type !== "other" ? sale.type : null;
+}
+
 export async function runInstantValuation(
   input: { postcode: string; paon: string | null; saon: string; propertyType?: string; majorWork: boolean },
   deps: InstantDeps = liveDeps,
@@ -122,7 +137,7 @@ export async function runInstantValuation(
       paon: input.paon ?? "",
       saon: input.saon,
       postcode,
-      type: input.propertyType ? registerTypeFor(input.propertyType) : null,
+      type: (input.propertyType ? registerTypeFor(input.propertyType) : null) ?? registeredType(history, { postcode, paon: input.paon ?? "", saon: input.saon }),
       // Prime central London prices turn on things public records can't see (Banc's Mayfair office): director-led.
       majorWork: input.majorWork || DIRECTOR_LED_OUTCODE.test(postcode.split(" ")[0] ?? ""),
       area: area ?? undefined,
