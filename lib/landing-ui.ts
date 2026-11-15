@@ -116,20 +116,20 @@ const sharedActions = {
     },
   ],
   heroActionPresentation: "editorial-paired-actions",
-  // The film Nitesh asked to change: half of hero-first-day's eight shots
-  // featured people. These are the same shots with only the property footage
-  // kept — aerials, the houses, the pool at dusk — so nothing on the landing
-  // page is a stock family.
+  // The landing film: aerials and houses first, then people arriving, moving
+  // in and living there. The last two shots (morning coffee on the terrace,
+  // friends in the kitchen at dusk) were added 15 Nov 2026 from clips SanSan
+  // generated; each is the clean first 1.4s of its clip, slowed to two seconds.
   heroVideo: {
-    poster: "/videos/hero-properties-first-poster.jpg",
+    poster: "/videos/hero-properties-life-poster.jpg",
     playbackRate: 1,
     desktop: {
-      src: "/videos/hero-properties-first.mp4",
+      src: "/videos/hero-properties-life.mp4",
       width: 1440,
       height: 810,
     },
     mobile: {
-      src: "/videos/hero-properties-2026-09-mobile.mp4",
+      src: "/videos/hero-properties-life-mobile.mp4",
       width: 608,
       height: 1316,
       preserveFullComposition: true,

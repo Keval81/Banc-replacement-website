@@ -7,8 +7,8 @@ import { OWNED_FILMS } from "../owned-film.ts";
 const root = join(import.meta.dirname, "..", "..");
 const read = (file: string) => readFileSync(join(root, file), "utf8");
 
-test("the terrace and kitchen films ship with a poster and stay light enough for a phone", () => {
-  for (const film of [OWNED_FILMS.premierTerrace, OWNED_FILMS.salesKitchen]) {
+test("the terrace film ships with a poster and stays light enough for a phone", () => {
+  for (const film of [OWNED_FILMS.premierTerrace]) {
     const video = join(root, "public", film.src);
     assert.ok(existsSync(video), `${film.src} exists`);
     assert.ok(existsSync(join(root, "public", film.poster)), `${film.poster} exists`);
@@ -17,11 +17,19 @@ test("the terrace and kitchen films ship with a poster and stay light enough for
   }
 });
 
-test("Premier Homes opens on the terrace film and Sales on the kitchen film", () => {
+test("Premier Homes opens on the terrace film", () => {
   assert.match(read("app/premier-homes/page.tsx"), /film=\{OWNED_FILMS\.premierTerrace\}/);
-  assert.match(read("app/sales/SalesPageClient.tsx"), /film=\{OWNED_FILMS\.salesKitchen\}/);
-  // The Sales opener used to hotlink a stock photo.
-  assert.doesNotMatch(read("app/sales/SalesPageClient.tsx"), /images\.unsplash\.com\/photo-1732983989209/);
+});
+
+test("the landing film ends on the terrace and kitchen shots, on desktop and phone", () => {
+  const landing = read("lib/landing-ui.ts");
+  assert.match(landing, /src: "\/videos\/hero-properties-life\.mp4"/);
+  assert.match(landing, /src: "\/videos\/hero-properties-life-mobile\.mp4"/);
+  for (const file of ["hero-properties-life.mp4", "hero-properties-life-mobile.mp4", "hero-properties-life-poster.jpg"]) {
+    assert.ok(existsSync(join(root, "public", "videos", file)), file);
+  }
+  // Phones download this on first load: keep it close to the film it replaces (3.7MB).
+  assert.ok(statSync(join(root, "public", "videos", "hero-properties-life-mobile.mp4")).size < 5 * 1024 * 1024);
 });
 
 test("a film opener uses the ambient player, so it never shows a play button", () => {

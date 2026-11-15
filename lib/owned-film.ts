@@ -54,17 +54,13 @@ export const OWNED_FILMS = {
     "beat4-maintenance",
     "An engineer knocks at the door of a red-brick house and is welcomed in",
   ),
-  // Generated 14 Nov 2026. Terrace plays forward then back so the loop has no
-  // cut; kitchen is the first 3.5s slowed by a fifth, with the loop point blended.
+  // Generated 14 Nov 2026. Only the first 1.4s is used, slowed to two seconds
+  // and played forward then back: after that the woman's cup and head move
+  // unnaturally (SanSan, 15 Nov).
   premierTerrace: beat(
     "premier-terrace",
     "A couple share a morning coffee on the terrace of a country house, mist over the lawn",
     "22% center",
-  ),
-  salesKitchen: beat(
-    "sales-kitchen",
-    "Friends gather around a kitchen island at dusk, wine being poured",
-    "30% center",
   ),
 } as const satisfies Record<string, OwnedFilm>;
 
@@ -83,7 +79,6 @@ export const SERVICE_FILMS: Record<string, OwnedFilm> = {
 /** Films that sit behind a page opener, keyed by the page's path. */
 export const OPENER_FILMS: Record<string, OwnedFilm> = {
   "/premier-homes": OWNED_FILMS.premierTerrace,
-  "/sales": OWNED_FILMS.salesKitchen,
 };
 
 export function getServiceFilm(href: string): OwnedFilm | undefined {
