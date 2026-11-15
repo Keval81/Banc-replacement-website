@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { PageBand } from "@/components/PageBand";
+import { OWNED_FILMS } from "@/lib/owned-film";
 import {
   actionPrimaryOnDark,
   actionSecondaryOnDark,
@@ -65,11 +66,7 @@ export default function SalesPageClient() {
         eyebrow="Property Sales"
         title="Selling Your Property"
         lede="Achieve the best price for your home with our premium marketing, expert valuations, and dedicated sales team."
-        image={{
-          src: "https://images.unsplash.com/photo-1732983989209-ae2fa3d1a9fc?auto=format&fit=crop&w=1920&q=80",
-          alt: "",
-          priority: true,
-        }}
+        film={OWNED_FILMS.salesKitchen}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link href="/valuation" className={actionPrimaryOnDark}>

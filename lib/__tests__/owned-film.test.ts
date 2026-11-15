@@ -8,6 +8,7 @@ import {
   SERVICE_FILMS,
   getServiceFilm,
   shouldPlayAmbientVideo,
+  OPENER_FILMS,
 } from "../owned-film.ts";
 
 const PUBLIC_DIR = join(import.meta.dirname, "..", "..", "public");
@@ -60,8 +61,10 @@ test("every service card now carries its own film", () => {
 
 test("ships no film the site does not actually use", () => {
   // The drone moves are candidates for the landing film, not shipped assets.
-  // Anything in OWNED_FILMS must be on a card, or it is 8MB a deploy for nothing.
-  const used = new Set(Object.values(SERVICE_FILMS).map((film) => film.src));
+  // Anything in OWNED_FILMS must be on a card or a page opener, or it is 8MB a deploy for nothing.
+  const used = new Set(
+    [...Object.values(SERVICE_FILMS), ...Object.values(OPENER_FILMS)].map((film) => film.src),
+  );
   for (const [name, film] of Object.entries(OWNED_FILMS)) {
     assert.ok(used.has(film.src), `${name} is configured but nothing renders it`);
   }

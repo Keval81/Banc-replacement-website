@@ -20,17 +20,21 @@ export interface OwnedFilm {
   height: number;
   /** Describes the footage for anyone who gets the poster instead of the film. */
   description: string;
+  /** CSS object-position for where the subject sits; keeps people in frame when a wide clip is cropped to a phone. */
+  focus?: string;
 }
 
 const beat = (
   name: string,
   description: string,
+  focus?: string,
 ): OwnedFilm => ({
   src: `/videos/film/${name}.mp4`,
   poster: `/images/film/${name}.jpg`,
   width: 1440,
   height: 810,
   description,
+  ...(focus ? { focus } : {}),
 });
 
 export const OWNED_FILMS = {
@@ -50,6 +54,18 @@ export const OWNED_FILMS = {
     "beat4-maintenance",
     "An engineer knocks at the door of a red-brick house and is welcomed in",
   ),
+  // Generated 14 Nov 2026. Terrace plays forward then back so the loop has no
+  // cut; kitchen is the first 3.5s slowed by a fifth, with the loop point blended.
+  premierTerrace: beat(
+    "premier-terrace",
+    "A couple share a morning coffee on the terrace of a country house, mist over the lawn",
+    "22% center",
+  ),
+  salesKitchen: beat(
+    "sales-kitchen",
+    "Friends gather around a kitchen island at dusk, wine being poured",
+    "30% center",
+  ),
 } as const satisfies Record<string, OwnedFilm>;
 
 /**
@@ -62,6 +78,12 @@ export const SERVICE_FILMS: Record<string, OwnedFilm> = {
   "/lettings": OWNED_FILMS.movingIn,
   "/premier-homes": OWNED_FILMS.premierElevation,
   "/lettings/landlords-guide": OWNED_FILMS.maintenanceCall,
+};
+
+/** Films that sit behind a page opener, keyed by the page's path. */
+export const OPENER_FILMS: Record<string, OwnedFilm> = {
+  "/premier-homes": OWNED_FILMS.premierTerrace,
+  "/sales": OWNED_FILMS.salesKitchen,
 };
 
 export function getServiceFilm(href: string): OwnedFilm | undefined {

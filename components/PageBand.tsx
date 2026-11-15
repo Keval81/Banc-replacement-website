@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { AmbientVideo } from "@/components/AmbientVideo";
+import type { OwnedFilm } from "@/lib/owned-film";
 
 interface PageBandProps {
   eyebrow: string;
@@ -17,6 +19,8 @@ interface PageBandProps {
     /** "light" keeps the photograph bright and only darkens behind the text. */
     scrim?: "dark" | "light";
   };
+  /** Looping footage behind the band, in place of a photograph. The band grows so the footage can be seen above the text. */
+  film?: OwnedFilm;
   /** Actions or a form that belongs to the opener. */
   children?: React.ReactNode;
   as?: "h1" | "h2";
@@ -29,10 +33,21 @@ interface PageBandProps {
  * title, short lede, all left-aligned. See DESIGN.md "Dark band".
  * Sits directly under the fixed header, which already supplies its own spacer.
  */
-export function PageBand({ eyebrow, title, lede, back, image, children, as: Heading = "h1", accent = "sky" }: PageBandProps) {
+export function PageBand({ eyebrow, title, lede, back, image, film, children, as: Heading = "h1", accent = "sky" }: PageBandProps) {
   return (
     <section className="banc-dark-surface relative overflow-hidden bg-banc-dark-deep text-white">
-      {image && (
+      {film && (
+        <>
+          <div className="absolute inset-0">
+            <AmbientVideo film={film} sizes="100vw" priority />
+          </div>
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-banc-dark-deep/95 via-banc-dark-deep/65 to-banc-dark-deep/25"
+            aria-hidden="true"
+          />
+        </>
+      )}
+      {image && !film && (
         <>
           <Image src={image.src} alt={image.alt} fill sizes="100vw" priority={image.priority} className={`object-cover ${image.position ?? ""}`} />
           <div
@@ -41,7 +56,7 @@ export function PageBand({ eyebrow, title, lede, back, image, children, as: Head
           />
         </>
       )}
-      <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
+      <div className={`relative mx-auto flex w-full max-w-7xl flex-col justify-end px-4 py-12 sm:px-6 lg:px-10 lg:py-20 ${film ? "min-h-[40rem] lg:min-h-[44rem]" : ""}`}>
         {back && (
           <Link
             href={back.href}
