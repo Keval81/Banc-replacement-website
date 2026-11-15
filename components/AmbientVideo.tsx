@@ -64,7 +64,6 @@ export function AmbientVideo({
         sizes={sizes}
         priority={priority}
         className="object-cover"
-        style={{ objectPosition: film.focus }}
       />
       {playing && (
         <video
@@ -73,7 +72,6 @@ export function AmbientVideo({
           // and would otherwise paint its own play button over the still.
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${started ? "opacity-100" : "opacity-0"}`}
           onPlaying={() => setStarted(true)}
-          style={{ objectPosition: film.focus }}
           width={film.width}
           height={film.height}
           poster={film.poster}

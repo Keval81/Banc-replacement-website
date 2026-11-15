@@ -5,7 +5,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { PageBand } from "@/components/PageBand";
-import { OWNED_FILMS } from "@/lib/owned-film";
 import {
   actionPrimaryOnDark,
   actionSecondaryOnDark,
@@ -41,7 +40,7 @@ export default function PremierHomesPage() {
         eyebrow="Premium Service"
         title="Banc Premier Homes"
         lede="An exclusive service for exceptional properties valued at £1 million and above. Discreet marketing, qualified buyers, and exceptional results."
-        film={OWNED_FILMS.premierTerrace}
+        image={{ src: "/hertfordshire-home-4.png", alt: "Luxury Premier Home", priority: true }}
       >
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button asChild className={goldActionOnDark}>
